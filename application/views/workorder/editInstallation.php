@@ -123,12 +123,13 @@ tr {
                                     </div>
                                     <div class="col-12 col-md-2">
                                         <label class="content-subtitle fw-bold d-block mb-2">Account Type</label>
-                                        <select id="account_type" name="account_type" class="form-control custom-select m_select">
-                                                <option value="<?php echo $workorder->account_type; ?>"><?php echo $workorder->account_type; ?></option>
-                                                <option value="Residential">Residential</option>
-                                                <option value="Commercial">Commercial</option>
-                                                <option value="Rental">Rental</option>
-                                                <option value="Inhouse">Inhouse</option>
+                                        <select id="account_type" name="account_type" class="form-control custom-select m_select" required="">
+                                                <option <?= $workorder->account_type == '' ? 'selected="selected"' : ''; ?> value="">- Select Account Type -</option>
+                                                <option <?= $workorder->account_type == 'In-House' ? 'selected="selected"' : ''; ?> value="In-House">In-House</option>
+                                                <option <?= $workorder->account_type == 'Purchase' ? 'selected="selected"' : ''; ?> value="Purchase">Purchase</option>
+                                                <option <?= $workorder->account_type == 'Commercial' ? 'selected="selected"' : ''; ?> value="Commercial">Commercial</option>
+                                                <option <?= $workorder->account_type == 'Rental' ? 'selected="selected"' : ''; ?> value="Rental">Rental</option>
+                                                <option <?= $workorder->account_type == 'Residential' ? 'selected="selected"' : ''; ?> value="Residential">Residential</option>
                                              </select>
                                              <input type="hidden" value="<?php echo $workorder->account_type; ?>" class="account_typeClass">
                                     </div>
@@ -143,34 +144,34 @@ tr {
                                     <div class="col-12 col-md-2">
                                         <label class="content-subtitle fw-bold d-block mb-2">Panel Type</label>
                                         <select name="panel_type" id="panel_type" class="form-control input_select" data-value="<?= isset($workorder) ? $workorder->panel_type : "" ?>">
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == ''){echo "selected";} } ?>  value="0">- none -</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Alarm.com'){echo "selected";} } ?> value="Alarm.com">Alarm.com</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Alula'){echo "selected";} } ?> value="Alula">Alula</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Bosch'){echo "selected";} } ?> value="Bosch">Bosch</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'DSC'){echo "selected";} } ?> value="DSC">DSC</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'ELK'){echo "selected";} } ?> value="ELK">ELK</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'FBI'){echo "selected";} } ?> value="FBI">FBI</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'GRI'){echo "selected";} } ?> value="GRI">GRI</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'GE'){echo "selected";} } ?> value="GE">GE</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell">Honeywell</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell Touch'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell 3000'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista">Honeywell Vista</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell Vista with Sem'){echo "selected";} } ?> value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell Lyric'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'IEI'){echo "selected";} } ?> value="IEI">IEI</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'MIER'){echo "selected";} } ?> value="MIER">MIER</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG">2 GIG</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == '2 GIG Go Panel 2'){echo "selected";} } ?> value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == '2 GIG Go Panel 3'){echo "selected";} } ?> value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys'){echo "selected";} } ?> value="Qolsyx">Qolsys</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys IQ Panel 2'){echo "selected";} } ?> value="Qolsys IQ Panel 2">Qolsys IQ Panel 2</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys IQ Panel 2 Plus'){echo "selected";} } ?> value="Qolsys IQ Panel 2 Plus">Qolsys IQ Panel 2 Plus</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys IQ Panel 3'){echo "selected";} } ?> value="Qolsys IQ Panel 3">Qolsys IQ Panel 3</option>
-                                                <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Custom'){echo "selected";} } ?> value="Custom">Custom</option>
-                                                <option <?php if(isset($workorder)){ if($alarm_info->panel_type == 'Other'){echo "selected";} } ?> value="Other">Other</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == ''){echo "selected";} } ?> value="">- Select Panel Type -</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Alarm.com'){echo "selected";} } ?> value="Alarm.com">Alarm.com</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Alula'){echo "selected";} } ?> value="Alula">Alula</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Bosch'){echo "selected";} } ?> value="Bosch">Bosch</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'DSC'){echo "selected";} } ?> value="DSC">DSC</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'ELK'){echo "selected";} } ?> value="ELK">ELK</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'FBI'){echo "selected";} } ?> value="FBI">FBI</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'GRI'){echo "selected";} } ?> value="GRI">GRI</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'GE'){echo "selected";} } ?> value="GE">GE</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell">Honeywell</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell Touch'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell 3000'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista">Honeywell Vista</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell Vista with Sem'){echo "selected";} } ?> value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Honeywell Lyric'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'IEI'){echo "selected";} } ?> value="IEI">IEI</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'MIER'){echo "selected";} } ?> value="MIER">MIER</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG">2 GIG</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == '2 GIG Go Panel 2'){echo "selected";} } ?> value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
+                                        <option <?php if(isset($alarm_info)){ if($workorder->panel_type == '2 GIG Go Panel 3'){echo "selected";} } ?> value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys'){echo "selected";} } ?> value="Qolsyx">Qolsys</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys IQ Panel 2'){echo "selected";} } ?> value="Qolsys IQ Panel 2">Qolsys IQ Panel 2</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys IQ Panel 2 Plus'){echo "selected";} } ?> value="Qolsys IQ Panel 2 Plus">Qolsys IQ Panel 2 Plus</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Qolsys IQ Panel 3'){echo "selected";} } ?> value="Qolsys IQ Panel 3">Qolsys IQ Panel 3</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Custom'){echo "selected";} } ?> value="Custom">Custom</option>
+                                        <option <?php if(isset($workorder)){ if($workorder->panel_type == 'Other'){echo "selected";} } ?> value="Other">Other</option>
                                             </select>
                                     </div>
                                     <div class="col-12 col-md-2">
@@ -890,8 +891,8 @@ tr {
                                     <div class="nsm-card-content">
                                         <div class="row g-3">
                                             <div class="col-12">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Customer (Optional)</label>
-                                                <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown">
+                                                <label class="content-subtitle fw-bold d-block mb-2">Customer</label>
+                                                <select id="customer_id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required="">
                                                     <option>Select Customer</option>
                                                     <?php if( $workorder->customer_id > 0 && $workorder->acs_first_name != '' ){ ?>
                                                         <option selected="" value="<?= $workorder->customer_id; ?>"><?= $workorder->acs_first_name . ' ' . $workorder->acs_last_name; ?></option>
@@ -901,11 +902,11 @@ tr {
 
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">First name</label>
-                                                <input type="text" name="firstname" id="firstname" class="nsm-field form-control name-field" value="<?php echo $agreeDetails->firstname; ?>">
+                                                <input type="text" name="firstname" id="firstname" class="nsm-field form-control name-field" value="<?php echo $agreeDetails->firstname; ?>" required="">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Last name</label>
-                                                <input type="text" name="lastname" id="lastname" class="nsm-field form-control name-field" value="<?php echo $agreeDetails->lastname; ?>">
+                                                <input type="text" name="lastname" id="lastname" class="nsm-field form-control name-field" value="<?php echo $agreeDetails->lastname; ?>" required="">
                                             </div>
                                             <div class="col-12 col-md-12" id="commercial_account">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Business Name</label>
@@ -921,23 +922,23 @@ tr {
                                             </div>
                                             <div class="col-12">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Address</label>
-                                                <input type="text" name="address" class="nsm-field form-control" value="<?php echo $agreeDetails->address; ?>">
+                                                <input type="text" name="address" class="nsm-field form-control" value="<?php echo $agreeDetails->address; ?>" required="">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">City</label>
-                                                <input type="text" name="city" class="nsm-field form-control" value="<?php echo $agreeDetails->city; ?>">
+                                                <input type="text" name="city" class="nsm-field form-control" value="<?php echo $agreeDetails->city; ?>" required="">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">State</label>
-                                                <input type="text" name="state" class="nsm-field form-control" value="<?php echo $agreeDetails->state; ?>">
+                                                <input type="text" name="state" class="nsm-field form-control" value="<?php echo $agreeDetails->state; ?>" required="">
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Postcode</label>
-                                                <input type="text" name="postcode" class="nsm-field form-control" value="<?php echo $agreeDetails->postcode; ?>">
+                                                <label class="content-subtitle fw-bold d-block mb-2">ZIP Code</label>
+                                                <input type="text" name="postcode" class="nsm-field form-control" value="<?php echo $agreeDetails->postcode; ?>" required="">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">County</label>
-                                                <input type="text" name="county" class="nsm-field form-control" value="<?php echo $agreeDetails->county; ?>">
+                                                <input type="text" name="county" class="nsm-field form-control" value="<?php echo $agreeDetails->county; ?>" required="">
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Phone</label>
@@ -945,35 +946,53 @@ tr {
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Mobile</label>
-                                                <input type="text" name="mobile" class="nsm-field form-control number-field" value="<?php echo $workorder->mobile_number; ?>">
+                                                <input type="text" name="mobile" class="nsm-field form-control number-field" value="<?php echo $workorder->mobile_number; ?>" required="">
                                             </div>
                                             <div class="col-12">
                                                 <label class="content-subtitle fw-bold d-block mb-2">Email</label>
                                                 <input type="email" name="email" class="nsm-field form-control" value="<?php echo $workorder->email; ?>">
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <label class="content-subtitle fw-bold d-block mb-2">1st Emergency Contact Name</label>
-                                                <input type="text" name="first_ecn" class="nsm-field form-control" value="<?php echo $agreeDetails->first_ecn; ?>">
+                                                <label class="content-subtitle fw-bold d-block mb-2">1st Emergency Contact</label>
+                                                <input type="text" name="ec1_firstname" id="ec1_firstname" placeholder="Firstname" class="nsm-field form-control" value="<?= $emergency_contact_a ? $emergency_contact_a['firstname'] : '';?>">
+                                                <input type="text" name="ec1_lastname" id="ec1_lastname" placeholder="Lastname" class="nsm-field form-control mt-1" value="<?=  $emergency_contact_a ? $emergency_contact_a['lastname'] : '';?>">
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Phone</label>
-                                                <input type="text" name="first_ecn_no" class="nsm-field form-control number-field" value="<?php echo $agreeDetails->first_ecn_no; ?>">
+                                                <label class="content-subtitle fw-bold d-block mb-2">&nbsp;</label>
+                                                <input type="text" name="ec1_phone" id="ec1_phone" placeholder="Contact Number" class="nsm-field form-control number-field" value="<?= $emergency_contact_a ? $emergency_contact_a['phone'] : '';?>">
+                                                <select class="form-control mt-1 select-relationship" id="ec1_relationship" name="ec1_relationship">
+                                                    <?php foreach($optionRelations as $value){ ?>
+                                                        <option <?= $emergency_contact_a && $emergency_contact_a['relationship'] == $value ? 'selected="selected"' : '';?> value="<?= $value; ?>"><?= $value; ?></option>
+                                                    <?php } ?>
+                                                </select>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <label class="content-subtitle fw-bold d-block mb-2">2nd Emergency Contact Name</label>
-                                                <input type="text" name="second_ecn" class="nsm-field form-control" value="<?php echo $agreeDetails->second_ecn; ?>">
+                                                <label class="content-subtitle fw-bold d-block mb-2">2nd Emergency Contact</label>
+                                                <input type="text" name="ec2_firstname" id="ec2_firstname" placeholder="Firstname" class="nsm-field form-control" value="<?= $emergency_contact_b ? $emergency_contact_b['firstname'] : '';?>">
+                                                <input type="text" name="ec2_lastname" id="ec2_lastname" placeholder="Lastname" class="nsm-field form-control mt-1" value="<?=  $emergency_contact_b ? $emergency_contact_b['lastname'] : '';?>">
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Phone</label>
-                                                <input type="text" name="second_ecn_no" class="nsm-field form-control number-field" value="<?php echo $agreeDetails->second_ecn_no; ?>">
+                                                <label class="content-subtitle fw-bold d-block mb-2">&nbsp;</label>
+                                                <input type="text" name="ec2_phone" id="ec2_phone" placeholder="Contact Number" class="nsm-field form-control number-field" value="<?= $emergency_contact_b ? $emergency_contact_b['phone'] : '';?>">
+                                                <select class="form-control mt-1 select-relationship" id="ec2_relationship" name="ec2_relationship">
+                                                    <?php foreach($optionRelations as $value){ ?>
+                                                        <option <?= $emergency_contact_b && $emergency_contact_b['relationship'] == $value ? 'selected="selected"' : '';?> value="<?= $value; ?>"><?= $value; ?></option>
+                                                    <?php } ?>
+                                                </select>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <label class="content-subtitle fw-bold d-block mb-2">3rd Emergency Contact Name</label>
-                                                <input type="text" name="third_ecn" class="nsm-field form-control" value="<?php echo $agreeDetails->third_ecn; ?>">
+                                                <label class="content-subtitle fw-bold d-block mb-2">3rd Emergency Contact</label>
+                                                <input type="text" name="ec3_firstname" id="ec3_firstname" placeholder="Firstname" class="nsm-field form-control" value="<?= $emergency_contact_c ? $emergency_contact_c['firstname'] : '';?>">
+                                                <input type="text" name="ec3_lastname" id="ec3_lastname" placeholder="Lastname" class="nsm-field form-control mt-1" value="<?= $emergency_contact_c ? $emergency_contact_c['lastname'] : '';?>">
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <label class="content-subtitle fw-bold d-block mb-2">Phone</label>
-                                                <input type="text" name="third_ecn_no" class="nsm-field form-control number-field" value="<?php echo $agreeDetails->third_ecn_no; ?>" >
+                                                <label class="content-subtitle fw-bold d-block mb-2">&nbsp;</label>
+                                                <input type="text" name="ec3_phone" id="ec3_phone" placeholder="Contact Number" class="nsm-field form-control number-field" value="<?= $emergency_contact_c ? $emergency_contact_c['phone'] : '';?>" >
+                                                <select class="form-control mt-1 select-relationship" id="ec3_relationship" name="ec3_relationship">
+                                                    <?php foreach($optionRelations as $value){ ?>
+                                                        <option <?= $emergency_contact_c && $emergency_contact_c['relationship'] == $value ? 'selected="selected"' : '';?> value="<?= $value; ?>"><?= $value; ?></option>
+                                                    <?php } ?>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -2125,6 +2144,11 @@ $(".nsm-subtitle").html(function() {
                 data: { id : customerId },
                 success: function(data) {
                     const {data: customer} = JSON.parse(data);
+                    const {emergency_contact_a: ec1} = JSON.parse(data);
+                    const {emergency_contact_b: ec2} = JSON.parse(data);
+                    const {emergency_contact_c: ec3} = JSON.parse(data);                    
+                    const {alarmInfo: alarmInfo} = JSON.parse(data);    
+
                     $("[name=firstname]").val(customer.first_name);
                     $("[name=lastname]").val(customer.last_name);
                     $("[name=address]").val(customer.mail_add);
@@ -2137,6 +2161,23 @@ $(".nsm-subtitle").html(function() {
                     $("[name=email]").val(customer.email);
                     $("[name=state]").val(customer.state);
                     $("[name=businessname]").val(customer.business_name);
+
+                    $('#ec1_firstname').val(ec1.firstname);
+                    $('#ec1_lastname').val(ec1.lastname);
+                    $('#ec1_phone').val(ec1.phone);
+                    $('#ec1_relationship').val(ec1.relationship);
+
+                    $('#ec2_firstname').val(ec2.firstname);
+                    $('#ec2_lastname').val(ec2.lastname);
+                    $('#ec2_phone').val(ec2.phone);
+                    $('#ec2_relationship').val(ec2.relationship);
+
+                    $('#ec3_firstname').val(ec3.firstname);
+                    $('#ec3_lastname').val(ec3.lastname);
+                    $('#ec3_phone').val(ec3.phone);
+                    $('#ec3_relationship').val(ec3.relationship);
+
+                    $('#panel_type').val(alarmInfo.panel_type);
                 }
             });
         }
