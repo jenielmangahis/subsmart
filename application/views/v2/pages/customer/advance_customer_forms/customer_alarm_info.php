@@ -335,6 +335,9 @@
                         <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == ''){echo "selected";} } ?> value=""></option>
                         <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'In-House'){echo "selected";} } ?> value="In-House">In-House</option>
                         <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Purchase'){echo "selected";} } ?> value="Purchase">Purchase</option>
+                        <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Commercial'){echo "selected";} } ?> value="Commercial">Commercial</option>
+                        <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Rental'){echo "selected";} } ?> value="Rental">Rental</option>
+                        <option <?php if(isset($alarm_info)){ if($alarm_info->acct_type == 'Residential'){echo "selected";} } ?> value="Residential">Residential</option>
                     </select>
                     <!-- <a href="<?= base_url() ?>customer/settings" target="_blank"  style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Type</a>&nbsp;&nbsp; -->
                 </div>

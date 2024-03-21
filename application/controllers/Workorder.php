@@ -1010,6 +1010,8 @@ class Workorder extends MY_Controller
 
     public function editInstallation($id)
     {
+        $this->load->model('Contacts_model');
+
         add_footer_js([
             'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js',
             'assets/js/jquery.signaturepad.js'
@@ -1024,7 +1026,8 @@ class Workorder extends MY_Controller
         } else {
             $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
         }
-        
+
+        $workorder = $this->workorder_model->getworkorder($id);
         $spt_query = array(
             'table' => 'ac_system_package_type',
             'order' => array(
@@ -1038,11 +1041,48 @@ class Workorder extends MY_Controller
         
         $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
         $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
+        
+        $contacts = $this->Contacts_model->getAllByCustomerId($workorder->customer_id,3);
+
+        $emergency_contact_a = [];
+        $emergency_contact_b = [];
+        $emergency_contact_c = [];
+        $rows = 1;
+        foreach( $contacts as $c ){
+            if( $rows == 1 ){
+                $emergency_contact_a = [
+                    'firstname' => $c->first_name,
+                    'lastname' => $c->last_name,
+                    'relationship' => $c->relation,
+                    'phone' => $c->phone
+                ];
+            }elseif( $rows == 2 ){
+                $emergency_contact_b = [
+                    'firstname' => $c->first_name,
+                    'lastname' => $c->last_name,
+                    'relationship' => $c->relation,
+                    'phone' => $c->phone
+                ];
+            }elseif( $rows == 3 ){
+                $emergency_contact_c = [
+                    'firstname' => $c->first_name,
+                    'lastname' => $c->last_name,
+                    'relationship' => $c->relation,
+                    'phone' => $c->phone
+                ];
+            }
+            $rows++;
+        }
+        
+        $this->page_data['emergency_contact_a'] = $emergency_contact_a;
+        $this->page_data['emergency_contact_b'] = $emergency_contact_b;
+        $this->page_data['emergency_contact_c'] = $emergency_contact_c;
+        $this->page_data['optionRelations'] = $this->Contacts_model->optionRelations();
 
         $this->page_data['headers'] = $this->workorder_model->getheaderByID();
         $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id' => $company_id]);
         // $this->page_data['workorder'] = $this->workorder_model->getById($id);
-        $this->page_data['workorder'] = $this->workorder_model->getworkorder($id);
+        $this->page_data['workorder'] = $workorder;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['customer'] = $this->workorder_model->getcustomerCompanyId($id);
         $this->page_data['job_types'] = $this->workorder_model->getjob_types();
@@ -4426,7 +4466,6 @@ class Workorder extends MY_Controller
                 'industry_template_id'                  => '0'
             );
 
-            // var_dump($new_data);
             $addQuery = $this->workorder_model->save_workorder($new_data);
 
             //Auto convert lead to customer
@@ -4445,7 +4484,6 @@ class Workorder extends MY_Controller
                         }
                     }
                 }
-                
             }
 
             //Update workorder setting
@@ -10727,29 +10765,46 @@ class Workorder extends MY_Controller
 
         $deleteContacts = $this->workorder_model->delete_contact($customer_id);
 
-        $contact = array(
-            'name'                 => $this->input->post('first_ecn'),
-            'phone'                => $this->input->post('first_ecn_no'),
-            'customer_id'          => $customer_id,
-        );
+        if( $this->input->post('ec1_firstname') != '' ){
+            $name = $this->input->post('ec1_firstname') . ' ' . $this->input->post('ec1_lastname');
+            $contact = array(
+                'first_name' => $this->input->post('ec1_firstname'), 
+                'last_name' => $this->input->post('ec1_lastname'),
+                'relation' => $this->input->post('ec1_relationship'),
+                'name' => $name,
+                'phone' => $this->input->post('ec1_phone'),
+                'customer_id' => $customer_id,
+            );
+            $contacts1 = $this->workorder_model->save_contact($contact);
+        }
 
-        $contacts1 = $this->workorder_model->save_contact($contact);
+        if( $this->input->post('ec2_firstname') != '' ){
+            $name = $this->input->post('ec2_firstname') . ' ' . $this->input->post('ec2_lastname');
+            $contact = array(
+                'first_name' => $this->input->post('ec2_firstname'), 
+                'last_name' => $this->input->post('ec2_lastname'),
+                'relation' => $this->input->post('ec2_relationship'),
+                'name' => $name,
+                'phone' => $this->input->post('ec2_phone'),
+                'customer_id' => $customer_id,
+            );
 
-        $contact1 = array(
-            'name'                 => $this->input->post('second_ecn'),
-            'phone'                => $this->input->post('second_ecn_no'),
-            'customer_id'          => $customer_id,
-        );
+            $contacts2 = $this->workorder_model->save_contact($contact);
+        }
 
-        $contacts1 = $this->workorder_model->save_contact($contact1);
+        if( $this->input->post('ec3_firstname') != '' ){
+            $name = $this->input->post('ec3_firstname') . ' ' . $this->input->post('ec3_lastname');
+            $contact = array(
+                'first_name' => $this->input->post('ec3_firstname'), 
+                'last_name' => $this->input->post('ec3_lastname'),
+                'relation' => $this->input->post('ec3_relationship'),
+                'name' => $name,
+                'phone' => $this->input->post('ec3_phone'),
+                'customer_id' => $customer_id,
+            );
 
-        $contact2 = array(
-            'name'                 => $this->input->post('third_ecn'),
-            'phone'                => $this->input->post('third_ecn_no'),
-            'customer_id'          => $customer_id,
-        );
-
-        $contacts2 = $this->workorder_model->save_contact($contact2);
+            $contacts3 = $this->workorder_model->save_contact($contact);
+        }
         
 
         if($this->input->post('payment_method') == 'Cash'){
