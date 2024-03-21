@@ -388,7 +388,12 @@ class Estimate extends MY_Controller
                 $this->sendEstimateToCustomer($new_data['customer_id'], $addQuery);
             }
 
-            redirect('estimate');
+            if( $this->input->post('module') && $this->input->post('module') == 'accounting' ){
+                redirect('accounting/newEstimateList');
+            }else{
+                redirect('estimate');
+            }
+            
         } else {
             echo json_encode(0);
         }
