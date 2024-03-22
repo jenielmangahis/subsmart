@@ -502,6 +502,55 @@ class Accounting extends MY_Controller
         $this->load->view('v2/pages/accounting/link_bank', $this->page_data);
     }
 
+    public function categorized_link_bank()
+    {
+        $comp_id = logged('company_id');
+        $get_company_account = array(
+            'table' => 'accounting_bank_accounts',
+            'where' => array('company_id' => $comp_id,),
+            'select' => '*',
+        );
+        $this->page_data['accounts'] = $this->general_model->get_data_with_param($get_company_account, false);
+
+        $get_company_banking_payment = array(
+            'table' => 'banking_payments',
+            'where' => array('company_id' => $comp_id,),
+            'select' => '*',
+        );
+        $this->page_data['banking_payments'] = $this->general_model->get_data_with_param($get_company_banking_payment);
+        $this->page_data['page']->title = 'Categorized Link Bank';
+        $this->page_data['page']->parent = 'Banking';
+
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        // $this->load->view('v2/pages/accounting/categorized_link_bank', $this->page_data);
+        $this->load->view('accounting/banking/categorized_link_bank', $this->page_data);
+
+    }
+
+    public function excluded_link_bank()
+    {
+        $comp_id = logged('company_id');
+        $get_company_account = array(
+            'table' => 'accounting_bank_accounts',
+            'where' => array('company_id' => $comp_id,),
+            'select' => '*',
+        );
+        $this->page_data['accounts'] = $this->general_model->get_data_with_param($get_company_account, false);
+
+        $get_company_banking_payment = array(
+            'table' => 'banking_payments',
+            'where' => array('company_id' => $comp_id,),
+            'select' => '*',
+        );
+        $this->page_data['banking_payments'] = $this->general_model->get_data_with_param($get_company_banking_payment);
+        $this->page_data['page']->title = 'Excluded Link Bank';
+        $this->page_data['page']->parent = 'Banking';
+
+        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        // $this->load->view('v2/pages/accounting/excluded_link_bank', $this->page_data);
+        $this->load->view('accounting/banking/excluded_link_bank', $this->page_data);
+    }
+
     public function test_payment()
     {
         $comp_id = logged('company_id');
