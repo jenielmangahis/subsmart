@@ -2004,7 +2004,7 @@ class Workorder_model extends MY_Model
         return true;
     }
 
-    public function  getlead_source($company_id)
+    public function  getlead_source()
     {
         $this->db->distinct();
         $this->db->select('*');
@@ -2014,11 +2014,11 @@ class Workorder_model extends MY_Model
     }
 
     public function  getLeadSourceByCompanyId($company_id)
-    {
-        $this->db->distinct();
+    {        
         $this->db->select('*');
 		$this->db->from('ac_leadsource');
 		$this->db->where('fk_company_id', $company_id);
+        $this->db->group_by('ls_name');
         $query = $this->db->get();
         return $query->result();
     }
@@ -2551,6 +2551,27 @@ class Workorder_model extends MY_Model
                 'passcode'                  => $passcode,
                 'comm_type'                 => $comm_type,
             ));
+            return true;
+        }
+    }
+
+    public function update_alarm_adi_by_customer_id($fk_prof_id, $data)
+    {
+        $this->db->select('*');
+		$this->db->from('acs_alarm');
+        $this->db->where('fk_prof_id', $fk_prof_id);
+        $query2 = $this->db->get();
+        $query3 = $query2->result();
+
+        if(empty($query3))
+        {
+            $vendor = $this->db->insert('acs_alarm', $data);
+            $insert_id = $this->db->insert_id();
+            return  $insert_id;
+
+        }else{
+            $this->db->where('fk_prof_id', $fk_prof_id);
+            $this->db->update('acs_alarm', $data);
             return true;
         }
     }

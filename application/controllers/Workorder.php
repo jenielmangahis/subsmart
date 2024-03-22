@@ -1040,7 +1040,7 @@ class Workorder extends MY_Controller
         );
         
         $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
-        $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
+        $this->page_data['lead_source'] = $this->workorder_model->getLeadSourceByCompanyId($company_id);
         
         $contacts = $this->Contacts_model->getAllByCustomerId($workorder->customer_id,3);
 
@@ -10531,6 +10531,9 @@ class Workorder extends MY_Controller
     
     public function updateWorkorderAgreement()
     {
+        $this->load->model('Customer_advance_model');
+        $this->load->model('AcsProfile_model');
+
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
 
@@ -10746,6 +10749,8 @@ class Workorder extends MY_Controller
         // );
 
         // $alarmInfoDatas = $this->workorder_model->update_alarm_adi($alarmInfoData);
+
+        //Update alarm info        
         $alarmInfoData = array(
             'fk_prof_id'                => $customer_id,
             'equipment_cost'            => $this->input->post('equipmentCost'),
@@ -10753,14 +10758,12 @@ class Workorder extends MY_Controller
             'panel_type'                => $this->input->post('panel_type'),
             'otps'                      => $this->input->post('otps'),
             'system_type'               => $this->input->post('communication_type'),
-            'monitor_comp'              => 'Stanley',
-            'acct_type'                 => 'In-House',
-            'equipment'                 => 'Installed',
+            'acct_type'                 => $this->input->post('account_type'),
             'passcode'                  => $this->input->post('password'),
             'comm_type'                 => $this->input->post('communication_type'),
         );
 
-        $alarmInfoDatas = $this->workorder_model->update_alarm_adi($alarmInfoData);
+        $alarmInfoDatas = $this->workorder_model->update_alarm_adi_by_customer_id($customer_id, $alarmInfoData);
         
 
         $deleteContacts = $this->workorder_model->delete_contact($customer_id);
@@ -10805,7 +10808,25 @@ class Workorder extends MY_Controller
 
             $contacts3 = $this->workorder_model->save_contact($contact);
         }
-        
+
+        //Update customer info
+        $customer = $this->AcsProfile_model->getByProfId($customer_id);
+        if( $customer ){
+            $data = [
+                'ssn' => $this->input->post('ssn') 
+            ];
+            $this->AcsProfile_model->updateCustomerByProfId($customer_id, $data);
+        }
+
+        //Update office data
+        $officeData = $this->Customer_advance_model->getCustomerOfficeData($customer_id);
+        if( $officeData ){
+            $update_office = [                
+                'off_id' => $officeData->off_id,
+                'lead_source' => $this->input->post('lead_source')
+            ];
+            $this->Customer_advance_model->update_data($update_office,'acs_office','off_id');
+        }
 
         if($this->input->post('payment_method') == 'Cash'){
             $payment_data = array(
