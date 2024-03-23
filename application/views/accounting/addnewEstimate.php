@@ -910,7 +910,6 @@ echo put_header_assets();
         </div>
         <!-- end container-fluid -->
     </div>
-    <!-- page wrapper end -->
 </div>
 
 <?php echo $file_selection; ?>
@@ -935,13 +934,6 @@ echo put_header_assets();
 <script src="<?php echo $url->assets ?>js/add.js"></script>
 
 <script>
-    //   $(function() {
-    //     $("#rebatable_toggle").each(function(){
-    //     $(this).change(function() {
-    //     //   $('#console-event').html('Toggle: ' + $(this).prop('checked'))
-    //     alert('yeah');
-    //     })
-    //   })
     $(document).ready(function() {
         
 
