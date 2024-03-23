@@ -2027,7 +2027,10 @@ $(".select_item2a").click(function() {
     // alert(tax_rate_);
     var taxRate = tax_rate_;
 
-    var count = parseInt($("#count").val()) + 1;
+    var count = $(this).attr('data-count') ? parseInt($(this).attr('data-count')) : parseInt($("#count").val());
+    if (!$(this).attr('data-replace')) {
+        count += 1
+    }
     $("#count").val(count);
     var total_ = price * qty;
     var tax_ = (parseFloat(total_).toFixed(2) * taxRate) / 100;
@@ -2064,7 +2067,7 @@ $(".select_item2a").click(function() {
     items.forEach(function(item) {
         options += `<option value="` + item.id + `"   data-item_type="${item.type.charAt(0).toUpperCase() + item.type.slice(1)}"
         data-itemname="` + item.title + `" data-price="` + item.price + `"  data-location_name="` + item
-            .location_name + `"
+            .location_name + `" data-count="` + count + `"
         data-location_id="` + item.location_id + `" `;
         if (item.title == title) {
             options += ' selected="selected"';
@@ -2104,7 +2107,8 @@ $(".select_item2a").click(function() {
         "'></td>" +
         "<td>\n" +
         "<a href=\"#\" class=\"remove nsm-button danger\" id='" + count +
-        "' ><i class=\"bx bx-fw bx-trash\"></i></a>\n" +
+        "' data-row-remove='" + idd + "'  data-itemselectedId='" + itemSelectedId +
+        "'><i class=\"bx bx-fw bx-trash\"></i></a>\n" +
         "</td>\n" +
         "</tr>";
     tableBody = $("#jobs_items_table_body");

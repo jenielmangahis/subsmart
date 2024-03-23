@@ -3252,6 +3252,7 @@ $(document).on("change", ".getItemsSearch", function () {
   );
   $selectItemButton.attr("data-itemname", selectedOption.attr("data-itemname"));
   $selectItemButton.attr("data-price", selectedOption.attr("data-price"));
+  $selectItemButton.attr("data-count", selectedOption.attr("data-count"));
   $selectItemButton.attr(
     "data-description",
     selectedOption.attr("data-description")
@@ -3271,8 +3272,7 @@ $(document).on("click", ".remove", function (e) {
   e.preventDefault();
   var idd = this.id;
   isConfirm = 1;
-  var count = parseInt($("#count").val()) - 1;
-  $("#count").val(count);
+
   // calculation(count);
 
   var in_id = idd;
@@ -3293,17 +3293,47 @@ $(document).on("click", ".remove", function (e) {
   ).toFixed(2);
 
   var total_wo_tax = price * quantity;
+
+  var toReplace = $(this).attr("data-row-remove");
   // alert( 'yeah' + total);
   if (!$(this).attr("data-remove")) {
     $(this)
       .parent()
       .parent()
-      .siblings("tr#description_" + idd)
+      .siblings("tr#description_" + toReplace)
       .remove();
     $(this).parent().parent().remove();
+    var count = parseInt($("#count").val()) - 1;
+    $("#count").val(count);
+    $("#ITEMLIST_PRODUCT_" + $(this).attr("data-row-remove")).show();
+  } else {
+    $("#ITEMLIST_PRODUCT_" + idd).show();
   }
+
+  var itemSelectedId = $(this).attr("data-itemselectedId")
+    ? $(this).attr("data-itemselectedId").split(",")
+    : [];
+
+  if (itemSelectedId.includes(parseInt(toReplace))) {
+    var indexToRemove = itemSelectedId.indexOf(parseInt(toReplace));
+    itemSelectedId.splice(indexToRemove, 1);
+    itemSelectedId.push(parseInt(this.id));
+  }
+
+  $(".getItemsSearch").each(function () {
+    var $select = $(this);
+    $select.find("option").each(function () {
+      var optionValue = $(this).val();
+      if (itemSelectedId.includes(parseInt(optionValue))) {
+        console.log("count goes here");
+        $(this).prop("disabled", true);
+      } else {
+        $(this).prop("disabled", false);
+      }
+    });
+  });
+
   $(this).removeAttr("data-remove");
-  $("#ITEMLIST_PRODUCT_" + idd).show();
   $("#priceqty_" + in_id).val(total_wo_tax);
   $("#span_total_" + in_id).text(total);
   $("#sub_total_text" + in_id).val(total);

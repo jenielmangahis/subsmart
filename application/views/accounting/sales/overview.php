@@ -31,15 +31,15 @@
                                 <div class="col-md-4">
                                     <div class="duration">
                                         <label for="">Duration:</label>
-                                        <select name="duration" class="duration">
-                                            <option value="">This month</option>
-                                            <option value="">Last month</option>
-                                            <option value="">This quarter</option>
-                                            <option value="">Last quarter</option>
-                                            <option value="">This year by month</option>
-                                            <option value="">This year by quarter</option>
-                                            <option value="">Last year by month</option>
-                                            <option value="">Last year by quarter</option>
+                                        <select name="duration" id="duration" class="duration">
+                                            <option value="This month">This month</option>
+                                            <option value="Last month">Last month</option>
+                                            <option value="This quarter">This quarter</option>
+                                            <option value="Last quarter">Last quarter</option>
+                                            <option value="This year by month">This year by month</option>
+                                            <option value="This year by quarter">This year by quarter</option>
+                                            <option value="Last year by month">Last year by month</option>
+                                            <option value="Last year by quarter">Last year by quarter</option>
                                         </select>
                                     </div>
                                 </div>
@@ -63,7 +63,7 @@
                                         <span class="label">This month</span>
                                     </div>
                                     <div class="monitary-increase" style="color:green;font-weight:bold;">
-                                        $<?=number_format($income_this_month-$income_last_month, 2)?>
+                                        $<?=number_format($income_this_month - $income_last_month, 2)?>
                                         more than <?=date("M d", strtotime("first day of previous month"))?>
                                         - <?=date("d, Y", strtotime("last day of previous month"))?>
                                     </div>
@@ -72,9 +72,7 @@
 
                                     </div>
                                     <canvas id="overview_chart" style="height: 200px; width: 100%;"></canvas>
-                                    <div class="no-graph">
-                                        <div class="text">No data found.</div>
-                                    </div>
+                                    
                             </div>
                         </div>
                         <!-- <div class="nsm-card primary" style="margin-top:10px;">
@@ -201,8 +199,9 @@
                             <h4>SHORTCUTS</h4>
                             <table class="table" style="width:50%;color:green;">
                                 <tr>
-                                    <td><center><i class="fa fa-file" aria-hidden="true" style="font-size:50px;"></i><br> <b>New Invoice</b></center></td>
-                                    <td><center><i class="fa fa-file-text" aria-hidden="true" style="font-size:50px;"></i><br> <b>Recurring Invoice</b></center></td>
+                                    <td  onclick="window.location.href='<?=base_url('accounting/addnewInvoice')?>'"><center><i class="fa fa-file" aria-hidden="true" style="font-size:50px;"></i><br> <b>New Invoice</b></center></td>
+                                    
+                                    <td onclick="window.location.href='<?=base_url('invoice/recurring')?>'"><center><i class="fa fa-file-text" aria-hidden="true" style="font-size:50px;"></i><br> <b>Recurring Invoice</b></center></td>
                                 </tr>
                                 <tr>
                                     <td><center><i class="fa fa-file-o" aria-hidden="true" style="font-size:50px;"></i><br> <b>New Sale</b></center></td>
@@ -225,12 +224,12 @@
                                     <table class="table">
                                         <tr>
                                             <td>
-                                                <b>$176,321.97 Unpaid</b>
-                                                <h4>$147,722.44</h4> Overdue
+                                                <b>$<?=number_format($unpaid_last_365, 2)?> Unpaid</b>
+                                                <h4>$<?=number_format($due_last_365, 2)?></h4> Overdue
                                             </td>
                                             <td>
                                                 <b>Last 365 days</b>
-                                                <h4>$147,722.44</h4> Not Due Yet
+                                                <h4>$<?=number_format($not_due_last_365, 2)?></h4> Not Due Yet
                                             </td>
                                         </tr>
                                     </table>
@@ -239,12 +238,12 @@
                                     <table class="table">
                                         <tr>
                                             <td>
-                                                <b>$176,321.97 Unpaid</b>
-                                                <h4>$147,722.44</h4> Overdue
+                                                <b>$<?=number_format($deposited_last30_days, 2)?> Deposited </b>
+                                                <h4>$<?=number_format($not_deposited_last30_days, 2)?></h4> Not Deposited
                                             </td>
                                             <td>
-                                                <b>Last 365 days</b>
-                                                <h4>$147,722.44</h4> Not Due Yet
+                                                <b>Last 30 days</b>
+                                                <h4>$<?=number_format($paid_last_30, 2)?></h4> Paid Last 30 days
                                             </td>
                                         </tr>
                                     </table>

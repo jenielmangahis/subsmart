@@ -133,7 +133,7 @@ Alarm Direct, Inc</textarea>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="recurring-form-part">
-                                    <div class="recurring-title">Recurring Sales Receipt</div>
+                                    <div class="recurring-title">Recurring Sales ReceiptSS</div>
                                     <div class="row no-margin">
                                         <div class="col-md-12 no-padding">
                                             <div class="row no-margin">
