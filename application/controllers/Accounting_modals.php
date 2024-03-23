@@ -7687,6 +7687,10 @@ class Accounting_modals extends MY_Controller
         $this->form_validation->set_rules('item[]', 'Item', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required');
 
+        if(isset($data['adjustment_name']) && $data['adjustment_name'] != '') {
+            $this->form_validation->set_rules('adjustment_value', 'Adjustment Value', 'required');
+        }
+
         if(isset($data['template_name'])) {
             $this->form_validation->set_rules('template_name', 'Template Name', 'required');
             $this->form_validation->set_rules('recurring_type', 'Recurring Type', 'required');
@@ -7716,6 +7720,14 @@ class Accounting_modals extends MY_Controller
             }
         } else {
             $this->form_validation->set_rules('sales_receipt_date', 'Sales receipt date', 'required');
+        }
+        
+        if((isset($data['adjustment_name']) && $data['adjustment_name'] != '') && $data['adjustment_value'] == 0) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Adjustment value must not contain 0.';    
+            return $return;
+            exit;        
         }
 
         $return = [];

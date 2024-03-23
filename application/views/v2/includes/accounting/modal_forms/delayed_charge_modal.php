@@ -348,31 +348,32 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <div class="row">
-                                                        <div class="col-7">
+                                                    <div class="row" style="float: right; margin-right: -20px !important;">
+                                                        <div class="col-10">
                                                             <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="<?=isset($charge) ? $charge->adjustment_name : ''?>">
                                                         </div>
-                                                        <div class="col-3">
+                                                        <!-- <div class="col-3">
                                                             <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($charge) ? number_format(floatval($charge->adjustment_value), 2, '.', ',') : ''?>">
-                                                        </div>
-                                                        <div class="col-1 d-flex align-items-center">
+                                                        </div> -->
+                                                        <div class="col-1 d-flex align-items-center" style="padding-left: 0 !important;">
                                                         <!-- <span id="modal-help-popover-adjustment" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></span> -->
                                                             <span id="modal-help-popover-adjustment" class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></span>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <span class="transaction-adjustment">
-                                                    <?php if(isset($charge)) : ?>
-                                                        <?php
-                                                        $amount = '$'.number_format(floatval($charge->adjustment_value), 2, '.', ',');
-                                                        $amount = str_replace('$-', '-$', $amount);
-                                                        echo $amount;
-                                                        ?>
-                                                    <?php else : ?>
-                                                        $0.00
-                                                    <?php endif; ?>
-                                                    </span>
+                                                    <input style="float: right; width: 75px;" type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($charge) ? number_format(floatval($charge->adjustment_value), 2, '.', ',') : ''?>">
+                                                    <!-- <span class="transaction-adjustment">
+                                                        <?php if(isset($charge)) : ?>
+                                                            <?php
+                                                            $amount = '$'.number_format(floatval($charge->adjustment_value), 2, '.', ',');
+                                                            $amount = str_replace('$-', '-$', $amount);
+                                                            echo $amount;
+                                                            ?>
+                                                        <?php else : ?>
+                                                            $0.00
+                                                        <?php endif; ?>
+                                                    </span> -->
                                                 </td>
                                             </tr>
                                             <tr>

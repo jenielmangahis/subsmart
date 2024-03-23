@@ -3,7 +3,7 @@
 <?php if(!isset($receipt)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
 <?php else : ?>
-<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/sales-receipt/<?=$receipt->id?>">
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="<?php echo base_url(); ?>accounting/update-transaction/sales-receipt/<?=$receipt->id?>">
 <?php endif; ?>
     <div id="salesReceiptModal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
         <div class="modal-dialog">
@@ -160,7 +160,7 @@
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="ref_no">Reference no.</label>
-                                    <input type="text" name="ref_no" id="ref_no" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->reference_no : ''?>">
+                                    <input type="number" name="ref_no" id="ref_no" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->reference_no : ''?>">
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="deposit_to_account">Deposit to</label>
@@ -391,7 +391,7 @@
                                                 <td>
                                                     <div class="row" style="float: right; margin-right: -20px !important;">
                                                         <div class="col-10">
-                                                            <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="<?=isset($receipt) ? $receipt->adjustment_name : ''?>">
+                                                            <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control sales-receipt-adjustment-name nsm-field" value="<?=isset($receipt) ? $receipt->adjustment_name : ''?>">
                                                         </div>
                                                         <!-- <div class="col-3">
                                                             <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($receipt) ? number_format(floatval($receipt->adjustment_value), 2, '.', ',') : ''?>">
@@ -403,7 +403,7 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <input style="float: right; width: 75px;" type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($receipt) ? number_format(floatval($receipt->adjustment_value), 2, '.', ',') : ''?>">
+                                                    <input style="float: right; width: 75px;" type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control sales-receipt-adjustment-value nsm-field adjustment_input_cm_c" disabled onchange="convertToDecimal(this)" value="<?=isset($receipt) ? number_format(floatval($receipt->adjustment_value), 2, '.', ',') : ''?>">
                                                     <!-- <span class="transaction-adjustment">
                                                     <?php if(isset($receipt)) : ?>
                                                         <?php
@@ -501,6 +501,15 @@
 
 <script>
     $(document).ready(function() {
+
+        $(".sales-receipt-adjustment-name").change(function(){
+            var sales_receipt_adj_name = $('.sales-receipt-adjustment-name').val();
+            var sales_receipt_adj_value = $('.sales-receipt-adjustment-value').val();
+            $('.sales-receipt-adjustment-value').prop("disabled", false); 
+            if(sales_receipt_adj_name == '') {
+                $('.sales-receipt-adjustment-value').prop("disabled", true); 
+            }
+        } );        
 
         $(".sales-receipt-email").change(function(){
             
