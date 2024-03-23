@@ -1,9 +1,11 @@
-<div class="modal fade nsm-modal fade" id="new_estimate_modal" tabindex="-1" aria-labelledby="new_estimate_modal_label" aria-hidden="true">
+<div class="modal fade nsm-modal fade" id="new_estimate_modal" tabindex="-1" aria-labelledby="new_estimate_modal_label"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="new_estimate_modal_label">New Estimate</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i
+                        class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
                 <div class="row text-center gy-3">
@@ -12,15 +14,29 @@
                     </div>
                     <div class="col-12">
                         <label class="content-subtitle d-block mb-2">Create a regular estimate with items</label>
-                        <button type="button" class="nsm-button w-50 primary" onclick="window.open('<?php echo base_url('estimate/add?customer=' . $profile_info->prof_id) ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');" data-bs-dismiss="modal">Standard Estimate</button>
+                        <button type="button" class="nsm-button w-50 primary"
+                            onclick="window.open('<?php echo base_url('estimate/add?customer='.$profile_info->prof_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');"
+                            data-bs-dismiss="modal">Standard Estimate</button>
                     </div>
                     <div class="col-12">
-                        <label class="content-subtitle d-block mb-2">Customers can select all or only certain options</label>
-                        <button type="button" class="nsm-button w-50 primary" onclick="window.open('<?php echo base_url('estimate/addoptions?type=2&customer=' . $profile_info->prof_id) ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');" data-bs-dismiss="modal">Options Estimate</button>
+                        <label class="content-subtitle d-block mb-2">Create a description estimate with items</label>
+                        <button type="button" class="nsm-button w-50 primary"
+                            onclick="window.open('<?php echo base_url('estimate/add_description?customer='.$profile_info->prof_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');"
+                            data-bs-dismiss="modal">Description Estimate</button>
                     </div>
                     <div class="col-12">
-                        <label class="content-subtitle d-block mb-2">Customers can select both Bundle Packages to<br>obtain an overall discount</label>
-                        <button type="button" class="nsm-button w-50 primary" onclick="window.open('<?php echo base_url('estimate/addbundle?type=3&customer=' . $profile_info->prof_id) ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');" data-bs-dismiss="modal">Bundle Estimate</button>
+                        <label class="content-subtitle d-block mb-2">Customers can select all or only certain
+                            options</label>
+                        <button type="button" class="nsm-button w-50 primary"
+                            onclick="window.open('<?php echo base_url('estimate/addoptions?type=2&customer='.$profile_info->prof_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');"
+                            data-bs-dismiss="modal">Options Estimate</button>
+                    </div>
+                    <div class="col-12">
+                        <label class="content-subtitle d-block mb-2">Customers can select both Bundle Packages
+                            to<br>obtain an overall discount</label>
+                        <button type="button" class="nsm-button w-50 primary"
+                            onclick="window.open('<?php echo base_url('estimate/addbundle?type=3&customer='.$profile_info->prof_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');"
+                            data-bs-dismiss="modal">Bundle Estimate</button>
                     </div>
                 </div>
             </div>
@@ -30,20 +46,24 @@
     </div>
 </div>
 
-<div class="modal fade nsm-modal fade" id="clone_estimate_modal" tabindex="-1" aria-labelledby="clone_estimate_modal_label" aria-hidden="true">
+<div class="modal fade nsm-modal fade" id="clone_estimate_modal" tabindex="-1"
+    aria-labelledby="clone_estimate_modal_label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="clone_estimate_modal_label">Clone Estimate</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i
+                        class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
                 <div class="row text-center gy-3">
                     <div class="col-12">
                         <input type="hidden" id="wo_id" name="est_id">
                         <label class="content-title d-block mb-2">You are going create a new Estimate based on</label>
-                        <label class="content-title d-block mb-2">Estimate Number: <span class="work_order_no"></span></label>
-                        <label class="content-subtitle d-block">Afterwards you can edit the newly created Estimate.</label>
+                        <label class="content-title d-block mb-2">Estimate Number: <span
+                                class="work_order_no"></span></label>
+                        <label class="content-subtitle d-block">Afterwards you can edit the newly created
+                            Estimate.</label>
                     </div>
 
                 </div>

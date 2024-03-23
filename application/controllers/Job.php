@@ -1778,9 +1778,9 @@ class Job extends MY_Controller
 
         $acsAlarm = $this->Customer_advance_model->getCustomerAlarmData($id);
         if( $acsAlarm ){
-            $alarmInfo = ['panel_type' => $acsAlarm->panel_type, 'acct_type' => $acsAlarm->acct_type];
+            $alarmInfo = ['panel_type' => $acsAlarm->panel_type, 'acct_type' => $acsAlarm->acct_type, 'passcode' => $acsAlarm->passcode];
         }else{
-            $alarmInfo = ['panel_type' => '', 'acct_type' => ''];
+            $alarmInfo = ['panel_type' => '', 'acct_type' => '', 'passcode' => ''];
         }  
 
         $data_arr = array("success" => true, "data" => $data, 'emergency_contact_a' => $emergency_contact_a, 'emergency_contact_b' => $emergency_contact_b, 'emergency_contact_c' => $emergency_contact_c, 'alarmInfo' => $alarmInfo);

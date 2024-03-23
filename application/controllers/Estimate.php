@@ -465,6 +465,139 @@ class Estimate extends MY_Controller
         // print_r($this->page_data['customers']);
     }
 
+    public function add_description()
+    {
+        $this->load->model('AcsProfile_model');
+        $this->load->model('EstimateSettings_model');
+
+        $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
+        $result_autoincrement = $query_autoincrment->result_array();
+
+        if (count($result_autoincrement)) {
+            if ($result_autoincrement[0]['AUTO_INCREMENT']) {
+                $this->page_data['auto_increment_estimate_id'] = 0000001;
+            } else {
+                $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
+            }
+        } else {
+            $this->page_data['auto_increment_estimate_id'] = 0000000;
+        }
+
+        $user_id = logged('id');
+        $company_id = logged('company_id');
+        $role = logged('role');
+
+        $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
+        $default_terms_condition = '';
+        $default_customer_message = 'I would be happy to have an opportunity to work with you.';
+        if ($setting) {
+            if ($setting->residential_message != '') {
+                $default_customer_message = $setting->residential_message;
+            }
+
+            if ($setting->residential_terms_and_conditions != '') {
+                $default_terms_condition = $setting->residential_terms_and_conditions;
+            }
+        }
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+
+        $this->page_data['clients'] = $this->workorder_model->getclientsById();
+        $type = $this->input->get('type');
+        $this->page_data['type'] = $type;
+        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['number'] = $this->estimate_model->getlastInsert();
+        $this->page_data['items'] = $this->items_model->getItemlist();
+        $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
+        $this->page_data['jobs_data_items'] = $this->jobs_model->get_specific_job_items($id);
+        $this->page_data['default_terms_condition'] = $default_terms_condition;
+        $this->page_data['default_customer_message'] = $default_customer_message;
+
+        add_css([
+            'assets/plugins/font-awesome/css/font-awesome.min.css',
+        ]);
+
+        $this->load->view('estimate/v2/addDescription', $this->page_data);
+    }
+
+    public function add_new_inventory_item()
+    {
+        $this->page_data['page']->title = 'Inventory';
+        $this->page_data['page']->parent = 'Tools';
+
+        $input = $this->input->post();
+        if ($input) {
+            $config = [
+                'upload_path' => './uploads/',
+                'allowed_types' => 'gif|jpg|png|jpeg',
+                'overwrite' => true,
+                'max_size' => '2048000',
+                'max_height' => '768',
+                'max_width' => '1024',
+            ];
+
+            $this->load->library('upload', $config);
+            if (!$this->upload->do_upload('attach_photo')) {
+                $product_image = '';
+            } else {
+                $data = ['upload_data' => $this->upload->data()];
+                $product_image = $data['upload_data']['file_name'];
+            }
+
+            $data = [
+                'company_id' => logged('company_id'),
+                'title' => $this->input->post('item_name'),
+                'type' => ucfirst($this->input->post('item_type')),
+                'model' => $this->input->post('model_number'),
+                'COGS' => $this->input->post('cost_of_goods'),
+                'cost' => $this->input->post('cost'),
+                'brand' => $this->input->post('brand'),
+                'price' => $this->input->post('retailField'),
+                'rebate' => $this->input->post('rebateField'),
+                // 'cost_per' => $this->input->post('cost_per'),
+                'description' => $this->input->post('description'),
+                'url' => $this->input->post('product_url'),
+                'notes' => '',
+                'item_categories_id' => $this->input->post('item_category'),
+                'is_active' => 1,
+                'vendor_id' => $this->input->post('vendor'),
+                'units' => $this->input->post('unit'),
+                'attached_image' => $product_image,
+            ];
+            $profile_id = $this->general->add_return_id($data, 'items');
+            redirect(base_url('inventory'));
+        }
+
+        $get_items_categories = [
+            'where' => ['company_id' => logged('company_id')],
+            'table' => 'item_categories',
+            'select' => '*',
+        ];
+        $this->page_data['item_categories'] = $this->general->get_data_with_param($get_items_categories);
+
+        $get_vendors = [
+            'where' => ['company_id' => logged('company_id')],
+            'table' => 'vendor',
+            'select' => '*',
+        ];
+        $this->page_data['vendors'] = $this->general->get_data_with_param($get_vendors);
+        $this->page_data['page']->title = 'Inventory';
+        $this->page_data['page']->parent = 'Tools';
+
+        $getLocation = [
+            'where' => [
+                'company_id' => logged('company_id'),
+            ],
+            'select' => 'loc_id, location_name, default',
+            'table' => 'storage_loc',
+        ];
+        $this->page_data['location'] = $this->general->get_data_with_param($getLocation);
+        $this->page_data['custom_fields'] = $this->items_model->get_custom_fields_by_company_id(logged('company_id'));
+        $this->load->view('v2/pages/inventory/action/inventory_add_window', $this->page_data);
+        // $this->page_data['page_title'] = 'Add Inventory Item';
+        // $this->load->view('inventory/add', $this->page_data);
+    }
+
     public function addoptions()
     {
         $this->load->model('AcsProfile_model');

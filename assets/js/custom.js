@@ -2770,7 +2770,9 @@ function taxRate() {
 
 function calculateSubtotal() {
   let retval = 0;
-  const $rows = document.querySelectorAll("#jobs_items_table_body tr");
+  const $rows = document.querySelectorAll(
+    "#jobs_items_table_body tr:not(.description)"
+  );
 
   [...$rows].forEach(($row) => {
     const $price = $row.querySelector("[name^=price]");
@@ -2788,7 +2790,9 @@ function calculateSubtotal() {
 
 function calculateTaxes() {
   let retval = 0;
-  const $rows = document.querySelectorAll("#jobs_items_table_body tr");
+  const $rows = document.querySelectorAll(
+    "#jobs_items_table_body tr:not(.description)"
+  );
 
   [...$rows].forEach(($row) => {
     const $tax = $row.querySelector("[name^=tax]");
@@ -3249,6 +3253,10 @@ $(document).on("change", ".getItemsSearch", function () {
   $selectItemButton.attr("data-itemname", selectedOption.attr("data-itemname"));
   $selectItemButton.attr("data-price", selectedOption.attr("data-price"));
   $selectItemButton.attr(
+    "data-description",
+    selectedOption.attr("data-description")
+  );
+  $selectItemButton.attr(
     "data-location_name",
     selectedOption.attr("data-location_name")
   );
@@ -3287,6 +3295,11 @@ $(document).on("click", ".remove", function (e) {
   var total_wo_tax = price * quantity;
   // alert( 'yeah' + total);
   if (!$(this).attr("data-remove")) {
+    $(this)
+      .parent()
+      .parent()
+      .siblings("tr#description_" + idd)
+      .remove();
     $(this).parent().parent().remove();
   }
   $(this).removeAttr("data-remove");

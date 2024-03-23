@@ -342,6 +342,32 @@ echo put_header_assets();
     label.bold {
         font-weight: bold;
     }
+
+    .add-item-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    #jobs_items_table_body tr td {
+        border: none;
+    }
+
+    #jobs_items_table_body tr:not(.description) td {
+        padding-top: 20px;
+    }
+
+    #jobs_items_table_body tr.description {
+        border-bottom: 1px solid lightgray;
+    }
+
+    #jobs_items_table_body tr.description td {
+        padding-bottom: 20px;
+    }
+
+    #jobs_items_table_body tr.description td {
+        margin-bottom: 20px;
+    }
     </style>
 
     <!-- page wrapper start -->
@@ -558,8 +584,14 @@ echo put_header_assets();
                                     </table>
                                     <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
                                     <!-- <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a> -->
-                                    <a class="nsm-button primary" href="#" id="add_another_items" data-bs-toggle="modal"
-                                        data-bs-target="#item_list"><i class='bx bx-plus-medical'></i> Add Items</a>
+                                    <div class="add-item-container">
+                                        <a class="nsm-button primary" href="#" id="add_another_items"
+                                            data-bs-toggle="modal" data-bs-target="#item_list"><i
+                                                class='bx bx-plus-medical'></i> Add Item List</a>
+                                        <a class="nsm-button primary" href="#"
+                                            onclick="window.open('<?php echo base_url('estimate/add_new_inventory_item'); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');"><i
+                                                class='bx bx-plus-medical'></i> Add New Item</a>
+                                    </div>
                                     &emsp;
                                     <!-- <a class="link-modal-open nsm-link" href="#" id="add_package" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span> Add Package</a> &emsp; -->
                                     <!-- <span class="link-modal-open nsm-link" id="createNewItem" style="border:solid white 1px;background-color:white;"><span class="fa fa-plus-square fa-margin-right"></span> Create New Item</span> -->
@@ -961,6 +993,7 @@ echo put_header_assets();
                                                         data-item_type="<?php echo ucfirst($item->type); ?>"
                                                         data-quantity="<?php echo $item_qty[0]->total_qty; ?>"
                                                         data-itemname="<?php echo $item->title; ?>"
+                                                        data-description="<?php echo $item->description; ?>"
                                                         data-price="<?php echo $item->price; ?>"
                                                         data-location_name="<?php echo $item->location_name; ?>"
                                                         data-location_id="<?php echo $item->location_id; ?>"><i
@@ -1983,6 +2016,7 @@ $(".select_item2a").click(function() {
     var price = parseInt($(this).attr('data-price'));
     // var qty = parseInt($(this).attr('data-quantity'));
     var location_name = $(this).data('location_name');
+    var description = $(this).attr('data-description');
     var location_id = $(this).data('location_id');
     var item_type = $(this).data('item_type');
 
@@ -2064,7 +2098,7 @@ $(".select_item2a").click(function() {
     items.forEach(function(item) {
         options += `<option value="` + item.id + `"   data-item_type="${item.type.charAt(0).toUpperCase() + item.type.slice(1)}"
         data-itemname="` + item.title + `" data-price="` + item.price + `"  data-location_name="` + item
-            .location_name + `"
+            .location_name + `" data-description="` + item.description + `"
         data-location_id="` + item.location_id + `" `;
         if (item.title == title) {
             options += ' selected="selected"';
@@ -2106,7 +2140,14 @@ $(".select_item2a").click(function() {
         "<a href=\"#\" class=\"remove nsm-button danger\" id='" + count +
         "' ><i class=\"bx bx-fw bx-trash\"></i></a>\n" +
         "</td>\n" +
+        `<tr class='description' id="description_` + idd + `">
+    <td colspan='7'>
+    <label><b>Description : </b></label> <span>` + description + `</span>
+    <td>
+    </tr>` +
         "</tr>";
+
+
     tableBody = $("#jobs_items_table_body");
     if ($(this).attr('data-replace')) {
         var tableRow = $("#jobs_items_table_body_tr_" + $(this).attr('data-to-replace')).first();;
@@ -2115,6 +2156,7 @@ $(".select_item2a").click(function() {
             .first()
             .attr('data-remove', true)
             .click();
+        tableRow.siblings("tr#description_" + $(this).attr('data-to-replace')).remove();
         $(tableRow).replaceWith(markup);
     } else {
         tableBody.append(markup);

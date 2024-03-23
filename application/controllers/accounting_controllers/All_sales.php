@@ -1,11 +1,12 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
 
-class All_sales extends MY_Controller {
-	
-	public function __construct()
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class All_sales extends MY_Controller
+{
+    public function __construct()
     {
-		parent::__construct();
+        parent::__construct();
         $this->checkLogin();
         $this->load->model('vendors_model');
         $this->load->model('accounting_customers_model');
@@ -30,63 +31,63 @@ class All_sales extends MY_Controller {
         $this->page_data['page']->title = 'Sales Transactions';
         $this->page_data['page']->parent = 'Sales';
 
-        add_css(array(
+        add_css([
             // "assets/css/accounting/banking.css?v='rand()'",
             // "assets/css/accounting/accounting.css",
             // "assets/css/accounting/accounting.modal.css",
-            "assets/css/accounting/sidebar.css",
-            "assets/css/accounting/sales.css",
-            "assets/plugins/dropzone/dist/dropzone.css",
-            "assets/css/accounting/accounting-modal-forms.css",
-            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css",
-            "assets/css/accounting/accounting_includes/receive_payment.css",
-            "assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css",
-            "assets/css/accounting/accounting_includes/create_charge.css",
-            "assets/css/accounting/invoices_page.css",
-            "assets/css/accounting/accounting_includes/send_reminder_by_batch_modal.css"
-        ));
+            'assets/css/accounting/sidebar.css',
+            'assets/css/accounting/sales.css',
+            'assets/plugins/dropzone/dist/dropzone.css',
+            'assets/css/accounting/accounting-modal-forms.css',
+            'assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.css',
+            'assets/css/accounting/accounting_includes/receive_payment.css',
+            'assets/css/accounting/accounting_includes/customer_sales_receipt_modal.css',
+            'assets/css/accounting/accounting_includes/create_charge.css',
+            'assets/css/accounting/invoices_page.css',
+            'assets/css/accounting/accounting_includes/send_reminder_by_batch_modal.css',
+        ]);
 
-        add_footer_js(array(
-            "assets/plugins/dropzone/dist/dropzone.js",
-            "assets/js/accounting/sweetalert2@9.js",
-            "assets/js/accounting/accounting.js",
-            "assets/js/accounting/modal-forms.js",
-            "assets/js/accounting/modal-forms1.js",
-            "assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js",
-            "assets/js/accounting/sales/customer_sales_receipt_modal.js",
-            "assets/js/accounting/sales/customer_includes/receive_payment.js",
-            "assets/js/accounting/sales/customer_includes/create_charge.js",
-            "assets/js/accounting/sales/invoices_page.js",
-            "assets/js/accounting/sales/customer_includes/send_reminder_by_batch_modal.js"
-        ));
+        add_footer_js([
+            'assets/plugins/dropzone/dist/dropzone.js',
+            'assets/js/accounting/sweetalert2@9.js',
+            'assets/js/accounting/accounting.js',
+            'assets/js/accounting/modal-forms.js',
+            'assets/js/accounting/modal-forms1.js',
+            'assets/plugins/jquery-toast-plugin-master/dist/jquery.toast.min.js',
+            'assets/js/accounting/sales/customer_sales_receipt_modal.js',
+            'assets/js/accounting/sales/customer_includes/receive_payment.js',
+            'assets/js/accounting/sales/customer_includes/create_charge.js',
+            'assets/js/accounting/sales/invoices_page.js',
+            'assets/js/accounting/sales/customer_includes/send_reminder_by_batch_modal.js',
+        ]);
 
-		$this->page_data['menu_name'] =
-            array(
+        $this->page_data['menu_name'] =
+            [
                 // array("Dashboard",	array()),
                 // array("Banking", 	array('Link Bank','Rules','Receipts','Tags')),
-                array("Cash Flow", array()),
-                array("Expenses", array('Expenses', 'Vendors')),
-                array("Sales", array('Overview', 'All Sales', 'Estimates', 'Customers', 'Deposits', 'Work Order', 'Invoice', 'Jobs', 'Products and services')),
-                array("Payroll", array('Overview', 'Employees', 'Contractors', "Workers' Comp", 'Benifits')),
-                array("Reports", array()),
-                array("Taxes", array("Sales Tax", "Payroll Tax")),
+                ['Cash Flow', []],
+                ['Expenses', ['Expenses', 'Vendors']],
+                ['Sales', ['Overview', 'All Sales', 'Estimates', 'Customers', 'Deposits', 'Work Order', 'Invoice', 'Jobs', 'Products and services']],
+                ['Payroll', ['Overview', 'Employees', 'Contractors', "Workers' Comp", 'Benifits']],
+                ['Reports', []],
+                ['Taxes', ['Sales Tax', 'Payroll Tax']],
                 // array("Mileage",    array()),
-                array("Accounting", array("Chart of Accounts", "Reconcile"))
-            );
+                ['Accounting', ['Chart of Accounts', 'Reconcile']],
+            ];
         $this->page_data['menu_link'] =
-            array(
+            [
                 // array('/accounting/banking',array()),
                 // array("",	array('/accounting/link_bank','/accounting/rules','/accounting/receipts','/accounting/tags')),
-                array('/accounting/cashflowplanner', array()),
-                array("", array('/accounting/expenses', '/accounting/vendors')),
-                array("", array('/accounting/sales-overview', '/accounting/all-sales', '/accounting/newEstimateList', '/accounting/customers', '/accounting/deposits', '/accounting/listworkOrder', '/accounting/invoices', '/accounting/jobs', '/accounting/products-and-services')),
-                array("", array('/accounting/payroll-overview', '/accounting/employees', '/accounting/contractors', '/accounting/workers-comp', '#')),
-                array('/accounting/reports', array()),
-                array("", array('/accounting/salesTax', '/accounting/payrollTax')),
+                ['/accounting/cashflowplanner', []],
+                ['', ['/accounting/expenses', '/accounting/vendors']],
+                ['', ['/accounting/sales-overview', '/accounting/all-sales', '/accounting/newEstimateList', '/accounting/customers', '/accounting/deposits', '/accounting/listworkOrder', '/accounting/invoices', '/accounting/jobs', '/accounting/products-and-services']],
+                ['', ['/accounting/payroll-overview', '/accounting/employees', '/accounting/contractors', '/accounting/workers-comp', '#']],
+                ['/accounting/reports', []],
+                ['', ['/accounting/salesTax', '/accounting/payrollTax']],
                 // array('#',  array()),
-                array("", array('/accounting/chart-of-accounts', '/accounting/reconcile')),
-            );
-        $this->page_data['menu_icon'] = array("fa-credit-card", "fa-money", "fa-dollar", "fa-bar-chart", "fa-minus-circle", "fa-file", "fa-calculator");
+                ['', ['/accounting/chart-of-accounts', '/accounting/reconcile']],
+            ];
+        $this->page_data['menu_icon'] = ['fa-credit-card', 'fa-money', 'fa-dollar', 'fa-bar-chart', 'fa-minus-circle', 'fa-file', 'fa-calculator'];
         $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId(logged('company_id'));
         $this->page_data['invoices'] = $this->invoice_model->getAllData(logged('company_id'));
         $this->page_data['clients'] = $this->invoice_model->getclientsData(logged('company_id'));
@@ -111,33 +112,33 @@ class All_sales extends MY_Controller {
 
     public function index()
     {
-        add_footer_js(array(
-            "assets/js/v2/accounting/sales/all_sales/list.js",
-            "assets/js/v2/printThis.js",
-        ));
+        add_footer_js([
+            'assets/js/v2/accounting/sales/all_sales/list.js',
+            'assets/js/v2/printThis.js',
+        ]);
 
-        if(!empty(get('transaction'))) {
+        if (!empty(get('transaction'))) {
             $this->page_data['transaction'] = get('transaction');
         }
 
         $filters = [];
-        if(!empty(get('type'))) {
+        if (!empty(get('type'))) {
             $filters['type'] = get('type');
             $this->page_data['type'] = get('type');
         }
 
-        if(!empty(get('status'))) {
+        if (!empty(get('status'))) {
             $filters['status'] = get('status');
             $this->page_data['status'] = get('status');
         }
 
-        if(!empty(get('delivery-method'))) {
+        if (!empty(get('delivery-method'))) {
             $filters['delivery_method'] = get('delivery-method');
             $this->page_data['delivery_method'] = get('delivery-method');
         }
 
-        if(!empty(get('date'))) {
-            if($filters['type'] !== 'unbilled-income') {
+        if (!empty(get('date'))) {
+            if ($filters['type'] !== 'unbilled-income') {
                 $filters['start-date'] = str_replace('-', '/', get('from'));
                 $filters['end-date'] = str_replace('-', '/', get('to'));
 
@@ -150,12 +151,12 @@ class All_sales extends MY_Controller {
             $this->page_data['date'] = get('date');
         }
 
-        if(!empty(get('customer'))) {
+        if (!empty(get('customer'))) {
             $filters['customer_id'] = get('customer');
             $this->page_data['customer'] = new stdClass();
             $this->page_data['customer']->id = get('customer');
             $customer = $this->accounting_customers_model->get_by_id(get('customer'));
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $customerName = $customer->first_name.' '.$customer->last_name;
             $this->page_data['customer']->name = $customerName;
         }
 
@@ -163,25 +164,25 @@ class All_sales extends MY_Controller {
 
         $estimates = $this->estimate_model->getAllByCompany(logged('company_id'));
 
-        $openEstimates = array_filter($estimates, function($v, $k) {
+        $openEstimates = array_filter($estimates, function ($v, $k) {
             return !in_array($v->status, ['Invoiced', 'Lost', 'Declined By Customer']);
         }, ARRAY_FILTER_USE_BOTH);
 
         $invoices = $this->invoice_model->get_all_company_invoice(logged('company_id'));
 
-        $overdueInvoices = array_filter($invoices, function($v, $k) {
-            if(in_array($v->status, ['Draft', 'Declined', 'Paid'])) {
+        $overdueInvoices = array_filter($invoices, function ($v, $k) {
+            if (in_array($v->status, ['Draft', 'Declined', 'Paid'])) {
                 return false;
             } else {
-                return strtotime($v->due_date) < strtotime(date("m/d/Y"));
+                return strtotime($v->due_date) < strtotime(date('m/d/Y'));
             }
         }, ARRAY_FILTER_USE_BOTH);
 
-        $openInvoices = array_filter($invoices, function($v, $k) {
+        $openInvoices = array_filter($invoices, function ($v, $k) {
             return !in_array($v->status, ['Draft', 'Declined', 'Paid']);
         }, ARRAY_FILTER_USE_BOTH);
 
-        $this->page_data['unbilledActs'] = $this->get_unbilled_incomes([], ['start-date' => date("m/d/Y")]);
+        $this->page_data['unbilledActs'] = $this->get_unbilled_incomes([], ['start-date' => date('m/d/Y')]);
         $this->page_data['recent_payments'] = $this->invoice_model->get_company_payments(logged('company_id'));
         $this->page_data['open_invoices'] = $openInvoices;
         $this->page_data['overdue_invoices'] = $overdueInvoices;
@@ -190,7 +191,7 @@ class All_sales extends MY_Controller {
         $this->page_data['headers'] = $get['headers'];
         $this->page_data['settingsCols'] = $get['settingsCols'];
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['page_title'] = "All Sales";
+        $this->page_data['page_title'] = 'All Sales';
         $company = $this->business_model->getByCompanyId(logged('company_id'));
         $this->page_data['company'] = $company;
         $this->load->view('accounting/sales/all_sales', $this->page_data);
@@ -280,11 +281,11 @@ class All_sales extends MY_Controller {
             '<div class="form-check">
                 <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
                 <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
-            </div>'
+            </div>',
         ];
 
-        switch($filters['type']) {
-            default :
+        switch ($filters['type']) {
+            default:
                 $transactions = $this->get_invoices($transactions, $filters);
                 $transactions = $this->get_credit_memos($transactions, $filters);
                 $transactions = $this->get_sales_receipts($transactions, $filters);
@@ -295,8 +296,8 @@ class All_sales extends MY_Controller {
                 $transactions = $this->get_payments($transactions, $filters);
                 $transactions = $this->get_billable_expenses($transactions, $filters);
                 $transactions = $this->get_time_charges($transactions, $filters);
-            break;
-            case 'estimates' :
+                break;
+            case 'estimates':
                 $headers = [
                     'Date',
                     'Type',
@@ -362,12 +363,12 @@ class All_sales extends MY_Controller {
                     '<div class="form-check">
                         <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
                         <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
-                    </div>'
+                    </div>',
                 ];
 
                 $transactions = $this->get_estimates($transactions, $filters);
-            break;
-            case 'invoices' :
+                break;
+            case 'invoices':
                 $headers = [
                     'Date',
                     'Type',
@@ -375,6 +376,7 @@ class All_sales extends MY_Controller {
                     'Customer',
                     'Memo',
                     'Due date',
+                    'Aging',
                     'Balance',
                     'Total',
                     'Last Delivered',
@@ -437,12 +439,12 @@ class All_sales extends MY_Controller {
                     '<div class="form-check">
                         <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
                         <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
-                    </div>'
+                    </div>',
                 ];
 
                 $transactions = $this->get_invoices($transactions, $filters);
-            break;
-            case 'sales-receipts' :
+                break;
+            case 'sales-receipts':
                 $headers = [
                     'Date',
                     'Type',
@@ -460,7 +462,7 @@ class All_sales extends MY_Controller {
                     'P.O. Number',
                     'Sales Rep',
                 ];
-        
+
                 $settingsCols = [
                     '<div class="form-check">
                         <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
@@ -513,12 +515,12 @@ class All_sales extends MY_Controller {
                     '<div class="form-check">
                         <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
                         <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
-                    </div>'
+                    </div>',
                 ];
 
                 $transactions = $this->get_sales_receipts($transactions, $filters);
-            break;
-            case 'credit-memos' :
+                break;
+            case 'credit-memos':
                 $headers = [
                     'Date',
                     'Type',
@@ -533,7 +535,7 @@ class All_sales extends MY_Controller {
                     'P.O. Number',
                     'Sales Rep',
                 ];
-        
+
                 $settingsCols = [
                     '<div class="form-check">
                         <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
@@ -574,12 +576,12 @@ class All_sales extends MY_Controller {
                     '<div class="form-check">
                         <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
                         <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
-                    </div>'
+                    </div>',
                 ];
 
                 $transactions = $this->get_credit_memos($transactions, $filters);
-            break;
-            case 'unbilled-income' :
+                break;
+            case 'unbilled-income':
                 $headers = [
                     'Date',
                     'Type',
@@ -588,9 +590,9 @@ class All_sales extends MY_Controller {
                     'Time',
                     'Expenses',
                     'Credits',
-                    'Unbilled Amount'
+                    'Unbilled Amount',
                 ];
-        
+
                 $settingsCols = [
                     '<div class="form-check">
                         <input type="checkbox" checked="checked" name="col_chk" id="chk_type" class="form-check-input">
@@ -623,12 +625,12 @@ class All_sales extends MY_Controller {
                     '<div class="form-check">
                         <input type="checkbox" checked="checked" name="col_chk" id="chk_unbilled_amount" class="form-check-input">
                         <label for="chk_unbilled_amount" class="form-check-label">Unbilled Amount</label>
-                    </div>'
+                    </div>',
                 ];
 
                 $transactions = $this->get_unbilled_incomes($transactions, $filters);
-            break;
-            case 'recently-paid' :
+                break;
+            case 'recently-paid':
                 $headers = [
                     'Date',
                     'Type',
@@ -714,12 +716,12 @@ class All_sales extends MY_Controller {
                     '<div class="form-check">
                         <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
                         <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
-                    </div>'
+                    </div>',
                 ];
 
                 $transactions = $this->get_recently_paid_invoices($transactions, $filters);
-            break;
-            case 'money-received' :
+                break;
+            case 'money-received':
                 $headers = [
                     'Date',
                     'Type',
@@ -765,12 +767,12 @@ class All_sales extends MY_Controller {
                     '<div class="form-check">
                         <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
                         <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
-                    </div>'
+                    </div>',
                 ];
 
                 $transactions = $this->get_payments($transactions, $filters);
-            break;
-            case 'statements' :
+                break;
+            case 'statements':
                 $headers = [
                     'Date',
                     'No.',
@@ -779,7 +781,7 @@ class All_sales extends MY_Controller {
                     'End Date',
                     'Statement Type',
                     'P.O. Number',
-                    'Sales Rep'
+                    'Sales Rep',
                 ];
 
                 $settingsCols = [
@@ -810,36 +812,37 @@ class All_sales extends MY_Controller {
                     '<div class="form-check">
                         <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
                         <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
-                    </div>'
+                    </div>',
                 ];
 
                 $transactions = [];
-            break;
+                break;
         }
 
-        if(isset($filters['start-date']) && $filters['type'] !== 'unbilled-income') {
-            $transactions = array_filter($transactions, function($v, $k) use ($filters) {
+        if (isset($filters['start-date']) && $filters['type'] !== 'unbilled-income') {
+            $transactions = array_filter($transactions, function ($v, $k) use ($filters) {
                 return strtotime($v['date']) >= strtotime($filters['start-date']) && strtotime($v['date']) <= strtotime($filters['end-date']);
             }, ARRAY_FILTER_USE_BOTH);
         }
 
-        if(isset($filters['customer_id'])) {
-            $transactions = array_filter($transactions, function($v, $k) use ($filters) {
+        if (isset($filters['customer_id'])) {
+            $transactions = array_filter($transactions, function ($v, $k) use ($filters) {
                 return $filters['customer_id'] === $v['customer_id'];
             }, ARRAY_FILTER_USE_BOTH);
         }
 
-        usort($transactions, function($a, $b) {
-            if($a['date'] === $b['date']) {
+        usort($transactions, function ($a, $b) {
+            if ($a['date'] === $b['date']) {
                 return strtotime($b['date_created']) > strtotime($a['date_created']);
             }
+
             return strtotime($b['date']) > strtotime($a['date']);
         });
 
         return [
             'transactions' => $transactions,
             'headers' => $headers,
-            'settingsCols' => $settingsCols
+            'settingsCols' => $settingsCols,
         ];
     }
 
@@ -847,10 +850,9 @@ class All_sales extends MY_Controller {
     {
         $invoices = $this->invoice_model->get_all_company_invoice(logged('company_id'));
 
-        foreach($invoices as $invoice)
-        {
+        foreach ($invoices as $invoice) {
             $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $customerName = $customer->first_name.' '.$customer->last_name;
 
             $manageCol = "<div class='dropdown table-management'>
                 <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
@@ -879,36 +881,36 @@ class All_sales extends MY_Controller {
             </div>";
 
             $flag = true;
-            switch($filters['status']) {
-                case 'open' :
-                    if(in_array($invoice->status, ['Draft', 'Declined', 'Paid'])) {
+            switch ($filters['status']) {
+                case 'open':
+                    if (in_array($invoice->status, ['Draft', 'Declined', 'Paid'])) {
                         $flag = false;
                     }
-                break;
-                case 'overdue' :
-                    if(in_array($invoice->status, ['Draft', 'Declined', 'Paid'])) {
+                    break;
+                case 'overdue':
+                    if (in_array($invoice->status, ['Draft', 'Declined', 'Paid'])) {
                         $flag = false;
                     } else {
-                        if(strtotime($invoice->due_date) > strtotime(date("m/d/Y"))) {
+                        if (strtotime($invoice->due_date) > strtotime(date('m/d/Y'))) {
                             $flag = false;
                         }
                     }
-                break;
-                case 'paid' :
-                    if($invoice->status !== 'Paid' || floatval($invoice->balance) > 0.00) {
+                    break;
+                case 'paid':
+                    if ($invoice->status !== 'Paid' || floatval($invoice->balance) > 0.00) {
                         $flag = false;
                     }
-                break;
+                    break;
             }
 
-            if(!is_null($filters['delivery_method'])) {
+            if (!is_null($filters['delivery_method'])) {
                 $flag = false;
             }
 
-            if($flag) {
+            if ($flag) {
                 $transactions[] = [
                     'id' => $invoice->id,
-                    'date' => date("m/d/Y", strtotime($invoice->date_issued)),
+                    'date' => date('m/d/Y', strtotime($invoice->date_issued)),
                     'type' => 'Invoice',
                     'no' => $invoice->invoice_number,
                     'customer' => $customerName,
@@ -916,7 +918,7 @@ class All_sales extends MY_Controller {
                     'method' => '',
                     'source' => '',
                     'memo' => $invoice->message_on_invoice,
-                    'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+                    'due_date' => date('m/d/Y', strtotime($invoice->due_date)),
                     'aging' => '',
                     'balance' => number_format(floatval(str_replace(',', '', $invoice->balance)), 2, '.', ','),
                     'total' => number_format(floatval(str_replace(',', '', $invoice->grand_total)), 2, '.', ','),
@@ -926,8 +928,8 @@ class All_sales extends MY_Controller {
                     'status' => $invoice->status,
                     'po_number' => '',
                     'sales_rep' => '',
-                    'date_created' => date("m/d/Y H:i:s", strtotime($invoice->date_created)),
-                    'manage' => $manageCol
+                    'date_created' => date('m/d/Y H:i:s', strtotime($invoice->date_created)),
+                    'manage' => $manageCol,
                 ];
             }
         }
@@ -939,10 +941,9 @@ class All_sales extends MY_Controller {
     {
         $creditMemos = $this->accounting_credit_memo_model->get_company_credit_memos(['company_id' => logged('company_id')]);
 
-        foreach($creditMemos as $creditMemo)
-        {
+        foreach ($creditMemos as $creditMemo) {
             $customer = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $customerName = $customer->first_name.' '.$customer->last_name;
 
             $manageCol = "<div class='dropdown table-management'>
                 <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
@@ -969,14 +970,14 @@ class All_sales extends MY_Controller {
 
             $flag = true;
 
-            if(!is_null($filters['delivery_method']) && $filters['delivery_method'] !== 'send-later' || $filters['delivery_method'] === 'send-later' && $creditMemo->send_later !== '1') {
+            if (!is_null($filters['delivery_method']) && $filters['delivery_method'] !== 'send-later' || $filters['delivery_method'] === 'send-later' && $creditMemo->send_later !== '1') {
                 $flag = false;
             }
 
-            if($flag) {
+            if ($flag) {
                 $transactions[] = [
                     'id' => $creditMemo->id,
-                    'date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
+                    'date' => date('m/d/Y', strtotime($creditMemo->credit_memo_date)),
                     'type' => 'Credit Memo',
                     'no' => $creditMemo->ref_no,
                     'customer' => $customerName,
@@ -984,7 +985,7 @@ class All_sales extends MY_Controller {
                     'method' => '',
                     'source' => '',
                     'memo' => $creditMemo->message_credit_memo,
-                    'due_date' => date("m/d/Y", strtotime($creditMemo->credit_memo_date)),
+                    'due_date' => date('m/d/Y', strtotime($creditMemo->credit_memo_date)),
                     'aging' => '',
                     'balance' => number_format(floatval(str_replace(',', '', $creditMemo->balance)), 2, '.', ','),
                     'total' => number_format(floatval(str_replace(',', '', $creditMemo->total_amount)), 2, '.', ','),
@@ -994,8 +995,8 @@ class All_sales extends MY_Controller {
                     'status' => floatval($creditMemo->balance) > 0 ? 'Unapplied' : 'Applied',
                     'po_number' => '',
                     'sales_rep' => '',
-                    'date_created' => date("m/d/Y H:i:s", strtotime($creditMemo->created_at)),
-                    'manage' => $manageCol
+                    'date_created' => date('m/d/Y H:i:s', strtotime($creditMemo->created_at)),
+                    'manage' => $manageCol,
                 ];
             }
         }
@@ -1007,10 +1008,9 @@ class All_sales extends MY_Controller {
     {
         $salesReceipts = $this->accounting_sales_receipt_model->get_all_by_company_id(logged('company_id'));
 
-        foreach($salesReceipts as $salesReceipt)
-        {
+        foreach ($salesReceipts as $salesReceipt) {
             $customer = $this->accounting_customers_model->get_by_id($salesReceipt->customer_id);
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $customerName = $customer->first_name.' '.$customer->last_name;
 
             $manageCol = "<div class='dropdown table-management'>
                 <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
@@ -1040,14 +1040,14 @@ class All_sales extends MY_Controller {
 
             $flag = false;
 
-            if(is_null($filters['delivery_method']) || $filters['delivery_method'] === 'send-later' && $salesReceipt->send_later === '1') {
+            if (is_null($filters['delivery_method']) || $filters['delivery_method'] === 'send-later' && $salesReceipt->send_later === '1') {
                 $flag = true;
             }
 
-            if($flag) {
+            if ($flag) {
                 $transactions[] = [
                     'id' => $salesReceipt->id,
-                    'date' => date("m/d/Y", strtotime($salesReceipt->sales_receipt_date)),
+                    'date' => date('m/d/Y', strtotime($salesReceipt->sales_receipt_date)),
                     'type' => 'Sales Receipt',
                     'no' => $salesReceipt->ref_no,
                     'customer' => $customerName,
@@ -1065,8 +1065,8 @@ class All_sales extends MY_Controller {
                     'status' => 'Paid',
                     'po_number' => '',
                     'sales_rep' => '',
-                    'date_created' => date("m/d/Y H:i:s", strtotime($salesReceipt->created_at)),
-                    'manage' => $manageCol
+                    'date_created' => date('m/d/Y H:i:s', strtotime($salesReceipt->created_at)),
+                    'manage' => $manageCol,
                 ];
             }
         }
@@ -1078,10 +1078,9 @@ class All_sales extends MY_Controller {
     {
         $refundReceipts = $this->accounting_refund_receipt_model->get_company_refund_receipts(['company_id' => logged('company_id')]);
 
-        foreach($refundReceipts as $refundReceipt)
-        {
+        foreach ($refundReceipts as $refundReceipt) {
             $customer = $this->accounting_customers_model->get_by_id($refundReceipt->customer_id);
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $customerName = $customer->first_name.' '.$customer->last_name;
 
             $manageCol = "<div class='dropdown table-management'>
                 <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
@@ -1104,14 +1103,14 @@ class All_sales extends MY_Controller {
             </div>";
 
             $flag = true;
-            if($filters['delivery_method'] === 'print-later' && $refundReceipt->print_later !== '1' || $filters['delivery_method'] === 'send-later') {
+            if ($filters['delivery_method'] === 'print-later' && $refundReceipt->print_later !== '1' || $filters['delivery_method'] === 'send-later') {
                 $flag = false;
             }
 
-            if($flag) {
+            if ($flag) {
                 $transactions[] = [
                     'id' => $refundReceipt->id,
-                    'date' => date("m/d/Y", strtotime($refundReceipt->refund_receipt_date)),
+                    'date' => date('m/d/Y', strtotime($refundReceipt->refund_receipt_date)),
                     'type' => 'Refund',
                     'no' => $refundReceipt->ref_no,
                     'customer' => $customerName,
@@ -1129,8 +1128,8 @@ class All_sales extends MY_Controller {
                     'status' => 'Paid',
                     'po_number' => '',
                     'sales_rep' => '',
-                    'date_created' => date("m/d/Y H:i:s", strtotime($refundReceipt->created_at)),
-                    'manage' => $manageCol
+                    'date_created' => date('m/d/Y H:i:s', strtotime($refundReceipt->created_at)),
+                    'manage' => $manageCol,
                 ];
             }
         }
@@ -1142,10 +1141,9 @@ class All_sales extends MY_Controller {
     {
         $delayedCredits = $this->accounting_delayed_credit_model->get_company_delayed_credits(['company_id' => logged('company_id')]);
 
-        foreach($delayedCredits as $delayedCredit)
-        {
+        foreach ($delayedCredits as $delayedCredit) {
             $customer = $this->accounting_customers_model->get_by_id($delayedCredit->customer_id);
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $customerName = $customer->first_name.' '.$customer->last_name;
 
             $manageCol = '<div class="dropdown table-management">
                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -1163,14 +1161,14 @@ class All_sales extends MY_Controller {
 
             $flag = true;
 
-            if(!is_null($filters['delivery_method'])) {
+            if (!is_null($filters['delivery_method'])) {
                 $flag = false;
             }
 
-            if($flag) {
+            if ($flag) {
                 $transactions[] = [
                     'id' => $delayedCredit->id,
-                    'date' => date("m/d/Y", strtotime($delayedCredit->delayed_credit_date)),
+                    'date' => date('m/d/Y', strtotime($delayedCredit->delayed_credit_date)),
                     'type' => 'Credit',
                     'no' => $delayedCredit->ref_no,
                     'customer' => $customerName,
@@ -1178,7 +1176,7 @@ class All_sales extends MY_Controller {
                     'method' => '',
                     'source' => '',
                     'memo' => $delayedCredit->memo,
-                    'due_date' => date("m/d/Y", strtotime($delayedCredit->delayed_credit_date)),
+                    'due_date' => date('m/d/Y', strtotime($delayedCredit->delayed_credit_date)),
                     'aging' => '',
                     'balance' => '0.00',
                     'total' => number_format(floatval(str_replace(',', '', $delayedCredit->total_amount)), 2, '.', ','),
@@ -1188,8 +1186,8 @@ class All_sales extends MY_Controller {
                     'status' => floatval($delayedCredit->remaining_balance) > 0 ? 'Open' : 'Closed',
                     'po_number' => '',
                     'sales_rep' => '',
-                    'date_created' => date("m/d/Y H:i:s", strtotime($delayedCredit->created_at)),
-                    'manage' => $manageCol
+                    'date_created' => date('m/d/Y H:i:s', strtotime($delayedCredit->created_at)),
+                    'manage' => $manageCol,
                 ];
             }
         }
@@ -1201,10 +1199,9 @@ class All_sales extends MY_Controller {
     {
         $delayedCharges = $this->accounting_delayed_charge_model->get_company_delayed_charges(['company_id' => logged('company_id')]);
 
-        foreach($delayedCharges as $delayedCharge)
-        {
+        foreach ($delayedCharges as $delayedCharge) {
             $customer = $this->accounting_customers_model->get_by_id($delayedCharge->customer_id);
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $customerName = $customer->first_name.' '.$customer->last_name;
 
             $manageCol = '<div class="dropdown table-management">
                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -1222,14 +1219,14 @@ class All_sales extends MY_Controller {
 
             $flag = true;
 
-            if(!is_null($filters['delivery_method'])) {
+            if (!is_null($filters['delivery_method'])) {
                 $flag = false;
             }
 
-            if($flag) {
+            if ($flag) {
                 $transactions[] = [
                     'id' => $delayedCharge->id,
-                    'date' => date("m/d/Y", strtotime($delayedCharge->delayed_charge_date)),
+                    'date' => date('m/d/Y', strtotime($delayedCharge->delayed_charge_date)),
                     'type' => 'Charge',
                     'no' => $delayedCharge->ref_no,
                     'customer' => $customerName,
@@ -1237,7 +1234,7 @@ class All_sales extends MY_Controller {
                     'method' => '',
                     'source' => '',
                     'memo' => $delayedCharge->memo,
-                    'due_date' => date("m/d/Y", strtotime($delayedCharge->delayed_charge_date)),
+                    'due_date' => date('m/d/Y', strtotime($delayedCharge->delayed_charge_date)),
                     'aging' => '',
                     'balance' => '0.00',
                     'total' => number_format(floatval(str_replace(',', '', $delayedCharge->total_amount)), 2, '.', ','),
@@ -1247,8 +1244,8 @@ class All_sales extends MY_Controller {
                     'status' => floatval($delayedCharge->remaining_balance) > 0 ? 'Open' : 'Closed',
                     'po_number' => '',
                     'sales_rep' => '',
-                    'date_created' => date("m/d/Y H:i:s", strtotime($delayedCharge->created_at)),
-                    'manage' => $manageCol
+                    'date_created' => date('m/d/Y H:i:s', strtotime($delayedCharge->created_at)),
+                    'manage' => $manageCol,
                 ];
             }
         }
@@ -1260,10 +1257,9 @@ class All_sales extends MY_Controller {
     {
         $estimates = $this->estimate_model->getAllByCompany(logged('company_id'));
 
-        foreach($estimates as $estimate)
-        {
+        foreach ($estimates as $estimate) {
             $customer = $this->accounting_customers_model->get_by_id($estimate->customer_id);
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $customerName = $customer->first_name.' '.$customer->last_name;
 
             $manageCol = "<div class='dropdown table-management'>
                 <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
@@ -1291,8 +1287,8 @@ class All_sales extends MY_Controller {
                 </ul>
             </div>";
 
-            $total1 = ((float)$estimate->option1_total) + ((float)$estimate->option2_total);
-            $total2 = ((float)$estimate->bundle1_total) + ((float)$estimate->bundle2_total);
+            $total1 = ((float) $estimate->option1_total) + ((float) $estimate->option2_total);
+            $total2 = ((float) $estimate->bundle1_total) + ((float) $estimate->bundle2_total);
 
             if ($estimate->estimate_type == 'Option') {
                 $grandTotal = $total1;
@@ -1303,84 +1299,84 @@ class All_sales extends MY_Controller {
             }
 
             $flag = true;
-            switch($filters['status']) {
-                case 'open' :
-                    if(in_array($estimate->status, ['Invoiced', 'Lost', 'Declined By Customer'])) {
+            switch ($filters['status']) {
+                case 'open':
+                    if (in_array($estimate->status, ['Invoiced', 'Lost', 'Declined By Customer'])) {
                         $flag = false;
                     }
-                break;
-                case 'closed' :
-                    if(in_array($estimate->status, ['Draft', 'Submitted', 'Accepted'])) {
+                    break;
+                case 'closed':
+                    if (in_array($estimate->status, ['Draft', 'Submitted', 'Accepted'])) {
                         $flag = false;
                     }
-                break;
-                case 'draft' :
-                    if($estimate->status !== 'Draft') {
+                    break;
+                case 'draft':
+                    if ($estimate->status !== 'Draft') {
                         $flag = false;
                     }
-                break;
-                case 'submitted' :
-                    if($estimate->status !== 'Submitted') {
+                    break;
+                case 'submitted':
+                    if ($estimate->status !== 'Submitted') {
                         $flag = false;
                     }
-                break;
-                case 'accepted' :
-                    if($estimate->status !== 'Accepted') {
+                    break;
+                case 'accepted':
+                    if ($estimate->status !== 'Accepted') {
                         $flag = false;
                     }
-                break;
-                case 'invoiced' :
-                    if($estimate->status !== 'Invoiced') {
+                    break;
+                case 'invoiced':
+                    if ($estimate->status !== 'Invoiced') {
                         $flag = false;
                     }
-                break;
-                case 'lost' :
-                    if($estimate->status !== 'Lost') {
+                    break;
+                case 'lost':
+                    if ($estimate->status !== 'Lost') {
                         $flag = false;
                     }
-                break;
-                case 'declined-by-customer' :
-                    if($estimate->status !== 'Declined By Customer') {
+                    break;
+                case 'declined-by-customer':
+                    if ($estimate->status !== 'Declined By Customer') {
                         $flag = false;
                     }
-                break;
-                case 'expired' :
-                    if(in_array($estimate->status, ['Invoiced', 'Lost', 'Declined By Customer']) || !in_array($estimate->status, ['Invoiced', 'Lost', 'Declined By Customer']) && strtotime($estimate->expiry_date) > strtotime(date('m/d/Y'))) {
+                    break;
+                case 'expired':
+                    if (in_array($estimate->status, ['Invoiced', 'Lost', 'Declined By Customer']) || !in_array($estimate->status, ['Invoiced', 'Lost', 'Declined By Customer']) && strtotime($estimate->expiry_date) > strtotime(date('m/d/Y'))) {
                         $flag = false;
                     }
-                break;
+                    break;
             }
 
-            if(!is_null($filters['delivery_method'])) {
+            if (!is_null($filters['delivery_method'])) {
                 $flag = false;
             }
 
-            if($flag) {
-                if($filters['type'] === 'estimates') {
+            if ($flag) {
+                if ($filters['type'] === 'estimates') {
                     $transactions[] = [
                         'id' => $estimate->id,
-                        'date' => date("m/d/Y", strtotime($estimate->estimate_date)),
+                        'date' => date('m/d/Y', strtotime($estimate->estimate_date)),
                         'type' => 'Estimate',
                         'no' => $estimate->estimate_number,
                         'customer' => $customerName,
                         'customer_id' => $estimate->customer_id,
                         'memo' => $estimate->customer_message,
-                        'expiration_date' => date("m/d/Y", strtotime($estimate->expiry_date)),
+                        'expiration_date' => date('m/d/Y', strtotime($estimate->expiry_date)),
                         'total' => number_format(floatval(str_replace(',', '', $grandTotal)), 2, '.', ','),
                         'last_delivered' => '',
                         'email' => '',
-                        'accepted_date' => !empty($estimate->accepted_date) && in_array($estimate->status, ['Accepted', 'Invoiced']) ? date("m/d/Y", strtotime($estimate->accepted_date)) : '',
+                        'accepted_date' => !empty($estimate->accepted_date) && in_array($estimate->status, ['Accepted', 'Invoiced']) ? date('m/d/Y', strtotime($estimate->accepted_date)) : '',
                         'attachments' => '',
                         'status' => $estimate->status,
                         'po_number' => '',
                         'sales_rep' => '',
-                        'date_created' => date("m/d/Y H:i:s", strtotime($estimate->created_at)),
-                        'manage' => $manageCol
+                        'date_created' => date('m/d/Y H:i:s', strtotime($estimate->created_at)),
+                        'manage' => $manageCol,
                     ];
                 } else {
                     $transactions[] = [
                         'id' => $estimate->id,
-                        'date' => date("m/d/Y", strtotime($estimate->estimate_date)),
+                        'date' => date('m/d/Y', strtotime($estimate->estimate_date)),
                         'type' => 'Estimate',
                         'no' => $estimate->estimate_number,
                         'customer' => $customerName,
@@ -1388,7 +1384,7 @@ class All_sales extends MY_Controller {
                         'method' => '',
                         'source' => '',
                         'memo' => $estimate->customer_message,
-                        'due_date' => date("m/d/Y", strtotime($estimate->expiry_date)),
+                        'due_date' => date('m/d/Y', strtotime($estimate->expiry_date)),
                         'aging' => '',
                         'balance' => '0.00',
                         'total' => number_format(floatval(str_replace(',', '', $grandTotal)), 2, '.', ','),
@@ -1398,8 +1394,8 @@ class All_sales extends MY_Controller {
                         'status' => $estimate->status,
                         'po_number' => '',
                         'sales_rep' => '',
-                        'date_created' => date("m/d/Y H:i:s", strtotime($estimate->created_at)),
-                        'manage' => $manageCol
+                        'date_created' => date('m/d/Y H:i:s', strtotime($estimate->created_at)),
+                        'manage' => $manageCol,
                     ];
                 }
             }
@@ -1412,10 +1408,9 @@ class All_sales extends MY_Controller {
     {
         $payments = $this->accounting_receive_payment_model->get_company_receive_payments(['company_id' => logged('company_id')]);
 
-        foreach($payments as $payment)
-        {
+        foreach ($payments as $payment) {
             $customer = $this->accounting_customers_model->get_by_id($payment->customer_id);
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $customerName = $customer->first_name.' '.$customer->last_name;
 
             $manageCol = '<div class="dropdown table-management">
                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -1430,14 +1425,14 @@ class All_sales extends MY_Controller {
 
             $flag = true;
 
-            if(!is_null($filters['delivery_method'])) {
+            if (!is_null($filters['delivery_method'])) {
                 $flag = false;
             }
 
-            if($flag) {
+            if ($flag) {
                 $transactions[] = [
                     'id' => $payment->id,
-                    'date' => date("m/d/Y", strtotime($payment->payment_date)),
+                    'date' => date('m/d/Y', strtotime($payment->payment_date)),
                     'type' => 'Payment',
                     'no' => $payment->ref_no,
                     'customer' => $customerName,
@@ -1445,7 +1440,7 @@ class All_sales extends MY_Controller {
                     'method' => '',
                     'source' => '',
                     'memo' => $payment->memo,
-                    'due_date' => date("m/d/Y", strtotime($payment->payment_date)),
+                    'due_date' => date('m/d/Y', strtotime($payment->payment_date)),
                     'aging' => '',
                     'balance' => '0.00',
                     'total' => '-'.number_format(floatval(str_replace(',', '', $payment->amount_received)), 2, '.', ','),
@@ -1455,8 +1450,8 @@ class All_sales extends MY_Controller {
                     'status' => 'Closed',
                     'po_number' => '',
                     'sales_rep' => '',
-                    'date_created' => date("m/d/Y H:i:s", strtotime($payment->created_at)),
-                    'manage' => $manageCol
+                    'date_created' => date('m/d/Y H:i:s', strtotime($payment->created_at)),
+                    'manage' => $manageCol,
                 ];
             }
         }
@@ -1468,10 +1463,9 @@ class All_sales extends MY_Controller {
     {
         $billableExpenses = $this->accounting_customers_model->get_company_billable_expenses(logged('company_id'));
 
-        foreach($billableExpenses as $billableExpense)
-        {
+        foreach ($billableExpenses as $billableExpense) {
             $customer = $this->accounting_customers_model->get_by_id($billableExpense->customer_id);
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $customerName = $customer->first_name.' '.$customer->last_name;
 
             $manageCol = '<div class="dropdown table-management">
                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -1487,36 +1481,36 @@ class All_sales extends MY_Controller {
                 </ul>
             </div>';
 
-            switch($billableExpense->transaction_type) {
-                case 'Expense' :
+            switch ($billableExpense->transaction_type) {
+                case 'Expense':
                     $expense = $this->vendors_model->get_expense_by_id($billableExpense->transaction_id, logged('company_id'));
-                    $date = date("m/d/Y", strtotime($expense->payment_date));
-                break;
-                case 'Check' :
+                    $date = date('m/d/Y', strtotime($expense->payment_date));
+                    break;
+                case 'Check':
                     $check = $this->vendors_model->get_check_by_id($billableExpense->transaction_id, logged('company_id'));
-                    $date = date("m/d/Y", strtotime($check->payment_date));
-                break;
-                case 'Bill' :
+                    $date = date('m/d/Y', strtotime($check->payment_date));
+                    break;
+                case 'Bill':
                     $bill = $this->vendors_model->get_bill_by_id($billableExpense->transaction_id, logged('company_id'));
-                    $date = date("m/d/Y", strtotime($bill->bill_date));
-                break;
-                case 'Vendor Credit' :
+                    $date = date('m/d/Y', strtotime($bill->bill_date));
+                    break;
+                case 'Vendor Credit':
                     $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($billableExpense->transaction_id, logged('company_id'));
-                    $date = date("m/d/Y", strtotime($vendorCredit->payment_date));
-                break;
-                case 'Credit Card Credit' :
+                    $date = date('m/d/Y', strtotime($vendorCredit->payment_date));
+                    break;
+                case 'Credit Card Credit':
                     $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($billableExpense->transaction_id, logged('company_id'));
-                    $date = date("m/d/Y", strtotime($ccCredit->payment_date));
-                break;
+                    $date = date('m/d/Y', strtotime($ccCredit->payment_date));
+                    break;
             }
 
             $flag = true;
 
-            if(!is_null($filters['delivery_method'])) {
+            if (!is_null($filters['delivery_method'])) {
                 $flag = false;
             }
-            
-            if($flag) {
+
+            if ($flag) {
                 $transactions[] = [
                     'id' => $billableExpense->id,
                     'date' => $date,
@@ -1537,8 +1531,8 @@ class All_sales extends MY_Controller {
                     'status' => floatval($billableExpense->received) > 0 ? 'Closed' : 'Open',
                     'po_number' => '',
                     'sales_rep' => '',
-                    'date_created' => date("m/d/Y H:i:s", strtotime($billableExpense->created_at)),
-                    'manage' => $manageCol
+                    'date_created' => date('m/d/Y H:i:s', strtotime($billableExpense->created_at)),
+                    'manage' => $manageCol,
                 ];
             }
         }
@@ -1552,8 +1546,7 @@ class All_sales extends MY_Controller {
         $delayedCharges = $this->accounting_delayed_charge_model->get_company_delayed_charges(['company_id' => logged('company_id')]);
         $billableExpenses = $this->accounting_customers_model->get_company_billable_expenses(logged('company_id'));
 
-        foreach($delayedCredits as $credit)
-        {
+        foreach ($delayedCredits as $credit) {
             $manageCol = '<div class="dropdown table-management">
                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                     <i class="bx bx-fw bx-dots-vertical-rounded"></i>
@@ -1566,17 +1559,17 @@ class All_sales extends MY_Controller {
             </div>';
 
             $customer = $this->accounting_customers_model->get_by_id($credit->customer_id);
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $customerName = $customer->first_name.' '.$customer->last_name;
 
-            if($credit->status === '1' && strtotime($credit->delayed_credit_date) <= strtotime($filters['start-date'])) {
+            if ($credit->status === '1' && strtotime($credit->delayed_credit_date) <= strtotime($filters['start-date'])) {
                 $key = array_search($credit->customer_id, array_column($transactions, 'customer_id'));
 
-                if($key !== false) {
+                if ($key !== false) {
                     $transactions[$key]['credits'] += floatval(str_replace(',', '', $credit->total_amount));
                 } else {
                     $transactions[] = [
                         'id' => $credit->customer_id,
-                        'date' => date("m/d/Y", strtotime($filters['start-date'])),
+                        'date' => date('m/d/Y', strtotime($filters['start-date'])),
                         'type' => '',
                         'customer' => $customerName,
                         'customer_id' => $credit->customer_id,
@@ -1585,14 +1578,13 @@ class All_sales extends MY_Controller {
                         'expenses' => '0.00',
                         'credits' => floatval(str_replace(',', '', $credit->total_amount)),
                         'unbilled_amount' => '',
-                        'manage' => $manageCol
+                        'manage' => $manageCol,
                     ];
                 }
             }
         }
 
-        foreach($delayedCharges as $charge)
-        {
+        foreach ($delayedCharges as $charge) {
             $manageCol = '<div class="dropdown table-management">
                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                     <i class="bx bx-fw bx-dots-vertical-rounded"></i>
@@ -1605,17 +1597,17 @@ class All_sales extends MY_Controller {
             </div>';
 
             $customer = $this->accounting_customers_model->get_by_id($charge->customer_id);
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $customerName = $customer->first_name.' '.$customer->last_name;
 
-            if($charge->status === '1' && strtotime($charge->delayed_charge_date) <= strtotime($filters['start-date'])) {
+            if ($charge->status === '1' && strtotime($charge->delayed_charge_date) <= strtotime($filters['start-date'])) {
                 $key = array_search($charge->customer_id, array_column($transactions, 'customer_id'));
 
-                if($key !== false) {
+                if ($key !== false) {
                     $transactions[$key]['charges'] += floatval(str_replace(',', '', $charge->total_amount));
                 } else {
                     $transactions[] = [
                         'id' => $charge->customer_id,
-                        'date' => date("m/d/Y", strtotime($filters['start-date'])),
+                        'date' => date('m/d/Y', strtotime($filters['start-date'])),
                         'type' => '',
                         'customer' => $customerName,
                         'customer_id' => $charge->customer_id,
@@ -1624,14 +1616,13 @@ class All_sales extends MY_Controller {
                         'expenses' => '0.00',
                         'credits' => '0.00',
                         'unbilled_amount' => '',
-                        'manage' => $manageCol
+                        'manage' => $manageCol,
                     ];
                 }
             }
         }
 
-        foreach($billableExpenses as $billableExpense)
-        {
+        foreach ($billableExpenses as $billableExpense) {
             $manageCol = '<div class="dropdown table-management">
                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                     <i class="bx bx-fw bx-dots-vertical-rounded"></i>
@@ -1644,36 +1635,36 @@ class All_sales extends MY_Controller {
             </div>';
 
             $customer = $this->accounting_customers_model->get_by_id($billableExpense->customer_id);
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $customerName = $customer->first_name.' '.$customer->last_name;
 
-            switch($billableExpense->transaction_type) {
-                case 'Expense' :
+            switch ($billableExpense->transaction_type) {
+                case 'Expense':
                     $expense = $this->vendors_model->get_expense_by_id($billableExpense->transaction_id, logged('company_id'));
-                    $date = date("m/d/Y", strtotime($expense->payment_date));
-                break;
-                case 'Check' :
+                    $date = date('m/d/Y', strtotime($expense->payment_date));
+                    break;
+                case 'Check':
                     $check = $this->vendors_model->get_check_by_id($billableExpense->transaction_id, logged('company_id'));
-                    $date = date("m/d/Y", strtotime($check->payment_date));
-                break;
-                case 'Bill' :
+                    $date = date('m/d/Y', strtotime($check->payment_date));
+                    break;
+                case 'Bill':
                     $bill = $this->vendors_model->get_bill_by_id($billableExpense->transaction_id, logged('company_id'));
-                    $date = date("m/d/Y", strtotime($bill->bill_date));
-                break;
-                case 'Vendor Credit' :
+                    $date = date('m/d/Y', strtotime($bill->bill_date));
+                    break;
+                case 'Vendor Credit':
                     $vendorCredit = $this->vendors_model->get_vendor_credit_by_id($billableExpense->transaction_id, logged('company_id'));
-                    $date = date("m/d/Y", strtotime($vendorCredit->payment_date));
-                break;
-                case 'Credit Card Credit' :
+                    $date = date('m/d/Y', strtotime($vendorCredit->payment_date));
+                    break;
+                case 'Credit Card Credit':
                     $ccCredit = $this->vendors_model->get_credit_card_credit_by_id($billableExpense->transaction_id, logged('company_id'));
-                    $date = date("m/d/Y", strtotime($ccCredit->payment_date));
-                break;
+                    $date = date('m/d/Y', strtotime($ccCredit->payment_date));
+                    break;
             }
 
-            if(strtotime($date) <= strtotime($filters['start-date'])) {
+            if (strtotime($date) <= strtotime($filters['start-date'])) {
                 $key = array_search($charge->customer_id, array_column($transactions, 'customer_id'));
 
-                if($key !== false) {
-                    if(in_array($billableExpense->transaction_type, ['Vendor Credit', 'Credit Card Credit'])) {
+                if ($key !== false) {
+                    if (in_array($billableExpense->transaction_type, ['Vendor Credit', 'Credit Card Credit'])) {
                         $transactions[$key]['expenses'] -= floatval(str_replace(',', '', $billableExpense->amount));
                     } else {
                         $transactions[$key]['expenses'] += floatval(str_replace(',', '', $billableExpense->amount));
@@ -1681,7 +1672,7 @@ class All_sales extends MY_Controller {
                 } else {
                     $transactions[] = [
                         'id' => $billableExpense->customer_id,
-                        'date' => date("m/d/Y", strtotime($filters['start-date'])),
+                        'date' => date('m/d/Y', strtotime($filters['start-date'])),
                         'type' => '',
                         'customer' => $customerName,
                         'customer_id' => $billableExpense->customer_id,
@@ -1690,14 +1681,13 @@ class All_sales extends MY_Controller {
                         'expenses' => floatval(str_replace(',', '', $billableExpense->amount)),
                         'credits' => '0.00',
                         'unbilled_amount' => '',
-                        'manage' => $manageCol
+                        'manage' => $manageCol,
                     ];
                 }
             }
         }
 
-        foreach($transactions as $key => $transaction)
-        {
+        foreach ($transactions as $key => $transaction) {
             $charges = floatval($transaction['charges']);
             $expenses = floatval($transaction['expenses']);
             $credits = floatval($transaction['credits']);
@@ -1717,10 +1707,9 @@ class All_sales extends MY_Controller {
     {
         $payments = $this->invoice_model->get_company_payments(logged('company_id'));
 
-        foreach($payments as $payment)
-        {
+        foreach ($payments as $payment) {
             $customer = $this->accounting_customers_model->get_by_id($payment->customer_id);
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $customerName = $customer->first_name.' '.$customer->last_name;
 
             $invoice = $this->invoice_model->get_invoice_by_invoice_number($payment->invoice_number, logged('company_id'));
 
@@ -1752,7 +1741,7 @@ class All_sales extends MY_Controller {
 
             $transactions[] = [
                 'id' => $invoice->id,
-                'date' => date("m/d/Y", strtotime($invoice->date_issued)),
+                'date' => date('m/d/Y', strtotime($invoice->date_issued)),
                 'type' => 'Invoice',
                 'no' => $invoice->invoice_number,
                 'customer' => $customerName,
@@ -1760,19 +1749,19 @@ class All_sales extends MY_Controller {
                 'method' => '',
                 'source' => '',
                 'memo' => $invoice->message_on_invoice,
-                'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+                'due_date' => date('m/d/Y', strtotime($invoice->due_date)),
                 'aging' => '',
                 'balance' => number_format(floatval(str_replace(',', '', $invoice->balance)), 2, '.', ','),
                 'total' => number_format(floatval(str_replace(',', '', $invoice->grand_total)), 2, '.', ','),
                 'last_delivered' => '',
                 'email' => $invoice->customer_email,
-                'latest_payment' => date("m/d/Y", strtotime($payment->payment_date)),
+                'latest_payment' => date('m/d/Y', strtotime($payment->payment_date)),
                 'attachments' => '',
                 'status' => $invoice->INV_status,
                 'po_number' => '',
                 'sales_rep' => '',
-                'date_created' => date("m/d/Y H:i:s", strtotime($invoice->date_created)),
-                'manage' => $manageCol
+                'date_created' => date('m/d/Y H:i:s', strtotime($invoice->date_created)),
+                'manage' => $manageCol,
             ];
         }
 
@@ -1783,12 +1772,11 @@ class All_sales extends MY_Controller {
     {
         $timeCharges = $this->accounting_single_time_activity_model->get_company_time_charges(logged('company_id'));
 
-        foreach($timeCharges as $timeCharge)
-        {
+        foreach ($timeCharges as $timeCharge) {
             $customer = $this->accounting_customers_model->get_by_id($timeCharge->customer_id);
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $customerName = $customer->first_name.' '.$customer->last_name;
 
-            if($timeCharge->status === '1') {
+            if ($timeCharge->status === '1') {
                 $manageCol = '<div class="dropdown table-management">
                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                         <i class="bx bx-fw bx-dots-vertical-rounded"></i>
@@ -1825,14 +1813,14 @@ class All_sales extends MY_Controller {
 
             $flag = true;
 
-            if(!is_null($filters['delivery_method'])) {
+            if (!is_null($filters['delivery_method'])) {
                 $flag = false;
             }
 
-            if($flag) {
+            if ($flag) {
                 $transactions[] = [
                     'id' => $timeCharge->id,
-                    'date' => date("m/d/Y", strtotime($timeCharge->date)),
+                    'date' => date('m/d/Y', strtotime($timeCharge->date)),
                     'type' => 'Time Charge',
                     'no' => '',
                     'customer' => $customerName,
@@ -1840,7 +1828,7 @@ class All_sales extends MY_Controller {
                     'method' => '',
                     'source' => '',
                     'memo' => '',
-                    'due_date' => date("m/d/Y", strtotime($timeCharge->date)),
+                    'due_date' => date('m/d/Y', strtotime($timeCharge->date)),
                     'aging' => '',
                     'balance' => '0.00',
                     'total' => number_format(floatval($total), 2, '.', ','),
@@ -1850,8 +1838,8 @@ class All_sales extends MY_Controller {
                     'status' => $timeCharge->status === '1' ? 'Open' : 'Closed',
                     'po_number' => '',
                     'sales_rep' => '',
-                    'date_created' => date("m/d/Y H:i:s", strtotime($timeCharge->created_at)),
-                    'manage' => $manageCol
+                    'date_created' => date('m/d/Y H:i:s', strtotime($timeCharge->created_at)),
+                    'manage' => $manageCol,
                 ];
             }
         }
@@ -1874,23 +1862,23 @@ class All_sales extends MY_Controller {
         $customerId = $post['customer'];
 
         $filters = [
-            'order' => $order
+            'order' => $order,
         ];
 
-        if($type) {
+        if ($type) {
             $filters['type'] = $type;
         }
 
-        if($status) {
+        if ($status) {
             $filters['status'] = $status;
         }
 
-        if($deliveryMethod) {
+        if ($deliveryMethod) {
             $filters['delivery_method'] = $deliveryMethod;
         }
 
-        if($date) {
-            if($type !== 'unbilled-income') {
+        if ($date) {
+            if ($type !== 'unbilled-income') {
                 $filters['start-date'] = str_replace('-', '/', $from);
                 $filters['end-date'] = str_replace('-', '/', $to);
             } else {
@@ -1898,7 +1886,7 @@ class All_sales extends MY_Controller {
             }
         }
 
-        if($customerId) {
+        if ($customerId) {
             $filters['customer_id'] = $customerId;
             $customer = $this->accounting_customers_model->get_by_id($customerId);
         }
@@ -1908,19 +1896,19 @@ class All_sales extends MY_Controller {
         $tableHeaders = $get['headers'];
         $transactions = $get['transactions'];
 
-        $excelHead .= !empty($type) ? "Type: ".ucfirst(str_replace('-', ' ', $type)) : "Type: All transactions";
-        $excelHead .= $status ? " · Status: $status" : " · Status: All statuses";
-        $excelHead .= $deliveryMethod ? " · Delivery method: $deliveryMethod" : " · Delivery method: Any";
-        $excelHead .= $customerId ? " · Name: $customer->first_name $customer->last_name" : "";
-        $excelHead .= $type !== 'unbilled-income' && !empty($date) ? " · Date: ".ucfirst(str_replace("-", " ", $date)) : " · Date: Last 365 days";
+        $excelHead .= !empty($type) ? 'Type: '.ucfirst(str_replace('-', ' ', $type)) : 'Type: All transactions';
+        $excelHead .= $status ? " · Status: $status" : ' · Status: All statuses';
+        $excelHead .= $deliveryMethod ? " · Delivery method: $deliveryMethod" : ' · Delivery method: Any';
+        $excelHead .= $customerId ? " · Name: $customer->first_name $customer->last_name" : '';
+        $excelHead .= $type !== 'unbilled-income' && !empty($date) ? ' · Date: '.ucfirst(str_replace('-', ' ', $date)) : ' · Date: Last 365 days';
 
         $writer = new XLSXWriter();
         $writer->writeSheetRow('Sheet1', [$excelHead], ['halign' => 'center', 'valign' => 'center', 'font-style' => 'bold']);
 
         $headers = [];
 
-        foreach($tableHeaders as $header) {
-            if(in_array($header, $post['fields'])) {
+        foreach ($tableHeaders as $header) {
+            if (in_array($header, $post['fields'])) {
                 $headers[] = $header;
             }
         }
@@ -1928,12 +1916,11 @@ class All_sales extends MY_Controller {
         $writer->markMergedCell('Sheet1', 0, 0, 0, count($headers) - 1);
         $writer->writeSheetRow('Sheet1', $headers, ['font-style' => 'bold', 'border' => 'bottom', 'halign' => 'center', 'valign' => 'center']);
 
-        foreach($transactions as $transaction) {
+        foreach ($transactions as $transaction) {
             $keys = array_keys($transaction);
 
             $item = [];
-            foreach($tableHeaders as $tableHeader)
-            {
+            foreach ($tableHeaders as $tableHeader) {
                 $tableHeader = str_replace('.', '', $tableHeader);
                 $tableHeader = str_replace(' ', '_', $tableHeader);
                 $tableHeader = strtolower($tableHeader);
