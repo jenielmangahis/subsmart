@@ -771,7 +771,7 @@ SQL;
         $data->last_income_label = $last_income_label;
         $data->income_month_label = $income_month_label;
         $data->income_year_label = $income_year_label;
-
+        $data->duration = $duration;
         if (date("m", strtotime($last_start_date)) == date("m", strtotime($last_end_date))) {
             $data->more_than_prev_month_label = date("M d", strtotime($last_start_date)) . " - " . date("d, Y", strtotime($last_end_date));
         } else {

@@ -50,8 +50,8 @@
                                             </select>
                                         </div>
                                         <div class="col-12 col-md-3">
-                                            <label for="email">Email</label>
-                                            <input type="email" name="email" id="email" class="form-control nsm-field mb-2" placeholder="Email (Separate emails with a comma)" value="<?=isset($receipt) ? $receipt->email : ''?>">
+                                            <label for="email">Email <i class="invalid-email-warning" style="color: red; display: none;">Invalid email address</i></label>
+                                            <input type="email" name="email" id="email" class="form-control nsm-field mb-2 sales-receipt-email" placeholder="Please enter your email" value="<?=isset($receipt) ? $receipt->email : ''?>" required>
                                             <div class="form-check">
                                                 <div class="checkbox checkbox-sec">
                                                     <input type="checkbox" name="send_later" value="1" class="form-check-input" id="send-later" <?=isset($receipt) && $receipt->send_later === "1" ? 'checked' : ''?>>
@@ -109,18 +109,21 @@
                                         <input type="text" name="sales_receipt_date" id="sales-receipt-date" class="form-control nsm-field mb-2 date" value="<?=isset($receipt) ? date("m/d/Y", strtotime($receipt->sales_receipt_date)) : date("m/d/Y")?>">
                                     </div>
 
-                                    <a href="#" class="text-decoration-none" onclick="makeRecurring('sales_receipt')">Create recurring sale</a>
+                                    
                                     <label for="purchase-order-no">P.O. Number</label>
                                     <input type="text" class="form-control nsm-field mb-2" name="purchase_order_no" id="purchase-order-no" value="<?=isset($receipt) ? $receipt->po_number : ''?>">
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="sales-rep">Sales Rep</label>
                                     <input type="text" name="sales_rep" id="sales-rep" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->sales_rep : ''?>">
+
+                                    <label for="location-of-sale">Location of sale</label>
+                                    <input type="text" name="location_of_sale" id="location-of-sale" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->location_of_sale : ''?>">                                    
                                 </div>
-                                <div class="col-12 col-md-2 offset-md-4">
+                                <!-- <div class="col-12 col-md-2 offset-md-4">
                                     <label for="location-of-sale">Location of sale</label>
                                     <input type="text" name="location_of_sale" id="location-of-sale" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->location_of_sale : ''?>">
-                                </div>
+                                </div> -->
                             </div>
 
                             <div class="row">
@@ -303,20 +306,23 @@
                             <div class="row">
                                 <div class="col-12 col-md-6">
                                     <div class="row">
-                                        <div class="col-12 col-md-4">
+                                        <div class="col-12 col-md-6">
                                             <label for="message_sales_receipt">Message displayed on sales receipt</label>
                                             <textarea name="message_sales_receipt" id="message_sales_receipt" class="form-control nsm-field mb-2"><?=isset($receipt) ? str_replace("<br />", "", $receipt->message_sales_receipt) : ''?></textarea>
 
-                                            <label for="message_statement">Message displayed on statement</label>
+                                           
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                        <label for="message_statement">Message displayed on statement</label>
                                             <textarea name="message_statement" id="message_statement" class="form-control nsm-field mb-2"><?=isset($receipt) ? str_replace("<br />", "", $receipt->message_on_statement) : ''?></textarea>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-12 col-md-6">
+                                        <div class="col-12">
                                             <div class="attachments">
                                                 <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
                                                 <span>Maximum size: 20MB</span>
-                                                <div id="sales-receipt-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                <div id="sales-receipt-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%; flex-wrap:wrap;">
                                                     <div class="dz-message" style="margin: 20px;border">
                                                         <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                         <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
@@ -495,6 +501,19 @@
 
 <script>
     $(document).ready(function() {
+
+        $(".sales-receipt-email").change(function(){
+            
+            var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
+            var sales_receipt_email = $(".sales-receipt-email").val();
+            if (testEmail.test(sales_receipt_email)) {
+                $(".invalid-email-warning").hide();
+            } else {
+                $(".invalid-email-warning").show();
+            }                
+
+        });        
+
         $('#modal-help-popover-adjustment').popover({
             placement: 'top',
             html : true, 
@@ -502,6 +521,14 @@
             content: function() {
                 return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
             } 
-        });     
+        }); 
+        $('#modal-help-popover-unscheduled').popover({
+            placement: 'top',
+            html : true, 
+            trigger: "hover focus",
+            content: function() {
+                return 'Unscheduled transactions don’t have timetables; you use them as needed from the Recurring Transactions list.';
+            } 
+        });         
     });
 </script>

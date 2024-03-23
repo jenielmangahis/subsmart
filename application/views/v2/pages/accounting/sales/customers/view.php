@@ -9,9 +9,18 @@
     .notes-container:hover {
         border-color: #dee2e6;
     }
+    #spinner {
+    position: fixed;
+    top: 10%; 
+    right:50%;
+    display: none;
+}
 </style>
 
 <div class="row page-content g-0">
+<div id="spinner" class="spinner-grow" role="status">
+  <span class="sr-only">Loading...</span>
+</div>
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/sales'); ?>
     </div>
@@ -20,6 +29,7 @@
             <div class="nsm-page-content">
                 <div class="row g-3">
                     <div class="col-12">
+
                         <div class="nsm-card primary">
                             <div class="nsm-card-content">
                                 <div class="row">

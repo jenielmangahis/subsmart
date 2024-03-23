@@ -17,39 +17,39 @@ $(".overview-widget .widget-with-counter").hover(function() {
 
 
 
-function income_overtime_duration_changed() {
-    var selected_duration = $(".overview-widget.income-overtime .filter-section select.duration").find(":selected").text();
-    $.ajax({
-        url: baseURL + "/sales-overview/income-overtime",
-        type: "POST",
-        dataType: "json",
-        data: { duration: selected_duration },
-        success: function(data) {
-            $(".overview-widget.income-overtime .content-monitary-highlight span.amount").html(data.formatted_current_income);
-            $(".overview-widget.income-overtime .content-monitary-highlight span.label").html(selected_duration);
-            if (data.current_income >= data.last_income) {
-                $(".overview-widget.income-overtime .monitary-increase").removeClass("decreased");
-                $(".overview-widget.income-overtime .monitary-increase").html("$" + data.increased_decreased_label + " more than " + data.more_than_prev_month_label);
-            } else {
-                $(".overview-widget.income-overtime .monitary-increase").addClass("decreased");
-                $(".overview-widget.income-overtime .monitary-increase").html("$" + data.increased_decreased_label + " less than " + data.more_than_prev_month_label);
-            }
-
-            // income_per_day = data.income_per_day;
-            // income_per_month = data.income_per_month;
-            // income_per_quarter = data.income_per_quarter;
-            // last_income_per_day = data.last_income_per_day;
-            // last_income_per_month = data.last_income_per_month;
-            // last_income_per_quarter = data.last_income_per_quarter;
-            // income_label = data.income_label;
-            // last_income_label = data.last_income_label;
-            // income_month_label = data.income_month_label;
-            // income_year_label = data.income_year_label;
-            // income_overtime_graph_setter();
-            // console.log(income_per_month);
-        },
-    });
-}
+// function income_overtime_duration_changed() {
+//     var selected_duration = $("#duration").val();
+//     $.ajax({
+//         url: baseURL + "sales-overview/income-overtime",
+//         type: "POST",
+//         dataType: "json",
+//         data: { duration: selected_duration },
+//         success: function(data) {
+//             $(".overview-widget.income-overtime .content-monitary-highlight span.amount").html(data.formatted_current_income);
+//             $(".overview-widget.income-overtime .content-monitary-highlight span.label").html(selected_duration);
+//             if (data.current_income >= data.last_income) {
+//                 $(".overview-widget.income-overtime .monitary-increase").removeClass("decreased");
+//                 $(".overview-widget.income-overtime .monitary-increase").html("$" + data.increased_decreased_label + " more than " + data.more_than_prev_month_label);
+//             } else {
+//                 $(".overview-widget.income-overtime .monitary-increase").addClass("decreased");
+//                 $(".overview-widget.income-overtime .monitary-increase").html("$" + data.increased_decreased_label + " less than " + data.more_than_prev_month_label);
+//             }
+//          console.log(data);
+//             // income_per_day = data.income_per_day;
+//             // income_per_month = data.income_per_month;
+//             // income_per_quarter = data.income_per_quarter;
+//             // last_income_per_day = data.last_income_per_day;
+//             // last_income_per_month = data.last_income_per_month;
+//             // last_income_per_quarter = data.last_income_per_quarter;
+//             // income_label = data.income_label;
+//             // last_income_label = data.last_income_label;
+//             // income_month_label = data.income_month_label;
+//             // income_year_label = data.income_year_label;
+//             // income_overtime_graph_setter();
+//             // console.log(income_per_month);
+//         },
+//     });
+// }
 
 $(document).on("click", ".overview-widget.shortcuts .img-button-links .recurring-sales-receipt", function(event) {
     $("#addsalesreceiptModal .modal-footer-check .middle-links.end a").trigger("click");
@@ -234,14 +234,14 @@ function toogleDataSeries(e) {
     }
     chart.render();
 }
-$(document).on("change", ".overview-widget.income-overtime .filter-section input#compare-prev-year", function(event) {
+$(document).on("change", "#compare-prev-year", function(event) {
     if ($(this).is(":checked")) {
         display_prev_year(overview_chart);
     } else {
         not_display_prev_year(overview_chart);
     }
 });
-$(document).on("change", ".overview-widget.income-overtime .filter-section select.duration", function(event) {
+$(document).on("change", "#duration", function(event) {
     income_overtime_duration_changed();
 });
 
@@ -250,6 +250,11 @@ var overview_chart_elem;
 var overview_chart;
 
 function over_view_chart_start() {
+
+    if (overview_chart instanceof Chart) {
+        // If so, destroy the existing chart
+        overview_chart.destroy();
+    }
     overview_chart_elem = document.getElementById('overview_chart').getContext('2d');
     const cfg = {
         type: "line",
@@ -347,7 +352,7 @@ function display_prev_year(chart) {
 }
 
 function income_overtime_duration_changed() {
-    var selected_duration = $(".overview-widget.income-overtime .filter-section select.duration").find(":selected").text();
+    var selected_duration = $("#duration").val();
     if (selected_duration == "Last year by month" || selected_duration == "Last year by quarter") {
         $(".overview-widget .filter-section .compare-prev-year").hide();
         $(".overview-widget.income-overtime .filter-section input#compare-prev-year").prop('checked', false);
@@ -355,7 +360,7 @@ function income_overtime_duration_changed() {
         $(".overview-widget .filter-section .compare-prev-year").show();
     }
     $.ajax({
-        url: baseURL + "/sales-overview/income-overtime",
+        url: baseURL + "sales-overview/income-overtime",
         type: "POST",
         dataType: "json",
         data: { duration: selected_duration },
@@ -380,7 +385,7 @@ function income_overtime_duration_changed() {
                 not_display_prev_year(overview_chart);
                 addData_overview_chart(overview_chart, data.labels, [data.current_data, null], [this_year_label, prev_year_label]);
             }
-
+            console.log(data);
             // income_per_day = data.income_per_day;
             // income_per_month = data.income_per_month;
             // income_per_quarter = data.income_per_quarter;

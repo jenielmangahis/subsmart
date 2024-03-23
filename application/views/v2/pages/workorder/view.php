@@ -15,18 +15,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
 }
 .workorder-details li{
   display:inline-block;
-  width:40%;
+  width:100%;
   margin:3px;
 }
 .label-details{
   display:inline-block;
-  width:30%;
+  width:110px;
+  white-space: nowrap;
 }
 .value-details{
+  width: calc(100% - 126px);
   vertical-align: top;
   display:inline-block;
-  width:60%;
   font-weight:bold;
+}
+.value-details::before{
+  content: " : ";
+  font-weight: normal;
 }
 .workorder-box{
   background-color:#a6a6a6;
@@ -34,6 +39,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
   display:block;
   margin-bottom:10px;
 }
+@media only screen and (max-width: 767px) {
+  .label-details{
+  display:inline-block;
+  width:120px;
+}
+
+}
+
 </style>
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('includes/notifications'); ?>
@@ -160,7 +173,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                           </tr>
                           <tr>
                             <td style="text-align:left;">Panel  Type:</td>
-                            <td style="text-align: right;"><b><?php echo $workorder->panel_type; ?></b></td>
+                            <td style="text-align: right;"><b><?php echo $workorder->panel_type ?? ""; ?></b></td>
                           </tr>
                           <tr>
                             <td style="text-align:left;">Source:</td>
@@ -208,49 +221,64 @@ defined('BASEPATH') or exit('No direct script access allowed');
 				  	        <div class="col-md-12" style="max-width:100%;overflow:auto;">
 					            <h6 class="title-border">WORKORDER DETAILS :</h6>
 						          <div class="row">
-                        <div class="col-6">
-                          <ul class="workorder-details">
+                        <div class="col-12 col-md-7">
+                         <div class="row">
+                          <div class="col-12 col-md-6"> 
+                            <ul class="workorder-details w-100">
                             <li>
-                              <span class="label-details">Job Name:</span>
+                              <span class="label-details">Job Name</span>
                               <span class="value-details"><?= $workorder->job_name; ?></span>
-                            </li>                            
+                            </li> 
                             <li>
-                              <span class="label-details">Installtion Date:</span>
+                              <span class="label-details">Job Description</span>
+                              <span class="value-details"><?= $workorder->job_description; ?></span>
+                            </li>                            
+                   
+                          </ul></div>
+                          <div class="col-12 col-md-6">
+                          <ul class="workorder-details">
+                          <li>
+                              <span class="label-details">Installtion Date</span>
                               <span class="value-details">
                                 <?php $installation_date = date("m-d-Y", strtotime($workorder->date_issued)); ?>
                                 <?= $installation_date; ?>
                               </span>
                             </li>
                             <li>
-                              <span class="label-details">Job Description:</span>
-                              <span class="value-details"><?= $workorder->job_description; ?></span>
-                            </li> 
-                            <li>
-                              <span class="label-details">Job Location:</span>
-                              <span class="value-details"><?= $workorder->job_location .'<br>'. $workorder->city .', '. $workorder->state .' '. $workorder->zip_code; ?></span>
+                              <span class="label-details">Job Location</span>
+                              <span class="value-details"><?= $workorder->job_location .' , '. $workorder->city .', '. $workorder->state .' '. $workorder->zip_code; ?></span>
                             </li>                            
                           </ul>
+                          </div>
+                         </div>
                           <hr />
-                          <ul class="workorder-details">
+                         <div class="row">
+                          <div class="col-12 col-md-6"> <ul class="workorder-details">
                             <li>
-                              <span class="label-details">Pay Method:</span>
+                              <span class="label-details">Pay Method</span>
                               <span class="value-details"><?= $workorder->payment_method; ?></span>
-                            </li>                            
+                            </li>   
                             <li>
-                              <span class="label-details">Amount:</span>
+                              <span class="label-details">Agent Name</span>
+                              <span class="value-details"><?= $agreements->sales_re_name; ?></span>
+                            </li>                         
+                           
+                           
+                          </ul> </div>
+                          <div class="col-12 col-md-6"> <ul class="workorder-details">
+                           
+                          <li>
+                              <span class="label-details">Amount</span>
                               <span class="value-details">$<?= number_format((float)$workorder->payment_amount,2); ?></span>
                             </li>
                             <li>
-                              <span class="label-details">Agent Name:</span>
-                              <span class="value-details"><?= $agreements->sales_re_name; ?></span>
-                            </li>
-                            <li>
-                              <span class="label-details">Job Tags:</span>
+                              <span class="label-details">Job Tags</span>
                               <span class="value-details"><?= $workorder->tags; ?></span>
                             </li>
-                          </ul>                          
+                          </ul> </div>
+                         </div>                         
                         </div>
-                        <div class="col-5">
+                        <div class="col-12 col-md-5">
                           <table class="table">
                             <tr><td colspan="2" style="background-color:#6a4a86;color:#ffffff;"><b>CUSTOM FIELDS</b></td></tr>
                             <tr>

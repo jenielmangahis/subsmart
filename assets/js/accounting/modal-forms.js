@@ -1657,8 +1657,10 @@ $(function() {
     
                 $(this).parent().next().html(`
                     <span>Remind &emsp;</span>
-                    <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
-                    <span>&emsp; days before the transaction date</span>
+                   <div class="d-flex">
+                   <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
+                   <span>&emsp; days before the transaction date</span>
+                   </div>
                 `);
 
                 if ($('#modal-container form div.modal div.modal-body select#recurringInterval').length === 0) {
@@ -1682,8 +1684,17 @@ $(function() {
                 $(this).parent().next().removeClass('col-md-3');
                 $(this).parent().next().addClass('col-md-2');
                 $(this).parent().next().html(`
-                    <p class="m-0">Unscheduled transactions don’t have timetables; you use them as needed from the Recurring Transactions list.</p>
-                `);
+                    <div class="d-flex justify-content-end align-items-end pb-3 h-100"><span id="modal-help-popover-unscheduled" class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Unscheduled transactions don’t have timetables; you use them as needed from the Recurring Transactions list."></span></div>
+                    `);
+
+                    $('#modal-help-popover-unscheduled').popover({
+                        placement: 'top',
+                        html: true,
+                        trigger: "hover focus",
+                        content: function() {
+                            return 'Unscheduled transactions don’t have timetables; you use them as needed from the Recurring Transactions list.';
+                        }
+                    })
             break;
             case 'scheduled' :
                 if ($(this).parent().next().hasClass('col-md-2')) {
@@ -8779,8 +8790,8 @@ $(function() {
                 <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
                 <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
                 <td>${locs}</td>
-                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0" min="0"></td>
-                <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" min="0" value="${item.price}"></td>
+                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0" min="0" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"></td>
+                <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" min="0" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" value="${item.price}"></td>
                 <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" min="0" value="0.00"></td>
                 <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="7.50"></td>
                 <td><span class="row-total">$0.00</span></td>
@@ -8881,9 +8892,9 @@ $(function() {
                     <td>${items[i].title}<input type="hidden" name="item[]" value="${items[i].id}"></td>
                     <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
                     <td>${locs}</td>
-                    <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0"></td>
-                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="${items[i].price}"></td>
-                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="0.00"></td>
+                    <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0" min="0" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"></td>
+                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" min="0" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" value="${items[i].price}"></td>
+                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" min="0" value="0.00"></td>
                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="7.50"></td>
                     <td><span class="row-total">$0.00</span></td>
                     <td>
@@ -8922,7 +8933,7 @@ $(function() {
                 <td>${details.name}<input type="hidden" name="package[]" value="${details.id}"></td>
                 <td>Package</td>
                 <td></td>
-                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0"></td>
+                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0" min="0" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"></td>
                 <td><span class="item-amount">${parseFloat(details.amount_set).toFixed(2)}</span></td>
                 <td></td>
                 <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="7.50"></td>
@@ -9314,6 +9325,7 @@ $(function() {
             address += customer.zip_code !== "" && customer.zip_code !== null ? customer.zip_code + ' ' : "";
             address += customer.country !== "" && customer.country !== null ? customer.country : "";
 
+            $('#salesReceiptModal #billing-address').html("");
             $('#salesReceiptModal #billing-address').append(address.trim());
             $('#salesReceiptModal #email').val(customer.email);
         });
@@ -11224,10 +11236,10 @@ const makeRecurring = (modalName) => {
                         <option value="unscheduled">Unscheduled</option>
                     </select>
                 </div>
-                <div class="col-12 col-md-3 d-flex align-items-end">
+                <div class="col-12 col-md-3 d-flex flex-column p-0 align-items-start">
                     <span>Create &emsp;</span>
-                    <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
-                    <span>&emsp; days in advance</span>
+                    <div class="d-flex align-items-start justify-content-center"><input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
+                    <span>&emsp; days in advance</span></div>
                 </div>
             </div>
         </div>

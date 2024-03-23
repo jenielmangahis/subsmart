@@ -7685,6 +7685,7 @@ class Accounting_modals extends MY_Controller
     private function sales_receipt($data)
     {
         $this->form_validation->set_rules('item[]', 'Item', 'required');
+        $this->form_validation->set_rules('email', 'Email', 'required');
 
         if(isset($data['template_name'])) {
             $this->form_validation->set_rules('template_name', 'Template Name', 'required');

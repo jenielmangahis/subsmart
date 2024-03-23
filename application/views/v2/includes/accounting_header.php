@@ -37,7 +37,7 @@ if ($this->session->userdata('usertimezone') == null) {
     <link rel="stylesheet"
         href="<?php echo $url->assets ?>plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css" />
     <link rel="stylesheet" href="<?= base_url("assets/css/bootstrap-tagsinput.css") ?>">
-    <!-- <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datetimepicker.min.css") ?>"> -->
+    <link rel="stylesheet" href="<?= base_url("assets/css/v2/bootstrap-datetimepicker.min.css") ?>">
     <!-- <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css"> -->
 
     <!-- Multi select -->

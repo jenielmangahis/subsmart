@@ -614,6 +614,7 @@ $('#new-delayed-charge').on('click', function() {
 });
 
 $('#new-time-activity').on('click', function() {
+   
     $.get(base_url + 'accounting/get-other-modals/single_time_activity_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
@@ -631,6 +632,28 @@ $('#new-time-activity').on('click', function() {
         initModalFields('singleTimeModal');
 
         $('#singleTimeModal').modal('show');
+    });
+});
+$('#new-statement').on('click', function() {
+    $('#spinner').show();
+    $.get(base_url + 'accounting/get-other-modals/statement_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#statementModal #customer').html(`<option value="${customerId}">${customerName}</option>`).trigger('change');
+
+        modalName = '#statementModal';
+        initModalFields('statementModal');
+             
+        $('#statementModal').modal('show');
+        $('#spinner').hide();
     });
 });
 

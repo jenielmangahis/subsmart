@@ -806,8 +806,8 @@ class Customer_advance_model extends MY_Model {
         $this->db->join('tickets', 'tickets.customer_id = acs_profile.prof_id', 'left');
         $this->db->join('payment_records', 'payment_records.customer_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $data['company_id']);
-        $this->db->where('acs_profile.first_name', $data['first_name']);
-        $this->db->where('acs_profile.last_name', $data['last_name']);
+        $this->db->like('acs_profile.first_name', $data['first_name'], 'both');
+        $this->db->like('acs_profile.last_name', $data['last_name'], 'both');
         $this->db->where('acs_profile.activated', 1);
         $this->db->group_by('acs_profile.prof_id');
         $query = $this->db->get();
@@ -817,13 +817,27 @@ class Customer_advance_model extends MY_Model {
     public function getDuplicateListData($company_id, $customerData, $searchMode, $searchType, $businessNameSearch, $firstNameSearch, $lastNameSearch) 
     {
         if ($customerData == "customer_with_count") {
-            $this->db->select('acs_profile.prof_id, acs_profile.company_id, acs_profile.customer_type, acs_profile.business_name, acs_profile.first_name, acs_profile.last_name, COUNT(*) AS total');
-            $this->db->from('acs_profile');
-            $this->db->where('acs_profile.company_id', $company_id);
-            $this->db->group_by('acs_profile.first_name, acs_profile.last_name, acs_profile.business_name');
-            $this->db->having('COUNT(*) > 1');
-            $this->db->order_by('acs_profile.first_name, acs_profile.last_name');
-            $query = $this->db->get();
+           if ($searchType == "Residential") {
+                $this->db->select(' acs_profile.prof_id, acs_profile.company_id, acs_profile.customer_type, TRIM(acs_profile.business_name) AS business_name, TRIM(acs_profile.first_name) AS first_name, TRIM(acs_profile.last_name) AS last_name, COUNT(*) AS total ');
+                $this->db->from('acs_profile');
+                $this->db->where('acs_profile.company_id', $company_id);
+                $this->db->where('acs_profile.first_name !=', '');
+                $this->db->where('acs_profile.last_name !=', '');
+                $this->db->group_by('TRIM(acs_profile.first_name), TRIM(acs_profile.last_name), TRIM(acs_profile.customer_type)');
+                $this->db->having('COUNT(*) > 1');
+                $this->db->order_by('TRIM(acs_profile.first_name), TRIM(acs_profile.last_name)');
+                $query = $this->db->get();
+           } else if ($searchType == "Commercial" || $searchType == "Business") {
+                $this->db->select(' acs_profile.prof_id, acs_profile.company_id, acs_profile.customer_type, TRIM(acs_profile.business_name) AS business_name, TRIM(acs_profile.first_name) AS first_name, TRIM(acs_profile.last_name) AS last_name, COUNT(*) AS total ');
+                $this->db->from('acs_profile');
+                $this->db->where('acs_profile.company_id', $company_id);
+                $this->db->where('acs_profile.business_name !=', '');
+                $this->db->group_by('TRIM(acs_profile.business_name), TRIM(acs_profile.customer_type)');
+                $this->db->having('COUNT(*) > 1');
+                $this->db->order_by('TRIM(acs_profile.business_name)');
+                $query = $this->db->get();
+           }
+           
         } else if ($customerData == "all_duplicated_customer") {
             $subquery = $this->db->select("CONCAT(acs_profile.first_name, ', ', acs_profile.last_name) AS full_name")
                 ->from('acs_profile')
@@ -835,21 +849,26 @@ class Customer_advance_model extends MY_Model {
             $this->db->join('customer_activity_logs', 'customer_activity_logs.customer_id = acs_profile.prof_id', 'left');
             $this->db->join('customer_groups', 'customer_groups.id = acs_profile.customer_group_id', 'left');
             $this->db->join('ac_salesarea', 'ac_salesarea.sa_id = acs_profile.fk_sa_id', 'left');
-            $this->db->where("CONCAT(acs_profile.first_name, ', ', acs_profile.last_name) IN ($subquery)", NULL, FALSE);
-            $this->db->where('acs_profile.company_id', $company_id);
+            
+            $this->db->where("EXISTS ($subquery)", NULL, FALSE);
+            $this->db->group_start();
+            $this->db->like('acs_profile.first_name', $search_string, 'both'); 
+            $this->db->like('acs_profile.last_name', $search_string, 'both');
+            $this->db->group_end();
 
             if ($searchMode == true) {
                 if ($searchType == "Commercial" || $searchType == "Business") {
-                    $this->db->where('acs_profile.business_name', $businessNameSearch);
+                    $this->db->like('acs_profile.business_name', $businessNameSearch, 'both');
                     $this->db->where('acs_profile.customer_type', "Commercial");
-                    $this->db->or_where('acs_profile.customer_type', "Business");
-                } else if ($searchType == "Residential") {
-                    $this->db->where('acs_profile.first_name', $firstNameSearch);
-                    $this->db->where('acs_profile.last_name', $lastNameSearch);
+                } 
+                else if ($searchType == "Residential") {
+                    $this->db->like('acs_profile.first_name', $firstNameSearch, 'both');
+                    $this->db->like('acs_profile.last_name', $lastNameSearch, 'both');
                     $this->db->where('acs_profile.customer_type', "Residential");
                 }
             }
 
+            $this->db->where('acs_profile.company_id', $company_id);
             $this->db->group_by('acs_profile.prof_id, acs_profile.company_id, acs_profile.customer_type, acs_profile.business_name, acs_profile.first_name, acs_profile.last_name');
             $this->db->order_by('acs_profile.first_name, acs_profile.last_name');
             $query = $this->db->get();
@@ -884,6 +903,57 @@ class Customer_advance_model extends MY_Model {
         $business = $query->row()->business;
     
         return $residential + $business;
+    }
+
+    public function mergeEntryUpdater($updateData, $entryID, $originFirstname, $originLastname, $originBusinessname) {
+        $company_id = logged('company_id');
+        $status = true; 
+        
+        // acs_profile merge process
+        $this->db->where('company_id', $company_id);
+        $this->db->where('prof_id', $entryID);
+        $status &= $this->db->update('acs_profile', $updateData);
+        
+        // get entry ID of the duplicates
+        $this->db->select('prof_id');
+        $this->db->from('acs_profile');
+        if ($updateData['customer_type'] == "Residential") {
+            $this->db->like('first_name',  $originFirstname, 'both');
+            $this->db->like('last_name', $originLastname, 'both');
+        } else {
+            $this->db->like('business_name',  $originBusinessname, 'both');
+        }
+        $this->db->where('prof_id !=', $entryID);
+        $query = $this->db->get();
+        $duplicateID = $query->result();
+    
+        // get all tables that have a column name of customer_id
+        $this->db->select('TABLE_NAME');
+        $this->db->from('INFORMATION_SCHEMA.COLUMNS');
+        $this->db->where('COLUMN_NAME', 'customer_id');
+        $this->db->where("TABLE_NAME IN (SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE')");
+        $query = $this->db->get();
+        $tableList = $query->result();
+    
+        foreach ($tableList as $tableLists) {
+            foreach ($duplicateID as $duplicateIDs) {
+                $this->db->where('customer_id', $duplicateIDs->prof_id);
+                $status &= $this->db->update($tableLists->TABLE_NAME, array("customer_id" => $entryID));
+            }
+        }
+    
+        // acs_profile remove process
+        $this->db->where('company_id', $company_id);
+        $this->db->where('prof_id !=', $entryID);
+        if ($updateData['customer_type'] == "Residential") {
+            $this->db->like('first_name',  $originFirstname, 'both');
+            $this->db->like('last_name', $originLastname, 'both');
+        } else {
+            $this->db->like('business_name',  $originBusinessname, 'both');
+        }
+        $status &= $this->db->delete('acs_profile');
+
+        return $status; 
     }
 
     public function getAllRecentLeadsByCompanyId($company_id, $limit = 10)
