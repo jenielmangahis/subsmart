@@ -85,12 +85,16 @@
                             <td colspan="2">ADJUSTMENT VALUE</td>
                             <td style="text-align: right"><?=number_format(floatval($salesReceipt->adjustment_value), 2, '.', ',')?></td>
                         </tr>
+                        <?php 
+                            $total_balance_due = 0;
+                            $total_balance_due = $salesReceipt->total_amount //($salesReceipt->subtotal + $salesReceipt->tax_total) - ($salesReceipt->discount_total + $salesReceipt->adjustment_value);
+                        ?>
                         <tr>
                             <td></td>
                             <td></td>
                             <td></td>
                             <td colspan="2">BALANCE DUE</td>
-                            <td style="text-align: right"><strong>$0.00</strong></td>
+                            <td style="text-align: right"><strong>$<?php echo number_format(floatval($total_balance_due), 2, '.', ','); ?></strong></td>
                         </tr>
                     </tfoot>
                 </table>
