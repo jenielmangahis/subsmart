@@ -16,7 +16,15 @@
                         <tr>
                             <td width="60%"><strong>BILL TO:</strong></td>
                             <td style="text-align: right"><strong>SALES #:</strong></td>
-                            <td><?=$salesReceipt->ref_no?></td>
+                            <td>
+                                <?php
+                                    if($salesReceipt->ref_no != null && $salesReceipt->ref_no != 0) {
+                                        echo $salesReceipt->ref_no;
+                                    } else {
+                                        echo '-';
+                                    }
+                                ?>
+                            </td>
                         </tr>
                         <tr style="vertical-align:top">
                             <td width="60%"><?=$salesReceipt->billing_address?></td>
@@ -28,9 +36,9 @@
                 <table class="table" style="width: 100%; margin-bottom: 1rem; color: #212529;border-collapse: collapse; margin-top: 1rem;">
                     <thead>
                         <tr>
-                            <th style="text-align: left" width="30%">ACTIVITY</th>
+                            <th style="text-align: left" width="30%">ITEM</th>
                             <th style="text-align: right">QTY</th>
-                            <th style="text-align: right">RATE</th>
+                            <th style="text-align: right">PRICE</th>
                             <th style="text-align: right">DISCOUNT</th>
                             <th style="text-align: right">TAX AMOUNT</th>
                             <th style="text-align: right">AMOUNT</th>

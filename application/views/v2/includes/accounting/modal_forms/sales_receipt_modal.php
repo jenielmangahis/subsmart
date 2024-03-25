@@ -3,7 +3,7 @@
 <?php if(!isset($receipt)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
 <?php else : ?>
-<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="/accounting/update-transaction/sales-receipt/<?=$receipt->id?>">
+<form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="<?php echo base_url(); ?>accounting/update-transaction/sales-receipt/<?=$receipt->id?>">
 <?php endif; ?>
     <div id="salesReceiptModal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
         <div class="modal-dialog">
@@ -109,7 +109,7 @@
                                         <input type="text" name="sales_receipt_date" id="sales-receipt-date" class="form-control nsm-field mb-2 date" value="<?=isset($receipt) ? date("m/d/Y", strtotime($receipt->sales_receipt_date)) : date("m/d/Y")?>">
                                     </div>
 
-                                    <a href="#" class="text-decoration-none" onclick="makeRecurring('sales_receipt')">Create recurring sale</a>
+                                    
                                     <label for="purchase-order-no">P.O. Number</label>
                                     <input type="text" class="form-control nsm-field mb-2" name="purchase_order_no" id="purchase-order-no" value="<?=isset($receipt) ? $receipt->po_number : ''?>">
                                 </div>
@@ -160,7 +160,7 @@
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="ref_no">Reference no.</label>
-                                    <input type="text" name="ref_no" id="ref_no" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->reference_no : ''?>">
+                                    <input type="number" name="ref_no" id="ref_no" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->reference_no : ''?>">
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="deposit_to_account">Deposit to</label>
@@ -306,20 +306,23 @@
                             <div class="row">
                                 <div class="col-12 col-md-6">
                                     <div class="row">
-                                        <div class="col-12 col-md-4">
+                                        <div class="col-12 col-md-6">
                                             <label for="message_sales_receipt">Message displayed on sales receipt</label>
                                             <textarea name="message_sales_receipt" id="message_sales_receipt" class="form-control nsm-field mb-2"><?=isset($receipt) ? str_replace("<br />", "", $receipt->message_sales_receipt) : ''?></textarea>
 
-                                            <label for="message_statement">Message displayed on statement</label>
+                                           
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                        <label for="message_statement">Message displayed on statement</label>
                                             <textarea name="message_statement" id="message_statement" class="form-control nsm-field mb-2"><?=isset($receipt) ? str_replace("<br />", "", $receipt->message_on_statement) : ''?></textarea>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-12 col-md-6">
+                                        <div class="col-12">
                                             <div class="attachments">
                                                 <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
                                                 <span>Maximum size: 20MB</span>
-                                                <div id="sales-receipt-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                <div id="sales-receipt-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%; flex-wrap:wrap;">
                                                     <div class="dz-message" style="margin: 20px;border">
                                                         <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                         <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
@@ -388,7 +391,7 @@
                                                 <td>
                                                     <div class="row" style="float: right; margin-right: -20px !important;">
                                                         <div class="col-10">
-                                                            <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="<?=isset($receipt) ? $receipt->adjustment_name : ''?>">
+                                                            <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control sales-receipt-adjustment-name nsm-field" value="<?=isset($receipt) ? $receipt->adjustment_name : ''?>">
                                                         </div>
                                                         <!-- <div class="col-3">
                                                             <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($receipt) ? number_format(floatval($receipt->adjustment_value), 2, '.', ',') : ''?>">
@@ -400,7 +403,7 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <input style="float: right; width: 75px;" type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($receipt) ? number_format(floatval($receipt->adjustment_value), 2, '.', ',') : ''?>">
+                                                    <input style="float: right; width: 75px;" type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control sales-receipt-adjustment-value nsm-field adjustment_input_cm_c" disabled onchange="convertToDecimal(this)" value="<?=isset($receipt) ? number_format(floatval($receipt->adjustment_value), 2, '.', ',') : ''?>">
                                                     <!-- <span class="transaction-adjustment">
                                                     <?php if(isset($receipt)) : ?>
                                                         <?php
@@ -499,6 +502,15 @@
 <script>
     $(document).ready(function() {
 
+        $(".sales-receipt-adjustment-name").change(function(){
+            var sales_receipt_adj_name = $('.sales-receipt-adjustment-name').val();
+            var sales_receipt_adj_value = $('.sales-receipt-adjustment-value').val();
+            $('.sales-receipt-adjustment-value').prop("disabled", false); 
+            if(sales_receipt_adj_name == '') {
+                $('.sales-receipt-adjustment-value').prop("disabled", true); 
+            }
+        } );        
+
         $(".sales-receipt-email").change(function(){
             
             var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
@@ -519,6 +531,15 @@
                 return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
             } 
         });    
+
+        $('#modal-help-popover-unscheduled').popover({
+            placement: 'top',
+            html : true, 
+            trigger: "hover focus",
+            content: function() {
+                return 'Unscheduled transactions don’t have timetables; you use them as needed from the Recurring Transactions list.';
+            } 
+        });         
 
     });
 </script>

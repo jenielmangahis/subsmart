@@ -68,11 +68,11 @@ table.dataTable.no-footer {
      margin-bottom: 10px;
 }
 
-#customerDuplicateTable td {
+#customerDuplicateTable td, #commercialDuplicateTable td {
     padding: 0.8rem 0rem;
 }
 
-#customerDuplicateTable_info { 
+#customerDuplicateTable_info, #commercialDuplicateTable_info { 
     display: none;
 }
 
@@ -81,9 +81,9 @@ table.dataTable thead th, table.dataTable thead td{
     border-bottom: 1px solid lightgray !important;
 }
 
-table.dataTable.no-footer {
+/* table.dataTable.no-footer {
     border-bottom: 1px solid lightgray !important;
-}
+} */
 
 .customCheckbox {
     width: 20px;
@@ -137,6 +137,25 @@ table.dataTable.no-footer {
 
 .mergeOutputEntryWidth {
     width: 316px;
+}
+
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    color: #fff;
+    background-color: #6a4a86;
+    border-radius: 50px;
+    font-weight: bold;
+}
+
+#customerDuplicateTable > tbody > tr > td, #commercialDuplicateTable > tbody > tr > td {
+    vertical-align: middle;
+}
+
+#customerDuplicateTable > thead > tr > th, #commercialDuplicateTable > thead > tr > th {
+    color: gray;
+}
+
+#customerDuplicateTable > tbody > tr:hover {
+    cursor: pointer;
 }
 </style>
 
@@ -411,18 +430,44 @@ table.dataTable.no-footer {
             <div class="modal-body">
                 <div class="row">
                     <div class="col-lg-12 mb-3 dupWizardStep1">
-                        <table id="customerDuplicateTable" class="nsm-table w-100 border-0" style="border-color: #cdcdcd !important;">
-                            <thead>
-                                <tr>
-                                    <th>CUSTOMER / COMMERCIAL</th>
-                                    <th>TYPE</th>
-                                    <th>ADDRESS</th>
-                                    <th>LOGS</th>
-                                    <th>ACTION</th>
-                                </tr>
-                            </thead>
-                            <tbody><tr></tr></tbody>
-                        </table>
+                        <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="pills-residential-tab" data-bs-toggle="pill" data-bs-target="#pills-residential" type="button" role="tab">Residential</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="pills-commercial-tab" data-bs-toggle="pill" data-bs-target="#pills-commercial" type="button" role="tab">Commercial</button>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="pills-tabContent">
+                            <div class="tab-pane fade show active" id="pills-residential" role="tabpanel">
+                                <table id="customerDuplicateTable" class="table table-hover w-100 border-0" style="border-color: #cdcdcd !important;">
+                                    <thead>
+                                        <tr>
+                                            <th>CUSTOMER</th>
+                                            <th>TYPE</th>
+                                            <th>ADDRESS</th>
+                                            <th>LOGS</th>
+                                            <th>ACTION</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody><tr></tr></tbody>
+                                </table>
+                            </div>
+                            <div class="tab-pane fade" id="pills-commercial" role="tabpanel">
+                                <table id="commercialDuplicateTable" class="table table-hover w-100 border-0" style="border-color: #cdcdcd !important;">
+                                    <thead>
+                                        <tr>
+                                            <th>COMMERCIAL</th>
+                                            <th>TYPE</th>
+                                            <th>ADDRESS</th>
+                                            <th>LOGS</th>
+                                            <th>ACTION</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody><tr></tr></tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-lg-12 mb-3 dupWizardStep2 displayHide">
                         <div class="container-fluid mb-3 mt-3">
@@ -463,9 +508,7 @@ table.dataTable.no-footer {
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="col-lg-1 w-auto fetchingDataLoader">
-                                <strong>COLLECTING DATA PLEASE WAIT...</strong>
-                            </div>
+                            <div class="col-lg-1 w-auto fetchingDataLoader"><strong>COLLECTING DATA PLEASE WAIT...</strong></div>
                             <div class="col-lg-1 w-auto"><div class="d-flex h-100"><div class="vr"></div></div></div>
                             <div class="col-lg-2 mergeOutputEntryWidth">
                                 <form id="mergeEntryForm">
@@ -543,7 +586,7 @@ table.dataTable.no-footer {
                                             </tr>
                                             <tr>
                                                 <td class="align-middle padding2px">
-                                                    <input class="form-control fw-bold border-0" type="text" name="destinationMiddleName" placeholder="—" required>
+                                                    <input class="form-control fw-bold border-0" type="text" name="destinationMiddleName" placeholder="—">
                                                     <i class="fas fa-check checkSize align-middle float-end"></i>
                                                 </td>
                                             </tr>
@@ -690,6 +733,9 @@ table.dataTable.no-footer {
                                         </tbody>
                                     </table>
                                     <div class="float-end">
+                                        <input class="form-control fw-bold border-0" type="hidden" name="originFirstname">
+                                        <input class="form-control fw-bold border-0" type="hidden" name="originLastname">
+                                        <input class="form-control fw-bold border-0" type="hidden" name="originBusinessName">
                                         <button type="button" class="nsm-button sm backToDuplicateList"><i class="fas fa-caret-left"></i>&nbsp;&nbsp;Back</button>
                                         <button type="submit" class="nsm-button primary sm"><i class="fas fa-copy"></i>&nbsp;&nbsp;Merge</button>
                                     </div>
@@ -707,11 +753,6 @@ table.dataTable.no-footer {
 <script type="text/javascript">
 
     function resetOutputEntry() {
-        $('.entryDestinationLogsCount').text('0 activity logs');
-        $('.entryDestinationInitials').text('?');
-        $('.entryDestinationName').text('Customer Name');
-        $('.entryDestinationID').text('#00000');
-        $('.entryDestinationEmail').text('Email Address');
         $('input[name="destinationCustomerID"]').val(null).change();
         $('select[name="destinationStatus"] option:contains("—")').prop('selected', true).change();
         $('select[name="destinationCustomerType"] option:contains("—")').prop('selected', true).change();
@@ -736,11 +777,18 @@ table.dataTable.no-footer {
         $('input[name="destinationEmail"]').val(null).change();
         $('input[name="destinationPhone"]').val(null).change();
         $('input[name="destinationMobile"]').val(null).change();
+        $('.entryDestinationLogsCount').text('0 activity logs');
+        $('.entryDestinationInitials').text('?');
+        $('.entryDestinationName').text('Customer Name');
+        $('.entryDestinationID').text('#00000');
+        $('.entryDestinationEmail').text('sample@email.com');
+        $('.destinationProfileData').css({'outline': '0px dashed green'});
     }
 
     $(document).on('click', '.profileData', function () {
-        $('.profileData').css({'outline': '0px dashed green'});
-        $(this).css({'outline': '1px dashed green'});
+        $('.profileData').css({'outline': '0px dashed darkblue'});
+        $(this).css({'outline': '1px dashed darkblue'});
+        $('.destinationProfileData').css({'outline': '1px dashed green'});
         // =======
         const logsCount = $(this).attr('data-logscount');
         const nameInitials = $(this).find('.entryDuplicateInitials').text();
@@ -760,7 +808,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const status = $(this).find('span').text();
-        if (status != "—") {
+        if (status != "—" && status != "NULL") {
             $('select[name="destinationStatus"] option:contains("' + status + '")').prop('selected', true).change();
         }
     });
@@ -770,7 +818,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const customer_type = $(this).find('span').text();
-        if (customer_type != "—") {
+        if (customer_type != "—" && customer_type != "NULL") {
             $('select[name="destinationCustomerType"] option:contains("' + customer_type + '")').prop('selected', true).change();
         }
     });
@@ -779,9 +827,10 @@ table.dataTable.no-footer {
         $('.businessNameField').css({'color': 'black','font-weight': '500',}).find('.checkSize').css('display', 'none');
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
-        const firstName = $(this).find('span').text();
-        if (firstName != "—") {
-            $('input[name="destinationBusinessName"]').val(firstName).change();
+        const businessName = $(this).find('span').text();
+        if (businessName != "—" && businessName != "NULL") {
+            $('input[name="destinationBusinessName"]').val(businessName).change();
+            $('input[name="originBusinessName"]').val(businessName).change();
         }
     });
 
@@ -790,7 +839,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const customer_group = $(this).find('span').text();
-        if (customer_group != "—") {
+        if (customer_group != "—" && customer_group != "NULL") {
             $('select[name="destinationCustomerGroup"] option:contains("' + customer_group + '")').prop('selected', true).change();
         }
     });
@@ -800,7 +849,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const sales_area = $(this).find('span').text();
-        if (sales_area != "—") {
+        if (sales_area != "—" && sales_area != "NULL") {
             $('select[name="destinationSalesArea"] option:contains("' + sales_area + '")').prop('selected', true).change();
         }
     });
@@ -810,8 +859,9 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const firstName = $(this).find('span').text();
-        if (firstName != "—") {
+        if (firstName != "—" && firstName != "NULL") {
             $('input[name="destinationFirstName"]').val(firstName).change();
+            $('input[name="originFirstname"]').val(firstName).change();
         }
     });
 
@@ -820,7 +870,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const middleName = $(this).find('span').text();
-        if (middleName != "—") {
+        if (middleName != "—" && middleName != "NULL") {
             $('input[name="destinationMiddleName"]').val(middleName).change();
         }
     });
@@ -830,8 +880,9 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const lastName = $(this).find('span').text();
-        if (lastName != "—") {
+        if (lastName != "—" && lastName != "NULL") {
             $('input[name="destinationLastName"]').val(lastName).change();
+            $('input[name="originLastname"]').val(lastName).change();
         }
     });
 
@@ -840,7 +891,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const prefix = $(this).find('span').text();
-        if (prefix != "—") {
+        if (prefix != "—" && prefix != "NULL") {
             $('select[name="destinationNamePrefix"] option:contains("' + prefix + '")').prop('selected', true).change();
         }
     });
@@ -850,7 +901,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const suffix = $(this).find('span').text();
-        if (suffix != "—") {
+        if (suffix != "—" && suffix != "NULL") {
             $('select[name="destinationNamePrefix"] option:contains("' + suffix + '")').prop('selected', true).change();
         }
     });
@@ -860,7 +911,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const country = $(this).find('span').text();
-        if (country != "—") {
+        if (country != "—" && country != "NULL") {
             $('input[name="destinationCountry"]').val(country).change();
         }
     });
@@ -870,7 +921,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const address = $(this).find('span').text();
-        if (address != "—") {
+        if (address != "—" && address != "NULL") {
             $('input[name="destinationAddress"]').val(address).change();
         }
     });
@@ -880,7 +931,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const city = $(this).find('span').text();
-        if (city != "—") {
+        if (city != "—" && city != "NULL") {
             $('input[name="destinationCity"]').val(city).change();
         }
     });
@@ -890,7 +941,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const county = $(this).find('span').text();
-        if (county != "—") {
+        if (county != "—" && county != "NULL") {
             $('input[name="destinationCounty"]').val(county).change();
         }
     });
@@ -900,7 +951,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const state = $(this).find('span').text();
-        if (state != "—") {
+        if (state != "—" && state != "NULL") {
             $('input[name="destinationState"]').val(state).change();
         }
     });
@@ -910,7 +961,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const zip = $(this).find('span').text();
-        if (zip != "—") {
+        if (zip != "—" && zip != "NULL") {
             $('input[name="destinationZipCode"]').val(zip).change();
         }
     });
@@ -920,7 +971,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const crossStreet = $(this).find('span').text();
-        if (crossStreet != "—") {
+        if (crossStreet != "—" && crossStreet != "NULL") {
             $('input[name="destinationCrossStreet"]').val(crossStreet).change();
         }
     });
@@ -930,7 +981,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const subdivision = $(this).find('span').text();
-        if (subdivision != "—") {
+        if (subdivision != "—" && subdivision != "NULL") {
             $('input[name="destinationSubdivision"]').val(subdivision).change();
         }
     });
@@ -940,7 +991,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const socialSecurityNo = $(this).find('span').text();
-        if (socialSecurityNo != "—") {
+        if (socialSecurityNo != "—" && socialSecurityNo != "NULL") {
             $('input[name="destinationSocialSecurityNo"]').val(socialSecurityNo).change();
         }
     });
@@ -950,7 +1001,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const birthdate = $(this).find('span').text();
-        if (birthdate != "—") {
+        if (birthdate != "—" && birthdate != "NULL") {
             $('input[name="destinationBirthdate"]').val(birthdate).change();
         }
     });
@@ -960,14 +1011,14 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const email = $(this).find('span').text();
-        if (email != "—") {
+        if (email != "—" && email != "NULL") {
             $('input[name="destinationEmail"]').val(email).change();
         }
     });
 
     $(document).on('keyup change', 'input[name="destinationEmail"]', function () {
         const email = $(this).val();
-        if (email != "—") {
+        if (email != "—" && email != "NULL") {
             $('.entryDestinationEmail').text(email);
         }
     });
@@ -977,7 +1028,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const phone = $(this).find('span').text();
-        if (phone != "—") {
+        if (phone != "—" && phone != "NULL") {
             $('input[name="destinationPhone"]').val(phone).change();
         }
     });
@@ -987,7 +1038,7 @@ table.dataTable.no-footer {
         $(this).css({'color': 'green','font-weight': 'bolder',}).find('.checkSize').css('display', 'block');
         // =======
         const mobile = $(this).find('span').text();
-        if (mobile != "—") {
+        if (mobile != "—" && mobile != "NULL") {
             $('input[name="destinationMobile"]').val(mobile).change();
         }
     });
@@ -1029,44 +1080,84 @@ table.dataTable.no-footer {
         }
     });
 
-
     const URL_ORIGIN = window.origin;
 
-    function loadDuplicateCustomerData(status) {
-        if (status == "Initialize") {
-            $.ajax({
-                type: "POST",
-                url: URL_ORIGIN + "/Customer/getDuplicateList/Commercial",
-                success: function(response) {
-                    $('#customerDuplicateTable > tbody').html(response);
-                    window.customerDuplicateTable = $('#customerDuplicateTable').DataTable({
-                        "ordering": false,
-                        "pageLength": 25
+    function loadDuplicateCustomerData(status, customerType) {
+        switch (status) {
+            case "Initialize":
+                if (customerType == "Residential") {
+                    $.ajax({
+                        type: "POST",
+                        url: URL_ORIGIN + "/Customer/getDuplicateList/Residential",
+                        success: function(response) {
+                            $('#customerDuplicateTable > tbody').html(response);
+                            window.customerDuplicateTable = $('#customerDuplicateTable').DataTable({
+                                "ordering": false,
+                                "pageLength": 25
+                            });
+                        }
+                    });
+                } else if (customerType == "Commercial" || customerType == "Business") {
+                    $.ajax({
+                        type: "POST",
+                        url: URL_ORIGIN + "/Customer/getDuplicateList/Commercial",
+                        success: function(response) {
+                            $('#commercialDuplicateTable > tbody').html(response);
+                            window.commercialDuplicateTable = $('#commercialDuplicateTable').DataTable({
+                                "ordering": false,
+                                "pageLength": 25
+                            });
+                        }
                     });
                 }
-            });
-            } else if (status == "Reload") {
-                const currentPage = window.customerDuplicateTable.page();
-                $.ajax({
-                    type: "POST",
-                    url: URL_ORIGIN + "/Customer/getDuplicateList/Commercial",
-                    success: function(response) {
-                        // Destroy the DataTable
-                        window.customerDuplicateTable.clear().destroy();
+                break;
+            case "Reload":
+                if (customerType == "Residential") {
+                    const currentPageResidential = window.customerDuplicateTable.page();
+                    $.ajax({
+                        type: "POST",
+                        url: URL_ORIGIN + "/Customer/getDuplicateList/Residential",
+                        success: function(response) {
+                            // Destroy the DataTable
+                            window.customerDuplicateTable.clear().destroy();
 
-                        // Reinitialize DataTable with previous configuration
-                        $('#customerDuplicateTable > tbody').html(response);
-                        window.customerDuplicateTable = $('#customerDuplicateTable').DataTable({
-                            "ordering": false,
-                            "pageLength": 25
-                        });
+                            // Reinitialize DataTable with previous configuration
+                            $('#customerDuplicateTable > tbody').html(response);
+                            window.customerDuplicateTable = $('#customerDuplicateTable').DataTable({
+                                "ordering": false,
+                                "pageLength": 25
+                            });
 
-                        // Set page to the stored index
-                        window.customerDuplicateTable.page(currentPage).draw('page');
-                    }
-                });
-            }
-        } loadDuplicateCustomerData("Initialize");
+                            // Set page to the stored index
+                            window.customerDuplicateTable.page(currentPageResidential).draw('page');
+                        }
+                    });
+                } else if (customerType == "Commercial" || customerType == "Business") {
+                    const currentPageCommercial = window.commercialDuplicateTable.page();
+                    $.ajax({
+                        type: "POST",
+                        url: URL_ORIGIN + "/Customer/getDuplicateList/Commercial",
+                        success: function(response) {
+                            // Destroy the DataTable
+                            window.commercialDuplicateTable.clear().destroy();
+
+                            // Reinitialize DataTable with previous configuration
+                            $('#commercialDuplicateTable > tbody').html(response);
+                            window.commercialDuplicateTable = $('#commercialDuplicateTable').DataTable({
+                                "ordering": false,
+                                "pageLength": 25
+                            });
+
+                            // Set page to the stored index
+                            window.commercialDuplicateTable.page(currentPageCommercial).draw('page');
+                        }
+                    });
+                }
+                break;
+        }
+    } 
+    loadDuplicateCustomerData("Initialize", "Residential");
+    loadDuplicateCustomerData("Initialize", "Commercial");
 
     function viewEntry(entryID) {
         const left = (screen.width - 1280) / 2;
@@ -1074,7 +1165,13 @@ table.dataTable.no-footer {
         window.open(URL_ORIGIN + "/customer/module/" + entryID, "Customer Dashboard", "width=" + 1280 + ", height=" + 720 + ", top=" + top + ", left=" + left);
     }
 
-    function removeEntry(entryID, entryName, entryNumber) {
+    $(document).on('click', '.removeDuplicatedEntry', function () {
+        const entryID = $(this).attr('data-prof_id');
+        const entryType = $(this).attr('data-customer-type');
+        const entryName = $(this).attr('data-entry-name');
+        const entryNumber = $(this).attr('data-number');
+        const dataSelector = $(this).attr('data-selector');
+
         Swal.fire({
             icon: "warning",
             title: "Remove Entry",
@@ -1083,42 +1180,48 @@ table.dataTable.no-footer {
             confirmButtonText: "Remove",
         }).then((result) => {
             if (result.isConfirmed) {
-            $.ajax({
-                type: "POST",
-                url: URL_ORIGIN + "/Customer/ajax_delete_customer",
-                data: "cid=" + entryID,
-                success: function (response) {
-                window.loadDuplicateCustomerData("Reload");
-                Swal.fire({
-                    title: "Removed Successfully!",
-                    icon: "success",
-                    showCancelButton: false,
-                    confirmButtonColor: "#3085d6",
-                    confirmButtonText: "OK"
+                ($('tr[data-selector="'+dataSelector+'"]:visible').length <= 3) ? $('tr[data-selector="'+dataSelector+'"]').hide() : $(this).parent().parent().hide();
+                $.ajax({
+                    type: "POST",
+                    url: URL_ORIGIN + "/Customer/ajax_delete_customer",
+                    data: "cid=" + entryID,
+                    success: function (response) {
+                        Swal.fire({
+                            title: "Removed Successfully!",
+                            icon: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#3085d6",
+                            confirmButtonText: "OK"
+                        });
+                    }
                 });
-                }
-            });
             } 
         });
-    }
+    });
 
-    function mergeEntry(entryFName, entryLName, entryBusinessName, entryType) {
-        resetOutputEntry()
+    var data_selector = "";
+    $(document).on('click', '.openCompareUI', function () {
+        const customerType = $(this).attr('data-customer-type');
+        const firstName = $(this).attr('data-firstname');
+        const lastName = $(this).attr('data-lastname');
+        const businessName = $(this).attr('data-business-name');
+        window.data_selector = $(this).attr('data-selector');
+        // ============
+        resetOutputEntry();
         $('.dupWizardStep1').hide();
         $('.dupWizardStep2').show();
-
         $('.fetchingDataLoader').show();
         $('.mergeOutputEntryWidth').hide();
         $('.entryDuplicateData').hide();
-        // loadingScreen
+        // ============
         $.ajax({
             type: "POST",
             url: URL_ORIGIN + "/Customer/getSpecificDuplicatesToMerge",
             data: {
-                entryFName: entryFName,
-                entryLName: entryLName,
-                entryBusinessName: entryBusinessName,
-                entryType: entryType
+                entryFName: firstName,
+                entryLName: lastName,
+                entryBusinessName: businessName,
+                entryType: customerType
             },
             success: function(response) {
                 $('.dupWizardStep2').show();
@@ -1129,7 +1232,7 @@ table.dataTable.no-footer {
                 $('.entryFields').after(response);
             }
         });
-    }
+    });
 
     $(document).on('click', '.backToDuplicateList', function () {
         Swal.fire({
@@ -1147,9 +1250,70 @@ table.dataTable.no-footer {
                 $('.entryDuplicateData').hide();
             } 
         });
-
     });
     
+    $(document).on('submit', '#mergeEntryForm', function(e) {
+        e.preventDefault();
+        const formData = $(this).serialize();
+        const entryID = $('input[name="destinationCustomerID"]').val();
+
+        if (entryID == "") {
+            Swal.fire({
+                icon: "warning",
+                title: "Unable to proceed",
+                html: "Please select main entry source first before merging.",
+                showConfirmButton: false,
+                showCloseButton: true,
+            });
+        } else {
+            $.ajax({
+                type: "POST",
+                url: URL_ORIGIN + "/Customer/entryMergeProcess",
+                data: formData,
+                beforeSend: function(formData, jqForm, options) {
+                    Swal.fire({
+                        icon: "info",
+                        title: "Merging Entry!",
+                        html: "Please wait while the merging process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                },
+                success: function(response) {
+                    if (response == true) {
+                        $('tr[data-selector="'+window.data_selector+'"]').hide();
+                        Swal.fire({
+                            icon: "success",
+                            title: "Merge complete!",
+                            html: "Entry has been merged successfully along with its data categories such as jobs, invoices, estimates, etc.",
+                            showConfirmButton: true,
+                            confirmButtonText: "Proceed",
+                            showCloseButton: true,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $('.dupWizardStep1').show();
+                                $('.dupWizardStep2').hide();
+                                $('.fetchingDataLoader').show();
+                                $('.mergeOutputEntryWidth').hide();
+                                $('.entryDuplicateData').hide();
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Failed to merge",
+                            html: "Entries failed to merge, Please try again.",
+                            showConfirmButton: false,
+                            showCloseButton: true,
+                        });
+                    }
+                }
+            });
+        }
+    });
 
     $(document).ready(function() {
 

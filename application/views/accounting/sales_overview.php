@@ -126,7 +126,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 										</div>
 									</div>
 									<div class="sinking-section">
-										<button class="transparent-button">Not now</button>
+										<button class="transparent-button">NotZX now</button>
 										<button class="success-button">Learn more</button>
 									</div>
 								</div>
@@ -575,7 +575,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 								<div class="img-button-links">
 									<div class="row">
 										<div class="col-md-6">
-											<div class="img">
+											<div class="img" >
 												<img src="<?=base_url('assets/img/accounting/overview/quick-sale.png')?>"
 													alt="">
 											</div>
@@ -594,7 +594,9 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 										</div>
 									</div>
 									<div class="row">
+									
 										<div class="col-md-6">
+										
 											<div class="img"
 												onclick="window.location.href='<?=base_url('accounting/addnewInvoice')?>'">
 												<img src="<?=base_url('assets/img/accounting/overview/new-invoice.png')?>"
@@ -603,6 +605,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 											<div class="text bold">
 												New invoice
 											</div>
+											
 										</div>
 										<div class="col-md-6">
 											<div class="img">
@@ -735,7 +738,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
 							<div class="bg-white p-4 rounded h-100">
 								<h5 class="text-secondary mt-0">SHORTCUTS</h5>
 								<div class="row px-2 text-center mt-5 align-items-center">
-									<div class="col-sm-6">
+									<div class="col-sm-6" onclick="window.location.href='<?=base_url('accounting/addnewInvoice')?>'">
 										<p class="bg-white border border-dark rounded-circle px-4 py-5 d-inline"><img
 												src="<?php echo base_url();?>assets/img/accounting/new-invoice.png"
 												class="w-25 img-responsive" /></p>

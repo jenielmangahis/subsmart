@@ -207,5 +207,14 @@
             </div>
         </div>
         <!--end of modal-->
+        
     </form>
+    <script>
+           $(document).ready(function(){
+
+            $('#time').datetimepicker({
+                 format: 'LT'
+             });
+              });
+    </script>
 </div>

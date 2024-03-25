@@ -1657,8 +1657,10 @@ $(function() {
     
                 $(this).parent().next().html(`
                     <span>Remind &emsp;</span>
-                    <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
-                    <span>&emsp; days before the transaction date</span>
+                   <div class="d-flex">
+                   <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
+                   <span>&emsp; days before the transaction date</span>
+                   </div>
                 `);
 
                 if ($('#modal-container form div.modal div.modal-body select#recurringInterval').length === 0) {
@@ -1682,8 +1684,17 @@ $(function() {
                 $(this).parent().next().removeClass('col-md-3');
                 $(this).parent().next().addClass('col-md-2');
                 $(this).parent().next().html(`
-                    <p class="m-0">Unscheduled transactions don’t have timetables; you use them as needed from the Recurring Transactions list.</p>
-                `);
+                    <div class="d-flex justify-content-end align-items-end pb-3 h-100"><span id="modal-help-popover-unscheduled" class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Unscheduled transactions don’t have timetables; you use them as needed from the Recurring Transactions list."></span></div>
+                    `);
+
+                    $('#modal-help-popover-unscheduled').popover({
+                        placement: 'top',
+                        html: true,
+                        trigger: "hover focus",
+                        content: function() {
+                            return 'Unscheduled transactions don’t have timetables; you use them as needed from the Recurring Transactions list.';
+                        }
+                    })
             break;
             case 'scheduled' :
                 if ($(this).parent().next().hasClass('col-md-2')) {
@@ -11225,10 +11236,10 @@ const makeRecurring = (modalName) => {
                         <option value="unscheduled">Unscheduled</option>
                     </select>
                 </div>
-                <div class="col-12 col-md-3 d-flex align-items-end">
+                <div class="col-12 col-md-3 d-flex flex-column p-0 align-items-start">
                     <span>Create &emsp;</span>
-                    <input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
-                    <span>&emsp; days in advance</span>
+                    <div class="d-flex align-items-start justify-content-center"><input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
+                    <span>&emsp; days in advance</span></div>
                 </div>
             </div>
         </div>
@@ -13966,7 +13977,7 @@ const printPreviewCreditMemo = () => {
 const printPreviewSalesReceipt = () => {
     var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
-    $.get('/accounting/print-sales-receipt-modal/'+split[1], function(result) {
+    $.get(base_url + 'accounting/print-sales-receipt-modal/'+split[1], function(result) {
         $('div#modal-container').append(result);
 
         $('#viewPrintSalesReceiptModal').modal('show');

@@ -197,7 +197,7 @@ class Accounting_receive_payment_model extends MY_Model
     {
         if ($company_id != "") {
             $conditions = "AND (payment_date >= '" . $start_date . "' AND payment_date <=  '" . $end_date . "')";
-            $sql = "SELECT SUM(amount) as total_sum FROM accounting_receive_payment WHERE company_id = " . $company_id . " " . $conditions . " ORDER BY payment_date ASC";
+            $sql = "SELECT SUM(amount_received) as total_sum FROM accounting_receive_payment WHERE company_id = " . $company_id . " " . $conditions . " ORDER BY payment_date ASC";
             $query = $this->db->query($sql);
             return $query->row()->total_sum;
         }
