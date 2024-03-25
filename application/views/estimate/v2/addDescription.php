@@ -548,6 +548,8 @@ echo put_header_assets();
                             </div>
 
                             <div class="row mb-3" style="background-color:white;font-size:16px;">
+                                <input type="hidden" id="data_item_selected_id">
+
                                 <div class="col-md-3">
                                     <b>Items Summary</b>
                                 </div>
@@ -1994,17 +1996,23 @@ window.document.addEventListener("DOMContentLoaded", async () => {
 });
 </script>
 <script>
-const itemSelectedId = []
+let itemSelectedId = []
 $(".select_item2a").click(function() {
     // taxRate();
-    if (!itemSelectedId.includes(parseInt(this.id))) {
+    itemSelectedId = $('#data_item_selected_id').val() ?
+        $('#data_item_selected_id').val().split(",") : [];
+
+    if (!itemSelectedId.includes(this.id.toString())) {
         var toReplace = $(this).attr('data-to-replace');
-        if (toReplace && itemSelectedId.includes(parseInt(toReplace))) {
-            var indexToRemove = itemSelectedId.indexOf(parseInt(toReplace));
+        if (toReplace && itemSelectedId.includes(toReplace.toString())) {
+            var indexToRemove = itemSelectedId.indexOf(toReplace
+                .toString());
             itemSelectedId.splice(indexToRemove, 1);
         }
-        itemSelectedId.push(parseInt(this.id));
+        itemSelectedId.push(this.id.toString());
     }
+    // Convert array back to string with comma separator
+    $('#data_item_selected_id').val(itemSelectedId.join(","));
 
 
 
@@ -2141,8 +2149,7 @@ $(".select_item2a").click(function() {
         "'></td>" +
         "<td>\n" +
         "<a href=\"#\" class=\"remove nsm-button danger\" id='" + count +
-        "'data-row-remove='" + idd + "'  data-itemselectedId='" + itemSelectedId +
-        "'><i class=\"bx bx-fw bx-trash\"></i></a>\n" +
+        "'data-row-remove='" + idd + "'  ><i class=\"bx bx-fw bx-trash\"></i></a>\n" +
         "</td>\n" +
         `<tr class='description' id="description_` + idd + `">
     <td colspan='7'>
@@ -2174,7 +2181,7 @@ $(".select_item2a").click(function() {
         var $select = $(this);
         $select.find('option').each(function() {
             var optionValue = $(this).val();
-            if (itemSelectedId.includes(parseInt(optionValue))) {
+            if (itemSelectedId.includes(optionValue.toString())) {
                 $(this).prop('disabled', true);
             }
         });
