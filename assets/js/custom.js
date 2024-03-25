@@ -3310,28 +3310,28 @@ $(document).on("click", ".remove", function (e) {
     $("#ITEMLIST_PRODUCT_" + idd).show();
   }
 
-  var itemSelectedId = $(this).attr("data-itemselectedId")
-    ? $(this).attr("data-itemselectedId").split(",")
+  var itemSelectedId = $("#data_item_selected_id").val()
+    ? $("#data_item_selected_id").val().split(",")
     : [];
 
-  if (itemSelectedId.includes(parseInt(toReplace))) {
-    var indexToRemove = itemSelectedId.indexOf(parseInt(toReplace));
+  if (itemSelectedId.includes(toReplace.toString())) {
+    var indexToRemove = itemSelectedId.indexOf(toReplace.toString());
     itemSelectedId.splice(indexToRemove, 1);
-    itemSelectedId.push(parseInt(this.id));
   }
-
   $(".getItemsSearch").each(function () {
     var $select = $(this);
+
+    $select.find("option").prop("disabled", false);
+
     $select.find("option").each(function () {
       var optionValue = $(this).val();
-      if (itemSelectedId.includes(parseInt(optionValue))) {
-        console.log("count goes here");
+      if (itemSelectedId.includes(optionValue.toString())) {
         $(this).prop("disabled", true);
-      } else {
-        $(this).prop("disabled", false);
       }
     });
   });
+  console.log("itemSelectedId delete", itemSelectedId);
+  $("#data_item_selected_id").val(itemSelectedId.join(","));
 
   $(this).removeAttr("data-remove");
   $("#priceqty_" + in_id).val(total_wo_tax);
