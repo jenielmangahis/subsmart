@@ -367,7 +367,6 @@ echo put_header_assets();
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row mb-3">
                                 <div class="col-md-3">
                                     <label for="job_name"><b>Customer Email</b></label>
@@ -383,13 +382,6 @@ echo put_header_assets();
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="job_location"><b>Job Location</b></label>
-                                    <!-- <input
-                                            id="autocomplete"
-                                            placeholder="Enter Location"
-                                            type="text"
-                                            class="form-control"
-                                            autocomplete="on" runat="server"
-                                        /> -->
                                     <!-- <input type="text" class="form-control" name="job_location" id="job_location" /> -->
                                     <input type="text" class="form-control" name="job_location" id="job_location" />
 
