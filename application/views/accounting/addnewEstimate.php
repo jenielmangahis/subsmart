@@ -447,7 +447,7 @@ echo put_header_assets();
 
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-3">
-                                    <label for="purchase_order_number"><b>Purchase Order#</b><small class="help help-sm">(optional)</small></label>
+                                    <label for="purchase_order_number"><b>Purchase Order#</b> <small class="help help-sm">(optional)</small></label>
                                     <input type="text" class="form-control" name="purchase_order_number" id="purchase_order_number" placeholder="Enter Purchase Order#" onChange="jQuery('#customer_name').text(jQuery(this).val());" />
                                 </div>
                                 <div class="col-md-3 form-group">
@@ -582,14 +582,21 @@ echo put_header_assets();
                                             <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
                                         </tr>
                                         <tr>
-                                            <td>Markup $<span id="span_markup">0.00</span></td>
-                                            <td><a href="#" data-bs-toggle="modal" data-bs-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td>
-                                            <td><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0"><span id="span_markup_input_form">0.00</span></td>
-                                        </tr>
+                                            <td>
+                                                Markup
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#modalSetMarkup"
+                                                    style="color:#02A32C;">set markup</a>
+                                            </td  colspan="2">
+                                            <td style="text-align:right;">
+                                                $<span id="span_markup">0.00</span>
+                                                <input type="hidden" name="markup_input_form" id="markup_input_form"
+                                                    class="markup_input" value="0">
+                                                <!-- <span id="span_markup_input_form">0.00</span> -->
+                                            </td>
+                                        </tr>                                        
                                         <tr style="color:blue;font-weight:bold;font-size:16px;">
                                             <td><b>Grand Total ($)</b></td>
-                                            <td></td>
-                                            <td><b><span id="grand_total">0.00</span>
+                                            <td  colspan="2" style="text-align:right;"><b><span id="grand_total">0.00</span>
                                                     <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
                                         </tr>
                                     </table>
@@ -781,7 +788,7 @@ echo put_header_assets();
 
             <!-- Modal Set Markup -->
             <div class="modal fade nsm-modal" id="modalSetMarkup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-dialog modal-md" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Set Markup</h5>
@@ -793,10 +800,15 @@ echo put_header_assets();
                             <p>Set percent or fixed markup that will be applied to each item.</p>
                             <p>The markup will not be visible to customer estimate.</p>
 
-                            <div class="btn-group margin-right-sec" role="group" aria-label="...">
+                            <!-- <div class="btn-group margin-right-sec" role="group" aria-label="...">
                                 <button class="btn btn-default btn-markup-percent" type="button" name="markup_type_percent">%</button>
                                 <button class="btn btn-success btn-markup-dollar" type="button" name="markup_type_dollar" id="markup_type_dollar">$</button>&emsp;&emsp;
                                 <input class="form-control" name="markup_input" id="markup_input" type="number" style="width: 260px;">
+                            </div> -->
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">$</span>
+                                <input class="form-control" name="markup_input" id="markup_input" type="number"
+                                    style="width: 260px;">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -1575,22 +1587,33 @@ echo put_header_assets();
 
 <script>
     window.document.addEventListener("DOMContentLoaded", async () => {
-        const $saveDraftButton = document.getElementById("estimate-save-draft-btn");
+        //const $saveDraftButton = document.getElementById("estimate-save-draft-btn");
         const $saveButton = document.getElementById("estimate-save-btn");
 
         const $statusSelect = document.getElementById("estimate-status");
         const $form = document.getElementById("estimate_form");
 
-        $saveDraftButton.addEventListener("click", () => {
-            $statusSelect.value = "Draft";
-            if (!isFormValid($form)) return;
-            $form.submit();
-        });
+        // $saveDraftButton.addEventListener("click", () => {
+        //     $statusSelect.value = "Draft";
+        //     if (!isFormValid($form)) return;
+        //     $form.submit();
+        // });
 
         $saveButton.addEventListener("click", () => {
             $statusSelect.value = "Submitted";
-            if (!isFormValid($form)) return;
-            $form.submit();
+            const adjustment_name = $('#adjustment_name').val();
+            const adjustment_value = $('#adjustment_input').val();
+
+            if( adjustment_name == '' && adjustment_value > 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: 'Please enter adjustment name'
+                });
+            }else{
+                if (!isFormValid($form)) return;
+                $form.submit();
+            }
         });
         
         function isFormValid($formElement) {
