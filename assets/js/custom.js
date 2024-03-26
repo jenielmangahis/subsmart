@@ -833,7 +833,7 @@ $(".select_item").click(function () {
     "</span></div></td>\n" +
     // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
     // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-    '<td width="10%" class="hidden_mobile_view"><input type="number" name="discount[]" value="0" class="form-control discount" data-counter=\'' +
+    '<td width="10%" class="hidden_mobile_view"><input type="number" min=0 name="discount[]" value="0" class="form-control discount" data-counter=\'' +
     count +
     "' id='discount_" +
     count +
