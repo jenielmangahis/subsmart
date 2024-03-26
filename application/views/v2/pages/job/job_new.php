@@ -886,13 +886,11 @@
                                                                     <span class="bx bx-plus"></span>Create Job Type
                                                                 </a>
                                                             </div>
-                                                            <select id="job_type" name="job_type" class="form-control " >
-                                                                <option value="">Select Type</option>
-                                                                <?php if(!empty($job_types)): ?>
-                                                                    <?php foreach ($job_types as $type): ?>
-                                                                        <option <?php if(isset($jobs_data) && $jobs_data->job_type == $type->title) {echo 'selected'; } ?> value="<?= $type->title; ?>" data-image="<?= $type->icon_marker; ?>"><?= $type->title; ?></option>
-                                                                    <?php endforeach; ?>
-                                                                <?php endif; ?>
+                                                            <select id="job_type" name="job_type" class="form-control">
+                                                                <option value="">Select Type1</option>
+                                                                <?php if( $defaultJobType ){ ?>
+                                                                    <option  value="<?= $defaultJobType->id; ?>" data-image="<?= $defaultJobType->icon_marker; ?>" selected="selected"><?= $defaultJobType->title; ?></option>
+                                                                <?php } ?>
                                                             </select>
                                                         </div>
                                                     </div>

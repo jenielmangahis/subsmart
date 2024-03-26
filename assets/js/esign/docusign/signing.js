@@ -97,6 +97,9 @@ function Signing(hash) {
     const {  inv_monthly_monitoring, inv_program_setup, inv_installation_cost, inv_taxes, inv_subtotal, inv_equipment_cost } = window.__esigndata.auto_populate_data.invoices;
 
     const {  business_name } = window.__esigndata.auto_populate_data.business_profile;
+
+    const {  job_account_number, job_number, job_name, job_type } = window.__esigndata.auto_populate_data.jobs;
+
     
     let text = recipient[field_name.toLowerCase()];
     let { pageTop: top, left } = JSON.parse(coordinates);
@@ -131,6 +134,54 @@ function Signing(hash) {
         }
       }else{
         return panel_type;
+      }          
+    }
+
+    if( field_name == "Job Account Number" ) {   
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return job_account_number;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return job_account_number;
+      }          
+    }
+
+    if( field_name == "Job Number" ) {   
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return job_number;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return job_number;
+      }          
+    }
+
+    if( field_name == "Job Type" ) {   
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return job_type;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return job_type;
+      }          
+    }
+
+    if( field_name == "Job Name" ) {   
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return job_name;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return job_name;
       }          
     }
 
@@ -795,7 +846,12 @@ function Signing(hash) {
         $(".signing__signatureInput").val("");
 
         $signatureModal.attr("data-field-id", fieldId);
-        $signatureModal.modal("show");
+
+        if( window.__ismobile ){
+          alert('Sign in mobile');
+        }else{
+          $signatureModal.modal("show");
+        }        
       });
       return $element;
     }

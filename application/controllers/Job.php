@@ -343,8 +343,11 @@ class Job extends MY_Controller
             $created_by = $this->general->get_data_with_param($query, false);            
             $items = $this->jobs_model->get_specific_job_items($id);
             
-            $this->page_data['jobs_data'] = $this->jobs_model->get_specific_job($id);
+            $job = $this->jobs_model->get_specific_job($id);
+            $defaultJobType = $this->JobType_model->getById($job->job_type);
+            $this->page_data['jobs_data'] = $job;
             $this->page_data['jobs_data_items'] = $items;
+            $this->page_data['defaultJobType'] = $defaultJobType;
 
             $this->db->select('id');
             $this->db->where('job_id', $id);
@@ -2279,7 +2282,7 @@ class Job extends MY_Controller
                 $job_workorder_id = $input['work_order_id'] != NULL ? $input['work_order_id'] : 0;
             }
 
-            $jobTag = $this->JobTags_model->getById($input['tags']);
+            $jobTag = $this->JobTags_model->getById($input['job_tag']);
             $estimate_id = 0;
             if ($input['estimate_id'] > 0) {
                 $estimate_id = $input['estimate_id'];

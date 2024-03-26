@@ -9,10 +9,6 @@ echo put_header_assets();
 <!-- <script src="<?php // base_url("assets/js/estimate/autosave-standard.js") ?>"></script> -->
 
 <div class="wrapper" role="wrapper">
-
-    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-
     <style>
         label>input {
             visibility: initial !important;
@@ -294,6 +290,13 @@ echo put_header_assets();
             border: 1px solid #dc3545;
             border-radius: 4px;
         } 
+        .select2-results__group{
+            margin:0px !important;
+
+        }
+        .select2-container--default .select2-results__option .select2-results__option{
+            padding:0px !important;
+        }
     </style>
 
     <!-- page wrapper start -->
@@ -337,32 +340,33 @@ echo put_header_assets();
             </div>
             <!-- end row -->
             <?php echo form_open_multipart('estimate/savenewestimate', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
+            <input type="hidden" name="module" value="accounting" />
             <div class="row custom__border">
                 <div class="col-xl-12">
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label for="customers" class="required"><b>Customer</b></label>
+                                    <div class="d-flex justify-content-between">
+                                        <label for="customers" class="required"><b>Customer</b></label>
+                                        <div class="d-flex">
+                                            <a class="nsm-link d-flex align-items-center"  data-bs-toggle="modal" data-bs-target="#new_customer" href="javascript:void(0);">
+                                                <span class="bx bx-plus"></span>Create Customer
+                                            </a>
+                                            <a class="nsm-link d-flex align-items-center" style="margin-left:5px;" data-bs-toggle="modal" data-bs-target="#quick-add-lead" href="javascript:void(0);">
+                                                <span class="bx bx-plus"></span>Create Lead
+                                            </a>
+                                        </div>
+                                    </div>
                                     <div id="sel-customerdiv">
                                         <select name="customer_id" id="sel-customer" class="form-control" required>
-                                            <option value="0">Select a customer</option>
-                                            <?php foreach ($customers as $customer) : ?>
-                                                <?php if ($default_customer_id > 0) { ?>
-                                                    <option <?= $default_customer_id == $customer->prof_id ? 'selected="selected"' : ''; ?> value="<?php echo $customer->prof_id ?>"><?php echo $customer->contact_name . '' . $customer->first_name . "&nbsp;" . $customer->last_name; ?> </option>
-                                                <?php } else { ?>
-                                                    <option value="<?php echo $customer->prof_id ?>"><?php echo $customer->contact_name . '' . $customer->first_name . "&nbsp;" . $customer->last_name; ?> </option>
-                                                <?php } ?>
-
-                                            <?php endforeach; ?>
+                                            <?php if ($default_customer_id > 0) { ?>
+                                                <option value="<?php echo $default_customer_id; ?>" selected=""><?php echo $default_customer_name; ?> </option>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <br><br><a class="link-modal-open" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="color:#02A32C;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
-                                </div>
                             </div>
-
                             <div class="row mb-3">
                                 <div class="col-md-3">
                                     <label for="job_name"><b>Customer Email</b></label>
@@ -378,13 +382,6 @@ echo put_header_assets();
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <label for="job_location"><b>Job Location</b></label>
-                                    <!-- <input
-                                            id="autocomplete"
-                                            placeholder="Enter Location"
-                                            type="text"
-                                            class="form-control"
-                                            autocomplete="on" runat="server"
-                                        /> -->
                                     <!-- <input type="text" class="form-control" name="job_location" id="job_location" /> -->
                                     <input type="text" class="form-control" name="job_location" id="job_location" />
 
@@ -450,7 +447,7 @@ echo put_header_assets();
 
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-3">
-                                    <label for="purchase_order_number"><b>Purchase Order#</b><small class="help help-sm">(optional)</small></label>
+                                    <label for="purchase_order_number"><b>Purchase Order#</b> <small class="help help-sm">(optional)</small></label>
                                     <input type="text" class="form-control" name="purchase_order_number" id="purchase_order_number" placeholder="Enter Purchase Order#" onChange="jQuery('#customer_name').text(jQuery(this).val());" />
                                 </div>
                                 <div class="col-md-3 form-group">
@@ -484,12 +481,12 @@ echo put_header_assets();
                                 </div>
                                 <div class="col-md-6">
                                 </div>
-                                <div class="col-md-3" align="right">
+                                <!-- <div class="col-md-3" align="right">
                                     <b>Show qty as: </b>
                                     <select class="dropdown">
                                         <option>Quantity</option>
                                     </select>
-                                </div>
+                                </div> -->
                             </div>
 
                             <div class="row mb-3" id="plansItemDiv" style="background-color:white;">
@@ -514,8 +511,8 @@ echo put_header_assets();
                                     </table>
                                     <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
                                     <!-- <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a> -->
-                                    <a class="link-modal-open nsm-link" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a> &emsp;
-                                    <a class="link-modal-open nsm-link" href="#" id="add_package" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span>Add Package</a>
+                                    <a class="link-modal-open nsm-link" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span> Add Items</a> &emsp;
+                                    <a class="link-modal-open nsm-link" href="#" id="add_package" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span> Add Package</a>
                                     <hr>
                                 </div>
                             </div>
@@ -562,7 +559,7 @@ echo put_header_assets();
                                         <tr>
                                             <td>
                                                 <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:90%; display:inline-block; border: 1px dashed #d1d1d1">
-                                                <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
+                                                <i id="help-popover-adjustment" class='bx bx-fw bx-info-circle ms-2 text-muted' style="margin-top: 0px !important;" data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=""></i> 
                                             </td>
                                             <td colspan="2" style="text-align: right;">
                                                 <div class="input-group mb-2" style="width: 40%;float: right;">
@@ -585,14 +582,21 @@ echo put_header_assets();
                                             <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
                                         </tr>
                                         <tr>
-                                            <td>Markup $<span id="span_markup">0.00</span></td>
-                                            <td><a href="#" data-bs-toggle="modal" data-bs-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td>
-                                            <td><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0"><span id="span_markup_input_form">0.00</span></td>
-                                        </tr>
+                                            <td>
+                                                Markup
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#modalSetMarkup"
+                                                    style="color:#02A32C;">set markup</a>
+                                            </td  colspan="2">
+                                            <td style="text-align:right;">
+                                                $<span id="span_markup">0.00</span>
+                                                <input type="hidden" name="markup_input_form" id="markup_input_form"
+                                                    class="markup_input" value="0">
+                                                <!-- <span id="span_markup_input_form">0.00</span> -->
+                                            </td>
+                                        </tr>                                        
                                         <tr style="color:blue;font-weight:bold;font-size:16px;">
                                             <td><b>Grand Total ($)</b></td>
-                                            <td></td>
-                                            <td><b><span id="grand_total">0.00</span>
+                                            <td  colspan="2" style="text-align:right;"><b><span id="grand_total">0.00</span>
                                                     <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
                                         </tr>
                                     </table>
@@ -655,9 +659,8 @@ echo put_header_assets();
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>
-                                            <h6>Instructions</h6>
-                                        </label><span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
+                                        <label><h6>Instructions</h6></label>
+                                        <span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
                                         <textarea name="instructions" cols="40" rows="2" class="form-control" id="instructions_est"></textarea>
                                     </div>
                                 </div>
@@ -666,9 +669,7 @@ echo put_header_assets();
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
                                     <a href="<?php echo url('accounting/newEstimateList') ?>" class="nsm-button" style="color: black;">Cancel</a>
-
-                                    <button type="button" class="nsm-button" style="margin: 0; height: 34px;" id="estimate-save-draft-btn">Save as Draft</button>
-
+                                    <!-- <button type="button" class="nsm-button" style="margin: 0; height: 34px;" id="estimate-save-draft-btn">Save as Draft</button> -->
                                     <button type="button" class="nsm-button primary" style="margin: 0; height: 34px;" id="estimate-save-btn">Save</button>
                                     <!-- <button type="button" class="btn btn-success but" style="border-radius: 0 !important;">Preview</button> -->
                                 </div>
@@ -787,7 +788,7 @@ echo put_header_assets();
 
             <!-- Modal Set Markup -->
             <div class="modal fade nsm-modal" id="modalSetMarkup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-dialog modal-md" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Set Markup</h5>
@@ -799,10 +800,15 @@ echo put_header_assets();
                             <p>Set percent or fixed markup that will be applied to each item.</p>
                             <p>The markup will not be visible to customer estimate.</p>
 
-                            <div class="btn-group margin-right-sec" role="group" aria-label="...">
+                            <!-- <div class="btn-group margin-right-sec" role="group" aria-label="...">
                                 <button class="btn btn-default btn-markup-percent" type="button" name="markup_type_percent">%</button>
                                 <button class="btn btn-success btn-markup-dollar" type="button" name="markup_type_dollar" id="markup_type_dollar">$</button>&emsp;&emsp;
                                 <input class="form-control" name="markup_input" id="markup_input" type="number" style="width: 260px;">
+                            </div> -->
+                            <div class="input-group mb-3">
+                                <span class="input-group-text" id="basic-addon1">$</span>
+                                <input class="form-control" name="markup_input" id="markup_input" type="number"
+                                    style="width: 260px;">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -908,10 +914,11 @@ echo put_header_assets();
         </div>
         <!-- end container-fluid -->
     </div>
-    <!-- page wrapper end -->
 </div>
 
 <?php echo $file_selection; ?>
+<?php include viewPath('v2/pages/job/modals/new_customer'); ?>
+<?php include viewPath('v2/includes/leads/quick_add'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
 
 <script>
@@ -931,14 +938,8 @@ echo put_header_assets();
 <script src="<?php echo $url->assets ?>js/add.js"></script>
 
 <script>
-    //   $(function() {
-    //     $("#rebatable_toggle").each(function(){
-    //     $(this).change(function() {
-    //     //   $('#console-event').html('Toggle: ' + $(this).prop('checked'))
-    //     alert('yeah');
-    //     })
-    //   })
     $(document).ready(function() {
+        
 
         $('#modal_items_list').DataTable({
             "autoWidth": false,
@@ -1035,8 +1036,91 @@ echo put_header_assets();
 
 
     $(document).ready(function() {
-        $('#sel-customer').select2();
+        $('#help-popover-adjustment').popover({
+            placement: 'top',
+            html : true, 
+            trigger: "hover focus",
+            content: function() {
+                return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
+            } 
+        }); 
+
+        $('#sel-customer').select2({
+            ajax: {
+                url: base_url + 'autocomplete/_company_customer_lead',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                  return {
+                    q: params.term, // search term
+                    page: params.page
+                  };
+                },
+                processResults: function(data) {
+                return {
+                        results: [{
+                        children: $.map(data, function(item) {
+                            item.text = item.name;
+                            return item;
+                        })
+                        }]
+                    };
+                },
+                cache: true
+              },
+              minimumInputLength: 0,
+              templateResult: formatRepoCustomer,
+              templateSelection: formatRepoCustomerSelection
+        });
+
+        function formatRepoCustomerSelection(repo) {
+            return repo.text;
+        }
+
+        function formatRepoCustomer(repo) {
+            if (!repo.id){
+                var $container = $(repo.text);
+                return $container;
+            } 
+
+            var $container = $(repo.html);
+
+            return $container;
+        }
         var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>";
+
+        $("#new_customer_form").submit(function(e) {
+            e.preventDefault(); 
+            var form = $(this);
+            $.ajax({
+                type: "POST",
+                url: base_url + "customer/_quick_add_customer",
+                data: form.serialize(), 
+                dataType:'json',
+                success: function(result)
+                {
+                    if(result.is_success == 1){
+                        $('#new_customer').modal('hide');
+                        Swal.fire({
+                            html: 'Customer Added Successfully',
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#32243d',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            $('#new_customer_form')[0].reset();
+                        });                        
+                    }else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: result.msg
+                        });                        
+                    }
+                }
+            });
+        });
 
         /*$('#customers')
             .empty() //empty select
@@ -1046,23 +1130,6 @@ echo put_header_assets();
             .trigger("change"); //apply to select2*/
     });
 </script>
-
-<!-- <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script> -->
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initialize&libraries=&v=weekly"></script>
-<script>
-    function initialize() {
-        var input = document.getElementById('job_location');
-        var autocomplete = new google.maps.places.Autocomplete(input);
-        google.maps.event.addListener(autocomplete, 'place_changed', function() {
-            var place = autocomplete.getPlace();
-            document.getElementById('city2').value = place.name;
-            document.getElementById('cityLat').value = place.geometry.location.lat();
-            document.getElementById('cityLng').value = place.geometry.location.lng();
-        });
-    }
-    google.maps.event.addDomListener(window, 'load', initialize);
-</script>
-
 <script>
     $(document).ready(function() {
 
@@ -1520,22 +1587,33 @@ echo put_header_assets();
 
 <script>
     window.document.addEventListener("DOMContentLoaded", async () => {
-        const $saveDraftButton = document.getElementById("estimate-save-draft-btn");
+        //const $saveDraftButton = document.getElementById("estimate-save-draft-btn");
         const $saveButton = document.getElementById("estimate-save-btn");
 
         const $statusSelect = document.getElementById("estimate-status");
         const $form = document.getElementById("estimate_form");
 
-        $saveDraftButton.addEventListener("click", () => {
-            $statusSelect.value = "Draft";
-            if (!isFormValid($form)) return;
-            $form.submit();
-        });
+        // $saveDraftButton.addEventListener("click", () => {
+        //     $statusSelect.value = "Draft";
+        //     if (!isFormValid($form)) return;
+        //     $form.submit();
+        // });
 
         $saveButton.addEventListener("click", () => {
             $statusSelect.value = "Submitted";
-            if (!isFormValid($form)) return;
-            $form.submit();
+            const adjustment_name = $('#adjustment_name').val();
+            const adjustment_value = $('#adjustment_input').val();
+
+            if( adjustment_name == '' && adjustment_value > 0 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: 'Please enter adjustment name'
+                });
+            }else{
+                if (!isFormValid($form)) return;
+                $form.submit();
+            }
         });
         
         function isFormValid($formElement) {

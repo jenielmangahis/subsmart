@@ -121,7 +121,7 @@ class Customers extends MY_Controller {
     }
 
     public function index()
-    {
+    {        
         add_footer_js(array(
             "assets/js/customer/lib/bday-picker.js",
             "assets/js/v2/printThis.js",
@@ -320,6 +320,7 @@ class Customers extends MY_Controller {
                 $customer_id = $getDatas->customer_id;
                 $customer_name = ($getDatas->customer_name != "") ? $getDatas->customer_name : $getDatas->business_name;
                 $customer_address = ($getDatas->customer_address != "") ? $getDatas->customer_address : "Not Specified";
+                $customer_address = str_replace("NA","",$customer_address);
                 if ($getDatas->phone_h == "")  {
                     $contact = $getDatas->phone_m;
                 } else if ($getDatas->phone_m == "") {

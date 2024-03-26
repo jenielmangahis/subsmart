@@ -10650,8 +10650,10 @@ const submitModalForm = (event, el) => {
 
             if(res.success === true) {
                 if(submitType === 'save-and-close' || submitType === 'save-and-void') {
-                    // $(el).children().modal('hide');
-                    //location.reload();
+                    $(el).children().modal('hide');
+                    setTimeout(function() { 
+                        location.reload();
+                    }, 1000);                    
                 }
 
                 if(submitType !== 'save-and-close' && submitType !== 'save-and-new' && modalId !== '#payBillsModal') {
