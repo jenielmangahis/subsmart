@@ -6919,9 +6919,19 @@ class Accounting_modals extends MY_Controller
         $this->form_validation->set_rules('deposit_to_account', 'Deposit to', 'required');
 
         if ($this->form_validation->run() === false) {
-            $return['data'] = null;
+            $return['data']    = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
+            $return['message'] = "Error: 'Customer' & 'Deposit to' is required";
+            $error_message     = ""; 
+            if(!isset($data['deposit_to_account']) && $data['deposit_to_account'] == '') {
+                $error_message .= "Please select Deposit To";
+            }
+            if(!isset($data['customer']) && $data['customer'] == '') {
+                $error_message .= "<br />Please select Customer";
+            }
+            if($error_message != "") {
+                $return['message'] = $error_message;
+            }
         } else {
             $paymentData = [
                 'company_id' => logged('company_id'),
@@ -9165,6 +9175,32 @@ class Accounting_modals extends MY_Controller
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Error';
+            $error_messages = '';
+
+            if(!isset($data['item']) || $data['item'] == '') {
+                $error_messages .= 'Please add Item or Package.';
+            }
+            if(!isset($data['customer']) || $data['customer'] == '') {
+                $error_messages .= '<br />Please select Customer.';
+            }
+            if(!isset($data['estimate_no']) || $data['estimate_no'] == '') {
+                $error_messages .= '<br />Please add Estimate #.';
+            }
+            if(!isset($data['estimate_date']) || $data['estimate_date'] == '') {
+                $error_messages .= '<br />Please select Estimate Date.';
+            }
+            if(!isset($data['expiry_date']) || $data['expiry_date'] == '') {
+                $error_messages .= '<br />Please select Expiry Date.';
+            }
+            if(!isset($data['estimate_type']) || $data['estimate_type'] == '') {
+                $error_messages .= '<br />Please select Estimate Type.';
+            }
+            if(!isset($data['estimate_status']) || $data['estimate_status'] == '') {
+                $error_messages .= '<br />Please select Estimate Status.';
+            }
+            if($error_messages != '') {
+                $return['message'] = $error_messages;
+            }
         } else {
             $company_id  = getLoggedCompanyID();
             $user_id  = getLoggedUserID();
