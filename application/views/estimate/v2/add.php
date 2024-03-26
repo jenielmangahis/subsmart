@@ -1971,12 +1971,7 @@ $(".select_item2a").click(function() {
 
     // taxRate();
     if (!itemSelectedId.includes(this.id.toString())) {
-        var toReplace = $(this).attr('data-to-replace');
-        if (toReplace && itemSelectedId.includes(toReplace.toString())) {
-            var indexToRemove = itemSelectedId.indexOf(toReplace
-                .toString());
-            itemSelectedId.splice(indexToRemove, 1);
-        }
+
         itemSelectedId.push(this.id.toString());
     }
     // Convert array back to string with comma separator
@@ -2130,20 +2125,23 @@ $(".select_item2a").click(function() {
         $(tableRow).replaceWith(markup);
     } else {
         tableBody.append(markup);
+        $('.getItemsSearch').each(function() {
+            var $select = $(this);
+            $select.find('option').each(function() {
+                var optionValue = $(this).val();
+                if (itemSelectedId.includes(optionValue.toString())) {
+                    $(this).prop('disabled', true);
+                } else {
+                    $(this).prop('disabled', false);
+                }
+            });
+        });
     }
 
 
     $(this).removeAttr('data-replace');
     $(this).removeAttr('data-to-replace');
-    $('.getItemsSearch').each(function() {
-        var $select = $(this);
-        $select.find('option').each(function() {
-            var optionValue = $(this).val();
-            if (itemSelectedId.includes(optionValue.toString())) {
-                $(this).prop('disabled', true);
-            }
-        });
-    });
+
     $('.getItemsSearch').select2();
     // markup2 = "<tr id=\"sss\">" +
     //     "<td >"+title+"</td>\n" +

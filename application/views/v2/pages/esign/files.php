@@ -842,6 +842,15 @@ echo put_header_assets();
                                                             <span class="u-ellipsis ng-binding">Total Due</span>
                                                         </div>
                                                     </li>
+
+                                                    <li class="menu_listItem">
+                                                        <div class="fields menu_item">
+                                                            <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-job_account_number"></i></span>
+                                                            <i class="esign-fa fas fa-dollar-sign"></i>
+                                                            <span class="u-ellipsis ng-binding">Job Account Number</span>
+                                                        </div>
+                                                    </li>
+
                                                 </ul>
                                             </div>
                                         </div>
