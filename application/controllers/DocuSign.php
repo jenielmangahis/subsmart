@@ -3141,7 +3141,7 @@ SQL;
     }
 
     public function debugGeneratePDF(){
-        $pdf = $this->debugGeneratePDFMaker(1103);
+        $pdf = $this->debugGeneratePDFMaker(1306);
         echo 'Finish';
     }
 
@@ -3161,6 +3161,8 @@ SQL;
 
         require_once(APPPATH . 'libraries/tcpdf/tcpdf.php');
         require_once(APPPATH . 'libraries/tcpdf/tcpdi.php');
+        // require_once(APPPATH . 'libraries/fpdi/autoload.php');
+        // require_once(APPPATH . 'libraries/fpdi/Fpdi.php');
 
         $this->db->where('docfile_id', $document->id);
         $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
@@ -3173,9 +3175,11 @@ SQL;
                 $pageCount = $pdf->setSourceFile($generatedPDFPath);
 
                 for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                    //$pageIndex = $pdf->importPage($pageNo, \PageBoundaries::MEDIA_BOX);
                     $pageIndex = $pdf->importPage($pageNo);
                     $pdf->AddPage();
-                    $pdf->useTemplate($pageIndex, null, null, 0, 0, true);
+                    //$pdf->useTemplate($pageIndex, null, null, 0, 0, true);
+                    $pdf->useTemplate($pageIndex);
                 }
 
                 return $pdf->Output(null, 'S');
@@ -3240,6 +3244,7 @@ SQL;
 
             for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
                 $pageIndex = $pdf->importPage($pageNo);
+                //$pageIndex = $pdf->importPage($pageNo, PdfReader\PageBoundaries::MEDIA_BOX);
                 $pdf->AddPage();
                 $pdf->useTemplate($pageIndex, null, null, 0, 0, true);
 

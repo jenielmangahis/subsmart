@@ -2606,7 +2606,6 @@ class Job extends MY_Controller
                 //'gross_profit' => $input['input_totalJobGrossProfit'],
                 'job_account_number' => $input['JOB_ACCOUNT_NUMBER']                
             );
-
             $commission_history_payload = [
                 'datetime' => date("M d, Y")."<br>".date("h:i a"), 
                 'user_id' => $input['employee_id'], 

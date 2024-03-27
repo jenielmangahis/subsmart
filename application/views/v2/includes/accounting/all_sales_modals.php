@@ -1,11 +1,9 @@
-<div class="modal fade nsm-modal" id="update-status-modal" tabindex="-1" aria-labelledby="update_status_modal_label"
-    aria-hidden="true">
+<div class="modal fade nsm-modal" id="update-status-modal" tabindex="-1" aria-labelledby="update_status_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="update_status_modal_label">Update estimate status</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i
-                        class='bx bx-fw bx-x m-0'></i></button>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <form id="update-estimate-status-form">
                 <div class="modal-body">
@@ -37,15 +35,13 @@
     </div>
 </div>
 
-<div class="modal fade nsm-modal" id="print_all_sales_transactions_modal" tabindex="-1"
-    aria-labelledby="print_all_sales_transactions_modal_label" aria-hidden="true">
+<div class="modal fade nsm-modal" id="print_all_sales_transactions_modal" tabindex="-1" aria-labelledby="print_all_sales_transactions_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="print_all_sales_transactions_modal_label">Print All Sales
                     Transactions List</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i
-                        class='bx bx-fw bx-x m-0'></i></button>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
                 <div style="overflow-x: auto; width: 100%;">
@@ -53,173 +49,177 @@
                         <thead>
                             <tr>
                                 <?php foreach ($headers as $header) { ?>
-                                <?php if ($header !== 'Attachments') { ?>
-                                <td data-name=" <?php echo $header; ?>"><?php echo strtoupper($header); ?></td>
-                                <?php } else { ?>
-                                <td class="table-icon text-center" data-name="<?php echo $header; ?>"><i
-                                        class="bx bx-paperclip"></i></td>
-                                <?php } ?>
+                                    <?php if ($header !== 'Attachments') { ?>
+                                        <td data-name=" <?php echo $header; ?>"><?php echo strtoupper($header); ?></td>
+                                    <?php } else { ?>
+                                        <td class="table-icon text-center" data-name="<?php echo $header; ?>"><i class="bx bx-paperclip"></i></td>
+                                    <?php } ?>
                                 <?php } ?>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if (count($transactions) > 0) { ?>
-                            <?php foreach ($transactions as $transaction) { ?>
-                            <?php switch ($type) {
-                                case 'estimates': ?>
-                            <tr>
-                                <td><?php echo $transaction['date']; ?></td>
-                                <td><?php echo $transaction['type']; ?></td>
-                                <td><?php echo $transaction['no']; ?></td>
-                                <td><?php echo $transaction['customer']; ?></td>
-                                <td><?php echo $transaction['memo']; ?></td>
-                                <td><?php echo $transaction['expiration_date']; ?></td>
-                                <td><?php echo $transaction['total']; ?></td>
-                                <td><?php echo $transaction['last_delivered']; ?></td>
-                                <td><?php echo $transaction['email']; ?></td>
-                                <td><?php echo $transaction['accepted_date']; ?></td>
-                                <td><?php echo $transaction['attachments']; ?></td>
-                                <td><?php echo $transaction['status']; ?></td>
-                                <td><?php echo $transaction['po_number']; ?></td>
-                                <td><?php echo $transaction['sales_rep']; ?></td>
-                            </tr>
-                            <?php break;
-                                case 'invoices': ?>
-                            <tr>
-                                <td><?php echo $transaction['date']; ?></td>
-                                <td><?php echo $transaction['type']; ?></td>
-                                <td><?php echo $transaction['no']; ?></td>
-                                <td><?php echo $transaction['customer']; ?></td>
-                                <td><?php echo $transaction['memo']; ?></td>
-                                <td><?php echo $transaction['due_date']; ?></td>
-                                <td><?php echo $transaction['aging']; ?></td>
-                                <td><?php echo $transaction['balance']; ?></td>
-                                <td><?php echo $transaction['total']; ?></td>
-                                <td><?php echo $transaction['last_delivered']; ?></td>
-                                <td><?php echo $transaction['email']; ?></td>
-                                <td><?php echo $transaction['attachments']; ?></td>
-                                <td><?php echo $transaction['status']; ?></td>
-                                <td><?php echo $transaction['po_number']; ?></td>
-                                <td><?php echo $transaction['sales_rep']; ?></td>
-                            </tr>
-                            <?php break;
-                                case 'sales-receipts': ?>
-                            <tr>
-                                <td><?php echo $transaction['date']; ?></td>
-                                <td><?php echo $transaction['type']; ?></td>
-                                <td><?php echo $transaction['no']; ?></td>
-                                <td><?php echo $transaction['customer']; ?></td>
-                                <td><?php echo $transaction['method']; ?></td>
-                                <td><?php echo $transaction['source']; ?></td>
-                                <td><?php echo $transaction['memo']; ?></td>
-                                <td><?php echo $transaction['due_date']; ?></td>
-                                <td><?php echo $transaction['total']; ?></td>
-                                <td><?php echo $transaction['last_delivered']; ?></td>
-                                <td><?php echo $transaction['email']; ?></td>
-                                <td><?php echo $transaction['attachments']; ?></td>
-                                <td><?php echo $transaction['status']; ?></td>
-                                <td><?php echo $transaction['po_number']; ?></td>
-                                <td><?php echo $transaction['sales_rep']; ?></td>
-                            </tr>
-                            <?php break;
-                                case 'credit-memos': ?>
-                            <tr>
-                                <td><?php echo $transaction['date']; ?></td>
-                                <td><?php echo $transaction['type']; ?></td>
-                                <td><?php echo $transaction['no']; ?></td>
-                                <td><?php echo $transaction['customer']; ?></td>
-                                <td><?php echo $transaction['memo']; ?></td>
-                                <td><?php echo $transaction['total']; ?></td>
-                                <td><?php echo $transaction['last_delivered']; ?></td>
-                                <td><?php echo $transaction['email']; ?></td>
-                                <td><?php echo $transaction['attachments']; ?></td>
-                                <td><?php echo $transaction['status']; ?></td>
-                                <td><?php echo $transaction['po_number']; ?></td>
-                                <td><?php echo $transaction['sales_rep']; ?></td>
-                            </tr>
-                            <?php break;
-                                case 'unbilled-income': ?>
-                            <tr>
-                                <td><?php echo $transaction['date']; ?></td>
-                                <td><?php echo $transaction['type']; ?></td>
-                                <td><?php echo $transaction['customer']; ?></td>
-                                <td><?php echo $transaction['charges']; ?></td>
-                                <td><?php echo $transaction['time']; ?></td>
-                                <td><?php echo $transaction['expenses']; ?></td>
-                                <td><?php echo $transaction['credits']; ?></td>
-                                <td><?php echo $transaction['unbilled_amount']; ?></td>
-                            </tr>
-                            <?php break;
-                                case 'recently-paid': ?>
-                            <tr>
-                                <td><?php echo $transaction['date']; ?></td>
-                                <td><?php echo $transaction['type']; ?></td>
-                                <td><?php echo $transaction['no']; ?></td>
-                                <td><?php echo $transaction['customer']; ?></td>
-                                <td><?php echo $transaction['method']; ?></td>
-                                <td><?php echo $transaction['source']; ?></td>
-                                <td><?php echo $transaction['memo']; ?></td>
-                                <td><?php echo $transaction['due_date']; ?></td>
-                                <td><?php echo $transaction['aging']; ?></td>
-                                <td><?php echo $transaction['balance']; ?></td>
-                                <td><?php echo $transaction['total']; ?></td>
-                                <td><?php echo $transaction['last_delivered']; ?></td>
-                                <td><?php echo $transaction['email']; ?></td>
-                                <td><?php echo $transaction['latest_payment']; ?></td>
-                                <td><?php echo $transaction['attachments']; ?></td>
-                                <td><?php echo $transaction['status']; ?></td>
-                                <td><?php echo $transaction['po_number']; ?></td>
-                                <td><?php echo $transaction['sales_rep']; ?></td>
-                            </tr>
-                            <?php break;
-                                case 'money-received': ?>
-                            <tr>
-                                <td><?php echo $transaction['date']; ?></td>
-                                <td><?php echo $transaction['type']; ?></td>
-                                <td><?php echo $transaction['no']; ?></td>
-                                <td><?php echo $transaction['customer']; ?></td>
-                                <td><?php echo $transaction['memo']; ?></td>
-                                <td><?php echo $transaction['total']; ?></td>
-                                <td><?php echo $transaction['attachments']; ?></td>
-                                <td><?php echo $transaction['status']; ?></td>
-                                <td><?php echo $transaction['po_number']; ?></td>
-                                <td><?php echo $transaction['sales_rep']; ?></td>
-                            </tr>
-                            <?php break;
-                                default: ?>
-                            <tr>
-                                <td><?php echo $transaction['date']; ?></td>
-                                <td><?php echo $transaction['type']; ?></td>
-                                <td><?php echo $transaction['no']; ?></td>
-                                <td><?php echo $transaction['customer']; ?></td>
-                                <td><?php echo $transaction['method']; ?></td>
-                                <td><?php echo $transaction['source']; ?></td>
-                                <td><?php echo $transaction['memo']; ?></td>
-                                <td><?php echo $transaction['due_date']; ?></td>
-                                <td><?php echo $transaction['aging']; ?></td>
-                                <td><?php echo $transaction['balance']; ?></td>
-                                <td><?php echo $transaction['total']; ?></td>
-                                <td><?php echo $transaction['last_delivered']; ?></td>
-                                <td><?php echo $transaction['email']; ?></td>
-                                <td><?php echo $transaction['attachments']; ?></td>
-                                <td><?php echo $transaction['status']; ?></td>
-                                <td><?php echo $transaction['po_number']; ?></td>
-                                <td><?php echo $transaction['sales_rep']; ?></td>
-                            </tr>
-                            <?php break;
-                            } ?>
-                            <?php } ?>
+                                <?php foreach ($transactions as $transaction) { ?>
+                                    <?php switch ($type) {
+                                        case 'estimates': ?>
+                                            <tr>
+                                                <td><?php echo $transaction['date']; ?></td>
+                                                <td><?php echo $transaction['type']; ?></td>
+                                                <td><?php echo $transaction['no']; ?></td>
+                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td><?php echo $transaction['memo']; ?></td>
+                                                <td><?php echo $transaction['expiration_date']; ?></td>
+                                                <td><?php echo $transaction['total']; ?></td>
+                                                <td><?php echo $transaction['last_delivered']; ?></td>
+                                                <td><?php echo $transaction['email']; ?></td>
+                                                <td><?php echo $transaction['accepted_date']; ?></td>
+                                                <td><?php echo $transaction['attachments']; ?></td>
+                                                <td><?php echo $transaction['status']; ?></td>
+                                                <td><?php echo $transaction['po_number']; ?></td>
+                                                <td><?php echo $transaction['sales_rep']; ?></td>
+                                            </tr>
+                                        <?php break;
+                                        case 'invoices': ?>
+                                            <tr>
+                                                <td><?php echo $transaction['date']; ?></td>
+                                                <td><?php echo $transaction['type']; ?></td>
+                                                <td><?php echo $transaction['no']; ?></td>
+                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td><?php echo $transaction['memo']; ?></td>
+                                                <td><?php echo $transaction['due_date']; ?></td>
+                                                <td><?php echo $transaction['aging']; ?></td>
+                                                <td><?php echo $transaction['balance']; ?></td>
+                                                <td><?php echo $transaction['total']; ?></td>
+                                                <td><?php echo $transaction['last_delivered']; ?></td>
+                                                <td><?php echo $transaction['email']; ?></td>
+                                                <td><?php echo $transaction['attachments']; ?></td>
+                                                <td><?php echo $transaction['status']; ?></td>
+                                                <td><?php echo $transaction['po_number']; ?></td>
+                                                <td><?php echo $transaction['sales_rep']; ?></td>
+                                            </tr>
+                                        <?php break;
+                                        case 'sales-receipts': ?>
+                                            <tr>
+                                                <td><?php echo $transaction['date']; ?></td>
+                                                <td><?php echo $transaction['type']; ?></td>
+                                                <td><?php echo $transaction['no']; ?></td>
+                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td><?php echo $transaction['method']; ?></td>
+                                                <td><?php echo $transaction['source']; ?></td>
+                                                <td><?php echo $transaction['memo']; ?></td>
+                                                <td><?php echo $transaction['due_date']; ?></td>
+                                                <td><?php echo $transaction['total']; ?></td>
+                                                <td><?php echo $transaction['last_delivered']; ?></td>
+                                                <td><?php echo $transaction['email']; ?></td>
+                                                <td><?php echo $transaction['attachments']; ?></td>
+                                                <td><?php echo $transaction['status']; ?></td>
+                                                <td><?php echo $transaction['po_number']; ?></td>
+                                                <td><?php echo $transaction['sales_rep']; ?></td>
+                                            </tr>
+                                        <?php break;
+                                        case 'credit-memos': ?>
+                                            <tr>
+                                                <td><?php echo $transaction['date']; ?></td>
+                                                <td><?php echo $transaction['type']; ?></td>
+                                                <td><?php echo $transaction['no']; ?></td>
+                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td><?php echo $transaction['memo']; ?></td>
+                                                <td><?php echo $transaction['total']; ?></td>
+                                                <td><?php echo $transaction['last_delivered']; ?></td>
+                                                <td><?php echo $transaction['email']; ?></td>
+                                                <td><?php echo $transaction['attachments']; ?></td>
+                                                <td><?php echo $transaction['status']; ?></td>
+                                                <td><?php echo $transaction['po_number']; ?></td>
+                                                <td><?php echo $transaction['sales_rep']; ?></td>
+                                            </tr>
+                                        <?php break;
+                                        case 'unbilled-income': ?>
+                                            <tr>
+                                                <td><?php echo $transaction['date']; ?></td>
+                                                <td><?php echo $transaction['type']; ?></td>
+                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td><?php echo $transaction['charges']; ?></td>
+                                                <td><?php echo $transaction['time']; ?></td>
+                                                <td><?php echo $transaction['expenses']; ?></td>
+                                                <td><?php echo $transaction['credits']; ?></td>
+                                                <td><?php echo $transaction['unbilled_amount']; ?></td>
+                                            </tr>
+                                        <?php break;
+                                        case 'recently-paid': ?>
+                                            <tr>
+                                                <td><?php echo $transaction['date']; ?></td>
+                                                <td><?php echo $transaction['type']; ?></td>
+                                                <td><?php echo $transaction['no']; ?></td>
+                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td><?php echo $transaction['method']; ?></td>
+                                                <td><?php echo $transaction['source']; ?></td>
+                                                <td><?php echo $transaction['memo']; ?></td>
+                                                <td><?php echo $transaction['due_date']; ?></td>
+                                                <td><?php echo $transaction['aging']; ?></td>
+                                                <td><?php echo $transaction['balance']; ?></td>
+                                                <td><?php echo $transaction['total']; ?></td>
+                                                <td><?php echo $transaction['last_delivered']; ?></td>
+                                                <td><?php echo $transaction['email']; ?></td>
+                                                <td><?php echo $transaction['latest_payment']; ?></td>
+                                                <td><?php echo $transaction['attachments']; ?></td>
+                                                <td><?php echo $transaction['status']; ?></td>
+                                                <td><?php echo $transaction['po_number']; ?></td>
+                                                <td><?php echo $transaction['sales_rep']; ?></td>
+                                            </tr>
+                                        <?php break;
+                                        case 'money-received': ?>
+                                            <tr>
+                                                <td><?php echo $transaction['date']; ?></td>
+                                                <td><?php echo $transaction['type']; ?></td>
+                                                <td><?php echo $transaction['no']; ?></td>
+                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td><?php echo $transaction['memo']; ?></td>
+                                                <td><?php echo $transaction['total']; ?></td>
+                                                <td><?php echo $transaction['attachments']; ?></td>
+                                                <td><?php echo $transaction['status']; ?></td>
+                                                <td><?php echo $transaction['po_number']; ?></td>
+                                                <td><?php echo $transaction['sales_rep']; ?></td>
+                                            </tr>
+                                        <?php break;
+                                        default: ?>
+                                            <tr>
+                                                <td><?php echo $transaction['date']; ?></td>
+                                                <td><?php echo $transaction['type']; ?></td>
+                                                <td><?php echo $transaction['no']; ?></td>
+                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td><?php echo $transaction['method']; ?></td>
+                                                <td><?php echo $transaction['source']; ?></td>
+                                                <td><?php echo $transaction['memo']; ?></td>
+                                                <td><?php echo $transaction['due_date']; ?></td>
+                                                <td><?php echo $transaction['aging']; ?></td>
+                                                <td><?php echo $transaction['balance']; ?></td>
+                                                <td><?php echo $transaction['total']; ?></td>
+                                                <td><?php echo $transaction['last_delivered']; ?></td>
+                                                <td><?php echo $transaction['email']; ?></td>
+                                                <td><?php echo $transaction['attachments']; ?></td>
+                                                <td><?php echo $transaction['status']; ?></td>
+                                                <td><?php echo $transaction['po_number']; ?></td>
+                                                <td><?php echo $transaction['sales_rep']; ?></td>
+                                            </tr>
+                                    <?php break;
+                                    } ?>
+                                <?php } ?>
                             <?php } else { ?>
-                            <tr>
-                                <td colspan="19">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td colspan="19">
+                                        <div class="nsm-empty">
+                                            <span>No results found.</span>
+                                        </div>
+                                    </td>
+                                </tr>
                             <?php } ?>
                         </tbody>
                     </table>
+                    <div class="pagination-container" style="display: flex; justify-content: flex-end; align-items: center;">
+                        <button type="button" class="nsm-button" id="prev-page-btn">Previous</button>
+                        <span id="pagination-info"></span>
+                        <button type="button" class="nsm-button" id="next-page-btn">Next</button>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -230,186 +230,183 @@
     </div>
 </div>
 
-<div class="modal fade nsm-modal" id="print_preview_customer_transactions_modal" tabindex="-1"
-    aria-labelledby="print_preview_customer_transactions_modal_label" aria-hidden="true">
+<div class="modal fade nsm-modal" id="print_preview_customer_transactions_modal" tabindex="-1" aria-labelledby="print_preview_customer_transactions_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="print_preview_customer_transactions_modal_label">Print
                     customers List</span>
-                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i
-                        class='bx bx-fw bx-x m-0'></i></button>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
                 <table class="w-100" id="all_sales_transactions_table_print">
                     <thead>
                         <tr>
                             <?php foreach ($headers as $header) { ?>
-                            <?php if ($header !== 'Attachments') { ?>
-                            <td data-name="<?php echo $header; ?>"><?php echo strtoupper($header); ?></td>
-                            <?php } else { ?>
-                            <td class="table-icon text-center" data-name="<?php echo $header; ?>"><i
-                                    class="bx bx-paperclip"></i>
-                            </td>
-                            <?php } ?>
+                                <?php if ($header !== 'Attachments') { ?>
+                                    <td data-name="<?php echo $header; ?>"><?php echo strtoupper($header); ?></td>
+                                <?php } else { ?>
+                                    <td class="table-icon text-center" data-name="<?php echo $header; ?>"><i class="bx bx-paperclip"></i>
+                                    </td>
+                                <?php } ?>
                             <?php } ?>
                         </tr>
                     </thead>
                     <tbody>
                         <?php if (count($transactions) > 0) { ?>
-                        <?php foreach ($transactions as $transaction) { ?>
-                        <?php switch ($type) {
-                            case 'estimates': ?>
-                        <tr>
-                            <td><?php echo $transaction['date']; ?></td>
-                            <td><?php echo $transaction['type']; ?></td>
-                            <td><?php echo $transaction['no']; ?></td>
-                            <td><?php echo $transaction['customer']; ?></td>
-                            <td><?php echo $transaction['memo']; ?></td>
-                            <td><?php echo $transaction['expiration_date']; ?></td>
-                            <td><?php echo $transaction['total']; ?></td>
-                            <td><?php echo $transaction['last_delivered']; ?></td>
-                            <td><?php echo $transaction['email']; ?></td>
-                            <td><?php echo $transaction['accepted_date']; ?></td>
-                            <td><?php echo $transaction['attachments']; ?></td>
-                            <td><?php echo $transaction['status']; ?></td>
-                            <td><?php echo $transaction['po_number']; ?></td>
-                            <td><?php echo $transaction['sales_rep']; ?></td>
-                        </tr>
-                        <?php break;
-                            case 'invoices': ?>
-                        <tr>
-                            <td><?php echo $transaction['date']; ?></td>
-                            <td><?php echo $transaction['type']; ?></td>
-                            <td><?php echo $transaction['no']; ?></td>
-                            <td><?php echo $transaction['customer']; ?></td>
-                            <td><?php echo $transaction['memo']; ?></td>
-                            <td><?php echo $transaction['due_date']; ?></td>
-                            <td><?php echo $transaction['aging']; ?></td>
-                            <td><?php echo $transaction['balance']; ?></td>
-                            <td><?php echo $transaction['total']; ?></td>
-                            <td><?php echo $transaction['last_delivered']; ?></td>
-                            <td><?php echo $transaction['email']; ?></td>
-                            <td><?php echo $transaction['attachments']; ?></td>
-                            <td><?php echo $transaction['status']; ?></td>
-                            <td><?php echo $transaction['po_number']; ?></td>
-                            <td><?php echo $transaction['sales_rep']; ?></td>
-                        </tr>
-                        <?php break;
-                            case 'sales-receipts': ?>
-                        <tr>
-                            <td><?php echo $transaction['date']; ?></td>
-                            <td><?php echo $transaction['type']; ?></td>
-                            <td><?php echo $transaction['no']; ?></td>
-                            <td><?php echo $transaction['customer']; ?></td>
-                            <td><?php echo $transaction['method']; ?></td>
-                            <td><?php echo $transaction['source']; ?></td>
-                            <td><?php echo $transaction['memo']; ?></td>
-                            <td><?php echo $transaction['due_date']; ?></td>
-                            <td><?php echo $transaction['total']; ?></td>
-                            <td><?php echo $transaction['last_delivered']; ?></td>
-                            <td><?php echo $transaction['email']; ?></td>
-                            <td><?php echo $transaction['attachments']; ?></td>
-                            <td><?php echo $transaction['status']; ?></td>
-                            <td><?php echo $transaction['po_number']; ?></td>
-                            <td><?php echo $transaction['sales_rep']; ?></td>
-                        </tr>
-                        <?php break;
-                            case 'credit-memos': ?>
-                        <tr>
-                            <td><?php echo $transaction['date']; ?></td>
-                            <td><?php echo $transaction['type']; ?></td>
-                            <td><?php echo $transaction['no']; ?></td>
-                            <td><?php echo $transaction['customer']; ?></td>
-                            <td><?php echo $transaction['memo']; ?></td>
-                            <td><?php echo $transaction['total']; ?></td>
-                            <td><?php echo $transaction['last_delivered']; ?></td>
-                            <td><?php echo $transaction['email']; ?></td>
-                            <td><?php echo $transaction['attachments']; ?></td>
-                            <td><?php echo $transaction['status']; ?></td>
-                            <td><?php echo $transaction['po_number']; ?></td>
-                            <td><?php echo $transaction['sales_rep']; ?></td>
-                        </tr>
-                        <?php break;
-                            case 'unbilled-income': ?>
-                        <tr>
-                            <td><?php echo $transaction['date']; ?></td>
-                            <td><?php echo $transaction['type']; ?></td>
-                            <td><?php echo $transaction['customer']; ?></td>
-                            <td><?php echo $transaction['charges']; ?></td>
-                            <td><?php echo $transaction['time']; ?></td>
-                            <td><?php echo $transaction['expenses']; ?></td>
-                            <td><?php echo $transaction['credits']; ?></td>
-                            <td><?php echo $transaction['unbilled_amount']; ?></td>
-                        </tr>
-                        <?php break;
-                            case 'recently-paid': ?>
-                        <tr>
-                            <td><?php echo $transaction['date']; ?></td>
-                            <td><?php echo $transaction['type']; ?></td>
-                            <td><?php echo $transaction['no']; ?></td>
-                            <td><?php echo $transaction['customer']; ?></td>
-                            <td><?php echo $transaction['method']; ?></td>
-                            <td><?php echo $transaction['source']; ?></td>
-                            <td><?php echo $transaction['memo']; ?></td>
-                            <td><?php echo $transaction['due_date']; ?></td>
-                            <td><?php echo $transaction['aging']; ?></td>
-                            <td><?php echo $transaction['balance']; ?></td>
-                            <td><?php echo $transaction['total']; ?></td>
-                            <td><?php echo $transaction['last_delivered']; ?></td>
-                            <td><?php echo $transaction['email']; ?></td>
-                            <td><?php echo $transaction['latest_payment']; ?></td>
-                            <td><?php echo $transaction['attachments']; ?></td>
-                            <td><?php echo $transaction['status']; ?></td>
-                            <td><?php echo $transaction['po_number']; ?></td>
-                            <td><?php echo $transaction['sales_rep']; ?></td>
-                        </tr>
-                        <?php break;
-                            case 'money-received': ?>
-                        <tr>
-                            <td><?php echo $transaction['date']; ?></td>
-                            <td><?php echo $transaction['type']; ?></td>
-                            <td><?php echo $transaction['no']; ?></td>
-                            <td><?php echo $transaction['customer']; ?></td>
-                            <td><?php echo $transaction['memo']; ?></td>
-                            <td><?php echo $transaction['total']; ?></td>
-                            <td><?php echo $transaction['attachments']; ?></td>
-                            <td><?php echo $transaction['status']; ?></td>
-                            <td><?php echo $transaction['po_number']; ?></td>
-                            <td><?php echo $transaction['sales_rep']; ?></td>
-                        </tr>
-                        <?php break;
-                            default: ?>
-                        <tr>
-                            <td><?php echo $transaction['date']; ?></td>
-                            <td><?php echo $transaction['type']; ?></td>
-                            <td><?php echo $transaction['no']; ?></td>
-                            <td><?php echo $transaction['customer']; ?></td>
-                            <td><?php echo $transaction['method']; ?></td>
-                            <td><?php echo $transaction['source']; ?></td>
-                            <td><?php echo $transaction['memo']; ?></td>
-                            <td><?php echo $transaction['due_date']; ?></td>
-                            <td><?php echo $transaction['aging']; ?></td>
-                            <td><?php echo $transaction['balance']; ?></td>
-                            <td><?php echo $transaction['total']; ?></td>
-                            <td><?php echo $transaction['last_delivered']; ?></td>
-                            <td><?php echo $transaction['email']; ?></td>
-                            <td><?php echo $transaction['attachments']; ?></td>
-                            <td><?php echo $transaction['status']; ?></td>
-                            <td><?php echo $transaction['po_number']; ?></td>
-                            <td><?php echo $transaction['sales_rep']; ?></td>
-                        </tr>
-                        <?php break;
-                        } ?>
-                        <?php } ?>
+                            <?php foreach ($transactions as $transaction) { ?>
+                                <?php switch ($type) {
+                                    case 'estimates': ?>
+                                        <tr>
+                                            <td><?php echo $transaction['date']; ?></td>
+                                            <td><?php echo $transaction['type']; ?></td>
+                                            <td><?php echo $transaction['no']; ?></td>
+                                            <td><?php echo $transaction['customer']; ?></td>
+                                            <td><?php echo $transaction['memo']; ?></td>
+                                            <td><?php echo $transaction['expiration_date']; ?></td>
+                                            <td><?php echo $transaction['total']; ?></td>
+                                            <td><?php echo $transaction['last_delivered']; ?></td>
+                                            <td><?php echo $transaction['email']; ?></td>
+                                            <td><?php echo $transaction['accepted_date']; ?></td>
+                                            <td><?php echo $transaction['attachments']; ?></td>
+                                            <td><?php echo $transaction['status']; ?></td>
+                                            <td><?php echo $transaction['po_number']; ?></td>
+                                            <td><?php echo $transaction['sales_rep']; ?></td>
+                                        </tr>
+                                    <?php break;
+                                    case 'invoices': ?>
+                                        <tr>
+                                            <td><?php echo $transaction['date']; ?></td>
+                                            <td><?php echo $transaction['type']; ?></td>
+                                            <td><?php echo $transaction['no']; ?></td>
+                                            <td><?php echo $transaction['customer']; ?></td>
+                                            <td><?php echo $transaction['memo']; ?></td>
+                                            <td><?php echo $transaction['due_date']; ?></td>
+                                            <td><?php echo $transaction['aging']; ?></td>
+                                            <td><?php echo $transaction['balance']; ?></td>
+                                            <td><?php echo $transaction['total']; ?></td>
+                                            <td><?php echo $transaction['last_delivered']; ?></td>
+                                            <td><?php echo $transaction['email']; ?></td>
+                                            <td><?php echo $transaction['attachments']; ?></td>
+                                            <td><?php echo $transaction['status']; ?></td>
+                                            <td><?php echo $transaction['po_number']; ?></td>
+                                            <td><?php echo $transaction['sales_rep']; ?></td>
+                                        </tr>
+                                    <?php break;
+                                    case 'sales-receipts': ?>
+                                        <tr>
+                                            <td><?php echo $transaction['date']; ?></td>
+                                            <td><?php echo $transaction['type']; ?></td>
+                                            <td><?php echo $transaction['no']; ?></td>
+                                            <td><?php echo $transaction['customer']; ?></td>
+                                            <td><?php echo $transaction['method']; ?></td>
+                                            <td><?php echo $transaction['source']; ?></td>
+                                            <td><?php echo $transaction['memo']; ?></td>
+                                            <td><?php echo $transaction['due_date']; ?></td>
+                                            <td><?php echo $transaction['total']; ?></td>
+                                            <td><?php echo $transaction['last_delivered']; ?></td>
+                                            <td><?php echo $transaction['email']; ?></td>
+                                            <td><?php echo $transaction['attachments']; ?></td>
+                                            <td><?php echo $transaction['status']; ?></td>
+                                            <td><?php echo $transaction['po_number']; ?></td>
+                                            <td><?php echo $transaction['sales_rep']; ?></td>
+                                        </tr>
+                                    <?php break;
+                                    case 'credit-memos': ?>
+                                        <tr>
+                                            <td><?php echo $transaction['date']; ?></td>
+                                            <td><?php echo $transaction['type']; ?></td>
+                                            <td><?php echo $transaction['no']; ?></td>
+                                            <td><?php echo $transaction['customer']; ?></td>
+                                            <td><?php echo $transaction['memo']; ?></td>
+                                            <td><?php echo $transaction['total']; ?></td>
+                                            <td><?php echo $transaction['last_delivered']; ?></td>
+                                            <td><?php echo $transaction['email']; ?></td>
+                                            <td><?php echo $transaction['attachments']; ?></td>
+                                            <td><?php echo $transaction['status']; ?></td>
+                                            <td><?php echo $transaction['po_number']; ?></td>
+                                            <td><?php echo $transaction['sales_rep']; ?></td>
+                                        </tr>
+                                    <?php break;
+                                    case 'unbilled-income': ?>
+                                        <tr>
+                                            <td><?php echo $transaction['date']; ?></td>
+                                            <td><?php echo $transaction['type']; ?></td>
+                                            <td><?php echo $transaction['customer']; ?></td>
+                                            <td><?php echo $transaction['charges']; ?></td>
+                                            <td><?php echo $transaction['time']; ?></td>
+                                            <td><?php echo $transaction['expenses']; ?></td>
+                                            <td><?php echo $transaction['credits']; ?></td>
+                                            <td><?php echo $transaction['unbilled_amount']; ?></td>
+                                        </tr>
+                                    <?php break;
+                                    case 'recently-paid': ?>
+                                        <tr>
+                                            <td><?php echo $transaction['date']; ?></td>
+                                            <td><?php echo $transaction['type']; ?></td>
+                                            <td><?php echo $transaction['no']; ?></td>
+                                            <td><?php echo $transaction['customer']; ?></td>
+                                            <td><?php echo $transaction['method']; ?></td>
+                                            <td><?php echo $transaction['source']; ?></td>
+                                            <td><?php echo $transaction['memo']; ?></td>
+                                            <td><?php echo $transaction['due_date']; ?></td>
+                                            <td><?php echo $transaction['aging']; ?></td>
+                                            <td><?php echo $transaction['balance']; ?></td>
+                                            <td><?php echo $transaction['total']; ?></td>
+                                            <td><?php echo $transaction['last_delivered']; ?></td>
+                                            <td><?php echo $transaction['email']; ?></td>
+                                            <td><?php echo $transaction['latest_payment']; ?></td>
+                                            <td><?php echo $transaction['attachments']; ?></td>
+                                            <td><?php echo $transaction['status']; ?></td>
+                                            <td><?php echo $transaction['po_number']; ?></td>
+                                            <td><?php echo $transaction['sales_rep']; ?></td>
+                                        </tr>
+                                    <?php break;
+                                    case 'money-received': ?>
+                                        <tr>
+                                            <td><?php echo $transaction['date']; ?></td>
+                                            <td><?php echo $transaction['type']; ?></td>
+                                            <td><?php echo $transaction['no']; ?></td>
+                                            <td><?php echo $transaction['customer']; ?></td>
+                                            <td><?php echo $transaction['memo']; ?></td>
+                                            <td><?php echo $transaction['total']; ?></td>
+                                            <td><?php echo $transaction['attachments']; ?></td>
+                                            <td><?php echo $transaction['status']; ?></td>
+                                            <td><?php echo $transaction['po_number']; ?></td>
+                                            <td><?php echo $transaction['sales_rep']; ?></td>
+                                        </tr>
+                                    <?php break;
+                                    default: ?>
+                                        <tr>
+                                            <td><?php echo $transaction['date']; ?></td>
+                                            <td><?php echo $transaction['type']; ?></td>
+                                            <td><?php echo $transaction['no']; ?></td>
+                                            <td><?php echo $transaction['customer']; ?></td>
+                                            <td><?php echo $transaction['method']; ?></td>
+                                            <td><?php echo $transaction['source']; ?></td>
+                                            <td><?php echo $transaction['memo']; ?></td>
+                                            <td><?php echo $transaction['due_date']; ?></td>
+                                            <td><?php echo $transaction['aging']; ?></td>
+                                            <td><?php echo $transaction['balance']; ?></td>
+                                            <td><?php echo $transaction['total']; ?></td>
+                                            <td><?php echo $transaction['last_delivered']; ?></td>
+                                            <td><?php echo $transaction['email']; ?></td>
+                                            <td><?php echo $transaction['attachments']; ?></td>
+                                            <td><?php echo $transaction['status']; ?></td>
+                                            <td><?php echo $transaction['po_number']; ?></td>
+                                            <td><?php echo $transaction['sales_rep']; ?></td>
+                                        </tr>
+                                <?php break;
+                                } ?>
+                            <?php } ?>
                         <?php } else { ?>
-                        <tr>
-                            <td colspan="19">
-                                <div class="nsm-empty">
-                                    <span>No results found.</span>
-                                </div>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td colspan="19">
+                                    <div class="nsm-empty">
+                                        <span>No results found.</span>
+                                    </div>
+                                </td>
+                            </tr>
                         <?php } ?>
                     </tbody>
                 </table>
@@ -424,15 +421,13 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Send email for </span>
-                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i
-                            class='bx bx-fw bx-x m-0'></i></button>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-12 grid-mb">
                             <label for="email-to">To</label>
-                            <input type="text" name="email_to" id="email-to" class="form-control nsm-field"
-                                value="<?php echo $customer->email; ?>">
+                            <input type="text" name="email_to" id="email-to" class="form-control nsm-field" value="<?php echo $customer->email; ?>">
                         </div>
                         <div class="col-12 grid-mb">
                             <label for="email-subject">Subject</label>
@@ -440,8 +435,7 @@
                         </div>
                         <div class="col-12 grid-mb">
                             <label for="email-message">Message</label>
-                            <textarea name="email_message" id="email-message" class="form-control nsm-field"
-                                style="height: 160px;">Dear <?php echo in_array($customer->business_name, ['', null]) ? $customer->first_name.' '.$customer->last_name : $customer->business_name; ?>,
+                            <textarea name="email_message" id="email-message" class="form-control nsm-field" style="height: 160px;">Dear <?php echo in_array($customer->business_name, ['', null]) ? $customer->first_name . ' ' . $customer->last_name : $customer->business_name; ?>,
 
 Please review the sales receipt below.
 We appreciate it very much.
@@ -460,3 +454,40 @@ Thanks for your business!
         </div>
     </form>
 </div>
+<script>
+    $(document).ready(function() {
+        var currentPage = 1;
+        var itemsPerPage = 10;
+        var $tableRows = $('#print_all_sales_transactions_table tbody tr');
+        var totalRows = $tableRows.length;
+        var totalPages = Math.ceil(totalRows / itemsPerPage);
+
+        function showRows() {
+            var startIndex = (currentPage - 1) * itemsPerPage;
+            var endIndex = Math.min(startIndex + itemsPerPage, totalRows);
+
+            $tableRows.hide().slice(startIndex, endIndex).show();
+            updatePaginationInfo();
+        }
+
+        function updatePaginationInfo() {
+            $('#pagination-info').text('Page ' + currentPage + ' of ' + totalPages);
+        }
+
+        showRows();
+
+        $('#prev-page-btn').click(function() {
+            if (currentPage > 1) {
+                currentPage--;
+                showRows();
+            }
+        });
+
+        $('#next-page-btn').click(function() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                showRows();
+            }
+        });
+    });
+</script>
