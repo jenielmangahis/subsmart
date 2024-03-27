@@ -132,7 +132,7 @@
                                 </div>
                                 <div class="col-12 col-md-2 offset-md-4 grid-mb">
                                     <label for="received-amount">Amount received</label>
-                                    <input type="number" name="received_amount" step=".01" class="form-control nsm-field text-end" id="received-amount" value="<?=isset($payment) ? number_format(floatval($payment->amount), 2, '.', ',') : "0.00"?>" onchange="convertToDecimal(this)">
+                                    <input type="number" name="received_amount" step=".01" min="0" class="form-control nsm-field text-end" id="received-amount" value="<?=isset($payment) ? number_format(floatval($payment->amount), 2, '.', ',') : "0.00"?>" onchange="convertToDecimal(this)" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))">
                                 </div>
                             </div>
 
