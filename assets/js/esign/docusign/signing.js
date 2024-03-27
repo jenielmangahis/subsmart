@@ -1406,7 +1406,7 @@ function Signing(hash) {
         $input.attr("data-field-id", fieldId);
       }
 
-      if (field.original_field_name === "Subscriber Name" || field.original_field_name === "City" || field.original_field_name === "State" || field.original_field_name === "Address" || field.original_field_name === "ZIP" || field.original_field_name === "Subscriber Email" || field.original_field_name === "Primary Contact" || field.original_field_name === "Secondary Contact" || field.original_field_name === "Access Password" || field.original_field_name === "County" || field.original_field_name === "Abort Code" || field.original_field_name === 'Social Security Number' || field.original_field_name === 'Date of Birth') {
+      if (field.original_field_name === "Subscriber Name" || field.original_field_name === "City" || field.original_field_name === "State" || field.original_field_name === "Address" || field.original_field_name === "ZIP" || field.original_field_name === "Subscriber Email" || field.original_field_name === "Primary Contact" || field.original_field_name === "Secondary Contact" || field.original_field_name === "Access Password" || field.original_field_name === "County" || field.original_field_name === "Abort Code" || field.original_field_name === 'Social Security Number' || field.original_field_name === 'Date of Birth' || field.original_field_name === 'Panel Type') {
         $input.attr("data-field-type", "autoPopulateCustomerDetails");
         $input.attr("data-field-id", fieldId);
       }
@@ -1421,12 +1421,12 @@ function Signing(hash) {
         $input.attr("data-field-id", fieldId); 
       }
 
-      if( field.original_field_name === "Checking Account Number" || field.original_field_name === "Account Number" || field.original_field_name === "CS Account Number" || field.original_field_name === "ABA" || field.original_field_name === "Card Number" || field.original_field_name === "Card Holder Name" || field.original_field_name === "Card Expiration" || field.original_field_name === "Card Security Code" || field.original_field_name === "Equipment" ){
+      if( field.original_field_name === "Checking Account Number" || field.original_field_name === "Account Number" || field.original_field_name === "CS Account Number" || field.original_field_name === "ABA" || field.original_field_name === "Card Number" || field.original_field_name === "Card Holder Name" || field.original_field_name === "Card Expiration" || field.original_field_name === "Card Security Code" || field.original_field_name === "Equipment" || field.original_field_name === "Account Number" ){
         $input.attr("data-field-type", "autoPopulateAccountDetails");
         $input.attr("data-field-id", fieldId); 
       }
 
-      if( field.original_field_name === "Equipment Cost" || field.original_field_name === "Monthly Monitoring Rate" || field.original_field_name === "One Time Activation (OTP)" || field.original_field_name === "Total Due" ){
+      if( field.original_field_name === "Equipment Cost" || field.original_field_name === "Monthly Monitoring Rate" || field.original_field_name === "One Time Activation (OTP)" || field.original_field_name === "Total Due" || field.original_field_name === "Job Account Number" ||  field.original_field_name === "Installation Cost"){
         $input.attr("data-field-type", "autoPopulateBilling");
         $input.attr("data-field-id", fieldId); 
       }

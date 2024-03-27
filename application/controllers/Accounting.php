@@ -8711,7 +8711,7 @@ class Accounting extends MY_Controller
         
         $role = logged('role');
         
-		$this->page_data['page']->title = 'Workorder';
+		$this->page_data['page']->title = 'Work Order';
 		$this->page_data['page']->parent = 'Sales';
         
         $company_id = logged('company_id');        

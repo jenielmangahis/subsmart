@@ -6874,6 +6874,30 @@ class Workorder extends MY_Controller
         echo json_encode($is_success);
     }
 
+    public function delete_selected_workorders()
+    {
+        $is_success = false;
+
+        $ids = $this->input->post('ids');
+
+        foreach ($ids as $id) {
+            $workOrder = $this->workorder_model->getDataByWO($id);
+            
+            if ($workOrder) {
+                $data = array(
+                    'id' => $id,
+                    'view_flag' => '1',
+                );
+
+                $is_success = $this->workorder_model->deleteWorkorder($data);
+
+                customerAuditLog(logged('id'), $workOrder->customer_id, $workOrder->id, 'Workorder', 'Deleted work order #' . $workOrder->work_order_number);
+            }
+        }
+
+        echo json_encode($is_success);
+    }
+
     public function work_order_templates()
     {
         $company_id = logged('company_id');

@@ -1,12 +1,13 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 // include viewPath('v2/includes/header');
-include viewPath('v2/includes/accounting_header'); 
+include viewPath('v2/includes/accounting_header');
 echo put_header_assets();
 ?>
 
 <!-- Script for autosaving form -->
-<!-- <script src="<?php // base_url("assets/js/estimate/autosave-standard.js") ?>"></script> -->
+<!-- <script src="<?php // base_url("assets/js/estimate/autosave-standard.js") 
+                    ?>"></script> -->
 
 <div class="wrapper" role="wrapper">
     <style>
@@ -286,7 +287,7 @@ echo put_header_assets();
             }
         }
 
-        .is-invalid + .select2-container {
+        .is-invalid+.select2-container {
             border: 1px solid #dc3545;
             border-radius: 4px;
         } 
@@ -413,14 +414,14 @@ echo put_header_assets();
                                                                                                                                                                         $nextNum = $arr[1];
                                                                                                                                                                     //    echo $number;
                                                                                                                                                                     endforeach;
-                                                                                                                                                                    if($nextNum){
+                                                                                                                                                                    if ($nextNum) {
                                                                                                                                                                         $val = (int)$nextNum + 1;
                                                                                                                                                                         echo str_pad($val, 9, "0", STR_PAD_LEFT);
-                                                                                                                                                                    }else{
+                                                                                                                                                                    } else {
                                                                                                                                                                         $val = 1;
                                                                                                                                                                         echo str_pad($val, 9, "0", STR_PAD_LEFT);
                                                                                                                                                                     }
-                                                                                                                                                                    
+
                                                                                                                                                                     ?>" />
                                 </div>
                                 <div class="col-md-3">
@@ -447,7 +448,7 @@ echo put_header_assets();
 
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-3">
-                                    <label for="purchase_order_number"><b>Purchase Order#</b> <small class="help help-sm">(optional)</small></label>
+                                    <label for="purchase_order_number"><b>Purchase Order #</b>&nbsp;<small class="help help-sm">(optional)</small></label>
                                     <input type="text" class="form-control" name="purchase_order_number" id="purchase_order_number" placeholder="Enter Purchase Order#" onChange="jQuery('#customer_name').text(jQuery(this).val());" />
                                 </div>
                                 <div class="col-md-3 form-group">
@@ -582,18 +583,13 @@ echo put_header_assets();
                                             <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
                                         </tr>
                                         <tr>
+                                            <td>Markup</td>
+                                            <td><a href="#" data-bs-toggle="modal" data-bs-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td>
                                             <td>
-                                                Markup
-                                                <a href="#" data-bs-toggle="modal" data-bs-target="#modalSetMarkup"
-                                                    style="color:#02A32C;">set markup</a>
-                                            </td  colspan="2">
-                                            <td style="text-align:right;">
-                                                $<span id="span_markup">0.00</span>
-                                                <input type="hidden" name="markup_input_form" id="markup_input_form"
-                                                    class="markup_input" value="0">
-                                                <!-- <span id="span_markup_input_form">0.00</span> -->
+                                                <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
+                                                <span id="markup_display">$<span id="span_markup_input_form">0.00</span></span>
                                             </td>
-                                        </tr>                                        
+                                        </tr>
                                         <tr style="color:blue;font-weight:bold;font-size:16px;">
                                             <td><b>Grand Total ($)</b></td>
                                             <td  colspan="2" style="text-align:right;"><b><span id="grand_total">0.00</span>
@@ -1615,7 +1611,7 @@ echo put_header_assets();
                 $form.submit();
             }
         });
-        
+
         function isFormValid($formElement) {
             const $requiredInputs = [...$formElement.querySelectorAll("[required]")];
             let $firstInputHasError = null;
@@ -1634,7 +1630,7 @@ echo put_header_assets();
                     $firstInputHasError = $firstInputHasError ? $firstInputHasError : $input;
                 }
             }
-            
+
             if ($firstInputHasError) {
                 $firstInputHasError.focus();
             }
@@ -1644,51 +1640,88 @@ echo put_header_assets();
     });
 </script>
 <script>
-$(document).on('click', '.saveCustomer', function() {
+    $(document).on('click', '.saveCustomer', function() {
 
-    var first_name = $('[name="first_name"]').val();
-    var middle_name = $('[name="middle_name"]').val();
-    var last_name = $('[name="last_name"]').val();
-    var contact_email = $('[name="contact_email"]').val();
-    var contact_mobile = $('[name="contact_mobile"]').val();
-    var contact_phone = $('[name="contact_phone"]').val();
-    var customer_type = $('[name="customer_type"]').val();
-    var street_address = $('[name="street_address"]').val();
-    var suite_unit = $('[name="suite_unit"]').val();
-    var city = $('[name="city"]').val();
-    var postcode = $('[name="postcode"]').val();
-    var state = $('[name="state"]').val();
-    // alert(first_name);
+        var first_name = $('[name="first_name"]').val();
+        var middle_name = $('[name="middle_name"]').val();
+        var last_name = $('[name="last_name"]').val();
+        var contact_email = $('[name="contact_email"]').val();
+        var contact_mobile = $('[name="contact_mobile"]').val();
+        var contact_phone = $('[name="contact_phone"]').val();
+        var customer_type = $('[name="customer_type"]').val();
+        var street_address = $('[name="street_address"]').val();
+        var suite_unit = $('[name="suite_unit"]').val();
+        var city = $('[name="city"]').val();
+        var postcode = $('[name="postcode"]').val();
+        var state = $('[name="state"]').val();
+        // alert(first_name);
 
-                $.ajax({
-                    type: 'POST',
-                    url: "<?php echo base_url(); ?>estimate/addNewCustomer",
-                    data: {
-                        first_name: first_name,
-                        middle_name: middle_name,
-                        last_name: last_name,
-                        contact_email: contact_email,
-                        contact_mobile: contact_mobile,
-                        contact_phone: contact_phone,
-                        customer_type: customer_type,
-                        street_address: street_address,
-                        suite_unit: suite_unit,
-                        city: city,
-                        postcode: postcode,
-                        state: state
-                    },
-                    dataType: 'json',
-                    success: function(response) {
-                        // alert('success');
-                        location.reload();
-                    },
-                    error: function(response) {
-                        location.reload();
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url(); ?>estimate/addNewCustomer",
+            data: {
+                first_name: first_name,
+                middle_name: middle_name,
+                last_name: last_name,
+                contact_email: contact_email,
+                contact_mobile: contact_mobile,
+                contact_phone: contact_phone,
+                customer_type: customer_type,
+                street_address: street_address,
+                suite_unit: suite_unit,
+                city: city,
+                postcode: postcode,
+                state: state
+            },
+            dataType: 'json',
+            success: function(response) {
+                // alert('success');
+                location.reload();
+            },
+            error: function(response) {
+                location.reload();
 
-                    }
-                });
+            }
+        });
 
-});
+    });
 </script>
+<script>
+    function handleInputChange() {
+        var input = document.getElementById('markup_input');
+        var span = document.getElementById('span_markup_input_form');
 
-<!-- <script src="<?php //base_url("assets/js/custom.js") ?>"></script> -->
+        if (input.value === '' || isNaN(input.value)) {
+            input.value = '0.00';
+            span.textContent = '0.00';
+        }
+    }
+
+    function setDefault() {
+        var input = document.getElementById('markup_input');
+        if (input.value === '') {
+            input.value = '0.00';
+        }
+    }
+
+    document.getElementById('markup_input').addEventListener('input', handleInputChange);
+    document.getElementById('markup_input').addEventListener('focus', setDefault);
+
+    document.querySelector('.btn-markup-percent').addEventListener('click', function() {
+        var input = document.getElementById('markup_input');
+        var display = document.getElementById('markup_display');
+        var span = document.getElementById('span_markup_input_form');
+        input.value = '0';
+        display.innerHTML = '%<span id="span_markup_input_form">0.00</span>';
+    });
+
+    document.querySelector('.btn-markup-dollar').addEventListener('click', function() {
+        var input = document.getElementById('markup_input');
+        var display = document.getElementById('markup_display');
+        var span = document.getElementById('span_markup_input_form');
+        input.value = '0';
+        display.innerHTML = '$<span id="span_markup_input_form">0.00</span>';
+    });
+</script>
+<!-- <script src="<?php //base_url("assets/js/custom.js") 
+                    ?>"></script> -->
