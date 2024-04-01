@@ -193,6 +193,38 @@ class Accounting_receive_payment_model extends MY_Model
             return $query->result();
         }
     }
+    // public function get_ranged_received_payment_by_company_id($company_id, $start_date, $end_date)
+    // {
+    //     if (!empty($company_id) && !empty($start_date) && !empty($end_date)) {
+    //         // Escape values to prevent SQL injection
+    //         $company_id = $this->db->escape($company_id);
+    //         $start_date = $this->db->escape($start_date);
+    //         $end_date = $this->db->escape($end_date);
+    
+    //         // Construct the SQL query using Query Builder
+    //         $this->db->select('*');
+    //         $this->db->from('accounting_receive_payment');
+    //         $this->db->where('company_id', $company_id);
+    //         $this->db->where('payment_date >=', $start_date);
+    //         $this->db->where('payment_date <=', $end_date);
+    //         $this->db->order_by('payment_date', 'ASC');
+    
+    //         // Execute the query
+    //         $query = $this->db->get();
+    
+    //         // Check if query was successful
+    //         if ($query) {
+    //             return $query->result();
+    //         } else {
+    //             // Query failed, handle error (return false, log error, etc.)
+    //             return false;
+    //         }
+    //     } else {
+    //         // Invalid input, handle error (return false, throw exception, etc.)
+    //         return false;
+    //     }
+    // }
+    
     public function get_sum_received_payments($company_id, $start_date, $end_date)
     {
         if ($company_id != "") {

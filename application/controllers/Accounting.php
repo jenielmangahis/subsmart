@@ -61,6 +61,7 @@ class Accounting extends MY_Controller
         $this->load->model('taskhub_status_model');
         $this->load->model('Crud', 'crud');
         $this->load->model('Business_model');
+    
         //$this->load->library('pdf');
         //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
         add_css(array(
@@ -706,7 +707,7 @@ class Accounting extends MY_Controller
         $this->page_data['page']->parent = 'Banking';
         $this->load->view('accounting/banking/reviewed_receipts', $this->page_data);
     }
-
+ 
     public function salesoverview()
     {
         add_css(array(
@@ -715,6 +716,10 @@ class Accounting extends MY_Controller
         add_footer_js(array(
             "assets/js/accounting/sales/overview.js",
         ));
+        add_footer_js([
+            'assets/js/v2/accounting/sales/all_sales/list.js',
+            'assets/js/v2/printThis.js',
+        ]);
 
         $company_id = getLoggedCompanyID();
         $start_date = date('Y-m-d', strtotime(date("Y-m-d") . ' - 365 days'));
@@ -753,7 +758,7 @@ class Accounting extends MY_Controller
         }
 
         //caculating this month overall income
-        $receive_payments = $this->accounting_receive_payment_model->get_ranged_received_payment_by_company_id($company_id, date("Y-m-d", strtotime("first day of this month")), date("Y-m-d"));
+        $receive_payments = $this->accounting_receive_payment_model->get_ranged_received_payment_by_company_id($company_id, date("Y-m-d", strtotime("first day of last month")), date("Y-m-d"));
         $income_this_month = 0;
         $income_last_month = 0;
         $income_per_day = array();
@@ -764,12 +769,12 @@ class Accounting extends MY_Controller
         $dataPoints = array();
         foreach ($receive_payments as $payment) {
             if (date("Y-m-d", strtotime($payment->payment_date)) >= date("Y-m-01") && date("Y-m-d", strtotime($payment->payment_date)) <= date("Y-m-d")) {
-                $income_this_month += $payment->amount;
+                $income_this_month += $payment->amount_received;
                 $per_day_index = date("d", strtotime($payment->payment_date));
-                $income_per_day[$per_day_index] += $payment->amount;
-                $dataPoints["y"][] = $payment->amount;
+                $income_per_day[$per_day_index] += $payment->amount_received;
+                $dataPoints["y"][] = $payment->amount_received;
             } else {
-                $income_last_month += $payment->amount;
+                $income_last_month += $payment->amount_received;
             }
         }
         $dataPoints["y"][] = 100;

@@ -50,7 +50,14 @@ $(".overview-widget .widget-with-counter").hover(function() {
 //         },
 //     });
 // }
+$("#not_now_link").click(function(e) {
+    e.preventDefault(); // Prevent the default action of the link
 
+    // Hide the div with id "learn_how_payments"
+    $("#learn_how_payments").hide();
+    $("#shortcuts").show();
+    
+});
 $(document).on("click", ".overview-widget.shortcuts .img-button-links .recurring-sales-receipt", function(event) {
     $("#addsalesreceiptModal .modal-footer-check .middle-links.end a").trigger("click");
 });
@@ -350,9 +357,72 @@ function display_prev_year(chart) {
         chart.update();
     }
 }
-
+function getQuarterMonths(isLastQuarter) {
+    const currentDate = new Date();
+    const month = currentDate.getMonth(); // Months are zero-based, so January is 0
+  
+    if (isLastQuarter) {
+      switch (true) {
+        case month >= 0 && month <= 2: // January to March
+          return 'OCT-NOV-DEC';
+        case month >= 3 && month <= 5: // April to June
+          return 'JAN-FEB-MAR';
+        case month >= 6 && month <= 8: // July to September
+          return 'APR-MAY-JUN';
+        case month >= 9 && month <= 11: // October to December
+          return 'JUL-AUG-SEP';
+        default:
+          return 'Invalid date';
+      }
+    } else {
+      switch (true) {
+        case month >= 0 && month <= 2: // January to March
+          return 'JAN-FEB-MAR';
+        case month >= 3 && month <= 5: // April to June
+          return 'APR-MAY-JUN';
+        case month >= 6 && month <= 8: // July to September
+          return 'JUL-AUG-SEP';
+        case month >= 9 && month <= 11: // October to December
+          return 'OCT-NOV-DEC';
+        default:
+          return 'Invalid date';
+      }
+    }
+  }
+  function getTodaysDateWithFormat() {
+    const today = new Date();
+    const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1)
+    const month = lastMonth.toLocaleString('en-US', { month: 'short' } );  // Abbreviated month name (e.g., Feb)
+    const day = lastMonth.getDate().toString().padStart(2, '0'); // Day with leading zero (01-29)
+    const year = lastMonth.getFullYear();
+  
+    // Format the date string with a hyphen
+    return `${month} 1 - ${day}  ${year}`;
+  }
+function getFormattedDateRangeForMonthsAgo(monthsAgo) {
+    var today = new Date();
+    var targetDate = new Date(today.getFullYear(), today.getMonth() - monthsAgo, 1);
+    var lastDayOfMonth = new Date(targetDate.getFullYear(), targetDate.getMonth() + 1, 0).getDate();
+    var monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var monthName = monthNames[targetDate.getMonth()];
+    var year = targetDate.getFullYear();
+    return monthName + " 1 - " + lastDayOfMonth + ", " + year;
+}
+function getCurrentOrLastYearMonths(isLastYear = false) {
+    const today = new Date();
+    const month = today.getMonth(); // Get the current month (0-indexed)
+  
+    if (isLastYear) {
+      // Last year
+      return `${new Date(today.getFullYear() - 1, 0, 1).toLocaleString('en-US', { month: 'short' })} - ${today.toLocaleString('en-US', { month: 'short' })}`;
+    } else {
+      // Current year (default)
+      return `${new Date(today.getFullYear(), 0, 1).toLocaleString('en-US', { month: 'short' })} - ${today.toLocaleString('en-US', { month: 'short' })}`;
+    }
+  }
 function income_overtime_duration_changed() {
     var selected_duration = $("#duration").val();
+    
     if (selected_duration == "Last year by month" || selected_duration == "Last year by quarter") {
         $(".overview-widget .filter-section .compare-prev-year").hide();
         $(".overview-widget.income-overtime .filter-section input#compare-prev-year").prop('checked', false);
@@ -365,6 +435,44 @@ function income_overtime_duration_changed() {
         dataType: "json",
         data: { duration: selected_duration },
         success: function(data) {
+            $("#duration_label").text(selected_duration);
+            $("#income_this_month").text("$"+ data.current_income.toFixed(2));
+            $("#income_difference").text("$" + (data.current_income.toFixed(2) - data.last_income.toFixed(2)));
+            if (selected_duration == "This month"){
+                
+               
+                $("#income_date_difference").text(getTodaysDateWithFormat);
+            }
+            if (selected_duration == "Last month"){
+                
+               
+                $("#income_date_difference").text(getFormattedDateRangeForMonthsAgo(2));
+            }
+            if(selected_duration == "This quarter"){
+               
+                $("#income_date_difference").text(getQuarterMonths(false));
+            }
+            if(selected_duration == "Last quarter"){
+                
+                $("#income_date_difference").text(getQuarterMonths(true));
+            }
+            if(selected_duration == "Last year by month"){
+               
+                $("#income_date_difference").text(new Date().getFullYear() - 1); 
+            }
+            if(selected_duration == "This year by month"){
+               
+                $("#income_date_difference").text(new Date().getFullYear()); 
+            }
+            if(selected_duration == "This year by quarter"){
+               
+                $("#income_date_difference").text(new Date().getFullYear()); 
+            }
+            if(selected_duration == "Last year by quarter"){
+               
+                $("#income_date_difference").text(new Date().getFullYear() - 1); 
+            }
+           
             $(".overview-widget.income-overtime .content-monitary-highlight span.amount").html(data.formatted_current_income);
             $(".overview-widget.income-overtime .content-monitary-highlight span.label").html(selected_duration);
             if (data.current_income >= data.last_income) {
@@ -374,6 +482,8 @@ function income_overtime_duration_changed() {
                 $(".overview-widget.income-overtime .monitary-increase").addClass("decreased");
                 $(".overview-widget.income-overtime .monitary-increase").html("$" + data.increased_decreased_label + " less than " + data.more_than_prev_month_label);
             }
+            
+           
             prev_year_data = data.last_year_data;
             prev_year_label = data.prev_year_label;
             this_year_label = data.this_year_label;

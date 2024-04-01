@@ -388,12 +388,11 @@ class Estimate extends MY_Controller
                 $this->sendEstimateToCustomer($new_data['customer_id'], $addQuery);
             }
 
-            if( $this->input->post('module') && $this->input->post('module') == 'accounting' ){
+            if ($this->input->post('module') && $this->input->post('module') == 'accounting') {
                 redirect('accounting/newEstimateList');
-            }else{
+            } else {
                 redirect('estimate');
             }
-            
         } else {
             echo json_encode(0);
         }
@@ -1895,6 +1894,123 @@ class Estimate extends MY_Controller
         // echo "test";
     }
 
+    public function email_preview()
+    {
+        // $id = 30694;
+        // $wo_id = 249;
+
+        $id = 30694;
+        $wo_id = 251;
+        $urlLogo = null;
+        $this->load->helper(['url', 'hashids_helper']);
+
+        $workData = $this->estimate_model->getEstimate($wo_id);
+        $eid = hashids_encrypt($workData->id, '', 15);
+        // var_dump($workData);
+
+        // $items = $this->estimate_model->getItemlistByID($wo_id);
+        $c_id = $workData->company_id;
+        $p_id = $workData->customer_id;
+
+        $cliets = $this->estimate_model->get_cliets_data($c_id);
+        $customerData = $this->estimate_model->get_customerData_data($p_id);
+
+        $items_dataOP1 = $this->estimate_model->getItemlistByIDOption1($wo_id);
+        $items_dataOP2 = $this->estimate_model->getItemlistByIDOption2($wo_id);
+
+        $items_dataBD1 = $this->estimate_model->getItemlistByIDBundle1($wo_id);
+        $items_dataBD2 = $this->estimate_model->getItemlistByIDBundle2($wo_id);
+        $items = $this->estimate_model->getEstimatesItems($wo_id);
+
+        $urlApprove = base_url('share_Link/approveEstimate/'.$eid);
+        $urlDecline = base_url('share_Link/declineEstimate/'.$eid);
+
+        $business = $this->business_model->getByCompanyId(logged('company_id'));
+        $imageUrl = getCompanyBusinessProfileImage();
+
+        $data = [
+            // 'workorder'             => $workorder,
+            'imageUrl' => $urlLogo,
+            'estimateID' => $workData->id,
+            'urlApprove' => $urlApprove,
+            'urlDecline' => $urlDecline,
+            // 'company'                       => $cliets->business_name,
+            // 'business_address'              => $cliets->business_address,
+            // 'phone_number'                  => $cliets->phone_number,
+            // 'email_address'                 => $cliets->email_address,
+
+            'company' => $business->business_name,
+            'business_address' => "$business->address, $business->city $business->postal_code",
+            'phone_number' => $business->business_phone,
+            'email_address' => $business->business_email,
+
+            'acs_name' => $customerData->first_name.' '.$customerData->middle_name.' '.$customerData->last_name,
+            'acsemail' => $customerData->email,
+            'acsaddress' => $customerData->mail_add,
+            'phone_m' => $customerData->phone_m,
+
+            'items_dataOP1' => $items_dataOP1,
+            'items_dataOP2' => $items_dataOP2,
+            'items_dataBD1' => $items_dataBD1,
+            'items_dataBD2' => $items_dataBD2,
+
+            'estimate_number' => $workData->estimate_number,
+            'job_location' => $workData->job_location,
+            'job_name' => $workData->job_name,
+            'estimate_date' => $workData->estimate_date,
+            'expiry_date' => $workData->expiry_date,
+            'purchase_order_number' => $workData->purchase_order_number,
+            'status' => $workData->status,
+            'estimate_type' => $workData->estimate_type,
+            'type' => $workData->type,
+            'deposit_request' => $workData->deposit_request,
+            'deposit_amount' => $workData->deposit_amount,
+            'customer_message' => $workData->customer_message,
+            'terms_conditions' => $workData->terms_conditions,
+            'instructions' => $workData->instructions,
+            'email' => $workData->email,
+            'phone' => $workData->phone_number,
+            'mobile' => $workData->mobile_number,
+            'terms_and_conditions' => $workData->terms_and_conditions,
+            'terms_of_use' => $workData->terms_of_use,
+            'job_description' => $workData->job_description,
+            'instructions' => $workData->instructions,
+            'bundle1_message' => $workData->bundle1_message,
+            'bundle2_message' => $workData->bundle2_message,
+
+            'items' => $items,
+
+            'bundle_discount' => $workData->bundle_discount,
+            // 'deposit_amount'                => $workData->deposit_amount,
+            'bundle1_total' => $workData->bundle1_total,
+            'bundle2_total' => $workData->bundle2_total,
+
+            'option_message' => $workData->option_message,
+            'option2_message' => $workData->option2_message,
+            'option1_total' => $workData->option1_total,
+            'option2_total' => $workData->option2_total,
+
+            'sub_total' => $workData->sub_total,
+            'sub_total2' => $workData->sub_total2,
+            'tax1_total' => $workData->tax1_total,
+            'tax2_total' => $workData->tax2_total,
+
+            'grand_total' => $workData->grand_total,
+            'adjustment_name' => $workData->adjustment_name,
+            'adjustment_value' => $workData->adjustment_value,
+            'markup_type' => $workData->markup_type,
+            'markup_amount' => $workData->markup_amount,
+            'eid' => $eid,
+            // 'source' => $source
+        ];
+
+        // $recipient  = "emploucelle@gmail.com";
+        $recipient = $customerData->email;
+
+        // $message = "This is a test email";
+        $this->load->view('estimate/send_email_acs_v3', $data);
+    }
+
     private function sendEstimateToCustomer($id, $wo_id, $urlLogo = null)
     {
         $this->load->helper(['url', 'hashids_helper']);
@@ -2006,7 +2122,7 @@ class Estimate extends MY_Controller
         $mail = email__getInstance(['subject' => 'Estimate Details']);
         $mail->addAddress($recipient, $recipient);
         $mail->isHTML(true);
-        $mail->Body = $this->load->view('estimate/send_email_acs', $data, true);
+        $mail->Body = $this->load->view('estimate/send_email_acs_v3', $data, true);
 
         $json_data['is_success'] = 1;
         $json_data['error'] = '';
@@ -2217,119 +2333,180 @@ class Estimate extends MY_Controller
                 $state = $lead->state;
                 $zip = $lead->zip;
             }
+
+            // <img src="'.(getCompanyBusinessProfileImage() ? getCompanyBusinessProfileImage() : 'assets/images/v2/logo2.png').'" style="margin-top:100px;">
+
             $html = '
+            <div style="height: 50px; width: 50px"></div>
             <table style="padding-top:-40px;">
                 <tr>
-                    <td>
-                        <h5 style="font-size:12px;"><span class="fa fa-user-o"></span> From <br/><span>'.$business->business_name.'</span></h5>
-                        <br />
-                        <span class="">'.$business->street.'</span><br />
-                        <span class="">'.$business->city.', '.$business->state.' '.$business->postal_code.'</span><br />
-                        <span class="">EMAIL: '.$business->business_email.'</span><br />
-                        <span class="">PHONE: '.formatPhoneNumber($business->business_phone).'</span>
-                        <br/><br /><br />
-                        <h5 style="font-size:12px;"><span class="fa fa-user-o"></span> To <br/><span>'.$firstname.' '.$lastname.'</span></h5>
-                        <br />
-                        <span class="">'.$address.'<br />'.$city.', '.$state.' '.$zip.'</span><br />
-                        <span class="">EMAIL: '.$email.'</span><br />
-                        <span class="">PHONE: '.formatPhoneNumber($phone_m).'</span>
+                    <td >
+                    <img src="assets/images/v2/logo2.jpg" style="height: 100px" >
                     </td>
                     <td colspan=1></td>
                     <td style="text-align:right;">
-                        <h5 style="font-size:20px;margin:0px;">ESTIMATE <br /><small style="font-size: 10px;">#'.$estimate->estimate_number.'</small></h5>
-                        <br />
+                        <span style="font-weight:bold;color:#6a4a86 ;font-size:20px;margin:0px;">ESTIMATE <br /><small style="font-size: 10px;">#'.$estimate->estimate_number.'</small></span>
+                        <br><br>
                         <table>
                           <tr>
                             <td>Estimate Date :</td>
                             <td>'.date('F d, Y', strtotime($estimate->estimate_date)).'</td>
                           </tr>
                           <tr>
-                            <td>Expire Due :</td>
-                            <td>'.date('F d, Y', strtotime($estimate->expiry_date)).'</td>
+                            <td >Expire Due :</td>
+                            <td >'.date('F d, Y', strtotime($estimate->expiry_date)).'</td>
                           </tr>
                         </table>
+                     
                     </td>
                 </tr>
-            </table>
-            <br /><br /><br />
-
-            <table style="width="100%;>
-            <thead>
+            </table><br><br><br>
+            <table>
                 <tr>
-                    <th style="width:5%;"><b>#</b></th>
-                    <th style="width:35%;"><b>Items</b></th>
-                    <th style="width:12%;"><b>Item Type</b></th>
-                    <th style="width:12%;text-align: right;"><b>Qty</b></th>
-                    <th style="width:12%;text-align: right;"><b>Price</b></th>
-                    <th style="width:12%;text-align: right;"><b>Discount</b></th>
-                    <th style="width:12%;text-align: right;"><b>Total</b></th>
+                    <td>
+                        <h5 style="font-size:12px;"><span class="fa fa-user-o"></span> <span style="font-weight:400;font-size: 10px"> From :</span> <br/><span  style="font-size:12px;">'.$business->business_name.'</span></h5>
+                        <span class="" style="padding: 100px">'.$business->street.'</span><br />
+                        <span class="">'.$business->city.', '.$business->state.' '.$business->postal_code.'</span><br />
+                        <span class="">EMAIL: '.$business->business_email.'</span><br />
+                        <span class="">PHONE: '.formatPhoneNumber($business->business_phone).'</span>
+                    </td>
+                    <td colspan="2"></td>
+                    <td    style="text-align:right;">
+                        <h5 style="font-size:12px"><span class="fa fa-user-o"></span><span style="font-weight:400;font-size: 10px"> To :</span>   <br/><span style="font-size:12px;">'.$firstname.' '.$lastname.'</span></h5>
+                        <span class="">'.$address.'<br />'.$city.', '.$state.' '.$zip.'</span><br />
+                        <span class="">EMAIL: '.($email ? $email : '---').'</span><br />
+                        <span class="">PHONE: '.formatPhoneNumber($phone_m).'</span>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>';
+            
+            </table>
+            <br>    <br>    <br> <br> <br>
+            <div >
+            <table  style="width: 100% ">
+            <tr style="">
+            <td style="background-color: #6a4a86;line-height: 30px; color: #fff; width:5%;"><b>#</b></td>
+            <td style=" background-color: #6a4a86;line-height: 30px; color: #fff; width:35%; text-align: start;"><b  style="padding: 10px;">Items</b></td>
+            <td style=" background-color: #6a4a86;line-height: 30px;  color: #fff; width:12%; text-align: start;"><b   style="padding: 10px;">Item Type</b></td>
+            <td style=" background-color: #6a4a86;line-height: 30px;  color: #fff; width:12%; text-align: start;"><b   style="padding: 10px;">Qty</b></td>
+            <td style="background-color: #6a4a86; line-height: 30px; color: #fff;  width:12%; text-align: start;"><b   style="padding: 10px;">Price</b></td>
+            <td style=" background-color: #6a4a86;line-height: 30px;  color: #fff; width:12%; text-align: start;"><b   style="padding: 10px;">Discount</b></td>
+            <td style="background-color: #6a4a86; line-height: 30px; color: #fff;  width:12%; text-align: start;"><b   style="padding: 10px;">Total</b></td>
+             </tr>
+            <tbody >';
             $total_amount = 0;
             $total_tax = 0;
             $row = 1;
             foreach ($estimateItems as $item) {
-                $html .= '<tr>
-                    <td valign="top" style="width:5%;">'.$row.'</td>
-                    <td valign="top" style="width:35%;">'.$item->title.'</td>
-                    <td valign="top" style="width:12%;">'.$item->type.'</td>
-                    <td valign="top" style="width:12%;text-align: right;">'.$item->qty.'</td>
-                    <td valign="top" style="width:12%;text-align: right;">'.number_format($item->iCost, 2).'</td>
-                    <td valign="top" style="width:12%;text-align: right;">'.number_format($item->discount, 2).'</td>
-                    <td valign="top" style="width:12%;text-align: right;">'.number_format($item->iTotal, 2).'</td>
+                $html .= '<tr style="border: 1px solid black;">
+                    <td valign="top" style="line-height: 15px; black;width:5%;">'.$row.'</td>
+                    <td valign="top" style="line-height: 15px;  black;width:35%;">'.$item->title.'</td>
+                    <td valign="top" style="line-height: 15px;  black;width:12%;">'.$item->type.'</td>
+                    <td valign="top" style=" line-height: 15px; black;width:12%;">'.$item->qty.'</td>
+                    <td valign="top" style="line-height: 15px;  black;width:12%;">$ '.number_format($item->iCost, 2).'</td>
+                    <td valign="top" style="line-height: 15px;  black;width:12%;">$ '.number_format($item->discount, 2).'</td>
+                    <td valign="top" style="line-height: 15px;  black;width:12%;">$ '.number_format($item->iTotal, 2).'</td>
                   </tr>
                 ';
+
                 ++$row;
                 $total_amount += $item->iTotal;
+            }
+            if (count($estimateItems) < 3) {
+                $html .= '<tr style="border: 1px solid black;">
+                <td valign="top" style="line-height: 25px; black;width:5%;"></td>
+                <td valign="top" style="line-height: 25px;  black;width:35%;"></td>
+                <td valign="top" style="line-height: 25px;  black;width:12%;"></td>
+                <td valign="top" style=" line-height: 25px; black;width:12%;"></td>
+                <td valign="top" style="line-height: 25px;  black;width:12%;"></td>
+                <td valign="top" style="line-height: 25px;  black;width:12%;"></td>
+                <td valign="top" style="line-height: 25px;  black;width:12%;"></td>
+              </tr>';
             }
 
             $deposit_amount = $estimate->grand_total * ($estimate->deposit_amount / 100);
 
-            $html .= '
-            <tr><br><br>
-              <td colspan="6" style="text-align: right;"><b>Subtotal</b></td>
-              <td style="text-align: right;"><b>$'.number_format($estimate->sub_total, 2).'</b></td>
-            </tr>
+            $html .= '<br><br>
             <tr>
-              <td colspan="6" style="text-align: right;"><b>Taxes</b></td>
-              <td style="text-align: right;"><b>$'.number_format($estimate->tax1_total, 2).'</b></td>
+                <td colspan="3" >
+                <p><b  style="font-size:12px;">Message</b><br /><br>'.($estimate->customer_message !== '' && $estimate->customer_message !== null ? $estimate->customer_message : 'If you have any questions or need more information, feel free to contact us at <b style="font-size: 10px; color:#6a4a86">'.formatPhoneNumber($business->business_phone).'</b>.').' </p>
+                <p><b style="font-size:12px;">Terms</b><br /><br />'.($estimate->terms_conditions !== '' && $estimate->terms_conditions !== null ? $estimate->terms_conditions : 'This document is strictly <span style="color:#6a4a86">private, confidential </span> and <span style="color:#6a4a86">personal</span> to its recipients and should not be copied, distributed, or reproduced in whole or in part, nor passed to any third party.  This estimate is based on available information at the time of estimation and is subject to change based on unforeseen circumstances or additional requirements.').'</p>
+                </td>
+                <td></td>
+                <td colspan="3">
+                    <table>
+                        <tr>
+                        <td  colspan="2" style="line-height: 20px; black;text-align: start;"><b>Subtotal</b></td>
+                        <td  style="line-height: 20px; black;text-align: center;"><b>$'.number_format($estimate->sub_total, 2).'</b></td>
+                        </tr>
+                        <tr>
+                        <td  colspan="2"  style="line-height: 20px; black;text-align: start;">Taxes</td>
+                        <td  style="line-height: 20px; black;text-align: center;">$'.number_format($estimate->tax1_total, 2).'</td>
+                      </tr>
+                      <tr>
+                      <td   colspan="2" style="line-height: 20px; black;text-align: start;">Discount</td>
+                      <td  style="line-height: 20px; black;text-align: center;">$'.number_format($estimate->adjustment_value, 2).'</td>
+                    </tr>
+                    <tr>
+                    <td  colspan="2" style="background-color: #dad1e0; line-height: 20px; black;text-align: start;"><b>Grand Total</b></td>
+                    <td   style="background-color: #dad1e0; line-height: 20px; black;text-align: center;"><b>$'.number_format($estimate->grand_total, 2).'</b></td>
+                    </tr>
+                    <tr>
+                    <td  colspan="2"  style="line-height: 20px; black;text-align: start;">Deposit Amount Requested</td>
+                    <td   style="line-height: 20px; black;text-align: center;">$'.number_format($deposit_amount, 2).'</td>
+                  </tr>
+                  <br><br>
+                    <tr style="text-align:center">
+                            <p style="text-align:center">Powered By:</p>
+                            <img src="assets/images/v2/logo.png" >
+                    </tr>
+                    </table>
+                </td>
             </tr>
+            <br> 
             <tr>
-              <td colspan="6" style="text-align: right;"><b>'.$estimate->adjustment_name.'</b></td>
-              <td style="text-align: right;"><b>$'.number_format($estimate->adjustment_value, 2).'</b></td>
+                <td colspan="4">
+                    <p style="margin-top: -50px;text-align:center"><b  style="font-size:12px;">Instruction</b><br /><br />
+                    <span style="font-weight:lighter;">'.($estimate->instructions !== '' && $estimate->instructions !== null ? $estimate->instructions : 'The following estimate request is being submitted for your approval.  Keep in mind, materials costs are subject to change and cannot be guaranteed until approval is received and your order is processed.').'</span></p>
+                    <div>
+                        <span style="font-size:12px: font-weight: 400">Would you like to proceed with accepting the estimate? </span><br><br>
+                        <table>
+                            <tr style="text-align:center">
+                                <td style="width: 40px"></td>
+                                <td style="font-size:10px;background-color:#d9534f; padding:10px 20px; border-radius:25px;line-height: 30px;text-align:center; width:100px"> 
+                                    <a style="color:#fff; background-color:#d9534f;   text-decoration: none">Reject</a>
+                                </td>
+                                <td style="width: 10px"></td>
+
+                                <td style="background-color:#5cb85c;font-size:10px; padding:10px 20px; border-radius:25px;line-height: 30px;text-align:center; width:100px"> 
+                                    <a style="color:#fff; background-color:#5cb85c; text-decoration: none">Accept</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
             </tr>
-            <tr>
-              <td colspan="6" style="text-align: right;"><b>Grand Total</b></td>
-              <td style="text-align: right;"><b>$'.number_format($estimate->grand_total, 2).'</b></td>
-            </tr>
-            <tr>
-              <td colspan="6" style="text-align: right;"></td>
-              <td style="text-align: right;"></td>
-            </tr>
-            <tr>
-              <td colspan="6" style="text-align: right;"><b>Deposit Amount Requested</b></td>
-              <td style="text-align: right;"><b>$'.number_format($deposit_amount, 2).'</b></td>
-            </tr>
+         
           </tbody>
           </table>
-          <br /><br /><br />
-          <p><b>Instructions</b><br /><br />'.$estimate->instructions.'</p>
-          <p><b>Message</b><br /><br />'.$estimate->customer_message.'</p>
-          <p><b>Terms</b><br /><Br />'.$estimate->terms_conditions.'</p>
+          </div>
+          <br /><br />
+          
+       
+        
             ';
 
             tcpdf();
             $obj_pdf = new TCPDF('P', PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
             $title = 'Estimates';
+            // $obj_pdf->setCellPaddings(5, 5, 5, 5);
             $obj_pdf->SetTitle($title);
             $obj_pdf->setPrintHeader(false);
             $obj_pdf->setPrintFooter(false);
             $obj_pdf->setFooterFont([PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA]);
             $obj_pdf->SetDefaultMonospacedFont('helvetica');
-            $obj_pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+            $obj_pdf->SetFooterMargin(5);
             $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
-            $obj_pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
+            $obj_pdf->SetAutoPageBreak(true, 10);
             $obj_pdf->SetFont('helvetica', '', 9);
             $obj_pdf->setFontSubsetting(false);
             $obj_pdf->AddPage();

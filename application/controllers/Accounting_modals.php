@@ -6264,6 +6264,15 @@ class Accounting_modals extends MY_Controller
         return $return;
     }
 
+    public function check_grand_total($amount)
+    {
+        if (floatval(str_replace(',', '', $amount)) == 0) {
+            $this->form_validation->set_message('check_grand_total', 'The total amount is required.');
+            return false;
+        }
+        return true;
+    }
+
     private function invoice($data)
     {
         $this->form_validation->set_rules('customer', 'Customer', 'required');
@@ -6304,12 +6313,13 @@ class Accounting_modals extends MY_Controller
             $this->form_validation->set_rules('due_date', 'Due date', 'required');
             $this->form_validation->set_rules('status', 'Status', 'required');
             $this->form_validation->set_rules('invoice_no', 'Invoice #', 'required');
+            $this->form_validation->set_rules('total_amount', 'Grand Total', 'callback_check_grand_total');
         }
 
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
+            $return['message'] = validation_errors();
         } else {
             if ($data['credit_card_payments'] == 1) {
                 $credit_card = 'Credit Card';

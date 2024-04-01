@@ -225,7 +225,7 @@
                                     <td><?php echo get_user_by_id($workorder->employee_id)->FName . ' ' . get_user_by_id($workorder->employee_id)->LName ?></td>
                                     <td><span class="nsm-badge <?= $prio_badge ?>"><?php echo $workorder->priority; ?></span></td>
                                     <td><span class="nsm-badge <?= $status_badge ?>"><?php echo $workorder->w_status; ?></span></td>
-                                    <td></td>
+                                    <td><span>$ &nbsp;<?php echo $workorder->grand_total; ?></span></td>
                                     <td class="action">
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">

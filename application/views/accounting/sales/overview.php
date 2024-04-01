@@ -1,6 +1,6 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@3.6.0/dist/chart.min.js"></script>
-
+<?php include viewPath('v2/includes/accounting/all_sales_modals'); ?>
 <div class="row page-content g-0">
     
     <input type="hidden" id="siteurl" value="<?=base_url();?>">
@@ -59,13 +59,14 @@
                             </div>
                             <div class="nsm-card-content">
                                 <div class="content-monitary-highlight">
-                                        <span class="amount" style="font-size:25px;font-weight:bold;">$<?=number_format($income_this_month, 2)?></span>
-                                        <span class="label">This month</span>
+                                        <span class="amount" style="font-size:25px;font-weight:bold;" id="income_this_month">$<?=number_format($income_this_month, 2)?></span>
+                                        <span class="label" id="duration_label">This month</span>
                                     </div>
                                     <div class="monitary-increase" style="color:green;font-weight:bold;">
-                                        $<?=number_format($income_this_month - $income_last_month, 2)?>
-                                        more than <?=date("M d", strtotime("first day of previous month"))?>
-                                        - <?=date("d, Y", strtotime("last day of previous month"))?>
+                                           
+                                        <span id="income_difference">$<?=number_format($income_this_month - $income_last_month, 2)?></span>
+                                        <span >more than</span> <span id="income_date_difference"><?=date("M d", strtotime("first day of previous month"))?>
+                                        - <?=date("d, Y", strtotime("last day of previous month"))?></span>
                                     </div>
                                     <div id="chartContainer11" class="dynamic-graph-container"
                                         style="display:none;width: 100%; height:200px;">
@@ -184,41 +185,27 @@
                         </div>  -->                       
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-7">
-                        <div class="nsm-card primary">
+                <div class="row" >
+                    <div class="col-md-7 ">
+                        <div class="row h-100">
+                            <div class="col-md-12 mb-3" id="learn_how_payments" style="height:160px">
+                            <div class="nsm-card primary">
                             <h4>Learn how to use payments</h4>
                             <p>Learn how to use nSmarTrac Payments to get paid online, in-person, and on the go.</p>
                             <div style="float:right;text-decoration:none;">
-                                <a href="#">Not Now</a> &emsp; <button class="btn btn-success">Learn More</button>
+                                <a href="#" class="text-decoration-none" id="not_now_link">Not Now</a> &emsp; <button onclick="window.location.href='<?=base_url('accounting/banking')?>'" class="btn btn-success">Learn More</button>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-md-5">
-                        <div class="nsm-card primary">
-                            <h4>SHORTCUTS</h4>
-                            <table class="table" style="width:50%;color:green;">
-                                <tr>
-                                    <td  onclick="window.location.href='<?=base_url('accounting/addnewInvoice')?>'"><center><i class="fa fa-file" aria-hidden="true" style="font-size:50px;"></i><br> <b>New Invoice</b></center></td>
-                                    
-                                    <td onclick="window.location.href='<?=base_url('invoice/recurring')?>'"><center><i class="fa fa-file-text" aria-hidden="true" style="font-size:50px;"></i><br> <b>Recurring Invoice</b></center></td>
-                                </tr>
-                                <tr>
-                                    <td><center><i class="fa fa-file-o" aria-hidden="true" style="font-size:50px;"></i><br> <b>New Sale</b></center></td>
-                                    <td><center><i class="fa fa-file" aria-hidden="true" style="font-size:50px;"></i><br> <b>Recurring Sale</b></center></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-7">
-                        <div class="nsm-card primary">
-                            <h4>Invoices</h4>
-                            <div class="row">
-                                <div class="col-md-3" style="color:red;">
-                                    <i class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size:30px;"></i><br> <b>Needs Attention $0.00</b>
+                            </div>
+                            </div>
+                            <div class="col-md-12 ">
+                                 <div class="nsm-card primary pb-0">
+                                      <h4>Invoices</h4>
+                                              <div class="row">
+                                <div class="col-md-3 d-flex align-items-start" style="color:red; padding: 5px;">
+                                    <i class="fa fa-exclamation-triangle mt-2" aria-hidden="true" style="font-size:40px;"></i><div style="padding-left: 10px; font-size:17px;">
+                                    <b>Needs Attention <br>$ <?=number_format($unpaid_last_365, 2)?></b>
+                                    </div>
+                                 
                                 </div>
                                 <div class="col-md-5">
                                     <table class="table">
@@ -250,8 +237,30 @@
                                 </div>
                             </div>
                         </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5 h-100" >
+                        <div class="nsm-card primary h-100" >
+                            <h4>SHORTCUTS</h4>
+                            <table class="" style="width:50%;color:green; display:flex; flex-wrap:wrap;">
+                                <tr>
+                                    <!-- <td  onclick="window.location.href='<?=base_url('accounting/addnewInvoice')?>'"><center><i class="fa fa-file" aria-hidden="true" style="font-size:50px;"></i><br> <b>New Invoice</b></center></td> -->
+                                    <!-- <td onclick="window.location.href='<?=base_url('invoice/recurring')?>'"><center><i class="fa fa-file-text" aria-hidden="true" style="font-size:50px;"></i><br> <b>Recurring Invoice</b></center></td> -->
+
+                                    <td ><a id="new-invoice" ><center><i class="fa fa-file" aria-hidden="true" style="font-size:50px;"></i><br> <b>New Invoice</b></center></a></td>
+                                    <td>
+                                <a id="new-recurring-invoice" class="text-decoration-none" style="color:green;" ><center><i class="fa fa-file-text" aria-hidden="true" style="font-size:50px;"></i><br> <b>Recurring Invoice</b></center></a></td>
+                                <td ><a id="new-sales-receipt"><center><i class="fa fa-file-o" aria-hidden="true" style="font-size:50px;"></i><br> <b>New Sale</b></center></a></td>
+                                    <td><a id="new-recurring-sale" ><center><i class="fa fa-file" aria-hidden="true" style="font-size:50px;"></i><br> <b>Recurring Sale</b></center></a></td>
+                                </tr>
+                              
+                            </table>
+                        </div>
                     </div>
                 </div>
+                <br>
+              
 
 
 
@@ -260,6 +269,7 @@
     </div>
 </div>
 <?php include viewPath('v2/includes/footer'); ?>
+
 
 <script src="<?php echo $url->assets ?>js/accounting/sales/overview.js"></script>
 <script>

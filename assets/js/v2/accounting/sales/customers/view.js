@@ -551,6 +551,7 @@ $('#new-payment').on('click', function() {
 });
 
 $('#new-sales-receipt').on('click', function() {
+     
     $.get(base_url +'accounting/get-other-modals/sales_receipt_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
@@ -568,6 +569,7 @@ $('#new-sales-receipt').on('click', function() {
         initModalFields('salesReceiptModal');
 
         $('#salesReceiptModal').modal('show');
+        
     });
 });
 
