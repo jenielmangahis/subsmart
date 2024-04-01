@@ -1,4 +1,5 @@
 <?php
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
@@ -100,7 +101,7 @@ $route['customer/_delete_customer_status'] = 'Customer/ajax_delete_customer_stat
 $route['customer/_quick_add_customer'] = 'Customer/ajax_quick_add_customer';
 $route['customer/_quick_add_lead'] = 'Customer/ajax_quick_add_lead';
 
-//Credit Bureau
+// Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
 $route['credit_bureau/add_new'] = 'Credit_Bureau/add_new';
 $route['credit_bureau/_create_credit_bureau'] = 'Credit_Bureau/ajax_create_credit_bureau';
@@ -108,7 +109,7 @@ $route['credit_bureau/_delete_credit_bureau'] = 'Credit_Bureau/ajax_delete_credi
 $route['credit_bureau/edit/(:num)'] = 'Credit_Bureau/edit/$1';
 $route['credit_bureau/_update_credit_bureau'] = 'Credit_Bureau/ajax_update_credit_bureau';
 
-//Creditor Furnisher
+// Creditor Furnisher
 $route['creditor_furnisher/list'] = 'CreditorFurnisher/index';
 $route['creditor_furnisher/add_new'] = 'CreditorFurnisher/add_new';
 $route['creditor_furnisher/_create_furnisher'] = 'CreditorFurnisher/ajax_create_furnisher';
@@ -117,7 +118,7 @@ $route['creditor_furnisher/edit/(:num)'] = 'CreditorFurnisher/edit/$1';
 $route['creditor_furnisher/_update_creditor_furnisher'] = 'CreditorFurnisher/ajax_update_creditor_furnisher';
 $route['creditor_furnisher/_quick_save'] = 'CreditorFurnisher/ajax_quick_save';
 
-//Quick Notes
+// Quick Notes
 $route['quick_notes/list'] = 'Quick_Notes/index';
 $route['quick_notes/add_new'] = 'Quick_Notes/add_new';
 $route['quick_notes/_create_quick_note'] = 'Quick_Notes/ajax_create_quick_note';
@@ -167,7 +168,7 @@ $route['terms-and-conditions/(:num)'] = 'TermsAndConditionsController/view/$1';
 $route['terms-and-conditions/edit/(:num)'] = 'TermsAndConditionsController/edit/$1';
 $route['terms-and-conditions/add'] = 'TermsAndConditionsController/add';
 
-//gene fb
+// gene fb
 $route['fb'] = 'FB';
 $route['fb/add'] = 'FB/add';
 $route['fb/thank-you'] = 'FB/thankYou';
@@ -183,14 +184,13 @@ $route['fb/update/(:num)']['post'] = 'FB/update/$1';
 $route['fb/generate-from-template/(:num)']['post'] = 'FB/generateFormFromTemplate/$1';
 $route['fb/generate-template-from-form/(:num)'] = 'FB/generateTemplateFromForm/$1';
 
-//fb elements
+// fb elements
 $route['fb/elements/create']['post'] = 'FB/createFormElement';
 $route['fb/elements/update-order']['post'] = 'FB/updateOrder';
 $route['fb/elements/update/(:num)']['post'] = 'FB/updateElement/$1';
 $route['fb/elements/destroy/(:num)']['post'] = 'FB/destroyElement/$1';
 
-
-//fb folders
+// fb folders
 $route['fb/folders/get-by-active-user'] = 'FB/getFoldersByActiveUser';
 $route['fb/folders/'] = 'FB/foldersIndex';
 $route['fb/folders'] = 'FB/foldersIndex';
@@ -198,12 +198,11 @@ $route['fb/folders/update/(:num)']['post'] = 'FB/updateFolder/$1';
 $route['fb/folders/create']['post'] = 'FB/createFolder';
 $route['fb/folders/destroy/(:num)']['post'] = 'FB/destroyFolder/$1';
 
-
-//fb templates
+// fb templates
 $route['fb/templates/get-all'] = 'FB/getAllTemplates';
 $route['fb/templates/get-by-form-template-id/(:num)'] = 'FB/getByFormTemplateID/$1';
 
-//fb template folders
+// fb template folders
 $route['fb/template-folders/get-all'] = 'FB/getAllTemplateFolders';
 
 // api
@@ -213,9 +212,9 @@ $route['terms-and-conditions/update/(:num)'] = 'TermsAndConditionsController/upd
 $route['terms-and-conditions/destroy/(:num)'] = 'TermsAndConditionsController/destroy/$1';
 $route['terms-and-conditions/create'] = 'TermsAndConditionsController/create';
 
-//survey module
+// survey module
 $route['vault/(:num)'] = 'vault/index/$1';
-//$route['survey/(:num)']['GET'] = 'survey/preview/$1';
+// $route['survey/(:num)']['GET'] = 'survey/preview/$1';
 $route['survey/(:num)']['GET'] = 'pages/front_survey/$1';
 $route['survey/edit/(:num)'] = 'survey/edit/$1';
 $route['survey/delete/(:num)']['GET'] = 'survey/delete/$1';
@@ -233,11 +232,11 @@ $route['survey/_delete_theme'] = 'Survey/ajax_delete_theme';
 $route['survey/_load_survey_logic_jump'] = 'Survey/ajax_load_survey_logic_jump';
 $route['survey/_logic_add'] = 'Survey/ajax_logic_add';
 $route['survey/_update_survey_logic'] = 'Survey/ajax_update_survey_logic';
-$route['survey/_question_logic_jump'] = 'Pages/ajax_survey_question_logic_jump'; //Front
+$route['survey/_question_logic_jump'] = 'Pages/ajax_survey_question_logic_jump'; // Front
 
 // survey logic
-$route['survey/logic/list/(:any)'] = "survey/surveyLogicList/$1";
-$route['survey/logic/add'] = "survey/addLogicJump";
+$route['survey/logic/list/(:any)'] = 'survey/surveyLogicList/$1';
+$route['survey/logic/add'] = 'survey/addLogicJump';
 
 // themes
 $route['survey/themes'] = 'survey/themeIndex';
@@ -249,11 +248,11 @@ $route['survey/themes/(:num)'] = 'survey/themeView/$1';
 $route['survey/themes/select/(:any)/(:any)'] = 'survey/selectTheme/$1/$2';
 $route['survey/_load_themes_list'] = 'survey/ajax_load_themes_list';
 
-//question
+// question
 $route['survey/update/(:num)/(:any)/(:num)'] = 'survey/updateSurvey/$1/$2/$3';
 $route['survey/update/question'] = 'survey/updateQuestion';
 $route['survey/update/(:any)'] = 'survey/updateSurvey/$1';
-//$route['survey/question/upload/(:num)'] = 'survey/addQuestionUpload/$1';
+// $route['survey/question/upload/(:num)'] = 'survey/addQuestionUpload/$1';
 $route['survey/question/upload/(:num)'] = 'pages/surveyAddQuestionUpload/$1';
 $route['survey/add/questions/choices/(:num)/(:num)'] = 'survey/addAndUpdateQuestionChoices/$1/$2';
 $route['survey/add/questions/(:num)/(:num)'] = 'survey/addAndUpdateQuestion/$1/$2';
@@ -274,7 +273,6 @@ $route['survey/result/$1'] = 'survey/result/$1';
 $route['survey/share/$1'] = 'survey/share/$1';
 $route['survey/answer/$1'] = 'survey/answer/$1';
 $route['survey/submit_answer/(:num)'] = 'pages/survey_answer/$1';
-
 
 $route['survey/add/question/choice/(:num)/(:num)'] = 'survey/addQuestionChoice/$1/$2';
 // [AdminLTE]
@@ -299,7 +297,6 @@ $route['invoice/customer_view/(:any)'] = 'Invoice/front_pay_now/$1';
 $route['invoice/_create_invoice'] = 'Invoice/ajax_create_invoice';
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
-
 
 $route['features'] = 'features';
 $route['pricing'] = 'pricing';
@@ -365,33 +362,33 @@ $route['campaign_blast/delete_blast'] = 'Campaign_Blast/delete_blast';
 $route['register/subscribe'] = 'register/subscribe';
 
 // [Accounting]
-$route['accounting/generate-pdf'] = "accounting_modals/generatePDF";
-$route['accounting/show-pdf'] = "accounting_modals/showPDF";
-$route['accounting/download-pdf'] = "accounting_modals/downloadPDF";
-$route['accounting/send-email-form']['post'] = "accounting_modals/showEmailModal";
+$route['accounting/generate-pdf'] = 'accounting_modals/generatePDF';
+$route['accounting/show-pdf'] = 'accounting_modals/showPDF';
+$route['accounting/download-pdf'] = 'accounting_modals/downloadPDF';
+$route['accounting/send-email-form']['post'] = 'accounting_modals/showEmailModal';
 
-//Workers Comp
-$route['accounting/_create_workers_comp'] = "accounting/ajax_create_workers_comp_quote";
+// Workers Comp
+$route['accounting/_create_workers_comp'] = 'accounting/ajax_create_workers_comp_quote';
 
 // Accounting tags
 $route['accounting/tags'] = 'accounting_controllers/tags/index';
 $route['accounting/tags/get-group-tags'] = 'accounting_controllers/tags/get_group_tags';
-$route['accounting/tags/load-all-tags']['post'] = "accounting_controllers/tags/load_all_tags";
-$route['accounting/tags/delete/(:any)/(:any)']['DELETE'] = "accounting_controllers/tags/delete/$1/$2";
-$route['accounting/tags/update/(:any)/(:any)']['POST'] = "accounting_controllers/tags/update/$1/$2";
-$route['accounting/tags/add-group-tag']['POST'] = "accounting_controllers/tags/add_group_tag";
-$route['accounting/tags/add-tag']['POST'] = "accounting_controllers/tags/add_tag";
-$route['accounting/tags/delete-tags']['POST'] = "accounting_controllers/tags/delete_tags";
-$route['accounting/tags/transactions'] = "accounting_controllers/tags/transactions";
-$route['accounting/tags/load-transactions']['post'] = "accounting_controllers/tags/load_transactions";
-$route['accounting/tags/print-transactions']['post'] = "accounting_controllers/tags/print_transactions";
-$route['accounting/tags/transactions/add-tags']['post'] = "accounting_controllers/tags/add_tags";
-$route['accounting/tags/transactions/load-tags-to-remove']['post'] = "accounting_controllers/tags/load_tags_to_remove";
-$route['accounting/tags/transactions/remove-tags']['post'] = "accounting_controllers/tags/remove_tags";
-$route['accounting/_update_tag'] = "accounting_controllers/tags/ajax_update_tag";
+$route['accounting/tags/load-all-tags']['post'] = 'accounting_controllers/tags/load_all_tags';
+$route['accounting/tags/delete/(:any)/(:any)']['DELETE'] = 'accounting_controllers/tags/delete/$1/$2';
+$route['accounting/tags/update/(:any)/(:any)']['POST'] = 'accounting_controllers/tags/update/$1/$2';
+$route['accounting/tags/add-group-tag']['POST'] = 'accounting_controllers/tags/add_group_tag';
+$route['accounting/tags/add-tag']['POST'] = 'accounting_controllers/tags/add_tag';
+$route['accounting/tags/delete-tags']['POST'] = 'accounting_controllers/tags/delete_tags';
+$route['accounting/tags/transactions'] = 'accounting_controllers/tags/transactions';
+$route['accounting/tags/load-transactions']['post'] = 'accounting_controllers/tags/load_transactions';
+$route['accounting/tags/print-transactions']['post'] = 'accounting_controllers/tags/print_transactions';
+$route['accounting/tags/transactions/add-tags']['post'] = 'accounting_controllers/tags/add_tags';
+$route['accounting/tags/transactions/load-tags-to-remove']['post'] = 'accounting_controllers/tags/load_tags_to_remove';
+$route['accounting/tags/transactions/remove-tags']['post'] = 'accounting_controllers/tags/remove_tags';
+$route['accounting/_update_tag'] = 'accounting_controllers/tags/ajax_update_tag';
 
 // Modals
-$route['accounting/get-other-modals/(:any)'] = "accounting_modals/index/$1";
+$route['accounting/get-other-modals/(:any)'] = 'accounting_modals/index/$1';
 $route['accounting/apply-for-capital'] = 'accounting/apply_for_capital';
 $route['accounting/submit-modal-form']['post'] = 'accounting_modals/action';
 $route['accounting/get-job-tags'] = 'accounting_modals/get_job_tags';
@@ -498,14 +495,13 @@ $route['accounting/mark-as-paid-transaction/(:any)/(:any)'] = 'accounting_modals
 
 $route['accounting/lists'] = 'accounting/lists';
 
-
 // Accounting attachments
 $route['accounting/attachments'] = 'accounting_controllers/attachments/index';
 $route['accounting/attachments/upload']['post'] = 'accounting_controllers/attachments/upload';
 $route['accounting/attachments/load-attachments']['post'] = 'accounting_controllers/attachments/load_attachment_files';
-$route['accounting/attachments/download'] = "accounting_controllers/attachments/download";
-$route['accounting/attachments/update/(:any)']['post'] = "accounting_controllers/attachments/edit/$1";
-$route['accounting/attachments/delete/(:any)']['DELETE'] = "accounting_controllers/attachments/delete/$1";
+$route['accounting/attachments/download'] = 'accounting_controllers/attachments/download';
+$route['accounting/attachments/update/(:any)']['post'] = 'accounting_controllers/attachments/edit/$1';
+$route['accounting/attachments/delete/(:any)']['DELETE'] = 'accounting_controllers/attachments/delete/$1';
 $route['accounting/attachments/attach']['post'] = 'accounting_controllers/attachments/attach';
 $route['accounting/attachments/get-all-attachments-ajax'] = 'accounting_controllers/attachments/get_all_attachments';
 $route['accounting/attachments/get-unlinked-attachments-ajax'] = 'accounting_controllers/attachments/get_unlinked_attachments';
@@ -517,32 +513,32 @@ $route['accounting/payment-methods'] = 'accounting_controllers/payment_methods/i
 $route['accounting/payment-methods/load-payment-methods']['post'] = 'accounting_controllers/payment_methods/load_payment_methods';
 $route['accounting/payment-methods/add']['post'] = 'accounting_controllers/payment_methods/add';
 $route['accounting/payment-methods/edit/(:any)'] = 'accounting_controllers/payment_methods/edit/$1';
-$route['accounting/payment-methods/delete/(:any)']['DELETE'] = "accounting_controllers/payment_methods/inactive/$1";
-$route['accounting/payment-methods/activate/(:any)'] = "accounting_controllers/payment_methods/activate/$1";
-$route['accounting/payment-methods/update/(:any)']['post'] = "accounting_controllers/payment_methods/update/$1";
+$route['accounting/payment-methods/delete/(:any)']['DELETE'] = 'accounting_controllers/payment_methods/inactive/$1';
+$route['accounting/payment-methods/activate/(:any)'] = 'accounting_controllers/payment_methods/activate/$1';
+$route['accounting/payment-methods/update/(:any)']['post'] = 'accounting_controllers/payment_methods/update/$1';
 $route['accounting/payment-methods/print']['post'] = 'accounting_controllers/payment_methods/print';
 
 // Accounting recurring transactions
-$route['accounting/recurring-transactions'] = "accounting_controllers/recurring_transactions/index";
-$route['accounting/recurring-transactions/load-recurring-transactions']['post'] = "accounting_controllers/recurring_transactions/load_recurring_transactions";
-$route['accounting/recurring-transactions/delete/(:any)']['DELETE'] = "accounting_controllers/recurring_transactions/delete/$1";
-$route['accounting/recurring-transactions/get-details/(:any)'] = "accounting_controllers/recurring_transactions/get/$1";
-$route['accounting/recurring-transactions/update/(:any)/(:any)']['post'] = "accounting_controllers/recurring_transactions/update/$1/$2";
-$route['accounting/recurring-transactions/print-recurring-transactions']['post'] = "accounting_controllers/recurring_transactions/print";
-$route['accounting/recurring-transactions/skip-next-date/(:any)'] = "accounting_controllers/recurring_transactions/skip_next_date/$1";
-$route['accounting/recurring-transactions/pause/(:any)'] = "accounting_controllers/recurring_transactions/pause/$1";
-$route['accounting/recurring-transactions/resume/(:any)'] = "accounting_controllers/recurring_transactions/resume/$1";
-$route['accounting/recurring-transactions/reminders-list'] = "accounting_controllers/recurring_transactions/reminders_list";
-$route['accounting/recurring-transactions/load-reminders-list']['post'] = "accounting_controllers/recurring_transactions/load_reminders_list";
-$route['accounting/recurring-transactions/skip-batch']['post'] = "accounting_controllers/recurring_transactions/skip_batch";
+$route['accounting/recurring-transactions'] = 'accounting_controllers/recurring_transactions/index';
+$route['accounting/recurring-transactions/load-recurring-transactions']['post'] = 'accounting_controllers/recurring_transactions/load_recurring_transactions';
+$route['accounting/recurring-transactions/delete/(:any)']['DELETE'] = 'accounting_controllers/recurring_transactions/delete/$1';
+$route['accounting/recurring-transactions/get-details/(:any)'] = 'accounting_controllers/recurring_transactions/get/$1';
+$route['accounting/recurring-transactions/update/(:any)/(:any)']['post'] = 'accounting_controllers/recurring_transactions/update/$1/$2';
+$route['accounting/recurring-transactions/print-recurring-transactions']['post'] = 'accounting_controllers/recurring_transactions/print';
+$route['accounting/recurring-transactions/skip-next-date/(:any)'] = 'accounting_controllers/recurring_transactions/skip_next_date/$1';
+$route['accounting/recurring-transactions/pause/(:any)'] = 'accounting_controllers/recurring_transactions/pause/$1';
+$route['accounting/recurring-transactions/resume/(:any)'] = 'accounting_controllers/recurring_transactions/resume/$1';
+$route['accounting/recurring-transactions/reminders-list'] = 'accounting_controllers/recurring_transactions/reminders_list';
+$route['accounting/recurring-transactions/load-reminders-list']['post'] = 'accounting_controllers/recurring_transactions/load_reminders_list';
+$route['accounting/recurring-transactions/skip-batch']['post'] = 'accounting_controllers/recurring_transactions/skip_batch';
 
 // Accounting payment terms
-$route['accounting/terms'] = "accounting_controllers/payment_terms/index";
-$route['accounting/terms/add'] = "accounting_controllers/payment_terms/add";
+$route['accounting/terms'] = 'accounting_controllers/payment_terms/index';
+$route['accounting/terms/add'] = 'accounting_controllers/payment_terms/add';
 $route['accounting/terms/edit/(:any)'] = 'accounting_controllers/payment_terms/edit/$1';
-$route['accounting/terms/delete/(:any)']['DELETE'] = "accounting_controllers/payment_terms/delete/$1";
-$route['accounting/terms/activate/(:any)'] = "accounting_controllers/payment_terms/activate/$1";
-$route['accounting/terms/update/(:any)']['post'] = "accounting_controllers/payment_terms/update/$1";
+$route['accounting/terms/delete/(:any)']['DELETE'] = 'accounting_controllers/payment_terms/delete/$1';
+$route['accounting/terms/activate/(:any)'] = 'accounting_controllers/payment_terms/activate/$1';
+$route['accounting/terms/update/(:any)']['post'] = 'accounting_controllers/payment_terms/update/$1';
 $route['accounting/terms/ajax-add-term']['post'] = 'accounting_controllers/payment_terms/ajax_add_term';
 $route['accounting/terms/print']['post'] = 'accounting_controllers/payment_terms/print';
 
@@ -600,11 +596,10 @@ $route['management-report/export/docx'] = 'accounting/management_report_generate
 $route['management-report/generate/preview'] = 'accounting/management_report_generate_pdf';
 $route['import/customer'] = 'accounting/import_customers';
 
-
 // Accounting products and services
 $route['accounting/products-and-services'] = 'accounting_controllers/products_and_services/index';
-$route['accounting/products-and-services/inactive/(:any)/(:any)']['DELETE'] = "accounting_controllers/products_and_services/inactive/$1/$2";
-$route['accounting/products-and-services/active/(:any)/(:any)'] = "accounting_controllers/products_and_services/active/$1/$2";
+$route['accounting/products-and-services/inactive/(:any)/(:any)']['DELETE'] = 'accounting_controllers/products_and_services/inactive/$1/$2';
+$route['accounting/products-and-services/active/(:any)/(:any)'] = 'accounting_controllers/products_and_services/active/$1/$2';
 $route['accounting/products-and-services/(:any)/create']['post'] = 'accounting_controllers/products_and_services/create/$1';
 $route['accounting/products-and-services/update/(:any)/(:any)']['post'] = 'accounting_controllers/products_and_services/update/$1/$2';
 $route['accounting/products-and-services/assign-category/(:any)']['post'] = 'accounting_controllers/products_and_services/assign_category/$1';
@@ -624,7 +619,7 @@ $route['accounting/product-categories/get'] = 'accounting_controllers/product_ca
 $route['accounting/product-categories/create']['post'] = 'accounting_controllers/product_categories/create';
 $route['accounting/product-categories/get/(:any)'] = 'accounting_controllers/product_categories/get_category_details/$1';
 $route['accounting/product-categories/update/(:any)']['post'] = 'accounting_controllers/product_categories/update/$1';
-$route['accounting/product-categories/delete/(:any)']['DELETE'] = "accounting_controllers/product_categories/delete/$1";
+$route['accounting/product-categories/delete/(:any)']['DELETE'] = 'accounting_controllers/product_categories/delete/$1';
 
 $route['accounting/payroll-overview'] = 'accounting/payrolloverview';
 $route['accounting/workers-comp'] = 'accounting/workerscomp';
@@ -794,7 +789,6 @@ $route['accounting/reconcile/check/save'] = 'reconcile/check_save';
 $route['accounting/reconcile/addcheck/servicecharge'] = 'reconcile/insert_check_servicecharge';
 $route['accounting/reconcile/servicecharge/remove_sc_check'] = 'reconcile/remove_sc_check';
 
-
 $route['accounting/reconcile/add/interestearned'] = 'reconcile/insert_interestearned';
 $route['accounting/reconcile/change/interestearned'] = 'reconcile/update_interestearned';
 $route['accounting/reconcile/interestearned/update_it'] = 'reconcile/update_it';
@@ -817,7 +811,7 @@ $route['accounting/reconcile/save/history'] = 'reconcile/addReconcile_history';
 $route['accounting/reconcile/add/servicecharge/history'] = 'reconcile/insert_servicecharge_history';
 $route['accounting/reconcile/add/interestearned/history'] = 'reconcile/insert_interestearned_history';
 
-//Accounting - Rules
+// Accounting - Rules
 $route['accounting/deleteRulesData'] = 'accounting/deleteRulesData';
 $route['accounting/rules/delete_single_rule'] = 'accounting/deleteSingleRuleData';
 $route['accounting/rules/delete_multi_rule'] = 'accounting/multiDeleteRulesData';
@@ -835,7 +829,7 @@ $route['more/addon/booking/preview'] = 'booking/preview';
 $route['booking/create_coupon'] = 'booking/save_coupon';
 $route['booking/create_category'] = 'booking/save_category';
 $route['booking/create_service_item'] = 'booking/save_service_item';
-//$route['booking/delete_coupon/(:num)']['GET'] = 'booking/delete_coupon/$1';
+// $route['booking/delete_coupon/(:num)']['GET'] = 'booking/delete_coupon/$1';
 $route['booking/delete_coupon'] = 'booking/delete_coupon';
 $route['booking/delete_service_item'] = 'booking/delete_service_item';
 $route['booking/delete_category'] = 'booking/delete_category';
@@ -857,18 +851,18 @@ $route['booking/_inquiry_edit_details'] = 'booking/ajax_inquiry_edit_details';
 $route['booking/update_inquiry_details'] = 'booking/update_inquiry_details';
 $route['booking/delete_inquiry'] = 'booking/delete_inquiry';
 $route['booking/_view_inquiry_details'] = 'booking/ajax_view_inquiry';
-//$route['booking/products'] = 'booking/front_items';
-//$route['booking/products/(:any)'] = 'booking/front_items/$1';
-//$route['booking/products_schedule/(:any)'] = 'booking/front_schedule/$1'; //Moved to pages controller to remove auth function
+// $route['booking/products'] = 'booking/front_items';
+// $route['booking/products/(:any)'] = 'booking/front_items/$1';
+// $route['booking/products_schedule/(:any)'] = 'booking/front_schedule/$1'; //Moved to pages controller to remove auth function
 $route['booking/_product_details'] = 'booking/ajax_get_product_details';
-//$route['booking/_add_cart_item'] = 'booking/ajax_update_cart_item'; //Moved to pages controller to remove auth function
-//$route['booking/_add_cart_coupon'] = 'booking/ajax_update_cart_coupon'; //Moved to pages controller to remove auth function
+// $route['booking/_add_cart_item'] = 'booking/ajax_update_cart_item'; //Moved to pages controller to remove auth function
+// $route['booking/_add_cart_coupon'] = 'booking/ajax_update_cart_coupon'; //Moved to pages controller to remove auth function
 $route['booking/_delete_cart_item'] = 'booking/ajax_delete_cart_item';
-//$route['booking/_load_week_schedule'] = 'booking/ajax_load_week_schedule'; //Moved to pages controller to remove auth function
-//$route['booking/_set_booking_schedule'] = 'booking/ajax_user_set_schedule'; //Moved to pages controller to remove auth function
-//$route['booking/product_booking_form/(:any)'] = 'booking/front_booking_form/$1'; //Moved to pages controller to remove auth function
-//$route['booking/save_booking_inquiry'] = 'booking/save_product_booking'; //Moved to pages controller to remove auth function
-//$route['booking/_delete_coupon'] = 'booking/ajax_delete_coupon'; //Moved to pages controller to remove auth function
+// $route['booking/_load_week_schedule'] = 'booking/ajax_load_week_schedule'; //Moved to pages controller to remove auth function
+// $route['booking/_set_booking_schedule'] = 'booking/ajax_user_set_schedule'; //Moved to pages controller to remove auth function
+// $route['booking/product_booking_form/(:any)'] = 'booking/front_booking_form/$1'; //Moved to pages controller to remove auth function
+// $route['booking/save_booking_inquiry'] = 'booking/save_product_booking'; //Moved to pages controller to remove auth function
+// $route['booking/_delete_coupon'] = 'booking/ajax_delete_coupon'; //Moved to pages controller to remove auth function
 
 $route['nsmart_plans/index'] = 'Nsmart_Plans/index';
 $route['nsmart_plans/add_new_plan'] = 'Nsmart_Plans/add_new_plan';
@@ -909,13 +903,13 @@ $route['before-after/edit/(:num)'] = 'before_after/edit/$1';
 $route['before-after/delete/(:num)'] = 'before_after/delete/$1';
 $route['before-after/delete_image'] = 'before_after/delete_image';
 
-//wizard
+// wizard
 $route['wizard/show_app'] = 'wizard/show_app';
 $route['wizard/del_app'] = 'wizard/del_app';
 $route['wizard/edit_workspace/(:num)'] = 'wizard/edit_workspace/$1';
-//$route['wizard/getSubOptions'] = 'wizard/getSubOptions';
+// $route['wizard/getSubOptions'] = 'wizard/getSubOptions';
 
-//Settings
+// Settings
 $route['settings/schedule'] = 'Settings/schedule';
 $route['settings/notifications'] = 'Settings/notifications';
 $route['settings/email_templates'] = 'Settings/email_templates';
@@ -936,15 +930,15 @@ $route['settings/_add_tax_rate'] = 'Settings/ajax_add_tax_rate';
 $route['settings/_update_tax_rate'] = 'Settings/ajax_update_tax_rate';
 $route['settings/_delete_tax_rate'] = 'Settings/ajax_delete_tax_rate';
 
-//leads
+// leads
 $route['online_leads'] = 'Inquiries/online_lead';
 $route['video_estimate'] = 'Inquiries/video_estimate';
 $route['leads/_lead_send_email'] = 'Customer/ajax_lead_send_email';
 
-//paypal
+// paypal
 $route['subscription/index'] = 'Subscription/index';
 
-//sms blast
+// sms blast
 $route['sms_campaigns'] = 'Sms_Campaigns/index';
 $route['sms_campaigns/add_sms_blast'] = 'Sms_Campaigns/add_sms_blast';
 $route['sms_campaigns/save_draft_campaign'] = 'Sms_Campaigns/create_draft_campaign';
@@ -966,7 +960,7 @@ $route['sms_campaigns/process_paypal_payment'] = 'Sms_Campaigns/process_paypal_p
 $route['sms_campaigns/process_stripe_payment'] = 'Sms_Campaigns/ajax_process_stripe_payment';
 $route['sms_campaigns/invoice_pdf/(:any)'] = 'Sms_Campaigns/campaign_invoice_pdf/$1';
 
-//sms automation
+// sms automation
 $route['sms_automation/_load_automation_list/(:any)'] = 'Sms_Automation/ajax_load_automation_list/$1';
 $route['sms_automation/add_sms_automation'] = 'Sms_Automation/add_sms_automation';
 $route['sms_automation/save_draft_automation'] = 'Sms_Automation/create_draft_automation';
@@ -979,7 +973,7 @@ $route['sms_automation/edit_automation/(:num)'] = 'Sms_Automation/edit_sms_autom
 $route['sms_automation/_delete_automation'] = 'Sms_Automation/ajax_delete_automation';
 $route['sms_automation/_view_sms_automation'] = 'Sms_Automation/ajax_view_sms_automation';
 
-//email blast
+// email blast
 $route['email_campaigns/add_email_blast'] = 'Email_Campaigns/add_email_blast';
 $route['email_campaigns/save_draft_campaign'] = 'Email_Campaigns/create_draft_campaign';
 $route['email_campaigns/add_campaign_send_to'] = 'Email_Campaigns/add_campaign_send_to';
@@ -997,8 +991,7 @@ $route['email_campaigns/edit_campaign/(:num)'] = 'Email_Campaigns/edit_email_cam
 $route['email_campaigns/_clone_campaign'] = 'Email_Campaigns/ajax_clone_campaign';
 $route['email_campaigns/_close_campaign'] = 'Email_Campaigns/ajax_close_campaign';
 
-
-//offers
+// offers
 $route['offers/add_offer'] = 'Offers/add_offer';
 $route['offers/save_draft_offer'] = 'Offers/create_draft_offer';
 $route['offers/add_offer_send_to'] = 'Offers/add_offer_send_to';
@@ -1009,7 +1002,7 @@ $route['offers/email_preview'] = 'Offers/email_preview';
 $route['offers/edit_offer/(:num)'] = 'Offers/edit_offer/$1';
 $route['offers/update_draft_offer'] = 'Offers/update_draft_offer';
 
-//workcalendar
+// workcalendar
 $route['calendar/_get_main_calendar_events'] = 'Workcalender/main_calendar_events';
 $route['calendar/_create_google_event'] = 'Workcalender/ajax_create_google_event';
 $route['calendar/_create_google_calendar'] = 'Workcalender/ajax_create_google_calendar';
@@ -1039,13 +1032,13 @@ $route['calendar/_set_appointment_paid'] = 'Workcalender/ajax_set_appointment_pa
 $route['calendar/_load_upcoming_schedules'] = 'Workcalender/ajax_load_upcoming_schedules';
 $route['calendar/_load_upcoming_calendar_by_date'] = 'Workcalender/ajax_load_upcoming_calendar_by_date';
 $route['calendar/_add_to_google_calendar'] = 'Workcalender/ajax_add_to_google_calendar';
-//TC Off Schedule
+// TC Off Schedule
 $route['calendar/_create_technician_off_schedule'] = 'Workcalender/ajax_create_technician_off_schedule';
 $route['calendar/_view_tcoff'] = 'Workcalender/ajax_load_view_tcoff';
 $route['calendar/_delete_tcoff'] = 'Workcalender/ajax_delete_tcoff';
 $route['calendar/_update_technician_off_schedule'] = 'Workcalender/ajax_update_technician_off_schedule';
 
-//workorder
+// workorder
 $route['workorder/_update_workorder_settings'] = 'Workorder/ajax_update_workoder_settings';
 $route['workorder/checklists'] = 'Workorder/checklists';
 $route['workorder/add_checklist'] = 'Workorder/add_checklist';
@@ -1081,11 +1074,11 @@ $route['customer/_get_customer_data'] = 'Customer/ajax_get_customer_data';
 $route['customer/_get_lead_data'] = 'Customer/ajax_get_lead_data';
 $route['customer/_convert_lead_to_customer'] = 'Customer/ajax_convert_lead_to_customer';
 
-//workstatus
+// workstatus
 $route['workstatus/_create_workorder_type'] = 'Workstatus/ajax_save_workorder_type';
 $route['workstatus/_update_workorder_type'] = 'Workstatus/ajax_update_workorder_type';
 
-//Addon Upgrades
+// Addon Upgrades
 $route['more/_load_plugin_details'] = 'More/ajax_load_plugin_details';
 $route['more/add_plugin'] = 'More/add_plugin';
 
@@ -1098,30 +1091,29 @@ $route['offer_codes/create_offer_code'] = 'Offer_Codes/create_offer_code';
 $route['offer_codes/edit_offer/(:num)'] = 'Offer_Codes/edit_offer/$1';
 $route['offer_codes/update_edit_offer'] = 'Offer_Codes/update_edit_offer';
 
-
-//Registration
+// Registration
 $route['registration/_use_offer_code'] = 'Register/registration_use_code';
 $route['registration/_create_registration'] = 'Register/ajax_create_registration';
 $route['registration/_converge_request_token'] = 'Register/ajax_converge_token_request';
 $route['registration/_pay_subscription'] = 'Register/ajax_converge_payment';
 
-//Public Add Employee
+// Public Add Employee
 $route['add_company_employee/(:any)'] = 'Pages/front_add_employee/$1';
 $route['save_company_employee'] = 'Pages/front_save_company_employee';
 
-//Onboarding
+// Onboarding
 $route['onboarding/_load_plugin_details'] = 'Onboarding/ajax_load_plugin_details';
 $route['onboarding/add_plugin'] = 'Onboarding/add_plugin';
 $route['onboarding/_save_business_availability'] = 'Onboarding/ajax_save_business_availability';
 $route['onboarding/_complete_onboarding'] = 'Onboarding/ajax_complete_onboarding';
 
-//check
+// check
 // $route['accounting/check'] = 'Check/index'; // old / not working
 $route['check'] = 'accounting_controllers/expenses/index';
 $route['accounting/check/do_upload'] = 'Check/do_upload';
 $route['accounting/check/view/showData'] = 'Check/showData';
 
-//Color Settings
+// Color Settings
 $route['color_settings/index'] = 'Color_Settings/index';
 $route['color_settings/add_new_color_setting'] = 'Color_Settings/add_new_color_setting';
 $route['color_settings/create_color_setting'] = 'Color_Settings/create_color_setting';
@@ -1130,7 +1122,7 @@ $route['color_settings/update_color_setting'] = 'Color_Settings/update_color_set
 $route['color_settings/delete_color'] = 'Color_Settings/delete_color';
 $route['color_settings/add_new'] = 'Color_Settings/add_new';
 
-//Users
+// Users
 $route['users/load_edit_employee'] = 'Users/ajax_edit_employee';
 $route['users/_update_employee'] = 'Users/ajaxUpdateEmployee';
 $route['users/_update_employee_password'] = 'Users/ajaxUpdateEmployeePassword';
@@ -1140,7 +1132,7 @@ $route['users/_update_payscale'] = 'Users/ajax_update_payscale';
 $route['users/_delete_payscale'] = 'Users/ajax_delete_payscale';
 $route['users/export_list'] = 'Users/user_export';
 $route['users/_delete_user'] = 'Users/ajax_delete_user';
-$route['user/_admin_switch'] = 'Users/ajax_admin_switch'; //Switch to admin
+$route['user/_admin_switch'] = 'Users/ajax_admin_switch'; // Switch to admin
 $route['user/_load_edit_adt_portal_login_details'] = 'Users/ajax_load_edit_adt_portal_login_details';
 $route['user/_update_adt_portal_login_details'] = 'Users/ajax_update_adt_portal_login_details';
 $route['user/_update_business_details'] = 'Users/ajax_update_business_details';
@@ -1150,10 +1142,10 @@ $route['user/_get_employee_commission_status'] = 'Users/ajax_get_employee_commis
 $route['user/_delete_employee_commission'] = 'Users/ajax_delete_employee_commission';
 $route['user/_update_employee_commission'] = 'Users/ajax_update_employee_commission';
 
-//Payscale
+// Payscale
 $route['payscale/_get_details'] = 'Users/ajax_payscale_get_details';
 
-//Jobs
+// Jobs
 $route['job/details/(:any)'] = 'job/details/$1';
 $route['job/_load_upcoming_jobs'] = 'Job/ajax_load_upcoming_jobs';
 $route['job/bird_eye_view'] = 'Workorder/map';
@@ -1170,8 +1162,9 @@ $route['job/_update_job'] = 'Job/ajax_update_job';
 
 $route['workorder/convert_to_job'] = 'Workorder/ajax_convert_to_job';
 
-//Estimates
+// Estimates
 $route['estimate/_send_customer'] = 'Estimate/send_mail_estimate_customer';
+$route['estimate/email_preview'] = 'Estimate/email_preview';
 $route['estimate_customer_view/(:any)'] = 'Pages/estimate_customer_view/$1';
 $route['customer_approve_estimate'] = 'Pages/customer_update_estimate/1';
 $route['customer_disapprove_estimate'] = 'Pages/customer_update_estimate/2';
@@ -1182,7 +1175,7 @@ $route['estimate/print/(:num)'] = 'Estimate/print_estimate/$1';
 $route['estimate/settings'] = 'Estimate/estimate_settings';
 $route['estimate/_save_estimate_setttings'] = 'Estimate/ajax_save_estimate_setttings';
 
-//Credit Notes
+// Credit Notes
 $route['credit_notes'] = 'Credit_Notes/index';
 $route['credit_notes/tab/(:any)'] = 'Credit_Notes/index/$1';
 $route['credit_notes/add_new'] = 'Credit_Notes/add_new';
@@ -1202,7 +1195,7 @@ $route['credit_notes/clone'] = 'Credit_Notes/clone_credit_note';
 $route['credit_notes/settings'] = 'Credit_Notes/credit_note_settings';
 $route['credit_notes/_update_credit_note_settings'] = 'Credit_Notes/ajax_update_credit_note_settings';
 
-//Event Types
+// Event Types
 $route['event_types'] = 'Event_Types/index';
 $route['event_types/index'] = 'Event_Types/index';
 $route['event_types/add_new'] = 'Event_Types/add_new_event_type';
@@ -1211,36 +1204,36 @@ $route['event_types/edit/(:num)'] = 'Event_Types/edit_event_type/$1';
 $route['event_types/update'] = 'Event_Types/update_event_type';
 $route['event_types/delete'] = 'Event_Types/delete_event_type';
 
-//Esign
+// Esign
 $route['esignmain'] = 'Esign_Main/index';
 
-//Job Types
+// Job Types
 $route['job/add_new_job_type'] = 'Job/add_new_job_type';
 $route['job/save_job_type'] = 'Job/create_job_type';
 $route['job/edit_job_type/(:num)'] = 'Job/edit_job_type/$1';
 $route['job/update_job_type'] = 'Job/update_job_type';
 $route['job/delete_job_type'] = 'Job/delete_job_type';
 
-//Event Tags
+// Event Tags
 $route['events/add_new_event_tag'] = 'Events/add_new_event_tag';
 $route['events/save_event_tag'] = 'Events/create_new_event_tag';
 $route['events/edit_event_tags/(:any)'] = 'Events/edit_event_tags/$1';
 $route['events/update_event_tag'] = 'Events/update_event_tag';
 
-//Job Tags
+// Job Tags
 $route['job/add_new_job_tag'] = 'Job/add_new_job_tag';
 $route['job/save_job_tag'] = 'Job/create_new_job_tag';
 $route['job/edit_job_tag/(:any)'] = 'Job/edit_job_tag/$1';
 $route['job/update_job_tag'] = 'Job/update_job_tag';
 
-//Forgot Password
+// Forgot Password
 $route['login/_check_user_id_exists'] = 'Login/ajax_check_user_id_exists';
 $route['login/_update_user_password'] = 'Login/ajax_update_user_password';
 
-//Customer Login
+// Customer Login
 $route['login/customer'] = 'Login/customer';
 
-//Customer Access
+// Customer Access
 $route['acs_access/dashboard'] = 'AcsAccess/dashboard';
 $route['acs_access/messages'] = 'AcsAccess/messages';
 $route['acs_access/logout'] = 'AcsAccess/logout';
@@ -1253,7 +1246,7 @@ $route['acs_access/_notifications'] = 'AcsAccess/ajax_notifications';
 $route['acs_access/_clear_notifications'] = 'AcsAccess/ajax_clear_notifications';
 $route['acs_access/notifications'] = 'AcsAccess/notifications';
 
-//Cards File
+// Cards File
 $route['cards_file/list'] = 'CardsFile/index';
 $route['cards_file/add_new'] = 'CardsFile/add_new_card';
 $route['cards_file/create_new_card'] = 'CardsFile/create_new_card';
@@ -1266,7 +1259,7 @@ $route['cards_file/_create_card_vault'] = 'CardsFile/ajax_create_card_vault';
 $route['cards_file/_edit_card_vault'] = 'CardsFile/ajax_edit_card_vault';
 $route['cards_file/_update_card_vault'] = 'CardsFile/ajax_update_card_vault';
 
-//Tools
+// Tools
 $route['tools/_get_converge_api_credentials'] = 'Tools/ajax_load_company_converge_form';
 $route['tools/_activate_company_converge'] = 'Tools/ajax_activate_company_online_payment_account';
 $route['tools/_activate_company_stripe'] = 'Tools/ajax_activate_company_online_payment_account';
@@ -1311,28 +1304,28 @@ $route['tools/square/oauth_redirect'] = 'Tools/squareOauthRedirect';
 $route['tools/_disconnect_square_account'] = 'Tools/ajax_disconnect_square_account';
 $route['tools/square_payment_logs'] = 'Tools/square_payment_logs';
 
-//Work Pictures
+// Work Pictures
 $route['users/_delete_work_picture'] = 'Users/ajax_delete_company_work_picture';
 $route['users/_update_work_image_caption'] = 'Users/ajax_update_company_work_picture_caption';
 
-//Profile Setting
+// Profile Setting
 $route['users/update_profile_setting'] = 'Users/update_profile_setting';
 $route['users/load_edit_profile'] = 'Users/ajax_edit_profile';
 $route['users/_update_profile'] = 'Users/ajax_update_profile';
 $route['users/_update_user_signature'] = 'Users/ajax_update_user_signature';
 
-//Job Front View
+// Job Front View
 $route['job_invoice_view/(:any)'] = 'Pages/job_customer_invoice_view/$1';
 $route['_converge_request_token'] = 'Pages/converge_token_request';
 $route['_update_job_status_paid'] = 'Pages/update_job_status_paid';
 $route['_braintree_process_payment'] = 'Pages/ajax_braintree_process_payment';
 $route['_square_process_payment'] = 'Pages/ajax_square_process_payment';
 
-//Refer Friend
+// Refer Friend
 $route['refer_friend'] = 'Pages/front_refer_friend';
 $route['_send_refer_email'] = 'Pages/send_refer_email';
 
-//Job Checklists
+// Job Checklists
 $route['job_checklists/list'] = 'Job_Checklists/index';
 $route['job_checklists/add_new'] = 'Job_Checklists/add_new';
 $route['job_checklists/create_checklist'] = 'Job_Checklists/create_checklist';
@@ -1346,10 +1339,10 @@ $route['job_checklists/delete_checklist'] = 'Job_Checklists/delete_checklist';
 $route['job_checklists/_create_checklist'] = 'Job_Checklists/ajax_save_checklist';
 $route['job_checklists/_update_checklist'] = 'Job_Checklists/ajax_update_checklist';
 
-//Business Profile front
+// Business Profile front
 $route['business/(:any)'] = 'Pages/front_company_business_profile/$1';
 
-//Deals Steals
+// Deals Steals
 $route['promote/_save_deals_steals'] = 'Promote/ajax_save_deals_steals';
 $route['promote/add_send_to'] = 'Promote/add_send_to';
 $route['promote/create_send_to'] = 'Promote/create_send_to';
@@ -1373,10 +1366,10 @@ $route['promote/bookings/(:any)'] = 'Promote/bookings/$1';
 $route['promote/view_deals_payment/(:any)'] = 'Promote/view_deals_payment/$1';
 $route['promote/order_pdf/(:any)'] = 'Promote/deals_order_pdf/$1';
 $route['deal/booking/(:num)'] = 'Pages/deals_booking/$1';
-$route['deal/(:any)/(:num)']  = 'Pages/deals_view/$1/$2';
-$route['deal/save_booking']  = 'Pages/create_deals_booking';
+$route['deal/(:any)/(:num)'] = 'Pages/deals_view/$1/$2';
+$route['deal/save_booking'] = 'Pages/create_deals_booking';
 
-//Admin login
+// Admin login
 $route['admin/login'] = 'Admin/login';
 
 // Removes DocuSign in URLs
@@ -1384,7 +1377,7 @@ $route['eSign/templateCreate'] = 'DocuSign/templateCreate';
 $route['eSign/templatePrepare'] = 'DocuSign/templatePrepare';
 $route['eSign/templateEdit'] = 'DocuSign/templateEdit';
 $route['eSign/signing'] = 'DocuSign/signing';
-//$route['eSign/manage'] = 'DocuSign/manage';
+// $route['eSign/manage'] = 'DocuSign/manage';
 $route['eSign/manage'] = 'DocuSign_v2/manage';
 
 $route['eSign_v2/templateCreate'] = 'DocuSign_v2/templateCreate';
@@ -1403,21 +1396,21 @@ $route['cron/acs_subscription_method_cc'] = 'Cron_Payment/acs_subscription_metho
 $route['cron/company_recurring_nsmart_subscription'] = 'Cron_Payment/company_recurring_nsmart_subscription';
 $route['cron/company_recurring_nsmart_subscription_with_payment_errors'] = 'Cron_Payment/company_recurring_nsmart_subscription_with_payment_errors';
 
-//Admin Users
+// Admin Users
 $route['admin/_update_employee'] = 'Admin/ajaxUpdateEmployee';
 $route['admin/_update_employee_password'] = 'Admin/ajaxUpdateEmployeePassword';
 $route['admin/_delete_employee'] = 'Admin/ajaxUpdateEmployeePassword';
 $route['admin/_update_employee_profile_photo'] = 'Admin/ajaxUpdateEmployeeProfilePhoto';
 $route['admin/_update_employee_status'] = 'Admin/ajaxUpdateEmployeeStatus';
 
-//Admin nsmart plans
+// Admin nsmart plans
 $route['admin/nsmart_plans'] = 'Admin/nsmart_plans';
 $route['admin/add_new_nsmart_plan'] = 'Admin/add_new_plan';
 $route['admin/create_nsmart_plan'] = 'Admin/create_nsmart_plan';
 $route['admin/update_nsmart_plan'] = 'Admin/update_nsmart_plan';
 $route['admin/delete_nsmart_plan'] = 'Admin/delete_nsmart_plan';
 
-//Mycrm
+// Mycrm
 $route['mycrm/_update_auto_recurring'] = 'Mycrm/company_update_auto_renewal';
 $route['mycrm/_upgrade_subscription'] = 'Mycrm/company_upgrade_subscription';
 $route['mycrm/_pay_subscription'] = 'Mycrm/company_pay_subscription';
@@ -1438,23 +1431,22 @@ $route['mycrm/_hdr_load_multi_account_list'] = 'Mycrm/ajax_hdr_load_multi_accoun
 $route['mycrm/_login_multi_account'] = 'Mycrm/ajax_login_multi_account';
 $route['mycrm/_login_main_multi_account'] = 'Mycrm/ajax_login_main_multi_account';
 
-//Addons
+// Addons
 $route['more/_load_addons_list'] = 'More/ajax_load_addons_list';
 $route['more/_load_active_addons_list'] = 'More/ajax_load_active_addons_list';
 
-//Acounting Customers
+// Acounting Customers
 
 $route['portal/appinv/(:any)/view'] = 'public_view_controller/view_invoice/$1';
-
 
 // Time Sheet
 $route['send-sms/clockin-clockout'] = 'Cron_Marketing/clockin_clockout_sms';
 
-//Cron Send Email
+// Cron Send Email
 $route['cron_mail/send_mail'] = 'Cron_Mail/send_mail';
 $route['cron_mail/send_acs_mail'] = 'Cron_Mail/send_acs_mail';
 
-//Cron Api
+// Cron Api
 $route['cron_api/sync_adt_sales_portal_projects'] = 'Cron_Api/createAdtSalesPortalProjectsNonAPI';
 $route['cron_api/google_calendar_sync'] = 'Cron_Api/syncGoogleCalendar';
 $route['cron_api/google_contacts_sync'] = 'Cron_Api/syncGoogleContacts';
@@ -1466,12 +1458,12 @@ $route['cron_api/export_customer_active_campaign_contacts'] = 'Cron_Api/activeCa
 $route['cron_api/export_customer_active_campaign_list_automation'] = 'Cron_Api/activeCampaignListAutomationExport';
 $route['cron_api/square_renew_token'] = 'Cron_Api/renewAllSquareToken';
 
-//Cron Payment
+// Cron Payment
 $route['cron_payment/deactivate_unpaid_nsmart_subscription'] = 'Cron_Payment/deactivate_unpaid_nsmart_subscription';
 $route['cron_payment/company_recurring_nsmart_subscription_with_payment_errors'] = 'Cron_Payment/company_recurring_nsmart_subscription_with_payment_errors';
 $route['cron_payment/company_recurring_nsmart_subscription'] = 'Cron_Payment/company_recurring_nsmart_subscription';
 
-//Customer
+// Customer
 $route['customer/subscriptions'] = 'Customer/customer_subscriptions';
 $route['customer/_load_active_subscriptions'] = 'Customer/ajax_load_active_subscriptions';
 $route['customer/_load_completed_subscriptions'] = 'Customer/ajax_load_completed_subscriptions';
@@ -1483,10 +1475,10 @@ $route['customer/_check_customer_esign_pdf'] = 'Customer/ajax_check_customer_esi
 $route['customer/download_esign_doc'] = 'Customer/downloadEsignDoc';
 $route['customer/_load_customer_sms_messages'] = 'Customer/ajax_load_customer_sms_messages';
 
-//Trac360
+// Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';
 
-//Inventory
+// Inventory
 $route['inventory/export_list'] = 'inventory/inventory_export';
 $route['inventory/add-custom-field']['post'] = 'inventory/add_custom_field';
 $route['inventory/update-custom-field/(:any)']['post'] = 'inventory/update_custom_field/$1';
@@ -1495,11 +1487,11 @@ $route['inventory/_create_custom_field'] = 'inventory/ajax_create_custom_field';
 $route['inventory/_update_custom_field'] = 'inventory/ajax_update_custom_field';
 $route['inventory/_delete_custom_field'] = 'inventory/ajax_delete_custom_field';
 
-//Inventory Fees
+// Inventory Fees
 $route['inventory/fees/edit/(:num)'] = 'inventory/edit_fee/$1';
 $route['inventory/fees/update'] = 'inventory/update_fees';
 
-//Inventory Vendor
+// Inventory Vendor
 $route['inventory/vendor/add'] = 'inventory/add_vendor';
 $route['inventory/_create_vendor'] = 'inventory/ajax_create_vendor';
 $route['inventory/vendor/edit/(:num)'] = 'inventory/edit_vendor/$1';
@@ -1508,16 +1500,16 @@ $route['inventory/vendor/delete'] = 'inventory/ajax_delete_vendor';
 $route['inventory/vendor/_send_email'] = 'inventory/ajax_vendor_send_email';
 $route['inventory/vendor/export'] = 'inventory/vendor_export';
 
-//Item Category
+// Item Category
 $route['inventory/_create_item_category'] = 'inventory/ajax_create_item_category';
 $route['inventory/item_groups/edit/(:num)'] = 'inventory/edit_item_category/$1';
 $route['inventory/_update_item_category'] = 'inventory/ajax_update_item_category';
 $route['inventory/item_groups/delete'] = 'inventory/ajax_delete_item_category';
 
-//Sales Overview
+// Sales Overview
 $route['sales-overview/income-overtime'] = 'AccountingSales/get_income_overtime';
 
-//Autocomplete
+// Autocomplete
 $route['autocomplete/_company_users'] = 'Autocomplete/company_users';
 $route['autocomplete/_company_customer'] = 'Autocomplete/company_customers';
 $route['autocomplete/_company_event_tags'] = 'Autocomplete/company_event_tags';
@@ -1527,10 +1519,10 @@ $route['autocomplete/_company_instructions'] = 'Autocomplete/company_instruction
 $route['autocomplete/_company_job_tags'] = 'Autocomplete/company_job_tags';
 $route['autocomplete/_company_customer_lead'] = 'Autocomplete/company_customers_leads';
 
-//Quick Add
+// Quick Add
 $route['quick_add/_add_customer'] = 'Quick_Add/ajax_add_company_customer';
 
-//Appointment Types
+// Appointment Types
 $route['appointment_types/index'] = 'Appointment_Types/index';
 $route['appointment_types/add_new_type'] = 'Appointment_Types/add_new_type';
 $route['appointment_types/create_appointment_type'] = 'Appointment_Types/create_appointment_type';
@@ -1541,19 +1533,19 @@ $route['appointment_types/_create_appointment_type'] = 'Appointment_Types/ajax_c
 $route['appointment_types/_update_appointment_type'] = 'Appointment_Types/ajax_update_appointment_type';
 $route['appointment_types/_delete_appointment_type'] = 'Appointment_Types/ajax_delete_appointment_type';
 
-//Items
+// Items
 $route['items/_get_item_details'] = 'Items/ajax_get_item_details';
 $route['items/_add_product_list'] = 'Items/ajax_add_product_list';
 $route['items/_add_services_list'] = 'Items/ajax_add_services_list';
 $route['items/_edit_product_stock'] = 'Items/ajax_edit_product_stock';
 $route['items/_update_product_stock'] = 'Items/ajax_update_product_stock';
 
-//Support
+// Support
 $route['support'] = 'Support/index';
 $route['support/_send_email'] = 'Support/ajax_send_email';
 $route['contact/_support_send_email'] = 'Contact/ajax_support_send_email';
 
-//Front company booking page
+// Front company booking page
 $route['booking/products/(:any)'] = 'Pages/external_booking_page/$1';
 $route['booking/_add_cart_item'] = 'Pages/ajax_update_booking_cart';
 $route['booking/_add_cart_coupon'] = 'Pages/ajax_update_cart_coupon';
@@ -1564,14 +1556,14 @@ $route['booking/_set_booking_schedule'] = 'Pages/ajax_user_set_schedule';
 $route['booking/product_booking_form/(:any)'] = 'Pages/front_booking_form/$1';
 $route['booking/save_booking_inquiry'] = 'Pages/save_product_booking';
 
-//Taskhub
+// Taskhub
 $route['taskhub/_load_taskhub_list'] = 'Taskhub/ajax_load_company_list';
 $route['taskhub/_add_new_task'] = 'Taskhub/ajax_add_new_task';
 $route['taskhub/_save_task'] = 'Taskhub/ajax_save_task';
 $route['taskhub/_task_mark_completed'] = 'Taskhub/ajax_complete_task';
 $route['taskhub/_mark_all_completed'] = 'Taskhub/ajax_company_complete_all_tasks';
 
-//SMS
+// SMS
 $route['messages'] = 'Sms/index';
 $route['messages/_company_send'] = 'Sms/ajax_company_send_sms';
 $route['messages/_company_delete'] = 'Sms/ajax_company_delete_sms';
@@ -1584,18 +1576,16 @@ $route['customer/_get_phone_number'] = 'Customer/ajax_get_phone_number';
 $route['messages/_sms_list'] = 'Sms/ajax_sms_list';
 $route['messages/_company_lead_send'] = 'Sms/ajax_company_lead_send_sms';
 
-
-//Calls
+// Calls
 $route['calls/_log_start_call'] = 'Calls/ajax_log_start_call';
 $route['calls/_log_end_call'] = 'Calls/ajax_log_end_call';
 $route['calls/logs'] = 'Calls/logs';
-
 
 $route['flashcard'] = 'FlashCard/index';
 $route['flashcard/add-cards/(:num)'] = 'FlashCard/addCards/$1';
 $route['flashcard/study-cards/(:num)'] = 'FlashCard/studyCards/$1';
 
-//Autosms
+// Autosms
 $route['settings/auto_sms'] = 'Settings/auto_sms';
 $route['settings/_load_auto_sms_notification_module_status'] = 'Settings/ajax_load_auto_sms_notification_module_status';
 $route['settings/_create_sms_auto_notification'] = 'Settings/ajax_create_sms_auto_notification';
@@ -1604,38 +1594,38 @@ $route['settings/_edit_auto_sms_notification'] = 'Settings/ajax_edit_auto_sms_no
 $route['settings/_update_sms_auto_notification'] = 'Settings/ajax_update_sms_auto_notification';
 $route['settings/_load_auto_sms_notification_module_smart_tags'] = 'Settings/ajax_load_auto_sms_notification_module_smart_tags';
 
-//Cron SMS Notification
+// Cron SMS Notification
 $route['cron_notification/auto_sms_notification'] = 'Cron_Notification/auto_sms_notification';
 
-//Cron Invoice Notification Email
+// Cron Invoice Notification Email
 $route['cron_notification/send_scheduled_invoice_notification'] = 'Cron_Notification/send_invoice_scheduled_email_notification';
 
-//Auth Key
+// Auth Key
 $route['tools/_send_auth_key'] = 'Tools/ajax_send_auth_key';
 $route['tools/_validate_auth_key'] = 'Tools/ajax_validate_auth_key';
 
-//Image tracker email
+// Image tracker email
 $route['tracker/estimate_image_tracker'] = 'Tracker/estimateImageTracker';
 
-//Dashboard : Bank Plaid
+// Dashboard : Bank Plaid
 $route['_launch_plaid_accounts'] = 'PlaidAccount/ajax_plaid_api';
 $route['_create_plaid_account'] = 'PlaidAccount/ajax_create_plaid_account';
 $route['_load_connected_bank_accounts'] = 'PlaidAccount/ajax_load_connected_bank_accounts';
 
-//Plaid Accounts
+// Plaid Accounts
 $route['plaid_accounts'] = 'PlaidAccount/list';
 $route['plaid_account/_delete_bank_account'] = 'PlaidAccount/ajax_delete_bank_account';
 $route['plaid_account/_bank_account_transactions'] = 'PlaidAccount/ajax_bank_account_transactions';
 $route['plaid_account/_bank_account_recurring_transactions'] = 'PlaidAccount/ajax_bank_account_recurring_transactions';
 
-//ADT Portal
+// ADT Portal
 $route['user/_loggedin_adt_sales_portal'] = 'Users/ajax_loggedin_adt_sales_portal';
 
-//Customer Sync Setting
+// Customer Sync Setting
 $route['customer/_update_adt_sales_sync_setting'] = 'Customer/ajax_update_adt_sales_sync_setting';
 $route['customer/_adt_sales_sync_setting'] = 'Customer/ajax_adt_sales_sync_setting';
 
-//API
+// API
 $route['api/create_auto_sms_notification'] = 'Api/create_auto_sms_notification';
 $route['api/create_hash_id'] = 'Api/create_hash_id';
 $route['api/create_google_calendar_event'] = 'Api/createGoogleCalendarEvent';
@@ -1650,10 +1640,10 @@ $route['api/send_email'] = 'Api/sendEmail';
 $route['api/send_customer_estimate_email'] = 'Api/emailCustomerEstimate';
 $route['api/create_job_employee_commission'] = 'Api/createEmployeeJobCommission';
 
-//Front View Appointment
+// Front View Appointment
 $route['appointment/(:any)'] = 'Pages/front_appointment_view/$1';
 
-//Modal Quickview
+// Modal Quickview
 $route['job/_quick_view_details'] = 'Job/ajax_quick_view_details';
 $route['ticket/_quick_view_details'] = 'Tickets/ajax_quick_view_details';
 $route['calendar/_quick_view_calendar_events'] = 'Workcalender/ajax_quick_view_calendar_events';
@@ -1679,21 +1669,21 @@ $route['event/_quick_delete_event'] = 'Events/ajax_quick_delete_event';
 
 $route['docusign/debugGeneratePDF'] = 'DocuSign/debugGeneratePDF';
 
-//Affiliate
+// Affiliate
 $route['affiliate/_save_affiliate'] = 'Affiliate/ajax_save_affiliate';
 
-//Job Quick Add
+// Job Quick Add
 $route['job/_quick_add_job_type'] = 'Job/ajax_quick_add_job_type';
 $route['job/_quick_add_job_tag'] = 'Job/ajax_quick_add_job_tag';
 $route['job/_quick_add_lead_source'] = 'Job/ajax_quick_add_lead_source';
 $route['job/_quick_add_tax_rate'] = 'Job/ajax_quick_add_tax_rate';
 
-//Job Import data
+// Job Import data
 $route['job/_list_workorder_import'] = 'Job/ajax_list_workorder_import';
 $route['job/_list_invoice_import'] = 'Job/ajax_list_invoice_import';
 $route['job/_list_estimate_import'] = 'Job/ajax_list_estimate_import';
 
-//Wdigets
+// Wdigets
 $route['dashboard/_recent_customers'] = 'Dashboard/ajax_recent_customers';
 $route['dashboard/_recent_leads'] = 'Dashboard/ajax_recent_leads';
 $route['dashboard/_create_news_feeds'] = 'Dashboard/sendFeed';
@@ -1701,7 +1691,7 @@ $route['dashboard/_create_newsletter'] = 'Newsletter/saveNewsBulletin';
 $route['dashboard/_company_newsletter'] = 'Newsletter/ajax_company_newsletter';
 $route['dashboard/_view_newsletter'] = 'Newsletter/ajax_view_newsletter';
 
-//Esign
+// Esign
 $route['esign_v2/_tags_sections'] = 'Esign_v2/ajax_company_tags_sections';
 $route['esign_v2/_create_tags'] = 'Esign_v2/ajax_create_tags';
 $route['esign_v2/_edit_widget'] = 'Esign_v2/ajax_edit_widget';

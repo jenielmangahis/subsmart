@@ -1049,7 +1049,8 @@ $(".nsm-counter").on("click", function () {
 });
 
 $("#new-invoice").on("click", function () {
-  $.get("/accounting/get-other-modals/invoice_modal", function (res) {
+  console.log("invoices")
+  $.get( base_url +"/accounting/get-other-modals/invoice_modal", function (res) {
     if ($("div#modal-container").length > 0) {
       $("div#modal-container").html(res);
     } else {
@@ -1064,6 +1065,30 @@ $("#new-invoice").on("click", function () {
     initModalFields("invoiceModal");
 
     $("#invoiceModal").modal("show");
+  });
+});
+$("#new-recurring-invoice").on("click", function () {
+  console.log("invoices")
+  $.get( base_url +"/accounting/get-other-modals/invoice_modal", function (res) {
+    if ($("div#modal-container").length > 0) {
+      $("div#modal-container").html(res);
+    } else {
+      $("body").append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+    }
+
+    modalName = "#invoiceModal";
+    initModalFields("invoiceModal");
+
+    $("#invoiceModal").modal("show");
+    $('#invoiceModal').on('shown.bs.modal', function () {
+      // Call makeRecurring function when the modal is fully shown
+      makeRecurring('invoice');
+    
+  });
   });
 });
 
@@ -1105,8 +1130,35 @@ $("#new-sales-receipt").on("click", function () {
 
       modalName = "#salesReceiptModal";
       initModalFields("salesReceiptModal");
-
+      console.log('wtssf');
       $("#salesReceiptModal").modal("show");
+  
+    }
+  );
+});
+$("#new-recurring-sale").on("click", function () {
+  $.get(
+    base_url + "accounting/get-other-modals/sales_receipt_modal",
+    function (res) {
+      if ($("div#modal-container").length > 0) {
+        $("div#modal-container").html(res);
+      } else {
+        $("body").append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+      }
+
+      modalName = "#salesReceiptModal";
+      initModalFields("salesReceiptModal");
+      console.log('wtssf');
+      $("#salesReceiptModal").modal("show");
+      $('#salesReceiptModal').on('shown.bs.modal', function () {
+        // Call makeRecurring function when the modal is fully shown
+        makeRecurring('sales_receipt');
+      
+    });
     }
   );
 });

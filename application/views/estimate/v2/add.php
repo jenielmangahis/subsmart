@@ -342,6 +342,12 @@ echo put_header_assets();
     label.bold {
         font-weight: bold;
     }
+    .add-item-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
     </style>
 
     <!-- page wrapper start -->
@@ -560,8 +566,14 @@ echo put_header_assets();
                                     </table>
                                     <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
                                     <!-- <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a> -->
-                                    <a class="nsm-button primary" href="#" id="add_another_items" data-bs-toggle="modal"
-                                        data-bs-target="#item_list"><i class='bx bx-plus-medical'></i> Add Items</a>
+                                    <div class="add-item-container">
+                                        <a class="nsm-button primary" href="#" id="add_another_items"
+                                            data-bs-toggle="modal" data-bs-target="#item_list"><i
+                                                class='bx bx-plus-medical'></i> Add Another Line</a>
+                                        <a class="nsm-button primary" href="#"
+                                            onclick="window.open('<?php echo base_url('estimate/add_new_inventory_item'); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');"><i
+                                                class='bx bx-plus-medical'></i> Add Items</a>
+                                    </div>
                                     &emsp;
                                     <!-- <a class="link-modal-open nsm-link" href="#" id="add_package" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span> Add Package</a> &emsp; -->
                                     <!-- <span class="link-modal-open nsm-link" id="createNewItem" style="border:solid white 1px;background-color:white;"><span class="fa fa-plus-square fa-margin-right"></span> Create New Item</span> -->

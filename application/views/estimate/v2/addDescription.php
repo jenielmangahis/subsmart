@@ -589,10 +589,10 @@ echo put_header_assets();
                                     <div class="add-item-container">
                                         <a class="nsm-button primary" href="#" id="add_another_items"
                                             data-bs-toggle="modal" data-bs-target="#item_list"><i
-                                                class='bx bx-plus-medical'></i> Add Item List</a>
+                                                class='bx bx-plus-medical'></i> Add Another Line</a>
                                         <a class="nsm-button primary" href="#"
                                             onclick="window.open('<?php echo base_url('estimate/add_new_inventory_item'); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');"><i
-                                                class='bx bx-plus-medical'></i> Add New Item</a>
+                                                class='bx bx-plus-medical'></i> Add Items</a>
                                     </div>
                                     &emsp;
                                     <!-- <a class="link-modal-open nsm-link" href="#" id="add_package" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span> Add Package</a> &emsp; -->
