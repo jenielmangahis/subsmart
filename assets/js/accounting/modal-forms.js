@@ -8751,7 +8751,7 @@ $(function() {
 
     $(document).on('click', '#modal-container form .modal #add_item', function(e) {
         e.preventDefault();
-
+        console.log('add Items');
         if ($('#modal-container #item_list.modal').length === 0) {
             $.get(base_url + 'accounting/get-items-list-modal', function(res) {
                 $('#modal-container').append(res);
@@ -10418,6 +10418,8 @@ const submitModalForm = (event, el) => {
             });
         break;
         case '#invoiceModal' :
+        
+            console.log(data);
             data.set('invoice_no', $('#invoiceModal #invoice-no').val());
         break;
         case '#statementModal' :
@@ -10645,8 +10647,8 @@ const submitModalForm = (event, el) => {
         contentType: false,
         success: function(result) {
             var res = JSON.parse(result);
-
-            toast(res.success, res.message);
+               console.log(res.message);
+            toast(res.success, removeDuplicateMessages(res.message));
 
             if(res.success === true) {
                 if(submitType === 'save-and-close' || submitType === 'save-and-void') {
@@ -10978,6 +10980,15 @@ const submitModalForm = (event, el) => {
         }
     });
 }
+const removeDuplicateMessages = (htmlMessage) => {
+   
+    const lines = htmlMessage.split('\n');
+    
+    const uniqueLines = Array.from(new Set(lines));
+    
+    const uniqueMessage = uniqueLines.join('\n');
+    return uniqueMessage;
+};
 
 const printTimesheet = (timesheetId) => {
     $.get(`/accounting/get-timesheet/${timesheetId}`, function(result) {
@@ -13603,6 +13614,7 @@ const loadCustomerInvoices = () => {
                         <td>${invoice.original_amount}</td>
                         <td>${invoice.open_balance}</td>
                         <td><input type="number" onchange="convertToDecimal(this)" step=".01" class="form-control nsm-field text-end" name="payment[]"></td>
+                        <td><button type="button" class="nsm-button delete-row"><i class='bx bx-fw bx-trash'></i></button></td>
                     </tr>
                     `);
                 });
@@ -14257,6 +14269,7 @@ const addcheck = () => {
 			];
 
 			if (dropdownFields.includes(type)) {
+              
 				$(this).select2({
 					ajax: {
 						url: base_url + 'accounting/get-dropdown-choices',

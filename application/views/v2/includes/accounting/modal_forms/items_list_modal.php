@@ -19,6 +19,7 @@
                             <thead>
                                 <tr>
                                     <td>Name</td>
+                                    <td>Location</td>
                                     <td>Qty</td>
                                     <td>Price</td>
                                     <td>Action</td>
@@ -33,6 +34,7 @@
                                     ?>
                                     <tr>
                                         <td><?= $item->title ?></td>
+                                        <td><?= $location[0]['name'] ?></td>
                                         <td><?= $qty ?></td>
                                         <td><?= $item->price ?></td>
                                         <td>
