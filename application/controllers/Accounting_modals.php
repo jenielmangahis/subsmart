@@ -6926,6 +6926,14 @@ class Accounting_modals extends MY_Controller
 
     private function receive_payment($data)
     {
+        if($data['received_amount'] <= 0) {
+            $return['data']    = null;
+            $return['success'] = false;
+            $return['message'] = "Error: Amount received must not contain 0 amount.";
+            return $return;
+            exit;
+        }
+
         $this->form_validation->set_rules('customer', 'Customer', 'required');
         $this->form_validation->set_rules('deposit_to_account', 'Deposit to', 'required');
 
@@ -6945,16 +6953,16 @@ class Accounting_modals extends MY_Controller
             }
         } else {
             $paymentData = [
-                'company_id' => logged('company_id'),
-                'customer_id' => $data['customer'],
-                'payment_date' => date("Y-m-d", strtotime($data['payment_date'])),
+                'company_id'     => logged('company_id'),
+                'customer_id'    => $data['customer'],
+                'payment_date'   => date("Y-m-d", strtotime($data['payment_date'])),
                 'payment_method' => $data['payment_method'],
                 'ref_no' => $data['ref_no'],
                 'deposit_to' => $data['deposit_to_account'],
-                'amount_received' => floatval(str_replace(',', '', $data['received_amount'])),
+                'amount_received'  => floatval(str_replace(',', '', $data['received_amount'])),
                 'amount_to_credit' => floatval(str_replace(',', '', $data['amount_to_credit'])),
-                'amount_to_apply' => floatval(str_replace(',', '', $data['amount_to_apply'])),
-                'credit_balance' => floatval(str_replace(',', '', $data['amount_to_credit'])),
+                'amount_to_apply'  => floatval(str_replace(',', '', $data['amount_to_apply'])),
+                'credit_balance'   => floatval(str_replace(',', '', $data['amount_to_credit'])),
                 'memo' => $data['memo'],
                 'status' => 1
             ];
@@ -23909,7 +23917,7 @@ class Accounting_modals extends MY_Controller
 
     public function get_customer_invoices($customerId)
     {
-        $post = $this->input->post();
+        $post   = $this->input->post();
         $search = $post['search'];
 
         $filters = [
@@ -24039,7 +24047,7 @@ class Accounting_modals extends MY_Controller
         echo json_encode($data);
     }
 
-    public function find_customer_by_invoice_no()
+    public function find_customer_by_invoice_no() //jeniel
     {
         $invoiceNo = $this->input->post('invoice_no');
         $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
