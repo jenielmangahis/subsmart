@@ -5337,8 +5337,9 @@ class Accounting_modals extends MY_Controller
                 1
             ]
         ];
+        $location = $this->items_model->getLocationByCompanyId();
         $items = $this->items_model->getItemsWithFilter($filter);
-
+        $this->page_data['location'] = $location;
         $this->page_data['items'] = $items;
         $this->load->view('v2/includes/accounting/modal_forms/items_list_modal', $this->page_data);
     }
@@ -11779,6 +11780,9 @@ class Accounting_modals extends MY_Controller
     private function get_customer_choices($choices, $search = null, $field)
     {
         $customers = $this->accounting_customers_model->getAllByCompany();
+       
+    
+
 
         if(!isset($choices['results'])) {
             $choices['results'] = [];
@@ -11800,8 +11804,14 @@ class Accounting_modals extends MY_Controller
                 'text' => 'Specified'
             ];
         }
+        $uniqueNames = [];
+
+        
         foreach ($customers as $customer) {
             $name = $customer->first_name . ' ' . $customer->last_name;
+            if (!in_array($name, $uniqueNames)) {
+                // Add $name to $uniqueNames
+                $uniqueNames[] = $name;
             if ($search !== null && $search !== '') {
                 $stripos = stripos($name, $search);
                 if ($stripos !== false) {
@@ -11817,10 +11827,12 @@ class Accounting_modals extends MY_Controller
                             'text' => str_replace($searched, "<strong>$searched</strong>", $name)
                         ];
                     } else {
+                       
                         $choices['results'][] = [
                             'id' => $customer->prof_id,
                             'text' => str_replace($searched, "<strong>$searched</strong>", $name)
                         ];
+                    
                     }
                 }
             } else {
@@ -11835,12 +11847,15 @@ class Accounting_modals extends MY_Controller
                         'text' => $name
                     ];
                 } else {
+                  
                     $choices['results'][] = [
                         'id' => $customer->prof_id,
                         'text' => $name
                     ];
-                }
+                
             }
+            }
+        }
         }
 
         return $choices;

@@ -6,6 +6,7 @@
             <form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="<?= base_url('accounting/update-transaction/invoice/' . $invoice->id) ?>">
             <?php endif; ?>
             <div id="invoiceModal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
+             
                 <div class="modal-dialog">
                     <!-- Modal content-->
                     <div class="modal-content">
