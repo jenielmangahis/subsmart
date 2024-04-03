@@ -7713,6 +7713,14 @@ class Accounting_modals extends MY_Controller
 
     private function sales_receipt($data)
     {
+        if($data['total_amount'] <= 0) {
+            $return['data']    = null;
+            $return['success'] = false;
+            $return['message'] = "Error: Total amount must not contain 0.";
+            return $return;
+            exit;
+        }
+
         $this->form_validation->set_rules('item[]', 'Item', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required');
 

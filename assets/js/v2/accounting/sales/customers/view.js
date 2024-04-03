@@ -637,7 +637,7 @@ $('#new-time-activity').on('click', function() {
     });
 });
 $('#new-statement').on('click', function() {
-    $('#spinner').show();
+    //$('#spinner').show();
     $.get(base_url + 'accounting/get-other-modals/statement_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
