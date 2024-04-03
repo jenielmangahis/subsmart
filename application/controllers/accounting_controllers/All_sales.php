@@ -162,6 +162,7 @@ class All_sales extends MY_Controller
 
         $get = $this->get_transactions($filters);
 
+
         $estimates = $this->estimate_model->getAllByCompany(logged('company_id'));
 
         $openEstimates = array_filter($estimates, function ($v, $k) {
@@ -181,6 +182,8 @@ class All_sales extends MY_Controller
         $openInvoices = array_filter($invoices, function ($v, $k) {
             return !in_array($v->status, ['Draft', 'Declined', 'Paid']);
         }, ARRAY_FILTER_USE_BOTH);
+
+
 
         $this->page_data['unbilledActs'] = $this->get_unbilled_incomes([], ['start-date' => date('m/d/Y')]);
         $this->page_data['recent_payments'] = $this->invoice_model->get_company_payments(logged('company_id'));
@@ -838,12 +841,35 @@ class All_sales extends MY_Controller
 
             return strtotime($b['date']) > strtotime($a['date']);
         });
+   
+            if (!empty($filters['status'])) {
 
-        return [
-            'transactions' => $transactions,
-            'headers' => $headers,
-            'settingsCols' => $settingsCols,
-        ];
+            $filteredEstimates = [];
+        
+            foreach ($transactions as $transaction) {
+
+                if (strtolower($transaction['status']) === $filters['status']) {
+   
+                    $filteredEstimates[] = $transaction;
+                }
+            }
+  
+            return [
+                'transactions' => $filteredEstimates,
+                'headers' => $headers,
+                'settingsCols' => $settingsCols,
+            ];
+        
+        }else{
+            
+            return [
+                'transactions' => $transactions,
+                'headers' => $headers,
+                'settingsCols' => $settingsCols,
+            ];
+        }
+
+       
     }
 
     private function get_invoices($transactions, $filters = [])
@@ -1257,6 +1283,23 @@ class All_sales extends MY_Controller
     {
         $estimates = $this->estimate_model->getAllByCompany(logged('company_id'));
 
+        // if (!empty($filters['status'])) {
+
+        //     $filteredEstimates = [];
+        
+        //     foreach ($estimates as $estimate) {
+
+        //         if (strtolower($estimate->status) == $filters['status']) {
+   
+        //             $filteredEstimates[] = $estimate;
+        //         }
+        //     }
+        
+        // } else {
+
+        //     $filteredEstimates = $estimates;
+        // }
+    
         foreach ($estimates as $estimate) {
             $customer = $this->accounting_customers_model->get_by_id($estimate->customer_id);
             $customerName = $customer->first_name.' '.$customer->last_name;
@@ -1892,6 +1935,7 @@ class All_sales extends MY_Controller
         }
 
         $get = $this->get_transactions($filters);
+        
 
         $tableHeaders = $get['headers'];
         $transactions = $get['transactions'];

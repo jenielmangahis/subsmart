@@ -20,8 +20,9 @@
 
 
 }
-</style>
 
+</style>
+ <!-- page_all_sales  -->
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/sales'); ?>
@@ -153,7 +154,7 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end table-filter p-3" style="width: max-content">
                                 <div class="row">
-                                    <div class="col-4">
+                                    <div class="col-6">
                                         <label for=" filter-type">Type</label>
                                         <select class="nsm-field form-select" name="filter_type" id="filter-type">
                                             <option value="all-transactions"
@@ -190,7 +191,7 @@
                                         </select>
                                     </div>
                                     <?php if (!in_array($type, ['unbilled-income', 'recently-paid', 'statements'])) { ?>
-                                    <div class="col-4">
+                                    <div class="col-6">
                                         <label for="filter-status">Status</label>
                                         <select class="nsm-field form-select" name="filter_status" id="filter-status">
                                             <?php switch ($type) {
@@ -238,6 +239,10 @@
                                             <option value="overdue"
                                                 <?php echo $status === 'overdue' ? 'selected' : ''; ?>>
                                                 Overdue
+                                            </option>
+                                            <option value="draft"
+                                                <?php echo $status === 'draft' ? 'selected' : ''; ?>>
+                                                Draft
                                             </option>
                                             <option value="paid" <?php echo $status === 'paid' ? 'selected' : ''; ?>>
                                                 Paid</option>
@@ -392,8 +397,8 @@
                                 </div>
                                 <?php } ?>
                                 <?php if ($type !== 'unbilled-income') { ?>
-                                <div class="row">
-                                    <div class="<?php echo $type === 'recently-paid' ? 'col-12' : 'col-5'; ?>">
+                          
+                                    <div class="<?php echo $type === 'recently-paid' ? 'col-12' : 'col-6'; ?>">
                                         <label for="filter-customer">Customer</label>
                                         <select class="nsm-field form-select" name="filter_customer"
                                             id="filter-customer">
@@ -405,21 +410,25 @@
                                             <?php } ?>
                                         </select>
                                     </div>
-                                </div>
+                              
                                 <?php } ?>
-                                <div class="row mt-3">
+                                <?php if ($type == 'recently-paid') { ?>
+                                    </div>
+                                    <?php } ?>
+                                <div class="row mt-3 " id="filter_buttons">
                                     <div class="col-6">
                                         <button type="button" class="nsm-button" id="reset-button">
                                             Reset
                                         </button>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-6 ">
                                         <button type="button" class="nsm-button primary float-end" id="apply-button">
                                             Apply
                                         </button>
                                     </div>
                                 </div>
                             </ul>
+                            
                         </div>
 
                         <div class="dropdown d-inline-block">
