@@ -50,6 +50,10 @@
                                     <?php foreach($optionCompanyFields as $key => $value){ ?>
                                         <option <?= $widget->auto_populate_field == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
                                     <?php } ?>
+                                <?php }elseif( $widget->auto_populate_data == 'Job' ){ ?>
+                                    <?php foreach($optionJobFields as $key => $value){ ?>
+                                        <option <?= $widget->auto_populate_field == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
+                                    <?php } ?>
                                 <?php } ?>                                
                             </select>
                         </div>
