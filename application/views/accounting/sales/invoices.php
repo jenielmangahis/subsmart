@@ -5,7 +5,7 @@
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/sales'); ?>
     </div>
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/accounting/subtabs/customers_subtabs'); ?>
+        <?php //include viewPath('v2/includes/page_navigations/accounting/subtabs/customers_subtabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">
@@ -134,54 +134,25 @@
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>
-                                    Filter
+                                Filter by <?= ucwords($filter_status); ?>
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end p-3">
-                                <div class="row">
-                                    <div class="col">
-                                        <label for="filter-status">Status</label>
-                                        <select class="nsm-field form-select" name="filter_status" id="filter-status">
-                                            <option value="all" selected>All</option>
-                                            <option value="needs-attention">Needs attention</option>
-                                            <option value="unpaid">Unpaid</option>
-                                            <option value="overdue">- Overdue</option>
-                                            <option value="not-due">- Not due</option>
-                                            <option value="paid">Paid</option>
-                                            <option value="not-deposited">- Not deposited</option>
-                                            <option value="deposited">- Deposited</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <label for="filter-date">Date</label>
-                                        <select class="nsm-field form-select" name="filter_date" id="filter-date">
-                                            <option value="this-month">This month</option>
-                                            <option value="last-month">Last month</option>
-                                            <option value="last-3-months">Last 3 months</option>
-                                            <option value="last-6-months">Last 6 months</option>
-                                            <option value="last-12-months" selected>Last 12 months</option>
-                                            <option value="year-to-date">Year-to-date</option>
-                                            <option value="2021">2021</option>
-                                            <option value="2020">2020</option>
-                                            <option value="2019">2019</option>
-                                            <option value="2018">2018</option>
-                                            <option value="2017">2017</option>
-                                            <option value="2016">2016</option>
-                                            <option value="2015">2015</option>
-                                            <option value="2014">2014</option>
-                                        </select>
-                                    </div>
-                                </div>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a class="dropdown-item" href="<?= base_url('accounting/invoices'); ?>">All</a></li>
+                                <li><a class="dropdown-item" href="<?= base_url('accounting/invoices?status=draft'); ?>">Draft</a></li>
+                                <li><a class="dropdown-item" href="<?= base_url('accounting/invoices?status=partially_paid'); ?>">Partially Paid</a></li>
+                                <li><a class="dropdown-item" href="<?= base_url('accounting/invoices?status=paid'); ?>">Paid</a></li>
+                                <li><a class="dropdown-item" href="<?= base_url('accounting/invoices?status=due'); ?>">Due</a></li>
+                                <li><a class="dropdown-item" href="<?= base_url('accounting/invoices?status=overdue'); ?>">Overdue</a></li>
+                                <li><a class="dropdown-item" href="<?= base_url('accounting/invoices?status=unpaid'); ?>">Unpaid</a></li>
                             </ul>
                         </div>
-
+                        
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-import'></i> Import
                             </button>
-                            <a href="<?php echo base_url('accounting/addnewInvoice') ?>" class="btn nsm-button">
+                            <a href="<?php echo base_url('accounting/addnewInvoice') ?>" class="nsm-button">
                                 <i class='bx bx-fw bx-list-plus'></i> New Invoice
                             </a>
                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
@@ -190,43 +161,42 @@
                             <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
                                 <p class="m-0">Columns</p>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_invoice_num" id="chk_invoice_num" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_invoice_num" class="form-check-input">
                                     <label for="chk_invoice_num" class="form-check-label">Invoice number</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_balance" id="chk_balance" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_balance" class="form-check-input">
                                     <label for="chk_balance" class="form-check-label">Balance</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_due_date" id="chk_due_date" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_due_date" class="form-check-input">
                                     <label for="chk_due_date" class="form-check-label">Due date</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_po_number" id="chk_po_number" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_po_number" class="form-check-input">
                                     <label for="chk_po_number" class="form-check-label">P.O. Number</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_sales_rep" id="chk_sales_rep" class="form-check-input">
+                                    <input type="checkbox" checked="checked" name="col_chk" id="chk_sales_rep" class="form-check-input">
                                     <label for="chk_sales_rep" class="form-check-label">Sales Rep</label>
                                 </div>
                             </ul>
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <table class="nsm-table" id="invoices-table">
                     <thead>
                         <tr>
                             <td class="table-icon text-center">
                                 <input class="form-check-input select-all table-select" type="checkbox">
                             </td>
-                            <td data-name="Recurring"></td>
                             <td data-name="Date">DATE ISSUED</td>
-                            <td data-name="No.">NO.</td>
+                            <td data-name="Invoice number">INVOICE NUMBER</td>
                             <td data-name="Customer">CUSTOMER</td>
                             <td data-name="Amount">AMOUNT</td>
                             <td data-name="Balance">BALANCE</td>
                             <td data-name="Due Date">DUE DATE</td>
-                            <td data-name="PO Number">P.O. Number</td>
+                            <td data-name="P.O. Number">P.O. Number</td>
                             <td data-name="Sales Rep">SALES REP</td>
                             <td data-name="Status">STATUS</td>
                             <td data-name="Manage"></td>
@@ -241,14 +211,16 @@
                                     <input class="form-check-input select-one table-select" type="checkbox">
                                 </div>
                             </td>
-                            <td></td>
-                            <td><?php
-                            // echo $invoice->date_issued;
-                            // $timestamp = strtotime($invoice->date_issued);
-                            //  echo $new_date = date("d-m-Y", $timestamp); 
-                            $myDateTime = DateTime::createFromFormat('Y-m-d', $invoice->date_issued);
-                            echo $newDateString = $myDateTime->format('m-d-Y');
-                             ?></td>
+                            <td>
+                                <?php
+                                    if( $invoice->date_issued != '' ){
+                                        $myDateTime = DateTime::createFromFormat('Y-m-d', $invoice->date_issued);
+                                        echo $newDateString = $myDateTime->format('m-d-Y');
+                                    }else{
+                                        echo 'Not Specified';
+                                    }                                
+                                ?>
+                            </td>
                             <td><?=$invoice->invoice_number?></td>
                             <td>
                                 <?php
@@ -257,11 +229,36 @@
                                 ?>
                             </td>
                             <td>$<?= number_format($invoice->grand_total,2) ?></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td><?=$invoice->status?></td>
+                            <td>$<?= $invoice->balance > 0 ? number_format($invoice->balance,2) : '0.00'; ?></td>
+                            <td>
+                                <?php
+                                    if( $invoice->due_date != '' ){
+                                        $myDateTime = DateTime::createFromFormat('Y-m-d', $invoice->due_date);
+                                        echo $newDateString = $myDateTime->format('m-d-Y');
+                                    }else{
+                                        echo 'Not Specified';
+                                    }                                
+                                ?>
+                            </td>
+                            <td>
+                                <?php 
+                                    if( $invoice->purchase_order != '' ){
+                                        echo $invoice->purchase_order;
+                                    }else{
+                                        echo  'not Specified';
+                                    }
+                                ?>
+                            </td>
+                            <td>
+                                <?php 
+                                    if( $invoice->FName != '' ){
+                                        echo $invoice->FName . ' ' . $invoice->LName;
+                                    }else{
+                                        echo 'Not Specified';
+                                    }
+                                ?>
+                            </td>
+                            <td><?= $invoice->status != '' ? $invoice->status : 'Draft'; ?></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -315,5 +312,37 @@
         </div>
     </div>
 </div>
+<script>
+$(function(){
+    $("#invoices-table").nsmPagination({itemsPerPage:10});  
+    $(".select-all").click(function(){
+        $('.form-check-input').not(this).prop('checked', this.checked);
 
+        var count_rows_list_check = $('.select-all').filter(':checked').length;
+        if(count_rows_list_check > 0) {
+            $(".dropdown-send").removeClass("disabled");
+            $(".dropdown-print").removeClass("disabled");
+            $(".dropdown-delete").removeClass("disabled");
+        } else {
+            $(".dropdown-send").addClass("disabled");
+            $(".dropdown-delete").addClass("disabled");
+            $(".dropdown-print").addClass("disabled");
+        }           
+    });
+
+    $('.dropdown-menu.table-settings input[name="col_chk"]').on('change', function() {
+        var chk = $(this);
+        var dataName = $(this).next().text();
+
+        var index = $(`#invoices-table thead td[data-name="${dataName}"]`).index();
+        $(`#invoices-table tr`).each(function() {
+            if(chk.prop('checked')) {
+                $($(this).find('td')[index]).show();
+            } else {
+                $($(this).find('td')[index]).hide();
+            }
+        });
+    });
+});
+</script>
 <?php include viewPath('v2/includes/footer'); ?>

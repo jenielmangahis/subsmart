@@ -204,7 +204,10 @@ class Esign_v2 extends MY_Controller
 
     public function Files()
     {        
+        $this->load->model('EsignCompanyTagSection_model');
+        $this->load->model('EsignCompanyTag_model');
         $this->load->model('User_docflies_model', 'User_docflies_model');
+
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['file_id'] = $this->input->get('id');
 
@@ -264,6 +267,35 @@ class Esign_v2 extends MY_Controller
             // 'assets/js/v2/bootstrap.bundle.min.js',
             // 'assets/js/v2/main.js',
         ]);
+
+        $company_id = logged('company_id');
+        $adi_company_ids = adi_company_ids();
+        if( in_array($company_id, $adi_company_ids) ){
+            $optionCustomerFields   = $this->EsignCompanyTagSection_model->optionCustomerFieldsAdi();
+        }else{
+            $optionCustomerFields   = $this->EsignCompanyTagSection_model->optionCustomerFields();
+        }
+
+        $optionAutoPopulateData = $this->EsignCompanyTagSection_model->optionAutoPopulateData();        
+        $optionCompanyFields    = $this->EsignCompanyTagSection_model->optionCompanyFields();
+        $optionInvoiceFields    = $this->EsignCompanyTagSection_model->optionInvoiceFields();
+        $optionJobFields        = $this->EsignCompanyTagSection_model->optionJobFields();
+        
+        $companyEsignTagsSections = $this->EsignCompanyTagSection_model->getAllNotDeletedByCompanyId($company_id);
+
+        $tagWidgets = [];
+        foreach( $companyEsignTagsSections as $section ){
+            $sectionTags = $this->EsignCompanyTag_model->getAllByTagSectionId($section->id);
+            $tagWidgets[$section->id]['section'] =  $section->section_name; 
+            $tagWidgets[$section->id]['tags']    =  $sectionTags;
+        }
+        
+        $this->page_data['tagWidgets'] = $tagWidgets;
+        $this->page_data['optionAutoPopulateData'] = $optionAutoPopulateData;
+        $this->page_data['optionCustomerFields']   = $optionCustomerFields;
+        $this->page_data['optionCompanyFields']    = $optionCompanyFields;
+        $this->page_data['optionInvoiceFields']    = $optionInvoiceFields;        
+        $this->page_data['optionJobFields']        = $optionJobFields;        
         $this->page_data['page']->title = 'Add Documents to the Envelope';
         $this->load->view('v2/pages/esign/files', $this->page_data);
     }
@@ -1022,6 +1054,208 @@ SQL;
 
         // Output to JSON format
         echo json_encode($output);
+    }
+
+    public function ajax_company_tags_sections()
+    {
+        //Test ajax only if script will work
+        $this->load->view('v2/pages/esign/company_tags', $this->page_data);
+    }
+
+    public function ajax_create_tags()
+    {
+        $this->load->model('EsignCompanyTagSection_model');
+        $this->load->model('EsignCompanyTag_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $is_success = 1;
+        $msg = '';
+
+        if( $post['tag_section_name'] == '' ){
+            $is_success = 0;
+            $msg = 'Please specify tag section name';
+        }elseif( !isset($post['tagAutoPopulate']) ){
+            $is_success = 0;
+            $msg = 'Please create at least 1 tag';
+        }
+
+        if( $is_success == 1 ){
+            $date = date("Y-m-d H:i:s");
+            $data_tag_section = [
+                'company_id' => $cid,
+                'section_name' => $post['tag_section_name'],
+                'is_deleted' => 0,
+                'date_created' => $date,
+                'date_updated' => $date
+            ];
+
+            $section_id = $this->EsignCompanyTagSection_model->saveTagSection($data_tag_section);
+            if( $section_id > 0 ){
+                foreach( $post['tagNames'] as $key => $value ){
+                    $date = date("Y-m-d H:i:s");
+                    $data_widget = [
+                        'esign_company_tag_section_id' => $section_id,
+                        'tag_name' => $value,
+                        'auto_populate_data' => $post['tagAutoPopulate'][$key],
+                        'auto_populate_field' => $post['tagFields'][$key],   
+                        'is_deleted' => 0,                     
+                        'date_created' => $date,
+                        'date_updated' => $date
+                    ];
+
+                    $this->EsignCompanyTag_model->create($data_widget);
+                }
+            }else{
+                $is_success = 0;
+                $msg = 'Cannot create data';
+            }
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function ajax_edit_widget()
+    {
+        $this->load->model('EsignCompanyTagSection_model');
+        $this->load->model('EsignCompanyTag_model');
+
+        $post = $this->input->post();
+        $widgetSection = $this->EsignCompanyTagSection_model->getById($post['sectionid']);
+        $widgetTags    = $this->EsignCompanyTag_model->getAllByTagSectionId($post['sectionid']);
+
+        $optionAutoPopulateData = $this->EsignCompanyTagSection_model->optionAutoPopulateData();
+        $optionCustomerFields   = $this->EsignCompanyTagSection_model->optionCustomerFields();
+        $optionCompanyFields    = $this->EsignCompanyTagSection_model->optionCompanyFields();
+        $optionInvoiceFields    = $this->EsignCompanyTagSection_model->optionInvoiceFields();
+        $optionJobFields        = $this->EsignCompanyTagSection_model->optionJobFields();
+
+        $this->page_data['widgetSection'] = $widgetSection;
+        $this->page_data['widgetTags'] = $widgetTags;
+        $this->page_data['optionAutoPopulateData'] = $optionAutoPopulateData;
+        $this->page_data['optionCustomerFields']   = $optionCustomerFields;
+        $this->page_data['optionCompanyFields']    = $optionCompanyFields;
+        $this->page_data['optionInvoiceFields']    = $optionInvoiceFields;   
+        $this->page_data['optionJobFields']        = $optionJobFields;   
+        $this->load->view('v2/pages/esign/ajax_edit_widget', $this->page_data);
+    }
+
+    public function ajax_update_widget()
+    {
+        $this->load->model('EsignCompanyTagSection_model');
+        $this->load->model('EsignCompanyTag_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $is_success = 1;
+        $msg = '';
+
+        if( $post['tag_section_name'] == '' ){
+            $is_success = 0;
+            $msg = 'Please specify tag section name';
+        }elseif( !isset($post['tagAutoPopulate']) ){
+            $is_success = 0;
+            $msg = 'Please create at least 1 tag';
+        }
+
+        if( $is_success == 1 ){
+            $widgetSection = $this->EsignCompanyTagSection_model->getById($post['sid']);
+            if( $widgetSection ){                
+                $date = date("Y-m-d H:i:s");
+                $data_tag_section = [
+                    'section_name' => $post['tag_section_name'],
+                    'is_deleted' => 0,
+                    'date_updated' => $date
+                ];
+
+                $this->EsignCompanyTagSection_model->update($widgetSection->id,$data_tag_section);
+
+                $this->EsignCompanyTag_model->deleteAllByTagSectionId($widgetSection->id);
+                foreach( $post['tagNames'] as $key => $value ){
+                    $date = date("Y-m-d H:i:s");
+                    $data_widget = [
+                        'esign_company_tag_section_id' => $widgetSection->id,
+                        'tag_name' => $value,
+                        'auto_populate_data' => $post['tagAutoPopulate'][$key],
+                        'auto_populate_field' => $post['tagFields'][$key],   
+                        'is_deleted' => 0,                     
+                        'date_created' => $date,
+                        'date_updated' => $date
+                    ];
+
+                    $this->EsignCompanyTag_model->create($data_widget);
+                }
+            }else{
+                $is_success = 0;
+                $msg = 'Cannot find data';
+            }            
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_widget()
+    {
+        $this->load->model('EsignCompanyTagSection_model');
+        $this->load->model('EsignCompanyTag_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $widgetSection = $this->EsignCompanyTagSection_model->getById($post['sid']);
+        if( $widgetSection && $widgetSection->company_id == $cid ){
+            $data = ['is_deleted' => 1, 'date_deleted' => date("Y-m-d H:i:s")];
+            $this->EsignCompanyTagSection_model->update($widgetSection->id, $data);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function ajax_restore_widget()
+    {
+        $this->load->model('EsignCompanyTagSection_model');
+        $this->load->model('EsignCompanyTag_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $widgetSection = $this->EsignCompanyTagSection_model->getById($post['sid']);
+        if( $widgetSection && $widgetSection->company_id == $cid ){
+            $data = ['is_deleted' => 0, 'date_deleted' => '', 'date_updated' => date("Y-m-d H:i:s")];
+            $this->EsignCompanyTagSection_model->update($widgetSection->id, $data);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function ajax_trash_widgets()
+    {
+        $this->load->model('EsignCompanyTagSection_model');
+        $this->load->model('EsignCompanyTag_model');
+
+        $company_id = logged('company_id');
+        $deletedEsignTagsSections = $this->EsignCompanyTagSection_model->getAllDeletedByCompanyId($company_id);
+
+        $this->page_data['deletedEsignTagsSections'] = $deletedEsignTagsSections;
+        $this->load->view('v2/pages/esign/ajax_trash_widgets', $this->page_data);
     }
 }
 

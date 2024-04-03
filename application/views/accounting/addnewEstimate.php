@@ -403,28 +403,6 @@ echo put_header_assets();
                             <hr>
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-3">
-                                    <label for="estimate_date" class="required"><b>Estimate#</b></label>
-                                    <!-- <input type="text" class="form-control" name="estimate_number" id="estimate_date"
-                                            required placeholder="Enter Estimate#"  value="<?php echo "EST-" . date("YmdHis"); ?>" /> -->
-                                    <input type="text" class="form-control" name="estimate_number" id="estimate_date" required placeholder="Enter Estimate#" value="<?php echo "EST-";
-                                                                                                                                                                    foreach ($number as $num) :
-                                                                                                                                                                        $next = $num->estimate_number;
-                                                                                                                                                                        $arr = explode("-", $next);
-                                                                                                                                                                        $date_start = $arr[0];
-                                                                                                                                                                        $nextNum = $arr[1];
-                                                                                                                                                                    //    echo $number;
-                                                                                                                                                                    endforeach;
-                                                                                                                                                                    if ($nextNum) {
-                                                                                                                                                                        $val = (int)$nextNum + 1;
-                                                                                                                                                                        echo str_pad($val, 9, "0", STR_PAD_LEFT);
-                                                                                                                                                                    } else {
-                                                                                                                                                                        $val = 1;
-                                                                                                                                                                        echo str_pad($val, 9, "0", STR_PAD_LEFT);
-                                                                                                                                                                    }
-
-                                                                                                                                                                    ?>" />
-                                </div>
-                                <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate Date</b></label>
                                     <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                     <!-- <div class="input-group date" data-provide="datepicker"> -->
@@ -817,49 +795,65 @@ echo put_header_assets();
 
             <!-- Modal -->
             <div class="modal fade nsm-modal" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document" style="width:800px;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
-                            <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                                <i class="bx bx-fw bx-x m-0"></i>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table id="modal_items_list" class="table table-hover" style="width: 100%;">
-                                        <thead>
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                                <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+                                    <i class="bx bx-fw bx-x m-0"></i>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table id="modal_items_list" class="table-hover" style="width: 100%;">
+                                            <thead>
                                             <tr>
-                                                <td> Name</td>
-                                                <td> Price</td>
                                                 <td></td>
+                                                <td>Name</td>
+                                                <td>On Hand</td>                                                
+                                                <td>Price</td>  
+                                                <td>Type</td>                                              
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($items as $item) { ?>
+                                            </thead>
+                                            <tbody>
+                                            <?php foreach($items as $item){ ?>
                                                 <tr>
-                                                    <td><?php echo $item->title; ?></td>
-                                                    <td><?php echo $item->price; ?></td>
-                                                    <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-bs-dismiss="modal" class="btn btn-sm btn-default select_item">
-                                                            <span class="fa fa-plus"></span>
-                                                        </button></td>
+                                                    <td style="width: 5% !important;">
+                                                        <button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="nsm-button primary small select_item">
+                                                        <i class='bx bx-plus-medical'></i>
+                                                        </button>
+                                                    </td>
+                                                    <td><?php echo $item->title; ?></td>                                                
+                                                    <td>
+                                                    <?php 
+                                                        foreach($itemsLocation as $itemLoc){
+                                                            if($itemLoc->item_id == $item->id){
+                                                                echo "<div class='data-block'>";
+                                                                echo $itemLoc->name. " = " .$itemLoc->qty;
+                                                                echo "</div>";
+                                                            } 
+                                                        }
+                                                    ?>
+                                                    </td>                                                    
+                                                    <td><?php echo $item->price; ?></td>                                                    
+                                                    <td><?php echo $item->type; ?></td>
                                                 </tr>
-
+                                                
                                             <?php } ?>
-                                        </tbody>
-                                    </table>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal-footer modal-footer-detail">
-                            <div class="button-modal-list">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                            <div class="modal-footer modal-footer-detail">
+                                <div class="button-modal-list">
+                                    
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
             <!-- Modal New Customer -->
             <div class="modal fade nsm-modal" id="modalNewCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

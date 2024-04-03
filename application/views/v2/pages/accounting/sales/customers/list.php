@@ -262,6 +262,20 @@
         justify-content: center;
         margin: auto;
     }
+    .table-num-rows{
+        float: right;
+        margin-top: 10px;
+        width: 205px;
+        text-align:right;
+    }
+    .table-num-rows select{
+        display: inline-block;
+        width:100px;
+    }
+    .table-num-rows label{
+        display:inline-block;
+        margin-right:5px;
+    }
 </style>
 
 <div class="row page-content g-0">
@@ -362,13 +376,7 @@
                         <form action="<?php echo base_url('accounting/customers') ?>" method="get">
                             <div class="nsm-field-group search">
                                 <div class="input-group">
-                                    <input type="text" class="form-control mb-2" id="search_field" name="search" placeholder="Search by customer info.">
-                                    <select id="customerListPagination" class="form-select">
-                                        <option value="10">10</option>
-                                        <option value="25">25</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                    </select>
+                                    <input type="text" class="form-control mb-2" id="search_field" name="search" placeholder="Search by customer info.">                                    
                                 </div>
                             </div>
                         </form>
@@ -430,26 +438,19 @@
                                 <div class="form-check">
                                     <input type="checkbox" id="inc_inactive" value="1" class="form-check-input">
                                     <label for="inc_inactive" class="form-check-label">Include inactive</label>
-                                </div>
-                                <p class="m-0">Rows</p>
-                                <div class="dropdown d-inline-block">
-                                    <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                        <span>
-                                            10
-                                        </span> <i class='bx bx-fw bx-chevron-down'></i>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
-                                        <li><a class="dropdown-item active" href="javascript:void(0);">10</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">50</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">150</a></li>
-                                        <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
-                                    </ul>
-                                </div>
+                                </div>                                
                             </ul>
                         </div>
                     </div>
+                </div>
+                <div class="table-num-rows">
+                    <label for="customerListPagination" class="col-sm-2 col-4 col-form-label">Rows</label>
+                    <select id="customerListPagination" class="form-select">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
                 </div>
                 <table class="nsm-table" id="customers-table">
                     <thead>

@@ -26,7 +26,7 @@
   .esignBuilder .add-recipeit {
     margin: 0 !important; }
   .esignBuilder__title {
-    font-family: Sarabun, sans-serif !important;
+    /* font-family: Sarabun, sans-serif !important; */
     font-weight: 600 !important;
     margin: 25px 0 !important;
     font-size: 28px !important; }
@@ -228,7 +228,7 @@
     position: fixed;
     right: 0;
     top: 0;
-    width: 250px;
+    width: 320px;
     height: 100vh;
     background-color: #ececec;
     padding: 10px;

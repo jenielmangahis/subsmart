@@ -8595,7 +8595,7 @@ $(function() {
         data.set('overdue', 0);
 
         $.ajax({
-            url: `/accounting/get-customer-invoices/${id}`,
+            url: base_url + `accounting/get-customer-invoices/${id}`,
             data: data,
             type: 'post',
             processData: false,
@@ -8640,7 +8640,7 @@ $(function() {
         });
 
         $.ajax({
-            url: `/accounting/get-customer-credits/${id}`,
+            url: base_url + `accounting/get-customer-credits/${id}`,
             data: data,
             type: 'post',
             processData: false,
@@ -12434,7 +12434,7 @@ const initModalFields = (modalName, data = {}) => {
             allowClear: true,
             dropdownParent: $('#modal-container form .modal'),
             ajax: {
-                url: '/accounting/get-job-tags',
+                url: base_url + 'accounting/get-job-tags',
                 dataType: 'json'
             }
         });
@@ -13477,7 +13477,7 @@ const findCustByInvoiceNo = () => {
     data.set('invoice_no', invoiceNo);
 
     $.ajax({
-        url: '/accounting/find-customer-by-invoice-no',
+        url: base_url + 'accounting/find-customer-by-invoice-no',
         data: data,
         type: 'post',
         processData: false,
@@ -13488,7 +13488,14 @@ const findCustByInvoiceNo = () => {
             if(res.success) {
                 $('#receivePaymentModal #customer').append(`<option value="${res.customer_id}" selected>${res.customer_name}</option>`).trigger('change');
             } else {
-                $('#receivePaymentModal #invoice-no').addClass('border-danger');
+                $('#receivePaymentModal #invoice-no').addClass('border-danger');                
+                Swal.fire({
+                    title: 'Invoice',
+                    text: 'No Records Found',
+                    icon: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'  
+                });             
             }
         }
     });
@@ -13591,7 +13598,7 @@ const loadCustomerInvoices = () => {
     data.set('overdue', $('#receivePaymentModal #overdue-invoices-only').attr('data-applied'));
 
     $.ajax({
-        url: `/accounting/get-customer-invoices/${$('#receivePaymentModal #customer').val()}`,
+        url: base_url + `accounting/get-customer-invoices/${$('#receivePaymentModal #customer').val()}`,
         data: data,
         type: 'post',
         processData: false,
@@ -13642,7 +13649,7 @@ const loadCustomerCredits = () => {
     data.set('to_date', $('#receivePaymentModal #credit-memo-to').attr('data-applied'));
 
     $.ajax({
-        url: `/accounting/get-customer-credits/${$('#receivePaymentModal #customer').val()}`,
+        url: base_url + `accounting/get-customer-credits/${$('#receivePaymentModal #customer').val()}`,
         data: data,
         type: 'post',
         processData: false,
