@@ -465,7 +465,7 @@ class DocuSign extends MYF_Controller
 
         #invoice details
         if( $document->job_id > 0 ){
-            $this->db->select('monthly_monitoring AS inv_monthly_monitoring, program_setup AS inv_program_setup, installation_cost AS inv_installation_cost, taxes AS inv_taxes, sub_total AS inv_subtotal, (sub_total+taxes) AS inv_equipment_cost');
+            $this->db->select('monthly_monitoring AS inv_monthly_monitoring, program_setup AS inv_program_setup, installation_cost AS inv_installation_cost, taxes AS inv_taxes, sub_total AS inv_subtotal, (sub_total+taxes) AS inv_equipment_cost, grand_total AS inv_grand_total');
             $this->db->where('job_id', $document->job_id);
             $invoces = $this->db->get('invoices')->row();
 
@@ -475,14 +475,15 @@ class DocuSign extends MYF_Controller
                 'inv_installation_cost',
                 'inv_subtotal',
                 'inv_equipment_cost',
-                'inv_taxes'
+                'inv_taxes',
+                'inv_grand_total'
             ];
             
             $filtered_invoice = array_filter( (array)$invoces , function($v) use ($invoices_accessKeys) {
                 return in_array($v, $invoices_accessKeys);
             }, ARRAY_FILTER_USE_KEY);
         }elseif( $document->ticket_id > 0 ){
-            $this->db->select('monthly_monitoring AS inv_monthly_monitoring, program_setup AS inv_program_setup, installation_cost AS inv_installation_cost, taxes AS inv_taxes, sub_total AS inv_subtotal, (sub_total+taxes) AS inv_equipment_cost');
+            $this->db->select('monthly_monitoring AS inv_monthly_monitoring, program_setup AS inv_program_setup, installation_cost AS inv_installation_cost, taxes AS inv_taxes, sub_total AS inv_subtotal, (sub_total+taxes) AS inv_equipment_cost, grand_total AS inv_grand_total');
             $this->db->where('ticket_id', $document->ticket_id);
             $invoces = $this->db->get('invoices')->row();
             if( $invoices ){
@@ -492,7 +493,8 @@ class DocuSign extends MYF_Controller
                     'inv_installation_cost',
                     'inv_subtotal',
                     'inv_equipment_cost',
-                    'taxes'
+                    'inv_taxes',
+                    'inv_grand_total'
                 ];
                 
                 $filtered_invoice = array_filter( (array)$invoces , function($v) use ($invoices_accessKeys) {
@@ -514,13 +516,16 @@ class DocuSign extends MYF_Controller
                         $total_tax += $item->tax;
                     }
 
+                    $grand_total = $total_equipment_cost + $total_tax;
+
                     $filtered_invoice = [
                         'inv_monthly_monitoring' => 0,
                         'inv_program_setup' => 0,
                         'inv_installation_cost' => 0,
                         'inv_subtotal' => 0,
                         'inv_equipment_cost' => $total_equipment_cost,
-                        'inv_taxes' => $total_tax
+                        'inv_taxes' => $total_tax,
+                        'inv_grand_total' => $grand_total
                     ];
 
                 }else{
@@ -530,7 +535,8 @@ class DocuSign extends MYF_Controller
                         'inv_installation_cost' => 0,
                         'inv_subtotal' => 0,
                         'inv_equipment_cost' => 0,
-                        'inv_taxes' => 0
+                        'inv_taxes' => 0,
+                        'inv_grand_total' => 0
                     ];
                 }
             }
@@ -625,23 +631,36 @@ class DocuSign extends MYF_Controller
         $this->db->where('id', $document->user_id);
         $user = $this->db->get('users')->row();
         if( $user ){
+            $this->db->select('business_name, street AS business_address, city AS business_city, state AS business_state, postal_code AS business_potal_code');
             $this->db->where('company_id', $user->company_id);
             $business_profile = $this->db->get('business_profile')->row();
             if( $business_profile ){
                 $businessprofile_Keys = [
-                    'business_name'
+                    'business_name',
+                    'business_address',
+                    'business_city',
+                    'business_potal_code',
+                    'business_state'
                 ];
                 $filteredCompany = array_filter( (array)$business_profile , function($v) use ($businessprofile_Keys) {
                     return in_array($v, $businessprofile_Keys);
                 }, ARRAY_FILTER_USE_KEY);
             }else{
                 $filteredCompany = [
-                    'company_name' => ''
+                    'business_name' => '',
+                    'business_address' => '',
+                    'business_city' => '',
+                    'business_potal_code' => '',
+                    'business_state' => '',
                 ];
             }
         }else{
             $filteredCompany = [
-                'company_name' => ''
+                'business_name' => '',
+                'business_address' => '',
+                'business_city' => '',
+                'business_potal_code' => '',
+                'business_state' => '',
             ];
         }
 
@@ -1939,6 +1958,13 @@ SQL;
             $name = str_replace(" ", "_", $name);
             $specs = '{"is_required":true, "name":"'.$name.'"}';
         }*/
+        
+        $widget_type = 'default-widget';
+        $widget_autopopulate_field_name = $field;
+        if( $payload['widget_type'] == 'dynamic-widget' ){
+            $widget_type = 'dynamic-widget';
+            $widget_autopopulate_field_name = $payload['widget_field'];
+        }
 
         if (is_null($record)) {
             $isCreated = true;
@@ -1952,6 +1978,8 @@ SQL;
                 'user_id' => $userId,
                 'recipients_id' => $recipientId,
                 'specs' => $specs,
+                'widget_type' => $widget_type,
+                'widget_autopopulate_field_name' => $widget_autopopulate_field_name
             ]);
         } else {
             $this->db->where('id', $record->id);
@@ -1964,6 +1992,8 @@ SQL;
                 'unique_key' => $uniqueKey,
                 'user_id' => $userId,
                 'specs' => is_null($specs) ? $record->specs : $specs,
+                'widget_type' => $widget_type,
+                'widget_autopopulate_field_name' => $widget_autopopulate_field_name
             ]);
         }
 
