@@ -18,7 +18,7 @@
         <?php if( $widgetTags ){ ?>
             <?php $row = 1; ?>
             <?php foreach($widgetTags as $widget){ ?>
-                <div class="tag-group-1 edit-tag-rows">
+                <div class="edit-tag-group-<?= $row; ?> edit-tag-rows">
                     <div class="form-group mt-3" style="margin-bottom:8px;">
                         <label>Tag Name</label>
                         <input type="text" name="tagNames[]" class="form-control <?= $row > 1 ? 'text-tag-name' : ''; ?>" value="<?= $widget->tag_name; ?>" id="" required="" placeholder="">
@@ -57,7 +57,7 @@
                 </div>
             <?php $row++;} ?>
         <?php }else{ ?>
-            <div class="tag-group-1 tag-rows">
+            <div class="edit-tag-group-1 tag-rows">
                 <div class="form-group mt-3" style="margin-bottom:8px;">
                     <label>Tag Name</label>
                     <input type="text" name="tagNames[]" class="form-control" id="" required="" placeholder="">
