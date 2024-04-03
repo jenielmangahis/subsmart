@@ -2313,7 +2313,13 @@ class Estimate extends MY_Controller
             $business = $this->business_model->getByCompanyId($company_id);
             // $estimateItems = unserialize($estimate->estimate_items);
             $estimateItems = $this->estimate_model->getEstimatesItems($id);
-
+            $showDiscountColumn = false;
+            foreach ($estimateItems as $item) {
+                if (!empty($item->discount) && $item->discount != 0) {
+                    $showDiscountColumn = true;
+                    break;
+                }
+            }
             if ($estimate->customer_id > 0) {
                 $firstname = $customer->first_name;
                 $lastname = $customer->last_name;
@@ -2371,7 +2377,7 @@ class Estimate extends MY_Controller
                         <span class="">PHONE: '.formatPhoneNumber($business->business_phone).'</span>
                     </td>
                     <td colspan="2"></td>
-                    <td    style="text-align:right;">
+                    <td    style="text-align:left;">
                         <h5 style="font-size:12px"><span class="fa fa-user-o"></span><span style="font-weight:400;font-size: 10px"> To :</span>   <br/><span style="font-size:12px;">'.$firstname.' '.$lastname.'</span></h5>
                         <span class="">'.$address.'<br />'.$city.', '.$state.' '.$zip.'</span><br />
                         <span class="">EMAIL: '.($email ? $email : '---').'</span><br />
@@ -2384,29 +2390,42 @@ class Estimate extends MY_Controller
             <div >
             <table  style="width: 100% ">
             <tr style="">
-            <td style="background-color: #6a4a86;line-height: 30px; color: #fff; width:5%;"><b>#</b></td>
+            <td style="background-color: #6a4a86;line-height: 30px; color: #fff; width:5%;"><b> #</b></td>
             <td style=" background-color: #6a4a86;line-height: 30px; color: #fff; width:35%; text-align: start;"><b  style="padding: 10px;">Items</b></td>
             <td style=" background-color: #6a4a86;line-height: 30px;  color: #fff; width:12%; text-align: start;"><b   style="padding: 10px;">Item Type</b></td>
             <td style=" background-color: #6a4a86;line-height: 30px;  color: #fff; width:12%; text-align: start;"><b   style="padding: 10px;">Qty</b></td>
             <td style="background-color: #6a4a86; line-height: 30px; color: #fff;  width:12%; text-align: start;"><b   style="padding: 10px;">Price</b></td>
-            <td style=" background-color: #6a4a86;line-height: 30px;  color: #fff; width:12%; text-align: start;"><b   style="padding: 10px;">Discount</b></td>
-            <td style="background-color: #6a4a86; line-height: 30px; color: #fff;  width:12%; text-align: start;"><b   style="padding: 10px;">Total</b></td>
-             </tr>
-            <tbody >';
+            ';
+
+            if ($showDiscountColumn) {
+                $html .= '<td style="background-color: #6a4a86;line-height: 30px; color: #fff; width:12%; text-align: start;"><b style="padding: 10px;">Discount</b></td>
+                <td style="background-color: #6a4a86; line-height: 30px; color: #fff;  width:12%; text-align: start;"><b   style="padding: 10px;">Total</b></td>
+             </tr><tbody >';
+            } else {
+                $html .= '<td style="background-color: #6a4a86; line-height: 30px; color: #fff;  width:24%; text-align: start;"><b   style="padding: 10px;">Total</b></td>
+                </tr>
+               <tbody >';
+            }
+
             $total_amount = 0;
             $total_tax = 0;
             $row = 1;
             foreach ($estimateItems as $item) {
                 $html .= '<tr style="border: 1px solid black;">
-                    <td valign="top" style="line-height: 15px; black;width:5%;">'.$row.'</td>
+                    <td valign="top" style="line-height: 15px; black;width:5%;"> '.$row.'</td>
                     <td valign="top" style="line-height: 15px;  black;width:35%;">'.$item->title.'</td>
                     <td valign="top" style="line-height: 15px;  black;width:12%;">'.$item->type.'</td>
                     <td valign="top" style=" line-height: 15px; black;width:12%;">'.$item->qty.'</td>
-                    <td valign="top" style="line-height: 15px;  black;width:12%;">$ '.number_format($item->iCost, 2).'</td>
-                    <td valign="top" style="line-height: 15px;  black;width:12%;">$ '.number_format($item->discount, 2).'</td>
+                    <td valign="top" style="line-height: 15px;  black;width:12%;">$ '.number_format($item->iCost, 2).'</td>';
+                if ($showDiscountColumn) {
+                    $html .= ' <td valign="top" style="line-height: 15px;  black;width:12%;">$ '.number_format($item->discount, 2).'</td>
                     <td valign="top" style="line-height: 15px;  black;width:12%;">$ '.number_format($item->iTotal, 2).'</td>
-                  </tr>
-                ';
+                    </tr>';
+                } else {
+                    $html .= '<td valign="top" style="line-height: 15px;  black;width:24%;">$ '.number_format($item->iTotal, 2).'</td>
+                    </tr>
+                  ';
+                }
 
                 ++$row;
                 $total_amount += $item->iTotal;

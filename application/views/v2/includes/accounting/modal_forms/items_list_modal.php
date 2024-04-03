@@ -33,6 +33,7 @@
                                     $buttonClass = $qty <= 0 ? "disabled-button" : "";
                                     ?>
                                     <tr>
+                                    <?php if($item->title !== ''){ ?>
                                         <td><?= $item->title ?></td>
                                         <td><?= $location[0]['name'] ?></td>
                                         <td><?= $qty ?></td>
@@ -42,6 +43,7 @@
                                                 <i class="bx bx-fw bx-plus"></i>
                                             </button>
                                         </td>
+                                        <?php  }  ?>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>

@@ -21,14 +21,14 @@
             </div>
             <span class="nsm-fab-label">New Estimate</span>
         </li>
-        <?php if (isset($estimates) && count($estimates) > 0) : ?>
-        <li onclick="location.href='<?php echo base_url('estimate/print') ?>'">
+        <?php if (isset($estimates) && count($estimates) > 0) { ?>
+        <li onclick="location.href='<?php echo base_url('estimate/print'); ?>'">
             <div class="nsm-fab-icon">
                 <i class="bx bx-printer"></i>
             </div>
             <span class="nsm-fab-label">Print</span>
         </li>
-        <?php endif; ?>
+        <?php } ?>
     </ul>
 </div>
 
@@ -52,83 +52,85 @@
                     </div>
 
                     <div class="col-12">
-                        <?php if(!empty($this->session->flashdata('message'))): ?>
-                        <div class="nsm-callout <?= $this->session->flashdata('alert_class') ?>">
+                        <?php if (!empty($this->session->flashdata('message'))) { ?>
+                        <div class="nsm-callout <?php echo $this->session->flashdata('alert_class'); ?>">
                             <button><i class='bx bx-x'></i></button>
-                            <?= $this->session->flashdata('message'); ?>
+                            <?php echo $this->session->flashdata('message'); ?>
                         </div>
-                        <?php endif; ?>
+                        <?php } ?>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-4">
-                        <form action="<?php echo base_url('estimate') ?>" method="GET">
+                        <form action="<?php echo base_url('estimate'); ?>" method="GET">
                             <div class="nsm-field-group search">
                                 <input type="search" class="nsm-field nsm-search form-control mb-2" id="search_field"
                                     name="search" placeholder="Search Estimates"
-                                    value="<?php echo (!empty($search)) ? $search : '' ?>">
+                                    value="<?php echo (!empty($search)) ? $search : ''; ?>">
                             </div>
                         </form>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Sort by <?= $order_by; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span>Sort by <?php echo $order_by; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
                                 <li><a class="dropdown-item"
-                                        href="<?php echo base_url('estimate') ?>?order=added-desc">Newest first</a></li>
+                                        href="<?php echo base_url('estimate'); ?>?order=added-desc">Newest first</a></li>
                                 <li><a class="dropdown-item"
-                                        href="<?php echo base_url('estimate') ?>?order=added-asc">Oldest first</a></li>
+                                        href="<?php echo base_url('estimate'); ?>?order=added-asc">Oldest first</a></li>
                                 <li><a class="dropdown-item"
-                                        href="<?php echo base_url('estimate') ?>?order=date-accepted-desc">Accepted:
+                                        href="<?php echo base_url('estimate'); ?>?order=date-accepted-desc">Accepted:
                                         newest</a></li>
                                 <li><a class="dropdown-item"
-                                        href="<?php echo base_url('estimate') ?>?order=date-accepted-asc">Accepted:
+                                        href="<?php echo base_url('estimate'); ?>?order=date-accepted-asc">Accepted:
                                         oldest</a></li>
                                 <li><a class="dropdown-item"
-                                        href="<?php echo base_url('estimate') ?>?order=number-desc">Estimate Number:
+                                        href="<?php echo base_url('estimate'); ?>?order=number-desc">Estimate Number:
                                         descending</a></li>
                                 <li><a class="dropdown-item"
-                                        href="<?php echo base_url('estimate') ?>?order=number-asc">Estimate Number:
+                                        href="<?php echo base_url('estimate'); ?>?order=number-asc">Estimate Number:
                                         ascending</a></li>
                                 <li><a class="dropdown-item"
-                                        href="<?php echo base_url('estimate') ?>?order=amount-asc">Amount: Lowest</a>
+                                        href="<?php echo base_url('estimate'); ?>?order=amount-asc">Amount: Lowest</a>
                                 </li>
                                 <li><a class="dropdown-item"
-                                        href="<?php echo base_url('estimate') ?>?order=amount-desc">Amount: Highest</a>
+                                        href="<?php echo base_url('estimate'); ?>?order=amount-desc">Amount: Highest</a>
                                 </li>
                             </ul>
                         </div>
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <?php if( $tab == '' ){ ?>
+                                <?php if ($tab == '') { ?>
                                 <span>Filter by All</span> <i class='bx bx-fw bx-chevron-down'></i>
-                                <?php }else{ ?>
-                                <span>Filter by <?= ucwords($tab); ?></span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <?php } else { ?>
+                                <span>Filter by <?php echo ucwords($tab); ?></span> <i class='bx bx-fw bx-chevron-down'></i>
                                 <?php } ?>
 
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
                                 <?php
-                                foreach (get_config_item('estimate_status') as $key => $status) :
-                                    if ($key === 0) continue;
-                                ?>
+                                foreach (get_config_item('estimate_status') as $key => $status) {
+                                    if ($key === 0) {
+                                        continue;
+                                    }
+                                    ?>
 
                                 <?php
-                                    if ($key === 1) :
-                                    ?>
-                                <li><a class="dropdown-item" href="<?php echo base_url('estimate') ?>">All</a></li>
+                                        if ($key === 1) {
+                                            ?>
+                                <li><a class="dropdown-item" href="<?php echo base_url('estimate'); ?>">All</a></li>
                                 <?php
-                                    endif;
+                                        }
                                     ?>
 
                                 <li><a class="dropdown-item"
-                                        href="<?php echo base_url('estimate/tab/' . strtolower($status)) ?>"><?php echo $status; ?></a>
+                                        href="<?php echo base_url('estimate/tab/'.strtolower($status)); ?>"><?php echo $status; ?></a>
                                 </li>
                                 <?php
-                                endforeach;
-                                ?>
+                                }
+?>
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
@@ -136,12 +138,12 @@
                                 data-bs-target="#new_estimate_modal">
                                 <i class='bx bx-fw bx-chart'></i> New Estimate
                             </button>
-                            <?php if (isset($estimates) && count($estimates) > 0) : ?>
+                            <?php if (isset($estimates) && count($estimates) > 0) { ?>
                             <button type="button" class="nsm-button primary"
-                                onclick="window.open('<?php echo base_url('estimate/print') ?>','_blank')">
+                                onclick="window.open('<?php echo base_url('estimate/print'); ?>','_blank')">
                                 <i class='bx bx-fw bx-printer'></i>
                             </button>
-                            <?php endif; ?>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>
@@ -160,31 +162,31 @@
                     </thead>
                     <tbody>
                         <?php
-                        if (!empty($estimates)) :
-                        ?>
-                        <?php
-                            foreach ($estimates as $estimate) :
-                                switch($estimate->status):
-                                    case "Draft":
-                                        $badge = "";
-                                        break;
-                                    case "Submitted":
-                                        $badge = "success";
-                                        break;
-                                    case "Accepted":
-                                        $badge = "success";
-                                        break;
-                                    case "Invoiced":
-                                        $badge = "primary";
-                                        break;
-                                    case "Lost":
-                                        $badge = "secondary";
-                                        break;
-                                    case "Declined By Customer":
-                                        $badge = "error";
-                                        break;
-                                endswitch;
+                        if (!empty($estimates)) {
                             ?>
+                        <?php
+                                foreach ($estimates as $estimate) {
+                                    switch ($estimate->status) {
+                                        case 'Draft':
+                                            $badge = '';
+                                            break;
+                                        case 'Submitted':
+                                            $badge = 'success';
+                                            break;
+                                        case 'Accepted':
+                                            $badge = 'success';
+                                            break;
+                                        case 'Invoiced':
+                                            $badge = 'primary';
+                                            break;
+                                        case 'Lost':
+                                            $badge = 'secondary';
+                                            break;
+                                        case 'Declined By Customer':
+                                            $badge = 'error';
+                                            break;
+                                    }
+                                    ?>
                         <tr>
                             <td>
                                 <div class="table-row-icon">
@@ -193,42 +195,42 @@
                             </td>
                             <td class="fw-bold nsm-text-primary"><?php echo $estimate->estimate_number; ?></td>
                             <td>
-                                <?php if( $estimate->customer_id > 0 ){ ?>
+                                <?php if ($estimate->customer_id > 0) { ?>
                                 <a class="nsm-link"
-                                    href="<?php echo base_url('customer/preview_/' . $estimate->customer_id) ?>">
-                                    <?= $estimate->customer_name; ?> ()
+                                    href="<?php echo base_url('customer/preview_/'.$estimate->customer_id); ?>">
+                                    <?php echo $estimate->customer_name; ?> ()
                                 </a>
-                                <?php }elseif( $estimate->lead_id > 0 ){ ?>
+                                <?php } elseif ($estimate->lead_id > 0) { ?>
                                 <a class="nsm-link"
-                                    href="<?php echo base_url('customer/add_lead/' . $estimate->lead_id) ?>">
-                                    <?= $estimate->lead_name; ?>
+                                    href="<?php echo base_url('customer/add_lead/'.$estimate->lead_id); ?>">
+                                    <?php echo $estimate->lead_name; ?>
                                 </a>
                                 <?php } ?>
                                 <br />
-                                Estimate Date : <?php echo date('M d, Y', strtotime($estimate->estimate_date)) ?>
+                                Estimate Date : <?php echo date('M d, Y', strtotime($estimate->estimate_date)); ?>
                             </td>
                             <td><?php echo $estimate->estimate_type; ?></td>
-                            <td><span class="nsm-badge <?= $badge ?>"><?= $estimate->status; ?></span></td>
+                            <td><span class="nsm-badge <?php echo $badge; ?>"><?php echo $estimate->status; ?></span></td>
                             <td style="width:10%;text-align:right;">
                                 <?php
-                                        $total1 = ((float)$estimate->option1_total) + ((float)$estimate->option2_total);
-                                        $total2 = ((float)$estimate->bundle1_total) + ((float)$estimate->bundle2_total);
-                                        echo '$ ' . number_format(floatval($estimate->grand_total),2);
+                                                $total1 = ((float) $estimate->option1_total) + ((float) $estimate->option2_total);
+                                    $total2 = ((float) $estimate->bundle1_total) + ((float) $estimate->bundle2_total);
+                                    echo '$ '.number_format(floatval($estimate->grand_total), 2);
 
-                                        ?>
+                                    ?>
                             </td>
                             <td style="width:8%;text-align:center;">
-                                <?php if ($estimate->is_mail_open == 1): ?>
+                                <?php if ($estimate->is_mail_open == 1) { ?>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                     <path fill="#888888"
                                         d="M15 12c0 1.654-1.346 3-3 3s-3-1.346-3-3 1.346-3 3-3 3 1.346 3 3zm9-.449s-4.252 8.449-11.985 8.449c-7.18 0-12.015-8.449-12.015-8.449s4.446-7.551 12.015-7.551c7.694 0 11.985 7.551 11.985 7.551zm-7 .449c0-2.757-2.243-5-5-5s-5 2.243-5 5 2.243 5 5 5 5-2.243 5-5z" />
                                 </svg>
-                                <?php else: ?>
+                                <?php } else { ?>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                     <path fill="#888888"
                                         d="M11.885 14.988l3.104-3.098.011.11c0 1.654-1.346 3-3 3l-.115-.012zm8.048-8.032l-3.274 3.268c.212.554.341 1.149.341 1.776 0 2.757-2.243 5-5 5-.631 0-1.229-.13-1.785-.344l-2.377 2.372c1.276.588 2.671.972 4.177.972 7.733 0 11.985-8.449 11.985-8.449s-1.415-2.478-4.067-4.595zm1.431-3.536l-18.619 18.58-1.382-1.422 3.455-3.447c-3.022-2.45-4.818-5.58-4.818-5.58s4.446-7.551 12.015-7.551c1.825 0 3.456.426 4.886 1.075l3.081-3.075 1.382 1.42zm-13.751 10.922l1.519-1.515c-.077-.264-.132-.538-.132-.827 0-1.654 1.346-3 3-3 .291 0 .567.055.833.134l1.518-1.515c-.704-.382-1.496-.619-2.351-.619-2.757 0-5 2.243-5 5 0 .852.235 1.641.613 2.342z" />
                                 </svg>
-                                <?php endif; ?>
+                                <?php } ?>
                             </td>
                             <td>
                                 <div class="dropdown table-management">
@@ -238,13 +240,13 @@
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
                                             <a class="dropdown-item"
-                                                href="<?php echo base_url('estimate/view/' . $estimate->id) ?>">View
+                                                href="<?php echo base_url('estimate/view/'.$estimate->id); ?>">View
                                                 Estimate</a>
                                         </li>
 
                                         <li>
                                             <a class="dropdown-item"
-                                                href="<?php echo base_url('estimate/view_pdf/' . $estimate->id) ?>"
+                                                href="<?php echo base_url('estimate/view_pdf/'.$estimate->id); ?>"
                                                 target="_new">View PDF</a>
                                         </li>
 
@@ -257,55 +259,55 @@
                                         <li>
                                             <a class="dropdown-item clone-item" href="javascript:void(0);"
                                                 data-bs-toggle="modal" data-bs-target="#clone_estimate_modal"
-                                                data-id="<?php echo $estimate->id ?>"
-                                                data-wo_num="<?php echo $estimate->estimate_number ?>"
+                                                data-id="<?php echo $estimate->id; ?>"
+                                                data-wo_num="<?php echo $estimate->estimate_number; ?>"
                                                 data-name="WO-00433">Clone Estimate</a>
                                         </li>
 
-                                        <?php if($estimate->status === 'Accepted'): ?>
+                                        <?php if ($estimate->status === 'Accepted') { ?>
                                         <li>
                                             <a class="dropdown-item"
-                                                href="<?= base_url('job/estimate_job/' . $estimate->id) ?>">Convert to
+                                                href="<?php echo base_url('job/estimate_job/'.$estimate->id); ?>">Convert to
                                                 Job</a>
                                         </li>
-                                        <?php endif; ?>
+                                        <?php } ?>
 
                                         <li>
                                             <a class="dropdown-item"
-                                                href="<?php echo base_url('invoice/estimateConversion/'. $estimate->id) ?>">Convert
+                                                href="<?php echo base_url('invoice/estimateConversion/'.$estimate->id); ?>">Convert
                                                 to Invoice</a>
                                         </li>
 
                                         <li>
                                             <a class="dropdown-item"
-                                                href="<?php echo base_url('workorder/estimateConversionWorkorder/'. $estimate->id) ?>">Convert
+                                                href="<?php echo base_url('workorder/estimateConversionWorkorder/'.$estimate->id); ?>">Convert
                                                 to Workorder</a>
                                         </li>
 
                                         <li>
                                             <a class="dropdown-item"
-                                                href="<?php echo base_url('estimate/print/' . $estimate->id) ?>"
+                                                href="<?php echo base_url('estimate/print/'.$estimate->id); ?>"
                                                 target="_new">Print</a>
                                         </li>
 
-                                        <?php if ($estimate->status !== 'Accepted'): ?>
-                                        <?php if ($estimate->estimate_type == 'Standard'): ?>
+                                        <?php if ($estimate->status !== 'Accepted') { ?>
+                                        <?php if ($estimate->estimate_type == 'Standard') { ?>
                                         <li>
                                             <a class="dropdown-item"
-                                                href="<?php echo base_url('estimate/edit/' . $estimate->id) ?>">Edit</a>
+                                                href="<?php echo base_url('estimate/edit/'.$estimate->id); ?>">Edit</a>
                                         </li>
-                                        <?php elseif ($estimate->estimate_type == 'Option'): ?>
+                                        <?php } elseif ($estimate->estimate_type == 'Option') { ?>
                                         <li>
                                             <a class="dropdown-item"
-                                                href="<?php echo base_url('estimate/editOption/' . $estimate->id) ?>">Edit</a>
+                                                href="<?php echo base_url('estimate/editOption/'.$estimate->id); ?>">Edit</a>
                                         </li>
-                                        <?php else: ?>
+                                        <?php } else { ?>
                                         <li>
                                             <a class="dropdown-item"
-                                                href="<?php echo base_url('estimate/editBundle/' . $estimate->id) ?>">Edit</a>
+                                                href="<?php echo base_url('estimate/editBundle/'.$estimate->id); ?>">Edit</a>
                                         </li>
-                                        <?php endif; ?>
-                                        <?php endif; ?>
+                                        <?php } ?>
+                                        <?php } ?>
 
                                         <li>
                                             <a class="dropdown-item delete-item" href="javascript:void(0);"
@@ -316,11 +318,11 @@
                             </td>
                         </tr>
                         <?php
-                            endforeach;
+                                }
                             ?>
                         <?php
-                        else :
-                        ?>
+                        } else {
+                            ?>
                         <tr>
                             <td colspan="8">
                                 <div class="nsm-empty">
@@ -329,8 +331,8 @@
                             </td>
                         </tr>
                         <?php
-                        endif;
-                        ?>
+                        }
+?>
                     </tbody>
                 </table>
             </div>
@@ -393,7 +395,7 @@ $(document).ready(function() {
         let est_id = $(this).attr('est-id');
 
         Swal.fire({
-            title: 'Sending of Estimate 2',
+            title: 'Sending of Estimate ',
             text: "Send this to customer?",
             icon: 'question',
             confirmButtonText: 'Proceed',
