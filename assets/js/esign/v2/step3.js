@@ -25,6 +25,7 @@ function Step3() {
   let isTemplate = undefined;
   let userInfo = undefined;
   let files = [];
+  //const prefixURL = "http://127.0.0.1/ci/nsmart_v2";
   const prefixURL = "";
 
   async function renderPage({ canvas, page, document }) {
@@ -129,7 +130,10 @@ function Step3() {
 
     const $subdata = $element.find(".subData");
     let key = $subdata.data("key");
+    let widget_type = $subdata.data('widget-type');
+    let widget_field = $subdata.data('widget-field');
     let fieldName = $element.text().trim();
+    console.log($subdata);
 
     if ($subdata.attr("data-field-name")) {
       fieldName = $subdata.attr("data-field-name");
@@ -176,6 +180,8 @@ function Step3() {
       field: fieldName,
       recipient_id: recipientId,
       specs,
+      widget_type:widget_type,
+      widget_field:widget_field
     });
   }
 
@@ -219,7 +225,7 @@ function Step3() {
   }
 
   function showFieldSidebar(field, event) {
-    const { field_name, specs: fieldSpecs } = field;
+    const { field_name, specs: fieldSpecs, widget_type } = field;
     const specs = JSON.parse(fieldSpecs || null) || {};
 
     const $fieldId = $optionsSidebar.find(".esignBuilder__optionsSidebarFieldId span"); // prettier-ignore
@@ -247,6 +253,8 @@ function Step3() {
     $fieldValueInput.val("");
     $fieldValueLabel.val("");
     $autoPopulateWith.val("");
+
+    $('.dynamic-widget').hide();
 
     const fieldTypeWithOptions = ["Checkbox", "Radio"];
     let fieldType = "field";
@@ -285,24 +293,25 @@ function Step3() {
       $checkbox.attr("name", specs.name ? specs.name : field.unique_key);
       $checkbox.prop("checked", Boolean(specs.isChecked));
 
-      $valueItem.find("[type=text]").val(specs.value || "");
+      //$valueItem.find("[type=text]").val(specs.value || "");
+      $('#optionsFieldValue').val(specs.value || "");
 
-      subCheckbox.forEach((item) => {
-        const $valueItem = $(".options__valuesItem:first").clone();
+      // subCheckbox.forEach((item) => {
+      //   const $valueItem = $(".options__valuesItem:first").clone();
 
-        $valueItem.attr("type", "radio");
-        $valueItem.attr("data-key", item.id);
+      //   $valueItem.attr("type", "radio");
+      //   $valueItem.attr("data-key", item.id);
 
-        const $checkbox = $valueItem.find(
-          `[type=${isCheckbox ? "checkbox" : "radio"}]`
-        );
-        $checkbox.attr("type", isCheckbox ? "checkbox" : "radio");
-        $checkbox.prop("checked", item.isChecked);
-        $checkbox.attr("name", specs.name ? specs.name : field.unique_key);
+      //   const $checkbox = $valueItem.find(
+      //     `[type=${isCheckbox ? "checkbox" : "radio"}]`
+      //   );
+      //   $checkbox.attr("type", isCheckbox ? "checkbox" : "radio");
+      //   $checkbox.prop("checked", item.isChecked);
+      //   $checkbox.attr("name", specs.name ? specs.name : field.unique_key);
 
-        $valueItem.find("[type=text]").val(item.value || "");
-        $(".options__valuesSubItems").append($valueItem);
-      });
+      //   $valueItem.find("[type=text]").val(item.value || "");
+      //   $(".options__valuesSubItems").append($valueItem);
+      // });
 
       $checks = $(`.options input[type=${isCheckbox ? "checkbox" : "radio"}]`);
       $checks.change(function (event) {
@@ -366,6 +375,16 @@ function Step3() {
         const $element = createDropdownInput({ value: "" });
         $(".dropdown .options__values").append($element);
         $element.find("input").focus();
+      }
+    }else {
+      if( widget_type === "dynamic-widget" ){
+        $('.dynamic-widget').show();
+        fieldType = "dynamic-widget";
+        $(".dynamic-widget #widgetRequiredText").prop("checked", specs.is_required);
+        $(".dynamic-widget #widgetReadOnlyText").prop("checked", specs.is_read_only);
+        $(".dynamic-widget #widgetTextFieldName").val(field.field_name);
+        $(".dynamic-widget #widgetTextFieldPlaceholder").val(specs.placeholder ? specs.placeholder : "");
+        $(".dynamic-widget #widgetTextFieldValue").val(specs.value ? specs.value : "");
       }
     }
 
@@ -462,7 +481,7 @@ function Step3() {
       return createFieldWithValue(field);
     }
 
-    const { coordinates: coords, unique_key, field_name = "", color } = field;
+    const { coordinates: coords, unique_key, field_name = "", color, widget_type, widget_autopopulate_field_name } = field;
     const coordinates = JSON.parse(coords);
     const top = parseInt(coordinates.pageTop, 10);
     const left = parseInt(coordinates.left, 10);
@@ -480,7 +499,7 @@ function Step3() {
         class="menu_item ui-draggable ui-draggable-handle ui-draggable-dragging esignBuilder__field"
         style="left: ${left}px; top: ${top}px; --color: ${rgba}"
       >
-        <div class="subData">
+        <div class="subData" data-widget-type="${widget_type}" data-widget-field="${widget_autopopulate_field_name}">
           <span>${fieldName}</span>
         </div>
       </div>
@@ -709,8 +728,8 @@ function Step3() {
   function createDropdownInput({ value = null }) {
     const html = `
       <div class="options__valuesItem d-flex align-items-center">
-          <input style="flex-grow: 1;" type="text">
-          <button class="btn btn-secondary options__close"><i class="fa fa-times"></i></button>
+          <input class="form-control" style="flex-grow: 1;" type="text">
+          <button class="nsm-button default options__close"><i class='bx bx-trash'></i></button>
       </div>
       `;
 
@@ -792,12 +811,17 @@ function Step3() {
         }
 
         const $item = $(ui.helper).clone();
+        const widget_type  = $item.attr('data-type');
+        const widget_autopopulate_field_name = $item.attr('data-key');
         const color = getRecipientColor();
+        console.log(widget_autopopulate_field_name);
         const $element = createField({
           coordinates: JSON.stringify(ui.position),
           field_name: $item.text(),
           color,
           isNew: true,
+          widget_type: widget_type,
+          widget_autopopulate_field_name: widget_autopopulate_field_name          
         });
 
         $_document.append($element);
@@ -965,6 +989,20 @@ function Step3() {
           name: !isEmpty(fieldName) ? fieldName : null,
           is_required: $(".dropdown #requiredDropdown").is(":checked"),
         };
+      } else if( fieldType === "dynamic-widget"){
+        const fieldName = $(".dynamic-widget #widgetTextFieldName").val().trim();
+        const fieldValue = $(".dynamic-widget #widgetTextFieldValue").val().trim();
+        const fieldPlaceholder = $(".dynamic-widget #widgetTextFieldPlaceholder").val().trim();
+        const autoPopulateWith = $(".dynamic-widget #widgetTextFieldName").val().trim();
+
+        specs = {
+          is_required: $("#widgetRequiredText").is(":checked"),
+          is_read_only: $("#widgetReadOnlyText").is(":checked"),
+          name: !isEmpty(fieldName) ? fieldName : null,
+          value: fieldValue,
+          placeholder: fieldPlaceholder,
+          auto_populate_with: autoPopulateWith,
+        };
       } else {
         const $fieldKey = $(".esignBuilder__optionsSidebarFieldId span");
         const fieldKey = $fieldKey.text();
@@ -981,31 +1019,33 @@ function Step3() {
         let { subCheckbox = [] } = JSON.parse(fieldSpecs) || {};
         specs = {};
 
-        $(".options__valuesItem").each(function (_, element) {
-          const $element = $(element);
-          const $checkbox = $element.find(
-            `[type=${isCheckbox ? "checkbox" : "radio"}]`
-          );
-          const $inputText = $element.find("[type=text]");
-          const key = $element.attr("data-key");
+        // $(".options__valuesItem").each(function (_, element) {
+        //   const $element = $(element);
+        //   const $checkbox = $element.find(
+        //     `[type=${isCheckbox ? "checkbox" : "radio"}]`
+        //   );
+        //   const $inputText = $element.find("[type=text]");
+        //   const key = $element.attr("data-key");
 
-          if (key === field.unique_key) {
-            specs.isChecked = $checkbox.is(":checked");
-            specs.value = $inputText.val();
-          } else {
-            subCheckbox = subCheckbox.map((c) => {
-              if (c.id !== key) return c;
-              return {
-                ...c,
-                isChecked: $checkbox.is(":checked"),
-                value: $inputText.val(),
-              };
-            });
-          }
-        });
+        //   if (key === field.unique_key) {
+        //     specs.isChecked = $checkbox.is(":checked");
+        //     specs.value = $inputText.val();
+        //   } else {
+        //     subCheckbox = subCheckbox.map((c) => {
+        //       if (c.id !== key) return c;
+        //       return {
+        //         ...c,
+        //         isChecked: $checkbox.is(":checked"),
+        //         value: $inputText.val(),
+        //       };
+        //     });
+        //   }
+        // });
+
+        specs.isChecked = true;
+        specs.value = $('#optionsFieldValue').val();
 
         // values must be unique
-
         const values = [...subCheckbox.map((s) => s.value)];
         if (specs.value) values.push(specs.value);
 
