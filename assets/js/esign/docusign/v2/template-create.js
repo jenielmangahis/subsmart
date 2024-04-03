@@ -2,6 +2,7 @@ function TemplateCreate() {
   const PDFJS = pdfjsLib;
 
   //const prefixURL = "http://127.0.0.1/ci/nsmart_v2";
+  
   const prefixURL = "";
   const validFileExtensions = ["pdf"];
 

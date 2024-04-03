@@ -161,7 +161,6 @@ body {
 
 .nsm-sidebar-menu > li:hover {
   background-color: #6a4a86;
-  padding: 0.8em 1em;
 }
 .nsm-sidebar-menu > li.shown a:hover {
   color: #6a4a86 !important;

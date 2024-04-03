@@ -154,8 +154,10 @@ $("#apply-button").on("click", function () {
 });
 
 $("#filter-type").on("change", function () {
+  console.log($(this).val());
   switch ($(this).val()) {
     case "unbilled-income":
+      console.log('unbilled-income');
       $(this).closest(".row").siblings(":not(.mt-3)").remove();
       $(this).parent().addClass("col-12").removeClass("col-5");
 
@@ -182,6 +184,7 @@ $("#filter-type").on("change", function () {
       });
       break;
     case "recently-paid":
+      console.log('recently-paid');
       $(this).closest(".row").siblings(":not(.mt-3)").remove();
       $(this).parent().addClass("col-12").removeClass("col-5");
 
@@ -193,20 +196,22 @@ $("#filter-type").on("change", function () {
                     </select>
                 </div>
             </div>`).insertAfter($(this).closest(".row"));
+            console.log('recently-paid filter');
       break;
     case "estimates":
+ 
       if ($("#filter-date").length < 1) {
         $(this).closest(".row").siblings(":not(.mt-3)").remove();
         $(this).parent().addClass("col-5").removeClass("col-12");
-
-        $(`<div class="row">
-                    <div class="col-12">
+        console.log('estimate case');
+        $(`
+                    <div class="col-5">
                         <label for="filter-customer">Customer</label>
                         <select class="nsm-field form-select" name="filter_customer" id="filter-customer">
                             <option value="all" selected="selected">All</option>
                         </select>
                     </div>
-                </div>`).insertAfter($(this).closest(".row"));
+  `).insertAfter($(this).closest(".row"));
 
         $(`<div class="row">
                     <div class="col-4">
@@ -239,7 +244,7 @@ $("#filter-type").on("change", function () {
                             <input type="text" class="nsm-field form-control date" value="" id="filter-to">
                         </div>
                     </div>
-                </div>`).insertAfter($(this).closest(".row"));
+                </div>`).insertBefore($(this).closest("#filter_buttons"));  
 
         $(`<div class="row">
                     <div class="col-4">
@@ -265,7 +270,7 @@ $("#filter-type").on("change", function () {
                             <option value="send-later">Send later</option>
                         </select>
                     </div>
-                </div>`).insertAfter($(this).closest(".row"));
+                </div>`).insertBefore($(this).closest("#filter_buttons"));  
 
         $(".table-filter .date").datepicker({
           format: "mm/dd/yyyy",
@@ -289,10 +294,11 @@ $("#filter-type").on("change", function () {
       }
 
       if ($("#filter-customer").parent().hasClass("col-12")) {
-        $("#filter-customer").parent().removeClass("col-12").addClass("col-5");
+        $("#filter-customer").parent().removeClass("col-12").addClass("col-6");
       }
       break;
     case "invoices":
+      console.log('invoices');
       if ($("#filter-date").length < 1) {
         $(this).closest(".row").siblings(":not(.mt-3)").remove();
         $(this).parent().addClass("col-5").removeClass("col-12");
@@ -347,6 +353,7 @@ $("#filter-type").on("change", function () {
                             <option value="open">Open</option>
                             <option value="overdue">Overdue</option>
                             <option value="paid">Paid</option>
+                            <option value="draft">Draft</option>
                         </select>
                     </div>
                     <div class="col-3">
@@ -371,14 +378,17 @@ $("#filter-type").on("change", function () {
           .html(`<option value="all-statuses" selected="selected">All statuses</option>
                 <option value="open">Open</option>
                 <option value="overdue">Overdue</option>
-                <option value="paid">Paid</option>`);
+                <option value="paid">Paid</option>
+                <option value="draft">Draft</option>
+                `);
       }
 
       if ($("#filter-customer").parent().hasClass("col-12")) {
-        $("#filter-customer").parent().removeClass("col-12").addClass("col-5");
+        $("#filter-customer").parent().removeClass("col-12").addClass("col-6");
       }
       break;
     case "sales-receipts":
+      console.log('sales-receipts');
       if ($("#filter-date").length < 1) {
         $(this).closest(".row").siblings(":not(.mt-3)").remove();
         $(this).parent().addClass("col-5").removeClass("col-12");
@@ -454,7 +464,7 @@ $("#filter-type").on("change", function () {
       }
 
       if ($("#filter-customer").parent().hasClass("col-12")) {
-        $("#filter-customer").parent().removeClass("col-12").addClass("col-5");
+        $("#filter-customer").parent().removeClass("col-12").addClass("col-6");
       }
       break;
     case "credit-memos":
@@ -533,7 +543,7 @@ $("#filter-type").on("change", function () {
       }
 
       if ($("#filter-customer").parent().hasClass("col-12")) {
-        $("#filter-customer").parent().removeClass("col-12").addClass("col-5");
+        $("#filter-customer").parent().removeClass("col-12").addClass("col-6");
       }
       break;
     case "money-received":
@@ -605,10 +615,11 @@ $("#filter-type").on("change", function () {
       }
 
       if ($("#filter-customer").parent().hasClass("col-12")) {
-        $("#filter-customer").parent().removeClass("col-12").addClass("col-5");
+        $("#filter-customer").parent().removeClass("col-12").addClass("col-6");
       }
       break;
     case "statements":
+      console.log('statements case');
       if ($("#filter-date").length < 1) {
         $(this).closest(".row").siblings(":not(.mt-3)").remove();
         $(this).parent().addClass("col-5").removeClass("col-12");
@@ -667,13 +678,14 @@ $("#filter-type").on("change", function () {
       }
 
       if ($("#filter-customer").parent().hasClass("col-12")) {
-        $("#filter-customer").parent().removeClass("col-12").addClass("col-5");
+        $("#filter-customer").parent().removeClass("col-12").addClass("col-6");
       }
       break;
     default:
+      console.log('default case');
       if ($("#filter-date").length < 1) {
         $(this).closest(".row").siblings(":not(.mt-3)").remove();
-        $(this).parent().addClass("col-5").removeClass("col-12");
+        $(this).parent().addClass("col-6").removeClass("col-12");
 
         $(`<div class="row">
                     <div class="col-12">
@@ -763,7 +775,7 @@ $("#filter-type").on("change", function () {
       }
 
       if ($("#filter-customer").parent().hasClass("col-12")) {
-        $("#filter-customer").parent().removeClass("col-12").addClass("col-5");
+        $("#filter-customer").parent().removeClass("col-12").addClass("col-6");
       }
       break;
   }

@@ -69,7 +69,7 @@ function Signing(hash) {
   }
 
   function getRenderField({ field, recipient }) {
-    const { field_name, coordinates, id: fieldId, value: fieldValue, specs } = field;
+    const { field_name, coordinates, id: fieldId, value: fieldValue, specs, widget_type, widget_autopopulate_field_name } = field;
 
     const { first_name, last_name, mail_add, city, state, zip_code, phone_h, phone_m, email, country, county_name, date_of_birth, ssn
      } = window.__esigndata.auto_populate_data.client;
@@ -94,9 +94,9 @@ function Signing(hash) {
 
     const {  total_due, equipment_cost, first_month_monitoring, one_time_activation } = window.__esigndata.auto_populate_data.cost_due;
 
-    const {  inv_monthly_monitoring, inv_program_setup, inv_installation_cost, inv_taxes, inv_subtotal, inv_equipment_cost } = window.__esigndata.auto_populate_data.invoices;
+    const {  inv_monthly_monitoring, inv_program_setup, inv_installation_cost, inv_taxes, inv_subtotal, inv_equipment_cost, inv_grand_total } = window.__esigndata.auto_populate_data.invoices;
 
-    const {  business_name } = window.__esigndata.auto_populate_data.business_profile;
+    const {  business_name, business_address, business_city, business_potal_code, business_state } = window.__esigndata.auto_populate_data.business_profile;
 
     const {  job_account_number, job_number, job_name, job_type } = window.__esigndata.auto_populate_data.jobs;
 
@@ -599,6 +599,130 @@ function Signing(hash) {
     if( field_name == "System Size" ){
       return solar_system_size;
     }
+
+    //Dynamic widget start
+    if( widget_type == 'dynamic-widget' ){
+
+      //Customer
+      if( widget_autopopulate_field_name == 'Customer Name' ){
+        return first_name + " " + last_name;
+      }
+
+      if( widget_autopopulate_field_name == 'Customer Firstname' ){
+        return first_name;
+      }
+
+      if( widget_autopopulate_field_name == 'Customer Lastname' ){
+        return last_name;
+      }
+
+      if( widget_autopopulate_field_name == 'Customer Email' ){
+        return email;
+      }
+
+      if( widget_autopopulate_field_name == 'Customer Mobile' ){
+        return phone_m;
+      }
+
+      if( widget_autopopulate_field_name == 'Customer Phone' ){
+        return phone_h;
+      }
+
+      if( widget_autopopulate_field_name == 'Customer Address' ){
+        return mail_add;
+      }
+
+      if( widget_autopopulate_field_name == 'Customer City' ){
+        return city;
+      }
+
+      if( widget_autopopulate_field_name == 'Customer State' ){
+        return state;
+      }
+
+      if( widget_autopopulate_field_name == 'Customer Zip' ){
+        return zip_code;
+      }
+
+      if( widget_autopopulate_field_name == 'Customer SSS' ){
+        return ssn;
+      }
+
+      if( widget_autopopulate_field_name == 'Customer Date of Birth' ){
+        return date_of_birth;
+      }
+
+      if( widget_autopopulate_field_name == 'Customer Password' ){
+        return access_password;
+      }
+
+      if( widget_autopopulate_field_name == 'Customer Abort Code' ){
+        return passcode;
+      }
+
+      if( widget_autopopulate_field_name == 'Customer Panel Type' ){
+        return panel_type;
+      }
+
+      //Company
+      if( widget_autopopulate_field_name == 'Company Name' ){
+        return business_name;
+      }
+
+      if( widget_autopopulate_field_name == 'Company Address' ){
+        return business_address;
+      }
+
+      if( widget_autopopulate_field_name == 'Company City' ){
+        return business_city;
+      }
+
+      if( widget_autopopulate_field_name == 'Company State' ){
+        return business_state;
+      }
+
+      if( widget_autopopulate_field_name == 'Company Zip' ){
+        return business_potal_code;
+      }
+
+      //Invoice
+      if( widget_autopopulate_field_name == 'Invoice Equipment Cost' ){
+        return inv_equipment_cost > 0 ? inv_equipment_cost : '0.00';
+      }
+
+      if( widget_autopopulate_field_name == 'Invoice Monthly Monitoring Rate' ){
+        return inv_monthly_monitoring > 0 ? inv_monthly_monitoring : '0.00';
+      }
+
+      if( widget_autopopulate_field_name == 'Invoice One Time Activation' ){
+        return inv_program_setup > 0 ? inv_program_setup : '0.00';   
+      }
+
+      if( widget_autopopulate_field_name == 'Invoice Installation Cost' ){
+        return inv_installation_cost > 0 ? inv_installation_cost : '0.00';  
+      }
+
+      if( widget_autopopulate_field_name == 'Invoice Total Due' ){
+        return inv_grand_total > 0 ? inv_grand_total : '0.00';  
+      }
+
+      if( widget_autopopulate_field_name == 'Job Account Number' ){
+        return job_account_number;  
+      }
+
+      if( widget_autopopulate_field_name == 'Job Name' ){
+        return job_name;  
+      }
+
+      if( widget_autopopulate_field_name == 'Job Number' ){
+        return job_number;  
+      }
+
+      if( widget_autopopulate_field_name == 'Job Type' ){
+        return job_type;  
+      }
+    }
+    // Dynamic widget end
     
     if (field_name === "Text" && fieldValue === null ) {
 
@@ -846,12 +970,13 @@ function Signing(hash) {
         $(".signing__signatureInput").val("");
 
         $signatureModal.attr("data-field-id", fieldId);
+        const fid = 0;
 
         if( window.__ismobile ){
-          alert('Sign in mobile');
+          alert('Sign in mobile:'+fid+':'+fieldId+':'+recipient.id);
         }else{
           $signatureModal.modal("show");
-        }        
+        }           
       });
       return $element;
     }
@@ -1238,7 +1363,7 @@ function Signing(hash) {
       text === undefined || field_name === "City"
     ) {
       let { value } = fieldValue || { value: "" };
-      const { specs: fieldSpecs, unique_key } = field;
+      const { specs: fieldSpecs, unique_key, widget_type } = field;
       const specs = fieldSpecs ? JSON.parse(fieldSpecs) : {};
       const { width, is_required = false, is_read_only = false } = specs;
       const isRequired = is_required.toLocaleString() === "true";
@@ -1406,10 +1531,17 @@ function Signing(hash) {
         $input.attr("data-field-id", fieldId);
       }
 
+      //Dynamic Widget auto save class start
+      if( widget_type ){
+        $input.attr("data-field-type", "autoPopulateDynamicWidget");
+        $input.attr("data-field-id", fieldId);
+      }
+      //Dynamic Widget auto save class end
+
       if (field.original_field_name === "Subscriber Name" || field.original_field_name === "City" || field.original_field_name === "State" || field.original_field_name === "Address" || field.original_field_name === "ZIP" || field.original_field_name === "Subscriber Email" || field.original_field_name === "Primary Contact" || field.original_field_name === "Secondary Contact" || field.original_field_name === "Access Password" || field.original_field_name === "County" || field.original_field_name === "Abort Code" || field.original_field_name === 'Social Security Number' || field.original_field_name === 'Date of Birth' || field.original_field_name === 'Panel Type') {
         $input.attr("data-field-type", "autoPopulateCustomerDetails");
         $input.attr("data-field-id", fieldId);
-      }
+      }      
 
       if( field.original_field_name === "Primary Contact Name" || field.original_field_name === "Primary Contact Number" || field.original_field_name === "Primary Contact First Name" || field.original_field_name === "Primary Contact Last Name" ){
         $input.attr("data-field-type", "autoPopulateEmergencyContact");
@@ -2056,6 +2188,21 @@ function Signing(hash) {
         return storeFieldValue({ id: fieldId, value });
       });
 
+      //Dynamic Widget Save Start
+      const $autoPopulateDynamicWidget = $("[data-field-type=autoPopulateDynamicWidget]");
+      const autoPopulateDynamicWidgetPromises = [...$autoPopulateDynamicWidget].map((autoPopulateDynamicWidget) => {
+        const $element = $(autoPopulateDynamicWidget);
+        const fieldId = $element.attr("data-field-id");
+
+        let value = $element.text().trim();
+        if ($element.is("input")) {
+          value = $element.val().trim();
+        }
+
+        return storeFieldValue({ id: fieldId, value });
+      });
+      //Dynamic Widget Save End
+
       const $autoPopulateEmergencyContact = $("[data-field-type=autoPopulateEmergencyContact]");
       const autoPopulateEmergencyContactPromises = [...$autoPopulateEmergencyContact].map((autoPopulateEmergencyContact) => {
         const $element = $(autoPopulateEmergencyContact);
@@ -2149,6 +2296,7 @@ function Signing(hash) {
       await Promise.all(autoPopulateBillingPromises);
       await Promise.all(autoPopulateSolarPromises);
       await Promise.all(autoPopulatePanelTypePromises);
+      await Promise.all(autoPopulateDynamicWidgetPromises);
 
       const response = await fetch(`${prefixURL}/DocuSign/apiComplete`, {
         method: "POST",
