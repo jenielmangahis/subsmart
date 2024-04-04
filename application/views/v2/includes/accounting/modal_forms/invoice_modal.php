@@ -1,3 +1,11 @@
+<style>
+    .bank-type {
+        margin-top: 10px;
+    }
+    .title-header{
+        margin-top: 20px;
+    }
+</style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
     <?php if (!isset($invoice)) : ?>
@@ -6,7 +14,7 @@
             <form onsubmit="updateTransaction(event, this)" id="modal-form" data-href="<?= base_url('accounting/update-transaction/invoice/' . $invoice->id) ?>">
             <?php endif; ?>
             <div id="invoiceModal" class="modal fade modal-fluid nsm-modal" role="dialog" data-bs-backdrop="false">
-             
+
                 <div class="modal-dialog">
                     <!-- Modal content-->
                     <div class="modal-content">
@@ -270,10 +278,16 @@
                                     </div>
 
                                     <div class="row">
-
+                                           <?php
+                                        $string = $number;
+                                        $invoiceNumber = preg_replace_callback('/(\d+)/', function($matches) {
+                                            return str_pad($matches[1] + 1, 9, '0', STR_PAD_LEFT);
+                                        }, $string);
+                                       
+                                           ?>
                                         <div class="col-12 col-md-2">
-                                            <label for="invoice-no">Invoice #</label>
-                                            <input type="text" class="form-control nsm-field mb-2" id="invoice-no" name="invoice_no" value="<?= isset($invoice) ? $invoice->invoice_number : "$invoice_prefix" . str_pad(intval($number) + 1, 9, "0", STR_PAD_LEFT) ?>" disabled>
+                                            <label for="invoice-no">Invoice # </label>
+                                            <input type="text" class="form-control nsm-field mb-2" id="invoice-no" name="invoice_no" value="<?= isset($number) ? $invoiceNumber : "INV-" . str_pad(intval($number) + 1, 9, "0", STR_PAD_LEFT) ?>" disabled>
                                         </div>
                                         <div class="col-12 col-md-2">
                                             <label for="job-no">Job # (optional)
@@ -628,51 +642,53 @@
                                                 <div class="col-12 col-md-4">
                                                     <input type="number" class="form-control nsm-field mb-2" id="deposit-amount" name="deposit_amount" onchange="convertToDecimal(this)" value="<?= isset($invoice) ? $invoice->deposit_request : '0.00' ?>" step=".01">
                                                 </div>
-                                                <div class="col-12">
+                                                <div class="col-12 title-header">
                                                     <h5>Payment Schedule</h5>
                                                     <span class="help help-sm help-block">Split the balance into multiple payment milestones.</span>
                                                     <p><a href="#" id="manage-payment-schedule" style="color:#02A32C;"><i class="bx bx-fw bxs-plus-square" aria-hidden="true"></i> Manage payment schedule </a></p>
                                                 </div>
-                                                <div class="col-12">
+                                                <div class="col-12 title-header">
                                                     <h5>Accepted payment methods</h5>
                                                     <span class="help help-sm help-block">Select the payment methods that will appear on this invoice.</span>
                                                 </div>
-                                                <div class="col-12 col-md-6">
+                                                <div class="col-12 col-md-4 bank-type">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" name="credit_card_payments" value="1" <?= isset($paymentMethods) && in_array('Credit Card', $paymentMethods) || !isset($invoice) ? 'checked' : '' ?> id="credit-card-payments">
                                                         <label for="credit-card-payments" class="form-check-label"><span>Credit Card Payments ()</span></label>
                                                     </div>
-                                                    <span class="help help-sm help-block">Your client can pay your invoice using credit card or bank account online. You will be notified when your client makes a payment and the money will be transferred to your bank account automatically.</span>
+                                                </div>
+                                                <div class="col-12 col-md-11" style="margin-top:8px;">
+                                                    <span class="help help-sm help-block" style="margin-bottom: 10px;">Your client can pay your invoice using credit card or bank account online. You will be notified when your client makes a payment and the money will be transferred to your bank account automatically.</span>
                                                     <div class="float-left mini-stat-img mr-4"><img src="<?= $url->assets ?>frontend/images/credit_cards.png" alt=""></div>
                                                 </div>
                                                 <div class="col-12">
                                                     <span class="help help-sm help-block">Your payment processor is not set up <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal" data-target="#modalNewCustomer">setup payment</a></span>
                                                 </div>
-                                                <div class="col-12">
+                                                <div class="col-12 bank-type">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" name="bank_transfer" value="1" <?= isset($paymentMethods) && in_array('Bank Transfer', $paymentMethods) || !isset($invoice) ? 'checked' : '' ?> id="bank-transfer">
                                                         <label for="bank-transfer" class="form-check-label"><span>Bank Transfer</span></label>
                                                     </div>
                                                 </div>
-                                                <div class="col-12">
+                                                <div class="col-12 bank-type">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" name="instapay" value="1" <?= isset($paymentMethods) && in_array('Instapay', $paymentMethods) || !isset($invoice) ? 'checked' : '' ?> id="instapay-payment">
                                                         <label for="instapay-payment" class="form-check-label"><span>Instapay</span></label>
                                                     </div>
                                                 </div>
-                                                <div class="col-12">
+                                                <div class="col-12 bank-type">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" name="check" value="1" <?= isset($paymentMethods) && in_array('Check', $paymentMethods) || !isset($invoice) ? 'checked' : '' ?> id="check-payment">
                                                         <label for="check-payment" class="form-check-label"><span>Check</span></label>
                                                     </div>
                                                 </div>
-                                                <div class="col-12">
+                                                <div class="col-12 bank-type">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" name="cash" value="1" <?= isset($paymentMethods) && in_array('Cash', $paymentMethods) || !isset($invoice) ? 'checked' : '' ?> id="cash-payment">
                                                         <label for="cash-payment" class="form-check-label"><span>Cash</span></label>
                                                     </div>
                                                 </div>
-                                                <div class="col-12">
+                                                <div class="col-12 bank-type">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" name="deposit" value="1" <?= isset($paymentMethods) && in_array('Deposit', $paymentMethods) || !isset($invoice) ? 'checked' : '' ?> id="deposit-payment">
                                                         <label for="deposit-payment" class="form-check-label"><span>Deposit</span></label>
@@ -803,18 +819,18 @@
                                     <div class="row">
                                         <div class="col-12 col-md-6">
                                             <div class="row">
-                                                <div class="col-12 col-md-4">
-                                                    <h5>Message to Customer</h5>
+                                                <div class="col-12 col-md-12">
+                                                    <h5 class="title-header">Message to Customer</h5>
                                                     <span class="help help-sm help-block">Add a message that will be displayed on the invoice.</span>
                                                     <textarea name="message_to_customer" cols="40" rows="2" class="form-control nsm-field mb-2"><?= isset($invoice) ? $invoice->message_to_customer : 'Thank you for your business.' ?></textarea>
 
-                                                    <h5>Terms &amp; Conditions</h5>
+                                                    <h5 class="title-header">Terms &amp; Conditions</h5>
                                                     <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the invoice.</span>
                                                     <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control nsm-field mb-2"><?= isset($invoice) ? $invoice->terms_and_conditions : '' ?></textarea>
                                                 </div>
                                             </div>
                                             <div class="row">
-                                                <div class="col-12 col-md-6">
+                                                <div class="col-12 col-md-12">
                                                     <div class="attachments">
                                                         <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label>
                                                         <span>Maximum size: 20MB</span>

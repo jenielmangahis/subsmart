@@ -149,10 +149,10 @@
                         </div>
 
                         <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown" id="filter_button" >
                                 <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
-                            <ul class="dropdown-menu dropdown-menu-end table-filter p-3" style="width: max-content">
+                            <ul class="dropdown-menu dropdown-menu-end table-filter p-3" style="width: max-content" id="filter_dropdown_body">
                                 <div class="row">
                                     <div class="col-6">
                                         <label for=" filter-type">Type</label>
@@ -190,8 +190,24 @@
                                                 Statements</option>
                                         </select>
                                     </div>
-                                    <?php if (!in_array($type, ['unbilled-income', 'recently-paid', 'statements'])) { ?>
-                                    <div class="col-6">
+                                    <?php if ($type !== 'unbilled-income') { ?>
+                          
+                          <div class="<?php echo $type === 'recently-paid' ? 'col-6' : 'col-6'; ?>">
+                              <label for="filter-customer">Customer</label>
+                              <select class="nsm-field form-select" name="filter_customer"
+                                  id="filter-customer">
+                                  <?php if (empty($customer)) { ?>
+                                  <option value="all" selected="selected">All</option>
+                                  <?php } else { ?>
+                                  <option value="<?php echo $customer->id; ?>"><?php echo $customer->name; ?>
+                                  </option>
+                                  <?php } ?>
+                              </select>
+                          </div>
+                    
+                      <?php } ?>
+                                    <?php if (!in_array($type, ['unbilled-income', 'statements'])) { ?>
+                                    <div class="col-6" id="status-filter-container">
                                         <label for="filter-status">Status</label>
                                         <select class="nsm-field form-select" name="filter_status" id="filter-status">
                                             <?php switch ($type) {
@@ -300,7 +316,7 @@
                                         </select>
                                     </div>
                                     <?php if ($type !== 'money-received') { ?>
-                                    <div class="col-4">
+                                    <div class="col-6" id="delivery-filter-container">
                                         <label for="filter-delivery-method">Delivery method</label>
                                         <select class="nsm-field form-select" name="filter_delivery_method"
                                             id="filter-delivery-method">
@@ -320,6 +336,9 @@
                                 </div>
                                 <?php } ?>
                                 <?php } ?>
+                                <?php if ($type === 'money-received') { ?>
+                                    </div>
+                                    <?php } ?>
                                 <?php if (!in_array($type, ['unbilled-income', 'recently-paid'])) { ?>
                                 <div class="row">
                                     <div class="col-4">
@@ -385,36 +404,19 @@
                                 </div>
                                 <?php } ?>
                                 <?php if ($type === 'unbilled-income') { ?>
-                                <div class="row">
-                                    <div class="col">
+                         
+                                    <div class="col-6">
                                         <label for="filter-as-of">Unbilled Income As Of</label>
                                         <div class="nsm-field-group calendar">
                                             <input type="text" name="filter_as_of_date" id="filter-as-of"
                                                 class="form-control nsm-field date"
                                                 value="<?php echo date('m/d/Y', strtotime($date)); ?>">
                                         </div>
-                                    </div>
+                       
                                 </div>
                                 <?php } ?>
-                                <?php if ($type !== 'unbilled-income') { ?>
-                          
-                                    <div class="<?php echo $type === 'recently-paid' ? 'col-12' : 'col-6'; ?>">
-                                        <label for="filter-customer">Customer</label>
-                                        <select class="nsm-field form-select" name="filter_customer"
-                                            id="filter-customer">
-                                            <?php if (empty($customer)) { ?>
-                                            <option value="all" selected="selected">All</option>
-                                            <?php } else { ?>
-                                            <option value="<?php echo $customer->id; ?>"><?php echo $customer->name; ?>
-                                            </option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
+                            
                               
-                                <?php } ?>
-                                <?php if ($type == 'recently-paid') { ?>
-                                    </div>
-                                    <?php } ?>
                                 <div class="row mt-3 " id="filter_buttons">
                                     <div class="col-6">
                                         <button type="button" class="nsm-button" id="reset-button">

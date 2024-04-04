@@ -2227,6 +2227,8 @@ SQL;
                     'user_id' => $userId,
                     'user_docfile_recipients_id' => $recipientId,
                     'specs' => $field['specs'],
+                    'widget_type' => $field['widget_type'],
+                    'widget_autopopulate_field_name' => $field['widget_autopopulate_field_name']
                 ]);
             }
 

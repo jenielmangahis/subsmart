@@ -69,6 +69,7 @@ function Signing(hash) {
   }
 
   function getRenderField({ field, recipient }) {
+    console.log(field);
     const { field_name, coordinates, id: fieldId, value: fieldValue, specs, widget_type, widget_autopopulate_field_name } = field;
 
     const { first_name, last_name, mail_add, city, state, zip_code, phone_h, phone_m, email, country, county_name, date_of_birth, ssn

@@ -51,11 +51,11 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer modal-footer-detail">
+            <!-- <div class="modal-footer modal-footer-detail">
                 <div class="button-modal-list">
                     <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Close</button>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
