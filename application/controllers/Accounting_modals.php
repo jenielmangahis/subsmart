@@ -14377,7 +14377,6 @@ class Accounting_modals extends MY_Controller
         {
             $totalPayment += floatval($record->invoice_amount);
         }
-
         $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
         $this->page_data['customer'] = $customer;
         $this->page_data['linkableTransactions'] = $linkableTransactions;
@@ -14389,6 +14388,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['totalPayment'] = $totalPayment;
         $this->page_data['term'] = $term;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Invoice', $invoiceId);
+        $this->page_data['number'] = $this->invoice_model->getlastInsert();
         $this->page_data['ac_tax_rates'] = $this->invoice_model->ac_tax_rates();
         $this->load->view("v2/includes/accounting/modal_forms/invoice_modal", $this->page_data);
     }
