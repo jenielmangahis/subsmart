@@ -7713,6 +7713,14 @@ class Accounting_modals extends MY_Controller
 
     private function sales_receipt($data)
     {
+        if($data['total_amount'] <= 0) {
+            $return['data']    = null;
+            $return['success'] = false;
+            $return['message'] = "Error: Total amount must not contain 0.";
+            return $return;
+            exit;
+        }
+
         $this->form_validation->set_rules('item[]', 'Item', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required');
 
@@ -9188,6 +9196,18 @@ class Accounting_modals extends MY_Controller
         $this->form_validation->set_rules('expiry_date', 'Expiry Date', 'required');
         $this->form_validation->set_rules('estimate_type', 'Estimate Type', 'required');
         $this->form_validation->set_rules('estimate_status', 'Estimate Status', 'required');
+
+        if(isset($data['adjustment_name']) && $data['adjustment_name'] != '') {
+            $this->form_validation->set_rules('adjustment_value', 'Adjustment Value', 'required');
+        }       
+
+        if((isset($data['adjustment_name']) && $data['adjustment_name'] != '') && $data['adjustment_value'] <= 0) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Adjustment value must not contain 0.';    
+            return $return;
+            exit;        
+        }
 
         $return = [];
         if ($this->form_validation->run() === false) {

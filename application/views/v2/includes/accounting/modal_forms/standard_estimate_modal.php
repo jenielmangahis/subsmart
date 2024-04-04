@@ -263,7 +263,7 @@
                                                     <td style="float: right;">
                                                         <div class="row">
                                                             <div class="col-10" style="float: right;">
-                                                                <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="<?=isset($estimate) ? $estimate->adjustment_name : ''?>">
+                                                                <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control standard-estimate-adjustment-name nsm-field" value="<?=isset($estimate) ? $estimate->adjustment_name : ''?>">
                                                             </div>
                                                             <!-- <div class="col-3">
                                                                 <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($estimate) ? number_format(floatval($estimate->adjustment_value), 2, '.', ',') : ''?>">
@@ -275,7 +275,7 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <input style="float: right; width: 75px;" type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($estimate) ? number_format(floatval($estimate->adjustment_value), 2, '.', ',') : ''?>">
+                                                        <input style="float: right; width: 75px;" type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field standard-estimate-adjustment-value adjustment_input_cm_c" disabled onchange="convertToDecimal(this)" value="<?=isset($estimate) ? number_format(floatval($estimate->adjustment_value), 2, '.', ',') : ''?>">
                                                         <!-- <span class="transaction-adjustment">
                                                             <?php if(isset($estimate)) : ?>
                                                                 <?php
@@ -423,6 +423,16 @@
 
 <script>
     $(document).ready(function() {
+
+        $(".standard-estimate-adjustment-name").change(function(){
+            var sales_receipt_adj_name = $('.standard-estimate-adjustment-name').val();
+            var sales_receipt_adj_value = $('.standard-estimate-adjustment-value').val();
+            $('.standard-estimate-adjustment-value').prop("disabled", false); 
+            if(sales_receipt_adj_name == '') {
+                $('.standard-estimate-adjustment-value').prop("disabled", true); 
+            }
+        } );         
+
         $('#modal-help-popover-adjustment').popover({
             placement: 'top',
             html : true, 
