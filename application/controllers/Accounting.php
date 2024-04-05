@@ -8011,6 +8011,7 @@ class Accounting extends MY_Controller
         
 
         $type = $this->input->get('type');
+        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
         $this->page_data['type'] = $type;
         $this->page_data['default_customer_id'] = $default_customer_id;
         $this->page_data['default_customer_name'] = $default_customer_name;
