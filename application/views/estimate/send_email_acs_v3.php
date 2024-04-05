@@ -10,12 +10,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <style>
-    @media (max-width: 550px) {
-        a {
-            min-width: 80% !important;
-        }
-    }
-
+    
+ 
     body {
         color: black;
         font-size: 10px;
@@ -25,7 +21,23 @@
         font-size: 10px;
 
     }
-
+    .message-td{
+        display: flex;
+        width: 100%;
+    }
+    .client_details{
+            text-align: right;
+        }
+ 
+ 
+    .message-term-column{
+        max-width: 400px;
+        margin-right: 300px;
+    }
+    .message-term-column-bottom{
+        display: none;
+     
+    }
     .container {
         width: 100%;
     }
@@ -44,87 +56,107 @@
         height: 40px;
         border: 2px solid red;
     }
+    .estimate_container{
+    text-align: right;
+    }
+    .estimate_date{
+        float: right;
+    }
+    .title-head{
+        display: flex;
+        justify-content:space-between;
+        align-items: start;
+    }
+    .mobile_view_items p{
+        margin-bottom: 0;
+    }
+   
+    .item_type_data{
+        display: none;
+    }
+    .total_column{
+        text-align: start;
+    }
+  .grand_total_column{
+    text-align: start;
+  }
+  .message-option{
+    max-width: 400px;
+    margin-right: 300px;
+  }
 
-    /* table { 
-            width: 750px; 
-            border-collapse: collapse; 
-            margin:50px auto;
-            }
-
-        tr:nth-of-type(odd) { 
-            background: #eee; 
-            }
-
-        th { 
-            background: #3498db; 
-            color: white; 
-            font-weight: bold; 
-            }
-
-        td, th { 
-            padding: 10px; 
-            border: 1px solid #ccc; 
-            text-align: left; 
-            font-size: 18px;
-            } */
-
-    /* 
-        Max width before this PARTICULAR table gets nasty
-        This query will take effect for any screen smaller than 760px
-        and also iPads specifically.
-        */
-    @media only screen and (max-width: 760px),
-    (min-device-width: 768px) and (max-device-width: 1024px) {
+    @media only screen and (max-width: 760px){
 
         table {
             width: 100%;
+      
         }
-
-        /* Force table to not be like tables anymore */
-        table,
-        thead,
-        tbody,
-        th,
-        td,
-        tr {
+        .message-td{
+         flex-direction: column;
+     
+    }
+    .message-term-column{
+        display: none;
+    }
+    .message-term-column-bottom{
+        display: block;
+    }
+    .total_column{
+        text-align: end;
+    }
+    .grand_total_column{
+    text-align: end;
+  }
+      
+  .message-option{
+    max-width: none;
+    margin-right: 0;
+  }
+    }
+    @media (max-width: 550px) {
+        a {
+            min-width: 80% !important;
+        }
+        .transaction_details{
+            flex-direction: column;
+        }
+        .client_details{
+            text-align: left;
+        }
+        .title-head{
+            flex-direction: column;
+            justify-content:center;
+            align-items: center;
+        }
+        .title-head img{
+            margin-bottom: 10px;
+        }
+        .estimate_container{
+            text-align: center;
+            width: 100%;
+        }
+        .estimate_date{
+            float: none;
+            text-align: center;
+          
+        }
+        .estimate_date table{
+            max-width: 200px;
+            margin: auto;
+        }
+        .item_type_data{
             display: block;
         }
-
-        /* Hide table headers (but not display: none;, for accessibility) */
-        thead tr {
-            position: absolute;
-            top: -9999px;
-            left: -9999px;
+        .item_title_data{
+       margin: 0;
         }
-
-        tr {
-            border: 1px solid #ccc;
+        .item_type{
+            display: none;
         }
-
-        td {
-            /* Behave  like a "row" */
-            border: none;
-            border-bottom: 1px solid #eee;
-            position: relative;
-            padding-left: 50%;
+        .item_type_default{
+            display: none;
         }
-
-        td:before {
-            /* Now like a table header */
-            position: absolute;
-            /* Top/left values mimic padding */
-            top: 6px;
-            left: 6px;
-            width: 45%;
-            padding-right: 10px;
-            white-space: nowrap;
-            /* Label the data */
-            content: attr(data-column);
-
-            color: #000;
-            font-weight: bold;
-        }
-
+  
     }
 
     span.invoice-txt {
@@ -143,29 +175,29 @@
                         <div style="padding: 10px;">
                             <div class="">
                                 <div id="printableArea">
-                                    <div style="display:flex;align-items: start; justify-content:space-between">
+                                    <div  class="title-head">
                                         <div>
                                             <!-- <img class="presenter-print-logo" style="max-width: 230px; max-height: 200px;" src="http://nsmartrac.com/assets/dashboard/images/logo.png"> -->
                                             <img src="<?php echo getCompanyBusinessProfileImage(); ?>"
                                                 style="height: 100px;" />
                                         </div>
 
-                                        <div class="col-xl-5 right" style="float: right">
-                                            <div style="text-align: right;">
+                                        <div class="estimate_container">
+                                            <div  class="estimate_title">
                                                 <h5 style="font-weight:bold;color:#6a4a86 ;font-size:20px;margin:0px;">
                                                     ESTIMATE</h5>
                                                 <small
                                                     style="color:#6a4a86;font-size: 10px; font-weight:bold">#<?php echo $estimate_number; ?></small>
                                             </div>
-                                            <div class="" style="float: right;margin-top: 20px;">
-                                                <table style="text-align: right;  font-size: 12px">
+                                            <div class="estimate_date" style="margin-top: 20px;">
+                                                <table style=" font-size: 12px">
                                                     <tr>
-                                                        <td style="text-align: right;">Estimate Date: &emsp;</td>
+                                                        <td>Estimate Date: &emsp;</td>
                                                         <td><?php echo date('F d, Y', strtotime($estimate_date)); ?>
                                                         </td>
                                                     </tr>
                                                     <tr>
-                                                        <td style="text-align: right;">Expiry Date: &emsp;</td>
+                                                        <td>Expiry Date: &emsp;</td>
                                                         <td><?php echo date('F d, Y', strtotime($expiry_date)); ?></td>
                                                     </tr>
                                                 </table>
@@ -174,7 +206,7 @@
                                     </div>
 
                                     <div
-                                        style="display:flex;align-items:start;justify-content: space-between; margin-top: 50px">
+                                      class="transaction_details"   style="display: flex ;align-items:start;justify-content: space-between; margin-top: 50px">
                                         <div class="col-xl-5 left" style="margin-bottom: 33px;">
                                             <span class="fa fa-user-o fa-margin-right"
                                                 style="font-weight:400;font-size: 10px"></span> From <br>
@@ -186,7 +218,7 @@
                                             <span class="">PHONE: <?php echo $phone_number; ?></span>
                                             <!-- </div> -->
                                         </div>
-                                        <div class="col-xl-5 left" style="text-align: right">
+                                        <div class="col-xl-5 left client_details">
                                             <span class="fa fa-user-o fa-margin-right"
                                                 style="font-weight:400;font-size: 10px"></span> To <br>
                                             <p style="font-size:14px;font-weight: 700; margin: 0">
@@ -201,12 +233,21 @@
                                     <br class="clear" />
                                     <?php $grandTotal = 0; ?>
                                     <?php
-$showDiscountColumn = false;
+                                                $showDiscountColumn = false;        
                                             foreach ($items_dataOP1 as $itemData1) {
                                                 if (!empty($itemData1->discount) && $itemData1->discount != 0) {
                                                     $showDiscountColumn = true;
                                                     break;
                                                 }
+
+                                           
+                                            }
+
+                                            foreach  ($items as $itemData){
+                                                if (!empty($itemData->discount) && $itemData->discount != 0) {
+                                                    $showDiscountColumn = true;
+                                                    break;
+                                                } 
                                             }
                                             ?>
                                     <table class="table-print table-items"
@@ -215,14 +256,14 @@ $showDiscountColumn = false;
                                             <tr>
                                                 <th
                                                     style="background: #6a4a86;color: #fff; text-align: start;  padding: 5px 0; width:5%">
-                                                    #
+                                                    &nbsp; # 
                                                 </th>
                                                 <th
                                                     style="background: #6a4a86;color: #fff; text-align: start; padding: 5px 0; width:35%;">
                                                     Items
                                                 </th>
                                                 <th
-                                                    style="background: #6a4a86;color: #fff; text-align: start;  padding: 5px 0;width:12%">
+                                                   class="item_type"  style="background: #6a4a86;color: #fff; text-align: start;  padding: 5px 0;width:12%">
                                                     Item
                                                     Type</th>
                                                 <th
@@ -241,20 +282,27 @@ $showDiscountColumn = false;
                                                     class="text-right">Total</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
+                                
                                         <tbody>
                                             <?php if ($estimate_type == 'Option') { ?>
                                             <tr>
-                                                <td colspan="7" style="padding:15px;">
+                                                <td colspan="6" style="padding:15px;">
                                                     <b>Option 1</b>
                                                 </td>
                                             </tr>
-                                            <?php foreach ($items_dataOP1 as $itemData1) { ?>
+                                            <?php 
+                                             $count = 1;
+                                            foreach ($items_dataOP1 as $itemData1) { 
+                                           
+                                                ?>
+
                                             <tr>
-                                                <td valign="top" style="width:5%; text-align:start;"></td>
-                                                <td valign="top" style="width:35%;"><?php echo $itemData1->title; ?>
+                                                <td valign="top" style="width:5%; text-align:start;"> <?php echo $count++; ?></td>
+                                                <td valign="top" style="width:35%;">
+                                                <p class="item_title_data">  <?php echo $itemData1->title; ?></p>
+                                                  <p class="item_type_data">Item Type :  <?php echo $itemData1->type; ?></p>
                                                 </td>
-                                                <td valign="top" style="width:12%;"><?php echo $itemData1->type; ?></td>
+                                                <td valign="top" style="width:12%;" class="item_type_default"><?php echo $itemData1->type; ?></td>
                                                 <td valign="top" style="width: 12%; text-align: start;">
                                                     <?php echo '$ '.number_format((float) $itemData1->costing, 2); ?>
                                                 </td>
@@ -268,30 +316,30 @@ $showDiscountColumn = false;
                                                 <td valign="top" style="width: 24%; text-align: start;">
                                                     <?php echo $itemData1->qty; ?></td>
                                                 <?php }  ?>
-                                                <td valign="top" style="width: 12%; text-align: start;">
+                                                <td valign="top" style="width: 12%; " class="total_column">
                                                     <?php echo '$ '.number_format((float) $itemData1->total, 2); ?></td>
                                             </tr>
                                             <?php } ?>
 
                                             <tr>
-                                                <td colspan="7">
+                                                <td colspan="6">
                                                     <hr />
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="2">
-                                                    <h5 style="font-size: 16px"><b>Option 1 Message</b></h5>
+                                                <td colspan="6" >
+                                                <div class="message-td">
+                                                <div class="message-term-column">
+                                                 <h5 style="font-size: 16px"><b>Option 1 Message</b></h5>
                                                     <p><?php echo $option_message; ?></p>
-                                                </td>
-                                                <td colspan="2">
-                                                </td>
-                                                <td colspan="4">
+                                                 </div>
+                                           
                                                     <table style="width: 100%">
                                                         <tr>
                                                             <td colspan="4" style="text-align: start;">
                                                                 <p>Subtotal</p>
                                                             </td>
-                                                            <td style="text-align: start;">
+                                                            <td class="grand_total_column">
                                                                 <p>$ <?php echo number_format((float) $sub_total, 2); ?>
                                                                 </p>
                                                             </td>
@@ -300,7 +348,7 @@ $showDiscountColumn = false;
                                                             <td colspan="4" style="text-align: start;">
                                                                 <p>Taxes</p>
                                                             </td>
-                                                            <td style="text-align: start;">
+                                                            <td class="grand_total_column">
                                                                 <p>$ <?php echo number_format((float) $tax1_total, 2); ?>
                                                                 </p>
                                                             </td>
@@ -309,7 +357,7 @@ $showDiscountColumn = false;
                                                             <td colspan="4" style="text-align: start;">
                                                                 <p>Discount</p>
                                                             </td>
-                                                            <td style="text-align: start;">
+                                                            <td class="grand_total_column">
                                                                 <p>$ <?php echo number_format((float) $adjustment_value, 2); ?>
                                                                 </p>
                                                             </td>
@@ -319,7 +367,7 @@ $showDiscountColumn = false;
                                                                 style="text-align: start; background-color: #dad1e0;">
                                                                 <b>Grand Total</b>
                                                             </td>
-                                                            <td style="text-align: start; background-color: #dad1e0;">
+                                                            <td  class="grand_total_column" style=" background-color: #dad1e0;">
                                                                 <b>$
                                                                     <?php echo number_format((float) $option1_total, 2); ?></b>
                                                             </td>
@@ -329,7 +377,7 @@ $showDiscountColumn = false;
                                                             <td colspan="4" style="text-align: start;">
                                                                 Deposit Amount Requested
                                                             </td>
-                                                            <td style="text-align: start;">
+                                                            <td class="grand_total_column">
                                                                 <?php
                                                                                                         $depositAmount = 0;
                                                 $percentage = null;
@@ -350,21 +398,32 @@ $showDiscountColumn = false;
                                                             </td>
                                                         </tr>
                                                     </table>
+                                                    <div class="message-term-column-bottom">
+                                                 <h5 style="font-size: 16px"><b>Option 1 Message</b></h5>
+                                                    <p><?php echo $option_message; ?></p>
+                                                 </div>
+                                                 </div>
                                                 </td>
                                             </tr>
 
 
                                             <tr>
-                                                <td colspan="7" style="padding:15px;">
+                                                <td colspan="6" style="padding:15px;">
                                                     <div style="margin-top:20px"></div><b>Option 2</b>
                                                 </td>
                                             </tr>
-                                            <?php foreach ($items_dataOP2 as $itemData2) { ?>
+                                            <?php 
+                                            $count=1;
+                                            foreach ($items_dataOP2 as $itemData2) { 
+                                           
+                                                ?>
                                             <tr class="table-items__tr">
-                                                <td valign="top" style="width:5%; text-align:start;"></td>
-                                                <td valign="top" style="width:35%;;"><?php echo $itemData2->title; ?>
+                                                <td valign="top" style="width:5%; text-align:start;"><?php  echo $count++; ?></td>
+                                                <td valign="top" style="width:35%;;">
+                                                <p class="item_title_data">  <?php echo $itemData2->title; ?></p>
+                                                  <p class="item_type_data">Item Type :  <?php echo $itemData2->type; ?></p>
                                                 </td>
-                                                <td valign="top" style="width:12%;"><?php echo $itemData2->type; ?></td>
+                                                <td valign="top" style="width:12%;" class="item_type_default"><?php echo $itemData2->type; ?></td>
                                                 <td valign="top" style="width: 12%; text-align: start;">
                                                     <?php echo number_format((float) $itemData2->costing, 2); ?></td>
 
@@ -378,31 +437,30 @@ $showDiscountColumn = false;
                                                     <?php echo $itemData2->qty; ?></td>
                                                 <?php }   ?>
 
-                                                <td valign="top" style="width: 12%; text-align: start;">
+                                                <td valign="top" style="width: 12%; " class="total_column">
                                                     <?php echo number_format((float) $itemData2->total, 2); ?></td>
                                             </tr>
                                             <?php } ?>
+                                            
 
                                             <tr>
-                                                <td colspan="7">
+                                                <td colspan="6">
                                                     <hr />
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="2">
-                                                    <h5 style="font-size: 16px"><b>Option 2 Message</b></h5>
+                                                <td colspan="6">
+                                                <div class="message-td">
+                                                <div class="message-term-column">
+                                              <h5 style="font-size: 16px"><b>Option 2 Message</b></h5>
                                                     <p><?php echo $option2_message; ?></p>
-
-                                                </td>
-                                                <td colspan="2">
-                                                </td>
-                                                <td colspan="4">
+                                              </div>
                                                     <table style="width: 100%">
                                                         <tr>
                                                             <td colspan="4" style="text-align: start;">
                                                                 <p>Subtotal</p>
                                                             </td>
-                                                            <td colspan="2" style="text-align: start;">
+                                                            <td colspan="2" class="grand_total_column">
                                                                 <p>$ <?php echo number_format((float) $sub_total2, 2); ?>
                                                                 </p>
                                                             </td>
@@ -412,7 +470,7 @@ $showDiscountColumn = false;
                                                             <td colspan="4" style="text-align: start;">
                                                                 <p>Discount</p>
                                                             </td>
-                                                            <td style="text-align: start;">
+                                                            <td class="grand_total_column">
                                                                 <p>$ <?php echo number_format((float) $adjustment_value, 2); ?>
                                                                 </p>
                                                             </td>
@@ -421,7 +479,7 @@ $showDiscountColumn = false;
                                                             <td colspan="4" style="text-align: start;">
                                                                 <p>Taxes</p>
                                                             </td>
-                                                            <td style="text-align: start;">
+                                                            <td class="grand_total_column">
                                                                 <p>$ <?php echo number_format((float) $tax2_total, 2); ?>
                                                                 </p>
                                                             </td>
@@ -430,7 +488,7 @@ $showDiscountColumn = false;
                                                             <td colspan="4" style="text-align: start;">
                                                                 <p>Discount</p>
                                                             </td>
-                                                            <td style="text-align: start;">
+                                                            <td class="grand_total_column">
                                                                 <p>$ <?php echo number_format((float) $adjustment_value, 2); ?>
                                                                 </p>
                                                             </td>
@@ -440,7 +498,7 @@ $showDiscountColumn = false;
                                                                 style="text-align: start; background-color: #dad1e0;">
                                                                 <b>Grand Total</b>
                                                             </td>
-                                                            <td style="text-align: start; background-color: #dad1e0;">
+                                                            <td class="grand_total_column" style=" background-color: #dad1e0;">
                                                                 <b>$
                                                                     <?php echo number_format((float) $option2_total, 2); ?></b>
                                                             </td>
@@ -450,7 +508,7 @@ $showDiscountColumn = false;
                                                             <td colspan="4" style="text-align: start;">
                                                                 Deposit Amount Requested
                                                             </td>
-                                                            <td style="text-align: start;">
+                                                            <td class="grand_total_column">
                                                                 <?php
                                                             $depositAmount = 0;
                                                 $percentage = null;
@@ -471,11 +529,18 @@ $showDiscountColumn = false;
                                                             </td>
                                                         </tr>
                                                     </table>
+                                                    <div class="message-term-column-bottom">
+                                              <h5 style="font-size: 16px"><b>Option 2 Message</b></h5>
+                                                    <p><?php echo $option2_message; ?></p>
+                                              </div>
+                                               </div>
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan='2'>
-                                                    <div style="margin-top: 20px">
+                                                <td colspan="5">
+                                                <div class="message-td">
+                                                <div class="message-option" style="margin-top: 20px" >
+                                                <div>
                                                         <h5 style="font-size: 16px"><b>Message</b></h5>
                                                         <p><?php if (!empty($customer_message)) {
                                                             echo $customer_message;
@@ -493,11 +558,7 @@ $showDiscountColumn = false;
                                                             echo $output;
                                                         } ?></p>
                                                     </div>
-
-                                                </td>
-                                                <td colspan="2">
-                                                </td>
-                                                <td colspan="4">
+                                                  </div>
                                                     <table style="width:100%">
                                                         <tr style="text-align:center">
                                                             <td colspan='5'>
@@ -509,10 +570,11 @@ $showDiscountColumn = false;
                                                             </td>
                                                         </tr>
                                                     </table>
-                                                <td>
+                                                    </div>
+                                                    </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="4">
+                                                <td colspan="6">
                                                     <div style="margin-top: 40px;text-align: center">
                                                         <h5 style="font-size: 16px"><b>Instructions</b></h5>
                                                         <p style="font-size: 14px;">
@@ -524,13 +586,13 @@ $showDiscountColumn = false;
                                                             } ?></p>
                                                     </div>
                                                     <div style="margin-top: 20px;text-align: start">
-                                                        <h5 style="font-size:12px: font-weight: 700">Would you like to
+                                                        <h5 style="font-size:12px; font-weight: 700">Would you like to
                                                             proceed with accepting the estimate? </h5>
                                                         <div style="margin-top:20px;text-align: center">
                                                             <a href="<?php echo $urlDecline; ?>"
-                                                                style="display: inline-block;outline: none;cursor: pointer;font-weight: 600;border-radius: 3px;padding: 12px 35px;border: 0;color: #fff;background: #d9534f;line-height: 1.15;font-size: 16px;text-decoration:none;">Reject</a>
+                                                                style="margin-bottom:15px;display: inline-block;outline: none;cursor: pointer;font-weight: 600;border-radius: 3px;padding: 12px 35px;border: 0;color: #fff;background: #d9534f;line-height: 1.15;font-size: 16px;text-decoration:none;">Reject</a>
                                                             <a href="<?php echo $urlApprove; ?>"
-                                                                style="display: inline-block;outline: none;cursor: pointer;font-weight: 600;border-radius: 3px;padding: 12px 35px;border: 0;color: #fff;background: #5cb85c;line-height: 1.15;font-size: 16px;text-decoration:none;">Accept
+                                                                style="margin-bottom:15px; display: inline-block;outline: none;cursor: pointer;font-weight: 600;border-radius: 3px;padding: 12px 35px;border: 0;color: #fff;background: #5cb85c;line-height: 1.15;font-size: 16px;text-decoration:none;">Accept
                                                             </a>
 
                                                         </div>
@@ -545,13 +607,18 @@ $showDiscountColumn = false;
                                             <tr>
                                                 <td colspan="7" style="padding:15px;"><b>Bundle 1</b></td>
                                             </tr>
-                                            <?php foreach ($items_dataBD1 as $itemDatabd1) { ?>
+                                            <?php
+                                            $count = 1;
+                                            foreach ($items_dataBD1 as $itemDatabd1) {
+                                          
+                                                ?>
                                             <tr class="table-items__tr">
-                                                <td valign="top" style="width:5%; text-align:start;"></td>
+                                                <td valign="top" style="width:5%; text-align:start;"><?php echo $count++; ?></td>
                                                 <td valign="top" style="width:35%;">
-                                                    <?php echo $itemDatabd1->title; ?>
+                                                  <p class="item_title_data">  <?php echo $itemDatabd1->title; ?></p>
+                                                  <p class="item_type_data">Item Type :  <?php echo $itemDatabd1->type; ?></p>
                                                 </td>
-                                                <td valign="top" style="width:12%;"><?php echo $itemDatabd1->type; ?>
+                                                <td valign="top" style="width:12%;" class="item_type_default"><?php echo $itemDatabd1->type; ?>
                                                 </td>
                                                 <td valign="top" style="width: 12%; text-align: start;">
                                                     <?php echo '$ '.number_format((float) $itemDatabd1->costing, 2); ?>
@@ -567,7 +634,7 @@ $showDiscountColumn = false;
                                                     <?php echo $itemDatabd1->qty; ?></td>
                                                 <?php } ?>
 
-                                                <td valign="top" style="width: 12%; text-align: start;">
+                                                <td valign="top" style="width: 12%; " class="total_column">
                                                     <?php echo '$ '.number_format((float) $itemDatabd1->total, 2); ?>
                                                 </td>
                                             </tr>
@@ -579,20 +646,19 @@ $showDiscountColumn = false;
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="2">
-                                                    <h5 style="font-size: 16px"><b>Bundle 1 Message</b></h5>
-                                                    <p><?php echo $bundle1_message; ?></p>
-
-                                                </td>
-                                                <td colspan="2">
-                                                </td>
-                                                <td colspan="4">
-                                                    <table style="width: 100%">
+                                                <td colspan="8"  class="grandtotal-td">
+                                                <div class="message-td">
+                                                <div class="message-term-column">
+                                                 <h5 style="font-size: 16px"><b>Bundle 1 Message</b></h5>
+                                                <p><?php echo $bundle1_message; ?></p>
+                                                 </div>
+                                          
+                                                  <table style="width: 100%">
                                                         <tr>
                                                             <td colspan="4" style="text-align: start;">
                                                                 <p>Subtotal</p>
                                                             </td>
-                                                            <td colspan="2" style="text-align: start;">
+                                                            <td colspan="2"  class="grand_total_column">
                                                                 <p>$ <?php echo number_format((float) $sub_total, 2); ?>
                                                                 </p>
                                                             </td>
@@ -601,7 +667,7 @@ $showDiscountColumn = false;
                                                             <td colspan="4" style="text-align: start;">
                                                                 <p>Taxes</p>
                                                             </td>
-                                                            <td style="text-align: start;">
+                                                            <td  class="grand_total_column">
                                                                 <p>$ <?php echo number_format((float) $tax1_total, 2); ?>
                                                                 </p>
                                                             </td>
@@ -610,7 +676,7 @@ $showDiscountColumn = false;
                                                             <td colspan="4" style="text-align: start;">
                                                                 <p>Discount</p>
                                                             </td>
-                                                            <td style="text-align: start;">
+                                                            <td  class="grand_total_column">
                                                                 <p>$ <?php echo number_format((float) $adjustment_value, 2); ?>
                                                                 </p>
                                                             </td>
@@ -620,7 +686,7 @@ $showDiscountColumn = false;
                                                                 style="text-align: start; background-color: #dad1e0;">
                                                                 <b>Grand Total</b>
                                                             </td>
-                                                            <td style="text-align: start; background-color: #dad1e0;">
+                                                            <td   class="grand_total_column" style=" background-color: #dad1e0;">
                                                                 <b>$
                                                                     <?php echo number_format((float) $bundle1_total, 2); ?></b>
                                                             </td>
@@ -630,7 +696,7 @@ $showDiscountColumn = false;
                                                             <td colspan="4" style="text-align: start;">
                                                                 Deposit Amount Requested
                                                             </td>
-                                                            <td style="text-align: start;">
+                                                            <td  class="grand_total_column">
                                                                 <?php
                                                             $depositAmount = 0;
                                                 $percentage = null;
@@ -651,7 +717,15 @@ $showDiscountColumn = false;
                                                             </td>
                                                         </tr>
                                                     </table>
+                                                    <div class="message-term-column-bottom">
+                                                 <h5 style="font-size: 16px"><b>Bundle 1 Message</b></h5>
+                                                <p><?php echo $bundle1_message; ?></p>
+                                                 </div>
+                                                </div>
+                                           
                                                 </td>
+                                            
+                                                
 
                                             </tr>
 
@@ -663,12 +737,18 @@ $showDiscountColumn = false;
                                                     <div style="margin-top:20px"></div><b>Bundle 2</b>
                                                 </td>
                                             </tr>
-                                            <?php foreach ($items_dataBD2 as $itemDatabd2) { ?>
+                                            <?php
+                                            $count= 1;
+                                            foreach ($items_dataBD2 as $itemDatabd2) { 
+                                             
+                                                ?>
                                             <tr class="table-items__tr">
-                                                <td valign="top" style="width:5%; text-align:start;"></td>
-                                                <td valign="top" style="width:35%;"><?php echo $itemDatabd2->title; ?>
+                                                <td valign="top" style="width:5%; text-align:start;"><?php echo  $count++; ?></td>
+                                                <td valign="top" style="width:35%;">
+                                                <p class="item_title_data">  <?php echo $itemDatabd2->title; ?></p>
+                                                  <p class="item_type_data">Item Type :  <?php echo $itemDatabd2->type; ?></p>
                                                 </td>
-                                                <td valign="top" style="width:12%;"><?php echo $itemDatabd2->type; ?>
+                                                <td valign="top" style="width:12%;" class="item_type_default"><?php echo $itemDatabd2->type; ?>
                                                 </td>
                                                 <td valign="top" style="width: 12%; text-align: start;">
                                                     <?php echo '$ '.number_format((float) $itemDatabd2->costing, 2); ?>
@@ -684,7 +764,7 @@ $showDiscountColumn = false;
                                                     <?php echo $itemDatabd2->qty; ?></td>
                                                 <?php }  ?>
 
-                                                <td valign="top" style="width: 12%; text-align: start;">
+                                                <td valign="top" style="width: 12%; " class="total_column">
                                                     <?php echo '$ '.number_format((float) $itemDatabd2->total, 2); ?>
                                                 </td>
                                             </tr>
@@ -696,21 +776,19 @@ $showDiscountColumn = false;
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="2">
-                                                    <h5 style="font-size: 16px"> <b>Bundle 2 Message</b></h5>
+                                                <td colspan="8" class="grandtotal-td">
+                                                <div class="message-td">
+                                                <div class="message-term-column">
+                                                 <h5 style="font-size: 16px"> <b>Bundle 2 Message</b></h5>
                                                     <p><?php echo $bundle2_message; ?></p>
-
-                                                </td>
-                                                <td colspan="2">
-
-                                                </td>
-                                                <td colspan="4">
-                                                    <table style="width: 100%">
+                                                 </div>
+                                                       
+                                                 <table style="width: 100%">
                                                         <tr>
                                                             <td colspan="4" style="text-align: start;">
                                                                 <p>Subtotal</p>
                                                             </td>
-                                                            <td style="text-align: start;">
+                                                            <td  class="grand_total_column">
                                                                 <p>$ <?php echo number_format((float) $sub_total2, 2); ?>
                                                                 </p>
                                                             </td>
@@ -719,7 +797,7 @@ $showDiscountColumn = false;
                                                             <td colspan="4" style="text-align: start;">
                                                                 <p>Taxes</p>
                                                             </td>
-                                                            <td style="text-align: start;">
+                                                            <td  class="grand_total_column">
                                                                 <p>$ <?php echo number_format((float) $tax2_total, 2); ?>
                                                                 </p>
                                                             </td>
@@ -728,7 +806,7 @@ $showDiscountColumn = false;
                                                             <td colspan="4" style="text-align: start;">
                                                                 <p>Discount</p>
                                                             </td>
-                                                            <td style="text-align: start;">
+                                                            <td  class="grand_total_column" >
                                                                 <p>$ <?php echo number_format((float) $adjustment_value, 2); ?>
                                                                 </p>
                                                             </td>
@@ -738,7 +816,7 @@ $showDiscountColumn = false;
                                                                 style="text-align: start; background-color: #dad1e0;">
                                                                 <b>Grand Total</b>
                                                             </td>
-                                                            <td style="text-align: start; background-color: #dad1e0;">
+                                                            <td  class="grand_total_column" style="background-color: #dad1e0;">
                                                                 <b>$
                                                                     <?php echo number_format((float) $bundle2_total, 2); ?></b>
                                                             </td>
@@ -748,7 +826,7 @@ $showDiscountColumn = false;
                                                             <td colspan="4" style="text-align: start;">
                                                                 Deposit Amount Requested
                                                             </td>
-                                                            <td style="text-align: start;">
+                                                            <td  class="grand_total_column">
                                                                 <?php
                                                             $depositAmount = 0;
                                                 $percentage = null;
@@ -769,11 +847,20 @@ $showDiscountColumn = false;
                                                             </td>
                                                         </tr>
                                                     </table>
+                                                    <div class="message-term-column-bottom">
+                                                 <h5 style="font-size: 16px"><b>Bundle 1 Message</b></h5>
+                                                <p><?php echo $bundle2_message; ?></p>
+                                                 </div>
+                                                </div>
+                                               </div>
                                                 </td>
+                                              
                                             </tr>
                                             <tr>
-                                                <td colspan='2'>
-                                                    <div style="margin-top: 20px">
+                                                <td colspan='8'>
+                                                  <div class="message-td">
+                                                  <div style="margin-top: 20px" class="message-term-column">
+                                                  <div>
                                                         <h5 style="font-size: 16px"><b>Message</b></h5>
                                                         <p><?php if (!empty($customer_message)) {
                                                             echo $customer_message;
@@ -791,12 +878,8 @@ $showDiscountColumn = false;
                                                             echo $output;
                                                         } ?></p>
                                                     </div>
-
-                                                </td>
-                                                <td colspan="2">
-                                                </td>
-                                                <td colspan="4">
-                                                    <table style="width:100%">
+                                                  </div>
+                                                  <table style="width:100%">
                                                         <tr style="text-align:center">
                                                             <td colspan='5'>
                                                                 <div style="margin-top: 60px">
@@ -807,10 +890,12 @@ $showDiscountColumn = false;
                                                             </td>
                                                         </tr>
                                                     </table>
-                                                <td>
+
+                                                </td>
+                                             
                                             </tr>
                                             <tr>
-                                                <td colspan="4">
+                                                <td colspan="8">
                                                     <div style="margin-top: 40px;text-align: center">
                                                         <h5 style="font-size: 16px"><b>Instructions</b></h5>
                                                         <p style="font-size:14px"><?php if (!empty($instructions)) { ?>
@@ -821,11 +906,11 @@ $showDiscountColumn = false;
                                                             } ?></p>
                                                     </div>
                                                     <div style="margin-top: 20px;text-align: start">
-                                                        <h5 style="font-size:12px: font-weight: 700">Would you like to
+                                                        <h5 style="font-size:12px; font-weight: 700">Would you like to
                                                             proceed with accepting the estimate? </h5>
                                                         <div style="margin-top:20px;text-align: center">
                                                             <a href="<?php echo $urlDecline; ?>"
-                                                                style="display: inline-block;outline: none;cursor: pointer;font-weight: 600;border-radius: 3px;padding: 12px 35px;border: 0;color: #fff;background: #d9534f;line-height: 1.15;font-size: 16px;text-decoration:none;">Reject</a>
+                                                                style=" margin-bottom: 15px; display: inline-block;outline: none;cursor: pointer;font-weight: 600;border-radius: 3px;padding: 12px 35px;border: 0;color: #fff;background: #d9534f;line-height: 1.15;font-size: 16px;text-decoration:none;">Reject</a>
                                                             <a href="<?php echo $urlApprove; ?>"
                                                                 style="display: inline-block;outline: none;cursor: pointer;font-weight: 600;border-radius: 3px;padding: 12px 35px;border: 0;color: #fff;background: #5cb85c;line-height: 1.15;font-size: 16px;text-decoration:none;">Accept
                                                             </a>
@@ -838,11 +923,12 @@ $showDiscountColumn = false;
 
 
                                             <?php } else { ?>
-                                            <?php foreach ($items as $itemData) { ?>
+                                            <?php  $count= 1; foreach ($items as $itemData) { ?>
                                             <tr class="table-items__tr">
-                                                <td valign="top" style="width:5%; text-align:start;"></td>
-                                                <td valign="top" style="width:35%;"><?php echo $itemData->title; ?></td>
-                                                <td valign="top" style="width:12%;"><?php echo $itemData->type; ?></td>
+                                                <td valign="top" style="width:5%; text-align:start;">&nbsp;&nbsp;<?php echo $count++; ?></td>
+                                                <td valign="top" style="width:35%;"><p class="item_title_data"><?php echo $itemData->title; ?></p>
+                                            <p class="item_type_data"><span>Item Type : </span><?php echo $itemData->type; ?></p></td>
+                                                <td valign="top" style="width:12%;" class="item_type_default"><?php echo $itemData->type; ?></td>
                                                 <td valign="top" style="width: 12%; text-align: start;">
                                                     <?php echo number_format((float) $itemData->iCost, 2); ?></td>
 
@@ -856,10 +942,12 @@ $showDiscountColumn = false;
                                                     <?php echo $itemData->qty; ?></td>
                                                 <?php } ?>
 
-                                                <td valign="top" style="width: 12%; text-align: start;">
+                                                <td valign="top" style="width: 12%;" class="total_column">
                                                     <?php echo number_format((float) $itemData->iTotal, 2); ?></td>
                                             </tr>
+                                      
                                             <?php } ?>
+                                    
 
                                             <tr>
                                                 <td colspan="7">
@@ -868,8 +956,10 @@ $showDiscountColumn = false;
                                             </tr>
                                             <tr>
 
-                                                <td colspan="2">
-                                                    <div>
+                                                <td colspan="8" >
+                                                <div class="message-td">
+                                                <div class="message-term-column">
+                                                  <div>
                                                         <h5 style="font-size: 16px"><b>Message</b></h5>
                                                         <p><?php if (!empty($customer_message)) {
                                                             echo $customer_message;
@@ -887,17 +977,17 @@ $showDiscountColumn = false;
                                                             echo $output;
                                                         } ?></p>
                                                     </div>
+                                                  </div>
 
-                                                </td>
-                                                <td colspan="2">
-                                                </td>
-                                                <td colspan="4">
+                                              
+
+                                   
                                                     <table style="width: 100%">
                                                         <tr>
                                                             <td colspan="4" style="text-align: start;">
                                                                 <p>Subtotal</p>
                                                             </td>
-                                                            <td style="text-align: start;">
+                                                            <td  class="grand_total_column">
                                                                 <p>$ <?php echo number_format((float) $sub_total, 2); ?>
                                                                 </p>
                                                             </td>
@@ -906,7 +996,7 @@ $showDiscountColumn = false;
                                                             <td colspan="4" style="text-align: start;">
                                                                 <p>Taxes</p>
                                                             </td>
-                                                            <td colspan="2" style="text-align: start;">
+                                                            <td colspan="2"  class="grand_total_column">
                                                                 <p>$ <?php echo number_format((float) $tax1_total, 2); ?>
                                                                 </p>
                                                             </td>
@@ -915,7 +1005,7 @@ $showDiscountColumn = false;
                                                             <td colspan="4" style="text-align: start;">
                                                                 <p>Discount</p>
                                                             </td>
-                                                            <td colspan="2" style="text-align: start;">
+                                                            <td colspan="2"  class="grand_total_column">
                                                                 <p>$ <?php echo number_format((float) $adjustment_value, 2); ?>
                                                                 </p>
                                                             </td>
@@ -925,8 +1015,8 @@ $showDiscountColumn = false;
                                                                 style="text-align: start; background-color: #dad1e0;">
                                                                 <p><b>Grand Total</b></p>
                                                             </td>
-                                                            <td colspan="2"
-                                                                style="text-align: start; background-color: #dad1e0;">
+                                                            <td colspan="2" class="grand_total_column"
+                                                                style="background-color: #dad1e0;">
                                                                 <p><b>$
                                                                         <?php echo number_format((float) $grand_total, 2); ?></b>
                                                                 </p>
@@ -938,7 +1028,7 @@ $showDiscountColumn = false;
                                                             <td colspan="4" style="text-align: start;">
                                                                 <p>Deposit Amount Requested</p>
                                                             </td>
-                                                            <td colspan="2" style="text-align: start;">
+                                                            <td colspan="2" class="grand_total_column">
                                                                 <?php
                                                                         $depositAmount = 0;
                                                 $percentage = null;
@@ -970,11 +1060,33 @@ $showDiscountColumn = false;
 
                                                     </table>
 
-                                                <td>
+                                                    <div class="message-term-column-bottom">
+                                                  <div>
+                                                        <h5 style="font-size: 16px"><b>Message</b></h5>
+                                                        <p><?php if (!empty($customer_message)) {
+                                                            echo $customer_message;
+                                                        } else {
+                                                            $output = 'If you have any questions or need more information, feel free to contact us at <b style="font-size: 10px; color:#6a4a86">'.formatPhoneNumber($business->phone_number).'';
+                                                            echo $output;
+                                                        } ?></p>
+                                                    </div>
+                                                    <div style="margin-top: 20px">
+                                                        <h5 style="font-size: 16px"><b>Terms</b></h5>
+                                                        <p><?php if (!empty($terms_conditions)) {
+                                                            echo $terms_conditions;
+                                                        } else {
+                                                            $output = 'This document is strictly <span style="color:#6a4a86">private, confidential </span> and <span style="color:#6a4a86">personal</span> to its recipients and should not be copied, distributed, or reproduced in whole or in part, nor passed to any third party.  This estimate is based on available information at the time of estimation and is subject to change based on unforeseen circumstances or additional requirements.';
+                                                            echo $output;
+                                                        } ?></p>
+                                                    </div>
+                                                  </div>
+                                                </div>
+
+                                           
 
                                             </tr>
                                             <tr>
-                                                <td colspan="4">
+                                                <td colspan="8">
                                                     <div style="margin-top: 20px;text-align: center">
                                                         <h5 style="font-size: 16px"><b>Instructions</b></h5>
                                                         <p style="font-size: 14px">
@@ -986,11 +1098,11 @@ $showDiscountColumn = false;
                                                             } ?></p>
                                                     </div>
                                                     <div style="margin-top: 20px;text-align: start">
-                                                        <h5 style="font-size:12px: font-weight: 700">Would you like to
+                                                        <h5 style="font-size:12px; font-weight: 700">Would you like to
                                                             proceed with accepting the estimate? </h5>
-                                                        <div style="margin-top:20px;text-align: center">
+                                                        <div style="margin-top:20px;text-align: center; ">
                                                             <a href="<?php echo $urlDecline; ?>"
-                                                                style="display: inline-block;outline: none;cursor: pointer;font-weight: 600;border-radius: 3px;padding: 12px 35px;border: 0;color: #fff;background: #d9534f;line-height: 1.15;font-size: 16px;text-decoration:none;">Reject</a>
+                                                                style="margin-bottom:15px; display: inline-block;outline: none;cursor: pointer;font-weight: 600;border-radius: 3px;padding: 12px 35px;border: 0;color: #fff;background: #d9534f;line-height: 1.15;font-size: 16px;text-decoration:none;">Reject</a>
                                                             <a href="<?php echo $urlApprove; ?>"
                                                                 style="display: inline-block;outline: none;cursor: pointer;font-weight: 600;border-radius: 3px;padding: 12px 35px;border: 0;color: #fff;background: #5cb85c;line-height: 1.15;font-size: 16px;text-decoration:none;">Accept
                                                             </a>
