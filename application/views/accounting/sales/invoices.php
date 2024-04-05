@@ -123,11 +123,11 @@
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="send">Send</a></li>
+                                <!-- <li><a class="dropdown-item disabled" href="javascript:void(0);" id="send">Send</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="send-reminder">Send reminder</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="print">Print</a></li>
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="print-packing-slip">Print packing slip</a></li>
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="delete">Delete</a></li>
+                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="print-packing-slip">Print packing slip</a></li> -->
+                                <li><a class="dropdown-item invoice-delete disabled" href="javascript:void(0);" id="delete">Delete</a></li>
                             </ul>
                         </div>
 
@@ -184,6 +184,7 @@
                         </div>
                     </div>
                 </div>
+                <form id="frm-invoices" method="POST">
                 <table class="nsm-table" id="invoices-table">
                     <thead>
                         <tr>
@@ -208,7 +209,7 @@
                         <tr>
                             <td>
                                 <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox">
+                                    <input class="form-check-input select-one table-select" name="invoices[]" value="<?= $invoice->id; ?>" type="checkbox">
                                 </div>
                             </td>
                             <td>
@@ -308,6 +309,7 @@
 						<?php endif; ?>
                     </tbody>
                 </table>
+                </form>
             </div>
         </div>
     </div>
@@ -320,13 +322,18 @@ $(function(){
 
         var count_rows_list_check = $('.select-all').filter(':checked').length;
         if(count_rows_list_check > 0) {
-            $(".dropdown-send").removeClass("disabled");
-            $(".dropdown-print").removeClass("disabled");
-            $(".dropdown-delete").removeClass("disabled");
+            $(".invoice-delete").removeClass("disabled");
         } else {
-            $(".dropdown-send").addClass("disabled");
-            $(".dropdown-delete").addClass("disabled");
-            $(".dropdown-print").addClass("disabled");
+            $(".invoice-delete").addClass("disabled");
+        }           
+    });
+
+    $(".select-one").click(function(){
+        var count_rows_list_check = $('.select-one').filter(':checked').length;
+        if(count_rows_list_check > 0) {
+            $(".invoice-delete").removeClass("disabled");
+        } else {
+            $(".invoice-delete").addClass("disabled");
         }           
     });
 
@@ -340,6 +347,47 @@ $(function(){
                 $($(this).find('td')[index]).show();
             } else {
                 $($(this).find('td')[index]).hide();
+            }
+        });
+    });
+
+    $('.invoice-delete').on('click', function(){
+        Swal.fire({            
+            html: "Proceed with deleting selected rows?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                var url = base_url + "accounting/invoices/delete-selected";
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: $('#frm-invoices').serialize(),
+                    dataType: 'json',
+                    beforeSend: function(data) {
+                        
+                    },
+                    success: function(data) {                                                
+                        Swal.fire({                        
+                            text: "Invoices was successfully updated",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //if (result.value) {
+                                location.reload();
+                            //}
+                        });                                         
+                    },
+                    complete : function(){
+                        
+                    },
+                    error: function(e) {
+                        console.log(e);
+                    }
+                });
             }
         });
     });
