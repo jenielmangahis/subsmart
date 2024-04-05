@@ -1896,11 +1896,21 @@ class Estimate extends MY_Controller
 
     public function email_preview()
     {
+        //standard
         // $id = 30694;
         // $wo_id = 249;
+        
+        // $id= 30684;
+        // $wo_id= 249;
+    //options
+    $id = 30684;
+    $wo_id = 251;
+        //bundle
+        // $id=30684;
+        // $wo_id= 250;
 
-        $id = 30694;
-        $wo_id = 251;
+        // $id = 30694;
+        // $wo_id = 251;
         $urlLogo = null;
         $this->load->helper(['url', 'hashids_helper']);
 

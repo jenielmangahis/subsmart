@@ -13486,14 +13486,14 @@ const findCustByInvoiceNo = () => {
             if (res.success) {
                 $('#receivePaymentModal #customer').append(`<option value="${res.customer_id}" selected>${res.customer_name}</option>`).trigger('change');
             } else {
-                $('#receivePaymentModal #invoice-no').addClass('border-danger');                
+                $('#receivePaymentModal #invoice-no').addClass('border-danger');
                 Swal.fire({
                     title: 'Invoice',
                     text: 'No Records Found',
                     icon: 'error',
                     showCancelButton: false,
-                    confirmButtonText: 'Okay'  
-                });             
+                    confirmButtonText: 'Okay'
+                });
             }
         }
     });
@@ -13593,12 +13593,10 @@ const loadCustomerInvoices = () => {
     data.set('from_date', ($('#receivePaymentModal #invoices-from').attr('data-applied') !== undefined) ? $('#receivePaymentModal #invoices-from').attr('data-applied') : '');
     data.set('to_date', ($('#receivePaymentModal #invoices-to').attr('data-applied') !== undefined) ? $('#receivePaymentModal #invoices-to').attr('data-applied') : '');
     data.set('overdue', ($('#receivePaymentModal #overdue-invoices-only').attr('data-applied') !== undefined) ? $('#receivePaymentModal #overdue-invoices-only').attr('data-applied') : '');
-    
-    var customerId = $('#receivePaymentModal #customer').val() || 'Empty Data';
-      var url = `/accounting/get-customer-invoices/${customerId}`;
+
     $.ajax({
-        
-        url: url,
+
+        url: `/accounting/get-customer-invoices/${$('#receivePaymentModal #customer').val() || 'get-customer-invoices'}`,
         data: data,
         type: 'post',
         processData: false,
@@ -13641,7 +13639,6 @@ const loadCustomerInvoices = () => {
         }
     });
 }
-
 
 const loadCustomerCredits = () => {
     var data = new FormData();
