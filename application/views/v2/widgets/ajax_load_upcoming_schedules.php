@@ -289,9 +289,21 @@
                         <td style="vertical-align: text-top;padding-top: 16px;">
                             <label class="content-title" style="cursor: pointer;margin-bottom: 11px;font-size: 17px;">
                                 <?php if( trim($schedule_tags) != '' ){ ?>
-                                    <?= $schedule_number . ' : ' . trim($schedule_type) . ', ' . trim($schedule_tags); ?> 
+                                    <?php 
+                                        if( trim($schedule_type != '')  ){
+                                            echo $schedule_number . ' : ' . trim($schedule_type) . ', ' . trim($schedule_tags);
+                                        }else{
+                                            echo $schedule_number . ' : ' . trim($schedule_tags);
+                                        }
+                                    ?>
                                 <?php }else{ ?>
-                                    <?= $schedule_number . ' : ' . trim($schedule_type); ?> 
+                                    <?php 
+                                        if( trim($schedule_type != '')  ){
+                                            echo $schedule_number . ' : ' . trim($schedule_type);
+                                        }else{
+                                            echo $schedule_number;
+                                        }
+                                    ?>                                    
                                 <?php } ?>                                    
                             </label>
                             <?php if( $is_appointment_event == 0 ){ ?>
