@@ -1700,3 +1700,6 @@ $route['esign_v2/_delete_widget'] = 'Esign_v2/ajax_delete_widget';
 $route['esign_v2/_undo_delete_widget'] = 'Esign_v2/ajax_restore_widget';
 $route['esign_v2/_trash_widgets'] = 'Esign_v2/ajax_trash_widgets';
 $route['esign_v2/_restore_widget'] = 'Esign_v2/ajax_restore_widget';
+
+//Accounting Invoices
+$route['accounting/invoices/delete-selected'] = 'Accounting/ajax_invoice_delete_selected';
