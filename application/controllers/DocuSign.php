@@ -247,6 +247,10 @@ class DocuSign extends MYF_Controller
                 continue;
             }
 
+            if( $field->widget_type == 'dynamic-widget' ){
+                continue;
+            }
+
             $specs = json_decode($field->specs, true);
             if (!array_key_exists('auto_populate_with', $specs)) {
                 continue;
@@ -555,7 +559,7 @@ class DocuSign extends MYF_Controller
         $autoPopulateData['invoices'] = $filtered_invoice;
 
         #emergency primary contact
-        $this->db->select('first_name AS emergency_primary_contact_fname, last_name AS emergency_primary_contact_lname, phone AS emergency_primary_contact_phone');
+        $this->db->select('first_name AS emergency_primary_contact_fname, last_name AS emergency_primary_contact_lname, phone AS emergency_primary_contact_phone, relation AS emergency_primary_contact_relation');
         $this->db->where('customer_id', $customer_id);
         $this->db->order_by('id', 'ASC');
         $emergencyPrimaryContact = $this->db->get('contacts')->row();
@@ -563,7 +567,8 @@ class DocuSign extends MYF_Controller
             $contacts_accessKeys = [
                 'emergency_primary_contact_fname',
                 'emergency_primary_contact_lname',
-                'emergency_primary_contact_phone'
+                'emergency_primary_contact_phone',
+                'emergency_primary_contact_relation'
             ];
 
             $filteredContacts = array_filter( (array)$emergencyPrimaryContact , function($v) use ($contacts_accessKeys) {
@@ -573,14 +578,15 @@ class DocuSign extends MYF_Controller
             $filteredContacts = [
                 'emergency_primary_contact_fname' => '',
                 'emergency_primary_contact_lname' => '',
-                'emergency_primary_contact_phone' => '',                
+                'emergency_primary_contact_phone' => '',   
+                'emergency_primary_contact_relation' => ''             
             ];
         }
         
         $autoPopulateData['primary_emergency_contacts'] = $filteredContacts;
 
         #emergency secondary contact
-        $this->db->select('first_name AS emergency_secondary_contact_fname, last_name AS emergency_secondary_contact_lname, phone AS emergency_secondary_contact_phone');
+        $this->db->select('first_name AS emergency_secondary_contact_fname, last_name AS emergency_secondary_contact_lname, phone AS emergency_secondary_contact_phone, relation AS emergency_secondary_contact_relation');
         $this->db->where('customer_id', $customer_id);        
         $this->db->order_by('id', 'DESC');
         $emergencySecondaryContact = $this->db->get('contacts')->row();
@@ -589,7 +595,8 @@ class DocuSign extends MYF_Controller
             $contacts_accessKeys = [
                 'emergency_secondary_contact_fname',
                 'emergency_secondary_contact_lname',
-                'emergency_secondary_contact_phone'
+                'emergency_secondary_contact_phone',
+                'emergency_secondary_contact_relation'
             ];
             
             $filteredContacts = array_filter( (array)$emergencySecondaryContact , function($v) use ($contacts_accessKeys) {
@@ -599,7 +606,8 @@ class DocuSign extends MYF_Controller
             $filteredContacts = [
                 'emergency_secondary_contact_fname' => '',
                 'emergency_secondary_contact_lname' => '',
-                'emergency_secondary_contact_phone' => '',                
+                'emergency_secondary_contact_phone' => '',     
+                'emergency_secondary_contact_relation' => ''           
             ];
         }
         
@@ -2217,10 +2225,16 @@ SQL;
                     continue;
                 }
 
+                if( $field['widget_type'] == 'dynamic-widget' ){
+                    $field_name = 'AutoPopulateText';
+                }else{
+                    $field_name = $field['field_name'];
+                }
+
                 array_push($createdRecipientsFields, [
                     'coordinates' => $field['coordinates'],
                     'docfile_id' => $docfileId,
-                    'field_name' => $field['field_name'],
+                    'field_name' => $field_name,
                     'doc_page' => $field['doc_page'],
                     'docfile_document_id' => $matchedDocument['id'],
                     'unique_key ' => uniqid(),
@@ -3858,6 +3872,26 @@ SQL;
                         $pdf->SetFont('Arial', '', 10);                        
                         $pdf->Cell(0, 0, trim($value->value), 0, 0, 'L');
                         //$pdf->Write(0, $field_value);
+                    }
+
+                    if ($field->widget_type === 'dynamic-widget') {
+                        $top = (int) $coordinates->pageTop;
+                        $left = (int) $coordinates->left;                        
+                        if( $left > 790 ){
+                            $left = 774;
+                        }
+
+                        $topAdjusted = (31.8 / 100) * $top;
+                        $topAdjusted = $top - $topAdjusted;
+
+                        $leftAdjusted = (30 / 100) * $left;
+                        $leftAdjusted = $left - $leftAdjusted;                        
+
+                        $pdf->setY($topAdjusted);
+                        $pdf->setX($leftAdjusted);
+                        
+                        $pdf->SetFont('Arial', '', 10);                        
+                        $pdf->Cell(0, 0, trim($value->value), 0, 0, 'L');
                     }
 
                     /*if ($field->field_name === 'Subscriber Name') {

@@ -69,7 +69,7 @@ function Signing(hash) {
   }
 
   function getRenderField({ field, recipient }) {
-    console.log(field);
+    //console.log(field);
     const { field_name, coordinates, id: fieldId, value: fieldValue, specs, widget_type, widget_autopopulate_field_name } = field;
 
     const { first_name, last_name, mail_add, city, state, zip_code, phone_h, phone_m, email, country, county_name, date_of_birth, ssn
@@ -602,19 +602,43 @@ function Signing(hash) {
     }
 
     //Dynamic widget start
-    if( widget_type == 'dynamic-widget' ){
+    if( field_name == 'AutoPopulateText' ){
 
       //Customer
       if( widget_autopopulate_field_name == 'Customer Name' ){
-        return first_name + " " + last_name;
+        if( fieldValue ){
+          if( fieldValue['value'] == '' ){
+            return first_name + " " + last_name;
+          }else{
+            return fieldValue['value'];
+          }  
+        }else{
+          return first_name + " " + last_name;
+        }     
       }
 
       if( widget_autopopulate_field_name == 'Customer Firstname' ){
-        return first_name;
+        if( fieldValue ){
+          if( fieldValue['value'] == '' ){
+            return first_name;
+          }else{
+            return fieldValue['value'];
+          }  
+        }else{
+          return first_name;
+        }      
       }
 
       if( widget_autopopulate_field_name == 'Customer Lastname' ){
-        return last_name;
+        if( fieldValue ){
+          if( fieldValue['value'] == '' ){
+            return last_name;
+          }else{
+            return fieldValue['value'];
+          }  
+        }else{
+          return last_name;
+        }          
       }
 
       if( widget_autopopulate_field_name == 'Customer Email' ){
@@ -1357,11 +1381,13 @@ function Signing(hash) {
     if (decrypted.is_self_signed) {
       text = undefined;
     }
-
+    
+    //console.log('widget' + widget_type);
     if (
       field_name === "Text" ||
       field_name === "TextString" ||
       text === undefined || field_name === "City"
+      || widget_type == 'dynamic-widget'
     ) {
       let { value } = fieldValue || { value: "" };
       const { specs: fieldSpecs, unique_key, widget_type } = field;
@@ -1890,9 +1916,9 @@ function Signing(hash) {
     
     $groupInput.on('change', function(){
       let class_name  = $(this).attr('data-name');
-      if( class_name != 'input-group-text' ){
+      if( class_name != 'input-group-text' && class_name != 'input-group-autopopulatetext' ){
         let input_value = $(this).val();
-        console.log('not same');
+        //console.log('not same');
         $('.'+class_name).val(input_value);
       }      
     });

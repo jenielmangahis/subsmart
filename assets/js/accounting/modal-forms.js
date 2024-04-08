@@ -13647,7 +13647,7 @@ const loadCustomerCredits = () => {
     data.set('to_date', $('#receivePaymentModal #credit-memo-to').attr('data-applied'));
 
     $.ajax({
-        url: base_url + `accounting/get-customer-credits/${$('#receivePaymentModal #customer').val()}`,
+        url: base_url + `/accounting/get-customer-credits/${$('#receivePaymentModal #customer').val()}`,
         data: data,
         type: 'post',
         processData: false,

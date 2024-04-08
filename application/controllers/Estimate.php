@@ -2350,14 +2350,15 @@ class Estimate extends MY_Controller
                 $zip = $lead->zip;
             }
 
-            // <img src="'.(getCompanyBusinessProfileImage() ? getCompanyBusinessProfileImage() : 'assets/images/v2/logo2.png').'" style="margin-top:100px;">
-
+          
+            // <img src="assets/images/v2/logo2.jpg" style="height: 100px" >
             $html = '
             <div style="height: 50px; width: 50px"></div>
             <table style="padding-top:-40px;">
                 <tr>
                     <td >
-                    <img src="assets/images/v2/logo2.jpg" style="height: 100px" >
+                    <img src="'.(getCompanyBusinessProfileImage() ? getCompanyBusinessProfileImage() : 'assets/images/v2/logo2.png').'" style="margin-top:100px;">
+                
                     </td>
                     <td colspan=1></td>
                     <td style="text-align:right;">
@@ -2409,10 +2410,10 @@ class Estimate extends MY_Controller
 
             if ($showDiscountColumn) {
                 $html .= '<td style="background-color: #6a4a86;line-height: 30px; color: #fff; width:12%; text-align: start;"><b style="padding: 10px;">Discount</b></td>
-                <td style="background-color: #6a4a86; line-height: 30px; color: #fff;  width:12%; text-align: start;"><b   style="padding: 10px;">Total</b></td>
+                <td style="background-color: #6a4a86; line-height: 30px; color: #fff;  width:12%; text-align: end;"><b   style="padding: 10px;">Total</b></td>
              </tr><tbody >';
             } else {
-                $html .= '<td style="background-color: #6a4a86; line-height: 30px; color: #fff;  width:24%; text-align: start;"><b   style="padding: 10px;">Total</b></td>
+                $html .= '<td style="background-color: #6a4a86; line-height: 30px; color: #fff;  width:24%; font-weight:bold; text-align: right;">Total&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                 </tr>
                <tbody >';
             }
@@ -2429,10 +2430,10 @@ class Estimate extends MY_Controller
                     <td valign="top" style="line-height: 15px;  black;width:12%;">$ '.number_format($item->iCost, 2).'</td>';
                 if ($showDiscountColumn) {
                     $html .= ' <td valign="top" style="line-height: 15px;  black;width:12%;">$ '.number_format($item->discount, 2).'</td>
-                    <td valign="top" style="line-height: 15px;  black;width:12%;">$ '.number_format($item->iTotal, 2).'</td>
+                    <td valign="top" style="line-height: 15px; text-align: right;  black;width:12%;">$ '.number_format($item->iTotal, 2).'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     </tr>';
                 } else {
-                    $html .= '<td valign="top" style="line-height: 15px;  black;width:24%;">$ '.number_format($item->iTotal, 2).'</td>
+                    $html .= '<td valign="top" style="line-height: 15px; text-align: right; black;width:24%;">$ '.number_format($item->iTotal, 2).'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                     </tr>
                   ';
                 }

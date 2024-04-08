@@ -215,6 +215,51 @@
                 }
             });
 
+            $(document).on('submit', '#sidebar-add-multi-account-form', function(e){
+                e.preventDefault();
+
+                var url  = base_url + 'mycrm/_add_multi_account';
+                var form = $(this);
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    dataType:'json',
+                    data: form.serialize(), 
+                    success: function(data) {
+                        
+                        $('#btn-sidebar-add-multi-account').html('Save'); 
+                        $('#btn-sidebar-add-multi-account').prop("disabled", false);
+
+                        if( data.is_success == 1 ){
+                            $('#sidebar-modal-add-multi-account').modal('hide');
+                            $('#sidebar-multi-email').val('');
+                            $('#sidebar-multi-password').val('');
+
+                            Swal.fire({
+                                html: 'An email was sent to <b>' + data.email + '</b> to activate and verify account.',
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonColor: '#6a4a86',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Ok'
+                            }).then((result) => {
+                                //load_company_multi_account_list();
+                            });    
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: data.msg
+                            });
+                        }
+                    }, beforeSend: function() {
+                        $('#btn-sidebar-add-multi-account').html('<span class="bx bx-loader bx-spin"></span>'); 
+                        //$('#btn-add-multi-account').find("button[type=submit]").prop("disabled", true);    
+                    }
+                });  
+            });
+
             function load_company_multi_account_list(){
                 var url = base_url + "mycrm/_hdr_load_multi_account_list";
                 showLoader($("#hdr-multi-account-list"));        

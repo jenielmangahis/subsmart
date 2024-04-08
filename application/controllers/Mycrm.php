@@ -1172,8 +1172,11 @@ class Mycrm extends MY_Controller {
     	$company_id    = logged('company_id');      	
     	$conditions[]  = ['field' => 'company_multi_accounts.status', 'value' => $this->CompanyMultiAccount_model->statusVerified()];
     	$multiAccounts = $this->CompanyMultiAccount_model->getByAllByCompanyParentId($company_id, $conditions);
+		$profiledata   = $this->business_model->getByCompanyId($company_id);
+
     	$this->page_data['multiAccounts'] = $multiAccounts;    	
     	$this->page_data['loggedMultiAccount'] = $loggedMultiAccount;
+        $this->page_data['profiledata'] = $profiledata;
     	$this->load->view('v2/pages/mycrm/ajax_hdr_load_multi_account_list', $this->page_data);
     }
 
