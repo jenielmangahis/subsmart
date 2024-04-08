@@ -429,7 +429,7 @@ class Estimate extends MY_Controller
         $role = logged('role');
 
         $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
-        $default_terms_condition = '';
+        $default_terms_condition = 'BY SIGNING THIS AGREEMENT, YOU SPECIFICALLY ACKNOWLEDGE AND ACCEPT THE TERMS AND CONDITIONS AND INDICATE YOUR INTENT TO BE LEGALLY BOUND TO THE PROPOSAL AND THIS AGREEMENT. BY SIGNING THIS AGREEMENT, THE CLIENT REPRESENTS THAT THE PERSON SIGNING ON ITS BEHALF HAS THE AUTHORITY TO BIND THE CLIENT TO THIS PROPOSAL AND AGREEMENT';
         $default_customer_message = 'I would be happy to have an opportunity to work with you.';
         if ($setting) {
             if ($setting->residential_message != '') {
@@ -2679,6 +2679,8 @@ class Estimate extends MY_Controller
             $default_next_num = 1;
         }
 
+        $default_terms_condition = 'BY SIGNING THIS AGREEMENT, YOU SPECIFICALLY ACKNOWLEDGE AND ACCEPT THE TERMS AND CONDITIONS AND INDICATE YOUR INTENT TO BE LEGALLY BOUND TO THE PROPOSAL AND THIS AGREEMENT. BY SIGNING THIS AGREEMENT, THE CLIENT REPRESENTS THAT THE PERSON SIGNING ON ITS BEHALF HAS THE AUTHORITY TO BIND THE CLIENT TO THIS PROPOSAL AND AGREEMENT';                
+        $this->page_data['default_terms_condition'] = $default_terms_condition;
         $this->page_data['setting'] = $setting;
         $this->page_data['default_next_num'] = $default_next_num;
         $this->load->view('v2/pages/estimate/settings', $this->page_data);
