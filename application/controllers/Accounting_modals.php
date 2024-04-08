@@ -67,6 +67,7 @@ class Accounting_modals extends MY_Controller
         $this->load->model('accounting_paychecks_model');
         $this->load->model('timesheet_model');
         $this->load->library('form_validation');
+        $this->load->model('General_model', 'general');
     }
 
     public function index($view ="")
@@ -504,6 +505,24 @@ class Accounting_modals extends MY_Controller
                     $this->page_data['est_number'] = $estNum;
                     $this->page_data['ac_tax_rates'] = $this->invoice_model->ac_tax_rates();
                 break;
+            }
+
+            if($view == 'sales_receipt_modal') {
+                $comp_id = logged('company_id');
+                $get_sales_rep = array(
+                    'where' => array(
+                        'users.company_id' => $comp_id
+                    ),
+                    'table' => 'users',
+                    'distinct' => true,
+                    'select' => 'users.id, users.FName, users.LName',
+                    'join' => array(
+                        'table' => 'acs_office',
+                        'statement' => 'users.id = acs_office.fk_sales_rep_office',
+                        'join_as' => 'left',
+                    ),
+                );
+                $this->page_data['sales_rep'] = $this->general->get_data_with_param($get_sales_rep);                
             }
 
             $this->load->view("v2/includes/accounting/modal_forms/". $view, $this->page_data);
@@ -7771,11 +7790,15 @@ class Accounting_modals extends MY_Controller
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
+            $return['message'] = 'Error: Please check your form; some fields are required.';
         } elseif (!isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
+        }elseif(!isset($data['email'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Email is required.';
         } else {
             $salesReceiptData = [
                 'company_id' => logged('company_id'),
@@ -11232,6 +11255,9 @@ class Accounting_modals extends MY_Controller
             case 'term' :
                 $return = $this->get_terms_choices($return, $search);
             break;
+            case 'sales-representatives' :
+                $return = $this->get_sales_representatives($return, $search);
+            break;
             case 'vendor-expense-account' :
                 $accountTypes = [
                     'Cost of Goods Sold',
@@ -11809,9 +11835,6 @@ class Accounting_modals extends MY_Controller
     {
         $customers = $this->accounting_customers_model->getAllByCompany();
        
-    
-
-
         if(!isset($choices['results'])) {
             $choices['results'] = [];
         }
@@ -11887,6 +11910,29 @@ class Accounting_modals extends MY_Controller
         }
 
         return $choices;
+    }
+
+    private function get_sales_representatives($choices, $search = null, $field)
+    {
+        /**
+         * Note:
+         *   Todo: fetching of correct sales representative values
+         */
+
+        /*$get_sales_rep = array(
+            'where' => array(
+                'users.company_id' => $comp_id
+            ),
+            'table' => 'users',
+            'distinct' => true,
+            'select' => 'users.id, users.FName, users.LName',
+            'join' => array(
+                'table' => 'acs_office',
+                'statement' => 'users.id = acs_office.fk_sales_rep_office',
+                'join_as' => 'left',
+            ),
+        );
+        $this->page_data['sales_rep'] = $this->general->get_data_with_param($get_sales_rep);*/
     }
 
     private function get_employee_choices($choices, $search = null, $field)
