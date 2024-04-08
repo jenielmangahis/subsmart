@@ -8,6 +8,7 @@
     width: 74%;
 } 
 </style>
+<?php $is_main = 1; ?>
 <?php if( $multiAccounts ){ ?>
     <ul id="hdr-list-multi-accounts" class="mt-3">
         <?php if( $loggedMultiAccount['multi_account_parent_company_id'] > 0 ){ ?>
@@ -22,6 +23,7 @@
                     <span class="hdr-multi-company-name">Switch Back to <b><?= $hdrCompanyData->business_name; ?></b></span>
                 </a>
             </li>
+            <?php $is_main = 0; ?>
         <?php } ?>
         <?php foreach($multiAccounts as $account){ ?>
             <li>
@@ -30,7 +32,12 @@
                     <span class="hdr-multi-company-name"><?= $account->company_name; ?></span>
                 </a>
             </li>
-        <?php } ?>        
+        <?php } ?>   
+        <?php if( $is_main == 1 ){ ?>
+            <li>
+                <a class="nsm-button default" id="btn-quick-link-account" href="javascript:void(0);"><i class='bx bx-plus-circle'></i> Link Account</a>
+            </li>     
+        <?php } ?>
     </ul>
 <?php }else{ ?>
     <?php if( $loggedMultiAccount['multi_account_parent_company_id'] > 0 ){ ?>
@@ -46,6 +53,12 @@
                     <span class="hdr-multi-company-name">Switch Back to <b><?= $hdrCompanyData->business_name; ?></b></span>
                 </a>
             </li>
+            <?php $is_main = 0; ?>
+            <?php if( $is_main == 1 ){ ?>
+                <li>
+                    <a class="nsm-button default" id="btn-quick-link-account" href="javascript:void(0);"><i class='bx bx-plus-circle'></i> Link Account</a>
+                </li>     
+            <?php } ?>
         </ul>
     <?php }else{ ?>
         <div class="alert alert-primary" role="alert" style="margin-top:18px;background-color:#dad1e0 !important;">
@@ -53,8 +66,14 @@
         </div>
     <?php } ?>    
 <?php } ?>
+<?php include viewPath('v2/includes/mycrm/quick_link_company'); ?>
 <script>
 $(function(){
+    $('#btn-quick-link-account').on('click', function(){
+        $('#sidebar-modal-add-multi-account').modal({backdrop: false});
+        $('#sidebar-modal-add-multi-account').modal('show');
+    });
+
     $('.hdr-multi-account').on('click', function(){
         var hashid = $(this).attr('data-hash');
         var url = base_url + "mycrm/_login_multi_account";

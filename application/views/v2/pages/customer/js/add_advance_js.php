@@ -253,6 +253,7 @@
         $( ".datepicker" ).datepicker();
         $("#recurring_end_date").datepicker();
         $("#bill_end_date").datepicker();
+        $("#date_of_birth").datepicker();
 
 
         $("#first_name").on("keyup change", function(e) {

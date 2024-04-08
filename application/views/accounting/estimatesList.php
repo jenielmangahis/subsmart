@@ -71,6 +71,17 @@
       position: relative;
       bottom: 0px;
     }
+    .swal2-popup{
+      max-width: 74%!important;
+    }
+    .swal2-icon {
+      width: 3em!important;
+    height: 3em!important;
+    margin: 1.5em auto 0em!important;
+    }
+    .swal2-title{
+      font-size: 22px!important;
+    }
   }
 </style>
 <?php
@@ -446,6 +457,7 @@ defined('BASEPATH') or exit('No direct script access allowed'); ?>
                 PHONE: <span class="from_phone"></span>
               </div>
             </div>
+   
             <div class="col-xl-5 right" style="float: right">
               <div style="text-align: right;">
                 <h5 style="font-size:30px;margin:0px;">ESTIMATE</h5>
