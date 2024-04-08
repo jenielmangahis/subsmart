@@ -114,9 +114,22 @@
                                     <input type="text" class="form-control nsm-field mb-2" name="purchase_order_no" id="purchase-order-no" value="<?=isset($receipt) ? $receipt->po_number : ''?>">
                                 </div>
                                 <div class="col-12 col-md-2">
-                                    <label for="sales-rep">Sales Rep</label>
-                                    <input type="text" name="sales_rep" id="sales-rep" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->sales_rep : ''?>">
-
+                                    <label for="sales-rep">Sales Representative</label>
+                                    <!-- <input type="text" name="sales_rep" id="sales-rep" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->sales_rep : ''?>"> -->
+                                    <?php 
+                                        $default_user = "";
+                                        if( isset($receipt) ){
+                                            $default_user = $receipt->sales_rep;
+                                        }
+                                    ?>
+                                    <select name="sales_rep" id="sales-representatives" class="form-control nsm-field sales-representatives" required>
+                                        <option value="10001">Select All</option>
+                                        <?php if(!empty($sales_rep)): ?>
+                                            <?php foreach ($sales_rep as $employee): ?>
+                                                <option <?= $default_user == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.','.$employee->LName; ?></option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>                                
                                     <label for="location-of-sale">Location of sale</label>
                                     <input type="text" name="location_of_sale" id="location-of-sale" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->location_of_sale : ''?>">                                    
                                 </div>
@@ -501,6 +514,8 @@
 
 <script>
     $(document).ready(function() {
+
+        //$('.sales-representative').select2();
 
         $(".sales-receipt-adjustment-name").change(function(){
             var sales_receipt_adj_name = $('.sales-receipt-adjustment-name').val();
