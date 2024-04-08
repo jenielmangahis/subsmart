@@ -8,6 +8,25 @@
     text-align: center;
     border-radius: 7px;
 }
+@media only screen and (max-width: 600px) {
+   
+    .swal2-popup{
+      max-width: 74%;
+    }
+     .swal2-icon {
+    margin: 1.5em auto 0em;
+    }
+    .swal2-title{
+      font-size: 20px;
+    }
+    .swal2-html-container{
+     margin: 5px 0px;   
+    }
+    .swal2-actions{
+        margin: 0.55em auto 0;
+    }
+
+  }
 </style>
 
 <div class="nsm-fab-container">

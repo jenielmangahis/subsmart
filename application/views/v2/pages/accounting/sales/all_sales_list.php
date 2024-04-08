@@ -117,6 +117,7 @@
                                 <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end table-filter p-3" style="width: max-content">
+                           
                                 <div class="row">
                                     <div class="col-5">
                                         <label for="filter-type">Type</label>

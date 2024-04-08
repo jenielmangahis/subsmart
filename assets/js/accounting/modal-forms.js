@@ -851,7 +851,7 @@ $(function () {
         var target = e.currentTarget.dataset;
         var modal_element = target.target;
 
-        $.get('/accounting/get-job-tag-modal/', function (res) {
+        $.get(base_url + 'accounting/get-job-tag-modal/', function (res) {
             if ($('#tags-modal').length > 0) {
                 $('#tags-modal').remove();
             }
@@ -13647,7 +13647,7 @@ const loadCustomerCredits = () => {
     data.set('to_date', $('#receivePaymentModal #credit-memo-to').attr('data-applied'));
 
     $.ajax({
-        url: base_url + `accounting/get-customer-credits/${$('#receivePaymentModal #customer').val()}`,
+        url: base_url + `/accounting/get-customer-credits/${$('#receivePaymentModal #customer').val()}`,
         data: data,
         type: 'post',
         processData: false,

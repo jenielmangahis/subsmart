@@ -47,7 +47,7 @@
                         <tr>
                             <td align="right" width="35%">Job Type :</td>
                             <td align="right" width="">
-                                <strong><?= $jobs_data->job_type;  ?></strong>
+                                <strong><?= $jobs_data->job_type != '' ? $jobs_data->job_type : 'Not Specified';  ?></strong>
                             </td>
                         </tr>
                         <tr>

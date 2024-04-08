@@ -344,7 +344,7 @@ class Job extends MY_Controller
             $items = $this->jobs_model->get_specific_job_items($id);
             
             $job = $this->jobs_model->get_specific_job($id);
-            $defaultJobType = $this->JobType_model->getById($job->job_type);
+            $defaultJobType = $this->JobType_model->getByTitle($job->job_type);
             $this->page_data['jobs_data'] = $job;
             $this->page_data['jobs_data_items'] = $items;
             $this->page_data['defaultJobType'] = $defaultJobType;
@@ -2561,7 +2561,11 @@ class Job extends MY_Controller
                 }
             }
             // End of Commission Feature for Tech Rep
-
+            $job_type = '';
+            $jobType = $this->JobType_model->getById($input['job_type']);
+            if( $jobType ){
+                $job_type = $jobType->title;
+            }
             $jobs_data = array(
                 'job_number' => $job_number,
                 'estimate_id' => $estimate_id,
@@ -2573,7 +2577,7 @@ class Job extends MY_Controller
                 'employee5_id' => $input['employee5_id'],
                 'employee6_id' => $input['employee6_id'],
                 'jobtypebase_amount' => json_encode($jobtypebase_amount),
-                'job_name' => $job_number . ' - ' . $input['job_type'],
+                'job_name' => $job_number . ' - ' . $job_type,
                 'job_location' => $job_location,
                 'job_description' => $input['job_description'],
                 'start_date' => $input['start_date'],
@@ -2594,7 +2598,7 @@ class Job extends MY_Controller
                 'attachment' => $input['attachment'],
                 'tax_percentage' => $input['tax_percentage'],
                 'tax_rate' => $input['tax'],
-                'job_type' => $input['job_type'],
+                'job_type' => $job_type,
                 'date_issued' => $input['start_date'],
                 'work_order_id' => $job_workorder_id,
                 'commission' => $input['commission_amount'],

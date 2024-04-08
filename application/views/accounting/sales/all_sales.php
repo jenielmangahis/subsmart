@@ -135,12 +135,13 @@
                         </div>
 
                         <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown" id="filter_button" >
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown" id="filter_button">
                                 <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end table-filter p-3" style="width: max-content" id="filter_dropdown_body">
+                            <section id="filter_contents" style="width:<?php echo $type === 'unbilled-income' ? '642px' : 'auto';  ?>">
                                 <div class="row">
-                                    <div class="col-6">
+                                    <div class="col-6" id="type_filter">
                                         <label for=" filter-type">Type</label>
                                         <select class="nsm-field form-select" name="filter_type" id="filter-type">
                                             <option value="all-transactions" <?php echo empty($type) || $type === 'all-transactions' ? 'selected' : ''; ?>>
@@ -167,9 +168,9 @@
                                                 Statements</option>
                                         </select>
                                     </div>
-                                    <?php if ($type !== 'unbilled-income') { ?>
-                          
-                          <div class="<?php echo $type === 'recently-paid' ? 'col-6' : 'col-6'; ?>">
+
+                            
+                          <div id="customer_filter" class="<?php echo $type === 'recently-paid' ? 'col-6' : 'col-6'; ?>" style="display:<?php echo $type !== 'unbilled-income' ? 'block' : 'none'; ?>">
                               <label for="filter-customer">Customer</label>
                               <select class="nsm-field form-select" name="filter_customer"
                                   id="filter-customer">
@@ -182,9 +183,9 @@
                               </select>
                           </div>
                     
-                      <?php } ?>
-                                    <?php if (!in_array($type, ['unbilled-income',])) { ?>
-                                    <div class="col-6" id="status-filter-container">
+
+                   
+                                    <div class="col-6" id="status-filter-container" style="display:<?php echo in_array($type, ['unbilled-income','sales-receipt','credit-memos','money-received']) ?  'none' : 'block';  ?>">
                                         <label for="filter-status">Status</label>
                                         <select class="nsm-field form-select" name="filter_status" id="filter-status">
                                             <?php switch ($type) {
@@ -292,8 +293,8 @@
                                             } ?>
                                         </select>
                                     </div>
-                                    <?php if ($type !== 'money-received') { ?>
-                                    <div class="col-6" id="delivery-filter-container">
+                            
+                                    <div class="<?php echo in_array($type, ['sales-receipt','credit-memos','money-received']) ?  'col-12' : 'col-6';  ?>" id="delivery-filter-container" style="display:<?php echo $type !== 'money-received'? 'block' : 'none' ?>">
                                         <label for="filter-delivery-method">Delivery method</label>
                                         <select class="nsm-field form-select" name="filter_delivery_method"
                                             id="filter-delivery-method">
@@ -311,48 +312,57 @@
                                         </select>
                                     </div>
                                 </div>
-                            <?php } ?>
-                        <?php } ?>
-                        <?php if ($type === 'money-received') { ?>
-                        </div>
-                    <?php } ?>
-                    <?php if (!in_array($type, ['unbilled-income', 'recently-paid'])) { ?>
-                        <div class="row">
-                            <div class="col-4">
-                                <label for="filter-date">Date</label>
-                                <select class="nsm-field form-select" name="filter_date" id="filter-date">
-                                    <option value="last-365-days" <?php echo empty($date) || $date === 'last-365-days' ? 'selected' : ''; ?>>
-                                        Last
-                                        365 days</option>
-                                    <option value="custom" <?php echo $date === 'custom' ? 'selected' : ''; ?>>
-                                        Custom
-                                    </option>
-                                    <option value="today" <?php echo $date === 'today' ? 'selected' : ''; ?>>
-                                        Today
-                                    </option>
-                                    <option value="yesterday" <?php echo $date === 'yesterday' ? 'selected' : ''; ?>>
-                                        Yesterday</option>
-                                    <option value="this-week" <?php echo $date === 'this-week' ? 'selected' : ''; ?>>This
-                                        week</option>
-                                    <option value="this-month" <?php echo $date === 'this-month' ? 'selected' : ''; ?>>
-                                        This month</option>
-                                    <option value="this-quarter" <?php echo $date === 'this-quarter' ? 'selected' : ''; ?>>This quarter
-                                    </option>
-                                    <option value="this-year" <?php echo $date === 'this-year' ? 'selected' : ''; ?>>This
-                                        year</option>
-                                    <option value="last-week" <?php echo $date === 'last-week' ? 'selected' : ''; ?>>Last
-                                        week</option>
-                                    <option value="last-month" <?php echo $date === 'last-month' ? 'selected' : ''; ?>>
-                                        Last month</option>
-                                    <option value="last-quarter" <?php echo $date === 'last-quarter' ? 'selected' : ''; ?>>Last quarter
-                                    </option>
-                                    <option value="last-year" <?php echo $date === 'last-year' ? 'selected' : ''; ?>>Last
-                                        year</option>
-                                    <option value="all-dates" <?php echo $date === 'all-dates' ? 'selected' : ''; ?>>All
-                                        dates</option>
-                                </select>
-                            </div>
-                            <div class="col-4">
+                            
+                 
+                   
+       
+                                <div class="row" id="date_filter" style="display:<?php echo in_array($type, ['unbilled-income', 'recently-paid']) ? 'none' : 'flex'; ?>">
+                                    <div class="col-4">
+                                        <label for="filter-date">Date</label>
+                                        <select class="nsm-field form-select" name="filter_date" id="filter-date">
+                                            <option value="last-365-days"
+                                                <?php echo empty($date) || $date === 'last-365-days' ? 'selected' : ''; ?>>
+                                                Last
+                                                365 days</option>
+                                            <option value="custom" <?php echo $date === 'custom' ? 'selected' : ''; ?>>
+                                                Custom
+                                            </option>
+                                            <option value="today" <?php echo $date === 'today' ? 'selected' : ''; ?>>
+                                                Today
+                                            </option>
+                                            <option value="yesterday"
+                                                <?php echo $date === 'yesterday' ? 'selected' : ''; ?>>
+                                                Yesterday</option>
+                                            <option value="this-week"
+                                                <?php echo $date === 'this-week' ? 'selected' : ''; ?>>This
+                                                week</option>
+                                            <option value="this-month"
+                                                <?php echo $date === 'this-month' ? 'selected' : ''; ?>>
+                                                This month</option>
+                                            <option value="this-quarter"
+                                                <?php echo $date === 'this-quarter' ? 'selected' : ''; ?>>This quarter
+                                            </option>
+                                            <option value="this-year"
+                                                <?php echo $date === 'this-year' ? 'selected' : ''; ?>>This
+                                                year</option>
+                                            <option value="last-week"
+                                                <?php echo $date === 'last-week' ? 'selected' : ''; ?>>Last
+                                                week</option>
+                                            <option value="last-month"
+                                                <?php echo $date === 'last-month' ? 'selected' : ''; ?>>
+                                                Last month</option>
+                                            <option value="last-quarter"
+                                                <?php echo $date === 'last-quarter' ? 'selected' : ''; ?>>Last quarter
+                                            </option>
+                                            <option value="last-year"
+                                                <?php echo $date === 'last-year' ? 'selected' : ''; ?>>Last
+                                                year</option>
+                                            <option value="all-dates"
+                                                <?php echo $date === 'all-dates' ? 'selected' : ''; ?>>All
+                                                dates</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
                                 <label for="filter-from">From</label>
                                 <div class="nsm-field-group calendar">
                                     <input type="text" class="nsm-field form-control date" value="<?php echo empty($from_date) ? date('m/d/Y', strtotime('-1 year')) : $from_date; ?>" id="filter-from">
@@ -364,35 +374,91 @@
                                     <input type="text" class="nsm-field form-control date" id="filter-to" value="<?php echo empty($to_date) ? '' : $to_date; ?>">
                                 </div>
                             </div>
-                        </div>
-                    <?php } ?>
-                    <?php if ($type === 'unbilled-income') { ?>
-
-                        <div class="col-6">
-                            <label for="filter-as-of">Unbilled Income As Of</label>
-                            <div class="nsm-field-group calendar">
-                                <input type="text" name="filter_as_of_date" id="filter-as-of" class="form-control nsm-field date" value="<?php echo date('m/d/Y', strtotime($date)); ?>">
                             </div>
+                             <div class="row" id="unbilled_income"  style="display:<?php echo $type === 'unbilled-income' ? 'block' : 'none';  ?>">
+                                        
+                                      <div class="col-12" >
+                                        <label for="filter-as-of">Unbilled Income As Of</label>
+                                        <div class="nsm-field-group calendar">
+                                            <input type="text" name="filter_as_of_date" id="filter-as-of"
+                                                class="form-control nsm-field date"
+                                                value="<?php echo date('m/d/Y', strtotime($date)); ?>">
+                                        </div>
+                                </div>
+                                </div>
+                            
+                                </section>
+                                <div class="row mt-3 " id="filter_buttons">
+                                    <div class="col-6">
+                                        <button type="button" class="nsm-button" id="reset-button">
+                                            Reset
+                                        </button>
+                                    </div>
+                                    <div class="col-6 ">
+                                        <button type="button" class="nsm-button primary float-end" id="apply-button">
+                                            Apply
+                                        </button>
+                                    </div>
+                                </div>
+                            </ul>
+                            
+                            </div>
+                       
+                  
 
-                        </div>
-                    <?php } ?>
+    
+                        <!-- <div class="row">
+                            <div class="col-4">
+                                <label for="filter-date">Date</label>
+                                <select class="nsm-field form-select" name="filter_date" id="filter-date">
+                                    <option value="last-365-days" <?php //echo empty($date) || $date === 'last-365-days' ? 'selected' : ''; ?>>
+                                        Last
+                                        365 days</option>
+                                    <option value="custom" <?php //echo $date === 'custom' ? 'selected' : ''; ?>>
+                                        Custom
+                                    </option>
+                                    <option value="today" <?php // echo $date === 'today' ? 'selected' : ''; ?>>
+                                        Today
+                                    </option>
+                                    <option value="yesterday" <?php //echo $date === 'yesterday' ? 'selected' : ''; ?>>
+                                        Yesterday</option>
+                                    <option value="this-week" <?php //echo $date === 'this-week' ? 'selected' : ''; ?>>This
+                                        week</option>
+                                    <option value="this-month" <?php //echo $date === 'this-month' ? 'selected' : ''; ?>>
+                                        This month</option>
+                                    <option value="this-quarter" <?php //echo $date === 'this-quarter' ? 'selected' : ''; ?>>This quarter
+                                    </option>
+                                    <option value="this-year" <?php //echo $date === 'this-year' ? 'selected' : ''; ?>>This
+                                        year</option>
+                                    <option value="last-week" <?php //echo $date === 'last-week' ? 'selected' : ''; ?>>Last
+                                        week</option>
+                                    <option value="last-month" <?php //echo $date === 'last-month' ? 'selected' : ''; ?>>
+                                        Last month</option>
+                                    <option value="last-quarter" <?php //echo $date === 'last-quarter' ? 'selected' : ''; ?>>Last quarter
+                                    </option>
+                                    <option value="last-year" <?php //echo $date === 'last-year' ? 'selected' : ''; ?>>Last
+                                        year</option>
+                                    <option value="all-dates" <?php //echo $date === 'all-dates' ? 'selected' : ''; ?>>All
+                                        dates</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label for="filter-from">From</label>
+                                <div class="nsm-field-group calendar">
+                                    <input type="text" class="nsm-field form-control date" value="<?php //echo empty($from_date) ? date('m/d/Y', strtotime('-1 year')) : $from_date; ?>" id="filter-from">
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label for="filter-to">To</label>
+                                <div class="nsm-field-group calendar">
+                                    <input type="text" class="nsm-field form-control date" id="filter-to" value="<?php //echo empty($to_date) ? '' : $to_date; ?>">
+                                </div>
+                            </div>
+                        </div> -->
+ 
+                   
 
-
-                    <div class="row mt-3 " id="filter_buttons">
-                        <div class="col-6">
-                            <button type="button" class="nsm-button" id="reset-button">
-                                Reset
-                            </button>
-                        </div>
-                        <div class="col-6 ">
-                            <button type="button" class="nsm-button primary float-end" id="apply-button">
-                                Apply
-                            </button>
-                        </div>
-                    </div>
-                    </ul>
-
-                    </div>
+             
 
                     <div class="dropdown d-inline-block">
                         <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
@@ -692,28 +758,4 @@
 <script>
     const companyName = "<?php echo $company->business_name; ?>";
 </script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var dropdownMenu = document.getElementById("table-rows");
-
-        var tableBody = document.querySelector("#transactions-table tbody");
-
-        dropdownMenu.querySelectorAll(".dropdown-item").forEach(function(item) {
-            item.addEventListener("click", function() {
-                var numRows = parseInt(this.textContent);
-
-                tableBody.querySelectorAll("tr").forEach(function(row) {
-                    row.style.display = "none";
-                });
-
-                tableBody.querySelectorAll("tr").forEach(function(row, index) {
-                    if (index < numRows) {
-                        row.style.display = "";
-                    }
-                });
-            });
-        });
-    });
-</script>
-
 <?php include viewPath('v2/includes/footer'); ?>

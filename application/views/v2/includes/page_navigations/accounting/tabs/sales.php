@@ -42,7 +42,7 @@
                 <span>Work Order</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Invoices'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Invoices' || $page->title == 'New Invoice'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url("/accounting/invoices"); ?>">
                 <i class='bx bx-fw bx-message-square-error'></i>
                 <span>Invoices</span>

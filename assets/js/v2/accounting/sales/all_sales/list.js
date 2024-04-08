@@ -1,7 +1,22 @@
 const currUrl = window.location.href;
 
-$("#transactions-table").nsmPagination({
-  itemsPerPage: 10,
+$(document).ready(function() {
+  $("#transactions-table").nsmPagination({
+      itemsPerPage: 10,
+  });
+
+  function updateRowsPerPage(numRows) {
+      $("#transactions-table").nsmPagination({ itemsPerPage: numRows });
+      $("#transactions-table tbody tr").hide();
+      $("#transactions-table tbody tr").slice(0, numRows).show();
+  }
+
+  document.getElementById("table-rows").querySelectorAll(".dropdown-item").forEach(function(item) {
+      item.addEventListener("click", function() {
+          var numRows = parseInt(this.textContent);
+          updateRowsPerPage(numRows);
+      });
+  });
 });
 
 $(".dropdown-menu#table-rows a.dropdown-item").on("click", function () {
@@ -185,8 +200,86 @@ var date_filter_select = `<div class="row">
     </div>
 </div>
 </div>`;
+var  delivery_method = `<div class="col-6" id="delivery-filter-container">
+<label for="filter-delivery-method">Delivery method</label>
+<select class="nsm-field form-select" name="filter_delivery_method"
+    id="filter-delivery-method">
+    <option value="any">
+        Any</option>
+    <option value="print-later">
+        Print later
+    </option>
+    <option value="send-later">Send
+        later
+    </option>
+</select>
+</div>`;
+var filter_buttons = `    <div class="row mt-3 " id="filter_buttons">
+<div class="col-6">
+    <button type="button" class="nsm-button" id="reset-button">
+        Reset
+    </button>
+</div>
+<div class="col-6 ">
+    <button type="button" class="nsm-button primary float-end" id="apply-button">
+        Apply
+    </button>
+</div>
+</div>`;
 
+var type_filter = ` <div class="col-6">
+<label for=" filter-type">Type</label>
+<select class="nsm-field form-select" name="filter_type" id="filter-type">
+    <option value="all-transactions">
+        All
+        transactions</option>
+    <option value="estimates">
+        Estimates</option>
+    <option value="invoices">
+        Invoices</option>
+    <option value="sales-receipts">Sales
+        Receipts
+    </option>
+    <option value="credit-memos">Credit memos
+    </option>
+    <option value="unbilled-income" selected>Unbilled
+        income
+    </option>
+    <option value="recently-paid">Recently paid
+    </option>
+    <option value="money-received">Money
+        received
+    </option>
+    <option value="statements">
+        Statements</option>
+</select>
+</div>`;
 
+let status_filter = `<div class="row">
+<div class="col-4">
+    <label for="filter-status">Status</label>
+    <select class="nsm-field form-select" name="filter_status" id="filter-status">
+        <option value="all-statuses" selected>All statuses</option>
+        <option value="open">Open</option>
+        <option value="closed">Closed</option>
+        <option value="draft">Draft</option>
+        <option value="submitted">Submitted</option>
+        <option value="accepted">Accepted</option>
+        <option value="invoiced">Invoiced</option>
+        <option value="lost">Lost</option>
+        <option value="declined-by-customer">Declined By Customer</option>
+        <option value="expired">Expired</option>
+    </select>
+</div>
+<div class="col-3">
+    <label for="filter-delivery-method">Delivery method</label>
+    <select class="nsm-field form-select" name="filter_delivery_method" id="filter-delivery-method">
+        <option value="any" selected="selected">Any</option>
+        <option value="print-later">Print later</option>
+        <option value="send-later">Send later</option>
+    </select>
+</div>
+</div>`;
 $(document).ready(function() {
 
 // Listen for input event on dynamically generated input field
@@ -232,94 +325,47 @@ $(document).on('click', '.select2-results', function() {
 
 
 $("#filter-type").on("change", function () {
-  if($(this).val() !== "unbilled-income"){
-        $('#unbilled-income-container').remove();
-  }
-  if($(this).val() !== "sales-receipts" || $(this).val() !== "credit-memos" || $(this).val() !== "money-received"){
-    $("#delivery-filter-container").removeClass("col-12").addClass("col-6");
-}
-
+  $("#filter_contents").css("width", ($(this).val() == "unbilled-income") ? "642px" : "");
+  
   console.log($(this).val());
   switch ($(this).val()) {
     case "unbilled-income":
       console.log('unbilled-income');
+  
+      
+      
+      $('#unbilled_income').show();
+      $('#type_filter').show();
+      $('#delivery-filter-container').show();
+
+      $('#customer_filter').hide();
+      $('#date_filter').hide();
       $("#status-filter-container").hide();
-      $(this).closest(".row").siblings(":not(.mt-3)").remove();
-      $(this).parent().addClass("col-6").removeClass("col-5");
+      $("#delivery-filter-container").removeClass("col-12").addClass("col-6");
 
-      var date = new Date();
-      var dd = String(date.getDate()).padStart(2, "0");
-      var mm = String(date.getMonth() + 1).padStart(2, "0"); //January is 0!
-      var yyyy = date.getFullYear();
-
-      date = mm + "/" + dd + "/" + yyyy;
- 
-      $(`<div class="col-6" id="unbilled-income-container">
-                    <label for="filter-as-of">Unbilled Income As Of</label>
-                    <div class="nsm-field-group calendar">
-                        <input type="text" name="filter_as_of_date" id="filter-as-of" class="form-control nsm-field date" value="${date}">
-                    </div>
-                </div>
-            `).appendTo($(this).closest(".row"));
-
-      $("#filter-as-of").datepicker({
-        format: "mm/dd/yyyy",
-        orientation: "bottom",
-        autoclose: true,
-      });
       break;
     case "recently-paid":
-      console.log('recently-paid');
+      
+      $("#delivery-filter-container").show();
+      $("#type_filter").show();
       $("#status-filter-container").show();
-      $(this).closest(".row").siblings(":not(.mt-3)").remove();
-      $(this).parent().addClass("col-6").removeClass("col-5");
-
-      // $(`<div class="row">
-      //           <div class="col-6">
-      //               <label for="filter-customer">Customer</label>
-      //               <select class="nsm-field form-select" name="filter_customer" id="filter-customer">
-      //                   <option value="all" selected="selected">All</option>
-      //               </select>
-      //           </div>
-      //       </div>`).insertAfter($(this).closest(".row"));
-            console.log('recently-paid filter');
+      $("#customer_filter").show();
+      $('#date_filter').hide();
+      $('#unbilled_income').hide();
+      $("#delivery-filter-container").removeClass("col-12").addClass("col-6");
       break;
     case "estimates":
-      $("#status-filter-container").show();
+
+    $("#type_filter").show();
+    $("#status-filter-container").show();
+    $("#customer_filter").show();
+    $('#delivery-filter-container').show();
+    $('#date_filter').css("display", "flex");
+    $('#unbilled_income').hide();
+    $("#delivery-filter-container").removeClass("col-12").addClass("col-6");
       if ($("#filter-date").length < 1) {
-        $(this).closest(".row").siblings(":not(.mt-3)").remove();
-        $(this).parent().addClass("col-5").removeClass("col-12");
-        console.log('estimate case');
-    
 
-        $(date_filter_select).insertAfter($(this).closest(".row"));  
-
-        $(`<div class="row">
-                    <div class="col-4">
-                        <label for="filter-status">Status</label>
-                        <select class="nsm-field form-select" name="filter_status" id="filter-status">
-                            <option value="all-statuses" selected>All statuses</option>
-                            <option value="open">Open</option>
-                            <option value="closed">Closed</option>
-                            <option value="draft">Draft</option>
-                            <option value="submitted">Submitted</option>
-                            <option value="accepted">Accepted</option>
-                            <option value="invoiced">Invoiced</option>
-                            <option value="lost">Lost</option>
-                            <option value="declined-by-customer">Declined By Customer</option>
-                            <option value="expired">Expired</option>
-                        </select>
-                    </div>
-                    <div class="col-3">
-                        <label for="filter-delivery-method">Delivery method</label>
-                        <select class="nsm-field form-select" name="filter_delivery_method" id="filter-delivery-method">
-                            <option value="any" selected="selected">Any</option>
-                            <option value="print-later">Print later</option>
-                            <option value="send-later">Send later</option>
-                        </select>
-                    </div>
-                </div>`).insertBefore($(this).closest("#filter_buttons"));  
-
+      
         $(".table-filter .date").datepicker({
           format: "mm/dd/yyyy",
           orientation: "bottom",
@@ -341,80 +387,85 @@ $("#filter-type").on("change", function () {
                 <option value="expired">Expired</option>`);
       }
 
-      if ($("#filter-customer").parent().hasClass("col-12")) {
-        $("#filter-customer").parent().removeClass("col-12").addClass("col-6");
-      }
+     
       break;
     case "invoices":
       console.log('invoices');
       $("#status-filter-container").show();
-      
+      $("#type_filter").show();
+      $("#status-filter-container").show();
+      $("#customer_filter").show();
+      $('#delivery-filter-container').show();
+      $('#date_filter').css("display", "flex");
+      $('#unbilled_income').hide();
+      $("#delivery-filter-container").addClass("col-6").removeClass("col-12");
+
       if ($("#filter-date").length < 1) {
-        $(this).closest(".row").siblings(":not(.mt-3)").remove();
-        $(this).parent().addClass("col-5").removeClass("col-12");
+        // $(this).closest(".row").siblings(":not(.mt-3)").remove();
+        // $(this).parent().addClass("col-5").removeClass("col-12");
 
-        $(`<div class="row">
-                    <div class="col-12">
-                        <label for="filter-customer">Customer</label>
-                        <select class="nsm-field form-select" name="filter_customer" id="filter-customer">
-                            <option value="all" selected="selected">All</option>
-                        </select>
-                    </div>
-                </div>`).insertAfter($(this).closest(".row"));
+        // $(`<div class="row">
+        //             <div class="col-12">
+        //                 <label for="filter-customer">Customer</label>
+        //                 <select class="nsm-field form-select" name="filter_customer" id="filter-customer">
+        //                     <option value="all" selected="selected">All</option>
+        //                 </select>
+        //             </div>
+        //         </div>`).insertAfter($(this).closest(".row"));
         
-        $(`<div class="row">
-                    <div class="col-4">
-                        <label for="filter-date">Date</label>
-                        <select class="nsm-field form-select" name="filter_date" id="filter-date">
-                            <option value="last-365-days" selected="selected">Last 365 days</option>
-                            <option value="custom">Custom</option>
-                            <option value="today">Today</option>
-                            <option value="yesterday">Yesterday</option>
-                            <option value="this-week">This week</option>
-                            <option value="this-month">This month</option>
-                            <option value="this-quarter">This quarter</option>
-                            <option value="this-year">This year</option>
-                            <option value="last-week">Last week</option>
-                            <option value="last-month">Last month</option>
-                            <option value="last-quarter">Last quarter</option>
-                            <option value="last-year">Last year</option>
-                            <option value="all-dates">All dates</option>
-                        </select>
-                    </div>
-                    <div class="col-4">
-                        <label for="filter-from">From</label>
-                        <div class="nsm-field-group calendar">
-                            <input type="text" class="nsm-field form-control date" value="" id="filter-from">
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <label for="filter-to">To</label>
-                        <div class="nsm-field-group calendar">
-                            <input type="text" class="nsm-field form-control date" value="" id="filter-to">
-                        </div>
-                    </div>
-                </div>`).insertAfter($(this).closest(".row"));
+        // $(`<div class="row">
+        //             <div class="col-4">
+        //                 <label for="filter-date">Date</label>
+        //                 <select class="nsm-field form-select" name="filter_date" id="filter-date">
+        //                     <option value="last-365-days" selected="selected">Last 365 days</option>
+        //                     <option value="custom">Custom</option>
+        //                     <option value="today">Today</option>
+        //                     <option value="yesterday">Yesterday</option>
+        //                     <option value="this-week">This week</option>
+        //                     <option value="this-month">This month</option>
+        //                     <option value="this-quarter">This quarter</option>
+        //                     <option value="this-year">This year</option>
+        //                     <option value="last-week">Last week</option>
+        //                     <option value="last-month">Last month</option>
+        //                     <option value="last-quarter">Last quarter</option>
+        //                     <option value="last-year">Last year</option>
+        //                     <option value="all-dates">All dates</option>
+        //                 </select>
+        //             </div>
+        //             <div class="col-4">
+        //                 <label for="filter-from">From</label>
+        //                 <div class="nsm-field-group calendar">
+        //                     <input type="text" class="nsm-field form-control date" value="" id="filter-from">
+        //                 </div>
+        //             </div>
+        //             <div class="col-4">
+        //                 <label for="filter-to">To</label>
+        //                 <div class="nsm-field-group calendar">
+        //                     <input type="text" class="nsm-field form-control date" value="" id="filter-to">
+        //                 </div>
+        //             </div>
+        //         </div>`).insertAfter($(this).closest(".row"));
 
-        $(`<div class="row">
-                    <div class="col-4">
-                        <label for="filter-status">Status</label>
-                        <select class="nsm-field form-select" name="filter_status" id="filter-status">
-                            <option value="all-statuses" selected="selected">All statuses</option>
-                            <option value="open">Open</option>
-                            <option value="overdue">Overdue</option>
-                            <option value="paid">Paid</option>
-                            <option value="draft">Draft</option>
-                        </select>
-                    </div>
-                    <div class="col-3">
-                        <label for="filter-delivery-method">Delivery method</label>
-                        <select class="nsm-field form-select" name="filter_delivery_method" id="filter-delivery-method">
-                            <option value="any" selected="selected">Any</option>
-                            <option value="print-later">Print later</option>
-                            <option value="send-later">Send later</option>
-                        </select>
-                    </div>
-                </div>`).insertAfter($(this).closest(".row"));
+        // $(`<div class="row">
+        //             <div class="col-4">
+        //                 <label for="filter-status">Status</label>
+        //                 <select class="nsm-field form-select" name="filter_status" id="filter-status">
+        //                     <option value="all-statuses" selected="selected">All statuses</option>
+        //                     <option value="open">Open</option>
+        //                     <option value="overdue">Overdue</option>
+        //                     <option value="paid">Paid</option>
+        //                     <option value="draft">Draft</option>
+        //                 </select>
+        //             </div>
+        //             <div class="col-3">
+        //                 <label for="filter-delivery-method">Delivery method</label>
+        //                 <select class="nsm-field form-select" name="filter_delivery_method" id="filter-delivery-method">
+        //                     <option value="any" selected="selected">Any</option>
+        //                     <option value="print-later">Print later</option>
+        //                     <option value="send-later">Send later</option>
+        //                 </select>
+        //             </div>
+        //         </div>`).insertAfter($(this).closest(".row"));
 
         $(".table-filter .date").datepicker({
           format: "mm/dd/yyyy",
@@ -433,20 +484,22 @@ $("#filter-type").on("change", function () {
                 `);
       }
 
-      if ($("#filter-customer").parent().hasClass("col-12")) {
-        $("#filter-customer").parent().removeClass("col-12").addClass("col-6");
-      }
+  
       break;
     case "sales-receipts":
       console.log('sales-receipts');
       $("#status-filter-container").hide();
+      $("#status-filter-container").show();
+      $("#type_filter").show();
+      $("#status-filter-container").hide();
+      $("#customer_filter").show();
+      $('#delivery-filter-container').show();
+      $('#date_filter').css("display", "flex");
+      $('#unbilled_income').hide();
+
       $("#delivery-filter-container").removeClass("col-6").addClass("col-12");
       if ($("#filter-date").length < 1) {
-        $(this).closest(".row").siblings(":not(.mt-3)").remove();
-        $(this).parent().addClass("col-5").removeClass("col-12");
-
-
-        $(date_filter_select).insertAfter($(this).closest(".row"));
+  
 
         $(".table-filter .date").datepicker({
           format: "mm/dd/yyyy",
@@ -459,23 +512,20 @@ $("#filter-type").on("change", function () {
         $("#filter-status").remove();
       }
 
-      if ($("#filter-customer").parent().hasClass("col-12")) {
-        $("#filter-customer").parent().removeClass("col-12").addClass("col-6");
-      }
+   
       break;
     case "credit-memos":
-      $("#delivery-filter-container").removeClass("col-6").addClass("col-12");
       $("#status-filter-container").hide();
+      $("#status-filter-container").show();
+      $("#type_filter").show();
+      $("#status-filter-container").hide();
+      $("#customer_filter").show();
+      $('#delivery-filter-container').show();
+      $('#date_filter').css("display", "flex");
+      $('#unbilled_income').hide();
+      $("#delivery-filter-container").removeClass("col-6").addClass("col-12");
       if ($("#filter-date").length < 1) {
-        $(this).closest(".row").siblings(":not(.mt-3)").remove();
-        $(this).parent().addClass("col-5").removeClass("col-12");
-        $("#status-filter-container").hide();
-      
-
-        $(date_filter_select).insertAfter($(this).closest(".row"));
-
-  
-
+   
         $(".table-filter .date").datepicker({
           format: "mm/dd/yyyy",
           orientation: "bottom",
@@ -484,54 +534,45 @@ $("#filter-type").on("change", function () {
 
         $("#filter-date").trigger("change");
       }
-      if ($("#filter-customer").parent().hasClass("col-12")) {
-        $("#filter-customer").parent().removeClass("col-12").addClass("col-6");
-      }
+
       break;
     case "money-received":
-      $("#delivery-filter-container").removeClass("col-6").addClass("col-12");
       $("#status-filter-container").hide();
+      $("#status-filter-container").show();
+      $("#type_filter").show();
+      $("#status-filter-container").hide();
+      $("#customer_filter").show();
+      // $('#delivery-filter-container').show();
+      $('#date_filter').css("display", "flex");
+      $('#unbilled_income').hide();
+      $("#delivery-filter-container").removeClass("col-6").addClass("col-12");
+
       if ($("#filter-date").length < 1) {
-        $(this).closest(".row").siblings(":not(.mt-3)").remove();
-        $(this).parent().addClass("col-5").removeClass("col-12");
-
-
-        $(date_filter_select).insertAfter($(this).closest(".row"));
-
-  
 
         $(".table-filter .date").datepicker({
           format: "mm/dd/yyyy",
           orientation: "bottom",
           autoclose: true,
         });
-
+        $('#delivery-filter-container').show();
         $("#filter-date").trigger("change");
       } else {
-        $("#filter-delivery-method").parent().remove();
+        $('#delivery-filter-container').hide();
       }
 
-      if ($("#filter-customer").parent().hasClass("col-12")) {
-        $("#filter-customer").parent().removeClass("col-12").addClass("col-6");
-      }
       break;
     case "statements":
       console.log('statements case');
       $("#status-filter-container").show();
-      if ($("#filter-date").length < 1) {
-        $(this).closest(".row").siblings(":not(.mt-3)").remove();
-        $(this).parent().addClass("col-5").removeClass("col-12");
+      $("#type_filter").show();
+      $("#status-filter-container").show();
+      $("#customer_filter").show();
+      $('#delivery-filter-container').show();
+      $('#date_filter').css("display", "flex");
+      $('#unbilled_income').hide();
+      $("#delivery-filter-container").addClass("col-6").removeClass("col-12");
+      if ($("#filter-date").length < 1) {;
 
-        $(`<div class="row">
-                    <div class="col-12">
-                        <label for="filter-customer">Customer</label>
-                        <select class="nsm-field form-select" name="filter_customer" id="filter-customer">
-                            <option value="all" selected="selected">All</option>
-                        </select>
-                    </div>
-                </div>`).insertAfter($(this).closest(".row"));
-
-        $(date_filter_select).insertAfter($(this).closest(".row"));
 
         $(".table-filter .date").datepicker({
           format: "mm/dd/yyyy",
@@ -540,52 +581,26 @@ $("#filter-type").on("change", function () {
         });
 
         $("#filter-date").trigger("change");
-      } else {
-        // $("#filter-status").closest(".row").remove();
       }
 
-      if ($("#filter-customer").parent().hasClass("col-12")) {
-        $("#filter-customer").parent().removeClass("col-12").addClass("col-6");
-      }
       break;
     default:
       console.log('default case');
+      $("#status-filter-container").show();
+      $("#type_filter").show();
+      $("#status-filter-container").show();
+      $("#customer_filter").show();
+      $('#delivery-filter-container').show();
+      $('#date_filter').css("display", "flex");
+      $('#unbilled_income').hide();
+      $("#delivery-filter-container").addClass("col-6").removeClass("col-12");
       if ($("#filter-date").length < 1) {
-        $(this).closest(".row").siblings(":not(.mt-3)").remove();
-        $(this).parent().addClass("col-6").removeClass("col-12");
 
         $(`<div class="row">
                     <div class="col-12">
                         <label for="filter-customer">Customer</label>
                         <select class="nsm-field form-select" name="filter_customer" id="filter-customer">
                             <option value="all" selected="selected">All</option>
-                        </select>
-                    </div>
-                </div>`).insertAfter($(this).closest(".row"));
-
-        $(date_filter_select).insertAfter($(this).closest(".row"));
-
-        $(`<div class="row">
-                    <div class="col-4">
-                        <label for="filter-status">Status</label>
-                        <select class="nsm-field form-select" name="filter_status" id="filter-status">
-                            <option value="all-statuses" selected="selected">All statuses</option>
-                            <option value="open">Open</option>
-                            <option value="overdue">Overdue</option>
-                            <option value="paid">Paid</option>
-                            <option value="pending">Pending</option>
-                            <option value="accepted">Accepted</option>
-                            <option value="closed">Closed</option>
-                            <option value="rejected">Rejected</option>
-                            <option value="expired">Expired</option>
-                        </select>
-                    </div>
-                    <div class="col-3">
-                        <label for="filter-delivery-method">Delivery method</label>
-                        <select class="nsm-field form-select" name="filter_delivery_method" id="filter-delivery-method">
-                            <option value="any" selected="selected">Any</option>
-                            <option value="print-later">Print later</option>
-                            <option value="send-later">Send later</option>
                         </select>
                     </div>
                 </div>`).insertAfter($(this).closest(".row"));
@@ -610,9 +625,6 @@ $("#filter-type").on("change", function () {
                 <option value="expired">Expired</option>`);
       }
 
-      if ($("#filter-customer").parent().hasClass("col-12")) {
-        $("#filter-customer").parent().removeClass("col-12").addClass("col-6");
-      }
       break;
   }
 });

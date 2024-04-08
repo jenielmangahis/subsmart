@@ -8182,18 +8182,17 @@ class Accounting extends MY_Controller
         // $this->page_data['number'] = $this->estimate_model->getlastInsert();
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
-
         $this->page_data['clients'] = $this->workorder_model->getclientsById();
         $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
-
         $this->page_data['packages'] = $this->workorder_model->getPackagelist($company_id);
-
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['companyDet'] = $this->workorder_model->companyDet($company_id);
-
         $this->page_data['itemPackages'] = $this->workorder_model->getPackageDetailsByCompany($company_id);
         $this->page_data['getSettings'] = $this->workorder_model->getSettings($company_id);
+
+        $this->page_data['page']->title = 'New Invoice';
+        $this->page_data['page']->parent = 'Sales';
 
         $this->load->view('accounting/addInvoice', $this->page_data);
     }
@@ -17250,6 +17249,29 @@ class Accounting extends MY_Controller
 
         $data = ['msg' => $msg, 'is_success' => $is_success];
 		echo json_encode($data);
+        exit;
+    }
+
+    public function ajax_invoice_delete_selected()
+    {
+        $post = $this->input->post();
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        foreach ($post['invoices'] as $key => $invoice_id) {
+            $this->invoice_model->delete($invoice_id);
+            $total_deleted++;
+        }
+
+        if( $total_deleted > 0 ){
+            $msg = '';
+            $is_success = 1;
+        }else{
+            $msg = 'Invoice data not found';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+
         exit;
     }
 }

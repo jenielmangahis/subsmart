@@ -839,7 +839,7 @@
                                                 </div>
                                                 <div class="col-12 col-md-6">
                                                     <h5 class="title-header">Terms &amp; Conditions</h5>
-                                                    <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the invoice.</span>
+                                                    <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the <br/> invoice.</span>
                                                     <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control nsm-field mb-2"><?= isset($invoice) ? $invoice->terms_and_conditions : '' ?></textarea>
                                                 </div>
                                             </div>

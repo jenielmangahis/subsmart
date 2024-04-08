@@ -637,7 +637,7 @@ $('#new-time-activity').on('click', function() {
     });
 });
 $('#new-statement').on('click', function() {
-    $('#spinner').show();
+    //$('#spinner').show();
     $.get(base_url + 'accounting/get-other-modals/statement_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
@@ -764,7 +764,7 @@ $('#edit-customer-form').on('submit', async function(e) {
         success: function(data)
         {
             if(data.success){
-                sucess("Customer Updated Successfully!",data.profile_id);
+                sucess("Customer Updated Successfully!",data.profile_id); 
             }else{
                 error(data.message);
             }
