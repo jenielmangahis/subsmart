@@ -190,7 +190,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <div class="col-sm-6">
                                                     <label>Residential Invoice Default Terms &amp; Conditions</label>
                                                     <div class="help help-sm help-block">Your T&amp;C that will appear at the bottom section of the invoice.</div>
-                                                    <textarea name="residential_terms" id="residential_terms" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->residential_terms_and_conditions : '' ?></textarea>
+                                                    <textarea name="residential_terms" id="residential_terms" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->residential_terms_and_conditions : $default_terms_condition ?></textarea>
                                                     <span class="validation-error-field hide" data-formerrors-for-name="terms" data-formerrors-message="true"></span>
                                                 </div>
                                             </div>
@@ -220,13 +220,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <div class="col-sm-6">
                                                     <label>Commercial Invoice Default Message</label>
                                                     <div class="help help-sm help-block">Custom message that will be placed at the bottom section of the invoice.</div>
-                                                    <textarea name="message_commercial" id="message_commercial" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->commercial_message : '' ?></textarea>
+                                                    <textarea name="message_commercial" id="message_commercial" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->commercial_message : ''; ?></textarea>
                                                     <span class="validation-error-field hide" data-formerrors-for-name="message" data-formerrors-message="true"></span>
                                                 </div>
                                                 <div class="col-sm-6">
                                                     <label>Commercial Invoice Default Terms &amp; Conditions</label>
                                                     <div class="help help-sm help-block">Your T&amp;C that will appear at the bottom section of the invoice.</div>
-                                                    <textarea name="terms_commercial" id="terms_commercial" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->commercial_terms_and_conditions : '' ?></textarea>
+                                                    <textarea name="terms_commercial" id="terms_commercial" cols="40" rows="2" class="form-control" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->commercial_terms_and_conditions : $default_terms_condition; ?></textarea>
                                                     <span class="validation-error-field hide" data-formerrors-for-name="terms" data-formerrors-message="true"></span>
                                                 </div>
                                             </div>

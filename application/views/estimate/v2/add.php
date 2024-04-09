@@ -740,9 +740,7 @@ echo put_header_assets();
                                         </textarea>
                                     </div>
                                 </div>
-
                             </div>
-
 
                             <div class="row mb-3" style="background-color:white;">
                                 <div class="col-md-4">
