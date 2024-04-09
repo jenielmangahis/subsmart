@@ -23981,61 +23981,121 @@ class Accounting_modals extends MY_Controller
         $this->load->view("v2/includes/accounting/modal_forms/$view", $this->page_data);
     }
 
+    // public function get_customer_invoices($customerId)
+    // {
+    //     $post   = $this->input->post();
+    //     $search = $post['search'];
+
+    //     $filters = [
+    //         'customer_id' => $customerId
+    //     ];
+
+    //     if(!in_array($post['from_date'], ['', null])) {
+    //         $filters['from_date'] = date("Y-m-d", strtotime($post['from_date']));
+    //     }
+
+    //     if(!in_array($post['to_date'], ['', null])) {
+    //         $filters['to_date'] = date("Y-m-d", strtotime($post['to_date']));
+    //     }
+
+    //     $filters['overdue'] = $post['overdue'];
+
+    //     $invoices = $this->accounting_invoices_model->get_customer_invoices_to_pay($filters);
+    //     $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+
+    //     $data = [];
+    //     foreach($invoices as $invoice) {
+    //         $invoiceNum = str_replace($invoiceSettings->invoice_num_prefix, '', $invoice->invoice_number);
+    //         $description = "<a href='/nsmartrac/invoice/genview/$invoice->id' class='text-decoration-none'>Invoice #$invoiceNum</a> (".date("m/d/Y", strtotime($invoice->date_issued)).")";
+
+    //         $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
+
+    //         $paymentAmounts = array_column($paymentRecords, 'invoice_amount');
+    //         $totalPayment = array_sum($paymentAmounts);
+
+    //         $balance = floatval($invoice->grand_total) - floatval($totalPayment);
+
+    //         if($search !== "") {
+    //             if(stripos($invoiceNum, $search) !== false) {
+    //                 $data[] = [
+    //                     'id' => $invoice->id,
+    //                     'description' => $description,
+    //                     'date_issued' => date("m/d/Y", strtotime($invoice->date_issued)),
+    //                     'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+    //                     'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
+    //                     'open_balance' => number_format(floatval($balance), 2, '.', ',')
+    //                 ];
+    //             }
+    //         } else {
+    //             $data[] = [
+    //                 'id' => $invoice->id,
+    //                 'description' => $description,
+    //                 'date_issued' => date("m/d/Y", strtotime($invoice->date_issued)),
+    //                 'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+    //                 'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
+    //                 'open_balance' => number_format(floatval($balance), 2, '.', ',')
+    //             ];
+    //         }
+    //     }
+
+    //     echo json_encode($data);
+    // }
+
     public function get_customer_invoices($customerId)
     {
-        $post   = $this->input->post();
-        $search = $post['search'];
+        $post = $this->input->post();
+        $search = isset($post['search']) ? trim($post['search']) : '';
+        $fromDate = isset($post['from_date']) ? trim($post['from_date']) : '';
+        $toDate = isset($post['to_date']) ? trim($post['to_date']) : '';
+        $overdue = isset($post['overdue']) ? $post['overdue'] : '';
 
         $filters = [
             'customer_id' => $customerId
         ];
 
-        if(!in_array($post['from_date'], ['', null])) {
-            $filters['from_date'] = date("Y-m-d", strtotime($post['from_date']));
+        if (!empty($fromDate)) {
+            $filters['from_date'] = date("Y-m-d", strtotime($fromDate));
         }
 
-        if(!in_array($post['to_date'], ['', null])) {
-            $filters['to_date'] = date("Y-m-d", strtotime($post['to_date']));
+        if (!empty($toDate)) {
+            $filters['to_date'] = date("Y-m-d", strtotime($toDate));
         }
 
-        $filters['overdue'] = $post['overdue'];
+        $filters['overdue'] = $overdue;
 
         $invoices = $this->accounting_invoices_model->get_customer_invoices_to_pay($filters);
         $invoiceSettings = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
         $data = [];
-        foreach($invoices as $invoice) {
+        foreach ($invoices as $invoice) {
             $invoiceNum = str_replace($invoiceSettings->invoice_num_prefix, '', $invoice->invoice_number);
-            $description = "<a href='/invoice/genview/$invoice->id' class='text-decoration-none'>Invoice #$invoiceNum</a> (".date("m/d/Y", strtotime($invoice->date_issued)).")";
+            $invoiceId = $invoice->id;
+
+            $baseurl = base_url('/');
+            if (!empty($invoice->customer_id)) {
+                //$description = "<a href='/invoice/genview/$invoiceId' class='text-decoration-none'>Invoice #$invoiceNum</a> (" . date("m/d/Y", strtotime($invoice->date_issued)) . ")";
+                $description = "<a href=" . site_url() . "invoice/genview/$invoiceId class='text-decoration-none'>Invoice #$invoiceNum</a> (" . date("m/d/Y", strtotime($invoice->date_issued)) . ")";
+            } else {
+                $description = "<a href=" . site_url() . "invoice/genview/$invoiceId class='text-decoration-none'>Invoice #$invoiceNum</a> (" . date("m/d/Y", strtotime($invoice->date_issued)) . ")";
+            }
 
             $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
-
             $paymentAmounts = array_column($paymentRecords, 'invoice_amount');
             $totalPayment = array_sum($paymentAmounts);
-
             $balance = floatval($invoice->grand_total) - floatval($totalPayment);
 
-            if($search !== "") {
-                if(stripos($invoiceNum, $search) !== false) {
-                    $data[] = [
-                        'id' => $invoice->id,
-                        'description' => $description,
-                        'date_issued' => date("m/d/Y", strtotime($invoice->date_issued)),
-                        'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
-                        'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
-                        'open_balance' => number_format(floatval($balance), 2, '.', ',')
-                    ];
-                }
-            } else {
-                $data[] = [
-                    'id' => $invoice->id,
-                    'description' => $description,
-                    'date_issued' => date("m/d/Y", strtotime($invoice->date_issued)),
-                    'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
-                    'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
-                    'open_balance' => number_format(floatval($balance), 2, '.', ',')
-                ];
+            if (!empty($search) && stripos($invoiceNum, $search) === false) {
+                continue; 
             }
+
+            $data[] = [
+                'id' => $invoiceId,
+                'description' => $description,
+                'date_issued' => date("m/d/Y", strtotime($invoice->date_issued)),
+                'due_date' => date("m/d/Y", strtotime($invoice->due_date)),
+                'original_amount' => number_format(floatval($invoice->grand_total), 2, '.', ','),
+                'open_balance' => number_format(floatval($balance), 2, '.', ',')
+            ];
         }
 
         echo json_encode($data);

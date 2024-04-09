@@ -13596,7 +13596,7 @@ const loadCustomerInvoices = () => {
 
     $.ajax({
 
-        url: `/accounting/get-customer-invoices/${$('#receivePaymentModal #customer').val() || 'get-customer-invoices'}`,
+        url: base_url + `accounting/get-customer-invoices/${$('#receivePaymentModal #customer').val() || 'get-customer-invoices'}`,
         data: data,
         type: 'post',
         processData: false,

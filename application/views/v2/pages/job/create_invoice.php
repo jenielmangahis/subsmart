@@ -343,10 +343,10 @@
 
             row.querySelector(".itemname").value = item.title;
             row.querySelector(".itemquantity").value = item.qty;
-            row.querySelector(".itemprice").value = parseFloat(item.cost) / parseFloat(item.qty);            
+            row.querySelector(".itemprice").value = parseFloat(item.cost);            
             row.querySelector(".itemdiscount").value = parseFloat(item.discount);
             row.querySelector(".itemtax").value = item.tax;
-            row.querySelector(".itemtotal").value = item.cost;
+            row.querySelector(".itemtotal").value = item.total;
             row.querySelector(".itemtype").value = capitalizeFirstLetter(item.type);
 
             const quantity = row.querySelector(".itemquantity");
@@ -361,7 +361,7 @@
             tax.addEventListener("input", updateTotal);
 
             //total.value = item.qty * item.price;
-            total.value = item.cost;
+            total.value = item.total;
         }
 
         document.querySelector("#item-table tbody").appendChild(row);

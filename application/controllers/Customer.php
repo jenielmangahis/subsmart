@@ -1,4 +1,5 @@
 <?php
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 // ini_set('display_errors', 1);
@@ -6,7 +7,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 // error_reporting(E_ALL);
 class Customer extends MY_Controller
 {
-
     public function __construct()
     {
         parent::__construct();
@@ -17,13 +17,12 @@ class Customer extends MY_Controller
         // load Models
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('Esign_model', 'Esign_model');
-        $this->load->model('Activity_model','activity');
+        $this->load->model('Activity_model', 'activity');
         $this->load->model('General_model', 'general');
         $this->load->model('Tickets_model', 'tickets_model');
         $this->load->model('Workorder_model', 'workorder_model');
 
-
-        //load library
+        // load library
         $this->load->library('session');
         // load helper
         $this->load->helper('functions');
@@ -38,11 +37,12 @@ class Customer extends MY_Controller
         }
     }
 
-    public function addJSONResponseHeader() {
-        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
-        header("Cache-Control: post-check=0, pre-check=0", false);
-        header("Pragma: no-cache");
-        header("Content-Type: application/json");
+    public function addJSONResponseHeader()
+    {
+        header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+        header('Cache-Control: post-check=0, pre-check=0', false);
+        header('Pragma: no-cache');
+        header('Content-Type: application/json');
     }
 
     public function getModulesList()
@@ -50,33 +50,33 @@ class Customer extends MY_Controller
         $user_id = logged('id');
         $this->load->library('wizardlib');
 
-        $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
+        $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id', $user_id, 'ac_module_sort');
         $this->page_data['widgets'] = $this->customer_ad_model->getModulesList();
         $this->load->view('v2/pages/customer/adv_cust_modules/add_module_details', $this->page_data);
     }
 
     public function index()
-    {     
-        $company_id = logged('company_id');   
+    {
+        $company_id = logged('company_id');
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
-        
+
         $this->hasAccessModule(9);
 
-        $this->load->library('wizardlib');        
+        $this->load->library('wizardlib');
         $input = $this->input->post();
-        $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
+        $this->page_data['affiliates'] = $this->customer_ad_model->get_all(false, '', '', 'affiliates', 'id');
 
-        $get_company_settings = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
+        $get_company_settings = [
+            'where' => [
+                'company_id' => logged('company_id'),
+            ],
             'table' => 'customer_settings_headers',
             'select' => '*',
-        );
+        ];
         $customer_settings = $this->general->get_data_with_param($get_company_settings);
-        $enabled_table_headers = array();
-        if( isset($customer_settings[0] )){
+        $enabled_table_headers = [];
+        if (isset($customer_settings[0])) {
             $enabled_table_headers = unserialize($customer_settings[0]->headers);
         }
 
@@ -84,23 +84,23 @@ class Customer extends MY_Controller
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
         ]);
 
-        $getCustomerStatus = array(
+        $getCustomerStatus = [
             'select' => '*',
             'table' => 'acs_cust_status',
-            'where' => array('company_id' => $company_id,),
-        );
+            'where' => ['company_id' => $company_id],
+        ];
 
-        $getCustomerGroup = array(
+        $getCustomerGroup = [
             'select' => '*',
             'table' => 'customer_groups',
-            'where' => array('company_id' => $company_id,),
-        );
+            'where' => ['company_id' => $company_id],
+        ];
 
-        $getSalesArea = array(
+        $getSalesArea = [
             'select' => '*',
             'table' => 'ac_salesarea',
-            'where' => array('fk_comp_id' => $company_id,),
-        );
+            'where' => ['fk_comp_id' => $company_id],
+        ];
 
         $this->page_data['customer_status'] = $this->general->get_data_with_param($getCustomerStatus);
         $this->page_data['customer_group'] = $this->general->get_data_with_param($getCustomerGroup);
@@ -113,252 +113,251 @@ class Customer extends MY_Controller
 
     public function ajax_customer_lists()
     {
-        $get_company_settings = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
+        $get_company_settings = [
+            'where' => [
+                'company_id' => logged('company_id'),
+            ],
             'table' => 'customer_settings_headers',
             'select' => '*',
-        );
+        ];
         $customer_settings = $this->general->get_data_with_param($get_company_settings);
-        $enabled_table_headers = array();
-        if( isset($customer_settings[0] )){
+        $enabled_table_headers = [];
+        if (isset($customer_settings[0])) {
             $enabled_table_headers = unserialize($customer_settings[0]->headers);
         }
 
-        $search = ['search' => ''];    
-        $this->page_data['profiles'] = $this->customer_ad_model->getCustomerLists($search,0,0);
+        $search = ['search' => ''];
+        $this->page_data['profiles'] = $this->customer_ad_model->getCustomerLists($search, 0, 0);
         $this->page_data['enabled_table_headers'] = $enabled_table_headers;
         $this->load->view('v2/pages/customer/ajax_customer_lists', $this->page_data);
     }
 
     /**
-     * This function will fetch customer list from post request of datatable server side processing
-     * 
+     * This function will fetch customer list from post request of datatable server side processing.
+     *
      * @return json Customer list json format
      */
     public function getCustomerLists()
     {
-        $data  = array();
+        $data = [];
         $start = $_POST['start'];
         $draw = $this->input->post('draw');
-        $length = $_POST['length'];        
-        $search = $_POST['search']['value'];    
-        $search = ['search' => $search];    
-        $customers    = $this->customer_ad_model->getCustomerLists($search, $start, $length);
+        $length = $_POST['length'];
+        $search = $_POST['search']['value'];
+        $search = ['search' => $search];
+        $customers = $this->customer_ad_model->getCustomerLists($search, $start, $length);
         $allCustomers = $this->customer_ad_model->getCustomerLists($search, 0, 0);
         $all_customer_ids = [];
-        foreach($allCustomers as $c){
-            if( !in_array($c->prof_id, $all_customer_ids) ){
+        foreach ($allCustomers as $c) {
+            if (!in_array($c->prof_id, $all_customer_ids)) {
                 $all_customer_ids[] = $c->prof_id;
             }
         }
-        
-        $get_company_settings = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
+
+        $get_company_settings = [
+            'where' => [
+                'company_id' => logged('company_id'),
+            ],
             'table' => 'customer_settings_headers',
             'select' => '*',
-        );
+        ];
         $customer_settings = $this->general->get_data_with_param($get_company_settings);
-        $enabled_table_headers = array();
-        if( isset($customer_settings[0] )){
+        $enabled_table_headers = [];
+        if (isset($customer_settings[0])) {
             $enabled_table_headers = unserialize($customer_settings[0]->headers);
         }
         $data = [];
-        $customer_ids = [];        
-        foreach($customers as $customer){      
-            //if( !in_array($customer->prof_id, $customer_ids) ){
-                $customer_ids[] = $customer->prof_id;   
-                switch (strtoupper($customer->status)){
-                    case "INSTALLED":
-                        $badge = "success";
-                        break;
-                    case "CANCELLED":
-                        $badge = "error";
-                        break;
-                    case "COLLECTIONS":
-                        $badge = "secondary";
-                        break;
-                    case "CHARGED BACK":
-                        $badge = "primary";
-                        break;
-                    default:
-                        $badge = "";
-                        break;
-                }
-                
-                $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : $customer->technician.'Not Assigned';
-                $companyId = logged('company_id');
-                $salesRep = get_sales_rep_name($customer->fk_sales_rep_office);
-                $labelName = $customer->customer_type === 'Business' ? $customer->business_name : $customer->first_name . ' ' . $customer->last_name;
-                $data_arr = [];
-                if(!empty($enabled_table_headers)){
-                    if (in_array('name', $enabled_table_headers)){
-                        if ($customer->customer_type === 'Business'){
-                            $parts = explode(' ', strtoupper(trim($customer->business_name)));
-                            $n = count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
-                            $data_name = "<div class='nsm-profile'><span>".$n."</span></div>";
-                            array_push($data_arr, $data_name);
-                        }else{
-                            $n = ucwords($customer->first_name[0]) . ucwords($customer->last_name[0]);
-                            $data_name = "<div class='nsm-profile'><span>".$n."</span></div>";
-                            array_push($data_arr, $data_name);
-                        }
-                        $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label>
-                        <label class='nsm-link default content-subtitle fst-italic d-block'>".$customer->email."</label>";
-                        if( $customer->adt_sales_project_id > 0 ){
-                            $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
-                        }
-                        array_push($data_arr, $name);
-                    }
-                    if (in_array('email', $enabled_table_headers)){
-                        array_push($data_arr, $customer->email);
-                    }
-                    if (in_array('industry', $enabled_table_headers)) {
-                        if( $customer->industry_type_id > 0 ){
-                            array_push($data_arr, $customer->industry_type);
-                        }else{
-                            array_push($data_arr, 'Not Specified');           
-                        }
-                    }
-                    if (in_array('city', $enabled_table_headers)) {
-                        array_push($data_arr, $customer->city);
-                    }
-                    if (in_array('state', $enabled_table_headers)){
-                        array_push($data_arr, $customer->state);
-                    }
-                    
-                    if (in_array('source', $enabled_table_headers)){
-                        // $lead =  $customer->lead_source != "" ? $customer->lead_source : Door';
-                        $lead = "Door";
-                        array_push($data_arr, $lead);
-                    }
-                    if (in_array('added', $enabled_table_headers)){
-                        array_push($data_arr, $customer->entered_by2);
-                    }
-                    if (in_array('sales_rep', $enabled_table_headers)){
-                        $sales_rep = get_sales_rep_name($customer->fk_sales_rep_office);
-                        array_push($data_arr, $sales_rep);
-                    }
-                    if (in_array('tech', $enabled_table_headers)) {
-                        $techician = !empty($customer->technician) ?  get_employee_name($customer->technician) : 'Not Assigned';
-                        array_push($data_arr, $techician);
-                    }
-                    if (in_array('plan_type', $enabled_table_headers)){
-                        array_push($data_arr, $customer->system_type);
-                    }
-                    if (in_array('rate_plan', $enabled_table_headers)){
-                        array_push($data_arr, ($customer->mmr) ? "$$customer->mmr" : "$0.00");
-                    }
-                    if (in_array('subscription_amount', $enabled_table_headers)){
-                        $subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
-                        array_push($data_arr, "$".$subs_amt);
-                    }
-                    if (in_array('job_amount', $enabled_table_headers)){
-                        $this->db->select('SUM(job_items.qty * job_items.cost) AS total_amount');
-                        $this->db->from('job_items');
-                        $this->db->join('jobs', 'job_items.job_id = jobs.id', 'left');
-                        $this->db->where('jobs.customer_id', $customer->prof_id);
-                        $totalJobItems = $this->db->get()->row();
-                        $job_amount    = 0;
-                        if( $totalJobItems->total_amount > 0 ){
-                            $job_amount = number_format(floatval($totalJobItems->total_amount), 2, '.', ',');
-                        }
-                        array_push($data_arr, "$".$job_amount);
-                    }
-                    if (in_array('phone', $enabled_table_headers)){
-                        array_push($data_arr, formatPhoneNumber($customer->phone_m));                        
-                    }
-                    if (in_array('status', $enabled_table_headers)){
-                        $stat = '<span class="nsm-badge <?= $badge ?>">'. $customer->status != null ? $customer->status : "Pending".'</span>';
-                        array_push($data_arr, $stat);
-                    }
-                }else{
-                    //name
-                    if ($customer->customer_type === 'Business'){
+        $customer_ids = [];
+        foreach ($customers as $customer) {
+            // if( !in_array($customer->prof_id, $customer_ids) ){
+            $customer_ids[] = $customer->prof_id;
+            switch (strtoupper($customer->status)) {
+                case 'INSTALLED':
+                    $badge = 'success';
+                    break;
+                case 'CANCELLED':
+                    $badge = 'error';
+                    break;
+                case 'COLLECTIONS':
+                    $badge = 'secondary';
+                    break;
+                case 'CHARGED BACK':
+                    $badge = 'primary';
+                    break;
+                default:
+                    $badge = '';
+                    break;
+            }
+
+            $techician = !empty($customer->technician) ? get_employee_name($customer->technician)->FName : $customer->technician.'Not Assigned';
+            $companyId = logged('company_id');
+            $salesRep = get_sales_rep_name($customer->fk_sales_rep_office);
+            $labelName = $customer->customer_type === 'Business' ? $customer->business_name : $customer->first_name.' '.$customer->last_name;
+            $data_arr = [];
+            if (!empty($enabled_table_headers)) {
+                if (in_array('name', $enabled_table_headers)) {
+                    if ($customer->customer_type === 'Business') {
                         $parts = explode(' ', strtoupper(trim($customer->business_name)));
-                        $n = count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
-                        $data_name = "<div class='nsm-profile'><span>".$n."</span></div>";
+                        $n = count($parts) > 1 ? $parts[0][0].end($parts)[0] : $parts[0][0];
+                        $data_name = "<div class='nsm-profile'><span>".$n.'</span></div>';
                         array_push($data_arr, $data_name);
-                    }else{
-                        $n = ucwords($customer->first_name[0]) . ucwords($customer->last_name[0]);
-                        $data_name = "<div class='nsm-profile'><span>".$n."</span></div>";
+                    } else {
+                        $n = ucwords($customer->first_name[0]).ucwords($customer->last_name[0]);
+                        $data_name = "<div class='nsm-profile'><span>".$n.'</span></div>';
                         array_push($data_arr, $data_name);
                     }
-                    $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/preview_/'.$customer->prof_id.'')."\"'>".$labelName."</label>
-                    <label class='nsm-link default content-subtitle fst-italic d-block'>".$customer->email."</label>";
-                    if( $customer->adt_sales_project_id > 0 ){
+                    $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label>
+                        <label class='nsm-link default content-subtitle fst-italic d-block'>".$customer->email.'</label>';
+                    if ($customer->adt_sales_project_id > 0) {
                         $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
                     }
                     array_push($data_arr, $name);
-                    //email
-                    //array_push($data_arr, $customer->email);
-                    //industry
-                    if( logged('company_id') == 1 ){
-                        if( $customer->industry_type_id > 0 ){
-                            array_push($data_arr, $customer->industry_type);
-                        }else{
-                            array_push($data_arr, 'Not Specified');           
-                        }
+                }
+                if (in_array('email', $enabled_table_headers)) {
+                    array_push($data_arr, $customer->email);
+                }
+                if (in_array('industry', $enabled_table_headers)) {
+                    if ($customer->industry_type_id > 0) {
+                        array_push($data_arr, $customer->industry_type);
+                    } else {
+                        array_push($data_arr, 'Not Specified');
                     }
-                    
-                    //city
+                }
+                if (in_array('city', $enabled_table_headers)) {
                     array_push($data_arr, $customer->city);
-                    //state
+                }
+                if (in_array('state', $enabled_table_headers)) {
                     array_push($data_arr, $customer->state);
-                    //source
-                    $lead =  $customer->lead_source != "" ? $customer->lead_source : 'Door';
+                }
+
+                if (in_array('source', $enabled_table_headers)) {
+                    // $lead =  $customer->lead_source != "" ? $customer->lead_source : Door';
+                    $lead = 'Door';
                     array_push($data_arr, $lead);
-                    //added
-                    $added_by = trim($customer->entered_by2) != '' ? $customer->entered_by2 : '---';
-                    array_push($data_arr, $added_by);
-                    //sales rep
-                    $sales_rep = trim(get_sales_rep_name($customer->fk_sales_rep_office));
-                    if( $sales_rep == '' ){
-                        $sales_rep = '---';
-                    }
+                }
+                if (in_array('added', $enabled_table_headers)) {
+                    array_push($data_arr, $customer->entered_by2);
+                }
+                if (in_array('sales_rep', $enabled_table_headers)) {
+                    $sales_rep = get_sales_rep_name($customer->fk_sales_rep_office);
                     array_push($data_arr, $sales_rep);
-                    //tech
-                    $techician = !empty($customer->technician) ?  get_employee_name($customer->technician) : 'Not Assigned';
+                }
+                if (in_array('tech', $enabled_table_headers)) {
+                    $techician = !empty($customer->technician) ? get_employee_name($customer->technician) : 'Not Assigned';
                     array_push($data_arr, $techician);
-                    //plan type
-                    $plan_type = trim($customer->system_type) != '' ? $customer->system_type : '---';
-                    array_push($data_arr, $plan_type);
-                    //sub amount
+                }
+                if (in_array('plan_type', $enabled_table_headers)) {
+                    array_push($data_arr, $customer->system_type);
+                }
+                if (in_array('rate_plan', $enabled_table_headers)) {
+                    array_push($data_arr, ($customer->mmr) ? "$$customer->mmr" : '$0.00');
+                }
+                if (in_array('subscription_amount', $enabled_table_headers)) {
                     $subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
-                    array_push($data_arr, "$".$subs_amt);
-                    //job amount
+                    array_push($data_arr, '$'.$subs_amt);
+                }
+                if (in_array('job_amount', $enabled_table_headers)) {
                     $this->db->select('SUM(job_items.qty * job_items.cost) AS total_amount');
                     $this->db->from('job_items');
                     $this->db->join('jobs', 'job_items.job_id = jobs.id', 'left');
                     $this->db->where('jobs.customer_id', $customer->prof_id);
                     $totalJobItems = $this->db->get()->row();
-                    $job_amount    = 0;
-                    if( $totalJobItems->total_amount > 0 ){
+                    $job_amount = 0;
+                    if ($totalJobItems->total_amount > 0) {
                         $job_amount = number_format(floatval($totalJobItems->total_amount), 2, '.', ',');
                     }
-                    array_push($data_arr, "$".$job_amount);
-                    //phone
-                    $phone = trim($customer->phone_m) != '' ? $customer->phone_m : '---';
-                    array_push($data_arr, formatPhoneNumber($phone));
-                    //status
-                    $stat = '<span class="nsm-badge <?= $badge ?>">'. $customer->status != null ? $customer->status : "Pending".'</span>';
+                    array_push($data_arr, '$'.$job_amount);
+                }
+                if (in_array('phone', $enabled_table_headers)) {
+                    array_push($data_arr, formatPhoneNumber($customer->phone_m));
+                }
+                if (in_array('status', $enabled_table_headers)) {
+                    $stat = '<span class="nsm-badge <?= $badge ?>">'.$customer->status != null ? $customer->status : 'Pending</span>';
                     array_push($data_arr, $stat);
-
+                }
+            } else {
+                // name
+                if ($customer->customer_type === 'Business') {
+                    $parts = explode(' ', strtoupper(trim($customer->business_name)));
+                    $n = count($parts) > 1 ? $parts[0][0].end($parts)[0] : $parts[0][0];
+                    $data_name = "<div class='nsm-profile'><span>".$n.'</span></div>';
+                    array_push($data_arr, $data_name);
+                } else {
+                    $n = ucwords($customer->first_name[0]).ucwords($customer->last_name[0]);
+                    $data_name = "<div class='nsm-profile'><span>".$n.'</span></div>';
+                    array_push($data_arr, $data_name);
+                }
+                $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/preview_/'.$customer->prof_id.'')."\"'>".$labelName."</label>
+                    <label class='nsm-link default content-subtitle fst-italic d-block'>".$customer->email.'</label>';
+                if ($customer->adt_sales_project_id > 0) {
+                    $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
+                }
+                array_push($data_arr, $name);
+                // email
+                // array_push($data_arr, $customer->email);
+                // industry
+                if (logged('company_id') == 1) {
+                    if ($customer->industry_type_id > 0) {
+                        array_push($data_arr, $customer->industry_type);
+                    } else {
+                        array_push($data_arr, 'Not Specified');
+                    }
                 }
 
-                $dropdown = "<div class='dropdown table-management'>
+                // city
+                array_push($data_arr, $customer->city);
+                // state
+                array_push($data_arr, $customer->state);
+                // source
+                $lead = $customer->lead_source != '' ? $customer->lead_source : 'Door';
+                array_push($data_arr, $lead);
+                // added
+                $added_by = trim($customer->entered_by2) != '' ? $customer->entered_by2 : '---';
+                array_push($data_arr, $added_by);
+                // sales rep
+                $sales_rep = trim(get_sales_rep_name($customer->fk_sales_rep_office));
+                if ($sales_rep == '') {
+                    $sales_rep = '---';
+                }
+                array_push($data_arr, $sales_rep);
+                // tech
+                $techician = !empty($customer->technician) ? get_employee_name($customer->technician) : 'Not Assigned';
+                array_push($data_arr, $techician);
+                // plan type
+                $plan_type = trim($customer->system_type) != '' ? $customer->system_type : '---';
+                array_push($data_arr, $plan_type);
+                // sub amount
+                $subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
+                array_push($data_arr, '$'.$subs_amt);
+                // job amount
+                $this->db->select('SUM(job_items.qty * job_items.cost) AS total_amount');
+                $this->db->from('job_items');
+                $this->db->join('jobs', 'job_items.job_id = jobs.id', 'left');
+                $this->db->where('jobs.customer_id', $customer->prof_id);
+                $totalJobItems = $this->db->get()->row();
+                $job_amount = 0;
+                if ($totalJobItems->total_amount > 0) {
+                    $job_amount = number_format(floatval($totalJobItems->total_amount), 2, '.', ',');
+                }
+                array_push($data_arr, '$'.$job_amount);
+                // phone
+                $phone = trim($customer->phone_m) != '' ? $customer->phone_m : '---';
+                array_push($data_arr, formatPhoneNumber($phone));
+                // status
+                $stat = '<span class="nsm-badge <?= $badge ?>">'.$customer->status != null ? $customer->status : 'Pending</span>';
+                array_push($data_arr, $stat);
+            }
+
+            $dropdown = "<div class='dropdown table-management'>
                     <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
                         <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                     </a>
                     <ul class='dropdown-menu dropdown-menu-end'>
                         <li>
-                            <a class='dropdown-item' href='".("customer/preview_/".$customer->prof_id)."'>Preview</a>
+                            <a class='dropdown-item' href='".('customer/preview_/'.$customer->prof_id)."'>Preview</a>
                         </li>
                         <li>
-                            <a class='dropdown-item' href='".base_url("customer/add_advance/".$customer->prof_id)."'>Edit</a>
+                            <a class='dropdown-item' href='".base_url('customer/add_advance/'.$customer->prof_id)."'>Edit</a>
                         </li>
                         <li>
                             <a class='dropdown-item send-email' data-id='".$customer->prof_id."' data-email='".$customer->email."' href='javascript:void(0);'>Email</a>
@@ -370,7 +369,7 @@ class Customer extends MY_Controller
                             <a class='dropdown-item' href='".base_url('invoice/add?cus_id='.$customer->prof_id)."'>Invoice</a>
                         </li>
                         <li>
-                            <a class='dropdown-item' href='".base_url('customer/module/' . $customer->prof_id)."'>Dashboard</a>
+                            <a class='dropdown-item' href='".base_url('customer/module/'.$customer->prof_id)."'>Dashboard</a>
                         </li>
                         <li>
                             <a class='dropdown-item' href='".base_url('job/new_job1?cus_id='.$customer->prof_id)."'>Schedule</a>
@@ -383,61 +382,59 @@ class Customer extends MY_Controller
                         </li>
                     </ul>
                 </div>";
-                array_push($data_arr, $dropdown);
+            array_push($data_arr, $dropdown);
 
-                // $is_adt_project = 'no';
-                // if( $customer->adt_sales_project_id > 0 ){
-                //     $is_adt_project = 'yes';
-                // }
-                // array_push($data_arr, $is_adt_project);
-                
+            // $is_adt_project = 'no';
+            // if( $customer->adt_sales_project_id > 0 ){
+            //     $is_adt_project = 'yes';
+            // }
+            // array_push($data_arr, $is_adt_project);
 
-                $data[] = $data_arr;
-                
+            $data[] = $data_arr;
 
-                $start++;
-            //}            
+            ++$start;
+            // }
         }
-        $output = array(
-            "draw" => $draw,
-            //"recordsTotal" => count($allCustomers),
-            //"recordsFiltered" => count($allCustomers),
-            "recordsTotal" => count($all_customer_ids),
-            "recordsFiltered" => count($all_customer_ids),            
-            "data" => $data
-        );
+        $output = [
+            'draw' => $draw,
+            // "recordsTotal" => count($allCustomers),
+            // "recordsFiltered" => count($allCustomers),
+            'recordsTotal' => count($all_customer_ids),
+            'recordsFiltered' => count($all_customer_ids),
+            'data' => $data,
+        ];
         echo json_encode($output);
     }
 
-    public function getDuplicatedEntry() 
+    public function getDuplicatedEntry()
     {
         $company_id = logged('company_id');
         $result = $this->customer_ad_model->getTotalDuplicatedEntry($company_id);
         echo $result;
     }
-    
-    public function getCustomerList(){
-        $get_company_settings = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
+
+    public function getCustomerList()
+    {
+        $get_company_settings = [
+            'where' => [
+                'company_id' => logged('company_id'),
+            ],
             'table' => 'customer_settings_headers',
             'select' => '*',
-        );
+        ];
         $customer_settings = $this->general->get_data_with_param($get_company_settings);
-        $enabled_table_headers = array();
-        if( isset($customer_settings[0] )){
+        $enabled_table_headers = [];
+        if (isset($customer_settings[0])) {
             $enabled_table_headers = unserialize($customer_settings[0]->headers);
         }
         $customers = $this->customer_ad_model->getCustomerLists();
 
-        $data_arr = array("customer" => $customers, "headers" => $enabled_table_headers);
-        die(json_encode($data_arr));
-
-
+        $data_arr = ['customer' => $customers, 'headers' => $enabled_table_headers];
+        exit(json_encode($data_arr));
     }
 
-    public function preview_($id=null){
+    public function preview_($id = null)
+    {
         $this->load->model('IndustryType_model');
 
         $this->page_data['page']->title = 'Customer Preview';
@@ -445,253 +442,257 @@ class Customer extends MY_Controller
 
         $this->load->model('jobs_model');
         $is_allowed = $this->isAllowedModuleAccess(9);
-        if( !$is_allowed ){
+        if (!$is_allowed) {
             $this->page_data['module'] = 'customer';
             echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
+            exit;
         }
         $userid = $id;
         $user_id = logged('id');
         $companyId = logged('company_id');
-        if(isset($userid) || !empty($userid)){
-            $customer = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+        if (isset($userid) || !empty($userid)) {
+            $customer = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['industryType'] = $this->IndustryType_model->getById($customer->industry_type_id);
             $this->page_data['profile_info'] = $customer;
-            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
-            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
-            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
-            if($companyId == 58){
-                $this->page_data['solar_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_info_solar");
+            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_access');
+            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_office');
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
+            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_alarm');
+            if ($companyId == 58) {
+                $this->page_data['solar_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_info_solar');
             }
-            
-            $get_customer_notes = array(
-                'where' => array(
-                    'fk_prof_id' => $userid
-                ),
+
+            $get_customer_notes = [
+                'where' => [
+                    'fk_prof_id' => $userid,
+                ],
                 'table' => 'acs_notes',
                 'select' => '*',
-            );
+            ];
             $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
 
-            $get_login_user = array(
-                'where' => array(
-                    'id' => $user_id
-                ),
+            $get_login_user = [
+                'where' => [
+                    'id' => $user_id,
+                ],
                 'table' => 'users',
                 'select' => 'id,FName,LName',
-            );
-            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+            ];
+            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user, false);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_customer_job_items($id);
 
-            $customer_papers_query = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
+            $customer_papers_query = [
+                'where' => [
+                    'customer_id' => $userid,
+                ],
                 'table' => 'acs_papers',
                 'select' => '*',
-            );
+            ];
             $this->page_data['papers'] = $this->general->get_data_with_param($customer_papers_query);
             if (count($this->page_data['papers'])) {
                 $this->page_data['papers'] = $this->page_data['papers'][0];
             }
 
-            $customer_contacts = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
+            $customer_contacts = [
+                'where' => [
+                    'customer_id' => $userid,
+                ],
                 'table' => 'contacts',
                 'select' => '*',
-                'order' => array(
+                'order' => [
                     'order_by' => 'id',
-                    'ordering' => 'asc'
-                ),
-            );
-            $emergency_contacts = $this->general->get_data_with_param($customer_contacts);            
+                    'ordering' => 'asc',
+                ],
+            ];
+            $emergency_contacts = $this->general->get_data_with_param($customer_contacts);
             $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
         }
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
-        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'ac_salesarea', 'sa_id');
+        $this->page_data['employees'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'users', 'id');
         $this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['companyId'] = logged('company_id');
 
         $this->load->view('v2/pages/customer/preview', $this->page_data);
     }
 
-    public function print_customer_details($id=null){
+    public function print_customer_details($id = null)
+    {
         $this->load->model('jobs_model');
         $is_allowed = $this->isAllowedModuleAccess(9);
-        if( !$is_allowed ){
+        if (!$is_allowed) {
             $this->page_data['module'] = 'customer';
             echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
+            exit;
         }
         $userid = $id;
         $user_id = logged('id');
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
-            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
-            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
-            $get_customer_notes = array(
-                'where' => array(
-                    'fk_prof_id' => $userid
-                ),
+        if (isset($userid) || !empty($userid)) {
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
+            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_access');
+            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_office');
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
+            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_alarm');
+            $get_customer_notes = [
+                'where' => [
+                    'fk_prof_id' => $userid,
+                ],
                 'table' => 'acs_notes',
                 'select' => '*',
-            );
+            ];
             $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
 
-            $get_login_user = array(
-                'where' => array(
-                    'id' => $user_id
-                ),
+            $get_login_user = [
+                'where' => [
+                    'id' => $user_id,
+                ],
                 'table' => 'users',
                 'select' => 'id,FName,LName',
-            );
-            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+            ];
+            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user, false);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_customer_job_items($id);
 
-            $customer_papers_query = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
+            $customer_papers_query = [
+                'where' => [
+                    'customer_id' => $userid,
+                ],
                 'table' => 'acs_papers',
                 'select' => '*',
-            );
+            ];
             $this->page_data['papers'] = $this->general->get_data_with_param($customer_papers_query);
 
-            $customer_contacts = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
+            $customer_contacts = [
+                'where' => [
+                    'customer_id' => $userid,
+                ],
                 'table' => 'contacts',
                 'select' => '*',
-            );
+            ];
             $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
         }
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
-        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'ac_salesarea', 'sa_id');
+        $this->page_data['employees'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'users', 'id');
         $this->page_data['users'] = $this->users_model->getUsers();
 
         $this->load->view('customer/print/customer_details', $this->page_data);
     }
 
-    public function preview($id=null){
+    public function preview($id = null)
+    {
         $this->load->model('jobs_model');
         $is_allowed = $this->isAllowedModuleAccess(9);
-        if( !$is_allowed ){
+        if (!$is_allowed) {
             $this->page_data['module'] = 'customer';
             echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
+            exit;
         }
         $userid = $id;
         $user_id = logged('id');
-        if(isset($userid) || !empty($userid)){
+        if (isset($userid) || !empty($userid)) {
             $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($userid);
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
-            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
-            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
-            $get_customer_notes = array(
-                'where' => array(
-                    'fk_prof_id' => $userid
-                ),
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
+            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_access');
+            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_office');
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
+            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_alarm');
+            $get_customer_notes = [
+                'where' => [
+                    'fk_prof_id' => $userid,
+                ],
                 'table' => 'acs_notes',
                 'select' => '*',
-            );
+            ];
             $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
 
-            $get_login_user = array(
-                'where' => array(
-                    'id' => $user_id
-                ),
+            $get_login_user = [
+                'where' => [
+                    'id' => $user_id,
+                ],
                 'table' => 'users',
                 'select' => 'id,FName,LName',
-            );
-            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+            ];
+            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user, false);
             $this->page_data['jobs_data_items'] = $this->jobs_model->get_customer_job_items($id);
 
-            $customer_papers_query = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
+            $customer_papers_query = [
+                'where' => [
+                    'customer_id' => $userid,
+                ],
                 'table' => 'acs_papers',
                 'select' => '*',
-            );
+            ];
             $this->page_data['papers'] = $this->general->get_data_with_param($customer_papers_query);
 
-            $customer_contacts = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
+            $customer_contacts = [
+                'where' => [
+                    'customer_id' => $userid,
+                ],
                 'table' => 'contacts',
                 'select' => '*',
-            );
+            ];
             $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
         }
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
-        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'ac_salesarea', 'sa_id');
+        $this->page_data['employees'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'users', 'id');
         $this->page_data['users'] = $this->users_model->getUsers();
 
         $this->load->view('v2/pages/customer/preview', $this->page_data);
     }
 
-    public function billing($id=null){
+    public function billing($id = null)
+    {
         $this->hasAccessModule(9);
 
         $userid = $id;
         $user_id = logged('id');
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+        if (isset($userid) || !empty($userid)) {
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
 
             // get customer transaction details
-            $transaction_details_query = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
+            $transaction_details_query = [
+                'where' => [
+                    'customer_id' => $userid,
+                ],
                 'table' => 'acs_transaction_history',
                 'select' => '*',
-            );
+            ];
             $this->page_data['transaction_details'] = $this->general->get_data_with_param($transaction_details_query);
 
-            $get_login_user = array(
-                'where' => array(
-                    'id' => $user_id
-                ),
+            $get_login_user = [
+                'where' => [
+                    'id' => $user_id,
+                ],
                 'table' => 'users',
                 'select' => 'id,FName,LName',
-            );
-            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+            ];
+            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user, false);
         }
-        //print_r($this->page_data['transaction_details']);
+        // print_r($this->page_data['transaction_details']);
         $this->page_data['transaction_details'];
         $this->load->view('customer/billing', $this->page_data);
     }
 
-    public function deleteCustomer($id=null)
+    public function deleteCustomer($id = null)
     {
         $customerId = $id;
-        $dataToDelete = array(
-            'where' => array(
-                'prof_id' => $customerId
-            ),
-            'table' => 'acs_profile'
-        );
-        $deleteExceute = $this->general->delete_($dataToDelete); 
+        $dataToDelete = [
+            'where' => [
+                'prof_id' => $customerId,
+            ],
+            'table' => 'acs_profile',
+        ];
+        $deleteExceute = $this->general->delete_($dataToDelete);
         echo $deleteExceute ? 'deleted' : 'Theres an issue';
     }
 
-    public function save_billing(){        
+    public function save_billing()
+    {
         $input = $this->input->post();
-        if($input){
+        if ($input) {
             $is_valid = true;
-            $err_msg  = '';
-            if( $input['method'] == 'CC' ){
-                $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
+            $err_msg = '';
+            if ($input['method'] == 'CC') {
+                $customer = $this->customer_ad_model->get_data_by_id('prof_id', $input['customer_id'], 'acs_profile');
                 $converge_data = [
                     'amount' => $input['transaction_amount'],
                     'card_number' => $input['card_number'],
@@ -699,15 +700,15 @@ class Customer extends MY_Controller
                     'exp_year' => $input['exp_year'],
                     'card_cvc' => $input['cvc'],
                     'address' => $customer->mail_add,
-                    'zip' => $customer->zip_code
+                    'zip' => $customer->zip_code,
                 ];
-                $result   = $this->converge_send_sale($converge_data);
+                $result = $this->converge_send_sale($converge_data);
                 $is_valid = $result['is_success'];
-                $err_msg  = $result['msg'];
+                $err_msg = $result['msg'];
             }
 
-            if( $input['method'] == 'NMI' ){
-                $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
+            if ($input['method'] == 'NMI') {
+                $customer = $this->customer_ad_model->get_data_by_id('prof_id', $input['customer_id'], 'acs_profile');
                 $nmi_data = [
                     'customer_id' => $customer->prof_id,
                     'frequency' => $input['frequency'],
@@ -718,15 +719,15 @@ class Customer extends MY_Controller
                     'exp_year' => $input['exp_year'],
                     'card_cvc' => $input['cvc'],
                     'address' => $customer->mail_add,
-                    'zip' => $customer->zip_code
+                    'zip' => $customer->zip_code,
                 ];
-                $result   = $this->nmi_send_sale($nmi_data);
+                $result = $this->nmi_send_sale($nmi_data);
                 $is_valid = $result['is_success'];
-                $err_msg  = $result['msg'];
+                $err_msg = $result['msg'];
             }
 
-            if( $is_valid ){
-                $transaction_details = array();
+            if ($is_valid) {
+                $transaction_details = [];
                 $transaction_details['customer_id'] = $input['customer_id'];
                 $transaction_details['subtotal'] = $input['subtotal'];
                 $transaction_details['tax'] = $input['tax'];
@@ -736,27 +737,27 @@ class Customer extends MY_Controller
                 $transaction_details['frequency'] = $input['frequency'];
                 $transaction_details['notes'] = $input['notes'];
                 $transaction_details['status'] = 'Approved';
-                $transaction_details['datetime'] = date("m-d-Y h:i A");
+                $transaction_details['datetime'] = date('m-d-Y h:i A');
 
-                if($this->general->add_($transaction_details, 'acs_transaction_history')){
+                if ($this->general->add_($transaction_details, 'acs_transaction_history')) {
                     echo '0';
-                }else{
+                } else {
                     echo 'Database Error!';
-                }    
-            }else{
+                }
+            } else {
                 echo $err_msg;
             }
-            
         }
     }
 
-    public function save_subscription(){
+    public function save_subscription()
+    {
         $input = $this->input->post();
-        if($input){
+        if ($input) {
             $is_valid = true;
-            $err_msg  = '';            
-            if( $input['method'] == 'CC' ){
-                $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
+            $err_msg = '';
+            if ($input['method'] == 'CC') {
+                $customer = $this->customer_ad_model->get_data_by_id('prof_id', $input['customer_id'], 'acs_profile');
                 $converge_data = [
                     'amount' => $input['transaction_amount'],
                     'card_number' => $input['card_number'],
@@ -764,15 +765,15 @@ class Customer extends MY_Controller
                     'exp_year' => $input['exp_year'],
                     'card_cvc' => $input['cvc'],
                     'address' => $customer->mail_add,
-                    'zip' => $customer->zip_code
+                    'zip' => $customer->zip_code,
                 ];
-                $result   = $this->converge_send_sale($converge_data);
+                $result = $this->converge_send_sale($converge_data);
                 $is_valid = $result['is_success'];
-                $err_msg  = $result['msg'];
+                $err_msg = $result['msg'];
             }
 
-            if( $input['method'] == 'NMI' ){
-                $customer = $this->customer_ad_model->get_data_by_id('prof_id',$input['customer_id'],"acs_profile");
+            if ($input['method'] == 'NMI') {
+                $customer = $this->customer_ad_model->get_data_by_id('prof_id', $input['customer_id'], 'acs_profile');
                 $nmi_data = [
                     'customer_id' => $customer->id,
                     'frequency' => $input['frequency'],
@@ -783,39 +784,39 @@ class Customer extends MY_Controller
                     'exp_year' => $input['exp_year'],
                     'card_cvc' => $input['cvc'],
                     'address' => $customer->mail_add,
-                    'zip' => $customer->zip_code
+                    'zip' => $customer->zip_code,
                 ];
-                $result   = $this->nmi_send_sale($nmi_data);
+                $result = $this->nmi_send_sale($nmi_data);
                 $is_valid = $result['is_success'];
-                $err_msg  = $result['msg'];
+                $err_msg = $result['msg'];
             }
 
-            if( $is_valid ){
-                $subscription_details = array();
+            if ($is_valid) {
+                $subscription_details = [];
                 $subscription_details['customer_id'] = $input['customer_id'];
                 $subscription_details['category'] = $input['transaction_category'];
                 $subscription_details['total_amount'] = $input['transaction_amount'];
                 $subscription_details['method'] = $input['method'];
                 $subscription_details['transaction_type'] = 'Pre-Auth and Capture';
                 $subscription_details['frequency'] = $input['frequency'];
-                //$subscription_details['num_frequency'] = $input['num_frequency'];
+                // $subscription_details['num_frequency'] = $input['num_frequency'];
                 $subscription_details['notes'] = $input['notes'];
                 $subscription_details['status'] = 'Approved';
 
-                if($this->general->add_($subscription_details, 'acs_subscriptions')){
+                if ($this->general->add_($subscription_details, 'acs_subscriptions')) {
                     echo '0';
-                }else{
+                } else {
                     echo 'Database Error!';
-                }    
-            }else{
+                }
+            } else {
                 echo $err_msg;
             }
-            
         }
     }
 
-    public function converge_send_sale($data){
-        include APPPATH . 'libraries/Converge/src/Converge.php';
+    public function converge_send_sale($data)
+    {
+        include APPPATH.'libraries/Converge/src/Converge.php';
 
         $this->load->model('CompanyOnlinePaymentAccount_model');
 
@@ -824,13 +825,13 @@ class Customer extends MY_Controller
 
         $companyApiSetting = $this->CompanyOnlinePaymentAccount_model->getByCompanyId(logged('company_id'));
 
-        if( $companyApiSetting ){
-            if( $companyApiSetting->converge_merchant_id != '' && $companyApiSetting->converge_merchant_user_id != '' && $companyApiSetting->converge_merchant_pin != '' ){
-                if( $data['exp_month'] < 10 ){
-                    $data['exp_month'] = 0 . $data['exp_month'];
+        if ($companyApiSetting) {
+            if ($companyApiSetting->converge_merchant_id != '' && $companyApiSetting->converge_merchant_user_id != '' && $companyApiSetting->converge_merchant_pin != '') {
+                if ($data['exp_month'] < 10) {
+                    $data['exp_month'] = 0 .$data['exp_month'];
                 }
-                $year = date("d-m-" . $data['exp_year']);
-                $exp_date = $data['exp_month'] . date("y",strtotime($year));
+                $year = date('d-m-'.$data['exp_year']);
+                $exp_date = $data['exp_month'].date('y', strtotime($year));
                 $converge = new \wwwroth\Converge\Converge([
                     'merchant_id' => $companyApiSetting->converge_merchant_id,
                     'user_id' => $companyApiSetting->converge_merchant_user_id,
@@ -847,25 +848,27 @@ class Customer extends MY_Controller
                     'ssl_avs_zip' => $data['zip'],
                 ]);
 
-                if( $createSale['success'] == 1 ){
+                if ($createSale['success'] == 1) {
                     $is_success = true;
                     $msg = '';
-                }else{
+                } else {
                     $is_success = false;
                     $msg = $createSale['errorMessage'];
                 }
-            }else{
+            } else {
                 $msg = 'Please setup your converge api credentials in API Connectors';
             }
-        }else{
+        } else {
             $msg = 'Please setup your converge api credentials in API Connectors';
         }
-        
+
         $return = ['is_success' => $is_success, 'msg' => $msg];
+
         return $return;
     }
 
-    public function nmi_send_sale($data){
+    public function nmi_send_sale($data)
+    {
         $is_success = 0;
         $msg = '';
         $is_with_error = false;
@@ -877,16 +880,16 @@ class Customer extends MY_Controller
 
         $companyApiSetting = $this->CompanyOnlinePaymentAccount_model->getByCompanyId(logged('company_id'));
 
-        if( $companyApiSetting ){
-            if( $companyApiSetting->nmi_transaction_key != '' && $companyApiSetting->nmi_terminal_id != '' ){
-                //include APPPATH . 'libraries/nmi/examples/common.php';
-                include_once APPPATH . 'libraries/nmi/src/Client.php';
+        if ($companyApiSetting) {
+            if ($companyApiSetting->nmi_transaction_key != '' && $companyApiSetting->nmi_terminal_id != '') {
+                // include APPPATH . 'libraries/nmi/examples/common.php';
+                include_once APPPATH.'libraries/nmi/src/Client.php';
 
-                if( $data['exp_month'] < 10 ){
-                    $data['exp_month'] = 0 . $data['exp_month'];
+                if ($data['exp_month'] < 10) {
+                    $data['exp_month'] = 0 .$data['exp_month'];
                 }
-                $year = date("d-m-" . $data['exp_year']);
-                $exp_date = date("y",strtotime($year)) . $data['exp_month'];
+                $year = date('d-m-'.$data['exp_year']);
+                $exp_date = date('y', strtotime($year)).$data['exp_month'];
 
                 // Setup the request.
                 $request = new Request();
@@ -895,14 +898,14 @@ class Customer extends MY_Controller
                 $request->setTerminalID($companyApiSetting->nmi_terminal_id);
                 $request->setTransactionKey($companyApiSetting->nmi_transaction_key);
 
-                $billing  = $this->customer_ad_model->get_data_by_id('fk_prof_id',$data['customer_id'],"acs_billing");
-                if( $data['frequency'] != '' ){                    
+                $billing = $this->customer_ad_model->get_data_by_id('fk_prof_id', $data['customer_id'], 'acs_billing');
+                if ($data['frequency'] != '') {
                     switch ($data['frequency']) {
                         case 'One Time Only':
                             $frequency = Frequency_Empty;
                             break;
                         case 'Every 1 Month':
-                            $frequency = Frequency_Monthly;                            
+                            $frequency = Frequency_Monthly;
                             break;
                         case 'Every 3 Months':
                             $frequency = Frequency_Quarterly;
@@ -914,16 +917,16 @@ class Customer extends MY_Controller
                             $frequency = Frequency_Yearly;
                             break;
                         default:
-                            $frequency = Frequency_Monthly;     
+                            $frequency = Frequency_Monthly;
                             break;
                     }
 
                     $start_date = strtotime($billing->bill_start_date);
-                    $end_date   = strtotime($billing->bill_end_date);
-                    $datediff   = $end_date - $start_date;
+                    $end_date = strtotime($billing->bill_end_date);
+                    $datediff = $end_date - $start_date;
                     $total_payments = round($datediff / (60 * 60 * 24));
-                    
-                    if( $total_payments <= 0 ){
+
+                    if ($total_payments <= 0) {
                         $is_with_error = true;
                     }
                     // Setup the request detail.
@@ -939,16 +942,15 @@ class Customer extends MY_Controller
                     $request->setPAN($data['card_number']);
                     $request->setExpiryDate($exp_date);
                     $request->setUserReference(rand());
-
-                }else{
-                   // Setup the request detail.
+                } else {
+                    // Setup the request detail.
                     $request->setRequestType(RequestType_Auth);
                     $request->setAmount($data['amount']);
                     $request->setPAN($data['card_number']);
-                    $request->setExpiryDate($exp_date); 
+                    $request->setExpiryDate($exp_date);
                 }
 
-                if( !$is_with_error ){
+                if (!$is_with_error) {
                     // Setup the client.
                     $client = new Client();
                     $client->addServerURL(NMI_TEST_SERVER_URL, 45000);
@@ -959,32 +961,33 @@ class Customer extends MY_Controller
 
                     // Get the response.
                     $response = $client->getResponse();
-                    $errors   = $response->getErrors();
+                    $errors = $response->getErrors();
                     if (!empty($errors)) {
                         foreach ($errors as $error) {
-                            $msg .= $error->getMessage() . "<br />";
+                            $msg .= $error->getMessage().'<br />';
                         }
-                    }else{
+                    } else {
                         $is_success = true;
                         $msg = '';
                     }
-                }else{
+                } else {
                     $is_success = false;
                     $msg = 'Invalid billing start and end date';
                 }
-                
-            }else{
+            } else {
                 $msg = 'Please setup your NMI api credentials in API Connectors';
             }
-        }else{
+        } else {
             $msg = 'Please setup your NMI api credentials in API Connectors';
         }
-        
+
         $return = ['is_success' => $is_success, 'msg' => $msg];
+
         return $return;
     }
 
-    public function subscription($id=null){
+    public function subscription($id = null)
+    {
         $this->hasAccessModule(9);
 
         $this->page_data['page']->parent = 'Customers';
@@ -992,106 +995,102 @@ class Customer extends MY_Controller
 
         $userid = $id;
         $user_id = logged('id');
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+        if (isset($userid) || !empty($userid)) {
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
 
-            $get_login_user = array(
-                'where' => array(
-                    'id' => $user_id
-                ),
+            $get_login_user = [
+                'where' => [
+                    'id' => $user_id,
+                ],
                 'table' => 'users',
                 'select' => 'id,FName,LName',
-            );
-            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+            ];
+            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user, false);
 
             // get customer subscription history
-            $subscriptions_query = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
+            $subscriptions_query = [
+                'where' => [
+                    'customer_id' => $userid,
+                ],
                 'table' => 'acs_subscriptions',
                 'select' => '*',
-            );
+            ];
             $this->page_data['subscriptions'] = $this->general->get_data_with_param($subscriptions_query);
         }
-        
-        $this->load->view('v2/pages/customer/subscription', $this->page_data);
 
+        $this->load->view('v2/pages/customer/subscription', $this->page_data);
     }
 
-    public function subscription_new($id=null)
+    public function subscription_new($id = null)
     {
         $this->page_data['page']->parent = 'Customers';
         $this->page_data['page']->title = 'New Subscription Plan';
         $userid = $id;
         $user_id = logged('id');
-        $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-        $get_login_user = array(
-            'where' => array('id' => $user_id),
+        $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
+        $get_login_user = [
+            'where' => ['id' => $user_id],
             'table' => 'users',
             'select' => 'id,FName,LName',
-        );
-        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+        ];
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user, false);
         $this->load->view('v2/pages/customer/subscription_new', $this->page_data);
     }
 
-    public function subscription_details($id=null)
+    public function subscription_details($id = null)
     {
-
-        $subscriptions_query = array(
-            'where' => array(
-                'id' => $id
-            ),
+        $subscriptions_query = [
+            'where' => [
+                'id' => $id,
+            ],
             'table' => 'acs_subscriptions',
             'select' => '*',
-        );
-        $subscription = $this->general->get_data_with_param($subscriptions_query,FALSE);
+        ];
+        $subscription = $this->general->get_data_with_param($subscriptions_query, false);
         $this->page_data['subscription_details'] = $subscription;
 
         $userid = $subscription->customer_id;
 
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
+        if (isset($userid) || !empty($userid)) {
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
 
-            $alarm_details_query = array(
-                'where' => array(
-                    'fk_prof_id' => $userid
-                ),
+            $alarm_details_query = [
+                'where' => [
+                    'fk_prof_id' => $userid,
+                ],
                 'table' => 'acs_alarm',
                 'select' => 'monitor_id',
-            );
-            $this->page_data['alarm_data'] = $this->general->get_data_with_param($alarm_details_query,FALSE);
+            ];
+            $this->page_data['alarm_data'] = $this->general->get_data_with_param($alarm_details_query, false);
 
-            $get_login_user = array(
-                'where' => array(
-                    'id' => logged('id')
-                ),
+            $get_login_user = [
+                'where' => [
+                    'id' => logged('id'),
+                ],
                 'table' => 'users',
                 'select' => 'id,FName,LName',
-            );
-            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
-
+            ];
+            $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user, false);
         }
         $this->load->view('customer/subscription_details', $this->page_data);
-
     }
 
     public function settingStatus()
-    {        
+    {
         $this->page_data['page']->title = 'Customer Status';
         $this->page_data['page']->parent = 'Customers';
-        $this->hasAccessModule(9); 
+        $this->hasAccessModule(9);
 
-        $user_id    = logged('id');
+        $user_id = logged('id');
         $company_id = logged('company_id');
 
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $user_id;
 
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+        if (isset($userid) || !empty($userid)) {
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
@@ -1107,7 +1106,7 @@ class Customer extends MY_Controller
         $this->page_data['page']->parent = 'Sales';
 
         $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
+        $this->hasAccessModule(9);
         /*$is_allowed = $this->isAllowedModuleAccess(9);
         if( !$is_allowed ){
             $this->page_data['module'] = 'customer';
@@ -1120,137 +1119,135 @@ class Customer extends MY_Controller
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $user_id;
 
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+        if (isset($userid) || !empty($userid)) {
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
         $this->page_data['active_tab'] = $this->uri->segment(3);
-//        $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
-//        $this->page_data['furnishers'] = $this->customer_ad_model->get_all(FALSE,"","","acs_furnisher","furn_id");
-//        $this->page_data['reasons'] = $this->customer_ad_model->get_all(FALSE,"","","acs_reasons","reason_id");
-        $this->page_data['lead_source'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadsource","ls_id");
-        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(FALSE,"","","ac_leadtypes","lead_id");
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","","ac_salesarea","sa_id");
-        $this->page_data['rate_plans'] = $this->customer_ad_model->get_all(FALSE,"","","ac_rateplan","id");
-        $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
-
+        //        $this->page_data['affiliates'] = $this->customer_ad_model->get_all(FALSE,"","","affiliates","id");
+        //        $this->page_data['furnishers'] = $this->customer_ad_model->get_all(FALSE,"","","acs_furnisher","furn_id");
+        //        $this->page_data['reasons'] = $this->customer_ad_model->get_all(FALSE,"","","acs_reasons","reason_id");
+        $this->page_data['lead_source'] = $this->customer_ad_model->get_all(false, '', '', 'ac_leadsource', 'ls_id');
+        $this->page_data['lead_types'] = $this->customer_ad_model->get_all(false, '', '', 'ac_leadtypes', 'lead_id');
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(false, '', '', 'ac_salesarea', 'sa_id');
+        $this->page_data['rate_plans'] = $this->customer_ad_model->get_all(false, '', '', 'ac_rateplan', 'id');
+        $this->page_data['customer_status'] = $this->customer_ad_model->get_all(false, '', '', 'acs_cust_status', 'id');
 
         // get activation fee
-        $activation_fee_query = array(
+        $activation_fee_query = [
             'table' => 'ac_activationfee',
-            'order' => array(
+            'order' => [
                 'order_by' => 'id',
-            ),
+            ],
             'select' => '*',
-        );
+        ];
         $this->page_data['activation_fee'] = $this->general->get_data_with_param($activation_fee_query);
 
         // get system package type
-        $spt_query = array(
+        $spt_query = [
             'table' => 'ac_system_package_type',
-            'order' => array(
+            'order' => [
                 'order_by' => 'id',
-            ),
+            ],
             'select' => '*',
-        );
+        ];
         $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
         $this->page_data['customer_list_headers'] = customer_list_headers();
         $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
 
-        $get_company_settings = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
+        $get_company_settings = [
+            'where' => [
+                'company_id' => logged('company_id'),
+            ],
             'table' => 'customer_settings_headers',
             'select' => '*',
-        );
+        ];
         $customer_settings = $this->general->get_data_with_param($get_company_settings);
         $headers = unserialize($customer_settings[0]->headers);
         $this->page_data['customer_tbl_headers'] = $headers;
-        //$this->load->model('Activity_model','activity');
-       // $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
-        //$this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
+        // $this->load->model('Activity_model','activity');
+        // $this->page_data['activity_list'] = $this->activity->getActivity($user_id, [], 0);
+        // $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
 
         $this->load->view('v2/pages/customer/settings', $this->page_data);
     }
 
-    public function module($id=null)
+    public function module($id = null)
     {
         $this->load->helper('sms_helper');
-        
-        $this->load->model('Clients_model');        
 
-        error_reporting(0);        
+        $this->load->model('Clients_model');
+
+        error_reporting(0);
         $this->page_data['page']->title = 'Customer Dashboard';
         $this->page_data['page']->parent = 'Customers';
 
         $this->load->model('taskhub_model');
         $this->load->library('wizardlib');
         $this->load->model('Invoice_model', 'invoice_model');
-        
+
         $is_allowed = $this->isAllowedModuleAccess(9);
-        if( !$is_allowed ){
+        if (!$is_allowed) {
             $this->page_data['module'] = 'customer';
             echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
+            exit;
         }
 
         $user_id = logged('id');
-        $check_if_exist = $this->customer_ad_model->if_exist('fk_user_id',$user_id,"ac_module_sort");
-        if(!$check_if_exist){
-            $input = array();
-            $input['fk_user_id'] = $user_id ;
-            $input['ams_values'] = "profile,score,tech,access,admin,office,owner,docu,tasks,memo,invoice,assign,cim,billing,alarm,dispute" ;
-            $this->customer_ad_model->add($input,"ac_module_sort");
+        $check_if_exist = $this->customer_ad_model->if_exist('fk_user_id', $user_id, 'ac_module_sort');
+        if (!$check_if_exist) {
+            $input = [];
+            $input['fk_user_id'] = $user_id;
+            $input['ams_values'] = 'profile,score,tech,access,admin,office,owner,docu,tasks,memo,invoice,assign,cim,billing,alarm,dispute';
+            $this->customer_ad_model->add($input, 'ac_module_sort');
         }
-        $userid =$id;
-        if(!isset($userid) || empty($userid)){
-            $get_id = $this->customer_ad_model->get_all(1,"","DESC","acs_profile","prof_id");
-            if(!empty($get_id)){
-                $userid =  $get_id[0]->prof_id;
-            }else{
+        $userid = $id;
+        if (!isset($userid) || empty($userid)) {
+            $get_id = $this->customer_ad_model->get_all(1, '', 'DESC', 'acs_profile', 'prof_id');
+            if (!empty($get_id)) {
+                $userid = $get_id[0]->prof_id;
+            } else {
                 $userid = 0;
             }
-        }else{
+        } else {
             $this->qrcodeGenerator($userid);
         }
 
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $userid;
-        if($id!=null){
+        if ($id != null) {
             $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($id);
             $this->page_data['cust_invoices'] = $this->invoice_model->getAllByCustomerId($id);
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$id,"acs_profile");
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
 
             $this->page_data['log_info'] = $this->customer_ad_model->getCustomerActivityLogs($id);
 
-            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_access");
-            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_office");
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_billing");
-            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_alarm");
-            $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$id,"acs_audit_import");
-            //$this->page_data['minitab'] = $this->uri->segment(5);
+            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_access');
+            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_office');
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_billing');
+            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_alarm');
+            $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_audit_import');
+            // $this->page_data['minitab'] = $this->uri->segment(5);
             $this->page_data['task_info'] = $this->taskhub_model->getAllNotCompletedTasksByCustomerId($id);
             $this->page_data['item_details'] = $this->customer_ad_model->get_customer_item_details($id);
-            //$this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$id,"acs_tasks");
-            $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
-            $this->page_data['tasks'] = $this->customer_ad_model->get_data_by_id('prof_id',$user_id,"tasks");
+            // $this->page_data['task_info'] = $this->customer_ad_model->get_all_by_id("fk_prof_id",$id,"acs_tasks");
+            $this->page_data['module_sort'] = $this->customer_ad_model->get_data_by_id('fk_user_id', $user_id, 'ac_module_sort');
+            $this->page_data['tasks'] = $this->customer_ad_model->get_data_by_id('prof_id', $user_id, 'tasks');
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
             $this->page_data['cus_id'] = $id;
 
-            if($this->uri->segment(5) == "mt3-cdl"){
+            if ($this->uri->segment(5) == 'mt3-cdl') {
                 $template_id = !empty($this->uri->segment(6)) ? $this->uri->segment(6) : '';
                 $this->page_data['letter_id'] = $template_id;
                 $this->page_data['letter_template'] = $this->Esign_model->get_template_by_id($template_id);
             }
 
-
             $this->db->where('customer_id', $id);
             $this->page_data['customer_id'] = $id;
             $this->page_data['customer_documents'] = $this->db->get('acs_customer_documents')->result_array();
-            //$this->page_data['esign_documents'] = $this->getCustomerGeneratedEsigns($id);
-        }else{
+            // $this->page_data['esign_documents'] = $this->getCustomerGeneratedEsigns($id);
+        } else {
             redirect(base_url('customer/'));
         }
         // load job checlist model
@@ -1258,32 +1255,32 @@ class Customer extends MY_Controller
         $jobChecklists = $this->JobChecklist_model->getAllByCompanyId(logged('company_id'));
         $this->page_data['job_check_lists'] = $jobChecklists;
 
-        //Sms
+        // Sms
         $cid = logged('company_id');
-        $default_sms = '';        
+        $default_sms = '';
         $enable_twilio_call = false;
         $enable_ringcentral_call = false;
 
-        $client      = $this->Clients_model->getById($cid);
-        if( $client->default_sms_api != '' ){
+        $client = $this->Clients_model->getById($cid);
+        if ($client->default_sms_api != '') {
             $default_sms = $client->default_sms_api;
-            if( $client->default_sms_api == 'twilio' ){
+            if ($client->default_sms_api == 'twilio') {
                 $enable_twilio_call = true;
-            }elseif( $client->default_sms_api == 'ring_central' ){
+            } elseif ($client->default_sms_api == 'ring_central') {
                 $enable_ringcentral_call = true;
             }
         }
 
-        //Sms Template
+        // Sms Template
         $this->load->model('SmsTemplate_model');
         $smsTemplates = $this->SmsTemplate_model->getAllByCompanyId($cid);
 
-        //Calls
+        // Calls
         $this->load->model('RingCentralAccounts_model');
         $this->load->model('TwilioAccounts_model');
 
         $ringCentralAccount = $this->RingCentralAccounts_model->getByCompanyId($cid);
-        $twilioAccount      = $this->TwilioAccounts_model->getByCompanyId($cid);
+        $twilioAccount = $this->TwilioAccounts_model->getByCompanyId($cid);
         $this->page_data['twilioAccount'] = $twilioAccount;
         $this->page_data['ringCentralAccount'] = $ringCentralAccount;
         $this->page_data['enable_twilio_call'] = $enable_twilio_call;
@@ -1294,7 +1291,7 @@ class Customer extends MY_Controller
         $this->page_data['cust_tab'] = $this->uri->segment(3);
         $this->page_data['cust_active_tab'] = 'dashboard';
         $this->page_data['users'] = $this->users_model->getUsers();
-        $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6,0], 1);
+        $this->page_data['history_activity_list'] = $this->activity->getActivity($user_id, [6, 0], 1);
         $this->page_data['ringCentralAccount'] = $ringCentralAccount;
         $this->page_data['twilioAccount'] = $twilioAccount;
         $this->load->view('v2/pages/customer/module', $this->page_data);
@@ -1309,8 +1306,8 @@ class Customer extends MY_Controller
         $customer = $this->AcsProfile_model->getByProfId($cid);
 
         $this->page_data['cust_active_tab'] = 'jobs';
-        $this->page_data['cus_id']   = $cid;
-        $this->page_data['jobs']     = $jobs;
+        $this->page_data['cus_id'] = $cid;
+        $this->page_data['jobs'] = $jobs;
         $this->page_data['customer'] = $customer;
 
         $this->load->view('customer/jobs_list', $this->page_data);
@@ -1322,12 +1319,12 @@ class Customer extends MY_Controller
         $this->load->model('AcsProfile_model');
 
         $estimates = $this->Estimate_model->getAllEstimatesByCustomerId($cid);
-        $customer  = $this->AcsProfile_model->getByProfId($cid);
+        $customer = $this->AcsProfile_model->getByProfId($cid);
 
         $this->page_data['cust_active_tab'] = 'estimates';
-        $this->page_data['cus_id']    = $cid;
+        $this->page_data['cus_id'] = $cid;
         $this->page_data['estimates'] = $estimates;
-        $this->page_data['customer']  = $customer;
+        $this->page_data['customer'] = $customer;
 
         $this->load->view('customer/estimate_list', $this->page_data);
     }
@@ -1341,12 +1338,12 @@ class Customer extends MY_Controller
         $this->load->model('AcsProfile_model');
 
         $activities = $this->CustomerAuditLog_model->getAllByCustomerId($cid);
-        $customer  = $this->AcsProfile_model->getByProfId($cid);
+        $customer = $this->AcsProfile_model->getByProfId($cid);
 
         $this->page_data['cust_active_tab'] = 'activites';
-        $this->page_data['cus_id']    = $cid;
+        $this->page_data['cus_id'] = $cid;
         $this->page_data['activities'] = $activities;
-        $this->page_data['customer']   = $customer;
+        $this->page_data['customer'] = $customer;
 
         $this->load->view('customer/activities', $this->page_data);
     }
@@ -1360,12 +1357,12 @@ class Customer extends MY_Controller
         $this->load->model('AcsProfile_model');
 
         $invoices = $this->Invoice_model->getAllByCustomerId($cid);
-        $customer  = $this->AcsProfile_model->getByProfId($cid);
+        $customer = $this->AcsProfile_model->getByProfId($cid);
 
         $this->page_data['cust_active_tab'] = 'invoices';
-        $this->page_data['cus_id']    = $cid;
-        $this->page_data['invoices']  = $invoices;
-        $this->page_data['customer']  = $customer;
+        $this->page_data['cus_id'] = $cid;
+        $this->page_data['invoices'] = $invoices;
+        $this->page_data['customer'] = $customer;
 
         $this->load->view('customer/invoice_list', $this->page_data);
     }
@@ -1378,15 +1375,15 @@ class Customer extends MY_Controller
 
         $company_id = logged('company_id');
 
-        $messages   = $this->CustomerMessages_model->getAllByProfId($cid);
-        $customer   = $this->AcsProfile_model->getByProfId($cid);
+        $messages = $this->CustomerMessages_model->getAllByProfId($cid);
+        $customer = $this->AcsProfile_model->getByProfId($cid);
         $quickNotes = $this->QuickNote_model->getAllByCompanyId($company_id);
 
         $this->page_data['cust_active_tab'] = 'messages';
-        $this->page_data['cus_id']     = $cid;
-        $this->page_data['messages']   = $messages;
+        $this->page_data['cus_id'] = $cid;
+        $this->page_data['messages'] = $messages;
         $this->page_data['quickNotes'] = $quickNotes;
-        $this->page_data['customer']   = $customer;
+        $this->page_data['customer'] = $customer;
 
         $this->load->view('customer/messages_list', $this->page_data);
     }
@@ -1401,62 +1398,61 @@ class Customer extends MY_Controller
         $this->load->model('Tickets_model');
 
         $filter = 'all';
-        if( $this->input->get('filter') ){
+        if ($this->input->get('filter')) {
             $filter = $this->input->get('filter');
-            if( $filter == 'jobs' ){
+            if ($filter == 'jobs') {
                 $jobs = $this->Jobs_model->getAllJobsByCustomerId($cid);
-                $inventory = array();
-                foreach( $jobs as $j ){
+                $inventory = [];
+                foreach ($jobs as $j) {
                     $jobItems = $this->Jobs_model->get_specific_job_items($j->id);
-                    $inventory[$j->id]['job']  = $j;
+                    $inventory[$j->id]['job'] = $j;
                     $inventory[$j->id]['type'] = 'job';
-                    if( $jobItems ){
+                    if ($jobItems) {
                         $inventory[$j->id]['items'] = $jobItems;
-                    }            
+                    }
                 }
-            }elseif( $filter == 'services' ){
+            } elseif ($filter == 'services') {
                 $tickets = $this->Tickets_model->get_tickets_by_customer_id($cid);
-                foreach( $tickets as $t ){
+                foreach ($tickets as $t) {
                     $ticketItems = $this->Tickets_model->get_ticket_items_by_ticket_id($t->id);
                     $inventory[$t->id]['ticket'] = $t;
                     $inventory[$t->id]['type'] = 'ticket';
-                    if( $ticketItems ){
+                    if ($ticketItems) {
                         $inventory[$t->id]['items'] = $ticketItems;
                     }
                 }
-            }else{
-                $inventory = array();
+            } else {
+                $inventory = [];
             }
-        }else{
+        } else {
             $jobs = $this->Jobs_model->getAllJobsByCustomerId($cid);
-            $inventory = array();
-            foreach( $jobs as $j ){
+            $inventory = [];
+            foreach ($jobs as $j) {
                 $jobItems = $this->Jobs_model->get_specific_job_items($j->id);
-                $inventory[$j->id]['job']  = $j;
+                $inventory[$j->id]['job'] = $j;
                 $inventory[$j->id]['type'] = 'job';
-                if( $jobItems ){
+                if ($jobItems) {
                     $inventory[$j->id]['items'] = $jobItems;
-                }            
+                }
             }
 
             $tickets = $this->Tickets_model->get_tickets_by_customer_id($cid);
-            foreach( $tickets as $t ){
+            foreach ($tickets as $t) {
                 $ticketItems = $this->Tickets_model->get_ticket_items_by_ticket_id($t->id);
                 $inventory[$t->id]['ticket'] = $t;
                 $inventory[$t->id]['type'] = 'ticket';
-                if( $ticketItems ){
+                if ($ticketItems) {
                     $inventory[$t->id]['items'] = $ticketItems;
                 }
-            }    
+            }
         }
-        
 
-        $customer  = $this->AcsProfile_model->getByProfId($cid);
+        $customer = $this->AcsProfile_model->getByProfId($cid);
         $this->page_data['cust_active_tab'] = 'inventory';
-        $this->page_data['cus_id']    = $cid;
-        $this->page_data['filter']    = $filter;
+        $this->page_data['cus_id'] = $cid;
+        $this->page_data['filter'] = $filter;
         $this->page_data['inventory'] = $inventory;
-        $this->page_data['customer']  = $customer;
+        $this->page_data['customer'] = $customer;
 
         $this->load->view('v2/pages/customer/inventory_list', $this->page_data);
     }
@@ -1470,9 +1466,9 @@ class Customer extends MY_Controller
         $customer = $this->AcsProfile_model->getByProfId($cid);
 
         $this->page_data['cust_active_tab'] = 'workorders';
-        $this->page_data['cus_id']    = $cid;
+        $this->page_data['cus_id'] = $cid;
         $this->page_data['workorders'] = $workorders;
-        $this->page_data['customer']   = $customer;
+        $this->page_data['customer'] = $customer;
 
         $this->load->view('customer/workorders_list', $this->page_data);
     }
@@ -1489,9 +1485,9 @@ class Customer extends MY_Controller
         $customer = $this->AcsProfile_model->getByProfId($cid);
 
         $this->page_data['cust_active_tab'] = 'internal_notes';
-        $this->page_data['cus_id']    = $cid;
-        $this->page_data['internalNotes']   = $internalNotes;
-        $this->page_data['customer']        = $customer;
+        $this->page_data['cus_id'] = $cid;
+        $this->page_data['internalNotes'] = $internalNotes;
+        $this->page_data['customer'] = $customer;
 
         $this->load->view('customer/internal_notes', $this->page_data);
     }
@@ -1504,27 +1500,27 @@ class Customer extends MY_Controller
         $this->load->model('CustomerDisputeItem_model');
 
         $company_id = logged('company_id');
-        $customer   = $this->AcsProfile_model->getByProfId($cid);
+        $customer = $this->AcsProfile_model->getByProfId($cid);
 
         $companyDispute = $this->CustomerDispute_model->getAllByCustomerId($cid);
-        $cbStatus       = array();
+        $cbStatus = [];
 
-        foreach( $companyDispute as $cd ){
+        foreach ($companyDispute as $cd) {
             $disputeItems = $this->CustomerDisputeItem_model->getAllByCustomerDisputeId($cd->id);
             $cd->disputeItems = $disputeItems;
-            foreach( $disputeItems as $di ){
+            foreach ($disputeItems as $di) {
                 $cbStatus[$cd->id][$di->credit_bureau_id] = ['status' => $di->status, 'icon' => $this->CustomerDisputeItem_model->optionOtherInfoStatus($di->status)];
-            }            
+            }
         }
 
-        $creditBureaus = $this->CreditBureau_model->getAll();        
+        $creditBureaus = $this->CreditBureau_model->getAll();
 
-        $this->page_data['companyDispute']  = $companyDispute;
-        $this->page_data['creditBureaus']   = $creditBureaus;
+        $this->page_data['companyDispute'] = $companyDispute;
+        $this->page_data['creditBureaus'] = $creditBureaus;
         $this->page_data['cbStatus'] = $cbStatus;
         $this->page_data['cust_active_tab'] = 'credit_industry';
-        $this->page_data['cus_id']     = $cid;
-        $this->page_data['customer']   = $customer;
+        $this->page_data['cus_id'] = $cid;
+        $this->page_data['customer'] = $customer;
 
         $this->page_data['page']->title = 'Credit Industry';
         $this->page_data['page']->parent = 'Customers';
@@ -1542,11 +1538,11 @@ class Customer extends MY_Controller
         $this->load->model('CustomerDisputeItem_model');
 
         $company_id = logged('company_id');
-        $customer   = $this->AcsProfile_model->getByProfId($cid);
-        $reasons    = $this->CompanyReason_model->getAllDefaultAndByCompanyId($company_id);
+        $customer = $this->AcsProfile_model->getByProfId($cid);
+        $reasons = $this->CompanyReason_model->getAllDefaultAndByCompanyId($company_id);
 
         $creditBureaus = $this->CreditBureau_model->getAll();
-        $furnishers    = $this->Furnisher_model->getAllByCompanyId($company_id);
+        $furnishers = $this->Furnisher_model->getAllByCompanyId($company_id);
 
         $this->page_data['optionOtherInfoStatus'] = $this->CustomerDisputeItem_model->optionOtherInfoStatus();
         $this->page_data['customer'] = $customer;
@@ -1566,40 +1562,39 @@ class Customer extends MY_Controller
         $this->load->model('CompanyReason_model');
 
         $company_id = logged('company_id');
-        $reasons    = $this->CompanyReason_model->getAllDefaultAndByCompanyId($company_id);
-    
-        $this->page_data['reasons'] = $reasons;        
-        $this->load->view('customer/ajax_load_company_reason_list', $this->page_data);
+        $reasons = $this->CompanyReason_model->getAllDefaultAndByCompanyId($company_id);
 
+        $this->page_data['reasons'] = $reasons;
+        $this->load->view('customer/ajax_load_company_reason_list', $this->page_data);
     }
 
     public function ajax_create_company_reason()
     {
         $this->load->model('CompanyReason_model');
-        
+
         $is_success = false;
         $msg = '';
 
         $company_id = logged('company_id');
-        $post       = $this->input->post();
+        $post = $this->input->post();
 
-        if( $post['company_reason'] != '' ){
+        if ($post['company_reason'] != '') {
             $data = [
                 'company_id' => $company_id,
                 'reason' => $post['company_reason'],
-                'date_created' => date("Y-m-d H:i:s"),
-                'date_modified' => date("Y-m-d H:i:s")
+                'date_created' => date('Y-m-d H:i:s'),
+                'date_modified' => date('Y-m-d H:i:s'),
             ];
 
             $this->CompanyReason_model->create($data);
 
             $is_success = true;
-        }else{
+        } else {
             $msg = 'Cannot save data';
         }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);     
+        echo json_encode($json_data);
     }
 
     public function ajax_create_dispute_item()
@@ -1608,74 +1603,71 @@ class Customer extends MY_Controller
         $this->load->model('CompanyReason_model');
         $this->load->model('CompanyDisputeInstruction_model');
         $this->load->model('CustomerDisputeItem_model');
-        
+
         $is_success = false;
         $msg = '';
 
         $company_id = logged('company_id');
-        $post       = $this->input->post();
+        $post = $this->input->post();
 
-        if( !empty($post['creditedBureau']) ){
-            if( $post['cus_id'] > 0 ){
-
+        if (!empty($post['creditedBureau'])) {
+            if ($post['cus_id'] > 0) {
                 $instruction = '';
-                if( $post['new_instruction'] != '' ){
+                if ($post['new_instruction'] != '') {
                     $instruction = $post['new_instruction'];
 
-                    //Save instruction
+                    // Save instruction
                     $data_new_instruction = [
                         'company_id' => $company_id,
                         'instructions' => $instruction,
-                        'date_created' => date("Y-m-d H:i:s")
+                        'date_created' => date('Y-m-d H:i:s'),
                     ];
 
                     $this->CompanyDisputeInstruction_model->create($data_new_instruction);
-
-                }else{
+                } else {
                     $companyInstruction = $this->CompanyDisputeInstruction_model->getById($post['list_instruction']);
-                    if( $companyInstruction ){
+                    if ($companyInstruction) {
                         $instruction = $companyInstruction->instructions;
-                    } 
-                }              
-                
+                    }
+                }
+
                 $data_dispute = [
                     'company_id' => $company_id,
                     'prof_id' => $post['cus_id'],
                     'furnisher_id' => $post['furnisher_id'],
-                    'date_dispute' => date('Y-m-d'),                 
+                    'date_dispute' => date('Y-m-d'),
                     'company_reason_id' => $post['dispute_reason'],
                     'instruction' => $instruction,
-                    'date_created' => date("Y-m-d H:i:s"),
-                    'date_modified' => date("Y-m-d H:i:s")
+                    'date_created' => date('Y-m-d H:i:s'),
+                    'date_modified' => date('Y-m-d H:i:s'),
                 ];
 
                 $customer_dispute_id = $this->CustomerDispute_model->saveDispute($data_dispute);
 
-                if( $customer_dispute_id > 0 ){
-                    foreach( $post['creditedBureau'] as $key => $bureauId ){
-
+                if ($customer_dispute_id > 0) {
+                    foreach ($post['creditedBureau'] as $key => $bureauId) {
                         $account_number = '';
-                        if( $post['account_number_opt'] == 'acc_num_same' ){
+                        if ($post['account_number_opt'] == 'acc_num_same') {
                             $account_number = $post['account_number_all'];
-                        }else{
-                            if( isset($post['cb_account_number'][$bureauId]) ){
+                        } else {
+                            if (isset($post['cb_account_number'][$bureauId])) {
                                 $account_number = $post['cb_account_number'][$bureauId];
-                            }                        
+                            }
                         }
 
-                        //Other fields
+                        // Other fields
                         $status = '';
-                        $other_fields = array();
-                        if( $post['other_fields_type'] == 'same' ){
-                            foreach($post['otherInfo']['group'] as $field => $value){
-                                if( $field == 'status' ){
+                        $other_fields = [];
+                        if ($post['other_fields_type'] == 'same') {
+                            foreach ($post['otherInfo']['group'] as $field => $value) {
+                                if ($field == 'status') {
                                     $status = $value;
                                 }
                                 $other_fields[$field] = ['field' => $field, 'value' => $value];
                             }
-                        }else{
-                            foreach($post['otherInfo']['individual'][$bureauId] as $field => $value){
-                                if( $field == 'status' ){
+                        } else {
+                            foreach ($post['otherInfo']['individual'][$bureauId] as $field => $value) {
+                                if ($field == 'status') {
                                     $status = $value;
                                 }
                                 $other_fields[$field] = ['field' => $field, 'value' => $value];
@@ -1684,32 +1676,32 @@ class Customer extends MY_Controller
 
                         $other_fields = serialize($other_fields);
 
-                        $data_dispute_item = [                            
+                        $data_dispute_item = [
                             'customer_dispute_id' => $customer_dispute_id,
                             'credit_bureau_id' => $bureauId,
                             'account_number`' => $account_number,
                             'status' => $status,
                             'other_fields' => $other_fields,
-                            'date_created' => date("Y-m-d H:i:s"),
-                            'date_modified' => date("Y-m-d H:i:s")
+                            'date_created' => date('Y-m-d H:i:s'),
+                            'date_modified' => date('Y-m-d H:i:s'),
                         ];
 
                         $companyDisputeItems = $this->CustomerDisputeItem_model->create($data_dispute_item);
                     }
 
                     $is_success = true;
-                }else{
+                } else {
                     $msg = 'Cannot save dispute data';
                 }
-            }else{
+            } else {
                 $msg = 'Customer not found';
             }
-        }else{
+        } else {
             $msg = 'Please select credit bureau';
         }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);     
+        echo json_encode($json_data);
     }
 
     public function ajax_edit_dispute_item()
@@ -1718,15 +1710,15 @@ class Customer extends MY_Controller
         $this->load->model('CustomerDisputeItem_model');
         $this->load->model('CreditBureau_model');
 
-        $cid  = logged('company_id');
+        $cid = logged('company_id');
         $post = $this->input->post();
 
         $dispute = $this->CustomerDispute_model->getById($post['did']);
-        $disputeItems = $this->CustomerDisputeItem_model->getAllByCustomerDisputeId($post['did']); 
-        $creditBureaus = $this->CreditBureau_model->getAll();   
+        $disputeItems = $this->CustomerDisputeItem_model->getAllByCustomerDisputeId($post['did']);
+        $creditBureaus = $this->CreditBureau_model->getAll();
 
-        $aDisputeItems = array();
-        foreach($disputeItems as $di){
+        $aDisputeItems = [];
+        foreach ($disputeItems as $di) {
             $aDisputeItems[$di->credit_bureau_id] = $di;
         }
 
@@ -1745,18 +1737,16 @@ class Customer extends MY_Controller
         $is_success = 0;
         $msg = '';
 
-        $cid  = logged('company_id');
+        $cid = logged('company_id');
         $post = $this->input->post();
 
         $customerDispute = $this->CustomerDispute_model->getByIdAndCustomerId($post['did'], $post['cdid']);
-        if( $customerDispute ){
-
+        if ($customerDispute) {
             $this->CustomerDisputeItem_model->deleteByCustomerDisputeId($customerDispute->id);
             $this->CustomerDispute_model->deleteById($customerDispute->id);
 
             $is_success = 1;
-
-        }else{
+        } else {
             $msg = 'Cannot find data';
         }
 
@@ -1768,68 +1758,66 @@ class Customer extends MY_Controller
     {
         $this->load->model('CustomerInternalNotes_model');
         $this->load->model('AcsProfile_model');
-        
+
         $is_success = false;
         $msg = '';
 
         $user_id = logged('id');
-        $post    = $this->input->post();
+        $post = $this->input->post();
 
-        if( $post['interal_notes'] != '' && $post['customer_id'] > 0 ){
+        if ($post['interal_notes'] != '' && $post['customer_id'] > 0) {
             $customer = $this->AcsProfile_model->getByProfId($post['customer_id']);
-            if( $customer ){
+            if ($customer) {
                 $data = [
                     'prof_id' => $customer->prof_id,
                     'user_id' => $user_id,
-                    'note_date' => date("Y-m-d",strtotime($post['note_date'])),
+                    'note_date' => date('Y-m-d', strtotime($post['note_date'])),
                     'notes' => $post['interal_notes'],
-                    'date_created' => date("Y-m-d H:i:s"),
-                    'date_modified' => date("Y-m-d H:i:s")
+                    'date_created' => date('Y-m-d H:i:s'),
+                    'date_modified' => date('Y-m-d H:i:s'),
                 ];
 
                 $internal_note = $this->CustomerInternalNotes_model->create($data);
 
                 $is_success = true;
-
-            }else{
+            } else {
                 $msg = 'Cannot find customer';
             }
-        }else{
+        } else {
             $msg = 'Cannot save data';
         }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);        
+        echo json_encode($json_data);
     }
 
     public function ajax_update_internal_notes()
     {
         $this->load->model('CustomerInternalNotes_model');
         $this->load->model('AcsProfile_model');
-        
+
         $is_success = false;
         $msg = '';
 
         $user_id = logged('id');
-        $post    = $this->input->post();
-        $internalNote = $this->CustomerInternalNotes_model->getById($post['nid']);  
+        $post = $this->input->post();
+        $internalNote = $this->CustomerInternalNotes_model->getById($post['nid']);
 
-        if( $internalNote ){
+        if ($internalNote) {
             $data = [
-                'note_date' => date("Y-m-d",strtotime($post['note_date'])),
-                'notes' => $post['interal_notes']
+                'note_date' => date('Y-m-d', strtotime($post['note_date'])),
+                'notes' => $post['interal_notes'],
             ];
 
             $this->CustomerInternalNotes_model->update($internalNote->id, $data);
 
             $is_success = 1;
-
-        }else{
+        } else {
             $msg = 'Cannot find data';
-        }  
+        }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);        
+        echo json_encode($json_data);
     }
 
     public function ajax_delete_internal_notes()
@@ -1837,26 +1825,26 @@ class Customer extends MY_Controller
         $this->load->model('CustomerInternalNotes_model');
 
         $is_success = 0;
-        $msg    = '';
+        $msg = '';
 
         $company_id = logged('company_id');
-        $post = $this->input->post(); 
+        $post = $this->input->post();
         $internalNote = $this->CustomerInternalNotes_model->getById($post['nid']);
-        if( $internalNote ){
-            if( $internalNote->company_id == $company_id  ){
+        if ($internalNote) {
+            if ($internalNote->company_id == $company_id) {
                 $this->CustomerInternalNotes_model->deleteById($internalNote->id);
                 $is_success = 1;
                 $msg = 'Record deleted';
-            }else{
-                $msg = 'Cannot find record';    
+            } else {
+                $msg = 'Cannot find record';
             }
-        }else{
+        } else {
             $msg = 'Cannot find record';
         }
 
         $json_data = [
             'is_success' => $is_success,
-            'msg' => $msg
+            'msg' => $msg,
         ];
 
         echo json_encode($json_data);
@@ -1866,158 +1854,158 @@ class Customer extends MY_Controller
     {
         $this->load->model('CustomerInternalNotes_model');
 
-        $post = $this->input->post(); 
+        $post = $this->input->post();
 
-        $internalNote = $this->CustomerInternalNotes_model->getById($post['nid']);      
+        $internalNote = $this->CustomerInternalNotes_model->getById($post['nid']);
 
-        $this->page_data['internalNote']   = $internalNote;
+        $this->page_data['internalNote'] = $internalNote;
         $this->load->view('customer/ajax_edit_internal_note', $this->page_data);
     }
 
-    public function add_advance($id=null)
+    public function add_advance($id = null)
     {
         $this->load->model('IndustryType_model');
 
         $this->hasAccessModule(9);
 
         $userid = $id;
-        $user_id = logged('id');        
-        $this->page_data['test']= getLoggedUserID();
-        if(isset($userid) || !empty($userid)){
-            $billing = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
-            $customer = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+        $user_id = logged('id');
+        $this->page_data['test'] = getLoggedUserID();
+        if (isset($userid) || !empty($userid)) {
+            $billing = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
+            $customer = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($userid);
             $this->page_data['profile_info'] = $customer;
-            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_access");
-            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_office");
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_billing");
-            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id',$userid,"acs_alarm");
-            $this->page_data['panel_type'] = $this->customer_ad_model->get_select_options('acs_alarm','panel_type');
+            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_access');
+            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_office');
+            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
+            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_alarm');
+            $this->page_data['panel_type'] = $this->customer_ad_model->get_select_options('acs_alarm', 'panel_type');
 
             $salesAreaSelected = [];
-            if( $customer ){
+            if ($customer) {
                 $salesAreaSelected = $this->customer_ad_model->getASalesAreaById($customer->fk_sa_id);
             }
 
-            $get_customer_notes = array(
-                'where' => array(
-                    'fk_prof_id' => $userid
-                ),
+            $get_customer_notes = [
+                'where' => [
+                    'fk_prof_id' => $userid,
+                ],
                 'table' => 'acs_notes',
                 'select' => '*',
-                'order' => array(
+                'order' => [
                     'order_by' => 'id',
-                    'ordering' => 'desc'
-                ),
-            );
+                    'ordering' => 'desc',
+                ],
+            ];
             $this->page_data['customer_notes'] = $this->general->get_data_with_param($get_customer_notes);
-            //$this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
-        
-            $customer_contacts = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
+            // $this->page_data['device_info'] = $this->customer_ad_model->get_all_by_id('fk_prof_id',$userid,"acs_devices");
+
+            $customer_contacts = [
+                'where' => [
+                    'customer_id' => $userid,
+                ],
                 'table' => 'contacts',
                 'select' => '*',
-                'order' => array(
+                'order' => [
                     'order_by' => 'id',
-                    'ordering' => 'asc'
-                ),
-            );
+                    'ordering' => 'asc',
+                ],
+            ];
             $this->page_data['contacts'] = $this->general->get_data_with_param($customer_contacts);
 
-            $customer_papers_query = array(
-                'where' => array(
-                    'customer_id' => $userid
-                ),
+            $customer_papers_query = [
+                'where' => [
+                    'customer_id' => $userid,
+                ],
                 'table' => 'acs_papers',
                 'select' => '*',
-            );
+            ];
             $this->page_data['papers'] = $this->general->get_data_with_param($customer_papers_query);
             if (count($this->page_data['papers'])) {
                 $this->page_data['papers'] = $this->page_data['papers'][0];
             }
 
-            if(logged('company_id') == 58 || logged('company_id') == 1){
-                $solar_info_query = array(
-                    'where' => array(
-                        'fk_prof_id' => $userid
-                    ),
+            if (logged('company_id') == 58 || logged('company_id') == 1) {
+                $solar_info_query = [
+                    'where' => [
+                        'fk_prof_id' => $userid,
+                    ],
                     'table' => 'acs_info_solar',
                     'select' => '*',
-                );
+                ];
 
-                $acs_info_solar = $this->general->get_data_with_param($solar_info_query, FALSE);                
+                $acs_info_solar = $this->general->get_data_with_param($solar_info_query, false);
                 $this->page_data['acs_info_solar'] = $acs_info_solar;
             }
         }
-        $get_customer_groups = array(
-            'where' => array(
-                    'company_id' => logged('company_id')
-            ),
+        $get_customer_groups = [
+            'where' => [
+                    'company_id' => logged('company_id'),
+            ],
             'table' => 'customer_groups',
             'select' => '*',
-        );
+        ];
 
-        $get_login_user = array(
-            'where' => array(
-                'id' => $user_id
-            ),
+        $get_login_user = [
+            'where' => [
+                'id' => $user_id,
+            ],
             'table' => 'users',
             'select' => 'id,FName,LName',
-        );
+        ];
 
-        $rate_plan_query = array(
+        $rate_plan_query = [
             // 'where' => array(
             //     'id' => $user_id
             // ),
             'table' => 'ac_rateplan',
             'select' => 'id,amount',
-        );
+        ];
 
-        $spt_query = array(
+        $spt_query = [
             'table' => 'ac_system_package_type',
             'select' => 'id,name',
-        );
+        ];
 
-        $activation_fee_query = array(
+        $activation_fee_query = [
             'table' => 'ac_activationfee',
             'select' => 'id,amount',
-        );
+        ];
 
-        $spt_query = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
+        $spt_query = [
+            'where' => [
+                'company_id' => logged('company_id'),
+            ],
             'table' => 'ac_system_package_type',
             'select' => '*',
-        );
+        ];
 
         $this->page_data['system_package_type'] = $this->general->get_data_with_param($spt_query);
 
-        if(logged('company_id') == 58 || logged('company_id') == 1){
-            $solar_info_settings_query = array(
+        if (logged('company_id') == 58 || logged('company_id') == 1) {
+            $solar_info_settings_query = [
                 'table' => 'acs_solar_info_settings',
                 'select' => '*',
-            );
+            ];
             $this->page_data['solar_info_settings'] = $this->general->get_data_with_param($solar_info_settings_query);
         }
-        
+
         $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
         $this->page_data['rate_plans'] = $this->general->get_data_with_param($rate_plan_query);
         $this->page_data['system_package_types'] = $this->general->get_data_with_param($spt_query);
         $this->page_data['activation_fees'] = $this->general->get_data_with_param($activation_fee_query);
 
-        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
-        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(FALSE,"","ASC","ac_salesarea","sa_id");
-        $this->page_data['employees'] = $this->customer_ad_model->get_all(FALSE,"","ASC","users","id");
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user, false);
+        $this->page_data['sales_area'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'ac_salesarea', 'sa_id');
+        $this->page_data['employees'] = $this->customer_ad_model->get_all(false, '', 'ASC', 'users', 'id');
         $this->page_data['users'] = $this->users_model->getUsers();
         // $this->page_data['technicians'] = $this->users_model->getUsersByRole([7]);
         $this->page_data['technicians'] = $this->users_model->getUsersByRole();
-        $this->page_data['sales_reps'] = $this->users_model->getUsersByRole([8,28]);
+        $this->page_data['sales_reps'] = $this->users_model->getUsersByRole([8, 28]);
         $this->page_data['salesAreaSelected'] = $salesAreaSelected;
         // fetch customer statuses
-        //$this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
+        // $this->page_data['customer_status'] = $this->customer_ad_model->get_all(FALSE,"","","acs_cust_status","id");
         $default_status_ids = defaultCompanyCustomerStatusIds();
         $this->page_data['customer_status'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'), $default_status_ids);
 
@@ -2039,49 +2027,51 @@ class Customer extends MY_Controller
         ]);
         $this->page_data['sales_tech_paid'] = $this->customer_ad_model->getJobSalesTechPaid($id);
         $this->page_data['sales_tech_commission'] = $this->customer_ad_model->getJobSalesTechCommission($id)[0];
-        $this->page_data['industryTypes'] = $this->IndustryType_model->getAll(); 
+        $this->page_data['industryTypes'] = $this->IndustryType_model->getAll();
         $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
         $this->page_data['LEAD_SOURCE_OPTION'] = $this->customer_ad_model->getLeadSourceData();
         $this->load->view('v2/pages/customer/add', $this->page_data);
     }
 
     public function leads()
-    {   
+    {
         $this->page_data['page']->title = 'Leads Manager List';
         $this->page_data['page']->parent = 'Customers';
 
         $this->hasAccessModule(14);
-        
+
         $user_id = logged('id');
         $this->page_data['leads'] = $this->customer_ad_model->get_leads_data();
         $this->load->view('v2/pages/customer/leads', $this->page_data);
     }
 
-    public function ac_module_sort($id=NULL){
-        //$user_id = logged('id');
+    public function ac_module_sort($id = null)
+    {
+        // $user_id = logged('id');
         $this->load->library('wizardlib');
         $input = $this->input->post();
-        if($this->customer_ad_model->update_data($input,"ac_module_sort","ams_id")){
+        if ($this->customer_ad_model->update_data($input, 'ac_module_sort', 'ams_id')) {
             $view = $this->wizardlib->getModuleById($id);
             $data['id'] = $id;
             $page = 'v2/pages/'.$view->ac_view_link;
             $this->load->view($page, $data);
-        }else{
-            echo "Error";
+        } else {
+            echo 'Error';
         }
     }
 
     private function removeItemString($string, $item)
     {
         $parts = explode(',', $string);
-        while(($i = array_search($item, $parts)) !== false){
+        while (($i = array_search($item, $parts)) !== false) {
             unset($parts[$i]);
         }
 
         return implode(',', $parts);
     }
 
-    public function remove_module(){
+    public function remove_module()
+    {
         $user_id = logged('id');
         $this->load->library('wizardlib');
         $details = post('ams_values');
@@ -2089,16 +2079,17 @@ class Customer extends MY_Controller
         $id = post('id');
 
         $mod_ids = $this->removeItemString($details, $id);
-        $input = array('ams_id'=>$ams_id,'ams_values' => $mod_ids);
-        if($this->customer_ad_model->update_data($input,"ac_module_sort","ams_id")){
-            $details = $this->customer_ad_model->get_data_by_id('fk_user_id',$user_id,"ac_module_sort");
+        $input = ['ams_id' => $ams_id, 'ams_values' => $mod_ids];
+        if ($this->customer_ad_model->update_data($input, 'ac_module_sort', 'ams_id')) {
+            $details = $this->customer_ad_model->get_data_by_id('fk_user_id', $user_id, 'ac_module_sort');
             echo $details->ams_values;
-        }else{
-            echo "Error";
+        } else {
+            echo 'Error';
         }
     }
 
-    public function qrcodeGenerator($profile_id){
+    public function qrcodeGenerator($profile_id)
+    {
         $this->load->library('qrcode/ciqrcode');
         $SERVERFILEPATH = $_SERVER['DOCUMENT_ROOT'].'/assets/img/customer/qr/'.$profile_id.'.png';
 
@@ -2107,16 +2098,17 @@ class Customer extends MY_Controller
         $params['size'] = 10;
         $params['savename'] = $SERVERFILEPATH;
         $this->ciqrcode->generate($params);
-        //echo '<img src="'.base_url().'assets/img/customer/qr/names.png" />';
+        // echo '<img src="'.base_url().'assets/img/customer/qr/names.png" />';
     }
 
-    public function save_customer_profile(){
+    public function save_customer_profile()
+    {
         self::addJSONResponseHeader();
 
         $input = $this->input->post();
-        if(isset($input['customer_id']) AND !empty($input['customer_id']) ){
-            $check_customer='';
-        }else{
+        if (isset($input['customer_id']) and !empty($input['customer_id'])) {
+            $check_customer = '';
+        } else {
             // $check_customer = $this->customer_ad_model->check_customer($input);
 
             // duplicate checking is implemented on Customer_Form apiCheckDuplicate
@@ -2135,9 +2127,9 @@ class Customer extends MY_Controller
             }
         }
 
-        if(empty($check_customer) ){
+        if (empty($check_customer)) {
             // customer profile info
-            $input_profile = array();
+            $input_profile = [];
             $input_profile['fk_user_id'] = logged('id');
             $input_profile['fk_sa_id'] = $input['fk_sa_id'];
             $input_profile['company_id'] = logged('company_id');
@@ -2167,10 +2159,10 @@ class Customer extends MY_Controller
             $input_profile['notes'] = trim($input['notes']);
             $input_profile['custom_fields'] = json_encode($custom_fields_array);
             $input_profile['is_sync'] = 0;
-            if( $input['bill_method'] == 'CC' ){
-                //Check cc if valid using converge
-                $a_exp_date = explode("/", $input['credit_card_exp']);
-                $exp_date   = $a_exp_date[0] . date("y",strtotime($a_exp_date[1] . "-01-01"));
+            if ($input['bill_method'] == 'CC') {
+                // Check cc if valid using converge
+                $a_exp_date = explode('/', $input['credit_card_exp']);
+                $exp_date = $a_exp_date[0].date('y', strtotime($a_exp_date[1].'-01-01'));
                 $data_cc = [
                     'card_number' => $input['credit_card_num'],
                     'exp_date' => $exp_date,
@@ -2178,188 +2170,184 @@ class Customer extends MY_Controller
                     'ssl_amount' => 0,
                     'ssl_first_name' => $input['first_name'],
                     'ssl_last_name' => $input['last_name'],
-                    'ssl_address' => $input['mail_add'] . ' ' . $input['city'] . ' ' . $input['state'],
-                    'ssl_zip' => $input['zip_code']
+                    'ssl_address' => $input['mail_add'].' '.$input['city'].' '.$input['state'],
+                    'ssl_zip' => $input['zip_code'],
                 ];
                 $is_valid = $this->converge_check_cc_details_valid($data_cc);
 
-                //echo $is_valid;
-                if( $is_valid['is_success'] == 1 ){
+                // echo $is_valid;
+                if ($is_valid['is_success'] == 1) {
                     $proceed = 1;
-                }else{
-                    //$proceed = 0;
+                } else {
+                    // $proceed = 0;
                     $proceed = 1;
                 }
-            }else{
+            } else {
                 $proceed = 1;
-            }   
+            }
 
-            if( $proceed == 1 ){
+            if ($proceed == 1) {
                 $prev_notes_value = '';
-                if(isset($input['customer_id'])){
-                    $customer = $this->customer_ad_model->get_customer_data_settings($input['customer_id']);                    
-                    $prev_notes_value = $customer[0]->notes;                    
-                    if( $customer->adt_sales_project_id > 0 ){
+                if (isset($input['customer_id'])) {
+                    $customer = $this->customer_ad_model->get_customer_data_settings($input['customer_id']);
+                    $prev_notes_value = $customer[0]->notes;
+                    if ($customer->adt_sales_project_id > 0) {
                         $input_profile['is_sync'] = 0;
                     }
-                    $this->general->update_with_key_field($input_profile, $input['customer_id'],'acs_profile','prof_id');
+                    $this->general->update_with_key_field($input_profile, $input['customer_id'], 'acs_profile', 'prof_id');
                     $profile_id = $input['customer_id'];
-                    customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Updated customer ' .$input['first_name'].' '.$input['last_name']);
-                    
-                }else{
+                    customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Updated customer '.$input['first_name'].' '.$input['last_name']);
+                } else {
                     $profile_id = $this->general->add_return_id($input_profile, 'acs_profile');
 
-                    customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Created customer ' .$input['first_name'].' '.$input['last_name']);
+                    customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Created customer '.$input['first_name'].' '.$input['last_name']);
                 }
-
 
                 $companyId = logged('company_id');
-                $save_billing = $this->save_billing_information($input,$profile_id);
-                $save_office = $this->save_office_information($input,$profile_id);
-                $save_alarm = $this->save_alarm_information($input,$profile_id);
-                $save_access = $this->save_access_information($input,$profile_id);
-                $save_papers = $this->save_papers_information($input,$profile_id);
-                $save_contacts = $this->save_contacts($input,$profile_id);
+                $save_billing = $this->save_billing_information($input, $profile_id);
+                $save_office = $this->save_office_information($input, $profile_id);
+                $save_alarm = $this->save_alarm_information($input, $profile_id);
+                $save_access = $this->save_access_information($input, $profile_id);
+                $save_papers = $this->save_papers_information($input, $profile_id);
+                $save_contacts = $this->save_contacts($input, $profile_id);
 
-                if($companyId == 58 || $companyId == 1){
-                    $this->save_solar_info($input,$profile_id);
+                if ($companyId == 58 || $companyId == 1) {
+                    $this->save_solar_info($input, $profile_id);
                 }
-                
 
-                if($save_billing == 0 || $save_office == 0 || $save_alarm == 0 || $save_access == 0 || $save_papers == 0){
+                if ($save_billing == 0 || $save_office == 0 || $save_alarm == 0 || $save_access == 0 || $save_papers == 0) {
                     echo 'Error Occured on Saving Billing Information';
-                    $data_arr = array("success" => FALSE,"message" => 'Error on saving information');
-                }else {                    
-                    if ($input['notes'] != "" && $input['notes'] != NULL && !empty($input['notes'])){
-                        $this->save_notes($prev_notes_value,$input,$profile_id);
+                    $data_arr = ['success' => false, 'message' => 'Error on saving information'];
+                } else {
+                    if ($input['notes'] != '' && $input['notes'] != null && !empty($input['notes'])) {
+                        $this->save_notes($prev_notes_value, $input, $profile_id);
                     }
-                    //$this->generate_qr_image($profile_id);
-                    if(isset($input['customer_id'])){
-                        $data_arr = array("success" => TRUE,"profile_id" => $input['customer_id']);
-                    }else{
-                        $data_arr = array("success" => TRUE,"profile_id" => $profile_id);
+                    // $this->generate_qr_image($profile_id);
+                    if (isset($input['customer_id'])) {
+                        $data_arr = ['success' => true, 'profile_id' => $input['customer_id']];
+                    } else {
+                        $data_arr = ['success' => true, 'profile_id' => $profile_id];
                     }
                 }
             }
-        }else {
-            $data_arr = array("success" => FALSE,"message" => 'Customer Already Exist!');
+        } else {
+            $data_arr = ['success' => false, 'message' => 'Customer Already Exist!'];
         }
-        die(json_encode($data_arr));
+        exit(json_encode($data_arr));
     }
 
-    public function getDuplicateList($customerType) 
+    public function getDuplicateList($customerType)
     {
         $company_id = logged('company_id');
-        if ($customerType == "Residential") {
-            $customerWithCount = $this->customer_ad_model->getDuplicateListData($company_id, "customer_with_count", false, "Residential", null, null, null);
-            $allDuplicatedCustomer = $this->customer_ad_model->getDuplicateListData($company_id, "all_duplicated_customer", false, null, null, null, null);
-            $html = "";
+        if ($customerType == 'Residential') {
+            $customerWithCount = $this->customer_ad_model->getDuplicateListData($company_id, 'customer_with_count', false, 'Residential', null, null, null);
+            $allDuplicatedCustomer = $this->customer_ad_model->getDuplicateListData($company_id, 'all_duplicated_customer', false, null, null, null, null);
+            $html = '';
             foreach ($customerWithCount as $customerWithCountData) {
                 $i = 0;
                 $customerUniqueID = md5($customerWithCountData->prof_id);
-                $customerName1 = trim($customerWithCountData->first_name). " " . trim($customerWithCountData->last_name);
+                $customerName1 = trim($customerWithCountData->first_name).' '.trim($customerWithCountData->last_name);
                 $businessName1 = trim($customerWithCountData->business_name);
                 $total = trim($customerWithCountData->total);
-                
-                if (trim($customerWithCountData->customer_type) == "Residential") {
+
+                if (trim($customerWithCountData->customer_type) == 'Residential') {
                     $html .= "<tr data-selector='row_$customerUniqueID' onclick='$(`.row_$customerUniqueID`).toggle()'>";
                     $html .= "<td><i class='fas fa-caret-right'></i>&emsp;<strong>$customerName1 ($total)</strong></td>";
-                    $html .= "<td>&emsp;</td>";
-                    $html .= "<td>&emsp;</td>";
-                    $html .= "<td>&emsp;</td>";
+                    $html .= '<td>&emsp;</td>';
+                    $html .= '<td>&emsp;</td>';
+                    $html .= '<td>&emsp;</td>';
                     $html .= "<td><button class='nsm-button primary small openCompareUI' data-selector='row_$customerUniqueID' data-firstname='".htmlspecialchars(trim($customerWithCountData->first_name), ENT_QUOTES)."' data-lastname='".htmlspecialchars(trim($customerWithCountData->last_name), ENT_QUOTES)."' data-customer-type='Residential'><i class='fas fa-copy'></i> Compare</button></td>";
-                    $html .= "</tr>";
+                    $html .= '</tr>';
                     foreach ($allDuplicatedCustomer as $allDuplicatedCustomerData) {
-                        $customerName2 = trim($allDuplicatedCustomerData->first_name). " " . trim($allDuplicatedCustomerData->last_name);
-                        $activityLogs = ($allDuplicatedCustomerData->customer_logs != 0) ? "<strong>$allDuplicatedCustomerData->customer_logs</strong> activity logs!" : "0 activity logs";
-                        if ($customerName1 == $customerName2 && trim($allDuplicatedCustomerData->customer_type) == "Residential") {
-                            $i++;
+                        $customerName2 = trim($allDuplicatedCustomerData->first_name).' '.trim($allDuplicatedCustomerData->last_name);
+                        $activityLogs = ($allDuplicatedCustomerData->customer_logs != 0) ? "<strong>$allDuplicatedCustomerData->customer_logs</strong> activity logs!" : '0 activity logs';
+                        if ($customerName1 == $customerName2 && trim($allDuplicatedCustomerData->customer_type) == 'Residential') {
+                            ++$i;
                             $html .= "<tr data-selector='row_$customerUniqueID' class='row_$customerUniqueID' style='display: none;'>";
                             $html .= "<td>&emsp; └╴<span>$customerName2 <small class='text-muted'>(#$i)</small></span></td>";
-                            $html .= "<td>Residential</td>";
-                            $html .= "<td>".trim($allDuplicatedCustomerData->address)."</td>";
+                            $html .= '<td>Residential</td>';
+                            $html .= '<td>'.trim($allDuplicatedCustomerData->address).'</td>';
                             $html .= "<td>$activityLogs</td>";
                             $html .= "<td><button class='nsm-button small border-0' onclick='viewEntry($allDuplicatedCustomerData->prof_id)'><i class='fas fa-search'></i> View</button><button class='nsm-button small border-0 removeDuplicatedEntry' data-selector='row_$customerUniqueID' data-prof_id='".$allDuplicatedCustomerData->prof_id."' data-entry-name='".$customerName2."' data-number='".$i."' data-customer-type='".$allDuplicatedCustomerData->customer_type."'><i class='fas fa-trash'></i> Remove</button></td>";
-                            $html .= "</tr>";
+                            $html .= '</tr>';
                         }
                     }
-        
                 }
             }
             echo $html;
-        } else if ($customerType == "Commercial") {
-            $customerWithCount = $this->customer_ad_model->getDuplicateListData($company_id, "customer_with_count", false, "Commercial", null, null, null);
-            $allDuplicatedCustomer = $this->customer_ad_model->getDuplicateListData($company_id, "all_duplicated_customer", false, null, null, null, null);
-            $html = "";
+        } elseif ($customerType == 'Commercial') {
+            $customerWithCount = $this->customer_ad_model->getDuplicateListData($company_id, 'customer_with_count', false, 'Commercial', null, null, null);
+            $allDuplicatedCustomer = $this->customer_ad_model->getDuplicateListData($company_id, 'all_duplicated_customer', false, null, null, null, null);
+            $html = '';
             foreach ($customerWithCount as $customerWithCountData) {
                 $i = 0;
                 $customerUniqueID = md5($customerWithCountData->prof_id);
-                $customerName1 = trim($customerWithCountData->first_name). " " . trim($customerWithCountData->last_name);
+                $customerName1 = trim($customerWithCountData->first_name).' '.trim($customerWithCountData->last_name);
                 $businessName1 = trim($customerWithCountData->business_name);
                 $total = trim($customerWithCountData->total);
-                
-                if (trim($customerWithCountData->customer_type) == "Commercial") {
+
+                if (trim($customerWithCountData->customer_type) == 'Commercial') {
                     $html .= "<tr data-selector='row_$customerUniqueID' onclick='$(`.row_$customerUniqueID`).toggle()'>";
                     $html .= "<td><i class='fas fa-caret-right'></i>&emsp;<strong>$businessName1 ($total)</strong></td>";
-                    $html .= "<td>&emsp;</td>";
-                    $html .= "<td>&emsp;</td>";
-                    $html .= "<td>&emsp;</td>";
+                    $html .= '<td>&emsp;</td>';
+                    $html .= '<td>&emsp;</td>';
+                    $html .= '<td>&emsp;</td>';
                     $html .= "<td><button class='nsm-button primary small openCompareUI' data-selector='row_$customerUniqueID' data-business-name='".htmlspecialchars(trim($businessName1), ENT_QUOTES)."' data-customer-type='Commercial'><i class='fas fa-copy'></i> Compare</button></td>";
-                    $html .= "</tr>";
-        
+                    $html .= '</tr>';
+
                     foreach ($allDuplicatedCustomer as $allDuplicatedCustomerData) {
                         $businessName2 = trim($allDuplicatedCustomerData->business_name);
-                        $activityLogs = ($allDuplicatedCustomerData->customer_logs != 0) ? "<strong>$allDuplicatedCustomerData->customer_logs activity logs!</strong>" : "0 activity logs";
-                        if ($businessName1 == $businessName2 && trim($allDuplicatedCustomerData->customer_type) != "Residential") {
-                            $i++;
+                        $activityLogs = ($allDuplicatedCustomerData->customer_logs != 0) ? "<strong>$allDuplicatedCustomerData->customer_logs activity logs!</strong>" : '0 activity logs';
+                        if ($businessName1 == $businessName2 && trim($allDuplicatedCustomerData->customer_type) != 'Residential') {
+                            ++$i;
                             $html .= "<tr data-selector='row_$customerUniqueID' class='row_$customerUniqueID' style='display: none;'>";
                             $html .= "<td>&emsp; └╴<span>$businessName2 <small class='text-muted'>(#$i)</small></span></td>";
-                            $html .= "<td>Commercial</td>";
-                            $html .= "<td>".trim($allDuplicatedCustomerData->address)."</td>";
+                            $html .= '<td>Commercial</td>';
+                            $html .= '<td>'.trim($allDuplicatedCustomerData->address).'</td>';
                             $html .= "<td>$activityLogs</td>";
                             $html .= "<td><button class='nsm-button small border-0' onclick='viewEntry($allDuplicatedCustomerData->prof_id)'><i class='fas fa-search'></i> View</button><button class='nsm-button small border-0 removeDuplicatedEntry' data-selector='row_$customerUniqueID' data-prof_id='".$allDuplicatedCustomerData->prof_id."' data-entry-name='".$businessName2."' data-number='".$i."' data-customer-type='".$allDuplicatedCustomerData->customer_type."'><i class='fas fa-trash'></i> Remove</button></td>";
-                            $html .= "</tr>";
+                            $html .= '</tr>';
                         }
                     }
                 }
             }
             echo $html;
-        }    
+        }
     }
-    
-    public function getSpecificDuplicatesToMerge() 
+
+    public function getSpecificDuplicatesToMerge()
     {
         $company_id = logged('company_id');
         $data = $this->input->post();
 
-        $html = "";
-        if ($data['entryType'] == "Residential") {
-            $fetchData = $this->customer_ad_model->getDuplicateListData($company_id, "all_duplicated_customer", true, "Residential", null, $data['entryFName'], $data['entryLName']);
+        $html = '';
+        if ($data['entryType'] == 'Residential') {
+            $fetchData = $this->customer_ad_model->getDuplicateListData($company_id, 'all_duplicated_customer', true, 'Residential', null, $data['entryFName'], $data['entryLName']);
             foreach ($fetchData as $fetchDatas) {
                 $customer_logs = ($fetchDatas->customer_logs == 0) ? 0 : $fetchDatas->customer_logs;
-                $status = (!empty(trim($fetchDatas->status))) ? trim($fetchDatas->status) : "—";
-                $customer_type = (!empty(trim($fetchDatas->customer_type))) ? trim($fetchDatas->customer_type) : "—";
-                $business_name = (!empty(trim($fetchDatas->business_name))) ? trim($fetchDatas->business_name) : "—";
-                $title = (!empty(trim($fetchDatas->title))) ? trim($fetchDatas->title) : "—";
-                $sa_name = (!empty(trim($fetchDatas->sa_name))) ? trim($fetchDatas->sa_name) : "—";
-                $first_name = (!empty(trim($fetchDatas->first_name))) ? trim($fetchDatas->first_name) : "—";
-                $middle_name = (!empty(trim($fetchDatas->middle_name))) ? trim($fetchDatas->middle_name) : "—";
-                $last_name = (!empty(trim($fetchDatas->last_name))) ? trim($fetchDatas->last_name) : "—";
-                $prefix = (!empty(trim($fetchDatas->prefix))) ? trim($fetchDatas->prefix) : "None";
-                $suffix = (!empty(trim($fetchDatas->suffix))) ? trim($fetchDatas->suffix) : "None";
-                $country = (!empty(trim($fetchDatas->country))) ? trim($fetchDatas->country) : "—";
-                $mail_add = (!empty(trim($fetchDatas->mail_add))) ? trim($fetchDatas->mail_add) : "—";
-                $city = (!empty(trim($fetchDatas->city))) ? trim($fetchDatas->city) : "—";
-                $county = (!empty(trim($fetchDatas->county))) ? trim($fetchDatas->county) : "—";
-                $state = (!empty(trim($fetchDatas->state))) ? trim($fetchDatas->state) : "—";
-                $zip_code = (!empty(trim($fetchDatas->zip_code))) ? trim($fetchDatas->zip_code) : "—";
-                $cross_street = (!empty(trim($fetchDatas->cross_street))) ? trim($fetchDatas->cross_street) : "—";
-                $subdivision = (!empty(trim($fetchDatas->subdivision))) ? trim($fetchDatas->subdivision) : "—";
-                $ssn = (!empty(trim($fetchDatas->ssn))) ? trim($fetchDatas->ssn) : "000-00-0000";
-                $date_of_birth = (!empty(trim($fetchDatas->date_of_birth))) ? trim($fetchDatas->date_of_birth) : "—";
-                $email = (!empty(trim($fetchDatas->email))) ? trim($fetchDatas->email) : "—";
-                $phone_h = (!empty(trim($fetchDatas->phone_h))) ? trim($fetchDatas->phone_h) : "000-000-0000";
-                $phone_m = (!empty(trim($fetchDatas->phone_m))) ? trim($fetchDatas->phone_m) : "000-000-0000";
+                $status = (!empty(trim($fetchDatas->status))) ? trim($fetchDatas->status) : '—';
+                $customer_type = (!empty(trim($fetchDatas->customer_type))) ? trim($fetchDatas->customer_type) : '—';
+                $business_name = (!empty(trim($fetchDatas->business_name))) ? trim($fetchDatas->business_name) : '—';
+                $title = (!empty(trim($fetchDatas->title))) ? trim($fetchDatas->title) : '—';
+                $sa_name = (!empty(trim($fetchDatas->sa_name))) ? trim($fetchDatas->sa_name) : '—';
+                $first_name = (!empty(trim($fetchDatas->first_name))) ? trim($fetchDatas->first_name) : '—';
+                $middle_name = (!empty(trim($fetchDatas->middle_name))) ? trim($fetchDatas->middle_name) : '—';
+                $last_name = (!empty(trim($fetchDatas->last_name))) ? trim($fetchDatas->last_name) : '—';
+                $prefix = (!empty(trim($fetchDatas->prefix))) ? trim($fetchDatas->prefix) : 'None';
+                $suffix = (!empty(trim($fetchDatas->suffix))) ? trim($fetchDatas->suffix) : 'None';
+                $country = (!empty(trim($fetchDatas->country))) ? trim($fetchDatas->country) : '—';
+                $mail_add = (!empty(trim($fetchDatas->mail_add))) ? trim($fetchDatas->mail_add) : '—';
+                $city = (!empty(trim($fetchDatas->city))) ? trim($fetchDatas->city) : '—';
+                $county = (!empty(trim($fetchDatas->county))) ? trim($fetchDatas->county) : '—';
+                $state = (!empty(trim($fetchDatas->state))) ? trim($fetchDatas->state) : '—';
+                $zip_code = (!empty(trim($fetchDatas->zip_code))) ? trim($fetchDatas->zip_code) : '—';
+                $cross_street = (!empty(trim($fetchDatas->cross_street))) ? trim($fetchDatas->cross_street) : '—';
+                $subdivision = (!empty(trim($fetchDatas->subdivision))) ? trim($fetchDatas->subdivision) : '—';
+                $ssn = (!empty(trim($fetchDatas->ssn))) ? trim($fetchDatas->ssn) : '000-00-0000';
+                $date_of_birth = (!empty(trim($fetchDatas->date_of_birth))) ? trim($fetchDatas->date_of_birth) : '—';
+                $email = (!empty(trim($fetchDatas->email))) ? trim($fetchDatas->email) : '—';
+                $phone_h = (!empty(trim($fetchDatas->phone_h))) ? trim($fetchDatas->phone_h) : '000-000-0000';
+                $phone_m = (!empty(trim($fetchDatas->phone_m))) ? trim($fetchDatas->phone_m) : '000-000-0000';
 
                 $html .= "
                 <div class='col-lg-1 w-auto entryDuplicateData'>
@@ -2404,34 +2392,33 @@ class Customer extends MY_Controller
                 </div>
                 ";
             }
-        } 
-        else if ($data['entryType'] == "Commercial" || $data['entryType'] == "Business") {
-            $fetchData = $this->customer_ad_model->getDuplicateListData($company_id, "all_duplicated_customer", true, "Commercial", $data['entryBusinessName'], null, null);
+        } elseif ($data['entryType'] == 'Commercial' || $data['entryType'] == 'Business') {
+            $fetchData = $this->customer_ad_model->getDuplicateListData($company_id, 'all_duplicated_customer', true, 'Commercial', $data['entryBusinessName'], null, null);
             foreach ($fetchData as $fetchDatas) {
                 $customer_logs = ($fetchDatas->customer_logs == 0) ? 0 : $fetchDatas->customer_logs;
-                $status = (!empty(trim($fetchDatas->status))) ? trim($fetchDatas->status) : "—";
-                $customer_type = (!empty(trim($fetchDatas->customer_type))) ? trim($fetchDatas->customer_type) : "—";
-                $business_name = (!empty(trim($fetchDatas->business_name))) ? trim($fetchDatas->business_name) : "—";
-                $title = (!empty(trim($fetchDatas->title))) ? trim($fetchDatas->title) : "—";
-                $sa_name = (!empty(trim($fetchDatas->sa_name))) ? trim($fetchDatas->sa_name) : "—";
-                $first_name = (!empty(trim($fetchDatas->first_name))) ? trim($fetchDatas->first_name) : "—";
-                $middle_name = (!empty(trim($fetchDatas->middle_name))) ? trim($fetchDatas->middle_name) : "—";
-                $last_name = (!empty(trim($fetchDatas->last_name))) ? trim($fetchDatas->last_name) : "—";
-                $prefix = (!empty(trim($fetchDatas->prefix))) ? trim($fetchDatas->prefix) : "None";
-                $suffix = (!empty(trim($fetchDatas->suffix))) ? trim($fetchDatas->suffix) : "None";
-                $country = (!empty(trim($fetchDatas->country))) ? trim($fetchDatas->country) : "—";
-                $mail_add = (!empty(trim($fetchDatas->mail_add))) ? trim($fetchDatas->mail_add) : "—";
-                $city = (!empty(trim($fetchDatas->city))) ? trim($fetchDatas->city) : "—";
-                $county = (!empty(trim($fetchDatas->county))) ? trim($fetchDatas->county) : "—";
-                $state = (!empty(trim($fetchDatas->state))) ? trim($fetchDatas->state) : "—";
-                $zip_code = (!empty(trim($fetchDatas->zip_code))) ? trim($fetchDatas->zip_code) : "—";
-                $cross_street = (!empty(trim($fetchDatas->cross_street))) ? trim($fetchDatas->cross_street) : "—";
-                $subdivision = (!empty(trim($fetchDatas->subdivision))) ? trim($fetchDatas->subdivision) : "—";
-                $ssn = (!empty(trim($fetchDatas->ssn))) ? trim($fetchDatas->ssn) : "000-00-0000";
-                $date_of_birth = (!empty(trim($fetchDatas->date_of_birth))) ? trim($fetchDatas->date_of_birth) : "—";
-                $email = (!empty(trim($fetchDatas->email))) ? trim($fetchDatas->email) : "—";
-                $phone_h = (!empty(trim($fetchDatas->phone_h))) ? trim($fetchDatas->phone_h) : "000-000-0000";
-                $phone_m = (!empty(trim($fetchDatas->phone_m))) ? trim($fetchDatas->phone_m) : "000-000-0000";
+                $status = (!empty(trim($fetchDatas->status))) ? trim($fetchDatas->status) : '—';
+                $customer_type = (!empty(trim($fetchDatas->customer_type))) ? trim($fetchDatas->customer_type) : '—';
+                $business_name = (!empty(trim($fetchDatas->business_name))) ? trim($fetchDatas->business_name) : '—';
+                $title = (!empty(trim($fetchDatas->title))) ? trim($fetchDatas->title) : '—';
+                $sa_name = (!empty(trim($fetchDatas->sa_name))) ? trim($fetchDatas->sa_name) : '—';
+                $first_name = (!empty(trim($fetchDatas->first_name))) ? trim($fetchDatas->first_name) : '—';
+                $middle_name = (!empty(trim($fetchDatas->middle_name))) ? trim($fetchDatas->middle_name) : '—';
+                $last_name = (!empty(trim($fetchDatas->last_name))) ? trim($fetchDatas->last_name) : '—';
+                $prefix = (!empty(trim($fetchDatas->prefix))) ? trim($fetchDatas->prefix) : 'None';
+                $suffix = (!empty(trim($fetchDatas->suffix))) ? trim($fetchDatas->suffix) : 'None';
+                $country = (!empty(trim($fetchDatas->country))) ? trim($fetchDatas->country) : '—';
+                $mail_add = (!empty(trim($fetchDatas->mail_add))) ? trim($fetchDatas->mail_add) : '—';
+                $city = (!empty(trim($fetchDatas->city))) ? trim($fetchDatas->city) : '—';
+                $county = (!empty(trim($fetchDatas->county))) ? trim($fetchDatas->county) : '—';
+                $state = (!empty(trim($fetchDatas->state))) ? trim($fetchDatas->state) : '—';
+                $zip_code = (!empty(trim($fetchDatas->zip_code))) ? trim($fetchDatas->zip_code) : '—';
+                $cross_street = (!empty(trim($fetchDatas->cross_street))) ? trim($fetchDatas->cross_street) : '—';
+                $subdivision = (!empty(trim($fetchDatas->subdivision))) ? trim($fetchDatas->subdivision) : '—';
+                $ssn = (!empty(trim($fetchDatas->ssn))) ? trim($fetchDatas->ssn) : '000-00-0000';
+                $date_of_birth = (!empty(trim($fetchDatas->date_of_birth))) ? trim($fetchDatas->date_of_birth) : '—';
+                $email = (!empty(trim($fetchDatas->email))) ? trim($fetchDatas->email) : '—';
+                $phone_h = (!empty(trim($fetchDatas->phone_h))) ? trim($fetchDatas->phone_h) : '000-000-0000';
+                $phone_m = (!empty(trim($fetchDatas->phone_m))) ? trim($fetchDatas->phone_m) : '000-000-0000';
 
                 $html .= "
                 <div class='col-lg-1 w-auto entryDuplicateData'>
@@ -2480,115 +2467,116 @@ class Customer extends MY_Controller
         echo $html;
     }
 
-    public function entryMergeProcess() {
+    public function entryMergeProcess()
+    {
         $post = $this->input->post();
 
-        $updateData = array(
-            "status" => $post["destinationStatus"],
-            "customer_type" => $post["destinationCustomerType"],
-            "business_name" => $post["destinationBusinessName"],
-            "customer_group_id" => $post["destinationCustomerGroup"],
-            "fk_sa_id" => $post["destinationSalesArea"],
-            "first_name" => $post["destinationFirstName"],
-            "middle_name" => $post["destinationMiddleName"],
-            "last_name" => $post["destinationLastName"],
-            "prefix" => $post["destinationNamePrefix"],
-            "suffix" => $post["destinationSuffix"],
-            "country" => $post["destinationCountry"],
-            "mail_add" => $post["destinationAddress"],
-            "city" => $post["destinationCity"],
-            "county" => $post["destinationCounty"],
-            "state" => $post["destinationState"],
-            "zip_code" => $post["destinationZipCode"],
-            "subdivision" => $post["destinationCrossStreet"],
-            "cross_street" => $post["destinationSubdivision"],
-            "ssn" => $post["destinationSocialSecurityNo"],
-            "date_of_birth" => $post["destinationBirthdate"],
-            "email" => $post["destinationEmail"],
-            "phone_h" => $post["destinationPhone"],
-            "phone_m" => $post["destinationMobile"],
-            "activated" => 1,
-        );
+        $updateData = [
+            'status' => $post['destinationStatus'],
+            'customer_type' => $post['destinationCustomerType'],
+            'business_name' => $post['destinationBusinessName'],
+            'customer_group_id' => $post['destinationCustomerGroup'],
+            'fk_sa_id' => $post['destinationSalesArea'],
+            'first_name' => $post['destinationFirstName'],
+            'middle_name' => $post['destinationMiddleName'],
+            'last_name' => $post['destinationLastName'],
+            'prefix' => $post['destinationNamePrefix'],
+            'suffix' => $post['destinationSuffix'],
+            'country' => $post['destinationCountry'],
+            'mail_add' => $post['destinationAddress'],
+            'city' => $post['destinationCity'],
+            'county' => $post['destinationCounty'],
+            'state' => $post['destinationState'],
+            'zip_code' => $post['destinationZipCode'],
+            'subdivision' => $post['destinationCrossStreet'],
+            'cross_street' => $post['destinationSubdivision'],
+            'ssn' => $post['destinationSocialSecurityNo'],
+            'date_of_birth' => $post['destinationBirthdate'],
+            'email' => $post['destinationEmail'],
+            'phone_h' => $post['destinationPhone'],
+            'phone_m' => $post['destinationMobile'],
+            'activated' => 1,
+        ];
 
         $mergeProcess = $this->customer_ad_model->mergeEntryUpdater(
-            $updateData, 
-            $post["destinationCustomerID"], 
-            $post["originFirstname"],
-            $post["originLastname"], 
-            $post["originBusinessName"]
+            $updateData,
+            $post['destinationCustomerID'],
+            $post['originFirstname'],
+            $post['originLastname'],
+            $post['originBusinessName']
         );
 
         echo $mergeProcess;
     }
 
-    public function checkCustomerDuplicate() 
+    public function checkCustomerDuplicate()
     {
         $company_id = logged('company_id');
-        
-        $data = array (
+
+        $data = [
             'company_id' => $company_id,
             'first_name' => $this->input->post('first_name'),
             'last_name' => $this->input->post('last_name'),
             'customer_type' => $this->input->post('customer_type'),
             'business_name' => $this->input->post('business_name'),
-        );
+        ];
 
         $getData = $this->customer_ad_model->customerDuplicateLookup($data);
 
-        $html = "";
+        $html = '';
 
         if ($data['customer_type'] == 'Residential') {
             $html .= "<table class='table table-bordered table-hover'>";
-            $html .= "<thead>";
-            $html .= "<tr>";
-            $html .= "<th>Customer</th>";
-            $html .= "<th>Type</th>";
+            $html .= '<thead>';
+            $html .= '<tr>';
+            $html .= '<th>Customer</th>';
+            $html .= '<th>Type</th>';
             $html .= "<th width='175px'>Action</th>";
-            $html .= "</tr>";
-            $html .= "</thead>";
-            $html .= "<tbody>";
-                foreach ($getData as $customer) {
-                    if ($customer->customer_type == "Residential") {
-                        $html .= "<tr>";
-                        $html .= "<td>$customer->first_name $customer->last_name</td>";
-                        $html .= "<td>$customer->customer_type</td>";
-                        $html .= "<td><button class='nsm-button small' onclick='viewCustomer($customer->prof_id)'><i class='fas fa-search'></i> View</button><button class='nsm-button small' onclick='removeCustomer($customer->prof_id)'><i class='fas fa-trash'></i> Remove</button></td>";
-                        $html .= "</tr>";
-                    }
+            $html .= '</tr>';
+            $html .= '</thead>';
+            $html .= '<tbody>';
+            foreach ($getData as $customer) {
+                if ($customer->customer_type == 'Residential') {
+                    $html .= '<tr>';
+                    $html .= "<td>$customer->first_name $customer->last_name</td>";
+                    $html .= "<td>$customer->customer_type</td>";
+                    $html .= "<td><button class='nsm-button small' onclick='viewCustomer($customer->prof_id)'><i class='fas fa-search'></i> View</button><button class='nsm-button small' onclick='removeCustomer($customer->prof_id)'><i class='fas fa-trash'></i> Remove</button></td>";
+                    $html .= '</tr>';
                 }
-            $html .= "</tbody>";
-            $html .= "</table>";
-        } else if ($data['customer_type'] == 'Commercial' || $data['customer_type'] == 'Business') {
+            }
+            $html .= '</tbody>';
+            $html .= '</table>';
+        } elseif ($data['customer_type'] == 'Commercial' || $data['customer_type'] == 'Business') {
             $html .= "<table class='table table-bordered'>";
-            $html .= "<thead>";
-            $html .= "<tr>";
-            $html .= "<th>Customer</th>";
-            $html .= "<th>Type</th>";
-            $html .= "<th>Business Name</th>";
-            $html .= "<th>Action</th>";
-            $html .= "</tr>";
-            $html .= "</thead>";
-            $html .= "<tbody>";
-                foreach ($getData as $customer) {
-                    if ($customer->customer_type == "Commercial" || $customer->customer_type == "Business") {
-                        $html .= "<tr>";
-                        $html .= "<td>$customer->first_name $customer->last_name</td>";
-                        $html .= "<td>$customer->customer_type</td>";
-                        $html .= "<td>$customer->business_name</td>";
-                        $html .= "<td><button class='nsm-button small' onclick='viewCustomer($customer->prof_id)'><i class='fas fa-search'></i> View</button><button class='nsm-button small' onclick='removeCustomer($customer->prof_id)'><i class='fas fa-trash'></i> Remove</button></td>";
-                        $html .= "</tr>";
-                    }
-                    
+            $html .= '<thead>';
+            $html .= '<tr>';
+            $html .= '<th>Customer</th>';
+            $html .= '<th>Type</th>';
+            $html .= '<th>Business Name</th>';
+            $html .= '<th>Action</th>';
+            $html .= '</tr>';
+            $html .= '</thead>';
+            $html .= '<tbody>';
+            foreach ($getData as $customer) {
+                if ($customer->customer_type == 'Commercial' || $customer->customer_type == 'Business') {
+                    $html .= '<tr>';
+                    $html .= "<td>$customer->first_name $customer->last_name</td>";
+                    $html .= "<td>$customer->customer_type</td>";
+                    $html .= "<td>$customer->business_name</td>";
+                    $html .= "<td><button class='nsm-button small' onclick='viewCustomer($customer->prof_id)'><i class='fas fa-search'></i> View</button><button class='nsm-button small' onclick='removeCustomer($customer->prof_id)'><i class='fas fa-trash'></i> Remove</button></td>";
+                    $html .= '</tr>';
                 }
-            $html .= "</tbody>";
-            $html .= "</table>";
+            }
+            $html .= '</tbody>';
+            $html .= '</table>';
         }
 
         echo $html;
     }
 
-    public function converge_check_cc_details_valid($data){
-        include APPPATH . 'libraries/Converge/src/Converge.php';
+    public function converge_check_cc_details_valid($data)
+    {
+        include APPPATH.'libraries/Converge/src/Converge.php';
 
         $msg = '';
         $is_success = 0;
@@ -2610,30 +2598,32 @@ class Customer extends MY_Controller
             'ssl_avs_address' => $data['ssl_address'],
             'ssl_avs_zip' => $data['ssl_zip'],
         ]);
-        if( $verify['success'] == 1 ){
-            if( $verify['ssl_result_message'] == 'DECLINED' ){
+        if ($verify['success'] == 1) {
+            if ($verify['ssl_result_message'] == 'DECLINED') {
                 $is_success = 0;
-            }else{
-                $is_success = 1;    
+            } else {
+                $is_success = 1;
             }
-            
-        }else{
+        } else {
             $msg = $verify['errorMessage'];
         }
-        
+
         $return = ['is_success' => $is_success, 'msg' => $msg];
+
         return $return;
     }
 
     /**
-     * This function will save/update solar information of the customer
+     * This function will save/update solar information of the customer.
+     *
      * * @param input Input data from customer form
      * * @param id ID of the customer
-     * @return boolean return TRUE if successfull transaction
-    */
-    public function save_solar_info($input,$id)
+     *
+     * @return bool return TRUE if successfull transaction
+     */
+    public function save_solar_info($input, $id)
     {
-        $solarInfo = array();
+        $solarInfo = [];
         $solarInfo['fk_prof_id'] = $id;
         $solarInfo['project_id'] = $input['project_id'];
         $solarInfo['lender_type'] = $input['lender_type'];
@@ -2657,20 +2647,21 @@ class Customer extends MY_Controller
         $solarInfo['kw_dc'] = $input['kw_dc'];
         $solarInfo['solar_system_size'] = $input['solar_system_size'];
 
-        $check = array(
-            'where' => array('fk_prof_id' => $id),
-            'table' => 'acs_info_solar'
-        );
-        $exist = $this->general->get_data_with_param($check,FALSE);
-        if($exist){
-            return $this->general->update_with_key_field($solarInfo, $input['customer_id'], 'acs_info_solar','fk_prof_id');
-        }else{
+        $check = [
+            'where' => ['fk_prof_id' => $id],
+            'table' => 'acs_info_solar',
+        ];
+        $exist = $this->general->get_data_with_param($check, false);
+        if ($exist) {
+            return $this->general->update_with_key_field($solarInfo, $input['customer_id'], 'acs_info_solar', 'fk_prof_id');
+        } else {
             return $this->general->add_($solarInfo, 'acs_info_solar');
         }
     }
 
-    public function save_billing_information($input,$id){
-        $input_billing = array();
+    public function save_billing_information($input, $id)
+    {
+        $input_billing = [];
         // billing data
         switch ($input['bill_freq']) {
             case 'One Time Only':
@@ -2724,21 +2715,21 @@ class Customer extends MY_Controller
         $input_billing['recurring_end_date'] = $input['recurring_end_date'];
         $input_billing['transaction_amount'] = $input['transaction_amount'];
         $input_billing['transaction_category'] = $input['transaction_category'];
-        $input_billing['frequency'] = $input['frequency']; //Subscription
-        $input_billing['billing_frequency'] = $billing_frequency; //Billing
-        $input_billing['next_billing_date'] = date("n/j/Y",strtotime("+" . $billing_frequency . " months", strtotime($input['bill_start_date'])));
-        $input_billing['next_subscription_billing_date'] = date("n/j/Y",strtotime("+" . $input['frequency'] . " months", strtotime($input['recurring_start_date'])));
+        $input_billing['frequency'] = $input['frequency']; // Subscription
+        $input_billing['billing_frequency'] = $billing_frequency; // Billing
+        $input_billing['next_billing_date'] = date('n/j/Y', strtotime('+'.$billing_frequency.' months', strtotime($input['bill_start_date'])));
+        $input_billing['next_subscription_billing_date'] = date('n/j/Y', strtotime('+'.$input['frequency'].' months', strtotime($input['recurring_start_date'])));
 
-        $check = array(
-            'where' => array(
-                'fk_prof_id' => $id
-            ),
-            'table' => 'acs_billing'
-        );
-        $exist = $this->general->get_data_with_param($check,FALSE);
-        if($exist){
-            return $this->general->update_with_key_field($input_billing, $input['customer_id'], 'acs_billing','fk_prof_id');
-        }else{
+        $check = [
+            'where' => [
+                'fk_prof_id' => $id,
+            ],
+            'table' => 'acs_billing',
+        ];
+        $exist = $this->general->get_data_with_param($check, false);
+        if ($exist) {
+            return $this->general->update_with_key_field($input_billing, $input['customer_id'], 'acs_billing', 'fk_prof_id');
+        } else {
             return $this->general->add_($input_billing, 'acs_billing');
         }
     }
@@ -2747,15 +2738,15 @@ class Customer extends MY_Controller
     {
         $payload = [];
         $saveToPayload = function ($customerNumber) use (&$payload, $postData, $customerId) {
-            if (empty(trim($postData['contact_first_name' . $customerNumber]))) {
+            if (empty(trim($postData['contact_first_name'.$customerNumber]))) {
                 return; // ignore empty contact with empty name
             }
 
             array_push($payload, [
-                'first_name' => trim($postData['contact_first_name' . $customerNumber]),
-                'last_name' => trim($postData['contact_last_name' . $customerNumber]),
-                'relation' => $postData['contact_relationship' . $customerNumber],
-                'phone' => $postData['contact_phone' . $customerNumber],
+                'first_name' => trim($postData['contact_first_name'.$customerNumber]),
+                'last_name' => trim($postData['contact_last_name'.$customerNumber]),
+                'relation' => $postData['contact_relationship'.$customerNumber],
+                'phone' => $postData['contact_phone'.$customerNumber],
                 'customer_id' => $customerId,
                 'phone_type' => 'mobile',
             ]);
@@ -2774,11 +2765,13 @@ class Customer extends MY_Controller
 
         $this->db->where('customer_id', $customerId);
         $contacts = $this->db->get('contacts')->result();
+
         return $contacts;
     }
 
-    public function save_office_information($input,$id){
-        $input_office = array();
+    public function save_office_information($input, $id)
+    {
+        $input_office = [];
 
         // office data
         $input_office['fk_prof_id'] = $id;
@@ -2804,9 +2797,9 @@ class Customer extends MY_Controller
         $input_office['post_install_survey'] = $input['post_install_survey'];
         $input_office['monitoring_waived'] = $input['monitoring_waived'];
 
-        if(isset($input['rebate_offer'])){
+        if (isset($input['rebate_offer'])) {
             $input_office['rebate_offer'] = $input['rebate_offer'];
-        }else{
+        } else {
             $input_office['rebate_offer'] = 0;
         }
 
@@ -2817,9 +2810,9 @@ class Customer extends MY_Controller
         $input_office['activation_fee'] = $input['activation_fee'];
         $input_office['way_of_pay'] = $input['way_of_pay'];
 
-        if(isset($input['commision_scheme'])){
+        if (isset($input['commision_scheme'])) {
             $input_office['commision_scheme'] = $input['commision_scheme'][0];
-        }else{
+        } else {
             $input_office['commision_scheme'] = 2;
         }
 
@@ -2834,9 +2827,9 @@ class Customer extends MY_Controller
         $input_office['rep_charge_back'] = $input['rep_charge_back'];
         $input_office['rep_payroll_charge_back'] = $input['rep_payroll_charge_back'];
 
-        if(isset($input['pso'])){
+        if (isset($input['pso'])) {
             $input_office['pso'] = $input['pso'][0];
-        }else{
+        } else {
             $input_office['pso'] = 2;
         }
 
@@ -2850,28 +2843,29 @@ class Customer extends MY_Controller
         $input_office['job_profit'] = $input['job_profit'];
         $input_office['url'] = $input['url'];
 
-        $check = array(
-            'where' => array(
-                'fk_prof_id' => $id
-            ),
-            'table' => 'acs_office'
-        );
-        $exist = $this->general->get_data_with_param($check,FALSE);
-        if($exist){
-            return $this->general->update_with_key_field($input_office, $input['customer_id'], 'acs_office','fk_prof_id');
-        }else{
+        $check = [
+            'where' => [
+                'fk_prof_id' => $id,
+            ],
+            'table' => 'acs_office',
+        ];
+        $exist = $this->general->get_data_with_param($check, false);
+        if ($exist) {
+            return $this->general->update_with_key_field($input_office, $input['customer_id'], 'acs_office', 'fk_prof_id');
+        } else {
             return $this->general->add_($input_office, 'acs_office');
         }
     }
 
-    public function save_alarm_information($input,$id){
-        $input_alarm = array();
+    public function save_alarm_information($input, $id)
+    {
+        $input_alarm = [];
 
         // alarm data
         $input_alarm['fk_prof_id'] = $id;
         $input_alarm['monitor_comp'] = $input['monitor_comp'];
         $input_alarm['monitor_id'] = $input['monitor_id'];
-        //$input_alarm['install_date'] = $input['install_date'];
+        // $input_alarm['install_date'] = $input['install_date'];
         $input_alarm['acct_type'] = $input['acct_type'];
         $input_alarm['online'] = $input['online'];
         $input_alarm['in_service'] = $input['in_service'];
@@ -2895,49 +2889,51 @@ class Customer extends MY_Controller
         $input_alarm['monthly_monitoring'] = $input['monthly_monitoring'];
         $input_alarm['otps'] = $input['otps'];
 
-        $check = array(
-            'where' => array(
-                'fk_prof_id' => $id
-            ),
-            'table' => 'acs_alarm'
-        );
-        $exist = $this->general->get_data_with_param($check,FALSE);
-        if($exist){
-            return $this->general->update_with_key_field($input_alarm, $input['customer_id'], 'acs_alarm','fk_prof_id');
-        }else{
+        $check = [
+            'where' => [
+                'fk_prof_id' => $id,
+            ],
+            'table' => 'acs_alarm',
+        ];
+        $exist = $this->general->get_data_with_param($check, false);
+        if ($exist) {
+            return $this->general->update_with_key_field($input_alarm, $input['customer_id'], 'acs_alarm', 'fk_prof_id');
+        } else {
             return $this->general->add_($input_alarm, 'acs_alarm');
         }
     }
 
-    public function save_access_information($input,$id){
-        $input_access = array();
-        //access data
+    public function save_access_information($input, $id)
+    {
+        $input_access = [];
+        // access data
         $input_access['fk_prof_id'] = $id;
-        if(isset($input['portal_status'])){
+        if (isset($input['portal_status'])) {
             $input_access['portal_status'] = $input['portal_status'];
-        }else{
+        } else {
             $input_access['portal_status'] = 2;
         }
 
-        $input_access['reset_password'] ='';
+        $input_access['reset_password'] = '';
         $input_access['access_login'] = $input['access_login'];
         $input_access['access_password'] = $input['access_password'];
-        $check = array(
-            'where' => array(
-                'fk_prof_id' => $id
-            ),
-            'table' => 'acs_access'
-        );
-        $exist = $this->general->get_data_with_param($check,FALSE);
-        if($exist){
-            return $this->general->update_with_key_field($input_access, $input['customer_id'], 'acs_access','fk_prof_id');
-        }else{
+        $check = [
+            'where' => [
+                'fk_prof_id' => $id,
+            ],
+            'table' => 'acs_access',
+        ];
+        $exist = $this->general->get_data_with_param($check, false);
+        if ($exist) {
+            return $this->general->update_with_key_field($input_access, $input['customer_id'], 'acs_access', 'fk_prof_id');
+        } else {
             return $this->general->add_($input_access, 'acs_access');
         }
     }
 
-    public function save_papers_information($input,$id){
-        $input_papers = array();
+    public function save_papers_information($input, $id)
+    {
+        $input_papers = [];
         $input_papers['customer_id'] = $id;
         $input_papers['rep_paper_date'] = $input['rep_paper_date'];
         $input_papers['tech_paper_date'] = $input['tech_paper_date'];
@@ -2946,69 +2942,70 @@ class Customer extends MY_Controller
         $input_papers['submitted'] = $input['submitted'];
         $input_papers['funded'] = $input['funded'];
         $input_papers['charged_back'] = $input['charged_back'];
-        //$input_papers['paperwork'] = $input['paperwork'];
-        $check = array(
-            'where' => array(
-                'customer_id' => $id
-            ),
-            'table' => 'acs_papers'
-        );
-        $exist = $this->general->get_data_with_param($check,FALSE);
-        if($exist){
-            return $this->general->update_with_key_field($input_papers, $input['customer_id'], 'acs_papers','customer_id');
-        }else{
+        // $input_papers['paperwork'] = $input['paperwork'];
+        $check = [
+            'where' => [
+                'customer_id' => $id,
+            ],
+            'table' => 'acs_papers',
+        ];
+        $exist = $this->general->get_data_with_param($check, false);
+        if ($exist) {
+            return $this->general->update_with_key_field($input_papers, $input['customer_id'], 'acs_papers', 'customer_id');
+        } else {
             return $this->general->add_($input_papers, 'acs_papers');
         }
     }
 
-    public function save_notes($prev_notes_value, $input,$id){
-        $input_notes = array();         
-        if( trim($prev_notes_value) != trim($input['notes']) ){
+    public function save_notes($prev_notes_value, $input, $id)
+    {
+        $input_notes = [];
+        if (trim($prev_notes_value) != trim($input['notes'])) {
             $input_notes['fk_prof_id'] = $id;
             $input_notes['note'] = $input['notes'];
-            $input_notes['datetime'] = date("m-d-Y h:i A");
+            $input_notes['datetime'] = date('m-d-Y h:i A');
             $this->general->add_($input_notes, 'acs_notes');
-        }           
+        }
     }
 
-    public function add_data_sheet(){
-
+    public function add_data_sheet()
+    {
         $user_id = logged('id');
         $cid = logged('company_id');
         $input = $this->input->post();
 
         $fk_prod_id = $input['prof_id'];
-        if(empty($fk_prod_id)){
-            $fk_prod_id = $this->customer_ad_model->add($input,"acs_profile");
+        if (empty($fk_prod_id)) {
+            $fk_prod_id = $this->customer_ad_model->add($input, 'acs_profile');
 
             $input_access['fk_prof_id'] = $fk_prod_id;
             $input_office['fk_prof_id'] = $fk_prod_id;
             $input_alarm['fk_prof_id'] = $fk_prod_id;
             $input_billing['fk_prof_id'] = $fk_prod_id;
 
-            $this->customer_ad_model->add($input_access,"acs_access");
-            $this->customer_ad_model->add($input_office,"acs_office");
-            $this->customer_ad_model->add($input_alarm,"acs_alarm");
-            $this->customer_ad_model->add($input_billing,"acs_billing");
-            echo "Added";
-        }else{
+            $this->customer_ad_model->add($input_access, 'acs_access');
+            $this->customer_ad_model->add($input_office, 'acs_office');
+            $this->customer_ad_model->add($input_alarm, 'acs_alarm');
+            $this->customer_ad_model->add($input_billing, 'acs_billing');
+            echo 'Added';
+        } else {
             $input_profile['prof_id'] = $fk_prod_id;
-            $this->customer_ad_model->update_data($input_profile,"acs_profile","prof_id");
+            $this->customer_ad_model->update_data($input_profile, 'acs_profile', 'prof_id');
 
             $input_access['fk_prof_id'] = $fk_prod_id;
             $input_office['fk_prof_id'] = $fk_prod_id;
             $input_alarm['fk_prof_id'] = $fk_prod_id;
             $input_billing['fk_prof_id'] = $fk_prod_id;
 
-            $this->customer_ad_model->update_data($input_access,"acs_access","fk_prof_id");
-            $this->customer_ad_model->update_data($input_office,"acs_office","fk_prof_id");
-            $this->customer_ad_model->update_data($input_alarm,"acs_alarm","fk_prof_id");
-            $this->customer_ad_model->update_data($input_billing,"acs_billing","fk_prof_id");
+            $this->customer_ad_model->update_data($input_access, 'acs_access', 'fk_prof_id');
+            $this->customer_ad_model->update_data($input_office, 'acs_office', 'fk_prof_id');
+            $this->customer_ad_model->update_data($input_alarm, 'acs_alarm', 'fk_prof_id');
+            $this->customer_ad_model->update_data($input_billing, 'acs_billing', 'fk_prof_id');
 
-            if(isset($input['device_name'])){
+            if (isset($input['device_name'])) {
                 $devices = count($input['device_name']);
-                for($xx=0;$xx<$devices;$xx++){
-                    $device_data = array();
+                for ($xx = 0; $xx < $devices; ++$xx) {
+                    $device_data = [];
                     $device_data['fk_prof_id'] = $fk_prod_id;
                     $device_data['device_name'] = $input['device_name'][$xx];
                     $device_data['sold_by'] = $input['sold_by'][$xx];
@@ -3020,92 +3017,97 @@ class Customer extends MY_Controller
                     $device_data['total_cost'] = $input['total_cost'][$xx];
                     $device_data['total_purch_price'] = $input['total_purch_price'][$xx];
                     $device_data['device_net'] = $input['device_net'][$xx];
-                    $this->customer_ad_model->add($device_data,"acs_devices");
+                    $this->customer_ad_model->add($device_data, 'acs_devices');
                     unset($device_data);
                 }
             }
-            echo "Updated";
+            echo 'Updated';
         }
     }
 
-    public function remove_customer(){
-        $input = array();
-        $input['field_name'] = "prof_id";
+    public function remove_customer()
+    {
+        $input = [];
+        $input['field_name'] = 'prof_id';
         $input['id'] = $_POST['prof_id'];
-        $input['tablename'] = "acs_profile";
-        $modules = array('acs_access','acs_office','acs_alarm','acs_billing');
+        $input['tablename'] = 'acs_profile';
+        $modules = ['acs_access', 'acs_office', 'acs_alarm', 'acs_billing'];
         if ($this->customer_ad_model->delete($input)) {
-            for($x=0;$x<count($modules);$x++){
-                $input_mod = array();
-                $input_mod['field_name'] = "fk_prof_id";
+            for ($x = 0; $x < count($modules); ++$x) {
+                $input_mod = [];
+                $input_mod['field_name'] = 'fk_prof_id';
                 $input_mod['id'] = $_POST['prof_id'];
                 $input_mod['tablename'] = $modules[$x];
                 $this->customer_ad_model->delete($input_mod);
             }
-            echo "Done";
+            echo 'Done';
         }
     }
 
-    public function remove_lead(){
-        $input = array();
-        $input['field_name'] = "leads_id";
+    public function remove_lead()
+    {
+        $input = [];
+        $input['field_name'] = 'leads_id';
         $input['id'] = $_POST['lead_id'];
-        $input['tablename'] = "ac_leads";
+        $input['tablename'] = 'ac_leads';
         $this->customer_ad_model->delete($input);
-        echo "Done";
+        echo 'Done';
     }
 
-    public function remove_devices(){
-        $input = array();
-        $input['field_name'] = "dev_id";
+    public function remove_devices()
+    {
+        $input = [];
+        $input['field_name'] = 'dev_id';
         $input['id'] = $_POST['id'];
-        $input['tablename'] = "acs_devices";
+        $input['tablename'] = 'acs_devices';
         $this->customer_ad_model->delete($input);
-        echo "Done";
+        echo 'Done';
     }
 
-    public function remove_task(){
-        $input = array();
-        $input['field_name'] = "task_id";
+    public function remove_task()
+    {
+        $input = [];
+        $input['field_name'] = 'task_id';
         $input['id'] = $_POST['id'];
-        $input['tablename'] = "acs_tasks";
+        $input['tablename'] = 'acs_tasks';
         $this->customer_ad_model->delete($input);
-        echo "Done";
+        echo 'Done';
     }
 
-    public function update_custom_fields(){
+    public function update_custom_fields()
+    {
         $input = $this->input->post();
-        $file_array = array();
-        //print_r($input);
-        for($x=0;$x<count($input['fieldname']);$x++){
+        $file_array = [];
+        // print_r($input);
+        for ($x = 0; $x < count($input['fieldname']); ++$x) {
             $file_array[$x]['field_name'] = $input['fieldname'][$x];
             $file_array[$x]['field_value'] = $input['fieldvalue'][$x];
         }
         unset($input['fieldname']);
         unset($input['fieldvalue']);
         $input['custom_fields'] = json_encode($file_array);
-        if($this->customer_ad_model->update_data($input,"acs_profile","prof_id")){
-            echo "Success";
-        }else{
-            echo "Done";
+        if ($this->customer_ad_model->update_data($input, 'acs_profile', 'prof_id')) {
+            echo 'Success';
+        } else {
+            echo 'Done';
         }
     }
 
     public function import_customer()
     {
-        $get_company_settings = array(
-            'where' => array(
+        $get_company_settings = [
+            'where' => [
                 'company_id' => logged('company_id'),
                 'setting_type' => 'import',
-            ),
+            ],
             'table' => 'customer_settings',
             'select' => '*',
-        );
+        ];
         $importSettings = $this->general->get_data_with_param($get_company_settings, false);
-        $getImportFields = array(
+        $getImportFields = [
             'table' => 'acs_import_fields',
             'select' => '*',
-        );
+        ];
         $this->page_data['importFieldsList'] = $this->general->get_data_with_param($getImportFields);
 
         $this->page_data['import_settings'] = $importSettings;
@@ -3115,30 +3117,30 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/import', $this->page_data);
     }
 
-    public function add_lead($lead_id=0)
+    public function add_lead($lead_id = null)
     {
-        //$this->hasAccessModule(9);
+        // $this->hasAccessModule(9);
         $this->hasAccessModule(43);
         $this->page_data['page']->title = 'New Lead Form';
-        
-        if(isset($lead_id)){
-            $this->page_data['leads_data'] = $this->customer_ad_model->get_data_by_id('leads_id',$lead_id,"ac_leads");
+
+        if (isset($lead_id)) {
+            $this->page_data['leads_data'] = $this->customer_ad_model->get_data_by_id('leads_id', $lead_id, 'ac_leads');
         }
         $leadId = $this->page_data['leads_data']->fk_sa_id;
-      
+
         $input = $this->input->post();
         $convert_lead = $this->input->post('convert_customer');
-        if(isset($convert_lead)){
+        if (isset($convert_lead)) {
             if (!isset($input['leads_id'])) {
                 unset($input['credit_report']);
                 unset($input['report_history']);
                 unset($input['convert_customer']);
-                $this->customer_ad_model->add($input, "ac_leads");
+                $this->customer_ad_model->add($input, 'ac_leads');
             }
-   
-            $input_profile = array();   
+
+            $input_profile = [];
             $input_profile['fk_user_id'] = logged('id');
-            //$input_profile['fk_sa_id'] = $input['fk_sa_id'];
+            // $input_profile['fk_sa_id'] = $input['fk_sa_id'];
             $input_profile['first_name'] = $input['firstname'];
             $input_profile['middle_name'] = strtoupper($input['middle_initial']);
             $input_profile['last_name'] = $input['lastname'];
@@ -3149,29 +3151,29 @@ class Customer extends MY_Controller
             $input_profile['city'] = $input['city'];
             $input_profile['email'] = $input['email_add'];
 
-            $profile_id = $this->customer_ad_model->add($input_profile,"acs_profile");
+            $profile_id = $this->customer_ad_model->add($input_profile, 'acs_profile');
 
-            if(isset($profile_id)){
+            if (isset($profile_id)) {
                 redirect(base_url('customer/add_advance/'.$profile_id));
             }
-        }else {
+        } else {
             if ($input) {
                 unset($input['credit_report']);
                 unset($input['report_history']);
                 print_r($input);
 
                 if (isset($input['leads_id'])) {
-                    if ($this->customer_ad_model->update_data($input, "ac_leads", "leads_id")) {
+                    if ($this->customer_ad_model->update_data($input, 'ac_leads', 'leads_id')) {
                         redirect(base_url('customer/leads'));
                     } else {
-                        echo "Error";
+                        echo 'Error';
                     }
                 }
             } else {
                 $user_id = logged('id');
-                $cid=logged('company_id');
+                $cid = logged('company_id');
                 $this->page_data['company_id'] = $cid;
-                $this->page_data['plans'] = "";
+                $this->page_data['plans'] = '';
                 $this->page_data['users'] = $this->users_model->getUsers();
                 $this->page_data['lead_types'] = $this->customer_ad_model->getAllSettingsLeadTypesByCompanyId($cid);
                 $this->page_data['sales_area'] = $this->customer_ad_model->getAllSettingsSalesAreaByCompanyId($cid);
@@ -3179,42 +3181,42 @@ class Customer extends MY_Controller
                 $this->load->view('customer/add_lead', $this->page_data);
             }
         }
-    }   
+    }
 
     public function save_new_lead()
     {
         $input = $this->input->post();
-        $uid   = logged('id');
+        $uid = logged('id');
         $company_id = logged('company_id');
-        
+
         if ($input) {
             unset($input['credit_report']);
-            unset($input['report_history']);    
+            unset($input['report_history']);
             $input['country'] = ucwords($input['country']);
-            $input['state']   = ucwords($input['state']);
-            $input['city']    = ucwords($input['city']);
-            $input['address'] = ucwords($input['address']);   
-            $input['phone_home'] = formatPhoneNumber($input['phone_home']);   
-            $input['phone_cell'] = formatPhoneNumber($input['phone_cell']);   
-            if( isset($input['leads_id']) ){                
-                if ($this->customer_ad_model->update_data($input, "ac_leads", 'leads_id')) {
-                    //SMS Notification
+            $input['state'] = ucwords($input['state']);
+            $input['city'] = ucwords($input['city']);
+            $input['address'] = ucwords($input['address']);
+            $input['phone_home'] = formatPhoneNumber($input['phone_home']);
+            $input['phone_cell'] = formatPhoneNumber($input['phone_cell']);
+            if ($input['leads_id'] != null) {
+                if ($this->customer_ad_model->update_data($input, 'ac_leads', 'leads_id')) {
+                    // SMS Notification
                     createCronAutoSmsNotification($company_id, $input['leads_id'], 'lead', $input['status'], $uid, $input['fk_assign_id']);
                     echo 'Saved';
                 } else {
-                    echo "Error";
+                    echo 'Error';
                 }
-            }else{
+            } else {
+            
                 $input['company_id'] = logged('company_id');
-                if ($lastid = $this->customer_ad_model->add($input, "ac_leads")) {
-                    //SMS Notification
+                if ($lastid = $this->customer_ad_model->add($input, 'ac_leads')) {
+                    // SMS Notification
                     createCronAutoSmsNotification($company_id, $lastid, 'lead', $input['status'], $uid, $input['fk_assign_id']);
                     echo 'Saved';
                 } else {
-                    echo "Error";
+                    echo 'Error';
                 }
             }
-            
         }
     }
 
@@ -3246,18 +3248,18 @@ class Customer extends MY_Controller
                 'email' => $input['email_add'],
                 'ssn' => $input['sss_num'],
                 'phone_h' => $input['phone_home'],
-                'phone_m' => $input['phone_cell']
+                'phone_m' => $input['phone_cell'],
             ];
-            if ($lastid = $this->customer_ad_model->add($customer_data, "acs_profile")) {
+            if ($lastid = $this->customer_ad_model->add($customer_data, 'acs_profile')) {
                 $customerOfficePayload = [
                     'fk_prof_id' => $lastid,
                     'sales_date' => date('m/d/Y'),
                     'fk_sales_rep_office' => $input['fk_sr_id'],
                 ];
-                $this->customer_ad_model->add($customerOfficePayload, "acs_office");
-                
-                $lead = $this->customer_ad_model->get_data_by_id('leads_id',$this->input->post('leads_id'),"ac_leads");
-                //SMS Notification
+                $this->customer_ad_model->add($customerOfficePayload, 'acs_office');
+
+                $lead = $this->customer_ad_model->get_data_by_id('leads_id', $this->input->post('leads_id'), 'ac_leads');
+                // SMS Notification
                 createCronAutoSmsNotification(logged('company_id'), $lead->leads_id, 'lead', 'Converted', 0, $lead->fk_assign_id);
 
                 $is_success = 1;
@@ -3270,521 +3272,550 @@ class Customer extends MY_Controller
         echo json_encode($json);
     }
 
-    public function add_audit_import_ajax(){
+    public function add_audit_import_ajax()
+    {
         $input = $this->input->post();
         // customer_ad_model
-        if(empty($input['ai_id'])){
+        if (empty($input['ai_id'])) {
             unset($input['ai_id']);
-            if($this->customer_ad_model->add($input,"acs_audit_import")){
-                echo "Success";
-            }else{
-                echo "Error";
-            }
-        }else{
-            if($this->customer_ad_model->update_data($input,"acs_audit_import","ai_id")){
-                echo "Updated";
-            }else{
-                echo "Error";
-            }
-        }
-    }
-
-    public function add_new_customer_from_jobs(){
-        $input = $this->input->post();
-        // customer_ad_model
-        if($input){
-            $input['company_id'] = logged('company_id'); ;
-            $input['status'] = 'New';
-            if ($this->customer_ad_model->add($input, "acs_profile")) {
-                echo "Success";
+            if ($this->customer_ad_model->add($input, 'acs_audit_import')) {
+                echo 'Success';
             } else {
-                echo "Error";
+                echo 'Error';
+            }
+        } else {
+            if ($this->customer_ad_model->update_data($input, 'acs_audit_import', 'ai_id')) {
+                echo 'Updated';
+            } else {
+                echo 'Error';
             }
         }
     }
 
-    public function add_furnisher_ajax(){
+    public function add_new_customer_from_jobs()
+    {
         $input = $this->input->post();
         // customer_ad_model
-        if($this->customer_ad_model->add($input,"acs_furnisher")){
-            echo "Success";
-        }else{
-            echo "Error";
+        if ($input) {
+            $input['company_id'] = logged('company_id');
+            $input['status'] = 'New';
+            if ($this->customer_ad_model->add($input, 'acs_profile')) {
+                echo 'Success';
+            } else {
+                echo 'Error';
+            }
         }
-//        else{
-//            if($this->customer_ad_model->update_data($input,"acs_audit_import","ai_id")){
-//                echo "Updated";
-//            }else{
-//                echo "Error";
-//            }
-//        }
     }
 
-    public function add_reasons_ajax(){
+    public function add_furnisher_ajax()
+    {
         $input = $this->input->post();
-        if($this->customer_ad_model->add($input,"acs_reasons")){
-            echo "Success";
-        }else{
-            echo "Error";
+        // customer_ad_model
+        if ($this->customer_ad_model->add($input, 'acs_furnisher')) {
+            echo 'Success';
+        } else {
+            echo 'Error';
+        }
+        //        else{
+        //            if($this->customer_ad_model->update_data($input,"acs_audit_import","ai_id")){
+        //                echo "Updated";
+        //            }else{
+        //                echo "Error";
+        //            }
+        //        }
+    }
+
+    public function add_reasons_ajax()
+    {
+        $input = $this->input->post();
+        if ($this->customer_ad_model->add($input, 'acs_reasons')) {
+            echo 'Success';
+        } else {
+            echo 'Error';
         }
     }
 
     public function fetch_reasons_data()
     {
-        $reasons = $this->customer_ad_model->get_all(1, "", "DESC", "acs_reasons", "reason_id");
+        $reasons = $this->customer_ad_model->get_all(1, '', 'DESC', 'acs_reasons', 'reason_id');
         echo json_encode($reasons);
     }
 
     public function fetch_all_reasons_data()
     {
-        $reasons = $this->customer_ad_model->get_all(FALSE, "", "ASC", "acs_reasons", "reason_id");
+        $reasons = $this->customer_ad_model->get_all(false, '', 'ASC', 'acs_reasons', 'reason_id');
         echo json_encode($reasons);
     }
 
-    public function delete_reason(){
-        $input = array();
-        $input['field_name'] = "reason_id";
+    public function delete_reason()
+    {
+        $input = [];
+        $input['field_name'] = 'reason_id';
         $input['id'] = $_POST['reason_id'];
-        $input['tablename'] = "acs_reasons";
+        $input['tablename'] = 'acs_reasons';
         if ($this->customer_ad_model->delete($input)) {
-            echo  "Done";
+            echo 'Done';
         }
     }
 
-    public function add_task_ajax(){
+    public function add_task_ajax()
+    {
         $input = $this->input->post();
-        if(empty($input['task_id'])){
+        if (empty($input['task_id'])) {
             unset($input['task_id']);
-            if($this->customer_ad_model->add($input,"acs_tasks")){
-                echo "Success";
-            }else{
-                echo "Error";
+            if ($this->customer_ad_model->add($input, 'acs_tasks')) {
+                echo 'Success';
+            } else {
+                echo 'Error';
             }
-        }else{
-            if($this->customer_ad_model->update_data($input,"acs_tasks","task_id")){
-                echo "Updated";
-            }else{
-                echo "Error";
+        } else {
+            if ($this->customer_ad_model->update_data($input, 'acs_tasks', 'task_id')) {
+                echo 'Updated';
+            } else {
+                echo 'Error';
             }
         }
     }
 
     // for addling of Lead Type (ac_leadtypes table)
-    public function add_leadtype_ajax(){
+    public function add_leadtype_ajax()
+    {
         $input = $this->input->post();
         // customer_ad_model
-        if(empty($input['lead_id'])){
+        if (empty($input['lead_id'])) {
             unset($input['lead_id']);
             $input['company_id'] = logged('company_id');
-            if($this->customer_ad_model->add($input,"ac_leadtypes")){
-                echo "Success";
-            }else{
-                echo "Error";
+            if ($this->customer_ad_model->add($input, 'ac_leadtypes')) {
+                echo 'Success';
+            } else {
+                echo 'Error';
             }
-        }else{
-            if($this->customer_ad_model->update_data($input,"ac_leadtypes","lead_id")){
-                echo "Updated";
-            }else{
-                echo "Error";
+        } else {
+            if ($this->customer_ad_model->update_data($input, 'ac_leadtypes', 'lead_id')) {
+                echo 'Updated';
+            } else {
+                echo 'Error';
             }
         }
     }
 
-    public function update_lead_type_ajax(){
+    public function update_lead_type_ajax()
+    {
         $input = $this->input->post();
         $data = ['lead_id' => $input['lead_id'], 'lead_name' => $input['lead_name']];
-        if($this->customer_ad_model->update_data($data,"ac_leadtypes","lead_id")){
+        if ($this->customer_ad_model->update_data($data, 'ac_leadtypes', 'lead_id')) {
             echo 1;
-        }else{
+        } else {
             echo 0;
         }
     }
 
-    public function add_rate_plan_ajax(){
+    public function add_rate_plan_ajax()
+    {
         $input = $this->input->post();
         // customer_ad_model
-        if(empty($input['id'])){
+        if (empty($input['id'])) {
             unset($input['id']);
             $input['company_id'] = logged('company_id');
-            if($this->customer_ad_model->add($input,"ac_rateplan")){
+            if ($this->customer_ad_model->add($input, 'ac_rateplan')) {
                 echo 1;
-            }else{
+            } else {
                 echo 0;
             }
-        }else{
-            if($this->customer_ad_model->update_data($input,"ac_rateplan","id")){
-                echo "Updated";
-            }else{
-                echo "Error";
+        } else {
+            if ($this->customer_ad_model->update_data($input, 'ac_rateplan', 'id')) {
+                echo 'Updated';
+            } else {
+                echo 'Error';
             }
         }
     }
 
-    public function update_rate_plan_ajax(){
+    public function update_rate_plan_ajax()
+    {
         $input = $this->input->post();
         $data = ['id' => $input['rate-plan-id'], 'amount' => $input['amount'], 'plan_name' => $input['plan_name']];
-        if($this->customer_ad_model->update_data($data,"ac_rateplan","id")){
+        if ($this->customer_ad_model->update_data($data, 'ac_rateplan', 'id')) {
             echo 1;
-        }else{
+        } else {
             echo 0;
         }
     }
 
-    public function customer_settings_ajax_process(){
+    public function customer_settings_ajax_process()
+    {
         $input = $this->input->post();
         // customer_ad_model
-        if(empty($input['id'])){
+        if (empty($input['id'])) {
             unset($input['id']);
-            if($this->customer_ad_model->add($input,"acs_cust_status")){
+            if ($this->customer_ad_model->add($input, 'acs_cust_status')) {
                 echo true;
-            }else{
-                echo "Error";
+            } else {
+                echo 'Error';
             }
-        }else{
-            if($this->customer_ad_model->update_data($input,"acs_cust_status","id")){
-                echo "Updated";
-            }else{
-                echo "Error";
+        } else {
+            if ($this->customer_ad_model->update_data($input, 'acs_cust_status', 'id')) {
+                echo 'Updated';
+            } else {
+                echo 'Error';
             }
         }
     }
 
-    public function customer_settings_delete(){
-        $deletion_query = array(
-            'where' => array(
-                'id' => $_POST['id']
-            ),
-            'table' => 'acs_cust_status'
-        );
-        if($this->general->delete_($deletion_query)){
+    public function customer_settings_delete()
+    {
+        $deletion_query = [
+            'where' => [
+                'id' => $_POST['id'],
+            ],
+            'table' => 'acs_cust_status',
+        ];
+        if ($this->general->delete_($deletion_query)) {
             echo 1;
-        }else{
+        } else {
             echo 0;
         }
     }
 
-
-    public function add_salesarea_ajax(){
+    public function add_salesarea_ajax()
+    {
         $input = $this->input->post();
         // customer_ad_model
-        if(empty($input['sa_id'])){
+        if (empty($input['sa_id'])) {
             unset($input['sa_id']);
             $input['fk_comp_id'] = logged('company_id');
-            if($this->customer_ad_model->add($input,"ac_salesarea")){
-                echo "Sales Area Added!";
-            }else{
-                echo "Error";
+            if ($this->customer_ad_model->add($input, 'ac_salesarea')) {
+                echo 'Sales Area Added!';
+            } else {
+                echo 'Error';
             }
-        }else{
-            if($this->customer_ad_model->update_data($input,"ac_salesarea","sa_id")){
-                echo "Updated";
-            }else{
-                echo "Error";
+        } else {
+            if ($this->customer_ad_model->update_data($input, 'ac_salesarea', 'sa_id')) {
+                echo 'Updated';
+            } else {
+                echo 'Error';
             }
         }
     }
 
-    public function update_sales_area_ajax(){
+    public function update_sales_area_ajax()
+    {
         $input = $this->input->post();
         $data = ['sa_id' => $input['sa_id'], 'sa_name' => $input['sa_name']];
-        if($this->customer_ad_model->update_data($data,"ac_salesarea","sa_id")){
+        if ($this->customer_ad_model->update_data($data, 'ac_salesarea', 'sa_id')) {
             echo 1;
-        }else{
+        } else {
             echo 0;
         }
     }
 
-    public function add_leadsource_ajax(){
+    public function add_leadsource_ajax()
+    {
         $input = $this->input->post();
         // customer_ad_model
-        if(empty($input['ls_id'])){
+        if (empty($input['ls_id'])) {
             unset($input['ls_id']);
             $input['fk_company_id'] = logged('company_id');
-            if($this->customer_ad_model->add($input,"ac_leadsource")){
-                echo "Lead Source Added!";
-            }else{
-                echo "Error";
+            if ($this->customer_ad_model->add($input, 'ac_leadsource')) {
+                echo 'Lead Source Added!';
+            } else {
+                echo 'Error';
             }
-        }else{
-            if($this->customer_ad_model->update_data($input,"ac_leadsource","ls_id")){
-                echo "Updated";
-            }else{
-                echo "Error";
+        } else {
+            if ($this->customer_ad_model->update_data($input, 'ac_leadsource', 'ls_id')) {
+                echo 'Updated';
+            } else {
+                echo 'Error';
             }
         }
     }
 
-    public function update_leadsource_ajax(){
+    public function update_leadsource_ajax()
+    {
         $input = $this->input->post();
         $data = ['ls_id' => $input['ls_id'], 'ls_name' => $input['ls_name']];
-        if($this->customer_ad_model->update_data($data,"ac_leadsource","ls_id")){
+        if ($this->customer_ad_model->update_data($data, 'ac_leadsource', 'ls_id')) {
             echo 1;
-        }else{
+        } else {
             echo 0;
         }
     }
 
-    public function add_activation_fee_ajax(){
+    public function add_activation_fee_ajax()
+    {
         $input = $this->input->post();
         // customer_ad_model
-        if(empty($input['id'])){
+        if (empty($input['id'])) {
             unset($input['id']);
             $input['company_id'] = logged('company_id');
-            if($this->customer_ad_model->add($input,"ac_activationfee")){
+            if ($this->customer_ad_model->add($input, 'ac_activationfee')) {
                 echo 1;
-            }else{
+            } else {
                 echo 0;
             }
-        }else{
-            if($this->customer_ad_model->update_data($input,"ac_activationfee","id")){
-                echo "Updated";
-            }else{
-                echo "Error";
+        } else {
+            if ($this->customer_ad_model->update_data($input, 'ac_activationfee', 'id')) {
+                echo 'Updated';
+            } else {
+                echo 'Error';
             }
         }
     }
 
-    public function update_activation_fee_ajax(){
+    public function update_activation_fee_ajax()
+    {
         $input = $this->input->post();
         $data = ['id' => $input['id'], 'amount' => $input['amount']];
-        if($this->customer_ad_model->update_data($data,"ac_activationfee","id")){
+        if ($this->customer_ad_model->update_data($data, 'ac_activationfee', 'id')) {
             echo 1;
-        }else{
+        } else {
             echo 0;
         }
     }
 
-    public function add_spt_ajax(){
+    public function add_spt_ajax()
+    {
         $input = $this->input->post();
         // customer_ad_model
-        if(empty($input['id'])){
+        if (empty($input['id'])) {
             unset($input['id']);
             $input['company_id'] = logged('company_id');
-            if($this->customer_ad_model->add($input,"ac_system_package_type")){
+            if ($this->customer_ad_model->add($input, 'ac_system_package_type')) {
                 echo 1;
-            }else{
+            } else {
                 echo 0;
             }
-        }else{
-            if($this->customer_ad_model->update_data($input,"ac_system_package_type","id")){
-                echo "Updated";
-            }else{
-                echo "Error";
+        } else {
+            if ($this->customer_ad_model->update_data($input, 'ac_system_package_type', 'id')) {
+                echo 'Updated';
+            } else {
+                echo 'Error';
             }
         }
     }
 
-    public function update_spt_ajax(){
+    public function update_spt_ajax()
+    {
         $input = $this->input->post();
         $data = ['id' => $input['id'], 'name' => $input['name']];
-        if($this->customer_ad_model->update_data($data,"ac_system_package_type","id")){
+        if ($this->customer_ad_model->update_data($data, 'ac_system_package_type', 'id')) {
             echo 1;
-        }else{
+        } else {
             echo 0;
         }
     }
 
-    public function update_customer_profile(){
+    public function update_customer_profile()
+    {
         $this->load->model('CustomerInternalNotes_model');
 
-        $input = array();
+        $input = [];
         $input['notes'] = $_POST['notes'];
         $input['prof_id'] = $_POST['id'];
-        if($this->customer_ad_model->update_data($input,"acs_profile","prof_id")){
-            //Insert to internal notes
-            if( trim($input['notes']) != '' && $input['notes'] != $_POST['memo_note'] ){
+        if ($this->customer_ad_model->update_data($input, 'acs_profile', 'prof_id')) {
+            // Insert to internal notes
+            if (trim($input['notes']) != '' && $input['notes'] != $_POST['memo_note']) {
                 $data_memo = [
                     'prof_id' => $input['prof_id'],
                     'user_id' => logged('id'),
-                    'note_date' => date("Y-m-d"),
+                    'note_date' => date('Y-m-d'),
                     'notes' => trim($input['notes']),
-                    'date_created' => date("Y-m-d H:i:s"),
-                    'date_modified' => date("Y-m-d H:i:s")
+                    'date_created' => date('Y-m-d H:i:s'),
+                    'date_modified' => date('Y-m-d H:i:s'),
                 ];
 
                 $this->CustomerInternalNotes_model->create($data_memo);
             }
-            echo "Success";
-        }else{
-            echo "Error";
+            echo 'Success';
+        } else {
+            echo 'Error';
         }
     }
 
     public function fetch_leadtype_data()
     {
-        $lead_types = $this->customer_ad_model->get_all(FALSE, "", "DESC", "ac_leadtypes", "lead_id");
+        $lead_types = $this->customer_ad_model->get_all(false, '', 'DESC', 'ac_leadtypes', 'lead_id');
         echo json_encode($lead_types);
     }
 
-    public function fetch_leadsource_data(){
-        $lead_source = $this->customer_ad_model->get_all(FALSE,"","DESC","ac_leadsource","ls_id");
+    public function fetch_leadsource_data()
+    {
+        $lead_source = $this->customer_ad_model->get_all(false, '', 'DESC', 'ac_leadsource', 'ls_id');
         echo json_encode($lead_source);
     }
 
-    public function fetch_salesarea_data(){
-        $lead_types = $this->customer_ad_model->get_all(FALSE,"","DESC","ac_salesarea","sa_id");
+    public function fetch_salesarea_data()
+    {
+        $lead_types = $this->customer_ad_model->get_all(false, '', 'DESC', 'ac_salesarea', 'sa_id');
         echo json_encode($lead_types);
     }
 
-    public function delete_data(){
+    public function delete_data()
+    {
         $tbl = $_POST['table'];
-        $input = array();
-        switch($tbl){
-            case "sa":
-                $input['field_name'] = "sa_id";
+        $input = [];
+        switch ($tbl) {
+            case 'sa':
+                $input['field_name'] = 'sa_id';
                 $input['id'] = $_POST['id'];
-                $input['tablename'] = "ac_salesarea";
+                $input['tablename'] = 'ac_salesarea';
                 break;
-            case "lt":
-                $input['field_name'] = "lead_id";
+            case 'lt':
+                $input['field_name'] = 'lead_id';
                 $input['id'] = $_POST['id'];
-                $input['tablename'] = "ac_leadtypes";
+                $input['tablename'] = 'ac_leadtypes';
                 break;
-            case "ls":
-                $input['field_name'] = "ls_id";
+            case 'ls':
+                $input['field_name'] = 'ls_id';
                 $input['id'] = $_POST['id'];
-                $input['tablename'] = "ac_leadsource";
+                $input['tablename'] = 'ac_leadsource';
                 break;
-            default;
+            default:
         }
         if ($this->customer_ad_model->delete($input)) {
-            echo  "nice";
+            echo 'nice';
         }
     }
 
-    public function delete_sales_area(){
-        $deletion_query = array(
-            'where' => array(
-                'sa_id' => $_POST['id']
-            ),
-            'table' => 'ac_salesarea'
-        );
-        if($this->general->delete_($deletion_query)){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
-    public function delete_lead_source(){
-        $deletion_query = array(
-            'where' => array(
-                'ls_id' => $_POST['id']
-            ),
-            'table' => 'ac_leadsource'
-        );
-        if($this->general->delete_($deletion_query)){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
-    public function delete_lead_type(){
-        $deletion_query = array(
-            'where' => array(
-                'lead_id' => $_POST['id']
-            ),
-            'table' => 'ac_leadtypes'
-        );
-        if($this->general->delete_($deletion_query)){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
-    public function delete_rate_plan(){
-        $deletion_query = array(
-            'where' => array(
-                'id' => $_POST['id']
-            ),
-            'table' => 'ac_rateplan'
-        );
-        if($this->general->delete_($deletion_query)){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
-    public function delete_activation_fee(){
-        $deletion_query = array(
-            'where' => array(
-                'id' => $_POST['id']
-            ),
-            'table' => 'ac_activationfee'
-        );
-        if($this->general->delete_($deletion_query)){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
-    public function delete_spt(){
-        $deletion_query = array(
-            'where' => array(
-                'id' => $_POST['id']
-            ),
-            'table' => 'ac_system_package_type'
-        );
-        if($this->general->delete_($deletion_query)){
-            echo 1;
-        }else{
-            echo 0;
-        }
-    }
-
-    public function send_qr2($id=null)
+    public function delete_sales_area()
     {
-        $info = $this->customer_ad_model->get_data_by_id('prof_id',$id,"acs_profile");
+        $deletion_query = [
+            'where' => [
+                'sa_id' => $_POST['id'],
+            ],
+            'table' => 'ac_salesarea',
+        ];
+        if ($this->general->delete_($deletion_query)) {
+            echo 1;
+        } else {
+            echo 0;
+        }
+    }
+
+    public function delete_lead_source()
+    {
+        $deletion_query = [
+            'where' => [
+                'ls_id' => $_POST['id'],
+            ],
+            'table' => 'ac_leadsource',
+        ];
+        if ($this->general->delete_($deletion_query)) {
+            echo 1;
+        } else {
+            echo 0;
+        }
+    }
+
+    public function delete_lead_type()
+    {
+        $deletion_query = [
+            'where' => [
+                'lead_id' => $_POST['id'],
+            ],
+            'table' => 'ac_leadtypes',
+        ];
+        if ($this->general->delete_($deletion_query)) {
+            echo 1;
+        } else {
+            echo 0;
+        }
+    }
+
+    public function delete_rate_plan()
+    {
+        $deletion_query = [
+            'where' => [
+                'id' => $_POST['id'],
+            ],
+            'table' => 'ac_rateplan',
+        ];
+        if ($this->general->delete_($deletion_query)) {
+            echo 1;
+        } else {
+            echo 0;
+        }
+    }
+
+    public function delete_activation_fee()
+    {
+        $deletion_query = [
+            'where' => [
+                'id' => $_POST['id'],
+            ],
+            'table' => 'ac_activationfee',
+        ];
+        if ($this->general->delete_($deletion_query)) {
+            echo 1;
+        } else {
+            echo 0;
+        }
+    }
+
+    public function delete_spt()
+    {
+        $deletion_query = [
+            'where' => [
+                'id' => $_POST['id'],
+            ],
+            'table' => 'ac_system_package_type',
+        ];
+        if ($this->general->delete_($deletion_query)) {
+            echo 1;
+        } else {
+            echo 0;
+        }
+    }
+
+    public function send_qr2($id = null)
+    {
+        $info = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
         $to = $info->email;
         $this->load->library('email');
-        $config = array(
+        $config = [
             'protocol' => 'smtp',
             'smtp_host' => 'ssl://smtp.gmail.com',
             'smtp_port' => 465,
             'smtp_user' => 'nsmartrac@gmail.com',
             'smtp_pass' => 'nSmarTrac2020',
             'mailtype' => 'html',
-            'charset' => 'utf-8'
-        );
+            'charset' => 'utf-8',
+        ];
         $this->email->initialize($config);
         $this->email->set_newline("\r\n");
         $this->email->from('no-reply@nsmartrac.com', 'nSmarTrac');
         $this->email->to($to);
         $this->email->subject('QR Details');
         $this->email->message('This is customer QR.');
-        $this->email->attach($_SERVER['DOCUMENT_ROOT'] . '/assets/img/customer/qr/'.$id.'.png');
+        $this->email->attach($_SERVER['DOCUMENT_ROOT'].'/assets/img/customer/qr/'.$id.'.png');
 
         if ($this->email->send()) {
-            echo json_encode("Congratulation Email Sent Successfully.");
+            echo json_encode('Congratulation Email Sent Successfully.');
         } else {
             echo json_encode($this->email->send());
         }
     }
 
-    public function send_qr() {
-
+    public function send_qr()
+    {
         $id = $_POST['custId'];
-        
-        $customer = $this->customer_ad_model->get_data_by_id('prof_id',$id,"acs_profile");
-        //Email Sending
-        $server    = MAIL_SERVER;
-        $port      = MAIL_PORT ;
-        $username  = MAIL_USERNAME;
-        $password  = MAIL_PASSWORD;
-        $from      = MAIL_FROM;
+
+        $customer = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
+        // Email Sending
+        $server = MAIL_SERVER;
+        $port = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from = MAIL_FROM;
         $recipient = 'welyelfhisula@gmail.com';
         $subject = 'nSmarTrac : Customer QR';
         $this->page_data['customer_id'] = $id.'.png';
 
-        $params = array();
-        $params['customer_id'] = ["id"=>$id,"firstname"=>$customer->first_name,"lastname"=>$customer->last_name];
+        $params = [];
+        $params['customer_id'] = ['id' => $id, 'firstname' => $customer->first_name, 'lastname' => $customer->last_name];
 
-        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
-        $mail = new PHPMailer;
+        include APPPATH.'libraries/PHPMailer/PHPMailerAutoload.php';
+        $mail = new PHPMailer();
         $mail->isSMTP();
         $mail->getSMTPInstance()->Timelimit = 5;
         $mail->Host = $server;
@@ -3797,40 +3828,39 @@ class Customer extends MY_Controller
         $mail->From = $from;
         $mail->FromName = 'nSmarTrac';
         $mail->Subject = $subject;
-        $mail->Body    = 'This is customer QR.';
-        //$mail->addAttachment($attachment);
+        $mail->Body = 'This is customer QR.';
+        // $mail->addAttachment($attachment);
 
         $content = $this->load->view('customer/email_template/customer_qr_template', $params, true);
 
         $mail->MsgHTML($content);
         $mail->addAddress($recipient);
-        if($mail->send()){
+        if ($mail->send()) {
             echo json_encode(['success' => true]);
-        }else{
+        } else {
             echo json_encode(['success' => false]);
         }
         $mail->ClearAllRecipients();
-        
     }
 
-    public function send_welcome_email() {
-        
+    public function send_welcome_email()
+    {
         $payload = json_decode(file_get_contents('php://input'), true);
         ['customer_email' => $customerEmail, 'letter_id' => $letterId] = $payload;
- 
-        //Email Sending
-        $server    = MAIL_SERVER;
-        $port      = MAIL_PORT ;
-        $username  = MAIL_USERNAME;
-        $password  = MAIL_PASSWORD;
-        $from      = MAIL_FROM;
+
+        // Email Sending
+        $server = MAIL_SERVER;
+        $port = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from = MAIL_FROM;
         $recipient = $customerEmail;
         $subject = 'Welcome to nSmaTrac';
 
-        $params = array();
-        
-        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
-        $mail = new PHPMailer;
+        $params = [];
+
+        include APPPATH.'libraries/PHPMailer/PHPMailerAutoload.php';
+        $mail = new PHPMailer();
         $mail->isSMTP();
         $mail->getSMTPInstance()->Timelimit = 5;
         $mail->Host = $server;
@@ -3843,378 +3873,376 @@ class Customer extends MY_Controller
         $mail->From = $from;
         $mail->FromName = 'nSmarTrac';
         $mail->Subject = $subject;
-        $mail->Body    = 'Welcome to nSmaTrac';
-        //$mail->addAttachment($attachment);
+        $mail->Body = 'Welcome to nSmaTrac';
+        // $mail->addAttachment($attachment);
 
-        //$content = $this->load->view('customer/email_template/customer_qr_template', $params, true);
+        // $content = $this->load->view('customer/email_template/customer_qr_template', $params, true);
         $content = '<h1>Welcome to nSmarTrac!</h1>';
 
         $mail->MsgHTML($content);
         $mail->addAddress($recipient);
-        if($mail->send()){
+        if ($mail->send()) {
             echo json_encode(['success' => true]);
-        }else{
+        } else {
             echo json_encode(['success' => false]);
         }
         $mail->ClearAllRecipients();
-        
     }
 
-    public function get_customer_import_header(){
+    public function get_customer_import_header()
+    {
         addJSONResponseHeader();
 
         if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-            $csv = array_map("str_getcsv", file($_FILES['file']['tmp_name'],FILE_SKIP_EMPTY_LINES));
+            $csv = array_map('str_getcsv', file($_FILES['file']['tmp_name'], FILE_SKIP_EMPTY_LINES));
             $csvHeader = array_shift($csv);
             if (!empty($csvHeader)) {
-                $data_arr = array("success" => TRUE,"data" => $csvHeader);
-            }else{
-                $data_arr = array("success" => FALSE,"message" => 'Unable to fetch CSV headers.');
+                $data_arr = ['success' => true, 'data' => $csvHeader];
+            } else {
+                $data_arr = ['success' => false, 'message' => 'Unable to fetch CSV headers.'];
             }
         }
-        die(json_encode($data_arr));
+        exit(json_encode($data_arr));
     }
 
     public function getImportData()
     {
         addJSONResponseHeader();
         if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-            
-            $csv = array_map("str_getcsv", file($_FILES['file']['tmp_name'],FILE_SKIP_EMPTY_LINES));
+            $csv = array_map('str_getcsv', file($_FILES['file']['tmp_name'], FILE_SKIP_EMPTY_LINES));
             $csvHeader = array_shift($csv);
 
             $this->load->library('CSVReader');
             $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
 
             $customerArray = []; // initialize array for storing import data
-            
+
             if (!empty($csvData)) {
                 foreach ($csvData as $row) {
                     $customerElement = [];
-                    for($x=0; $x<count($csvHeader); $x++){
-                        $trimmedData = str_replace(")", "", str_replace("(", "", str_replace("Phone:","", str_replace("$","",$row[$csvHeader[$x]]))));
-                        //$data = preg_replace('/\s+/', '', $trimmedData);
+                    for ($x = 0; $x < count($csvHeader); ++$x) {
+                        $trimmedData = str_replace(')', '', str_replace('(', '', str_replace('Phone:', '', str_replace('$', '', $row[$csvHeader[$x]]))));
+                        // $data = preg_replace('/\s+/', '', $trimmedData);
                         $customerElement[$csvHeader[$x]] = $trimmedData;
-                        //echo $csvHeader[$x]. PHP_EOL;
-                        //echo $row[$csvHeader[$x]]. PHP_EOL;
+                        // echo $csvHeader[$x]. PHP_EOL;
+                        // echo $row[$csvHeader[$x]]. PHP_EOL;
                     }
-                    //print_r(json_encode($customerElement)) . PHP_EOL;
-                    //echo 'fasdf' . PHP_EOL;
+                    // print_r(json_encode($customerElement)) . PHP_EOL;
+                    // echo 'fasdf' . PHP_EOL;
                     $customerArray[] = $customerElement;
                 }
-                $data_arr = array("success" => TRUE,"data" => $customerArray, "headers" => $csvHeader, "csvData" => $csvData);
-            }else{
-                $data_arr = array("success" => FALSE,"message" => 'Something is wrong with your CSV file.');
+                $data_arr = ['success' => true, 'data' => $customerArray, 'headers' => $csvHeader, 'csvData' => $csvData];
+            } else {
+                $data_arr = ['success' => false, 'message' => 'Something is wrong with your CSV file.'];
             }
-        }else{
-            //echo 'No upload' . PHP_EOL;
+        } else {
+            // echo 'No upload' . PHP_EOL;
         }
-        die(json_encode($data_arr));
+        exit(json_encode($data_arr));
     }
 
     public function importCustomerData()
     {
         addJSONResponseHeader();
-        $getImportFields = array(
+        $getImportFields = [
             'table' => 'acs_import_fields',
             'select' => '*',
-        );
+        ];
         $importFieldsList = $this->general->get_data_with_param($getImportFields);
-        
-        $getCompanyImportSettings= array(
-            'where' => array(
+
+        $getCompanyImportSettings = [
+            'where' => [
                 'company_id' => logged('company_id'),
                 'setting_type' => 'import',
-            ),
+            ],
             'table' => 'customer_settings',
             'select' => '*',
-        );
-        //1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,62,17,18,19,20,21,22,23,24,25,26,27,28,29,
-        //30,31,32,33,34,35,36,37,38,40,41,42,43,44,45,46,47,48,49,50,51,52,63,64,53,54,55,56,57,58,59,60,61
-        $importFieldSettings = $this->general->get_data_with_param($getCompanyImportSettings, false); 
-        
+        ];
+        // 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,62,17,18,19,20,21,22,23,24,25,26,27,28,29,
+        // 30,31,32,33,34,35,36,37,38,40,41,42,43,44,45,46,47,48,49,50,51,52,63,64,53,54,55,56,57,58,59,60,61
+        $importFieldSettings = $this->general->get_data_with_param($getCompanyImportSettings, false);
+
         $input = $this->input->post();
         if ($input) {
-            $customers = json_decode($input['customers']); //data CSV
-            $mappingSelected = json_decode($input['mapHeaders'], true); //selected Headers
-            $csvHeaders = json_decode($input['csvHeaders'], true); //CSV Headers
-            
+            $customers = json_decode($input['customers']); // data CSV
+            $mappingSelected = json_decode($input['mapHeaders'], true); // selected Headers
+            $csvHeaders = json_decode($input['csvHeaders'], true); // CSV Headers
+
             // intialize array
-            $acsProfileData = array();
-            $acsAlarmData = array();
-            $acsOfficeData = array();
-            $acsBillingData = array();
+            $acsProfileData = [];
+            $acsAlarmData = [];
+            $acsOfficeData = [];
+            $acsBillingData = [];
             $dataVal = [];
 
-            $settingsValue = explode(',', $importFieldSettings->value); //convert values from database to array
+            $settingsValue = explode(',', $importFieldSettings->value); // convert values from database to array
             sort($settingsValue);
-            $fieldCompanyValue = implode(",", $settingsValue);
-            $fieldCompanyValues = explode(",", $fieldCompanyValue);
+            $fieldCompanyValue = implode(',', $settingsValue);
+            $fieldCompanyValues = explode(',', $fieldCompanyValue);
             $exist = $insert = 0;
 
-            foreach($customers as $data) {
+            foreach ($customers as $data) {
                 $counter = 0;
-                foreach($fieldCompanyValues as $field) {
-                    $fieldname = "";
-                    $category = "";
+                foreach ($fieldCompanyValues as $field) {
+                    $fieldname = '';
+                    $category = '';
 
-                    foreach($importFieldsList as $importSetting) { //values from acs_import_fields database
-                        if($field == $importSetting->id) {
-                            $fieldname = $importSetting->field_name; //name of the header such as Status, First name Sale Date
-                            $category = $importSetting->field_category; //category no. where the header belong, usefull for inserting in diff tables
-                        
-                    $dataValue = $csvHeaders[$mappingSelected[$counter]]; // name of the selected header in the csv fle eg. "Sales Date"
-                    array_push($dataVal, $dataValue);
-                    switch($category){
-                        case 1:
-                            $acsProfileData[$fieldname] = $data->$dataValue;
-                            break;
-                        case 2:
-                            $acsBillingData[$fieldname] = $data->$dataValue;
-                            break;    
-                        case 3:
-                            if($fieldname == 'technician' || $fieldname == 'fk_sales_rep_office'){
-                                $acsOfficeData[$fieldname] = getOfficeId($data->$dataValue);
-                            }else{
-                            $acsOfficeData[$fieldname] = $data->$dataValue;
+                    foreach ($importFieldsList as $importSetting) { // values from acs_import_fields database
+                        if ($field == $importSetting->id) {
+                            $fieldname = $importSetting->field_name; // name of the header such as Status, First name Sale Date
+                            $category = $importSetting->field_category; // category no. where the header belong, usefull for inserting in diff tables
+
+                            $dataValue = $csvHeaders[$mappingSelected[$counter]]; // name of the selected header in the csv fle eg. "Sales Date"
+                            array_push($dataVal, $dataValue);
+                            switch ($category) {
+                                case 1:
+                                    $acsProfileData[$fieldname] = $data->$dataValue;
+                                    break;
+                                case 2:
+                                    $acsBillingData[$fieldname] = $data->$dataValue;
+                                    break;
+                                case 3:
+                                    if ($fieldname == 'technician' || $fieldname == 'fk_sales_rep_office') {
+                                        $acsOfficeData[$fieldname] = getOfficeId($data->$dataValue);
+                                    } else {
+                                        $acsOfficeData[$fieldname] = $data->$dataValue;
+                                    }
+                                    break;
+                                case 4:
+                                    $acsAlarmData[$fieldname] = $data->$dataValue;
+                                    break;
+                                case 5:
+                                    $acsProfileData[$fieldname] = $data->$dataValue;
+                                    break;
+                                default:
+                                    break;
                             }
-                            break;    
-                        case 4:
-                            $acsAlarmData[$fieldname] = $data->$dataValue;
-                            break;    
-                        case 5:
-                            $acsProfileData[$fieldname] = $data->$dataValue;
-                            break;    
-                        default:
-                            break;    
+                        }
                     }
+                    ++$counter;
                 }
-            }
-                    $counter++;
-                }
-                $check_user = array(
-                'where' => array(
+                $check_user = [
+                'where' => [
                     'first_name' => $data->FirstName,
                     'last_name' => $data->LastName,
                     'company_id' => logged('company_id'),
-                ),
-                'returnType' => 'count'
-                );
+                ],
+                'returnType' => 'count',
+                ];
                 $isExist = $this->customer_ad_model->check_if_user_exist($check_user, 'acs_profile');
                 if ($isExist > 0) {
-                    $exist++;
-                }else{
+                    ++$exist;
+                } else {
                     $acsProfileData['company_id'] = logged('company_id');
-                    $fk_prod_id = $this->customer_ad_model->add($acsProfileData,"acs_profile");
-                    $insert++;
-                    
-                    if($fk_prod_id){
+                    $fk_prod_id = $this->customer_ad_model->add($acsProfileData, 'acs_profile');
+                    ++$insert;
+
+                    if ($fk_prod_id) {
                         $acsAlarmData['fk_prof_id'] = $fk_prod_id;
                         $acsBillingData['fk_prof_id'] = $fk_prod_id;
                         $acsOfficeData['fk_prof_id'] = $fk_prod_id;
-                        
-                        $this->customer_ad_model->add($acsAlarmData,"acs_alarm");
-                        $this->customer_ad_model->add($acsBillingData,"acs_billing");
-                        $this->customer_ad_model->add($acsOfficeData,"acs_office");
+
+                        $this->customer_ad_model->add($acsAlarmData, 'acs_alarm');
+                        $this->customer_ad_model->add($acsBillingData, 'acs_billing');
+                        $this->customer_ad_model->add($acsOfficeData, 'acs_office');
                     }
                 }
-
             }
-            
-            $data_arr = array("success" => TRUE, "message" => "Successfully imported ".$insert." users!", "alarm" => $acsAlarmData, "profile" => $acsProfileData, "billing" => $acsBillingData, "office" => $acsOfficeData, "Mapping" => $mappingSelected, "CSV"=> $csvHeaders, "customers" => $customers);
-            //$data_arr = array("success" => TRUE, "alarm" => $acsAlarmData, "profile" => $acsProfileData, "billing" => $acsBillingData, "office" => $acsOfficeData, "Mapping" => $mappingSelected, "CSV"=> $csvHeaders, "customers" => $customers);
-        }else{
-            $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
+
+            $data_arr = ['success' => true, 'message' => 'Successfully imported '.$insert.' users!', 'alarm' => $acsAlarmData, 'profile' => $acsProfileData, 'billing' => $acsBillingData, 'office' => $acsOfficeData, 'Mapping' => $mappingSelected, 'CSV' => $csvHeaders, 'customers' => $customers];
+            // $data_arr = array("success" => TRUE, "alarm" => $acsAlarmData, "profile" => $acsProfileData, "billing" => $acsBillingData, "office" => $acsOfficeData, "Mapping" => $mappingSelected, "CSV"=> $csvHeaders, "customers" => $customers);
+        } else {
+            $data_arr = ['success' => false, 'message' => 'Something goes wrong.'];
         }
-        die(json_encode($data_arr));
+        exit(json_encode($data_arr));
     }
 
-    public function import_customer_data() {
-
+    public function import_customer_data()
+    {
         $is_success = 0;
 
-        $data = array();
+        $data = [];
         addJSONResponseHeader();
         $input = $this->input->post();
 
         if ($input) {
-                $insertCount = $updateCount = $rowCount = $notAddCount = 0;
-                if (is_uploaded_file($_FILES['file']['tmp_name'])) {
-                    $this->load->library('CSVReader');
-                    $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
-                    if (!empty($csvData)) {
-                        foreach ($csvData as $row) {
-                            //print_r($row);
-                            $company = '';
-                            if( in_array('Company', $input['headers']) ){
-                                $company = $row['Company'];
-                            }
+            $insertCount = $updateCount = $rowCount = $notAddCount = 0;
+            if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+                $this->load->library('CSVReader');
+                $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+                if (!empty($csvData)) {
+                    foreach ($csvData as $row) {
+                        // print_r($row);
+                        $company = '';
+                        if (in_array('Company', $input['headers'])) {
+                            $company = $row['Company'];
+                        }
 
-                            $status = '';
-                            if( in_array('Status', $input['headers']) ){
-                                $status = $row['Status'];
-                            }
+                        $status = '';
+                        if (in_array('Status', $input['headers'])) {
+                            $status = $row['Status'];
+                        }
 
-                            $address = '';
-                            if( in_array('Address', $input['headers']) ){
-                                $address = $row['Address'];
-                            }
+                        $address = '';
+                        if (in_array('Address', $input['headers'])) {
+                            $address = $row['Address'];
+                        }
 
-                            $city = '';
-                            if( in_array('City', $input['headers']) ){
-                                $city = $row['City'];
-                            }
+                        $city = '';
+                        if (in_array('City', $input['headers'])) {
+                            $city = $row['City'];
+                        }
 
-                            $city = '';
-                            if( in_array('City', $input['headers']) ){
-                                $city = $row['City'];
-                            }
+                        $city = '';
+                        if (in_array('City', $input['headers'])) {
+                            $city = $row['City'];
+                        }
 
-                            $state = '';
-                            if( in_array('State', $input['headers']) ){
-                                $state = $row['State'];
-                            }
+                        $state = '';
+                        if (in_array('State', $input['headers'])) {
+                            $state = $row['State'];
+                        }
 
-                            $email = '';
-                            if( in_array('Email', $input['headers']) ){
-                                $email = $row['Email'];
-                            }
+                        $email = '';
+                        if (in_array('Email', $input['headers'])) {
+                            $email = $row['Email'];
+                        }
 
-                            $zip = '';
-                            if( in_array('Zip', $input['headers']) ){
-                                $city = $row['Zip'];
-                            }
+                        $zip = '';
+                        if (in_array('Zip', $input['headers'])) {
+                            $city = $row['Zip'];
+                        }
 
-                            $country = '';
-                            if( in_array('Country', $input['headers']) ){
-                                $city = $row['Country'];
-                            }
+                        $country = '';
+                        if (in_array('Country', $input['headers'])) {
+                            $city = $row['Country'];
+                        }
 
-                            $input_profile = array(
-                                'fk_user_id' => logged('id'),
-                                'fk_sa_id' => 0,
-                                'first_name' => $row['FirstName'],
-                                'last_name' => $row['LastName'],
-                                'business_name' => $company,
-                                'status' => $status,
-                                'mail_add' => $address,
-                                'city' => $city,
-                                'email' => $email,
-                                'state' => $state,
-                                'zip_code' => $zip,
-                                'country' => $country,
-                                'company_id' => logged('company_id'),
-                            );
-                            if(!empty( $row['FirstName']) && !empty( $row['LastName'])) {
-                                $check_user = array(
-                                    'where' => array(
-                                        'first_name' => $row['FirstName'],
-                                        'last_name' => $row['LastName'],
-                                        'company_id' => logged('company_id'),
-                                    ),
-                                    'returnType' => 'count'
-                                );
-                                $prevCount = $this->customer_ad_model->check_if_user_exist($check_user, 'acs_profile');
+                        $input_profile = [
+                            'fk_user_id' => logged('id'),
+                            'fk_sa_id' => 0,
+                            'first_name' => $row['FirstName'],
+                            'last_name' => $row['LastName'],
+                            'business_name' => $company,
+                            'status' => $status,
+                            'mail_add' => $address,
+                            'city' => $city,
+                            'email' => $email,
+                            'state' => $state,
+                            'zip_code' => $zip,
+                            'country' => $country,
+                            'company_id' => logged('company_id'),
+                        ];
+                        if (!empty($row['FirstName']) && !empty($row['LastName'])) {
+                            $check_user = [
+                                'where' => [
+                                    'first_name' => $row['FirstName'],
+                                    'last_name' => $row['LastName'],
+                                    'company_id' => logged('company_id'),
+                                ],
+                                'returnType' => 'count',
+                            ];
+                            $prevCount = $this->customer_ad_model->check_if_user_exist($check_user, 'acs_profile');
 
-                                if ($prevCount > 0) {
-//                                $condition = array('contact_name' => $row['Contact Name']);
-//                                $update = $this->customer_model->update($itemData, $condition);
-//                                if ($update) {
-//                                    $updateCount++;
-//                                }
-                                } else {
-                                    $cs2 = $row['CreditScore2'];
-                                    $score2 = 0;
-                                    switch ($cs2){
-                                        case 'A':
-                                            $score2 = 700;
-                                            break;
-                                        case 'B':
-                                            $score2 = 650;
-                                            break;
-                                        case 'C':
-                                            $score2 = 625;
-                                            break;
-                                        case 'D':
-                                            $score2 = 600;
-                                            break;
-                                        case 'F':
-                                            $score2 = 599;
-                                            break;
-                                        default:
-                                            $score2 = 0;
-                                    }
-                                    //$insert = $this->customer_ad_model->insert($itemData);
-                                    $fk_prod_id = $this->customer_ad_model->add($input_profile,"acs_profile");
-
-                                    if ($fk_prod_id) {
-                                        $insertCount++;
-                                        $input_alarm = array(
-                                            'fk_prof_id' => $fk_prod_id,
-                                            'panel_type' => $row['PanelType'],
-                                            'passcode' => $row['AbortCode'],
-                                            'credit_score_alarm' => $row['CreditScore'],
-                                            'monitor_comp' => $row['MonitoringCompany'],
-                                            'install_date' => $row['InstallDate'],
-                                            'monitor_id' => $row['MonitoringID'],
-                                            'acct_type' => $row['AccountType'],
-                                        );
-                                        $input_office = array(
-                                            'fk_prof_id' => $fk_prod_id,
-                                            'sales_date' => $row['SaleDate'],
-                                            'fk_sales_rep_office' => 1,//$row['SalesRep'],
-                                            'technician' => $row['Technician'],
-                                            'credit_score' => $score2,
-                                        );
-                                        if(logged('company_id') == 2){
-                                            $input_billing = array(
-                                                'fk_prof_id' => $fk_prod_id,
-                                                'mmr' => $row['MonthlyMonitoringRate'],
-                                                'contract_term' => $row['ContractTerm'],
-                                                'routing_num' => $row['Routing#'],
-                                                'acct_num' => $row['Acct#'],
-                                                'credit_card_num' => $row['CC#'],
-                                                'credit_card_exp' => $row['Exp date'],
-                                                'ach_date' => $row['Ach date'],
-                                            );
-                                        }else{
-                                            $input_billing = array(
-                                                'fk_prof_id' => $fk_prod_id,
-                                                'mmr' => $row['MonthlyMonitoringRate'],
-                                                'contract_term' => $row['ContractTerm'],
-                                            );
-                                        }
-                                        //$this->customer_ad_model->add($input_alarm,"acs_alarm");
-                                        //$this->customer_ad_model->add($input_office,"acs_office");
-                                        //$this->customer_ad_model->add($input_billing,"acs_billing");
-                                    }
-                                    $data[$rowCount]['firstname']= $row['FirstName'];
-                                    $data[$rowCount]['lastname']= $row['LastName'];
-                                    $data[$rowCount]['email']= $row['Email'];
-                                    $data[$rowCount]['monitoring_company']= $row['MonitoringCompany'];
-                                    $data[$rowCount]['state']= $row['State'];
-                                    $data[$rowCount]['sales_rep']= $row['Technician'];
-                                    $data[$rowCount]['status']= $row['Status'];
-                                    $rowCount++;
+                            if ($prevCount > 0) {
+                                //                                $condition = array('contact_name' => $row['Contact Name']);
+                                //                                $update = $this->customer_model->update($itemData, $condition);
+                                //                                if ($update) {
+                                //                                    $updateCount++;
+                                //                                }
+                            } else {
+                                $cs2 = $row['CreditScore2'];
+                                $score2 = 0;
+                                switch ($cs2) {
+                                    case 'A':
+                                        $score2 = 700;
+                                        break;
+                                    case 'B':
+                                        $score2 = 650;
+                                        break;
+                                    case 'C':
+                                        $score2 = 625;
+                                        break;
+                                    case 'D':
+                                        $score2 = 600;
+                                        break;
+                                    case 'F':
+                                        $score2 = 599;
+                                        break;
+                                    default:
+                                        $score2 = 0;
                                 }
+                                // $insert = $this->customer_ad_model->insert($itemData);
+                                $fk_prod_id = $this->customer_ad_model->add($input_profile, 'acs_profile');
+
+                                if ($fk_prod_id) {
+                                    ++$insertCount;
+                                    $input_alarm = [
+                                        'fk_prof_id' => $fk_prod_id,
+                                        'panel_type' => $row['PanelType'],
+                                        'passcode' => $row['AbortCode'],
+                                        'credit_score_alarm' => $row['CreditScore'],
+                                        'monitor_comp' => $row['MonitoringCompany'],
+                                        'install_date' => $row['InstallDate'],
+                                        'monitor_id' => $row['MonitoringID'],
+                                        'acct_type' => $row['AccountType'],
+                                    ];
+                                    $input_office = [
+                                        'fk_prof_id' => $fk_prod_id,
+                                        'sales_date' => $row['SaleDate'],
+                                        'fk_sales_rep_office' => 1, // $row['SalesRep'],
+                                        'technician' => $row['Technician'],
+                                        'credit_score' => $score2,
+                                    ];
+                                    if (logged('company_id') == 2) {
+                                        $input_billing = [
+                                            'fk_prof_id' => $fk_prod_id,
+                                            'mmr' => $row['MonthlyMonitoringRate'],
+                                            'contract_term' => $row['ContractTerm'],
+                                            'routing_num' => $row['Routing#'],
+                                            'acct_num' => $row['Acct#'],
+                                            'credit_card_num' => $row['CC#'],
+                                            'credit_card_exp' => $row['Exp date'],
+                                            'ach_date' => $row['Ach date'],
+                                        ];
+                                    } else {
+                                        $input_billing = [
+                                            'fk_prof_id' => $fk_prod_id,
+                                            'mmr' => $row['MonthlyMonitoringRate'],
+                                            'contract_term' => $row['ContractTerm'],
+                                        ];
+                                    }
+                                    // $this->customer_ad_model->add($input_alarm,"acs_alarm");
+                                    // $this->customer_ad_model->add($input_office,"acs_office");
+                                    // $this->customer_ad_model->add($input_billing,"acs_billing");
+                                }
+                                $data[$rowCount]['firstname'] = $row['FirstName'];
+                                $data[$rowCount]['lastname'] = $row['LastName'];
+                                $data[$rowCount]['email'] = $row['Email'];
+                                $data[$rowCount]['monitoring_company'] = $row['MonitoringCompany'];
+                                $data[$rowCount]['state'] = $row['State'];
+                                $data[$rowCount]['sales_rep'] = $row['Technician'];
+                                $data[$rowCount]['status'] = $row['Status'];
+                                ++$rowCount;
                             }
                         }
-                        //$successMsg = 'Customer imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
-                       // $this->session->set_userdata('success_msg', $successMsg);
-
-                        //$this->activity_model->add($successMsg);
-                        //$this->session->set_flashdata('alert-type', 'success');
-                        //$this->session->set_flashdata('alert', $successMsg);
                     }
-                    //echo json_encode($data);
-                    $is_success = 1;
-                    //redirect(base_url('customer'));
-                } else {
-                    //$this->session->set_userdata('error_msg', 'Error on file upload, please try again.');
-                   // redirect($_SERVER['HTTP_REFERER'], 'refresh');
-                    $is_success = 2;
+                    // $successMsg = 'Customer imported successfully. Total Rows ('.$rowCount.') | Inserted ('.$insertCount.') | Updated ('.$updateCount.') | Not Inserted ('.$notAddCount.')';
+                    // $this->session->set_userdata('success_msg', $successMsg);
+
+                    // $this->activity_model->add($successMsg);
+                    // $this->session->set_flashdata('alert-type', 'success');
+                    // $this->session->set_flashdata('alert', $successMsg);
                 }
-        }else{
+                // echo json_encode($data);
+                $is_success = 1;
+                // redirect(base_url('customer'));
+            } else {
+                // $this->session->set_userdata('error_msg', 'Error on file upload, please try again.');
+                // redirect($_SERVER['HTTP_REFERER'], 'refresh');
+                $is_success = 2;
+            }
+        } else {
             $is_success = 0;
         }
 
@@ -4223,61 +4251,61 @@ class Customer extends MY_Controller
     }
 
     public function customer_export()
-    {        
+    {
         $this->load->model('Users_model');
 
         $user_id = logged('id');
-        $items =  $this->customer_ad_model->getExportData();
+        $items = $this->customer_ad_model->getExportData();
 
-        $getImportFields = array(
+        $getImportFields = [
             'table' => 'acs_import_fields',
             'select' => '*',
-        );
+        ];
         $importFieldsList = $this->general->get_data_with_param($getImportFields);
         $emergency_contacts_fields = ['contact_name1', 'first_relation', 'contact_phone1', 'contact_name2', 'second_relation', 'contact_phone2', 'contact_name3', 'third_relation', 'contact_phone3'];
-        
-        $getCompanyImportSettings= array(
-            'where' => array(
+
+        $getCompanyImportSettings = [
+            'where' => [
                 'company_id' => logged('company_id'),
                 'setting_type' => 'export',
-            ),
+            ],
             'table' => 'customer_settings',
             'select' => '*',
-        );
+        ];
         $importFieldSettings = $this->general->get_data_with_param($getCompanyImportSettings, false);
-        if( $importFieldSettings->value != '' ){
+        if ($importFieldSettings->value != '') {
             $fieldCompanyValues = explode(',', $importFieldSettings->value);
-        }else{
-            $fieldCompanyValues = [ '5','6','7','8','9','10','11'];
+        } else {
+            $fieldCompanyValues = ['5', '6', '7', '8', '9', '10', '11'];
         }
-        
-        $fields = array();
-        $fieldNames = array();
+
+        $fields = [];
+        $fieldNames = [];
         $is_with_emergency_contacts = 0;
-        foreach($fieldCompanyValues as $field) {
-            foreach($importFieldsList as $importSetting) {                
-                if($field == $importSetting->id) {
-                    array_push($fields,$importSetting->field_description);
-                    array_push($fieldNames,$importSetting->field_name);
-                    if( in_array($importSetting->field_name, $emergency_contacts_fields) ){
+        foreach ($fieldCompanyValues as $field) {
+            foreach ($importFieldsList as $importSetting) {
+                if ($field == $importSetting->id) {
+                    array_push($fields, $importSetting->field_description);
+                    array_push($fieldNames, $importSetting->field_name);
+                    if (in_array($importSetting->field_name, $emergency_contacts_fields)) {
                         $is_with_emergency_contacts = 0;
                     }
                 }
             }
         }
-        
-        $delimiter = ",";
-        $time      = time();
-        $filename  = "customers_list_".$time.".csv";
+
+        $delimiter = ',';
+        $time = time();
+        $filename = 'customers_list_'.$time.'.csv';
         $f = fopen('php://memory', 'w');
         fputcsv($f, $fields, $delimiter);
 
-        if (!empty($items)) {            
+        if (!empty($items)) {
             foreach ($items as $item) {
-                if( $is_with_emergency_contacts == 1 ){
-                    $eContacts = array();
+                if ($is_with_emergency_contacts == 1) {
+                    $eContacts = [];
                     $emergencyContacts = $this->customer_ad_model->getAllCustomerEmergencyContactsByCustomerId($item->prof_id);
-                    foreach($emergencyContacts as $e){
+                    foreach ($emergencyContacts as $e) {
                         $eContacts[] = $e;
                     }
                 }
@@ -4288,173 +4316,170 @@ class Customer extends MY_Controller
                 //     print_r($eContacts);
                 //     exit;
                 // }
-                $csvData = array();
-                foreach($fieldNames as $fieldName){
+                $csvData = [];
+                foreach ($fieldNames as $fieldName) {
                     $is_custom_field = 0;
-                    if( $fieldName == 'customer_group_id' ){
+                    if ($fieldName == 'customer_group_id') {
                         $customerGroup = $this->customer_ad_model->getCustomerGroupById($item->$fieldName);
-                        if( $customerGroup ){
+                        if ($customerGroup) {
                             array_push($csvData, $customerGroup->name);
-                        }else{
+                        } else {
                             array_push($csvData, '---');
                         }
 
                         $is_custom_field = 1;
-                    }     
-                    
-                    if( $fieldName == 'fk_sa_id' ){
+                    }
+
+                    if ($fieldName == 'fk_sa_id') {
                         $salesArea = $this->customer_ad_model->getASalesAreaById($item->$fieldName);
-                        if( $salesArea ){
+                        if ($salesArea) {
                             array_push($csvData, $salesArea->sa_name);
-                        }else{
+                        } else {
                             array_push($csvData, '---');
                         }
 
                         $is_custom_field = 1;
                     }
 
-                    if( $fieldName == 'fk_sales_rep_office' || $fieldName == 'technician' ){
+                    if ($fieldName == 'fk_sales_rep_office' || $fieldName == 'technician') {
                         $user = $this->Users_model->getUserByID($item->$fieldName);
-                        if( $user ){
-                            $name = $user->FName . ' ' . $user->LName;
+                        if ($user) {
+                            $name = $user->FName.' '.$user->LName;
                             array_push($csvData, $name);
-                        }else{
+                        } else {
                             array_push($csvData, '---');
                         }
                         $is_custom_field = 1;
                     }
 
-                    if( $fieldName == 'contact_name1' ){
-                        if( isset($eContacts[0]) ){
-                            $name = $eContacts[0]->first_name . ' ' . $eContacts[0]->last_name;
+                    if ($fieldName == 'contact_name1') {
+                        if (isset($eContacts[0])) {
+                            $name = $eContacts[0]->first_name.' '.$eContacts[0]->last_name;
                             array_push($csvData, $name);
-                        }else{
+                        } else {
                             array_push($csvData, '---');
                         }
-                        $is_custom_field = 1;                        
+                        $is_custom_field = 1;
                     }
 
-                    if( $fieldName == 'first_relation' ){
-                        if( isset($eContacts[0]) ){
+                    if ($fieldName == 'first_relation') {
+                        if (isset($eContacts[0])) {
                             array_push($csvData, $eContacts[0]->relation);
-                        }else{
+                        } else {
                             array_push($csvData, '---');
                         }
                         $is_custom_field = 1;
                     }
 
-                    if( $fieldName == 'contact_phone1' ){
-                        if( isset($eContacts[0]) ){
+                    if ($fieldName == 'contact_phone1') {
+                        if (isset($eContacts[0])) {
                             array_push($csvData, $eContacts[0]->phone);
-                        }else{
+                        } else {
                             array_push($csvData, '---');
                         }
                         $is_custom_field = 1;
                     }
 
-                    if( $fieldName == 'contact_name2' ){
-                        if( isset($eContacts[1]) ){
-                            $name = $eContacts[1]->first_name . ' ' . $eContacts[1]->last_name;
+                    if ($fieldName == 'contact_name2') {
+                        if (isset($eContacts[1])) {
+                            $name = $eContacts[1]->first_name.' '.$eContacts[1]->last_name;
                             array_push($csvData, $name);
-                        }else{
+                        } else {
                             array_push($csvData, '---');
                         }
                         $is_custom_field = 1;
                     }
 
-                    if( $fieldName == 'second_relation' ){
-                        if( isset($eContacts[1]) ){
+                    if ($fieldName == 'second_relation') {
+                        if (isset($eContacts[1])) {
                             array_push($csvData, $eContacts[1]->relation);
-                        }else{
+                        } else {
                             array_push($csvData, '---');
                         }
                         $is_custom_field = 1;
                     }
 
-                    if( $fieldName == 'contact_phone2' ){
-                        if( isset($eContacts[1]) ){
+                    if ($fieldName == 'contact_phone2') {
+                        if (isset($eContacts[1])) {
                             array_push($csvData, $eContacts[1]->phone);
-                        }else{
+                        } else {
                             array_push($csvData, '---');
                         }
                         $is_custom_field = 1;
                     }
 
-                    if( $fieldName == 'contact_name3' ){
-                        if( isset($eContacts[2]) ){
-                            $name = $eContacts[2]->first_name . ' ' . $eContacts[2]->last_name;
+                    if ($fieldName == 'contact_name3') {
+                        if (isset($eContacts[2])) {
+                            $name = $eContacts[2]->first_name.' '.$eContacts[2]->last_name;
                             array_push($csvData, $name);
-                        }else{
+                        } else {
                             array_push($csvData, '---');
                         }
                         $is_custom_field = 1;
                     }
 
-                    if( $fieldName == 'third_relation' ){
-                        if( isset($eContacts[2]) ){
+                    if ($fieldName == 'third_relation') {
+                        if (isset($eContacts[2])) {
                             array_push($csvData, $eContacts[2]->relation);
-                        }else{
+                        } else {
                             array_push($csvData, '---');
                         }
                         $is_custom_field = 1;
                     }
 
-                    if( $fieldName == 'contact_phone3' ){
-                        if( isset($eContacts[2]) ){
+                    if ($fieldName == 'contact_phone3') {
+                        if (isset($eContacts[2])) {
                             array_push($csvData, $eContacts[2]->phone);
-                        }else{
+                        } else {
                             array_push($csvData, '---');
                         }
                         $is_custom_field = 1;
                     }
 
-                    if( $is_custom_field == 0 ){
-                        if( trim($item->$fieldName) != '' ){
-                            array_push($csvData, $item->$fieldName);  
-                        }else{
-                            array_push($csvData, '---');  
+                    if ($is_custom_field == 0) {
+                        if (trim($item->$fieldName) != '') {
+                            array_push($csvData, $item->$fieldName);
+                        } else {
+                            array_push($csvData, '---');
                         }
-                        
                     }
-                    
                 }
                 fputcsv($f, $csvData, $delimiter);
             }
         } else {
-            $csvData = array('');
+            $csvData = [''];
             fputcsv($f, $csvData, $delimiter);
         }
 
         fseek($f, 0);
         header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="' . $filename . '";');
+        header('Content-Disposition: attachment; filename="'.$filename.'";');
         fpassthru($f);
     }
 
-    public function customer_signature_upload(){
-        if ( 0 < $_FILES['file']['error'] ) {
-            echo 'Error: ' . $_FILES['file']['error'] . '<br>';
+    public function customer_signature_upload()
+    {
+        if (0 < $_FILES['file']['error']) {
+            echo 'Error: '.$_FILES['file']['error'].'<br>';
         } else {
-            $uniquesavename=time().uniqid(rand());
+            $uniquesavename = time().uniqid(rand());
             $path = $_FILES['file']['name'];
             $ext = pathinfo($path, PATHINFO_EXTENSION);
-            $destination = 'uploads/customer/' .$uniquesavename.'.'.$ext;
+            $destination = 'uploads/customer/'.$uniquesavename.'.'.$ext;
             move_uploaded_file($_FILES['file']['tmp_name'], $destination);
 
             $sourceFile = $_SERVER['DOCUMENT_ROOT'].'/'.$destination;
-            $content = file_get_contents($sourceFile,FILE_USE_INCLUDE_PATH);
-            $input =  array();
+            $content = file_get_contents($sourceFile, FILE_USE_INCLUDE_PATH);
+            $input = [];
 
-            $input = array();
+            $input = [];
             $input['prof_sign_img'] = '/'.$destination;
             $input['prof_id'] = $_POST['id'];
-            if($this->customer_ad_model->update_data($input,"acs_profile","prof_id")){
+            if ($this->customer_ad_model->update_data($input, 'acs_profile', 'prof_id')) {
                 echo '/'.$destination;
-            }else{
-                echo "Error";
+            } else {
+                echo 'Error';
             }
-
-
         }
     }
 
@@ -4463,11 +4488,8 @@ class Customer extends MY_Controller
         $customer = get_customer_by_id($id);
 
         if (!empty($customer)) {
-
             foreach ($customer as $key => $value) {
-
                 if (is_serialized($value)) {
-
                     $customer->{$key} = unserialize($value);
                 }
             }
@@ -4479,19 +4501,14 @@ class Customer extends MY_Controller
 
         $this->load->view('customer/mixedview', $this->page_data);
     }
-    /**
-     * @param $id
-     */
+
     public function genview($id)
     {
         $customer = get_customer_by_id($id);
 
         if (!empty($customer)) {
-
             foreach ($customer as $key => $value) {
-
                 if (is_serialized($value)) {
-
                     $customer->{$key} = unserialize($value);
                 }
             }
@@ -4501,19 +4518,14 @@ class Customer extends MY_Controller
 
         $this->load->view('customer/genview', $this->page_data);
     }
-    /**
-     * @param $id
-     */
+
     public function mixedview($id)
     {
         $customer = get_customer_by_id($id);
 
         if (!empty($customer)) {
-
             foreach ($customer as $key => $value) {
-
                 if (is_serialized($value)) {
-
                     $customer->{$key} = unserialize($value);
                 }
             }
@@ -4532,25 +4544,19 @@ class Customer extends MY_Controller
 
         $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
 
-
         $this->load->model('Users_model', 'users_model');
 
-
         if ($parent_id->parent_id == 1) {
-
             $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
-
         } else {
-
             $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
-
         }
 
         $this->page_data['customer'] = $this->customer_model->getByWhere(['company_id' => $company_id]);
 
         $this->page_data['customer'] = $this->customer_model->getById($id);
 
-        //$this->page_data['customer']->service_address = unserialize($this->page_data['customer']->service_address);
+        // $this->page_data['customer']->service_address = unserialize($this->page_data['customer']->service_address);
 
         $this->page_data['customer']->additional_contacts = unserialize($this->page_data['customer']->additional_contacts);
 
@@ -4565,23 +4571,20 @@ class Customer extends MY_Controller
 
         $this->page_data['groups'] = get_customer_groups();
 
-
         $this->load->model('Source_model', 'source_model');
 
-        $this->page_data['customer']->service_address = $this->customeraddress_model->getByModelAndType($id,'customer','service_address');
+        $this->page_data['customer']->service_address = $this->customeraddress_model->getByModelAndType($id, 'customer', 'service_address');
 
         $this->page_data['customer']->source = $this->source_model->getSource($this->page_data['customer']->source_id);
 
-
         $this->load->view('customer/edit', $this->page_data);
-
     }
 
     public function save()
     {
-        $user = (object)$this->session->userdata('logged');
+        $user = (object) $this->session->userdata('logged');
         $company_id = logged('company_id');
-        $data = array(
+        $data = [
             'customer_type' => post('customer_type'),
             'contact_name' => post('contact_name'),
             'contact_email' => post('contact_email'),
@@ -4597,11 +4600,11 @@ class Customer extends MY_Controller
             'source_id' => post('customer_source_id'),
             'comments' => post('notes'),
             'user_id' => $user->id,
-            'additional_info' => (!empty(post('additional'))) ? serialize(post('additional')) : NULL,
-            'card_info' => (!empty(post('card'))) ? serialize(post('card')) : NULL,
+            'additional_info' => (!empty(post('additional'))) ? serialize(post('additional')) : null,
+            'card_info' => (!empty(post('card'))) ? serialize(post('card')) : null,
             'company_id' => $company_id,
-            'customer_group' => (!empty(post('customer_group'))) ? serialize(post('customer_group')) : serialize(array()),
-        );
+            'customer_group' => (!empty(post('customer_group'))) ? serialize(post('customer_group')) : serialize([]),
+        ];
 
         // previously generated customer id
         // this id will be present on session if addition contact or service address has been added
@@ -4611,18 +4614,16 @@ class Customer extends MY_Controller
         // if (!empty($cid)) {
         //     $id = $this->customer_model->update($cid, $data);
         // } else {
-            $id = $this->customer_model->create($data);
-            if(!empty($this->input->post('service_address')))
-            {
-                foreach($this->input->post('service_address') as $key => $value)
-                {
-                    $temp_data = $value;
-                    $temp_data['customer_id'] = $id;
-                    $temp_data['module'] = 'customer';
-                    $temp_data['type'] = 'service_address';
-                    $this->customeraddress_model->create($temp_data);
-                }
+        $id = $this->customer_model->create($data);
+        if (!empty($this->input->post('service_address'))) {
+            foreach ($this->input->post('service_address') as $key => $value) {
+                $temp_data = $value;
+                $temp_data['customer_id'] = $id;
+                $temp_data['module'] = 'customer';
+                $temp_data['type'] = 'service_address';
+                $this->customeraddress_model->create($temp_data);
             }
+        }
 
         // }
 
@@ -4632,27 +4633,21 @@ class Customer extends MY_Controller
 
         $this->session->set_flashdata('alert', 'New Customer Created Successfully');
 
-
         // clear sessions
 
         $this->session->unset_userdata('uid');
 
         $this->session->unset_userdata('customer_id');
         redirect('customer');
-
     }
 
     public function update($id)
-
     {
-
-        $user = (object)$this->session->userdata('logged');
+        $user = (object) $this->session->userdata('logged');
 
         $company_id = logged('company_id');
 
-        $data = array(
-
-
+        $data = [
             'customer_type' => post('customer_type'),
 
             'contact_name' => post('contact_name'),
@@ -4683,33 +4678,27 @@ class Customer extends MY_Controller
 
             'user_id' => $user->id,
 
-            'additional_info' => (!empty(post('additional'))) ? serialize(post('additional')) : NULL,
+            'additional_info' => (!empty(post('additional'))) ? serialize(post('additional')) : null,
 
-            'card_info' => (!empty(post('card'))) ? serialize(post('card')) : NULL,
+            'card_info' => (!empty(post('card'))) ? serialize(post('card')) : null,
 
             'company_id' => $company_id,
 
-            'customer_group' => (!empty(post('customer_group'))) ? serialize(post('customer_group')) : serialize(array()),
-
-        );
-
+            'customer_group' => (!empty(post('customer_group'))) ? serialize(post('customer_group')) : serialize([]),
+        ];
 
         $id = $this->customer_model->update($id, $data);
 
-
-        if(!empty($this->input->post('service_address'))>0)
-        {
-            foreach($this->input->post('service_address') as $key => $value)
-            {
+        if (!empty($this->input->post('service_address')) > 0) {
+            foreach ($this->input->post('service_address') as $key => $value) {
                 $temp_data = $value;
                 unset($temp_data['id']);
 
-                if(isset($value['id']) && $value['id'] != '' && $value['id'] > 0)
-                {
-                  // $this->customeraddress_model->update($temp_data)->where('id',$value->id);
-                   // $this->db->where('id', $id);
-                   //  $this->db->update('user', $data);
-                   $this->db->where('id', $value['id']);
+                if (isset($value['id']) && $value['id'] != '' && $value['id'] > 0) {
+                    // $this->customeraddress_model->update($temp_data)->where('id',$value->id);
+                    // $this->db->where('id', $id);
+                    //  $this->db->update('user', $data);
+                    $this->db->where('id', $value['id']);
                     $this->db->update($this->customeraddress_model->table, $temp_data);
                 } else {
                     $temp_data['customer_id'] = $id;
@@ -4720,155 +4709,100 @@ class Customer extends MY_Controller
             }
         }
 
-
-        if($this->input->post('service_address_container_deleted_addresses') !='')
-        {
-            $delete_list = explode(",", $this->input->post('service_address_container_deleted_addresses'));
+        if ($this->input->post('service_address_container_deleted_addresses') != '') {
+            $delete_list = explode(',', $this->input->post('service_address_container_deleted_addresses'));
             $this->db->from($this->customeraddress_model->table);
             $this->db->where('customer_id ', $id);
             $this->db->where_in('id', $delete_list);
             $this->db->delete();
         }
 
-        $this->activity_model->add("User #$user->id Updated by User:" . logged('name'));
+        $this->activity_model->add("User #$user->id Updated by User:".logged('name'));
 
         $this->session->set_flashdata('alert-type', 'success');
 
         $this->session->set_flashdata('alert', 'Customer has been Updated Successfully');
 
-
-        die(json_encode(
-
-            array(
-
-                'url' => base_url('customer')
-
-            )
-
+        exit(json_encode(
+            [
+                'url' => base_url('customer'),
+            ]
         ));
-
     }
 
     public function service_address_form()
     {
-
         $get = $this->input->get();
         if (!empty($get)) {
-
-
             $this->page_data['action'] = $get['action'];
 
             $this->page_data['data_index'] = $get['index'];
 
             $this->page_data['customer'] = $this->customer_model->getCustomer($get['customer_id']);
 
-            $this->page_data['service_address'] = $this->customer_model->getServiceAddress(array('id' => $get['customer_id']), $get['index']);
+            $this->page_data['service_address'] = $this->customer_model->getServiceAddress(['id' => $get['customer_id']], $get['index']);
 
             // print_r($this->page_data['service_address']); die;
-
         }
 
-
-        die($this->load->view('customer/service_address_form', $this->page_data, true));
-
+        exit($this->load->view('customer/service_address_form', $this->page_data, true));
     }
-
 
     public function save_service_address()
     {
-
         $post = $this->input->post();
-
 
         // save service address to db
 
         if (!empty($post['customer_id'])) {
-
             $cid = $post['customer_id'];
-
         } else {
-
             $cid = $this->session->userdata('customer_id');
-
         }
-
-
-        if (empty($cid))
-
-            $customer_id = $this->customer_model->saveServiceAddress($post);
-
-        else {
-
-            $this->customer_model->saveServiceAddress($post, $cid);
-
-        }
-
 
         if (empty($cid)) {
-
-            $this->session->set_userdata(['customer_id' => $customer_id]);
-
+            $customer_id = $this->customer_model->saveServiceAddress($post);
         } else {
-
-            $customer_id = $cid;
-
+            $this->customer_model->saveServiceAddress($post, $cid);
         }
 
+        if (empty($cid)) {
+            $this->session->set_userdata(['customer_id' => $customer_id]);
+        } else {
+            $customer_id = $cid;
+        }
 
-        die(json_encode(
-
-            array(
-
-                'customer_id' => $customer_id
-
-            )
-
+        exit(json_encode(
+            [
+                'customer_id' => $customer_id,
+            ]
         ));
-
     }
 
     public function json_get_additional_contacts()
-
     {
-
         $get = $this->input->get();
 
-
         if (!empty($get['customer_id'])) {
-
             $cid = $get['customer_id'];
-
         } else {
-
             $cid = $this->session->userdata('customer_id');
-
         }
-
 
         if (!empty($cid)) {
-
-
             $this->page_data['customer_id'] = $cid;
 
-            $this->page_data['additionalContacts'] = $this->customer_model->getAdditionalContacts(array('id' => $cid));
+            $this->page_data['additionalContacts'] = $this->customer_model->getAdditionalContacts(['id' => $cid]);
 
             // echo '<pre>'; print_r($serviceAddresses); die;
-
         }
 
-
-        die($this->load->view('customer/additional_contact_list', $this->page_data, true));
-
+        exit($this->load->view('customer/additional_contact_list', $this->page_data, true));
     }
 
-
     public function save_additional_contact()
-
     {
-
-
         $post = $this->input->post();
-
 
         // clear sessions
 
@@ -4876,97 +4810,54 @@ class Customer extends MY_Controller
 
         // $this->session->unset_userdata('customer_id');
 
-
         // save service address to db
 
         if (!empty($post['customer_id'])) {
-
             $cid = $post['customer_id'];
-
         } else {
-
             $cid = $this->session->userdata('customer_id');
-
         }
-
-
-        if (empty($cid))
-
-            $customer_id = $this->customer_model->saveAdditionalContact($post);
-
-        else {
-
-            $this->customer_model->saveAdditionalContact($post, $cid);
-
-        }
-
 
         if (empty($cid)) {
-
-            $this->session->set_userdata(['customer_id' => $customer_id]);
-
+            $customer_id = $this->customer_model->saveAdditionalContact($post);
         } else {
-
-            $customer_id = $cid;
-
+            $this->customer_model->saveAdditionalContact($post, $cid);
         }
 
+        if (empty($cid)) {
+            $this->session->set_userdata(['customer_id' => $customer_id]);
+        } else {
+            $customer_id = $cid;
+        }
 
-        die(json_encode(
-
-            array(
-
-                'customer_id' => $customer_id
-
-            )
-
+        exit(json_encode(
+            [
+                'customer_id' => $customer_id,
+            ]
         ));
-
     }
-
 
     public function remove_additional_contact()
-
     {
-
-
         $post = $this->input->post();
 
-
         if ($this->customer_model->removeAdditionalContact($post['customer_id'], $post['index'])) {
-
-
-            die(json_encode(
-
-                array(
-
-                    'status' => 'success'
-
-                )
+            exit(json_encode(
+                [
+                    'status' => 'success',
+                ]
             ));
-
         } else {
-
-
-            die(json_encode(
-
-                array(
-
-                    'status' => 'error'
-
-                )
-
+            exit(json_encode(
+                [
+                    'status' => 'error',
+                ]
             ));
-
         }
-
     }
-
 
     public function json_dropdown_customer_list()
     {
-
-
         $get = $this->input->get();
 
         $company_id = logged('company_id');
@@ -4974,55 +4865,37 @@ class Customer extends MY_Controller
         $role = logged('role');
 
         if ($role == 2 || $role == 3) {
-
             $this->page_data['customers'] = $this->customer_model->getAllByCompany($company_id, $get);
-
         }
 
         if ($role == 4) {
-
             $this->page_data['customers'] = $this->customer_model->getAllByUserId('', '', 0, 0, $get);
-
         }
 
         $this->page_data['customers'] = $this->customer_model->getAllByCompany($company_id, $get);
 
-        die(json_encode($this->page_data['customers']));
-
+        exit(json_encode($this->page_data['customers']));
     }
 
-
-
-    /**
-     * @param $id
-     */
     public function delete($id)
-
     {
-
         if ($id !== 1 && $id != logged($id)) {
         } else {
-
             redirect('/', 'refresh');
 
             return;
         }
 
-
         $id = $this->customer_model->delete($id);
 
-
-        $this->activity_model->add("Customer #$id Deleted by User:" . logged('name'));
-
+        $this->activity_model->add("Customer #$id Deleted by User:".logged('name'));
 
         $this->session->set_flashdata('alert-type', 'success');
 
         $this->session->set_flashdata('alert', 'Customer has been Deleted Successfully');
 
-
         redirect('customer');
     }
-
 
     public function group()
     {
@@ -5032,46 +4905,46 @@ class Customer extends MY_Controller
         $this->hasAccessModule(9);
         $company_id = logged('company_id');
         // pass the $this so that we can use it to load view, model, library or helper classes
-       // $customerGroup = new CustomerGroup($this);
-        //$this->page_data['customerGroups'] =  $this->customer_ad_model->get_all_by_id('user_id',logged('id'),'customer_groups');
-        $this->page_data['customerGroups'] =  $this->customer_ad_model->getAllSettingsCustomerGroupByCompanyId($company_id);
+        // $customerGroup = new CustomerGroup($this);
+        // $this->page_data['customerGroups'] =  $this->customer_ad_model->get_all_by_id('user_id',logged('id'),'customer_groups');
+        $this->page_data['customerGroups'] = $this->customer_ad_model->getAllSettingsCustomerGroupByCompanyId($company_id);
         // $this->load->view('customer/group/list', $this->page_data);
         $this->load->view('v2/pages/customer/group/list', $this->page_data);
     }
 
-    public function group_edit($id=null)
+    public function group_edit($id = null)
     {
         $this->page_data['page']->title = 'Edit Group';
 
         $is_allowed = $this->isAllowedModuleAccess(11);
-        if( !$is_allowed ){
+        if (!$is_allowed) {
             $this->page_data['module'] = 'customer_group';
             echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
+            exit;
         }
 
-        if(!$id==NULL){
+        if (!$id == null) {
             // save new updated group data
             $input = $this->input->post();
             unset($input['name-button']);
             if ($input) {
-                $input['date_added'] = date("d-m-Y h:i A");
-                if ($this->general->update_with_key($input,$id,"customer_groups")) {
+                $input['date_added'] = date('d-m-Y h:i A');
+                if ($this->general->update_with_key($input, $id, 'customer_groups')) {
                     redirect(base_url('customer/group'));
                 }
             }
-            $get_company_info = array(
-                'where' => array(
+            $get_company_info = [
+                'where' => [
                     'id' => $id,
-                ),
+                ],
                 'table' => 'customer_groups',
                 'select' => '*',
-            );
-            $this->page_data['customerGroup'] = $this->general->get_data_with_param($get_company_info,FALSE);
-        }else{
+            ];
+            $this->page_data['customerGroup'] = $this->general->get_data_with_param($get_company_info, false);
+        } else {
             redirect(base_url('customer/group'));
         }
-        //$this->load->view('customer/group/edit', $this->page_data);
+        // $this->load->view('customer/group/edit', $this->page_data);
         $this->load->view('v2/pages/customer/group/edit', $this->page_data);
     }
 
@@ -5083,17 +4956,17 @@ class Customer extends MY_Controller
         if (!$is_allowed) {
             $this->page_data['module'] = 'customer_group';
             echo $this->load->view('no_access_module', $this->page_data, true);
-            die();
+            exit;
         }
         // pass the $this so that we can use it to load view, model, library or helper classes
-        //$customerGroup = new CustomerGroup($this);
+        // $customerGroup = new CustomerGroup($this);
         $input = $this->input->post();
-        if ($input) {            
+        if ($input) {
             unset($input['name-button']);
             $input['user_id'] = logged('id');
-            $input['date_added'] = date("d-m-Y h:i A");
+            $input['date_added'] = date('d-m-Y h:i A');
             $input['company_id'] = logged('company_id');
-            if ($this->customer_ad_model->add($input, "customer_groups")) {
+            if ($this->customer_ad_model->add($input, 'customer_groups')) {
                 redirect(base_url('customer/group'));
             }
         }
@@ -5101,73 +4974,76 @@ class Customer extends MY_Controller
         $this->load->view('customer/group/add', $this->page_data);
     }
 
-    public function group_delete() {
-        $group_delete = array(
-            'where' => array(
-                'id' => $_POST['id']
-            ),
-            'table' => 'customer_groups'
-        );
-        if($this->general->delete_($group_delete)){
+    public function group_delete()
+    {
+        $group_delete = [
+            'where' => [
+                'id' => $_POST['id'],
+            ],
+            'table' => 'customer_groups',
+        ];
+        if ($this->general->delete_($group_delete)) {
             echo true;
-        }else{
+        } else {
             echo false;
         }
     }
 
-    public function categorizeNameAlphabetically($items) {
-        $result = array();
+    public function categorizeNameAlphabetically($items)
+    {
+        $result = [];
 
-        $cat = array(
-            '#' => array(),
-            'A' => array(),
-            'B' => array(),
-            'C' => array(),
-            'D' => array(),
-            'E' => array(),
-            'F' => array(),
-            'G' => array(),
-            'H' => array(),
-            'I' => array(),
-            'J' => array(),
-            'K' => array(),
-            'L' => array(),
-            'M' => array(),
-            'N' => array(),
-            'O' => array(),
-            'P' => array(),
-            'Q' => array(),
-            'R' => array(),
-            'S' => array(),
-            'T' => array(),
-            'U' => array(),
-            'V' => array(),
-            'W' => array(),
-            'X' => array(),
-            'Y' => array(),
-            'Z' => array()
-        );
+        $cat = [
+            '#' => [],
+            'A' => [],
+            'B' => [],
+            'C' => [],
+            'D' => [],
+            'E' => [],
+            'F' => [],
+            'G' => [],
+            'H' => [],
+            'I' => [],
+            'J' => [],
+            'K' => [],
+            'L' => [],
+            'M' => [],
+            'N' => [],
+            'O' => [],
+            'P' => [],
+            'Q' => [],
+            'R' => [],
+            'S' => [],
+            'T' => [],
+            'U' => [],
+            'V' => [],
+            'W' => [],
+            'X' => [],
+            'Y' => [],
+            'Z' => [],
+        ];
 
-        foreach($items as $item) {
-            $letter = ucfirst(substr($item->contact_name,0,1));
-            foreach($cat as $key => $c) {
+        foreach ($items as $item) {
+            $letter = ucfirst(substr($item->contact_name, 0, 1));
+            foreach ($cat as $key => $c) {
                 if ($letter == $key) {
                     array_push($cat[$key], $item);
-                } else if (is_numeric($letter)) {
-                    if (!in_array($item, $cat["#"]))
-                        array_push($cat["#"], $item);
+                } elseif (is_numeric($letter)) {
+                    if (!in_array($item, $cat['#'])) {
+                        array_push($cat['#'], $item);
+                    }
                 }
             }
         }
 
-        foreach($cat as $key => $c) {
-            if(!empty($c)) {
-                $header = array($key, "header", "", "");
-                array_push($result,$header);
+        foreach ($cat as $key => $c) {
+            if (!empty($c)) {
+                $header = [$key, 'header', '', ''];
+                array_push($result, $header);
 
-                foreach($c as $v) {
-                    $value = array($v->id, $v->contact_name, $v->contact_email, $v->phone);
-                    array_push($result,$value);
+                foreach ($c as $v) {
+                    $value = [$v->id, $v->contact_name, $v->contact_email, $v->phone];
+                    array_push($result, $value);
                 }
             }
         }
@@ -5175,7 +5051,8 @@ class Customer extends MY_Controller
         return $result;
     }
 
-    public function ticketslist(){
+    public function ticketslist()
+    {
         $this->page_data['page']->title = 'Tickets';
         $this->page_data['page']->parent = 'Sales';
 
@@ -5186,7 +5063,7 @@ class Customer extends MY_Controller
     }
 
     public function addTicket()
-    {        
+    {
         $this->hasAccessModule(39);
         $this->load->model('AcsProfile_model');
         $this->load->model('Job_tags_model');
@@ -5195,12 +5072,10 @@ class Customer extends MY_Controller
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
 
-        if(count( $result_autoincrement )) {
-            if($result_autoincrement[0]['AUTO_INCREMENT'])
-            {
+        if (count($result_autoincrement)) {
+            if ($result_autoincrement[0]['AUTO_INCREMENT']) {
                 $this->page_data['auto_increment_estimate_id'] = 1;
             } else {
-
                 $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
             }
         } else {
@@ -5227,44 +5102,43 @@ class Customer extends MY_Controller
         $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
 
         $default_customer_id = 0;
-        if( $this->input->get('cus_id') ){
+        if ($this->input->get('cus_id')) {
             $default_customer_id = $this->input->get('cus_id');
         }
 
         $this->page_data['default_customer_id'] = $default_customer_id;
 
-        $default_start_date = date("Y-m-d");
+        $default_start_date = date('Y-m-d');
         $default_start_time = '';
         $default_user = 0;
         $redirect_calendar = 0;
 
-        if( $this->input->get('start_date') ){
+        if ($this->input->get('start_date')) {
             $default_start_date = $this->input->get('start_date');
             $redirect_calendar = 1;
         }
 
-        if( $this->input->get('start_time') ){
+        if ($this->input->get('start_time')) {
             $default_start_time = $this->input->get('start_time');
             $redirect_calendar = 1;
         }
 
-        if( $this->input->get('user') ){
+        if ($this->input->get('user')) {
             $default_user = $this->input->get('user');
             $redirect_calendar = 1;
         }
-        
-        
-        //Settings
+
+        // Settings
         $prefix = 'SERVICE-';
         $lastInserted = $this->tickets_model->getlastInsert($company_id);
-        if( $lastInserted ){
+        if ($lastInserted) {
             $next = $lastInserted->ticket_no;
-            $arr = explode("-", $next);
+            $arr = explode('-', $next);
             $val = $arr[1];
 
             $next_num = $val + 1;
             // dd($next_num);
-        }else{
+        } else {
             $next_num = 1;
         }
 
@@ -5295,7 +5169,8 @@ class Customer extends MY_Controller
         $this->load->view('tickets/add', $this->page_data);
     }
 
-    public function merchant(){
+    public function merchant()
+    {
         $this->load->model('Users_model');
         $this->load->model('Clients_model');
         $this->load->model('ConvergeMerchant_model');
@@ -5303,8 +5178,8 @@ class Customer extends MY_Controller
         $user_id = logged('id');
         $company_id = logged('company_id');
 
-        $user     = $this->Users_model->getUser($user_id);
-        $company  = $this->Clients_model->getById($company_id);
+        $user = $this->Users_model->getUser($user_id);
+        $company = $this->Clients_model->getById($company_id);
         $merchant = $this->ConvergeMerchant_model->getByCompanyId($company_id);
 
         $this->page_data['merchant'] = $merchant;
@@ -5313,319 +5188,317 @@ class Customer extends MY_Controller
         $this->load->view('customer/merchant', $this->page_data);
     }
 
-    public function send_merchant_details(){
+    public function send_merchant_details()
+    {
         $this->load->model('ConvergeMerchant_model');
 
         $post = $this->input->post();
 
         $company_id = logged('company_id');
-        $merchant   = $this->ConvergeMerchant_model->getByCompanyId($company_id);
+        $merchant = $this->ConvergeMerchant_model->getByCompanyId($company_id);
 
         $is_mailing = 0;
-        if( isset($post['is_mailing']) ){
+        if (isset($post['is_mailing'])) {
             $is_mailing = 1;
         }
 
         $is_shipping = 0;
-        if( isset($post['is_shipping']) ){
+        if (isset($post['is_shipping'])) {
             $is_shipping = 1;
         }
 
         $is_see_special_instructions = 0;
-        if( isset($post['is_see_special_instructions']) ){
+        if (isset($post['is_see_special_instructions'])) {
             $is_see_special_instructions = 1;
         }
 
         $is_beneficial_owner = 0;
-        if( isset($post['is_beneficial_owner']) ){
+        if (isset($post['is_beneficial_owner'])) {
             $is_beneficial_owner = 1;
         }
 
         $is_authorized_signer = 0;
-        if( isset($post['is_authorized_signer']) ){
+        if (isset($post['is_authorized_signer'])) {
             $is_authorized_signer = 1;
         }
 
         $is_sole_proprietor = 0;
-        if( isset($post['is_sole_proprietor']) ){
+        if (isset($post['is_sole_proprietor'])) {
             $is_sole_proprietor = 1;
         }
 
         $is_principal_llc = 0;
-        if( isset($post['principal_llc']) ){
+        if (isset($post['principal_llc'])) {
             $is_sole_proprietor = 1;
         }
 
         $is_principal_corporation = 0;
-        if( isset($post['principal_corporation']) ){
+        if (isset($post['principal_corporation'])) {
             $is_principal_corporation = 1;
         }
 
         $is_principal_others = 0;
-        if( isset($post['principal_others']) ){
+        if (isset($post['principal_others'])) {
             $is_principal_others = 1;
         }
 
-        $post['is_mailing']  = $is_mailing;
+        $post['is_mailing'] = $is_mailing;
         $post['is_shipping'] = $is_shipping;
         $post['is_see_special_instructions'] = $is_see_special_instructions;
-        $post['is_beneficial_owner']  = $is_beneficial_owner;
+        $post['is_beneficial_owner'] = $is_beneficial_owner;
         $post['is_authorized_signer'] = $is_authorized_signer;
-        $post['is_sole_proprietor']   = $is_sole_proprietor;
+        $post['is_sole_proprietor'] = $is_sole_proprietor;
         $post['principal_llc'] = $is_principal_llc;
         $post['principal_corporation'] = $is_principal_corporation;
         $post['principal_others'] = $is_principal_others;
 
-        if( $merchant ){
+        if ($merchant) {
             $this->ConvergeMerchant_model->update($merchant->id, $post);
-        }else{
+        } else {
             $post['company_id'] = $company_id;
             $this->ConvergeMerchant_model->create($post);
         }
 
-        //Send Email
-        $message = "<p>Below is the user merchant details.</p><br />";
-        $message .= "<table>";
-            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>COMPANY INFORMATION</h5></td></tr>";
-            $message .= "<tr><td>DBA NAME</td><td>".$post['dba_name']."</td></tr>";
-            $message .= "<tr><td>LEGAL BUSINESS NAME</td><td>".$post['legal_business_name']."</td></tr>";
-            $message .= "<tr><td>CONTANCT NAME</td><td>".$post['contact_name']."</td></tr>";
-            $message .= "<tr><td>DBA ADDRESS TYPE</td><td>".$post['dba_address_type']."</td></tr>";
-            $message .= "<tr><td>DBA ADDRESS 1 (NO PO BOX)</td><td>".$post['dba_address_1']."</td></tr>";
-            $message .= "<tr><td>DBA ADDRESS 2</td><td>".$post['dba_address_2']."</td></tr>";
-            $message .= "<tr><td>CITY</td><td>".$post['city']."</td></tr>";
-            $message .= "<tr><td>STATE</td><td>".$post['state']."</td></tr>";
-            $message .= "<tr><td>ZIP CODE</td><td>".$post['zip_code']."</td></tr>";
-            $message .= "<tr><td>DBA PHONE NO.</td><td>".$post['dba_phone_no']."</td></tr>";
-            $message .= "<tr><td>EMAIL ADDRESS</td><td>".$post['email_address']."</td></tr>";
-            $message .= "<tr><td>MOBILE PHONE NO.</td><td>".$post['mobile_phone_no']."</td></tr>";
-            $message .= "<tr><td>YEAR ESTABLISHED</td><td>".$post['years_established']."</td></tr>";
-            $message .= "<tr><td>LENGTH OF CURRENT OWNERSHIP</td><td>".$post['length_ownership']."</td></tr>";
-            $message .= "<tr><td>YEARS</td><td>".$post['ownership_years']."</td></tr>";
-            $message .= "<tr><td>MONTHS</td><td>".$post['ownership_months']."</td></tr>";
+        // Send Email
+        $message = '<p>Below is the user merchant details.</p><br />';
+        $message .= '<table>';
+        $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>COMPANY INFORMATION</h5></td></tr>";
+        $message .= '<tr><td>DBA NAME</td><td>'.$post['dba_name'].'</td></tr>';
+        $message .= '<tr><td>LEGAL BUSINESS NAME</td><td>'.$post['legal_business_name'].'</td></tr>';
+        $message .= '<tr><td>CONTANCT NAME</td><td>'.$post['contact_name'].'</td></tr>';
+        $message .= '<tr><td>DBA ADDRESS TYPE</td><td>'.$post['dba_address_type'].'</td></tr>';
+        $message .= '<tr><td>DBA ADDRESS 1 (NO PO BOX)</td><td>'.$post['dba_address_1'].'</td></tr>';
+        $message .= '<tr><td>DBA ADDRESS 2</td><td>'.$post['dba_address_2'].'</td></tr>';
+        $message .= '<tr><td>CITY</td><td>'.$post['city'].'</td></tr>';
+        $message .= '<tr><td>STATE</td><td>'.$post['state'].'</td></tr>';
+        $message .= '<tr><td>ZIP CODE</td><td>'.$post['zip_code'].'</td></tr>';
+        $message .= '<tr><td>DBA PHONE NO.</td><td>'.$post['dba_phone_no'].'</td></tr>';
+        $message .= '<tr><td>EMAIL ADDRESS</td><td>'.$post['email_address'].'</td></tr>';
+        $message .= '<tr><td>MOBILE PHONE NO.</td><td>'.$post['mobile_phone_no'].'</td></tr>';
+        $message .= '<tr><td>YEAR ESTABLISHED</td><td>'.$post['years_established'].'</td></tr>';
+        $message .= '<tr><td>LENGTH OF CURRENT OWNERSHIP</td><td>'.$post['length_ownership'].'</td></tr>';
+        $message .= '<tr><td>YEARS</td><td>'.$post['ownership_years'].'</td></tr>';
+        $message .= '<tr><td>MONTHS</td><td>'.$post['ownership_months'].'</td></tr>';
 
-            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>OTHER ADDRESS (IF DIFFERENT FROM ABOVE)</h5></td></tr>";
-            $message .= "<tr><td>IS MAILING</td><td>".($post['is_mailing'] == 1 ? 'YES' : 'NO')."</td></tr>";
-            $message .= "<tr><td>IS SHIPPING</td><td>".($post['is_shipping'] == 1 ? 'YES' : 'NO')."</td></tr>";
-            $message .= "<tr><td>IS SEE ALSO SPECIAL INSTRUCTIONS</td><td>".($post['is_see_special_instructions'] == 1 ? 'YES' : 'NO')."</td></tr>";
-            $message .= "<tr><td>LOCATION NAME</td><td>".$post['other_address_location_name']."</td></tr>";
-            $message .= "<tr><td>PHONE NO.</td><td>".$post['other_address_phone_no']."</td></tr>";
-            $message .= "<tr><td>CONTACT NO.</td><td>".$post['other_address_contact_no']."</td></tr>";
-            $message .= "<tr><td>BEST CONTACT NO.</td><td>".$post['other_address_best_contact_no']."</td></tr>";
-            $message .= "<tr><td>BEST TIME TO CALL</td><td>".$post['other_address_best_time_call_from']."-".$post['other_address_best_time_call_to']."</td></tr>";
-            $message .= "<tr><td>FAX NO.</td><td>".$post['other_address_fax_no']."</td></tr>";
-            $message .= "<tr><td>ADDRESS</td><td>".$post['other_address_address']."</td></tr>";
-            $message .= "<tr><td>CITY</td><td>".$post['other_address_city']."</td></tr>";
-            $message .= "<tr><td>STATE</td><td>".$post['other_address_state']."</td></tr>";
-            $message .= "<tr><td>ZIP CODE</td><td>".$post['other_address_zipcode']."</td></tr>";
+        $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>OTHER ADDRESS (IF DIFFERENT FROM ABOVE)</h5></td></tr>";
+        $message .= '<tr><td>IS MAILING</td><td>'.($post['is_mailing'] == 1 ? 'YES' : 'NO').'</td></tr>';
+        $message .= '<tr><td>IS SHIPPING</td><td>'.($post['is_shipping'] == 1 ? 'YES' : 'NO').'</td></tr>';
+        $message .= '<tr><td>IS SEE ALSO SPECIAL INSTRUCTIONS</td><td>'.($post['is_see_special_instructions'] == 1 ? 'YES' : 'NO').'</td></tr>';
+        $message .= '<tr><td>LOCATION NAME</td><td>'.$post['other_address_location_name'].'</td></tr>';
+        $message .= '<tr><td>PHONE NO.</td><td>'.$post['other_address_phone_no'].'</td></tr>';
+        $message .= '<tr><td>CONTACT NO.</td><td>'.$post['other_address_contact_no'].'</td></tr>';
+        $message .= '<tr><td>BEST CONTACT NO.</td><td>'.$post['other_address_best_contact_no'].'</td></tr>';
+        $message .= '<tr><td>BEST TIME TO CALL</td><td>'.$post['other_address_best_time_call_from'].'-'.$post['other_address_best_time_call_to'].'</td></tr>';
+        $message .= '<tr><td>FAX NO.</td><td>'.$post['other_address_fax_no'].'</td></tr>';
+        $message .= '<tr><td>ADDRESS</td><td>'.$post['other_address_address'].'</td></tr>';
+        $message .= '<tr><td>CITY</td><td>'.$post['other_address_city'].'</td></tr>';
+        $message .= '<tr><td>STATE</td><td>'.$post['other_address_state'].'</td></tr>';
+        $message .= '<tr><td>ZIP CODE</td><td>'.$post['other_address_zipcode'].'</td></tr>';
 
-            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>BUSINESS STRUCTURES</h5></td></tr>";
-            $message .= "<tr><td>IS LLC</td><td>".($post['principal_llc'] == 1 ? 'YES' : 'NO')."</td></tr>";
-            $message .= "<tr><td>IS CORPORATION</td><td>".($post['principal_corporation'] == 1 ? 'YES' : 'NO')."</td></tr>";
-            $message .= "<tr><td>IS SOLE PROPRIETORSHIP</td><td>".($post['is_sole_proprietor'] == 1 ? 'YES' : 'NO')."</td></tr>";
-            $message .= "<tr><td>OTHER</td><td>".($post['principal_others'] == 1 ? 'YES' : 'NO')."</td></tr>";
-            $message .= "<tr><td>FEDERAL ID NUMBER</td><td>".$post['federal_id_number']."</td></tr>";
+        $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>BUSINESS STRUCTURES</h5></td></tr>";
+        $message .= '<tr><td>IS LLC</td><td>'.($post['principal_llc'] == 1 ? 'YES' : 'NO').'</td></tr>';
+        $message .= '<tr><td>IS CORPORATION</td><td>'.($post['principal_corporation'] == 1 ? 'YES' : 'NO').'</td></tr>';
+        $message .= '<tr><td>IS SOLE PROPRIETORSHIP</td><td>'.($post['is_sole_proprietor'] == 1 ? 'YES' : 'NO').'</td></tr>';
+        $message .= '<tr><td>OTHER</td><td>'.($post['principal_others'] == 1 ? 'YES' : 'NO').'</td></tr>';
+        $message .= '<tr><td>FEDERAL ID NUMBER</td><td>'.$post['federal_id_number'].'</td></tr>';
 
-            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>PRINCIPAL 1 INFORMATION (Include all additional owners with 25% or greater ownership (Individual or Intermediary Business) on the Addl ownership ownership form)</h5></td></tr>";
-            $message .= "<tr><td>IS BENEFICIAL OWNER</td><td>".($post['is_beneficial_owner'] == 1 ? 'YES' : 'NO')."</td></tr>";
-            $message .= "<tr><td>PERCENTAGE OWNERSHIP</td><td>".$post['percentage_ownership']."</td></tr>";
-            $message .= "<tr><td>IS AUTHORIZED SIGNER</td><td>".($post['is_authorized_signer'] == 1 ? 'YES' : 'NO')."</td></tr>";
-            $message .= "<tr><td>FIRST NAME</td><td>".$post['principal_firstname']."</td></tr>";
-            $message .= "<tr><td>MIDDLE NAME</td><td>".$post['principal_middlename']."</td></tr>";
-            $message .= "<tr><td>LAST NAME</td><td>".$post['principal_lastname']."</td></tr>";
-            $message .= "<tr><td>ADDRESS (NO PO BOX)</td><td>".$post['principal_address']."</td></tr>";
-            $message .= "<tr><td>PHONE NO</td><td>".$post['principal_phone_no']."</td></tr>";
-            $message .= "<tr><td>CITY</td><td>".$post['principal_city']."</td></tr>";
-            $message .= "<tr><td>STATE/PROVINCE</td><td>".$post['principal_state_province']."</td></tr>";
-            $message .= "<tr><td>ZIP/POSTAL CODE</td><td>".$post['principal_zip_postal_code']."</td></tr>";
-            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>PREVIOUS ADDRESS IF CURRENT ADDRESS IS LESS THAN 2 YEARS</h5></td></tr>";
-            $message .= "<tr><td>HOME ADDRESS</td><td>".$post['principal_home_address']."</td></tr>";
-            $message .= "<tr><td>CITY</td><td>".$post['principal_city_1']."</td></tr>";
-            $message .= "<tr><td>STATE</td><td>".$post['principal_state_1']."</td></tr>";
-            $message .= "<tr><td>ZIP CODE</td><td>".$post['principal_zip_code_1']."</td></tr>";
+        $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>PRINCIPAL 1 INFORMATION (Include all additional owners with 25% or greater ownership (Individual or Intermediary Business) on the Addl ownership ownership form)</h5></td></tr>";
+        $message .= '<tr><td>IS BENEFICIAL OWNER</td><td>'.($post['is_beneficial_owner'] == 1 ? 'YES' : 'NO').'</td></tr>';
+        $message .= '<tr><td>PERCENTAGE OWNERSHIP</td><td>'.$post['percentage_ownership'].'</td></tr>';
+        $message .= '<tr><td>IS AUTHORIZED SIGNER</td><td>'.($post['is_authorized_signer'] == 1 ? 'YES' : 'NO').'</td></tr>';
+        $message .= '<tr><td>FIRST NAME</td><td>'.$post['principal_firstname'].'</td></tr>';
+        $message .= '<tr><td>MIDDLE NAME</td><td>'.$post['principal_middlename'].'</td></tr>';
+        $message .= '<tr><td>LAST NAME</td><td>'.$post['principal_lastname'].'</td></tr>';
+        $message .= '<tr><td>ADDRESS (NO PO BOX)</td><td>'.$post['principal_address'].'</td></tr>';
+        $message .= '<tr><td>PHONE NO</td><td>'.$post['principal_phone_no'].'</td></tr>';
+        $message .= '<tr><td>CITY</td><td>'.$post['principal_city'].'</td></tr>';
+        $message .= '<tr><td>STATE/PROVINCE</td><td>'.$post['principal_state_province'].'</td></tr>';
+        $message .= '<tr><td>ZIP/POSTAL CODE</td><td>'.$post['principal_zip_postal_code'].'</td></tr>';
+        $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>PREVIOUS ADDRESS IF CURRENT ADDRESS IS LESS THAN 2 YEARS</h5></td></tr>";
+        $message .= '<tr><td>HOME ADDRESS</td><td>'.$post['principal_home_address'].'</td></tr>';
+        $message .= '<tr><td>CITY</td><td>'.$post['principal_city_1'].'</td></tr>';
+        $message .= '<tr><td>STATE</td><td>'.$post['principal_state_1'].'</td></tr>';
+        $message .= '<tr><td>ZIP CODE</td><td>'.$post['principal_zip_code_1'].'</td></tr>';
 
-            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>CREDIT CARD TRANSACTIONS</h5></td></tr>";
-            $message .= "<tr><td>ANNUAL REVENUE (ACH, CHECK, CREDIT CARDS)</td><td>".$post['annual_revenue']."</td></tr>";
-            $message .= "<tr><td>MONTHLY CREDIT CARD SALES</td><td>".$post['monthly_cc_sales']."</td></tr>";
-            $message .= "<tr><td>AVERAGE CREDIT CARD TRANSACTIONS</td><td>".$post['average_cc_transcations']."</td></tr>";
-            $message .= "<tr><td>HIGHEST CREDIT CARD TRANSACTION AND HOW MANY TIMES A YEAR WILL HAVE</td><td>".$post['highest_cc_transction_years']."</td></tr>";
-            $message .= "<tr><td>CARD NOT PRESENT TRANSACTION</td><td>".$post['card_not_present_transaction']."</td></tr>";
+        $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>CREDIT CARD TRANSACTIONS</h5></td></tr>";
+        $message .= '<tr><td>ANNUAL REVENUE (ACH, CHECK, CREDIT CARDS)</td><td>'.$post['annual_revenue'].'</td></tr>';
+        $message .= '<tr><td>MONTHLY CREDIT CARD SALES</td><td>'.$post['monthly_cc_sales'].'</td></tr>';
+        $message .= '<tr><td>AVERAGE CREDIT CARD TRANSACTIONS</td><td>'.$post['average_cc_transcations'].'</td></tr>';
+        $message .= '<tr><td>HIGHEST CREDIT CARD TRANSACTION AND HOW MANY TIMES A YEAR WILL HAVE</td><td>'.$post['highest_cc_transction_years'].'</td></tr>';
+        $message .= '<tr><td>CARD NOT PRESENT TRANSACTION</td><td>'.$post['card_not_present_transaction'].'</td></tr>';
 
-            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>ACH CHECKS</h5></td></tr>";
-            $message .= "<tr><td>ANNUAL CHECK VOLUME</td><td>".$post['annual_check_volume']."</td></tr>";
-            $message .= "<tr><td>AVERAGE CHECK TRANSACTION</td><td>".$post['average_check_transaction']."</td></tr>";
-            $message .= "<tr><td>HIGHEST CHECK TRANSACTION AND HOW MANY TIMES A YEAR WILL HAVE</td><td>".$post['highest_check_transaction_years']."</td></tr>";
+        $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>ACH CHECKS</h5></td></tr>";
+        $message .= '<tr><td>ANNUAL CHECK VOLUME</td><td>'.$post['annual_check_volume'].'</td></tr>';
+        $message .= '<tr><td>AVERAGE CHECK TRANSACTION</td><td>'.$post['average_check_transaction'].'</td></tr>';
+        $message .= '<tr><td>HIGHEST CHECK TRANSACTION AND HOW MANY TIMES A YEAR WILL HAVE</td><td>'.$post['highest_check_transaction_years'].'</td></tr>';
 
-            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>BANK ACCOUNT</h5></td></tr>";
-            $message .= "<tr><td>BANK ACCOUNT</td><td>".$post['bank_account']."</td></tr>";
-            $message .= "<tr><td>ROUTING NUMBER</td><td>".$post['routing_number']."</td></tr>";
-            $message .= "<tr><td>BANK ACCOUNT NUMBER</td><td>".$post['bank_account_number']."</td></tr>";
+        $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>BANK ACCOUNT</h5></td></tr>";
+        $message .= '<tr><td>BANK ACCOUNT</td><td>'.$post['bank_account'].'</td></tr>';
+        $message .= '<tr><td>ROUTING NUMBER</td><td>'.$post['routing_number'].'</td></tr>';
+        $message .= '<tr><td>BANK ACCOUNT NUMBER</td><td>'.$post['bank_account_number'].'</td></tr>';
 
+        $message .= '</table>';
+        $message .= '<br /><p>Confidentiality Statement</p>
+    <p>This email and any files transmitted with it are confidential and intended solely for the use of the individual or entity to whom they are addressed. If you have received this email in error, please notify the system manager. This message contains confidential information and is intended only for the individual named. If you are not the named addressee, you should not disseminate, distribute or copy this e-mail. Please notify the sender immediately by e-mail if you have received this e-mail by mistake, and delete this e-mail from your system. If you are not the intended recipient, you are notified that disclosing, copying, distributing, or taking any action in reliance on the contents of this information is strictly prohibited.</p>';
 
-        $message .= "</table>";
-        $message .= "<br /><p>Confidentiality Statement</p>
-    <p>This email and any files transmitted with it are confidential and intended solely for the use of the individual or entity to whom they are addressed. If you have received this email in error, please notify the system manager. This message contains confidential information and is intended only for the individual named. If you are not the named addressee, you should not disseminate, distribute or copy this e-mail. Please notify the sender immediately by e-mail if you have received this e-mail by mistake, and delete this e-mail from your system. If you are not the intended recipient, you are notified that disclosing, copying, distributing, or taking any action in reliance on the contents of this information is strictly prohibited.</p>";
-
-        //Email Sending
-        include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
-        $server    = MAIL_SERVER;
-        $port      = MAIL_PORT ;
-        $username  = MAIL_USERNAME;
-        $password  = MAIL_PASSWORD;
-        $from      = MAIL_FROM;
-        $subject   = 'nSmarTrac: Merchant Data Application';
-        $mail = new PHPMailer;
-        //$mail->SMTPDebug = 4;
+        // Email Sending
+        include APPPATH.'libraries/PHPMailer/PHPMailerAutoload.php';
+        $server = MAIL_SERVER;
+        $port = MAIL_PORT;
+        $username = MAIL_USERNAME;
+        $password = MAIL_PASSWORD;
+        $from = MAIL_FROM;
+        $subject = 'nSmarTrac: Merchant Data Application';
+        $mail = new PHPMailer();
+        // $mail->SMTPDebug = 4;
         $mail->isSMTP();
         $mail->Host = $server;
         $mail->SMTPAuth = true;
-        $mail->Username   = $username;
-        $mail->Password   = $password;
+        $mail->Username = $username;
+        $mail->Password = $password;
         $mail->getSMTPInstance()->Timelimit = 5;
         $mail->SMTPSecure = 'ssl';
-        $mail->Timeout    =   10; // set the timeout (seconds)
+        $mail->Timeout = 10; // set the timeout (seconds)
         $mail->Port = $port;
         $mail->From = $from;
         $mail->FromName = 'nSmarTrac';
 
-        //$mail->addAddress('moresecureadi@gmail.com', 'moresecureadi@gmail.com');
+        // $mail->addAddress('moresecureadi@gmail.com', 'moresecureadi@gmail.com');
         $mail->addAddress('joyce.reynolds@elavon.com', 'joyce.reynolds@elavon.com');
         $mail->isHTML(true);
         $mail->Subject = $subject;
-        $mail->Body    = $message;
-
+        $mail->Body = $message;
 
         $json_data['is_success'] = 1;
-        $json_data['error']      = '';
+        $json_data['error'] = '';
 
-        if(!$mail->Send()) {
+        if (!$mail->Send()) {
             /*echo 'Message could not be sent.';
             echo 'Mailer Error: ' . $mail->ErrorInfo;
             exit;*/
             $json_data['is_success'] = 0;
-            $json_data['error']      = 'Mailer Error: ' . $mail->ErrorInfo;
+            $json_data['error'] = 'Mailer Error: '.$mail->ErrorInfo;
         }
 
         $this->session->set_flashdata('alert-type', 'success');
         $this->session->set_flashdata('alert', 'Customer Merchant has been successfully updated');
 
         echo json_encode($json_data);
-        //redirect('customer/merchant');
-
+        // redirect('customer/merchant');
     }
 
     public function share_merchant_data()
     {
         $this->load->model('ConvergeMerchant_model');
 
-        $post       = $this->input->post();
-        $recipient  = $post['share_email'];
-        $user_id    = logged('id');
+        $post = $this->input->post();
+        $recipient = $post['share_email'];
+        $user_id = logged('id');
         $company_id = logged('company_id');
 
         $merchant = $this->ConvergeMerchant_model->getByCompanyId($company_id);
-        if( $merchant ){
-            $post = (array)$merchant;
-            //Send Email
-            $message = "<p>Below is the user merchant details.</p><br />";
-            $message .= "<table>";
-                $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>COMPANY INFORMATION</h5></td></tr>";
-                $message .= "<tr><td>DBA NAME</td><td>".$post['dba_name']."</td></tr>";
-                $message .= "<tr><td>LEGAL BUSINESS NAME</td><td>".$post['legal_business_name']."</td></tr>";
-                $message .= "<tr><td>CONTANCT NAME</td><td>".$post['contact_name']."</td></tr>";
-                $message .= "<tr><td>DBA ADDRESS TYPE</td><td>".$post['dba_address_type']."</td></tr>";
-                $message .= "<tr><td>DBA ADDRESS 1 (NO PO BOX)</td><td>".$post['dba_address_1']."</td></tr>";
-                $message .= "<tr><td>DBA ADDRESS 2</td><td>".$post['dba_address_2']."</td></tr>";
-                $message .= "<tr><td>CITY</td><td>".$post['city']."</td></tr>";
-                $message .= "<tr><td>STATE</td><td>".$post['state']."</td></tr>";
-                $message .= "<tr><td>ZIP CODE</td><td>".$post['zip_code']."</td></tr>";
-                $message .= "<tr><td>DBA PHONE NO.</td><td>".$post['dba_phone_no']."</td></tr>";
-                $message .= "<tr><td>EMAIL ADDRESS</td><td>".$post['email_address']."</td></tr>";
-                $message .= "<tr><td>MOBILE PHONE NO.</td><td>".$post['mobile_phone_no']."</td></tr>";
-                $message .= "<tr><td>YEAR ESTABLISHED</td><td>".$post['years_established']."</td></tr>";
-                $message .= "<tr><td>LENGTH OF CURRENT OWNERSHIP</td><td>".$post['length_ownership']."</td></tr>";
-                $message .= "<tr><td>YEARS</td><td>".$post['ownership_years']."</td></tr>";
-                $message .= "<tr><td>MONTHS</td><td>".$post['ownership_months']."</td></tr>";
+        if ($merchant) {
+            $post = (array) $merchant;
+            // Send Email
+            $message = '<p>Below is the user merchant details.</p><br />';
+            $message .= '<table>';
+            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>COMPANY INFORMATION</h5></td></tr>";
+            $message .= '<tr><td>DBA NAME</td><td>'.$post['dba_name'].'</td></tr>';
+            $message .= '<tr><td>LEGAL BUSINESS NAME</td><td>'.$post['legal_business_name'].'</td></tr>';
+            $message .= '<tr><td>CONTANCT NAME</td><td>'.$post['contact_name'].'</td></tr>';
+            $message .= '<tr><td>DBA ADDRESS TYPE</td><td>'.$post['dba_address_type'].'</td></tr>';
+            $message .= '<tr><td>DBA ADDRESS 1 (NO PO BOX)</td><td>'.$post['dba_address_1'].'</td></tr>';
+            $message .= '<tr><td>DBA ADDRESS 2</td><td>'.$post['dba_address_2'].'</td></tr>';
+            $message .= '<tr><td>CITY</td><td>'.$post['city'].'</td></tr>';
+            $message .= '<tr><td>STATE</td><td>'.$post['state'].'</td></tr>';
+            $message .= '<tr><td>ZIP CODE</td><td>'.$post['zip_code'].'</td></tr>';
+            $message .= '<tr><td>DBA PHONE NO.</td><td>'.$post['dba_phone_no'].'</td></tr>';
+            $message .= '<tr><td>EMAIL ADDRESS</td><td>'.$post['email_address'].'</td></tr>';
+            $message .= '<tr><td>MOBILE PHONE NO.</td><td>'.$post['mobile_phone_no'].'</td></tr>';
+            $message .= '<tr><td>YEAR ESTABLISHED</td><td>'.$post['years_established'].'</td></tr>';
+            $message .= '<tr><td>LENGTH OF CURRENT OWNERSHIP</td><td>'.$post['length_ownership'].'</td></tr>';
+            $message .= '<tr><td>YEARS</td><td>'.$post['ownership_years'].'</td></tr>';
+            $message .= '<tr><td>MONTHS</td><td>'.$post['ownership_months'].'</td></tr>';
 
-                $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>OTHER ADDRESS (IF DIFFERENT FROM ABOVE)</h5></td></tr>";
-                $message .= "<tr><td>IS MAILING</td><td>".($post['is_mailing'] == 1 ? 'YES' : 'NO')."</td></tr>";
-                $message .= "<tr><td>IS SHIPPING</td><td>".($post['is_shipping'] == 1 ? 'YES' : 'NO')."</td></tr>";
-                $message .= "<tr><td>IS SEE ALSO SPECIAL INSTRUCTIONS</td><td>".($post['is_see_special_instructions'] == 1 ? 'YES' : 'NO')."</td></tr>";
-                $message .= "<tr><td>LOCATION NAME</td><td>".$post['other_address_location_name']."</td></tr>";
-                $message .= "<tr><td>PHONE NO.</td><td>".$post['other_address_phone_no']."</td></tr>";
-                $message .= "<tr><td>CONTACT NO.</td><td>".$post['other_address_contact_no']."</td></tr>";
-                $message .= "<tr><td>BEST CONTACT NO.</td><td>".$post['other_address_best_contact_no']."</td></tr>";
-                $message .= "<tr><td>BEST TIME TO CALL</td><td>".$post['other_address_best_time_call_from']."-".$post['other_address_best_time_call_to']."</td></tr>";
-                $message .= "<tr><td>FAX NO.</td><td>".$post['other_address_fax_no']."</td></tr>";
-                $message .= "<tr><td>ADDRESS</td><td>".$post['other_address_address']."</td></tr>";
-                $message .= "<tr><td>CITY</td><td>".$post['other_address_city']."</td></tr>";
-                $message .= "<tr><td>STATE</td><td>".$post['other_address_state']."</td></tr>";
-                $message .= "<tr><td>ZIP CODE</td><td>".$post['other_address_zipcode']."</td></tr>";
+            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>OTHER ADDRESS (IF DIFFERENT FROM ABOVE)</h5></td></tr>";
+            $message .= '<tr><td>IS MAILING</td><td>'.($post['is_mailing'] == 1 ? 'YES' : 'NO').'</td></tr>';
+            $message .= '<tr><td>IS SHIPPING</td><td>'.($post['is_shipping'] == 1 ? 'YES' : 'NO').'</td></tr>';
+            $message .= '<tr><td>IS SEE ALSO SPECIAL INSTRUCTIONS</td><td>'.($post['is_see_special_instructions'] == 1 ? 'YES' : 'NO').'</td></tr>';
+            $message .= '<tr><td>LOCATION NAME</td><td>'.$post['other_address_location_name'].'</td></tr>';
+            $message .= '<tr><td>PHONE NO.</td><td>'.$post['other_address_phone_no'].'</td></tr>';
+            $message .= '<tr><td>CONTACT NO.</td><td>'.$post['other_address_contact_no'].'</td></tr>';
+            $message .= '<tr><td>BEST CONTACT NO.</td><td>'.$post['other_address_best_contact_no'].'</td></tr>';
+            $message .= '<tr><td>BEST TIME TO CALL</td><td>'.$post['other_address_best_time_call_from'].'-'.$post['other_address_best_time_call_to'].'</td></tr>';
+            $message .= '<tr><td>FAX NO.</td><td>'.$post['other_address_fax_no'].'</td></tr>';
+            $message .= '<tr><td>ADDRESS</td><td>'.$post['other_address_address'].'</td></tr>';
+            $message .= '<tr><td>CITY</td><td>'.$post['other_address_city'].'</td></tr>';
+            $message .= '<tr><td>STATE</td><td>'.$post['other_address_state'].'</td></tr>';
+            $message .= '<tr><td>ZIP CODE</td><td>'.$post['other_address_zipcode'].'</td></tr>';
 
-                $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>BUSINESS STRUCTURES</h5></td></tr>";
-                $message .= "<tr><td>IS LLC</td><td>".($post['principal_llc'] == 1 ? 'YES' : 'NO')."</td></tr>";
-                $message .= "<tr><td>IS CORPORATION</td><td>".($post['principal_corporation'] == 1 ? 'YES' : 'NO')."</td></tr>";
-                $message .= "<tr><td>IS SOLE PROPRIETORSHIP</td><td>".($post['is_sole_proprietor'] == 1 ? 'YES' : 'NO')."</td></tr>";
-                $message .= "<tr><td>OTHER</td><td>".($post['principal_others'] == 1 ? 'YES' : 'NO')."</td></tr>";
-                $message .= "<tr><td>FEDERAL ID NUMBER</td><td>".$post['federal_id_number']."</td></tr>";
+            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>BUSINESS STRUCTURES</h5></td></tr>";
+            $message .= '<tr><td>IS LLC</td><td>'.($post['principal_llc'] == 1 ? 'YES' : 'NO').'</td></tr>';
+            $message .= '<tr><td>IS CORPORATION</td><td>'.($post['principal_corporation'] == 1 ? 'YES' : 'NO').'</td></tr>';
+            $message .= '<tr><td>IS SOLE PROPRIETORSHIP</td><td>'.($post['is_sole_proprietor'] == 1 ? 'YES' : 'NO').'</td></tr>';
+            $message .= '<tr><td>OTHER</td><td>'.($post['principal_others'] == 1 ? 'YES' : 'NO').'</td></tr>';
+            $message .= '<tr><td>FEDERAL ID NUMBER</td><td>'.$post['federal_id_number'].'</td></tr>';
 
-                $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>PRINCIPAL 1 INFORMATION (Include all additional owners with 25% or greater ownership (Individual or Intermediary Business) on the Addl ownership ownership form)</h5></td></tr>";
-                $message .= "<tr><td>IS BENEFICIAL OWNER</td><td>".($post['is_beneficial_owner'] == 1 ? 'YES' : 'NO')."</td></tr>";
-                $message .= "<tr><td>PERCENTAGE OWNERSHIP</td><td>".$post['percentage_ownership']."</td></tr>";
-                $message .= "<tr><td>IS AUTHORIZED SIGNER</td><td>".($post['is_authorized_signer'] == 1 ? 'YES' : 'NO')."</td></tr>";
-                $message .= "<tr><td>FIRST NAME</td><td>".$post['principal_firstname']."</td></tr>";
-                $message .= "<tr><td>MIDDLE NAME</td><td>".$post['principal_middlename']."</td></tr>";
-                $message .= "<tr><td>LAST NAME</td><td>".$post['principal_lastname']."</td></tr>";
-                $message .= "<tr><td>ADDRESS (NO PO BOX)</td><td>".$post['principal_address']."</td></tr>";
-                $message .= "<tr><td>PHONE NO</td><td>".$post['principal_phone_no']."</td></tr>";
-                $message .= "<tr><td>CITY</td><td>".$post['principal_city']."</td></tr>";
-                $message .= "<tr><td>STATE/PROVINCE</td><td>".$post['principal_state_province']."</td></tr>";
-                $message .= "<tr><td>ZIP/POSTAL CODE</td><td>".$post['principal_zip_postal_code']."</td></tr>";
-                $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>PREVIOUS ADDRESS IF CURRENT ADDRESS IS LESS THAN 2 YEARS</h5></td></tr>";
-                $message .= "<tr><td>HOME ADDRESS</td><td>".$post['principal_home_address']."</td></tr>";
-                $message .= "<tr><td>CITY</td><td>".$post['principal_city_1']."</td></tr>";
-                $message .= "<tr><td>STATE</td><td>".$post['principal_state_1']."</td></tr>";
-                $message .= "<tr><td>ZIP CODE</td><td>".$post['principal_zip_code_1']."</td></tr>";
+            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>PRINCIPAL 1 INFORMATION (Include all additional owners with 25% or greater ownership (Individual or Intermediary Business) on the Addl ownership ownership form)</h5></td></tr>";
+            $message .= '<tr><td>IS BENEFICIAL OWNER</td><td>'.($post['is_beneficial_owner'] == 1 ? 'YES' : 'NO').'</td></tr>';
+            $message .= '<tr><td>PERCENTAGE OWNERSHIP</td><td>'.$post['percentage_ownership'].'</td></tr>';
+            $message .= '<tr><td>IS AUTHORIZED SIGNER</td><td>'.($post['is_authorized_signer'] == 1 ? 'YES' : 'NO').'</td></tr>';
+            $message .= '<tr><td>FIRST NAME</td><td>'.$post['principal_firstname'].'</td></tr>';
+            $message .= '<tr><td>MIDDLE NAME</td><td>'.$post['principal_middlename'].'</td></tr>';
+            $message .= '<tr><td>LAST NAME</td><td>'.$post['principal_lastname'].'</td></tr>';
+            $message .= '<tr><td>ADDRESS (NO PO BOX)</td><td>'.$post['principal_address'].'</td></tr>';
+            $message .= '<tr><td>PHONE NO</td><td>'.$post['principal_phone_no'].'</td></tr>';
+            $message .= '<tr><td>CITY</td><td>'.$post['principal_city'].'</td></tr>';
+            $message .= '<tr><td>STATE/PROVINCE</td><td>'.$post['principal_state_province'].'</td></tr>';
+            $message .= '<tr><td>ZIP/POSTAL CODE</td><td>'.$post['principal_zip_postal_code'].'</td></tr>';
+            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>PREVIOUS ADDRESS IF CURRENT ADDRESS IS LESS THAN 2 YEARS</h5></td></tr>";
+            $message .= '<tr><td>HOME ADDRESS</td><td>'.$post['principal_home_address'].'</td></tr>';
+            $message .= '<tr><td>CITY</td><td>'.$post['principal_city_1'].'</td></tr>';
+            $message .= '<tr><td>STATE</td><td>'.$post['principal_state_1'].'</td></tr>';
+            $message .= '<tr><td>ZIP CODE</td><td>'.$post['principal_zip_code_1'].'</td></tr>';
 
-                $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>CREDIT CARD TRANSACTIONS</h5></td></tr>";
-                $message .= "<tr><td>ANNUAL REVENUE (ACH, CHECK, CREDIT CARDS)</td><td>".$post['annual_revenue']."</td></tr>";
-                $message .= "<tr><td>MONTHLY CREDIT CARD SALES</td><td>".$post['monthly_cc_sales']."</td></tr>";
-                $message .= "<tr><td>AVERAGE CREDIT CARD TRANSACTIONS</td><td>".$post['average_cc_transcations']."</td></tr>";
-                $message .= "<tr><td>HIGHEST CREDIT CARD TRANSACTION AND HOW MANY TIMES A YEAR WILL HAVE</td><td>".$post['highest_cc_transction_years']."</td></tr>";
-                $message .= "<tr><td>CARD NOT PRESENT TRANSACTION</td><td>".$post['card_not_present_transaction']."</td></tr>";
+            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>CREDIT CARD TRANSACTIONS</h5></td></tr>";
+            $message .= '<tr><td>ANNUAL REVENUE (ACH, CHECK, CREDIT CARDS)</td><td>'.$post['annual_revenue'].'</td></tr>';
+            $message .= '<tr><td>MONTHLY CREDIT CARD SALES</td><td>'.$post['monthly_cc_sales'].'</td></tr>';
+            $message .= '<tr><td>AVERAGE CREDIT CARD TRANSACTIONS</td><td>'.$post['average_cc_transcations'].'</td></tr>';
+            $message .= '<tr><td>HIGHEST CREDIT CARD TRANSACTION AND HOW MANY TIMES A YEAR WILL HAVE</td><td>'.$post['highest_cc_transction_years'].'</td></tr>';
+            $message .= '<tr><td>CARD NOT PRESENT TRANSACTION</td><td>'.$post['card_not_present_transaction'].'</td></tr>';
 
-                $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>ACH CHECKS</h5></td></tr>";
-                $message .= "<tr><td>ANNUAL CHECK VOLUME</td><td>".$post['annual_check_volume']."</td></tr>";
-                $message .= "<tr><td>AVERAGE CHECK TRANSACTION</td><td>".$post['average_check_transaction']."</td></tr>";
-                $message .= "<tr><td>HIGHEST CHECK TRANSACTION AND HOW MANY TIMES A YEAR WILL HAVE</td><td>".$post['highest_check_transaction_years']."</td></tr>";
+            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>ACH CHECKS</h5></td></tr>";
+            $message .= '<tr><td>ANNUAL CHECK VOLUME</td><td>'.$post['annual_check_volume'].'</td></tr>';
+            $message .= '<tr><td>AVERAGE CHECK TRANSACTION</td><td>'.$post['average_check_transaction'].'</td></tr>';
+            $message .= '<tr><td>HIGHEST CHECK TRANSACTION AND HOW MANY TIMES A YEAR WILL HAVE</td><td>'.$post['highest_check_transaction_years'].'</td></tr>';
 
-                $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>BANK ACCOUNT</h5></td></tr>";
-                $message .= "<tr><td>BANK ACCOUNT</td><td>".$post['bank_account']."</td></tr>";
-                $message .= "<tr><td>ROUTING NUMBER</td><td>".$post['routing_number']."</td></tr>";
-                $message .= "<tr><td>BANK ACCOUNT NUMBER</td><td>".$post['bank_account_number']."</td></tr>";
+            $message .= "<tr><td colspan='2' style='background-color:#32243d;color:#ffffff;'><h5 style='margin:0px;padding:10px;font-size:15px;'>BANK ACCOUNT</h5></td></tr>";
+            $message .= '<tr><td>BANK ACCOUNT</td><td>'.$post['bank_account'].'</td></tr>';
+            $message .= '<tr><td>ROUTING NUMBER</td><td>'.$post['routing_number'].'</td></tr>';
+            $message .= '<tr><td>BANK ACCOUNT NUMBER</td><td>'.$post['bank_account_number'].'</td></tr>';
 
-            $message .= "</table>";
-            $message .= "<br /><p>Confidentiality Statement</p>
-    <p>This email and any files transmitted with it are confidential and intended solely for the use of the individual or entity to whom they are addressed. If you have received this email in error, please notify the system manager. This message contains confidential information and is intended only for the individual named. If you are not the named addressee, you should not disseminate, distribute or copy this e-mail. Please notify the sender immediately by e-mail if you have received this e-mail by mistake, and delete this e-mail from your system. If you are not the intended recipient, you are notified that disclosing, copying, distributing, or taking any action in reliance on the contents of this information is strictly prohibited.</p>";
+            $message .= '</table>';
+            $message .= '<br /><p>Confidentiality Statement</p>
+    <p>This email and any files transmitted with it are confidential and intended solely for the use of the individual or entity to whom they are addressed. If you have received this email in error, please notify the system manager. This message contains confidential information and is intended only for the individual named. If you are not the named addressee, you should not disseminate, distribute or copy this e-mail. Please notify the sender immediately by e-mail if you have received this e-mail by mistake, and delete this e-mail from your system. If you are not the intended recipient, you are notified that disclosing, copying, distributing, or taking any action in reliance on the contents of this information is strictly prohibited.</p>';
 
-            //Email Sending
-            include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
-            $server    = MAIL_SERVER;
-            $port      = MAIL_PORT ;
-            $username  = MAIL_USERNAME;
-            $password  = MAIL_PASSWORD;
-            $from      = MAIL_FROM;
-            $subject   = 'nSmarTrac: Merchant Data Application';
-            $mail = new PHPMailer;
-            //$mail->SMTPDebug = 4;
+            // Email Sending
+            include APPPATH.'libraries/PHPMailer/PHPMailerAutoload.php';
+            $server = MAIL_SERVER;
+            $port = MAIL_PORT;
+            $username = MAIL_USERNAME;
+            $password = MAIL_PASSWORD;
+            $from = MAIL_FROM;
+            $subject = 'nSmarTrac: Merchant Data Application';
+            $mail = new PHPMailer();
+            // $mail->SMTPDebug = 4;
             $mail->isSMTP();
             $mail->Host = $server;
             $mail->SMTPAuth = true;
-            $mail->Username   = $username;
-            $mail->Password   = $password;
+            $mail->Username = $username;
+            $mail->Password = $password;
             $mail->getSMTPInstance()->Timelimit = 5;
             $mail->SMTPSecure = 'ssl';
-            $mail->Timeout    =   10; // set the timeout (seconds)
+            $mail->Timeout = 10; // set the timeout (seconds)
             $mail->Port = $port;
             $mail->From = $from;
             $mail->FromName = 'NsmarTrac';
@@ -5633,22 +5506,21 @@ class Customer extends MY_Controller
             $mail->addAddress($recipient, $recipient);
             $mail->isHTML(true);
             $mail->Subject = $subject;
-            $mail->Body    = $message;
-
+            $mail->Body = $message;
 
             $json_data['is_success'] = 1;
-            $json_data['error']      = '';
+            $json_data['error'] = '';
 
-            if(!$mail->Send()) {
+            if (!$mail->Send()) {
                 /*echo 'Message could not be sent.';
                 echo 'Mailer Error: ' . $mail->ErrorInfo;
                 exit;*/
                 $json_data['is_success'] = 0;
-                $json_data['error']      = 'Mailer Error: ' . $mail->ErrorInfo;
+                $json_data['error'] = 'Mailer Error: '.$mail->ErrorInfo;
             }
-        }else{
+        } else {
             $json_data['is_success'] = 0;
-            $json_data['message']    = '';
+            $json_data['message'] = '';
         }
 
         echo json_encode($json_data);
@@ -5656,68 +5528,69 @@ class Customer extends MY_Controller
 
     public function generate_qr_image($profile_id)
     {
-        require_once APPPATH . 'libraries/qr_generator/QrCode.php';
+        require_once APPPATH.'libraries/qr_generator/QrCode.php';
 
-        $target_dir = "./uploads/customer_qr/";
-        
-        if(!file_exists($target_dir)) {
+        $target_dir = './uploads/customer_qr/';
+
+        if (!file_exists($target_dir)) {
             mkdir($target_dir, 0777, true);
         }
-        
-        $qr_data  = base_url('/customer/preview/' . $profile_id);
-        $ecc      = 'M';                       
-        $size     = 3;
-        $filename = 'qr'.md5($qr_data.'|'.$ecc.'|'.$size).'.png'; 
 
-        $qrApi = new \Qr\QrCode();  
-        $qrApi->setFileName($target_dir . $filename);
+        $qr_data = base_url('/customer/preview/'.$profile_id);
+        $ecc = 'M';
+        $size = 3;
+        $filename = 'qr'.md5($qr_data.'|'.$ecc.'|'.$size).'.png';
+
+        $qrApi = new \Qr\QrCode();
+        $qrApi->setFileName($target_dir.$filename);
         $qrApi->setErrorCorrectionLevel($ecc);
         $qrApi->setMatrixPointSize($size);
-        $qrApi->setQrData($qr_data);               
+        $qrApi->setQrData($qr_data);
         $qr_data = $qrApi->generateQR();
 
         $profile_data = ['qr_img' => $filename];
-        $this->general->update_with_key_field($profile_data, $profile_id,'acs_profile','prof_id');
+        $this->general->update_with_key_field($profile_data, $profile_id, 'acs_profile', 'prof_id');
     }
 
-    public function save_customer_headers(){
+    public function save_customer_headers()
+    {
         $input = $this->input->post();
-        $headers = array();
-        if( isset($input['headers']) ){
-            foreach( $input['headers'] as $key => $value ){
+        $headers = [];
+        if (isset($input['headers'])) {
+            foreach ($input['headers'] as $key => $value) {
                 $headers[] = $key;
             }
-        }       
+        }
 
-        if( logged('company_id') == 58 ){
-            foreach( $input['solarHeader'] as $key => $value ){
+        if (logged('company_id') == 58) {
+            foreach ($input['solarHeader'] as $key => $value) {
                 $headers[] = $key;
-            }            
+            }
         }
 
-        if( logged('company_id') == 31 ){
-            if( isset($input['alarmHeader']) ){
-                foreach( $input['alarmHeader'] as $key => $value ){
+        if (logged('company_id') == 31) {
+            if (isset($input['alarmHeader'])) {
+                foreach ($input['alarmHeader'] as $key => $value) {
                     $headers[] = $key;
-                }            
-            }            
+                }
+            }
         }
 
-        $get_company_settings = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
+        $get_company_settings = [
+            'where' => [
+                'company_id' => logged('company_id'),
+            ],
             'table' => 'customer_settings_headers',
             'select' => '*',
-        );
+        ];
         $customer_settings = $this->general->get_data_with_param($get_company_settings);
-        if( $customer_settings ){
+        if ($customer_settings) {
             $data = ['headers' => serialize($headers)];
-            $this->general->update_with_key_field($data, logged('company_id'),'customer_settings_headers','company_id');
-        }else{
+            $this->general->update_with_key_field($data, logged('company_id'), 'customer_settings_headers', 'company_id');
+        } else {
             $data = [
                 'company_id' => logged('company_id'),
-                'headers' => serialize($headers)
+                'headers' => serialize($headers),
             ];
             $this->general->add_($data, 'customer_settings_headers');
         }
@@ -5726,17 +5599,19 @@ class Customer extends MY_Controller
         echo json_encode($json_data);
     }
 
-    public function billing_errors(){
+    public function billing_errors()
+    {
         $billingErrors = $this->customer_ad_model->get_customer_billing_errors(logged('company_id'));
         $this->page_data['billingErrors'] = $billingErrors;
 
         $this->page_data['page']->title = 'Billing Errors';
         $this->page_data['page']->parent = 'Customers';
         $this->load->view('v2/pages/customer/billing_error/list', $this->page_data);
-        //$this->load->view('customer/billing_error/list', $this->page_data);
+        // $this->load->view('customer/billing_error/list', $this->page_data);
     }
 
-    public function ajax_load_company_billing_credit_card_details(){
+    public function ajax_load_company_billing_credit_card_details()
+    {
         $post = $this->input->post();
         $billing_id = $post['billing_id'];
         $billing = $this->customer_ad_model->get_company_billing_error(logged('company_id'), $billing_id);
@@ -5746,26 +5621,27 @@ class Customer extends MY_Controller
         //     $this->page_data['cc_date_year'] = $date_year;
         //     $this->page_data['billing'] = $billing;
         //     $this->load->view('customer/billing_error/ajax_credit_card_details', $this->page_data);
-            
+
         // }else{
         //     echo "<div class='alert alert-danger'>Cannot find record</div>";
-        // }        
+        // }
 
-        $date_year = explode("/", $billing->credit_card_exp);
+        $date_year = explode('/', $billing->credit_card_exp);
 
         $this->page_data['cc_date_year'] = $date_year;
         $this->page_data['billing'] = $billing;
         $this->load->view('v2/pages/customer/load_credit_card_details', $this->page_data);
     }
 
-    public function ajax_update_billing_credit_card_details(){
+    public function ajax_update_billing_credit_card_details()
+    {
         $is_success = 0;
-        $msg        = '';
-        $post       = $this->input->post();
+        $msg = '';
+        $post = $this->input->post();
 
-        $billing     = $this->customer_ad_model->get_company_billing_error(logged('company_id'), $post['bid']);
-        $cc_exp_date = $post['exp_month'] . date("y", strtotime("01-01-" . $post['exp_year']));
-        
+        $billing = $this->customer_ad_model->get_company_billing_error(logged('company_id'), $post['bid']);
+        $cc_exp_date = $post['exp_month'].date('y', strtotime('01-01-'.$post['exp_year']));
+
         $data_cc = [
             'card_number' => $post['card_number'],
             'exp_date' => $cc_exp_date,
@@ -5773,24 +5649,24 @@ class Customer extends MY_Controller
             'ssl_amount' => 0,
             'ssl_first_name' => $billing->card_fname,
             'ssl_last_name' => $billing->card_lname,
-            'ssl_address' => $billing->card_address . ' ' . $billing->city . ' ' . $billing->state,
-            'ssl_zip' => $billing->zip
+            'ssl_address' => $billing->card_address.' '.$billing->city.' '.$billing->state,
+            'ssl_zip' => $billing->zip,
         ];
         $is_valid = $this->converge_check_cc_details_valid($data_cc);
-        if( $is_valid['is_success'] > 0 ){
+        if ($is_valid['is_success'] > 0) {
             $is_success = 1;
-            //Update cc
+            // Update cc
             $billing_data = [
                 'credit_card_num' => $post['card_number'],
-                'credit_card_exp' => $post['exp_month'] . "/" . $post['exp_year'],
+                'credit_card_exp' => $post['exp_month'].'/'.$post['exp_year'],
                 'credit_card_exp_mm_yyyy' => $post['cvc'],
                 'is_with_error' => 0,
                 'error_message' => '',
                 'error_type' => '',
-                'error_date' => ''
+                'error_date' => '',
             ];
             $this->general->update_with_key_field($billing_data, $billing->bill_id, 'acs_billing', 'bill_id');
-        }else{
+        } else {
             $msg = $is_valid['msg'];
         }
 
@@ -5800,10 +5676,10 @@ class Customer extends MY_Controller
     }
 
     public function customer_subscriptions()
-    {        
+    {
         $this->page_data['page']->title = 'Customer Subscriptions';
         $this->page_data['page']->parent = 'Customers';
-        
+
         // $this->load->view('customer/subscription_list', $this->page_data);
         $this->load->view('v2/pages/customer/subscription_list', $this->page_data);
     }
@@ -5811,9 +5687,9 @@ class Customer extends MY_Controller
     public function ajax_load_active_subscriptions()
     {
         $this->load->model('Customer_advance_model');
-        
-        $company_id    = logged('company_id');
-        $activeSubscriptions = $this->Customer_advance_model->get_all_active_subscription_by_company_id($company_id);        
+
+        $company_id = logged('company_id');
+        $activeSubscriptions = $this->Customer_advance_model->get_all_active_subscription_by_company_id($company_id);
         $this->page_data['activeSubscriptions'] = $activeSubscriptions;
         // $this->load->view('customer/ajax_load_active_subscriptions', $this->page_data);
         $this->load->view('v2/pages/customer/load_active_subscriptions', $this->page_data);
@@ -5822,9 +5698,9 @@ class Customer extends MY_Controller
     public function ajax_load_completed_subscriptions()
     {
         $this->load->model('Customer_advance_model');
-        
-        $company_id    = logged('company_id');
-        $completedSubscriptions = $this->Customer_advance_model->get_all_completed_subscription_by_company_id($company_id);        
+
+        $company_id = logged('company_id');
+        $completedSubscriptions = $this->Customer_advance_model->get_all_completed_subscription_by_company_id($company_id);
         $this->page_data['completedSubscriptions'] = $completedSubscriptions;
         // $this->load->view('customer/ajax_load_completed_subscriptions', $this->page_data);
         $this->load->view('v2/pages/customer/load_completed_subscriptions', $this->page_data);
@@ -5833,26 +5709,27 @@ class Customer extends MY_Controller
     public function ajax_load_billing_error_subscriptions()
     {
         $this->load->model('Customer_advance_model');
-        
-        $company_id    = logged('company_id');
-        $errorSubscriptions = $this->Customer_advance_model->get_all_billing_errors_by_company_id($company_id);        
+
+        $company_id = logged('company_id');
+        $errorSubscriptions = $this->Customer_advance_model->get_all_billing_errors_by_company_id($company_id);
         $this->page_data['errorSubscriptions'] = $errorSubscriptions;
         // $this->load->view('customer/ajax_load_billing_error_subscriptions', $this->page_data);
         $this->load->view('v2/pages/customer/load_biller_error_subscriptions', $this->page_data);
     }
 
-    public function ajax_load_subscription_list_counter(){
+    public function ajax_load_subscription_list_counter()
+    {
         $this->load->model('Customer_advance_model');
 
         $company_id = logged('company_id');
-        $activeSubscriptions    = $this->Customer_advance_model->get_all_active_subscription_by_company_id($company_id);    
+        $activeSubscriptions = $this->Customer_advance_model->get_all_active_subscription_by_company_id($company_id);
         $completedSubscriptions = $this->Customer_advance_model->get_all_completed_subscription_by_company_id($company_id);
-        $errorSubscriptions     = $this->Customer_advance_model->get_all_billing_errors_by_company_id($company_id);    
+        $errorSubscriptions = $this->Customer_advance_model->get_all_billing_errors_by_company_id($company_id);
 
         $json_data = [
             'total_active' => count($activeSubscriptions),
             'total_completed' => count($completedSubscriptions),
-            'total_billing_errors' => count($errorSubscriptions)
+            'total_billing_errors' => count($errorSubscriptions),
         ];
 
         echo json_encode($json_data);
@@ -5863,8 +5740,8 @@ class Customer extends MY_Controller
         $this->load->model('Customer_advance_model');
 
         $post = $this->input->post();
-        
-        $paymentHistory = $this->Customer_advance_model->get_all_subscription_payments($post['customer_id']);        
+
+        $paymentHistory = $this->Customer_advance_model->get_all_subscription_payments($post['customer_id']);
         $this->page_data['paymentHistory'] = $paymentHistory;
         // $this->load->view('customer/ajax_load_subscription_payment_history', $this->page_data);
         $this->load->view('v2/pages/customer/load_subscription_payment_history', $this->page_data);
@@ -5876,7 +5753,7 @@ class Customer extends MY_Controller
         $this->page_data['page']->parent = 'Customers';
 
         $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
+        $this->hasAccessModule(9);
 
         $user_id = logged('id');
         $company_id = logged('company_id');
@@ -5884,8 +5761,8 @@ class Customer extends MY_Controller
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $user_id;
 
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+        if (isset($userid) || !empty($userid)) {
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
@@ -5900,7 +5777,7 @@ class Customer extends MY_Controller
         $this->page_data['page']->parent = 'Sales';
 
         $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
+        $this->hasAccessModule(9);
 
         $user_id = logged('id');
         $company_id = logged('company_id');
@@ -5908,13 +5785,13 @@ class Customer extends MY_Controller
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $user_id;
 
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+        if (isset($userid) || !empty($userid)) {
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
         $this->page_data['lead_source'] = $this->customer_ad_model->getAllSettingsLeadSourceByCompanyId($company_id);
-        
+
         $this->load->view('v2/pages/customer/settings_lead_source', $this->page_data);
     }
 
@@ -5924,7 +5801,7 @@ class Customer extends MY_Controller
         $this->page_data['page']->parent = 'Sales';
 
         $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
+        $this->hasAccessModule(9);
 
         $user_id = logged('id');
         $company_id = logged('company_id');
@@ -5932,8 +5809,8 @@ class Customer extends MY_Controller
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $user_id;
 
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+        if (isset($userid) || !empty($userid)) {
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
@@ -5948,7 +5825,7 @@ class Customer extends MY_Controller
         $this->page_data['page']->parent = 'Sales';
 
         $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
+        $this->hasAccessModule(9);
 
         $user_id = logged('id');
         $company_id = logged('company_id');
@@ -5956,13 +5833,13 @@ class Customer extends MY_Controller
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $user_id;
 
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+        if (isset($userid) || !empty($userid)) {
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
         $this->page_data['rate_plans'] = $this->customer_ad_model->getAllSettingsRatePlansByCompanyId($company_id);
-        
+
         $this->load->view('v2/pages/customer/settings_rate_plans', $this->page_data);
     }
 
@@ -5972,7 +5849,7 @@ class Customer extends MY_Controller
         $this->page_data['page']->parent = 'Sales';
 
         $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
+        $this->hasAccessModule(9);
 
         $user_id = logged('id');
         $company_id = logged('company_id');
@@ -5980,8 +5857,8 @@ class Customer extends MY_Controller
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $user_id;
 
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+        if (isset($userid) || !empty($userid)) {
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
@@ -5995,29 +5872,29 @@ class Customer extends MY_Controller
         $this->page_data['page']->parent = 'Sales';
 
         $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
+        $this->hasAccessModule(9);
 
         $user_id = logged('id');
 
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $user_id;
 
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+        if (isset($userid) || !empty($userid)) {
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
-        $spt_query = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
+        $spt_query = [
+            'where' => [
+                'company_id' => logged('company_id'),
+            ],
             'table' => 'ac_system_package_type',
-            'order' => array(
+            'order' => [
                 'order_by' => 'id',
-                'ordering' => 'DESC'
-            ),
+                'ordering' => 'DESC',
+            ],
             'select' => '*',
-        );
+        ];
 
         // for($x=0;$x<10;$x++){
         //     $randomPassword = bin2hex(random_bytes(20));
@@ -6034,28 +5911,28 @@ class Customer extends MY_Controller
         $this->page_data['page']->parent = 'Sales';
 
         $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
+        $this->hasAccessModule(9);
 
         $user_id = logged('id');
 
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $user_id;
 
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+        if (isset($userid) || !empty($userid)) {
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
         $this->page_data['customer_list_headers'] = customer_list_headers();
         $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
 
-        $get_company_settings = array(
-            'where' => array(
-                'company_id' => logged('company_id')
-            ),
+        $get_company_settings = [
+            'where' => [
+                'company_id' => logged('company_id'),
+            ],
             'table' => 'customer_settings_headers',
             'select' => '*',
-        );
+        ];
         $customer_settings = $this->general->get_data_with_param($get_company_settings);
         $headers = unserialize($customer_settings[0]->headers);
         $this->page_data['customer_tbl_headers'] = $headers;
@@ -6065,41 +5942,41 @@ class Customer extends MY_Controller
     }
 
     /**
-     * This function will serve as view of customer settings import, each company has their own import settings
-    */
+     * This function will serve as view of customer settings import, each company has their own import settings.
+     */
     public function settings_import()
     {
         $this->page_data['page']->title = 'Customer Import Settings';
         $this->page_data['page']->parent = 'Sales';
 
         $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
+        $this->hasAccessModule(9);
 
         $user_id = logged('id');
 
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $user_id;
 
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+        if (isset($userid) || !empty($userid)) {
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
         $this->page_data['customer_list_headers'] = customer_list_headers();
         $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
 
-        $get_company_settings = array(
-            'where' => array(
+        $get_company_settings = [
+            'where' => [
                 'company_id' => logged('company_id'),
                 'setting_type' => 'import',
-            ),
+            ],
             'table' => 'customer_settings',
             'select' => '*',
-        );
-        $getImportFields = array(
+        ];
+        $getImportFields = [
             'table' => 'acs_import_fields',
             'select' => '*',
-        );
+        ];
         $this->page_data['importFieldsList'] = $this->general->get_data_with_param($getImportFields);
         $this->page_data['importFields'] = $this->general->get_data_with_param($get_company_settings, false);
         $this->page_data['company_id'] = logged('company_id');
@@ -6107,42 +5984,42 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/settings_import', $this->page_data);
     }
 
-     /**
-     * This function will serve as view of customer settings import, each company has their own import settings
-    */
+    /**
+     * This function will serve as view of customer settings import, each company has their own import settings.
+     */
     public function settings_export()
     {
         $this->page_data['page']->title = 'Customer Export Settings';
         $this->page_data['page']->parent = 'Sales';
 
         $this->load->library('wizardlib');
-        $this->hasAccessModule(9); 
+        $this->hasAccessModule(9);
 
         $user_id = logged('id');
 
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $user_id;
 
-        if(isset($userid) || !empty($userid)){
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+        if (isset($userid) || !empty($userid)) {
+            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
 
         $this->page_data['customer_list_headers'] = customer_list_headers();
         $this->page_data['profiles'] = $this->customer_ad_model->get_customer_data_settings($user_id);
 
-        $get_company_settings = array(
-            'where' => array(
+        $get_company_settings = [
+            'where' => [
                 'company_id' => logged('company_id'),
                 'setting_type' => 'export',
-            ),
+            ],
             'table' => 'customer_settings',
             'select' => '*',
-        );
-        $getImportFields = array(
+        ];
+        $getImportFields = [
             'table' => 'acs_import_fields',
             'select' => '*',
-        );
+        ];
         $this->page_data['importFieldsList'] = $this->general->get_data_with_param($getImportFields);
 
         $customer_settings = $this->general->get_data_with_param($get_company_settings, false);
@@ -6153,121 +6030,120 @@ class Customer extends MY_Controller
     }
 
     /**
-     * This function will serve Add or Update of Customer Import Settings
-    */
+     * This function will serve Add or Update of Customer Import Settings.
+     */
     public function addOrUpdateImportFields()
     {
         addJSONResponseHeader();
         $input = $this->input->post();
         if ($input) {
             $importFields = json_decode($input['importFields']);
-            
+
             $table = 'customer_settings'; // database table to use
             // check if there is already save import settings
-            $checkIfHasExistingData = array(
-                'where' => array(
+            $checkIfHasExistingData = [
+                'where' => [
                     'company_id' => logged('company_id'),
                     'setting_type' => $input['type'],
-                ),
+                ],
                 'table' => $table,
                 'select' => 'customer_settings_id',
-            );
+            ];
             $customer_settings = $this->general->get_data_with_param($checkIfHasExistingData, false);
 
-            if($customer_settings) {
-                $data = array();
-                $data['value'] = implode(",",$importFields);
+            if ($customer_settings) {
+                $data = [];
+                $data['value'] = implode(',', $importFields);
                 if ($this->general->update_with_key_field($data, $customer_settings->customer_settings_id, $table, 'customer_settings_id')) {
-                    $data_arr = array("success" => TRUE,"message" => 'Customer Settings Export updated.');
-                }else{
-                    $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
+                    $data_arr = ['success' => true, 'message' => 'Customer Settings Export updated.'];
+                } else {
+                    $data_arr = ['success' => false, 'message' => 'Something goes wrong.'];
                 }
             } else {
-                $customer_setting = array();
+                $customer_setting = [];
                 $customer_setting['setting_type'] = $input['type'];
-                $customer_setting['value'] = implode(",",$importFields);
+                $customer_setting['value'] = implode(',', $importFields);
                 $customer_setting['status'] = 1;
                 $customer_setting['company_id'] = logged('company_id');
-                if($this->general->add_($customer_setting, $table)){
-                    $data_arr = array("success" => TRUE,"message" => 'Customer Settings Export added.');
-                }else{
-                    $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
+                if ($this->general->add_($customer_setting, $table)) {
+                    $data_arr = ['success' => true, 'message' => 'Customer Settings Export added.'];
+                } else {
+                    $data_arr = ['success' => false, 'message' => 'Something goes wrong.'];
                 }
-                
             }
-        }else{
-            $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
+        } else {
+            $data_arr = ['success' => false, 'message' => 'Something goes wrong.'];
         }
-        die(json_encode($data_arr));
+        exit(json_encode($data_arr));
     }
 
     /**
-     * This function will serve as view of solar lender type page
-    */
+     * This function will serve as view of solar lender type page.
+     */
     public function settings_solar_lender_type()
     {
-        $lender_types = array();
+        $lender_types = [];
         // get solar lender types
-        $solar_info_query = array(
-            'where' => array(
-                'field_name' => 'lender_type'
-            ),
+        $solar_info_query = [
+            'where' => [
+                'field_name' => 'lender_type',
+            ],
             'table' => 'acs_solar_info_settings',
-            'order' => array(
+            'order' => [
                 'order_by' => 'id',
-            ),
+            ],
             'select' => '*',
-        );
-        $lender_types_data = $this->general->get_data_with_param($solar_info_query,FALSE);
+        ];
+        $lender_types_data = $this->general->get_data_with_param($solar_info_query, false);
         $results = json_decode($lender_types_data->field_value);
 
         $x = 0;
-        if(!empty($results)){
-            foreach ($results  as $result){
+        if (!empty($results)) {
+            foreach ($results as $result) {
                 array_push($lender_types, $result);
-                $x++;
+                ++$x;
             }
         }
-        
+
         $input = $this->input->post();
-        if($input) {
-            
-            if(isset($input['lenderName'] )){
+        if ($input) {
+            if (isset($input['lenderName'])) {
                 // filter the lender_types array to remove data
                 $a = array_filter($lender_types, function ($v) {
                     $delete = $_POST['lenderName'];
+
                     return $v->name !== $delete;
                 });
                 $lender_types = array_values($a);
                 unset($input['lenderName']);
-            }else{
+            } else {
                 $lender_types[$x]['name'] = $input['lender_name'];
-                $lender_types[$x]['date_created'] = date("Y-m-d H:i:s");
+                $lender_types[$x]['date_created'] = date('Y-m-d H:i:s');
                 unset($input['lender_name']);
             }
 
             $input['field_value'] = json_encode($lender_types);
             $input['id'] = $lender_types_data->id;
 
-            if($this->customer_ad_model->update_data($input,"acs_solar_info_settings","id")){
-                echo "1";
-            }else{
-                echo "Error";
+            if ($this->customer_ad_model->update_data($input, 'acs_solar_info_settings', 'id')) {
+                echo '1';
+            } else {
+                echo 'Error';
             }
-        }else {
+        } else {
             $this->page_data['page']->title = 'Lender Types';
             $this->page_data['page']->parent = 'Sales';
 
             $this->load->library('wizardlib');
-            $this->hasAccessModule(9); 
+            $this->hasAccessModule(9);
 
             $user_id = logged('id');
 
             // set a global data for customer profile id
             $this->page_data['customer_profile_id'] = $user_id;
 
-            if(isset($userid) || !empty($userid)){
-                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            if (isset($userid) || !empty($userid)) {
+                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
                 $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
             }
             $this->page_data['lender_types'] = $lender_types;
@@ -6276,72 +6152,72 @@ class Customer extends MY_Controller
     }
 
     /**
-     * This function will serve as view of solar lender type page
-    */
+     * This function will serve as view of solar lender type page.
+     */
     public function settings_solar_system_size()
     {
-        $lender_types = array();
+        $lender_types = [];
         // get solar lender types
-        $solar_info_query = array(
-            'where' => array(
-                'field_name' => 'solar_system_size'
-            ),
+        $solar_info_query = [
+            'where' => [
+                'field_name' => 'solar_system_size',
+            ],
             'table' => 'acs_solar_info_settings',
-            'order' => array(
+            'order' => [
                 'order_by' => 'id',
-            ),
+            ],
             'select' => '*',
-        );
-        $lender_types_data = $this->general->get_data_with_param($solar_info_query,FALSE);
+        ];
+        $lender_types_data = $this->general->get_data_with_param($solar_info_query, false);
         $results = json_decode($lender_types_data->field_value);
 
         $x = 0;
-        if(!empty($results)){
-            foreach ($results  as $result){
+        if (!empty($results)) {
+            foreach ($results as $result) {
                 array_push($lender_types, $result);
-                $x++;
+                ++$x;
             }
         }
-        
+
         $input = $this->input->post();
-        if($input) {
-            
-            if(isset($input['lenderName'] )){
+        if ($input) {
+            if (isset($input['lenderName'])) {
                 // filter the lender_types array to remove data
                 $a = array_filter($lender_types, function ($v) {
                     $delete = $_POST['lenderName'];
+
                     return $v->name !== $delete;
                 });
                 $lender_types = array_values($a);
                 unset($input['lenderName']);
-            }else{
+            } else {
                 $lender_types[$x]['name'] = $input['lender_name'];
-                $lender_types[$x]['date_created'] = date("Y-m-d H:i:s");
+                $lender_types[$x]['date_created'] = date('Y-m-d H:i:s');
                 unset($input['lender_name']);
             }
 
             $input['field_value'] = json_encode($lender_types);
             $input['id'] = $lender_types_data->id;
 
-            if($this->customer_ad_model->update_data($input,"acs_solar_info_settings","id")){
-                echo "1";
-            }else{
-                echo "Error";
+            if ($this->customer_ad_model->update_data($input, 'acs_solar_info_settings', 'id')) {
+                echo '1';
+            } else {
+                echo 'Error';
             }
-        }else {
+        } else {
             $this->page_data['page']->title = 'Solar System Size';
             $this->page_data['page']->parent = 'Sales';
 
             $this->load->library('wizardlib');
-            $this->hasAccessModule(9); 
+            $this->hasAccessModule(9);
 
             $user_id = logged('id');
 
             // set a global data for customer profile id
             $this->page_data['customer_profile_id'] = $user_id;
 
-            if(isset($userid) || !empty($userid)){
-                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            if (isset($userid) || !empty($userid)) {
+                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
                 $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
             }
             $this->page_data['lender_types'] = $lender_types;
@@ -6350,72 +6226,72 @@ class Customer extends MY_Controller
     }
 
     /**
-     * This function will serve as view of solar lender type page
-    */
+     * This function will serve as view of solar lender type page.
+     */
     public function settings_solar_modules()
     {
-        $lender_types = array();
+        $lender_types = [];
         // get solar lender types
-        $solar_info_query = array(
-            'where' => array(
-                'field_name' => 'solar_modules'
-            ),
+        $solar_info_query = [
+            'where' => [
+                'field_name' => 'solar_modules',
+            ],
             'table' => 'acs_solar_info_settings',
-            'order' => array(
+            'order' => [
                 'order_by' => 'id',
-            ),
+            ],
             'select' => '*',
-        );
-        $lender_types_data = $this->general->get_data_with_param($solar_info_query,FALSE);
+        ];
+        $lender_types_data = $this->general->get_data_with_param($solar_info_query, false);
         $results = json_decode($lender_types_data->field_value);
 
         $x = 0;
-        if(!empty($results)){
-            foreach ($results  as $result){
+        if (!empty($results)) {
+            foreach ($results as $result) {
                 array_push($lender_types, $result);
-                $x++;
+                ++$x;
             }
         }
-        
+
         $input = $this->input->post();
-        if($input) {
-            
-            if(isset($input['lenderName'] )){
+        if ($input) {
+            if (isset($input['lenderName'])) {
                 // filter the lender_types array to remove data
                 $a = array_filter($lender_types, function ($v) {
                     $delete = $_POST['lenderName'];
+
                     return $v->name !== $delete;
                 });
                 $lender_types = array_values($a);
                 unset($input['lenderName']);
-            }else{
+            } else {
                 $lender_types[$x]['name'] = $input['lender_name'];
-                $lender_types[$x]['date_created'] = date("Y-m-d H:i:s");
+                $lender_types[$x]['date_created'] = date('Y-m-d H:i:s');
                 unset($input['lender_name']);
             }
 
             $input['field_value'] = json_encode($lender_types);
             $input['id'] = $lender_types_data->id;
 
-            if($this->customer_ad_model->update_data($input,"acs_solar_info_settings","id")){
-                echo "1";
-            }else{
-                echo "Error";
+            if ($this->customer_ad_model->update_data($input, 'acs_solar_info_settings', 'id')) {
+                echo '1';
+            } else {
+                echo 'Error';
             }
-        }else {
+        } else {
             $this->page_data['page']->title = 'Solar Proposed Modules';
             $this->page_data['page']->parent = 'Sales';
 
             $this->load->library('wizardlib');
-            $this->hasAccessModule(9); 
+            $this->hasAccessModule(9);
 
             $user_id = logged('id');
 
             // set a global data for customer profile id
             $this->page_data['customer_profile_id'] = $user_id;
 
-            if(isset($userid) || !empty($userid)){
-                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            if (isset($userid) || !empty($userid)) {
+                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
                 $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
             }
             $this->page_data['lender_types'] = $lender_types;
@@ -6424,72 +6300,72 @@ class Customer extends MY_Controller
     }
 
     /**
-     * This function will serve as view of solar lender type page
-    */
+     * This function will serve as view of solar lender type page.
+     */
     public function settings_solar_inverter()
     {
-        $lender_types = array();
+        $lender_types = [];
         // get solar lender types
-        $solar_info_query = array(
-            'where' => array(
-                'field_name' => 'solar_inverter'
-            ),
+        $solar_info_query = [
+            'where' => [
+                'field_name' => 'solar_inverter',
+            ],
             'table' => 'acs_solar_info_settings',
-            'order' => array(
+            'order' => [
                 'order_by' => 'id',
-            ),
+            ],
             'select' => '*',
-        );
-        $lender_types_data = $this->general->get_data_with_param($solar_info_query,FALSE);
+        ];
+        $lender_types_data = $this->general->get_data_with_param($solar_info_query, false);
         $results = json_decode($lender_types_data->field_value);
 
         $x = 0;
-        if(!empty($results)){
-            foreach ($results  as $result){
+        if (!empty($results)) {
+            foreach ($results as $result) {
                 array_push($lender_types, $result);
-                $x++;
+                ++$x;
             }
         }
-        
+
         $input = $this->input->post();
-        if($input) {
-            
-            if(isset($input['lenderName'] )){
+        if ($input) {
+            if (isset($input['lenderName'])) {
                 // filter the lender_types array to remove data
                 $a = array_filter($lender_types, function ($v) {
                     $delete = $_POST['lenderName'];
+
                     return $v->name !== $delete;
                 });
                 $lender_types = array_values($a);
                 unset($input['lenderName']);
-            }else{
+            } else {
                 $lender_types[$x]['name'] = $input['lender_name'];
-                $lender_types[$x]['date_created'] = date("Y-m-d H:i:s");
+                $lender_types[$x]['date_created'] = date('Y-m-d H:i:s');
                 unset($input['lender_name']);
             }
 
             $input['field_value'] = json_encode($lender_types);
             $input['id'] = $lender_types_data->id;
 
-            if($this->customer_ad_model->update_data($input,"acs_solar_info_settings","id")){
-                echo "1";
-            }else{
-                echo "Error";
+            if ($this->customer_ad_model->update_data($input, 'acs_solar_info_settings', 'id')) {
+                echo '1';
+            } else {
+                echo 'Error';
             }
-        }else {
+        } else {
             $this->page_data['page']->title = 'Solar Proposed Inverter';
             $this->page_data['page']->parent = 'Sales';
 
             $this->load->library('wizardlib');
-            $this->hasAccessModule(9); 
+            $this->hasAccessModule(9);
 
             $user_id = logged('id');
 
             // set a global data for customer profile id
             $this->page_data['customer_profile_id'] = $user_id;
 
-            if(isset($userid) || !empty($userid)){
-                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id',$userid,"acs_profile");
+            if (isset($userid) || !empty($userid)) {
+                $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
                 $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
             }
             $this->page_data['lender_types'] = $lender_types;
@@ -6497,16 +6373,14 @@ class Customer extends MY_Controller
         }
     }
 
-
-    
     public function ajax_use_quick_note()
     {
         $this->load->model('QuickNote_model');
 
-        $company_id    = logged('company_id');
+        $company_id = logged('company_id');
         $post = $this->input->post();
 
-        $quickNote  = $this->QuickNote_model->getById($post['qnid']);
+        $quickNote = $this->QuickNote_model->getById($post['qnid']);
         $quickNotes = $this->QuickNote_model->getAllByCompanyId($company_id);
 
         $this->page_data['quickNote'] = $quickNote;
@@ -6518,62 +6392,62 @@ class Customer extends MY_Controller
     {
         $this->load->model('CustomerMessages_model');
         $this->load->model('AcsProfile_model');
-        
+
         $is_success = 0;
         $msg = '';
 
         $user_id = logged('id');
-        $post    = $this->input->post();
+        $post = $this->input->post();
 
-        if( $post['message_subject'] != '' && $post['message_body'] != '' && $post['cid'] > 0 ){
+        if ($post['message_subject'] != '' && $post['message_body'] != '' && $post['cid'] > 0) {
             $customer = $this->AcsProfile_model->getByProfId($post['cid']);
-            if( $customer ){
+            if ($customer) {
                 $data = [
                     'prof_id' => $customer->prof_id,
                     'customer_email' => $customer->email,
-                    'date_sent' => date("Y-m-d"),
+                    'date_sent' => date('Y-m-d'),
                     'subject' => $post['message_subject'],
                     'message' => $post['message_body'],
                     'is_sent' => 0,
-                    'date_created' => date("Y-m-d H:i:s")
+                    'date_created' => date('Y-m-d H:i:s'),
                 ];
 
                 $last_id = $this->CustomerMessages_model->create($data);
 
-                //Send mail
-                $body    = $post['message_body'];
+                // Send mail
+                $body = $post['message_body'];
                 $attachment = '';
 
-                $subject = 'nSmarTrac: ' . $post['message_subject'];
-                $to      = $customer->email;
+                $subject = 'nSmarTrac: '.$post['message_subject'];
+                $to = $customer->email;
 
                 $data_email = [
-                    'subject' => $subject, 
+                    'subject' => $subject,
                     'body' => $body,
                     'to' => $to,
                     'cc' => '',
                     'bcc' => '',
-                    'attachment' => $attachment
+                    'attachment' => $attachment,
                 ];
 
                 $isSent = sendEmail($data_email);
-                if( $isSent['is_valid'] ){
+                if ($isSent['is_valid']) {
                     $cus_data = ['is_sent' => 1];
                     $this->CustomerMessages_model->update($last_id, $cus_data);
 
                     $is_success = 1;
-                }ELSE{
-                    $msg = $isSent['err_msg'] ;
+                } else {
+                    $msg = $isSent['err_msg'];
                 }
-            }else{
+            } else {
                 $msg = 'Cannot find customer';
             }
-        }else{
+        } else {
             $msg = 'Cannot save data';
         }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);        
+        echo json_encode($json_data);
     }
 
     public function ajax_delete_customer_message()
@@ -6581,27 +6455,27 @@ class Customer extends MY_Controller
         $this->load->model('CustomerMessages_model');
 
         $is_success = 0;
-        $msg    = '';
+        $msg = '';
 
         $company_id = logged('company_id');
-        $post = $this->input->post(); 
+        $post = $this->input->post();
 
         $customerMessage = $this->CustomerMessages_model->getById($post['mid']);
-        if( $customerMessage ){
-            if( $customerMessage->company_id == $company_id  ){
+        if ($customerMessage) {
+            if ($customerMessage->company_id == $company_id) {
                 $this->CustomerMessages_model->deleteById($customerMessage->id);
                 $is_success = 1;
                 $msg = 'Record deleted';
-            }else{
-                $msg = 'Cannot find record';    
+            } else {
+                $msg = 'Cannot find record';
             }
-        }else{
+        } else {
             $msg = 'Cannot find record';
         }
 
         $json_data = [
             'is_success' => $is_success,
-            'msg' => $msg
+            'msg' => $msg,
         ];
 
         echo json_encode($json_data);
@@ -6609,9 +6483,9 @@ class Customer extends MY_Controller
 
     public function ajax_welcome_email_form()
     {
-        $post = $this->input->post(); 
+        $post = $this->input->post();
 
-        $customer = $this->customer_ad_model->get_data_by_id('prof_id',$post['cid'],"acs_profile");
+        $customer = $this->customer_ad_model->get_data_by_id('prof_id', $post['cid'], 'acs_profile');
         $this->page_data['customer'] = $customer;
         $this->load->view('customer/ajax_welcome_email_form', $this->page_data);
     }
@@ -6619,49 +6493,48 @@ class Customer extends MY_Controller
     public function ajax_send_welcome_email()
     {
         $this->load->model('AcsProfile_model');
-        
+
         $is_success = 0;
         $msg = '';
 
         $user_id = logged('id');
-        $post    = $this->input->post();
+        $post = $this->input->post();
 
-        if( $post['message_subject'] != '' && $post['message_body'] != '' && $post['cid'] > 0 ){
+        if ($post['message_subject'] != '' && $post['message_body'] != '' && $post['cid'] > 0) {
             $customer = $this->AcsProfile_model->getByProfId($post['cid']);
-            if( $customer ){
-
-                //Send mail
-                $body    = $post['message_body'];
+            if ($customer) {
+                // Send mail
+                $body = $post['message_body'];
                 $attachment = '';
 
-                $subject = 'nSmarTrac: ' . $post['message_subject'];
-                $to      = $customer->email;
+                $subject = 'nSmarTrac: '.$post['message_subject'];
+                $to = $customer->email;
 
                 $data_email = [
-                    'subject' => $subject, 
+                    'subject' => $subject,
                     'body' => $body,
                     'to' => $to,
                     'cc' => '',
                     'bcc' => '',
-                    'attachment' => $attachment
+                    'attachment' => $attachment,
                 ];
 
                 $isSent = sendEmail($data_email);
-                if( $isSent['is_valid'] ){
-                    customerAuditLog(logged('id'), $customer->prof_id, $customer->prof_id, 'Customer', 'Sent welcome email to ' . $customer->email);
+                if ($isSent['is_valid']) {
+                    customerAuditLog(logged('id'), $customer->prof_id, $customer->prof_id, 'Customer', 'Sent welcome email to '.$customer->email);
                     $is_success = 1;
-                }ELSE{
-                    $msg = $isSent['err_msg'] ;
+                } else {
+                    $msg = $isSent['err_msg'];
                 }
-            }else{
+            } else {
                 $msg = 'Cannot find customer';
             }
-        }else{
+        } else {
             $msg = 'Cannot save data';
         }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);        
+        echo json_encode($json_data);
     }
 
     public function ajax_update_customer_dispute()
@@ -6670,40 +6543,39 @@ class Customer extends MY_Controller
         $this->load->model('CompanyReason_model');
         $this->load->model('CompanyDisputeInstruction_model');
         $this->load->model('CustomerDisputeItem_model');
-        
+
         $is_success = false;
         $msg = '';
 
         $company_id = logged('company_id');
-        $post       = $this->input->post();
+        $post = $this->input->post();
 
         $dispute = $this->CustomerDispute_model->getById($post['did']);
 
-        if( $dispute && $dispute->company_id == $company_id ){
-            if( !empty($post['creditedBureau']) ){                
+        if ($dispute && $dispute->company_id == $company_id) {
+            if (!empty($post['creditedBureau'])) {
                 $data_dispute = [
                     'furnisher_id' => $post['furnisher_id'],
-                    'date_dispute' => $post['dispute_date'],                 
+                    'date_dispute' => $post['dispute_date'],
                     'company_reason_id' => $post['dispute_reason'],
                     'instruction' => $post['dispute_instruction'],
-                    'date_modified' => date("Y-m-d H:i:s")
+                    'date_modified' => date('Y-m-d H:i:s'),
                 ];
 
                 $this->CustomerDispute_model->update($dispute->id, $data_dispute);
                 $this->CustomerDisputeItem_model->deleteByCustomerDisputeId($dispute->id);
 
-                foreach( $post['creditedBureau'] as $key => $bureauId ){
-
+                foreach ($post['creditedBureau'] as $key => $bureauId) {
                     $account_number = '';
-                    if( isset($post['cb_account_number'][$bureauId]) ){
+                    if (isset($post['cb_account_number'][$bureauId])) {
                         $account_number = $post['cb_account_number'][$bureauId];
                     }
 
-                    //Other fields
+                    // Other fields
                     $status = '';
-                    $other_fields = array();
-                    foreach($post['otherInfo']['individual'][$bureauId] as $field => $value){
-                        if( $field == 'status' ){
+                    $other_fields = [];
+                    foreach ($post['otherInfo']['individual'][$bureauId] as $field => $value) {
+                        if ($field == 'status') {
                             $status = $value;
                         }
                         $other_fields[$field] = ['field' => $field, 'value' => $value];
@@ -6711,29 +6583,29 @@ class Customer extends MY_Controller
 
                     $other_fields = serialize($other_fields);
 
-                    $data_dispute_item = [                            
+                    $data_dispute_item = [
                         'customer_dispute_id' => $dispute->id,
                         'credit_bureau_id' => $bureauId,
                         'account_number`' => $account_number,
                         'status' => $status,
                         'other_fields' => $other_fields,
-                        'date_created' => date("Y-m-d H:i:s"),
-                        'date_modified' => date("Y-m-d H:i:s")
+                        'date_created' => date('Y-m-d H:i:s'),
+                        'date_modified' => date('Y-m-d H:i:s'),
                     ];
 
                     $companyDisputeItems = $this->CustomerDisputeItem_model->create($data_dispute_item);
                 }
 
                 $is_success = true;
-            }else{
+            } else {
                 $msg = 'Please select credit bureau';
             }
-        }else{
+        } else {
             $msg = 'Cannot find data';
         }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
-        echo json_encode($json_data);     
+        echo json_encode($json_data);
     }
 
     public function ajax_update_customer_mobile_number()
@@ -6743,27 +6615,26 @@ class Customer extends MY_Controller
         $is_success = 0;
         $msg = 'Cannot save data.';
 
-        $cid  = logged('company_id');
+        $cid = logged('company_id');
         $post = $this->input->post();
 
-        $customer = $this->Customer_advance_model->get_data_by_id('prof_id',$post['cid'],'acs_profile');
-        if( $post['customer_phone'] != '' ){
-            if( $customer && $customer->company_id == $cid ){
+        $customer = $this->Customer_advance_model->get_data_by_id('prof_id', $post['cid'], 'acs_profile');
+        if ($post['customer_phone'] != '') {
+            if ($customer && $customer->company_id == $cid) {
                 $data = [
                     'prof_id' => $post['cid'],
-                    'phone_m' => $post['customer_phone']
+                    'phone_m' => $post['customer_phone'],
                 ];
                 $this->Customer_advance_model->update_data($data, 'acs_profile', 'prof_id');
 
                 $msg = '';
                 $is_success = 1;
-            
-            }else{
+            } else {
                 $msg = 'Cannot find customer data';
-            } 
-        }else{
+            }
+        } else {
             $msg = 'Please specify customer mobile number';
-        }        
+        }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
 
@@ -6775,8 +6646,8 @@ class Customer extends MY_Controller
         $this->load->model('CustomerMessages_model');
         $this->load->model('Business_model');
 
-        $post   = $this->input->post();
-        $cid    = logged('company_id');
+        $post = $this->input->post();
+        $cid = logged('company_id');
         $profid = $post['profid'];
 
         $business = $this->Business_model->getByCompanyId($cid);
@@ -6799,52 +6670,52 @@ class Customer extends MY_Controller
         $msg = 'Cannot save data.';
 
         $post = $this->input->post();
-        $cid  = logged('company_id');
-        $uid  = logged('id');
+        $cid = logged('company_id');
+        $uid = logged('id');
 
-        if( $post['customer_message'] != '' ){
+        if ($post['customer_message'] != '') {
             $customer = $this->AcsProfile_model->getByProfId($post['profid']);
-            if( $customer ){
+            if ($customer) {
                 $data = [
                     'prof_id' => $post['profid'],
                     'user_id' => $uid,
-                    'message_date' => date("Y-m-d H:i:s"),
+                    'message_date' => date('Y-m-d H:i:s'),
                     'message' => $post['customer_message'],
                     'status' => $this->CustomerMessages_model->statusNew(),
                 ];
 
                 $this->CustomerMessages_model->create($data);
 
-                if( $customer->email != '' ){
-                    //Send mail
+                if ($customer->email != '') {
+                    // Send mail
                     $customer_login_url = base_url('login/customer');
                     $business = $this->Business_model->getByCompanyId($cid);
 
-                    $subject  = 'nSmarTrac : Customer Message';
-                    $body     = "<p>Hi ".$customer->first_name.",</p><br /><p><b>".$business->business_name."</b> have sent you a message. To view this message, please login to your account and go to messages.<br /><br />To login, <a href='".$customer_login_url."' target='_blank'>Click here</a></p>";
-                    $to       = $customer->email;
+                    $subject = 'nSmarTrac : Customer Message';
+                    $body = '<p>Hi '.$customer->first_name.',</p><br /><p><b>'.$business->business_name."</b> have sent you a message. To view this message, please login to your account and go to messages.<br /><br />To login, <a href='".$customer_login_url."' target='_blank'>Click here</a></p>";
+                    $to = $customer->email;
                     $attachment = '';
 
                     $data_email = [
-                        'subject' => $subject, 
+                        'subject' => $subject,
                         'body' => $body,
                         'to' => $to,
                         'cc' => '',
                         'bcc' => '',
-                        'attachment' => $attachment
+                        'attachment' => $attachment,
                     ];
 
-                    $isSent = sendEmail($data_email); 
+                    $isSent = sendEmail($data_email);
                 }
 
-                createNotification($post['profid'], 'Messages', 'New Message from ' . $business->business_name);
+                createNotification($post['profid'], 'Messages', 'New Message from '.$business->business_name);
 
                 $msg = '';
                 $is_success = 1;
-            }else{
+            } else {
                 $msg = 'Cannot find customer';
             }
-        }else{
+        } else {
             $msg = 'Please enter your message to customer';
         }
 
@@ -6864,42 +6735,41 @@ class Customer extends MY_Controller
 
         $post = $this->input->post();
 
-        $check = array(
-            'where' => array(
-                'fk_prof_id' => $post['cid']
-            ),
-            'table' => 'acs_access'
-        );
-        $customerAccess = $this->general->get_data_with_param($check,FALSE);        
+        $check = [
+            'where' => [
+                'fk_prof_id' => $post['cid'],
+            ],
+            'table' => 'acs_access',
+        ];
+        $customerAccess = $this->general->get_data_with_param($check, false);
 
-        if( $customerAccess ){            
+        if ($customerAccess) {
             $customer = $this->AcsProfile_model->getByProfId($post['cid']);
-            if( $customer && $customer->email != '' ){
-                //Send mail
+            if ($customer && $customer->email != '') {
+                // Send mail
                 $customer_login_url = base_url('login/customer');
-                //$business = $this->Business_model->getByCompanyId($cid);
+                // $business = $this->Business_model->getByCompanyId($cid);
 
-                $subject  = 'nSmarTrac : Customer Login Details';
-                $body     = "<p>Hi ".$customer->first_name.",</p><br /><p>Below is your login details.</p><br /><p>Username : ".$customerAccess->access_login."<br /> Password : ".$customerAccess->access_password."</p><br />";
-                $body    .= "<p>To login to your account, click <a href='".$customer_login_url."'>here</a></p>";
-                $to       = $customer->email;
+                $subject = 'nSmarTrac : Customer Login Details';
+                $body = '<p>Hi '.$customer->first_name.',</p><br /><p>Below is your login details.</p><br /><p>Username : '.$customerAccess->access_login.'<br /> Password : '.$customerAccess->access_password.'</p><br />';
+                $body .= "<p>To login to your account, click <a href='".$customer_login_url."'>here</a></p>";
+                $to = $customer->email;
                 $attachment = '';
 
                 $data_email = [
-                    'subject' => $subject, 
+                    'subject' => $subject,
                     'body' => $body,
                     'to' => $to,
                     'cc' => '',
                     'bcc' => '',
-                    'attachment' => $attachment
+                    'attachment' => $attachment,
                 ];
 
                 $isSent = sendEmail($data_email);
 
                 $is_success = 1;
                 $msg = '';
-
-            }else{
+            } else {
                 $msg = 'Cannot find customer data';
             }
         }
@@ -6913,10 +6783,10 @@ class Customer extends MY_Controller
     {
         $this->load->model('CustomerSettings_model');
 
-        $cid  = logged('company_id');
-        $filter[] = ['field' => 'setting_type', 'value' => $this->CustomerSettings_model->settingAdtSalesSync()]; 
-        $setting  =  $this->CustomerSettings_model->getByCompanyId($cid, $filter);
-        
+        $cid = logged('company_id');
+        $filter[] = ['field' => 'setting_type', 'value' => $this->CustomerSettings_model->settingAdtSalesSync()];
+        $setting = $this->CustomerSettings_model->getByCompanyId($cid, $filter);
+
         $this->page_data['setting'] = $setting;
         $this->load->view('v2/pages/customer/ajax_adt_sales_sync_setting', $this->page_data);
     }
@@ -6929,21 +6799,21 @@ class Customer extends MY_Controller
         $msg = 'Cannot save data.';
 
         $post = $this->input->post();
-        $cid  = logged('company_id');
-        $filter[] = ['field' => 'setting_type', 'value' => 'adt_sales_sync']; 
-        $setting  =  $this->CustomerSettings_model->getByCompanyId($cid, $filter);
+        $cid = logged('company_id');
+        $filter[] = ['field' => 'setting_type', 'value' => 'adt_sales_sync'];
+        $setting = $this->CustomerSettings_model->getByCompanyId($cid, $filter);
 
-        if ( isSolarCompany() == 0 ){
-            if( $setting ){
+        if (isSolarCompany() == 0) {
+            if ($setting) {
                 $data = ['setting_type' => $this->CustomerSettings_model->settingAdtSalesSync(), 'value' => $post['adt_sales_sync']];
                 $this->CustomerSettings_model->updateByCustomerSettingId($setting->customer_settings_id, $data);
-            }else{
+            } else {
                 $data = [
                     'company_id' => $cid,
                     'setting_type' => $this->CustomerSettings_model->settingAdtSalesSync(),
                     'value' => $post['adt_sales_sync'],
                     'status' => 1,
-                    'created_at' => date("Y-m-d H:i:s")
+                    'created_at' => date('Y-m-d H:i:s'),
                 ];
 
                 $this->CustomerSettings_model->create($data);
@@ -6951,7 +6821,7 @@ class Customer extends MY_Controller
 
             $msg = '';
             $is_success = 1;
-        }else{
+        } else {
             $msg = 'Cannot upate setting. Only solar industry company can update this feature';
         }
 
@@ -6965,7 +6835,7 @@ class Customer extends MY_Controller
         $this->load->model('AcsProfile_model');
 
         $company_id = logged('company_id');
-        $post       = $this->input->post();
+        $post = $this->input->post();
 
         $filter[] = ['field' => 'company_id', 'value' => $company_id];
         $customer = $this->AcsProfile_model->getByProfId($post['prof_id'], $filter);
@@ -6980,10 +6850,10 @@ class Customer extends MY_Controller
 
         $is_success = 0;
         $company_id = logged('company_id');
-        $post       = $this->input->post();
+        $post = $this->input->post();
 
         $customer = $this->AcsProfile_model->getByProfId($post['cus_prof']);
-        if( $customer ){
+        if ($customer) {
             $data = [
                 'mail_add' => $post['cus_address'],
                 'city' => $post['cus_city'],
@@ -6993,7 +6863,7 @@ class Customer extends MY_Controller
                 'phone_h' => $post['cus_phone'],
             ];
 
-            $this->general->update_with_key_field($data, $post['cus_prof'],'acs_profile','prof_id');
+            $this->general->update_with_key_field($data, $post['cus_prof'], 'acs_profile', 'prof_id');
             $is_success = 1;
         }
 
@@ -7022,6 +6892,7 @@ class Customer extends MY_Controller
                         $attachedGeneratedPDF['attached_generated_pdf_entry'] = $entry;
                     }
                 }
+
                 return $attachedGeneratedPDF;
             }, $attachedGeneratedPDFs);
         }
@@ -7066,6 +6937,7 @@ class Customer extends MY_Controller
             }
 
             array_push($carry, $generatedPDF);
+
             return $carry;
         }, []);
     }
@@ -7103,7 +6975,7 @@ class Customer extends MY_Controller
             if (!$attachedPDF) {
                 $this->db->insert('user_docfile_customer_attached_generated_pdfs', [
                     'customer_id' => $customerId,
-                    'generated_pdf_id' => $generatedPDF->id
+                    'generated_pdf_id' => $generatedPDF->id,
                 ]);
                 $attachedGeneratedPDFId = $this->db->insert_id();
             }
@@ -7113,7 +6985,7 @@ class Customer extends MY_Controller
         if ($attachedGeneratedPDFId) {
             $this->db->where('docfile_id', $documentId);
             $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
-    
+
             $this->db->where('id', $attachedGeneratedPDFId);
             $generatedPDF->attached_generated_pdf_entry = $this->db->get('user_docfile_customer_attached_generated_pdfs')->row();
         }
@@ -7139,39 +7011,45 @@ class Customer extends MY_Controller
     {
         $this->load->model('Customer_advance_model');
 
-        $customer_name  = '';
+        $customer_name = '';
         $customer_phone = '';
 
         $post = $this->input->post();
-        $customer = $this->Customer_advance_model->get_data_by_id('prof_id',$post['profid'],'acs_profile');
-        if( $customer ){
-            $customer_name  = $customer->first_name . ' ' . $customer->last_name;
-            if( $customer->phone_m != '' ){
-                $customer_phone = $customer->phone_m; 
-            }            
+        $customer = $this->Customer_advance_model->get_data_by_id('prof_id', $post['profid'], 'acs_profile');
+        if ($customer) {
+            $customer_name = $customer->first_name.' '.$customer->last_name;
+            if ($customer->phone_m != '') {
+                $customer_phone = $customer->phone_m;
+            }
         }
 
         $return = ['name' => $customer_name, 'phone' => $customer_phone];
         echo json_encode($return);
     }
 
-    public function editCustomerStatus() {
+    public function editCustomerStatus()
+    {
         $input = $this->input->post();
-        $data = array(
-            'id' => $input['statusID'], 
-            'name' => $input['statusName'], 
-        );
-        $updateStatus = $this->customer_ad_model->update_data($data,"acs_cust_status","id");
-        if ($updateStatus) { echo "true"; } else { echo "false"; }
+        $data = [
+            'id' => $input['statusID'],
+            'name' => $input['statusName'],
+        ];
+        $updateStatus = $this->customer_ad_model->update_data($data, 'acs_cust_status', 'id');
+        if ($updateStatus) {
+            echo 'true';
+        } else {
+            echo 'false';
+        }
     }
 
-    public function ajax_load_esign_doc(){
+    public function ajax_load_esign_doc()
+    {
         $this->load->model('UserCustomerDocfile_model');
 
-        $post     = $this->input->post();
+        $post = $this->input->post();
 
         $search_query = '';
-        if( isset($post['search_query']) && $post['search_query'] != '' ){
+        if (isset($post['search_query']) && $post['search_query'] != '') {
             $search_query = $post['search_query'];
         }
 
@@ -7180,18 +7058,19 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/ajax_load_esign_doc', $this->page_data);
     }
 
-    public function ajax_check_customer_esign_pdf(){
+    public function ajax_check_customer_esign_pdf()
+    {
         $this->load->model('UserCustomerDocfile_model');
 
         $msg = 'Cannot find data';
         $is_valid = 0;
         $path = '';
 
-        $cid  = logged('company_id');
+        $cid = logged('company_id');
         $post = $this->input->post();
 
         $esignPDF = $this->UserCustomerDocfile_model->getByUserDocfileGeneratedPdfId($post['pid']);
-        if( $esignPDF && $esignPDF->company_id == $cid ){
+        if ($esignPDF && $esignPDF->company_id == $cid) {
             $path = ltrim($esignPDF->path, '/');
             $is_valid = 1;
             $msg = '';
@@ -7202,17 +7081,18 @@ class Customer extends MY_Controller
         exit;
     }
 
-    public function downloadEsignDoc(){
+    public function downloadEsignDoc()
+    {
         $this->load->model('UserCustomerDocfile_model');
 
         $post = $this->input->post();
-        $esignFiles = array();
+        $esignFiles = [];
 
-        foreach($post['esignPdf'] as $pdfid){            
+        foreach ($post['esignPdf'] as $pdfid) {
             $esignPdf = $this->UserCustomerDocfile_model->getEsignPdfById($pdfid);
-            if( $esignPdf ){
-                $a_file = explode("/", $esignPdf->path);                                           
-                $esignFiles[] = $a_file[3];                
+            if ($esignPdf) {
+                $a_file = explode('/', $esignPdf->path);
+                $esignFiles[] = $a_file[3];
             }
         }
         $filesPath = 'uploads/docusigngeneratedpdfs';
@@ -7220,39 +7100,39 @@ class Customer extends MY_Controller
 
         echo $this->createZipAndDownload($esignFiles, $filesPath, $zipName);
         exit;
-        
     }
 
     public function createZipAndDownload($files, $filesPath, $zipFileName)
     {
         // Create instance of ZipArchive. and open the zip folder.
-        $zip_file = "./uploads/".$zipFileName; 
-        touch($zip_file); // just create a zip file        
+        $zip_file = './uploads/'.$zipFileName;
+        touch($zip_file); // just create a zip file
 
         $zip = new \ZipArchive();
-        if ($zip->open($zip_file, \ZipArchive::CREATE) !== TRUE) {
+        if ($zip->open($zip_file, \ZipArchive::CREATE) !== true) {
             exit("cannot open <$zipFileName>\n");
         }
 
-        foreach ($files as $file) {            
+        foreach ($files as $file) {
             $zip->addFile($filesPath.'/'.$file, $file);
         }
         $zip->close();
 
         // Download the created zip file
-        header("Content-Type: application/force-download");
-        header("Content-type: application/zip");
+        header('Content-Type: application/force-download');
+        header('Content-type: application/zip');
         header("Content-Disposition: attachment; filename = $zipFileName");
-        header("Content-length: " . filesize($zip_file));
-        header("Pragma: no-cache");
-        header("Expires: 0");        
+        header('Content-length: '.filesize($zip_file));
+        header('Pragma: no-cache');
+        header('Expires: 0');
         ob_clean();
         flush();
         readfile("$zip_file");
         unlink($zip_file);
     }
 
-    public function ajax_delete_esign_documents(){
+    public function ajax_delete_esign_documents()
+    {
         $this->load->model('UserCustomerDocfile_model');
 
         $is_success = 0;
@@ -7260,15 +7140,15 @@ class Customer extends MY_Controller
 
         $post = $this->input->post();
         $total_deleted = 0;
-        foreach($post['esignPdf'] as $eid){
+        foreach ($post['esignPdf'] as $eid) {
             $isExists = $this->UserCustomerDocfile_model->getById($eid);
-            if( $isExists ){
+            if ($isExists) {
                 $this->UserCustomerDocfile_model->delete($eid);
-                $total_deleted++;    
-            }            
+                ++$total_deleted;
+            }
         }
 
-        if( $total_deleted > 0 ){
+        if ($total_deleted > 0) {
             $is_success = 1;
         }
 
@@ -7277,7 +7157,8 @@ class Customer extends MY_Controller
         exit;
     }
 
-    public function ajax_load_customer_sms_messages(){
+    public function ajax_load_customer_sms_messages()
+    {
         $this->load->model('CompanySms_model');
 
         $post = $this->input->post();
@@ -7286,7 +7167,8 @@ class Customer extends MY_Controller
         $this->load->view('v2/pages/customer/ajax_load_customer_sms_messages', $this->page_data);
     }
 
-    public function ajax_send_email(){
+    public function ajax_send_email()
+    {
         $this->load->model('AcsSentEmail_model');
         $this->load->model('AcsProfile_model');
 
@@ -7294,23 +7176,23 @@ class Customer extends MY_Controller
         $msg = 'Cannot find customer data';
 
         $post = $this->input->post();
-        if( $post['customer_email_suject'] == '' ){
+        if ($post['customer_email_suject'] == '') {
             $msg = 'Please enter email subject';
             $is_success = 0;
         }
 
-        if( $post['customer_email'] == '' ){
+        if ($post['customer_email'] == '') {
             $msg = 'Please enter customer email';
             $is_success = 0;
         }
 
-        if( $post['customer_email_message'] == '' ){
+        if ($post['customer_email_message'] == '') {
             $msg = 'Please enter email message';
             $is_success = 0;
         }
-        
+
         $customer = $this->AcsProfile_model->getByProfId($post['cid']);
-        if( $customer && $is_success == 1 ){
+        if ($customer && $is_success == 1) {
             $cid = logged('company_id');
             $uid = logged('id');
             $data_acs_emails = [
@@ -7321,20 +7203,20 @@ class Customer extends MY_Controller
                 'subject' => $post['customer_email_suject'],
                 'message' => $post['customer_email_message'],
                 'is_sent' => 1,
-                'date_created' => date("Y-m-d H:i:s")
+                'date_created' => date('Y-m-d H:i:s'),
             ];
 
             $this->AcsSentEmail_model->create($data_acs_emails);
 
-            //Send Email
+            // Send Email
             $mail = email__getInstance();
             $mail->FromName = 'nSmarTrac';
             $mail->addAddress($post['customer_email'], $post['customer_email']);
             $mail->isHTML(true);
             $mail->Subject = $post['customer_email_suject'];
-            $mail->Body    = $post['customer_email_message'];
+            $mail->Body = $post['customer_email_message'];
             $sendEmail = $mail->Send();
-            
+
             $is_success = 1;
             $msg = '';
         }
@@ -7343,37 +7225,38 @@ class Customer extends MY_Controller
         echo json_encode($return);
         exit;
     }
-    
-    public function ajax_lead_send_email(){
+
+    public function ajax_lead_send_email()
+    {
         $is_success = 1;
         $msg = 'Cannot send email';
 
         $post = $this->input->post();
-        if( $post['lead_email_suject'] == '' ){
+        if ($post['lead_email_suject'] == '') {
             $msg = 'Please enter email subject';
             $is_success = 0;
         }
 
-        if( $post['lead_email'] == '' ){
+        if ($post['lead_email'] == '') {
             $msg = 'Please enter customer email';
             $is_success = 0;
         }
 
-        if( $post['lead_email_message'] == '' ){
+        if ($post['lead_email_message'] == '') {
             $msg = 'Please enter email message';
             $is_success = 0;
-        }       
-        
-        if( $is_success == 1 ){
-            //Send Email
+        }
+
+        if ($is_success == 1) {
+            // Send Email
             $mail = email__getInstance();
             $mail->FromName = 'nSmarTrac';
             $mail->addAddress($post['lead_email'], $post['lead_email']);
             $mail->isHTML(true);
             $mail->Subject = $post['lead_email_suject'];
-            $mail->Body    = $post['lead_email_message'];
+            $mail->Body = $post['lead_email_message'];
             $sendEmail = $mail->Send();
-            
+
             $is_success = 1;
             $msg = '';
         }
@@ -7383,15 +7266,16 @@ class Customer extends MY_Controller
         exit;
     }
 
-    public function ajax_delete_customer(){
+    public function ajax_delete_customer()
+    {
         $this->load->model('Customer_model');
         $is_success = 0;
         $msg = 'Cannot find customer data';
 
         $company_id = logged('company_id');
-        $post       = $this->input->post();
-        $customer   = $this->Customer_model->getCustomer($post['cid']);
-        if( $customer && $customer->company_id == $company_id ){
+        $post = $this->input->post();
+        $customer = $this->Customer_model->getCustomer($post['cid']);
+        if ($customer && $customer->company_id == $company_id) {
             $this->Customer_model->deleteCustomer($post['cid']);
             $is_success = 1;
             $msg = '';
@@ -7402,16 +7286,17 @@ class Customer extends MY_Controller
         exit;
     }
 
-    public function ajax_add_customer_status(){
+    public function ajax_add_customer_status()
+    {
         $is_success = 0;
         $msg = 'Cannot save data';
 
         $company_id = logged('company_id');
-        $post       = $this->input->post();
+        $post = $this->input->post();
 
-        if( $post['name'] != '' ){
+        if ($post['name'] != '') {
             $post['company_id'] = logged('company_id');
-            if($this->customer_ad_model->add($post,"acs_cust_status")){
+            if ($this->customer_ad_model->add($post, 'acs_cust_status')) {
                 $is_success = 1;
                 $msg = '';
             }
@@ -7419,38 +7304,40 @@ class Customer extends MY_Controller
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
-        exit;        
+        exit;
     }
 
-    public function ajax_update_customer_status(){
+    public function ajax_update_customer_status()
+    {
         $is_success = 0;
-        $msg  = 'Cannot save data';
+        $msg = 'Cannot save data';
         $post = $this->input->post();
 
-        if( $post['name'] != '' ){   
-            $status = ['name' => $post['name']];         
-            $this->general->update_with_key_field($status, $post['cs_id'],'acs_cust_status','id');
+        if ($post['name'] != '') {
+            $status = ['name' => $post['name']];
+            $this->general->update_with_key_field($status, $post['cs_id'], 'acs_cust_status', 'id');
             $is_success = 1;
-            $msg = '';            
+            $msg = '';
         }
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
-        exit;       
+        exit;
     }
 
-    public function ajax_delete_customer_status(){        
+    public function ajax_delete_customer_status()
+    {
         $is_success = 0;
-        $msg  = 'Cannot find data';
+        $msg = 'Cannot find data';
 
         $post = $this->input->post();
-        $deletion_query = array(
-            'where' => array(
-                'id' => $post['csid']
-            ),
-            'table' => 'acs_cust_status'
-        );
-        if($this->general->delete_($deletion_query)){
+        $deletion_query = [
+            'where' => [
+                'id' => $post['csid'],
+            ],
+            'table' => 'acs_cust_status',
+        ];
+        if ($this->general->delete_($deletion_query)) {
             $is_success = 1;
             $msg = '';
         }
@@ -7466,95 +7353,96 @@ class Customer extends MY_Controller
         $this->load->model('AcsAccess_model');
 
         $customer_id = $this->input->post('customer_id');
-        $company_id  = logged('company_id');
+        $company_id = logged('company_id');
 
-        $customer = $this->AcsProfile_model->getdataAjax($customer_id); 
-        if( $customer->phone_m != '' ){
+        $customer = $this->AcsProfile_model->getdataAjax($customer_id);
+        if ($customer->phone_m != '') {
             $customer->phone_m = formatPhoneNumber($customer->phone_m);
-        }else{
+        } else {
             $customer->phone_m = 'Not Specified';
-        }          
+        }
 
-        if( $customer->phone_h != '' ){
+        if ($customer->phone_h != '') {
             $customer->phone_h = formatPhoneNumber($customer->phone_h);
-        }else{
+        } else {
             $customer->phone_h = 'Not Specified';
-        }     
+        }
 
-        if( $customer->business_name == '' || $customer->business_name == NULL ){
+        if ($customer->business_name == '' || $customer->business_name == null) {
             $customer->business_name = 'Not Specified';
         }
-        
-        if( $customer->date_of_birth == '' || $customer->date_of_birth == NULL ){
-            $customer->date_of_birth = date("m/d/Y");
-        } 
 
-        if( $customer->ssn == '' || $customer->ssn == NULL ){
+        if ($customer->date_of_birth == '' || $customer->date_of_birth == null) {
+            $customer->date_of_birth = date('m/d/Y');
+        }
+
+        if ($customer->ssn == '' || $customer->ssn == null) {
             $customer->ssn = 'Not Specified';
-        } 
-        
-        if( $customer->state == '' || $customer->state == NULL ){
+        }
+
+        if ($customer->state == '' || $customer->state == null) {
             $customer->state = '';
         }
 
-        if( $customer->country == '' || $customer->country == NULL ){
+        if ($customer->country == '' || $customer->country == null) {
             $customer->country = 'Not Specified';
         }
 
-        if( $customer->country == '' || $customer->country == NULL ){
+        if ($customer->country == '' || $customer->country == null) {
             $customer->country = 'Not Specified';
         }
 
-        if( $customer->cross_street == '' || $customer->cross_street == NULL ){
+        if ($customer->cross_street == '' || $customer->cross_street == null) {
             $customer->cross_street = '';
         }
 
-        if( $customer->cross_street == '' || $customer->cross_street == NULL ){
+        if ($customer->cross_street == '' || $customer->cross_street == null) {
             $customer->cross_street = '';
         }
 
         $acsAccess = $this->AcsAccess_model->getByProfId($customer_id);
-        if( $acsAccess ){
+        if ($acsAccess) {
             $customer->access_password = $acsAccess->access_password;
-        }else{
+        } else {
             $customer->access_password = 'Not Specified';
         }
 
         echo json_encode($customer);
     }
 
-    public function ajax_quick_add_customer(){
+    public function ajax_quick_add_customer()
+    {
         $is_valid = 1;
-        $msg      = '';      
-        $customer = [];  
+        $msg = '';
+        $customer = [];
 
-        $cid  = logged('company_id');
+        $cid = logged('company_id');
         $post = $this->input->post();
 
-        if( $post['first_name'] == '' || $post['last_name'] == ''){
+        if ($post['first_name'] == '' || $post['last_name'] == '') {
             $is_valid = 0;
             $msg = 'Please enter customer name';
         }
 
-        if( $post['email'] == '' ){
+        if ($post['email'] == '') {
             $is_valid = 0;
             $msg = 'Please enter customer email';
         }
 
-        if( $post['customer_type'] == '' ){
+        if ($post['customer_type'] == '') {
             $is_valid = 0;
             $msg = 'Please select customer type';
         }
 
-        if( $is_valid == 1 ){
+        if ($is_valid == 1) {
             $post['company_id'] = $cid;
-            $post['status']     = 'New';
+            $post['status'] = 'New';
 
-            $prof_id = $this->customer_ad_model->add($post, "acs_profile");
+            $prof_id = $this->customer_ad_model->add($post, 'acs_profile');
 
             $customer = [
                 'id' => $prof_id,
-                'name' => $post['first_name'] . ' ' . $post['last_name']
+                'name' => $post['first_name'].' '.$post['last_name'],
             ];
         }
 
@@ -7567,46 +7455,45 @@ class Customer extends MY_Controller
         $this->load->model('Customer_advance_model');
 
         $lead_id = $this->input->post('lead_id');
-        $company_id  = logged('company_id');
+        $company_id = logged('company_id');
 
-        $lead = $this->Customer_advance_model->getLeadByLeadId($lead_id); 
-        if( $lead->phome_cell != '' && $lead->phone_cell != 'NULL' ){
+        $lead = $this->Customer_advance_model->getLeadByLeadId($lead_id);
+        if ($lead->phome_cell != '' && $lead->phone_cell != 'NULL') {
             $lead->phome_cell = formatPhoneNumber($lead->phome_cell);
-        }else{
+        } else {
             $lead->phone_m = 'Not Specified';
-        }          
+        }
 
-        if( $lead->phone_home != '' && $lead->phone_home != 'NULL' ){
+        if ($lead->phone_home != '' && $lead->phone_home != 'NULL') {
             $lead->phone_home = formatPhoneNumber($lead->phone_home);
-        }else{
+        } else {
             $lead->phone_home = 'Not Specified';
-        } 
-        
-        if( $lead->date_of_birth == '' || $lead->date_of_birth == 'NULL' ){
-            $lead->date_of_birth = date("m/d/Y");
-        } 
+        }
 
-        if( $lead->sss_num == '' || $lead->sss_num == 'NULL' ){
+        if ($lead->date_of_birth == '' || $lead->date_of_birth == 'NULL') {
+            $lead->date_of_birth = date('m/d/Y');
+        }
+
+        if ($lead->sss_num == '' || $lead->sss_num == 'NULL') {
             $lead->sss_num = 'Not Specified';
-        } 
-        
-        if( $lead->state == '' || $lead->state == 'NULL' ){
+        }
+
+        if ($lead->state == '' || $lead->state == 'NULL') {
             $lead->state = '';
         }
 
-        if( $lead->country == '' || $lead->country == 'NULL' ){
+        if ($lead->country == '' || $lead->country == 'NULL') {
             $lead->country = 'Not Specified';
         }
 
-        if( $lead->county == '' || $customleader->county == 'NULL' ){
+        if ($lead->county == '' || $customleader->county == 'NULL') {
             $lead->county = 'Not Specified';
         }
 
-        if( $lead->address == '' || $lead->address == 'NULL' ){
+        if ($lead->address == '' || $lead->address == 'NULL') {
             $lead->lead = '';
         }
 
         echo json_encode($lead);
     }
-    
 }

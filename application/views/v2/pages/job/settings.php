@@ -67,6 +67,26 @@ table.dataTable.no-footer {
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <div class="col-12">
+                                            <div class="nsm-card-header d-block">
+                                                <div class="nsm-card-title">
+                                                    <span>Job Account Number</span>
+                                                </div>
+                                                <label class="nsm-subtitle">Set the next auto-generated number.</label>
+                                            </div>
+                                            <div class="nsm-card-content">
+                                                <div class="row g-2">
+                                                    <div class="col-12 col-md-3">
+                                                        <input type="text" placeholder="" class="nsm-field form-control" value="<?php echo $comp_id.'-'; ?>" disabled="" readonly="" />
+                                                    </div>
+                                                    <div class="col-12 col-md-9">
+                                                        <input type="text" placeholder="Next Number" name="job_settings_account_number_next_number" id="job-account-number-base" class="nsm-field form-control" value="<?php echo $settings_job_account_next_num; ?>" autocomplete="off" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="col-12 text-end">
                                             <hr>
                                             <button type="submit" class="nsm-button primary">Save Changes</button>

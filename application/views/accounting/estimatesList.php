@@ -72,7 +72,7 @@
       bottom: 0px;
     }
     .swal2-popup{
-      max-width: 74%!important;
+      max-width: 50%!important;
     }
     .swal2-icon {
       width: 3em!important;
@@ -80,7 +80,10 @@
     margin: 1.5em auto 0em!important;
     }
     .swal2-title{
-      font-size: 22px!important;
+      font-size: 16px!important;
+    }
+    .swal2-html-container{
+      font-size: 12px;
     }
   }
 </style>

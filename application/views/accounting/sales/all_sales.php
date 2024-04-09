@@ -758,4 +758,26 @@
 <script>
     const companyName = "<?php echo $company->business_name; ?>";
 </script>
+<script>
+    $(document).ready(function() {
+        $("#transactions-table").nsmPagination({
+            itemsPerPage: 10,
+        });
+
+        function updateRowsPerPage(numRows) {
+            $("#transactions-table").nsmPagination({
+                itemsPerPage: numRows
+            });
+            $("#transactions-table tbody tr").hide();
+            $("#transactions-table tbody tr").slice(0, numRows).show();
+        }
+
+        document.getElementById("table-rows").querySelectorAll(".dropdown-item").forEach(function(item) {
+            item.addEventListener("click", function() {
+                var numRows = parseInt(this.textContent);
+                updateRowsPerPage(numRows);
+            });
+        });
+    });
+</script>
 <?php include viewPath('v2/includes/footer'); ?>
