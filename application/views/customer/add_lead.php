@@ -20,7 +20,7 @@
 
 
             <form method="post" id="new_lead_form">
-                <input type="hidden" name="leads_id" value="<?= isset($leads_data) ? $leads_data->leads_id : '0'; ?>" />
+                <input type="hidden" name="leads_id" value="<?= isset($leads_data) ? $leads_data->leads_id : null; ?>" />
                 <div class="row">
                     <div class="col-lg-5 mb-3">
                         <div class="nsm-card primary" style="height: auto;">
