@@ -173,7 +173,7 @@ class Job extends MY_Controller
                 $job_account_next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
             }
         }  
-        
+
         $default_job_account_number = $comp_id . '-' . $job_account_next_num;
         $this->page_data['default_job_account_number'] = $default_job_account_number;
 
@@ -2184,7 +2184,7 @@ class Job extends MY_Controller
                 $next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
                 $job_account_next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
             }
-        }            
+        }      
 
         $this->page_data['settings_prefix'] = $prefix;
         $this->page_data['settings_next_num'] = $next_num;
@@ -2301,7 +2301,7 @@ class Job extends MY_Controller
                     }
                 }
                 
-                $job_number         = $prefix . str_pad($next_num, 5, '0', STR_PAD_LEFT);
+                $job_number       = $prefix . str_pad($next_num, 5, '0', STR_PAD_LEFT);
                 $job_account_number = $comp_id . '-' . $account_next_num;
                 $job_workorder_id = $input['work_order_id'] != NULL ? $input['work_order_id'] : 0;
             }
@@ -2730,7 +2730,7 @@ class Job extends MY_Controller
                         $job_items_data['commission'] = $input['item_commission'][$xx];
                         $job_items_data['margin'] = $input['item_margin'][$xx];
                         $job_items_data['qty']  = $input['item_qty'][$xx];
-                        $job_items_data['cost'] = $input['item_price'][$xx] * $input['item_qty'][$xx];
+                        $job_items_data['cost'] = $input['item_price'][$xx];
                         $job_items_data['tax']      = 0;
                         $job_items_data['total']    = $input['item_price'][$xx] * $input['item_qty'][$xx];
                         $job_items_data['location'] = $input['location'][$xx];
