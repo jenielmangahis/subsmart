@@ -159,9 +159,23 @@ class Job extends MY_Controller
                 'company_id' => $comp_id
             ),
             'table' => 'job_settings',
-            'select' => 'id',
+            'select' => '*',
         );
-        $event_settings = $this->general->get_data_with_param($get_job_settings);
+        $job_settings = $this->general->get_data_with_param($get_job_settings, false);
+        if ($job_settings) {        
+            $job_account_next_num = str_pad($job_settings->job_account_next_num, 5, '0', STR_PAD_LEFT);
+        } else {
+            $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+            $job_account_next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+            $lastId = $this->jobs_model->getlastInsert($comp_id);
+            if ($lastId) {
+                $next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
+                $job_account_next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
+            }
+        }  
+
+        $default_job_account_number = $comp_id . '-' . $job_account_next_num;
+        $this->page_data['default_job_account_number'] = $default_job_account_number;
 
         $get_sales_rep = array(
             'where' => array(
@@ -2160,17 +2174,22 @@ class Job extends MY_Controller
         if ($job_settings) {
             $prefix   = $job_settings->job_num_prefix;
             $next_num = str_pad($job_settings->job_num_next, 5, '0', STR_PAD_LEFT);
+            $job_account_next_num = str_pad($job_settings->job_account_next_num, 5, '0', STR_PAD_LEFT);
         } else {
             $prefix   = 'JOB-';
             $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+            $job_account_next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
             $lastId = $this->jobs_model->getlastInsert($comp_id);
             if ($lastId) {
                 $next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
+                $job_account_next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
             }
-        }
+        }      
 
         $this->page_data['settings_prefix'] = $prefix;
         $this->page_data['settings_next_num'] = $next_num;
+        $this->page_data['comp_id'] = $comp_id;
+        $this->page_data['settings_job_account_next_num'] = $job_account_next_num;
         $this->page_data['job_settings'] = $this->general->get_data_with_param($get_job_settings, false);
 
         $get_job_tax = array(
@@ -2255,6 +2274,7 @@ class Job extends MY_Controller
             if (!empty($isJob)) {
                 $job_number = $isJob->job_number;
                 $job_workorder_id = $isJob->work_order_id;
+                $job_account_number = $isJob->job_account_number;
                 $is_update = 1;
             } else {
                 $get_job_settings = array(
@@ -2268,17 +2288,21 @@ class Job extends MY_Controller
                 if ($job_settings) {
                     $prefix   = $job_settings->job_num_prefix;
                     $next_num = $job_settings->job_num_next;
+                    $account_next_num = $job_settings->job_account_next_num;
                 } else {
                     $prefix = 'JOB-';
                     $lastId = $this->jobs_model->getLastInsertByCompanyId($comp_id);                    
                     if ($lastId) {
                         $next_num = $lastId->id + 1;
+                        $account_next_num = $lastId->id + 1;
                     } else {
                         $next_num = 1;
+                        $account_next_num = 1;
                     }
                 }
                 
                 $job_number       = $prefix . str_pad($next_num, 5, '0', STR_PAD_LEFT);
+                $job_account_number = $comp_id . '-' . $account_next_num;
                 $job_workorder_id = $input['work_order_id'] != NULL ? $input['work_order_id'] : 0;
             }
 
@@ -2608,7 +2632,7 @@ class Job extends MY_Controller
                 //'margin' => $input['input_totalEquipmentMargin'],
                 //'amount_collected' => $input['input_totalAmountCollected'],
                 //'gross_profit' => $input['input_totalJobGrossProfit'],
-                'job_account_number' => $input['JOB_ACCOUNT_NUMBER']                
+                'job_account_number' => $job_account_number                
             );
             $commission_history_payload = [
                 'datetime' => date("M d, Y")."<br>".date("h:i a"), 
@@ -2706,7 +2730,7 @@ class Job extends MY_Controller
                         $job_items_data['commission'] = $input['item_commission'][$xx];
                         $job_items_data['margin'] = $input['item_margin'][$xx];
                         $job_items_data['qty']  = $input['item_qty'][$xx];
-                        $job_items_data['cost'] = $input['item_price'][$xx] * $input['item_qty'][$xx];
+                        $job_items_data['cost'] = $input['item_price'][$xx];
                         $job_items_data['tax']      = 0;
                         $job_items_data['total']    = $input['item_price'][$xx] * $input['item_qty'][$xx];
                         $job_items_data['location'] = $input['location'][$xx];
@@ -2738,12 +2762,13 @@ class Job extends MY_Controller
 
                 // insert / update job settings 
                 if( $job_settings ){
-                    $jobs_settings_data = ['job_num_next' =>  $next_num + 1];
+                    $jobs_settings_data = ['job_num_next' =>  $next_num + 1, 'job_account_next_num' => $account_next_num + 1];
                     $this->JobSettings_model->update($job_settings->id, $jobs_settings_data);                    
                 }else{
                     $job_settings_data = [
                         'job_num_prefix' => $prefix,
                         'job_num_next' => $next_num + 1,
+                        'job_account_next_num' => $account_next_num + 1,
                         'company_id' => $comp_id
                     ];
 
@@ -4217,7 +4242,8 @@ class Job extends MY_Controller
         $data = [
             'company_id' => $cid,
             'job_num_prefix' => $post['job_settings_prefix'],
-            'job_num_next' => $post['job_settings_next_number']
+            'job_num_next' => $post['job_settings_next_number'],
+            'job_account_next_num' => (int)$post['job_settings_account_number_next_number']
         ];
 
         if ($settings) {

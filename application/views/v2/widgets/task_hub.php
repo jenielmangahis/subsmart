@@ -16,9 +16,6 @@
             <a role="button" class="nsm-button btn-sm m-0 me-2 btn-add-task" href="javascript:void(0);">
                 Add Task
             </a>
-            <a role="button" class="nsm-button btn-sm m-0 me-2 btn-task-list" href="javascript:void(0);">
-                See More
-            </a>
             <div class="dropdown">
                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
@@ -30,10 +27,15 @@
             </div>
         </div>
     </div>
-    <div class="nsm-card-content taskhub-container">
+    <div class="nsm-card-content taskhub-container"  style="  height: calc(100% - 120px);">
         <div class="nsm-loader">
             <i class='bx bx-loader-alt bx-spin'></i>
         </div>
+    </div>
+    <div class='nsm-card-footer'>
+        <a role="button" class="nsm-button btn-sm m-0 me-2" href="taskhub">
+            <i class='bx bx-right-arrow-alt'></i>
+        </a>
     </div>
 </div>
 

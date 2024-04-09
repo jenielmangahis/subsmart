@@ -869,11 +869,7 @@
                                                     </div>
                                                 </div>
                                             </div> -->
-                                            <div class="col-md-12">
-                                                <div class="col-md-12">
-                                                        <h6>Job Account Number</h6>
-                                                        <input value="<?php echo ($jobs_data->job_account_number) ? $jobs_data->job_account_number : ""; ?>" type="text" class="form-control" name="JOB_ACCOUNT_NUMBER">
-                                                    </div>
+                                            <div class="col-md-12">                                                
                                                 <div class="col-md-12">
                                                     <hr>
                                                 </div>
@@ -912,9 +908,13 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-12">
+                                                    <div class="col-md-6">
+                                                        <h6>Job Account Number</h6>
+                                                        <input value="<?php echo ($jobs_data->job_account_number) ? $jobs_data->job_account_number : $default_job_account_number; ?>" type="text" class="form-control" disabled="" readonly="">
+                                                    </div>
+                                                    <div class="col-md-6">
                                                         <h6>Description of Job</h6>
-                                                        <textarea name="job_description" class="form-control" required=""><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
+                                                        <textarea style="height:80px;" name="job_description" class="form-control" required=""><?= isset($jobs_data) ? $jobs_data->job_description : ''; ?></textarea>
                                                     </div>
                                                     <div class="col-md-12">
                                                         <hr>
