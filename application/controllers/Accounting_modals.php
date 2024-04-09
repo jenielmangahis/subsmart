@@ -67,6 +67,7 @@ class Accounting_modals extends MY_Controller
         $this->load->model('accounting_paychecks_model');
         $this->load->model('timesheet_model');
         $this->load->library('form_validation');
+        
         $this->load->model('General_model', 'general');
     }
 
