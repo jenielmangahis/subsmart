@@ -377,12 +377,12 @@ input:checked + .slider:before {
                                         <div class="row form-group">
                                             <div class="col-md-3">
                                             <label>Terms</label>
-                                                <select class="form-control" name="terms" id="addNewTermsInvoice">
-                                                    <option></option>
-                                                    <option value="0">Add New</option>
+                                                <select class="form-control" name="terms" id="addNewTermsInvoice">                                                    
                                                     <?php foreach($terms as $term) : ?>
-                                                    <option value="<?php echo $term->id; ?>"><?php echo $term->name . ' ' . $term->net_due_days; ?></option>
-                                                    <?php endforeach; ?>
+                                                        <?php if( $term->name != '' ){ ?>
+                                                            <option value="<?php echo $term->id; ?>"><?php echo $term->name . ' ' . $term->net_due_days; ?></option>
+                                                        <?php } ?>
+                                                    <?php endforeach; ?>                                                    
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
@@ -537,101 +537,7 @@ input:checked + .slider:before {
                                             </tr>
                                             </thead>
                                             <tbody id="jobs_items_table_body">
-                                            <!-- <tr>
-                                                <td><input type="text" class="form-control getItems"
-                                                        onKeyup="getItems(this)" name="item[]">
-                                                    <ul class="suggestions"></ul>
-                                                </td>
-                                                <td><select name="item_type[]" class="form-control">
-                                                        <option value="service">Service</option>
-                                                        <option value="material">Material</option>
-                                                        <option value="product">Product</option>
-                                                    </select></td>
-                                                <td><input type="text" class="form-control quantity" name="quantity[]"
-                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                                <td><input type="number" class="form-control price" name="price[]"
-                                                        data-counter="0" id="price_0" min="0" value="0"></td>
-                                                <td><input type="number" class="form-control discount" name="discount[]"
-                                                        data-counter="0" id="discount_0" min="0" value="0" ></td>
-                                                <td><input type="hidden" class="form-control tax" name="tax[]"
-                                                        data-counter="0" id="tax_0" min="0" value="0">
-                                                        <span id="span_tax_0">0.00 (7.5%)</span></td>
-                                                <td><input type="hidden" class="form-control " name="total[]"
-                                                        data-counter="0" id="item_total_0" min="0" value="0">
-                                                        $<span id="span_total_0">0.00</span></td>
-                                            </tr> -->
-                                            <?php if( empty($w_items) ){ ?>
-                                                <!-- <tr>
-                                                    <td width="30%">
-                                                        <input type="text" class="form-control getItems"
-                                                            onKeyup="getItems(this)" name="items[]">
-                                                        <ul class="suggestions"></ul>
-                                                        <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                        <input type="hidden" name="itemid[]" id="itemid" class="itemid">
-                                                    </td>
-                                                    <td width="20%">
-                                                    <div class="dropdown-wrapper">
-                                                        <select name="item_type[]" id="item_typeid" class="form-control">
-                                                            <option value="product">Product</option>
-                                                            <option value="material">Material</option>
-                                                            <option value="service">Service</option>
-                                                            <option value="fee">Fee</option>
-                                                        </select>
-                                                    </div>
-
-                                                        </td>
-                                                    <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                            data-counter="0" id="quantity_0" value="1"></td>
-                                                    <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                            data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
-                                                            <div class="show_mobile_view"><span class="price">0</span>
-                                                            </div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                                    <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                            data-counter="0" id="discount_0" min="0" value="0"  readonly></td>
-                                                    <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                            data-counter="0" id="tax1_0" min="0" value="0">
-                                                            </td>
-                                                    <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                            data-counter="0" id="item_total_0" min="0" value="0">
-                                                            $<span id="span_total_0">0.00</span></td>
-                                                    <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="bx bx-fw bx-trash"></i></a></td>
-                                                </tr> -->
-                                                <tr style="display:;">
-                                                    <td width="30%">
-                                                        <input type="text" class="form-control getItems"
-                                                            onKeyup="getItems(this)" name="items[]">
-                                                        <ul class="suggestions"></ul>
-                                                        <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                        <input type="hidden" name="item_id[]" id="itemid" class="itemid" value="0">
-                                                        <input type="hidden" name="packageID[]" value="0">
-                                                    </td>
-                                                    <td width="20%">
-                                                    <div class="dropdown-wrapper">
-                                                        <select name="item_type[]" id="item_typeid" class="form-control">
-                                                            <option value="product">Product</option>
-                                                            <option value="material">Material</option>
-                                                            <option value="service">Service</option>
-                                                            <option value="fee">Fee</option>
-                                                        </select>
-                                                    </div>
-                                                        </td>
-                                                    <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                            data-counter="0" id="quantity_0" value="1"></td>
-                                                    <td width="10%"><input type="text" class="form-control price price hidden_mobile_view" name="price[]"
-                                                            data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0" value="0"> 
-                                                            <div class="show_mobile_view">
-                                                            </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                                    <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                            data-counter="0" id="discount_0" min="0" value="0"></td>
-                                                    <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                            data-counter="0" id="tax1_0" min="0" value="0" >
-                                                            </td>
-                                                    <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                            data-counter="0" id="item_total_0" min="0" value="0">
-                                                            $<span id="span_total_0">0.00</span></td>
-                                                    <td><a href="#" class="remove btn btn-sm btn-danger" id="0"><i class="fa fa-trash" aria-hidden="true"></i>Remove</a></td>
-                                                </tr>
-                                            <?php }else{ ?>
+                                            <?php if( $w_items ){ ?>
                                                 <?php $item_row = 0; foreach($w_items as $data){ ?>
 
                                                 <tr>
@@ -646,7 +552,7 @@ input:checked + .slider:before {
                                                     <div class="dropdown-wrapper">
                                                         <select name="item_type[]" id="item_typeid" class="form-control">
                                                             <option value="<?php echo $data->type; ?>"><?php echo $data->type; ?></option>
-                                                            <option value="product">Product</option>
+                                                            <option value="product">Product1</option>
                                                             <option value="material">Material</option>
                                                             <option value="service">Service</option>
                                                             <option value="fee">Fee</option>
@@ -739,12 +645,20 @@ input:checked + .slider:before {
                                                         <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
                                                     </tr>
                                                     <tr>
-                                                        <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1"></td>
-                                                        <td align="center">
-                                                        <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;">
-                                                            <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
+                                                        <td>
+                                                            <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:85%; display:inline-block; border: 1px dashed #d1d1d1">
+                                                            <i id="help-popover-adjustment" class='bx bx-fw bx-info-circle ms-2 text-muted' style="display:inline-block;margin-top: 0px !important;" data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=""></i>
                                                         </td>
-                                                        <td><span id="adjustmentText">0.00</span></td>
+                                                        <td colspan="2">
+                                                            <div class="input-group mb-2" style="width: 40%;float: right;">
+                                                                <div class="input-group-prepend">
+                                                                <div class="input-group-text">$</div>
+                                                                </div>
+                                                                <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;text-align: right;padding:0px;">
+                                                            </div>
+                                                            <span id="adjustmentText" style="display: none;">0.00</span>
+                                                        </td>
+                                                        <!-- <td><span id="adjustmentText">0.00</span></td> -->
                                                     </tr>
                                                     <!-- <tr>
                                                         <td>Markup $<span id="span_markup"></td> -->
@@ -757,9 +671,8 @@ input:checked + .slider:before {
                                                         <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
                                                     </tr>
                                                     <tr style="color:blue;font-weight:bold;font-size:16px;">
-                                                        <td><b>Grand Total ($)</b></td>
-                                                        <td></td>
-                                                        <td><b><span id="grand_total">0.00</span>
+                                                        <td><b>Grand Total ($)</b></td>                                                        
+                                                        <td colspan="2" align="right"><b><span id="grand_total">0.00</span>
                                                             <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
                                                     </tr>
                                                 </table>
@@ -896,9 +809,9 @@ input:checked + .slider:before {
                                 <br>
                                 <div class="row" style="background-color:white;padding-top:10px;">
                                     <div class="col-md-12 form-group">
-                                        <button class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;" data-action="update">Save</button>
-                                        <button class="btn btn-success but" style="border-radius: 0 !important;" data-action="send">Preview</button>
-                                        <a href="<?php echo url('invoice') ?>" class="btn but-red">cancel this</a>
+                                        <a href="<?php echo url('invoice') ?>" class="nsm-button">Cancel</a>
+                                        <button class="nsm-button primary but" data-action="update">Save</button>
+                                        <!-- <button class="btn btn-success but" style="border-radius: 0 !important;" data-action="send">Preview</button> -->                                        
                                     </div>
                                 </div>
 
@@ -1225,6 +1138,15 @@ $(document).ready(function () {
     $('.btn-quick-add-job-tag').on('click', function(){
         $('#quick_add_job_tag').modal('show');
     });
+
+    $('#help-popover-adjustment').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
+        } 
+    }); 
 
     //iterate through all the divs - get their ids, hide them, then call the on click
     $(".toggle").each(function () {
