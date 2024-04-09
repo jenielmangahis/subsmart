@@ -946,6 +946,7 @@ $(function () {
                 } else {
                     type = type.replaceAll('_', '-');
                 }
+                
 
                 if (dropdownFields.includes(type)) {
                     $(this).select2({
@@ -5514,7 +5515,6 @@ $(function () {
 
                         $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('select').each(function () {
                             var field = $(this).attr('name').replace('[]', '');
-
                             $(this).select2({
                                 ajax: {
                                     url: base_url + 'accounting/get-dropdown-choices',
@@ -5863,7 +5863,6 @@ $(function () {
 
             $('#item-modal select').each(function () {
                 var dropdownType = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
-
                 if (dropdownFields.includes(dropdownType)) {
                     $(this).select2({
                         ajax: {
@@ -9578,6 +9577,7 @@ $(function () {
             }
         });
     });
+
 });
 
 const convertToDecimal = (el) => {
@@ -14274,7 +14274,6 @@ const addcheck = () => {
             ];
 
             if (dropdownFields.includes(type)) {
-
                 $(this).select2({
                     ajax: {
                         url: base_url + 'accounting/get-dropdown-choices',
