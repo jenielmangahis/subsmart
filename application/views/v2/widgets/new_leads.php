@@ -4,16 +4,28 @@ if (!is_null($dynamic_load) && $dynamic_load == true) :
 endif;
 ?>
 
+<style>
+.leads-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+</style>
+
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span>Appointments</span>
+            <div class="nsm-card-header">
+                <div class="nsm-card-title summary-report-header">
+                    <div class="icon-summary-leads">
+                        <i class="bx bx-fw bx-notepad"></i>
+                    </div>
+                    <span style="color:#c7951c ">New Leads</span>
+                </div>
+            </div>
         </div>
         <div class="nsm-card-controls">
-            <a role="button" class="nsm-button btn-sm m-0 me-2 btn-quick-access-calendar-schedule"
-                href="javascript:void(0);">
-                Calendar
-            </a>
+
             <div class="dropdown">
                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
@@ -27,9 +39,19 @@ endif;
             </div>
         </div>
     </div>
-    <div class="nsm-card-content upcoming-calendar-container"  style="  height: calc(100% - 120px);"></div>
-    <div class='nsm-card-footer mt-3'>
-        <a role="button" class="nsm-button btn-sm m-0 me-2" href="workcalender">
+    <div class="nsm-card-content" style="  height: calc(100% - 120px);">
+        <div class="row h-100">
+            <div class="col-12 col-lg-12 leads-container">
+                <div class="text-center summary-report-body">
+                    <label for="">Total Leads</label>
+                    <h1><?= $leads ?></h1>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='nsm-card-footer'>
+        <a role="button" class="nsm-button btn-sm m-0 me-2" href="customer/leads">
             <i class='bx bx-right-arrow-alt'></i>
         </a>
     </div>
@@ -40,21 +62,3 @@ if (!is_null($dynamic_load) && $dynamic_load == true) :
     echo '</div>';
 endif;
 ?>
-<script>
-$(function() {
-    loadUpcomingCalendar();
-});
-
-function loadUpcomingCalendar() {
-    $.ajax({
-        async: false,
-        url: '<?php echo base_url(); ?>widgets/getUpcomingCalendar',
-        method: 'get',
-        data: {},
-        success: function(response) {
-            $('.upcoming-calendar-container').html(response);
-        }
-
-    });
-}
-</script>

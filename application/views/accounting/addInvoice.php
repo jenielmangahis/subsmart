@@ -335,7 +335,8 @@ input:checked + .slider:before {
                                                 data-inquiry-source="dropdown" class="form-control searchable-dropdown"
                                                 placeholder="Select customer">
                                         </select> -->
-                                        <select name="customer_id" id="customer-id" class="form-control" required>
+                                        <select id="customer-id" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown"></select>
+                                        <!-- <select name="customer_id" id="customer-id" class="form-control" required>
                                         <option>Select a customer</option>
                                         <?php foreach ($customers as $customer):?>
                                         <?php 
@@ -344,14 +345,11 @@ input:checked + .slider:before {
                                             }
                                         ?>
                                         <option <?= $default_cust_id == $customer->prof_id ? 'selected="selected"' : ''; ?> value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
-                                        <?php endforeach; ?>
+                                        <?php endforeach; ?> -->
                                     </select>
                                     </div>
                                     <div class="col-md-5 form-group">
-                                        <p>&nbsp;</p>
-                                        <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
-                                        data-target="#modalNewCustomer" style="color:#02A32C;"><span
-                                                    class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
+                                        <button type="button" style="margin-top:21px;" id="" data-bs-toggle="modal" data-bs-target="#new_customer" class="nsm-button small text-end" ><strong>Add New Customer</strong></button>  
                                     </div>
                                     <br>
                                     <div class="col-md-5 form-group">
@@ -411,7 +409,12 @@ input:checked + .slider:before {
                                                 <input type="date" class="form-control" name="shipping_date">
                                             </div>
                                             <div class="col-md-3">
-                                            <label>Tags</label> <span class="float-right"><a href="#" class="text-info" data-toggle="modal" data-target="#tags-modal" id="open-tags-modal">Manage tags</a></span>
+                                                <label>Tags</label> 
+                                                <span style="float:right;">
+                                                    <a class="nsm-link align-items-center btn-quick-add-job-tag" href="javascript:void(0);">
+                                                        <span class="bx bx-plus"></span>Create Job Tag
+                                                    </a>
+                                                </span>
                                                 <input type="text" class="form-control" name="tags">
                                             </div>
                                         <!-- </div>
@@ -927,26 +930,6 @@ input:checked + .slider:before {
                     </div>
                 </div>
 
-                <!-- Modal New Customer -->
-                <div class="modal fade" id="modalNewCustomer" tabindex="-1" role="dialog"
-                    aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">New Customer</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body pt-0 pl-3 pb-3"></div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary">Save changes</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!--    Modal for creating rules-->
                 <div class="modal-right-side">
                                     <div class="modal right fade" id="createTagGroup" tabindex="" role="dialog" aria-labelledby="myModalLabel2">
@@ -1214,6 +1197,8 @@ input:checked + .slider:before {
                 </div>
             </div>
 <?php include viewPath('accounting/add_new_term'); ?>
+<?php include viewPath('v2/pages/job/modals/new_customer'); ?>
+<?php include viewPath('v2/includes/job/quick_add'); ?>
 <?php //include viewPath('v2/includes/footer'); ?>
 <?php //include viewPath('includes/footer'); ?>
 <!-- Fancybox -->
@@ -1237,64 +1222,113 @@ input:checked + .slider:before {
 //   })
 $(document).ready(function () {
 
-//iterate through all the divs - get their ids, hide them, then call the on click
-$(".toggle").each(function () {
-    var $context = $(this);
-    var $button = $context.find("#rebatable_toggle");
-    //            $currentId = $button.attr('id');
-    // var $divOptions = $context.find('div').last();
+    $('.btn-quick-add-job-tag').on('click', function(){
+        $('#quick_add_job_tag').modal('show');
+    });
 
-    //$($divOptions).hide();
-    $($button).on('change', function (event) {
-        // alert('yeah');
-        // $(this).click(function() {        
-        var id = $($button).attr("item-id");
-        var get_val = $($button).val();
-        // alert(id);
+    //iterate through all the divs - get their ids, hide them, then call the on click
+    $(".toggle").each(function () {
+        var $context = $(this);
+        var $button = $context.find("#rebatable_toggle");
+        //            $currentId = $button.attr('id');
+        // var $divOptions = $context.find('div').last();
 
-        $.ajax({
-            type: 'POST',
-            url:"<?php echo base_url(); ?>accounting/changeRebate",
-            data: {id : id, get_val : get_val },
-            dataType: 'json',
-            success: function(response){
-                // alert('Successfully Change');
-                sucess("Rebate Updated Successfully!");
-                // $('.lamesa').load(window.location.href +  ' .lamesa');
-                // location.reload();
-                $('#item_list').modal('toggle');
-                // $("#item_list .modal-body").load(target, function() { 
-                // $("#item_list").modal("show"); 
-                // });
-                $('#item_list').on('hidden.bs.modal', function (e) {
-                    location.reload();
-                    });
-            },
-                error: function(response){
-                alert('Error'+response);
-       
-                }
-        });
+        //$($divOptions).hide();
+        $($button).on('change', function (event) {
+            // alert('yeah');
+            // $(this).click(function() {        
+            var id = $($button).attr("item-id");
+            var get_val = $($button).val();
+            // alert(id);
 
-        function sucess(information,$id){
-            Swal.fire({
-                title: 'Good job!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    window.location.href="<?= base_url(); ?>customer/preview/"+$id;
-                }
+            $.ajax({
+                type: 'POST',
+                url:"<?php echo base_url(); ?>accounting/changeRebate",
+                data: {id : id, get_val : get_val },
+                dataType: 'json',
+                success: function(response){
+                    // alert('Successfully Change');
+                    sucess("Rebate Updated Successfully!");
+                    // $('.lamesa').load(window.location.href +  ' .lamesa');
+                    // location.reload();
+                    $('#item_list').modal('toggle');
+                    // $("#item_list .modal-body").load(target, function() { 
+                    // $("#item_list").modal("show"); 
+                    // });
+                    $('#item_list').on('hidden.bs.modal', function (e) {
+                        location.reload();
+                        });
+                },
+                    error: function(response){
+                    alert('Error'+response);
+        
+                    }
             });
+
+            function sucess(information,$id){
+                Swal.fire({
+                    title: 'Good job!',
+                    text: information,
+                    icon: 'success',
+                    showCancelButton: false,
+                    confirmButtonColor: '#32243d',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ok'
+                }).then((result) => {
+                    if (result.value) {
+                        window.location.href="<?= base_url(); ?>customer/preview/"+$id;
+                    }
+                });
+            }
+
+        // });
+        });
+    });
+
+    $('#customer-id').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_customer',
+            dataType: 'json',
+            delay: 250,
+            data: function(params) {
+                return {
+                    q: params.term, // search term
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+                return {
+                    results: data,
+                };
+            },
+            cache: true
+        },
+        placeholder: 'Select Customer',        
+        minimumInputLength: 0,
+        templateResult: formatRepoCustomer,
+        templateSelection: formatRepoCustomerSelection
+    });
+
+    function formatRepoCustomer(repo) {
+        if (repo.loading) {
+            return repo.text;
         }
 
-    // });
-    });
-});
+        var $container = $(
+            '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.address + ' / ' + repo.email + '</small></div>'
+        );
+
+        return $container;
+    }
+
+    function formatRepoCustomerSelection(repo) {
+        if (repo.first_name != null) {
+            return repo.first_name + ' ' + repo.last_name;
+        } else {
+            return repo.text;
+        }
+    }
 });
 </script>
 

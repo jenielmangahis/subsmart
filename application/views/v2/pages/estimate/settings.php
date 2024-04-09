@@ -52,7 +52,7 @@
                                                         <span>Residential Invoice Default Message</span>
                                                     </div>
                                                     <label class="nsm-subtitle">Custom message that will be placed at the bottom section of the invoice.</label>
-                                                    <textarea name="residential_message" id="residential_message" cols="40" rows="2" class="form-control nsm-field mt-3" autocomplete="off" placeholder=""><?php echo ($setting) ? $setting->residential_message : 'I would be happy to have an opportunity to work with you.' ?></textarea>
+                                                    <textarea style="height:200px;" name="residential_message" id="residential_message" cols="40" rows="2" class="form-control nsm-field mt-3" autocomplete="off" placeholder=""><?php echo ($setting) ? $setting->residential_message : 'I would be happy to have an opportunity to work with you.' ?></textarea>
                                                     <span class="validation-error-field hide" data-formerrors-for-name="message" data-formerrors-message="true"></span>
                                                 </div>
                                                 <div class="col-12 col-md-6">
@@ -60,7 +60,7 @@
                                                         <span>Residential Invoice Default Terms & Conditions</span>
                                                     </div>
                                                     <label class="nsm-subtitle">Your T&C that will appear at the bottom section of the invoice.</label>
-                                                    <textarea name="residential_terms" id="residential_terms" cols="40" rows="2" class="form-control nsm-field mt-3" autocomplete="off" placeholder=""><?php echo ($setting) ? $setting->residential_terms_and_conditions : 'I would be happy to have an opportunity to work with you.' ?></textarea>
+                                                    <textarea style="height:200px;" name="residential_terms" id="residential_terms" cols="40" rows="2" class="form-control nsm-field mt-3" autocomplete="off" placeholder=""><?php echo ($setting) ? $setting->residential_terms_and_conditions : $default_terms_condition ?></textarea>
                                                     <span class="validation-error-field hide" data-formerrors-for-name="terms" data-formerrors-message="true"></span>
                                                 </div>
                                             </div>
@@ -90,7 +90,7 @@
                                                         <span>Commercial Invoice Default Message</span>
                                                     </div>
                                                     <label class="nsm-subtitle">Custom message that will be placed at the bottom section of the invoice.</label>
-                                                    <textarea name="message_commercial" id="message_commercial" cols="40" rows="2" class="form-control nsm-field mt-3" autocomplete="off" placeholder=""><?php echo ($setting) ? $setting->commercial_message : '' ?></textarea>
+                                                    <textarea style="height:200px;" name="message_commercial" id="message_commercial" cols="40" rows="2" class="form-control nsm-field mt-3" autocomplete="off" placeholder=""><?php echo ($setting) ? $setting->commercial_message : '' ?></textarea>
                                                     <span class="validation-error-field hide" data-formerrors-for-name="message" data-formerrors-message="true"></span>
                                                 </div>
                                                 <div class="col-12 col-md-6">
@@ -98,7 +98,7 @@
                                                         <span>Commercial Invoice Default Terms & Conditions</span>
                                                     </div>
                                                     <label class="nsm-subtitle">Your T&C that will appear at the bottom section of the invoice.</label>
-                                                    <textarea name="terms_commercial" id="terms_commercial" cols="40" rows="2" class="form-control nsm-field mt-3" autocomplete="off" placeholder=""><?php echo ($setting) ? $setting->commercial_terms_and_conditions : '' ?></textarea>
+                                                    <textarea style="height:200px;" name="terms_commercial" id="terms_commercial" cols="40" rows="2" class="form-control nsm-field mt-3" autocomplete="off" placeholder=""><?php echo ($setting) ? $setting->commercial_terms_and_conditions : $default_terms_condition; ?></textarea>
                                                     <span class="validation-error-field hide" data-formerrors-for-name="terms" data-formerrors-message="true"></span>
                                                 </div>
                                             </div>

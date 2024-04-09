@@ -1,5 +1,6 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/estimate/estimate_modals'); ?>
+<!-- /nsmartrac/estimate -->
 <style>
 .nsm-table .nsm-badge {
     font-size: 14px;
@@ -11,22 +12,54 @@
 @media only screen and (max-width: 600px) {
    
     .swal2-popup{
-      max-width: 74%;
+      max-width: 54%;
     }
      .swal2-icon {
     margin: 1.5em auto 0em;
     }
     .swal2-title{
-      font-size: 20px;
+      font-size: 16px;
     }
     .swal2-html-container{
-     margin: 5px 0px;   
+     margin: 5px 0px;  
+     font-size: 12px; 
     }
     .swal2-actions{
         margin: 0.55em auto 0;
     }
+    .swal2-styled {
+    padding: 5px 10px;
+    font-size: 12px!important;
+}
+.swal2-icon{
+    width: 3em;
+    height: 3em;
+}
+.swal2-icon-content {
+    font-size: 2.75em!important;
+}
+.swal2-icon.swal2-success .swal2-success-fix{
+    display: none;
+}
+.swal2-icon.swal2-success [class^=swal2-success-line][class$=long]{
+    top: 1.375em;
+    right: 2px;
+    width: 25px;
+}
+.swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=left]{
+    left: -1.0635em;
+}
+.swal2-success [class^="swal2-success-line"] {
+    display: none; /* Hide the success lines */
+}
+.swal2-icon.swal2-success [class^=swal2-success-line][class$=tip] {
+    top: 1.5em;
+    left: 5px;
+    width: 1.200em;
 
-  }
+}
+
+}
 </style>
 
 <div class="nsm-fab-container">
@@ -435,7 +468,10 @@ $(document).ready(function() {
                             text: "Successfully sent to Customer!",
                             icon: 'success',
                             showCancelButton: false,
-                            confirmButtonText: 'Okay'
+                            confirmButtonText: 'Okay',
+                            showClass: {
+                            icon: '' ,                      // disable icon animation
+  },
                         }).then((result) => {
                             if (result.value) {
                                 location.reload();

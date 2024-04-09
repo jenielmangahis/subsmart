@@ -1,24 +1,5 @@
 const currUrl = window.location.href;
 
-$(document).ready(function() {
-  $("#transactions-table").nsmPagination({
-      itemsPerPage: 10,
-  });
-
-  function updateRowsPerPage(numRows) {
-      $("#transactions-table").nsmPagination({ itemsPerPage: numRows });
-      $("#transactions-table tbody tr").hide();
-      $("#transactions-table tbody tr").slice(0, numRows).show();
-  }
-
-  document.getElementById("table-rows").querySelectorAll(".dropdown-item").forEach(function(item) {
-      item.addEventListener("click", function() {
-          var numRows = parseInt(this.textContent);
-          updateRowsPerPage(numRows);
-      });
-  });
-});
-
 $(".dropdown-menu#table-rows a.dropdown-item").on("click", function () {
   var count = $(this).html();
   $(".dropdown-menu#table-rows a.dropdown-item.active").removeClass("active");
