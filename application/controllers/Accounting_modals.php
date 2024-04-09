@@ -24071,10 +24071,12 @@ class Accounting_modals extends MY_Controller
             $invoiceNum = str_replace($invoiceSettings->invoice_num_prefix, '', $invoice->invoice_number);
             $invoiceId = $invoice->id;
 
+            $baseurl = base_url('/');
             if (!empty($invoice->customer_id)) {
-                $description = "<a href='/invoice/genview/$invoiceId' class='text-decoration-none'>Invoice #$invoiceNum</a> (" . date("m/d/Y", strtotime($invoice->date_issued)) . ")";
+                //$description = "<a href='/invoice/genview/$invoiceId' class='text-decoration-none'>Invoice #$invoiceNum</a> (" . date("m/d/Y", strtotime($invoice->date_issued)) . ")";
+                $description = "<a href=" . site_url() . "invoice/genview/$invoiceId class='text-decoration-none'>Invoice #$invoiceNum</a> (" . date("m/d/Y", strtotime($invoice->date_issued)) . ")";
             } else {
-                $description = "Invoice #$invoiceNum (No customer ID)";
+                $description = "<a href=" . site_url() . "invoice/genview/$invoiceId class='text-decoration-none'>Invoice #$invoiceNum</a> (" . date("m/d/Y", strtotime($invoice->date_issued)) . ")";
             }
 
             $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
