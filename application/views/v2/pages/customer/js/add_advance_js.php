@@ -446,92 +446,107 @@
         $("#customer_form").submit(async function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var form = $(this);
+            var is_valid = 1;
+            var err_msg  = '';
 
-            const formArray = form.serializeArray();
-            const payload = {};
-            formArray.forEach(({ name, value }) => payload[name] = value);
-            //const prefixURL = location.hostname === "localhost" ? "/ci/nsmart_v2" : "";
-            const prefixURL = base_url;
-            const response = await fetch(`${prefixURL}Customer_Form/apiCheckDuplicate`, { 
-                method: "post", 
-                body: JSON.stringify(payload),
-                headers: { 
-                    accept: "application/json", 
-                    "content-type": "application/json"
-                }
-            });
-            const json = await response.json();
-            if (json.data && json.message) {
-                const duplicateConfirmation = await Swal.fire({
-                    title: 'Possible duplicate customer',
-                    html: json.message,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#32243d',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Save anyway'
-                });
+            if( $('#lead_source').val() == null ){
+                is_valid = 0;
+                err_msg  = 'Please specify lead source';
+            } 
 
-                if (!duplicateConfirmation.isConfirmed) {
-                    return;
-                }
-            }
-
-            //var url = form.attr('action');
-            // const payload1 = new FormData();
-            // console.log(payload1);
-            // fetch('<?= base_url('customer/save_customer_profile') ?>', {
-            //     method: 'POST',
-            //     body: payload1,
-            // }) .then(response => response.json() ).then(response => {
-            //     document.getElementById('overlay').style.display = "none";
-            //     if(success){
-            //         alert('yawa');
-            //     }else{
-            //         sweetAlert('Sorry!','error',message);
-            //     }
-
-            //     console.log(response);
-            // }).catch((error) => {
-            //     console.log('Error:', error);
-            // });
-
-            $.ajax({
-                type: "POST",
-                url: base_url + "customer/save_customer_profile",
-                dataType: 'json',
-                data: form.serialize(), // serializes the form's elements.
-                success: function(data)
-                {
-                    document.getElementById('overlay').style.display = "none";
-                    if(data){
-                        <?php if(isset($profile_info)): ?>
-                        sucess("Customer Information has been Updated Successfully!",data.profile_id);
-                        <?php else: ?>
-                        sucess("New Customer has been Added Successfully!",data.profile_id);
-                        <?php endif; ?>
-                    }else{
-                        error(data.message);
+            if( is_valid == 1 ){
+                const formArray = form.serializeArray();
+                const payload = {};
+                formArray.forEach(({ name, value }) => payload[name] = value);
+                //const prefixURL = location.hostname === "localhost" ? "/ci/nsmart_v2" : "";
+                const prefixURL = base_url;
+                const response = await fetch(`${prefixURL}Customer_Form/apiCheckDuplicate`, { 
+                    method: "post", 
+                    body: JSON.stringify(payload),
+                    headers: { 
+                        accept: "application/json", 
+                        "content-type": "application/json"
                     }
-                    console.log(data);
-                }, beforeSend: function() {
-                    document.getElementById('overlay').style.display = "flex";
-                },error: function (xhr, ajaxOptions, thrownError, data) {
-                    document.getElementById('overlay').style.display = "none";
-                    Swal.fire({
-                        text: 'Customer profile was successfully updated!',
-                        icon: 'success',
-                        showCancelButton: false,
+                });
+                const json = await response.json();
+                if (json.data && json.message) {
+                    const duplicateConfirmation = await Swal.fire({
+                        title: 'Possible duplicate customer',
+                        html: json.message,
+                        icon: 'warning',
+                        showCancelButton: true,
                         confirmButtonColor: '#32243d',
                         cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ok'
-                    }).then((result) => {
-                        if (result.value) {
-                            window.location.href="<?= base_url(); ?>customer";
-                        }
+                        confirmButtonText: 'Save anyway'
                     });
+
+                    if (!duplicateConfirmation.isConfirmed) {
+                        return;
+                    }
                 }
-            });
+
+                //var url = form.attr('action');
+                // const payload1 = new FormData();
+                // console.log(payload1);
+                // fetch('<?= base_url('customer/save_customer_profile') ?>', {
+                //     method: 'POST',
+                //     body: payload1,
+                // }) .then(response => response.json() ).then(response => {
+                //     document.getElementById('overlay').style.display = "none";
+                //     if(success){
+                //         alert('yawa');
+                //     }else{
+                //         sweetAlert('Sorry!','error',message);
+                //     }
+
+                //     console.log(response);
+                // }).catch((error) => {
+                //     console.log('Error:', error);
+                // });
+
+                $.ajax({
+                    type: "POST",
+                    url: base_url + "customer/save_customer_profile",
+                    dataType: 'json',
+                    data: form.serialize(), // serializes the form's elements.
+                    success: function(data)
+                    {
+                        document.getElementById('overlay').style.display = "none";
+                        if(data){
+                            <?php if(isset($profile_info)): ?>
+                            sucess("Customer Information has been Updated Successfully!",data.profile_id);
+                            <?php else: ?>
+                            sucess("New Customer has been Added Successfully!",data.profile_id);
+                            <?php endif; ?>
+                        }else{
+                            error(data.message);
+                        }
+                        console.log(data);
+                    }, beforeSend: function() {
+                        document.getElementById('overlay').style.display = "flex";
+                    },error: function (xhr, ajaxOptions, thrownError, data) {
+                        document.getElementById('overlay').style.display = "none";
+                        Swal.fire({
+                            text: 'Customer profile was successfully updated!',
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonColor: '#32243d',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                            if (result.value) {
+                                window.location.href="<?= base_url(); ?>customer";
+                            }
+                        });
+                    }
+                });
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: err_msg
+                });
+            }
         });
         function save_sucess(information){
             Swal.fire(
