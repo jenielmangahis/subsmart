@@ -25,10 +25,8 @@
         </div>
     </div>
     <div class="nsm-card-content">
-        <div class="nsm-widget-table activity-logs-container">
-            <div class="nsm-loader">
-                <i class='bx bx-loader-alt bx-spin'></i>
-            </div>
+        <div class="nsm-widget-table">
+            <div class="activity-logs-container"></div>            
         </div>
     </div>
 </div>
@@ -39,6 +37,7 @@
     });
     
     function loadActivityLogs() {
+        $('.activity-logs-container').html('<span class="bx bx-loader bx-spin"></span>');
         $.ajax({
             url: '<?php echo base_url(); ?>activity_logs/getV2ActivityLogs',
             method: 'GET',
