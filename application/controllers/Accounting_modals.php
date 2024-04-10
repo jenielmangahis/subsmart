@@ -5690,7 +5690,6 @@ class Accounting_modals extends MY_Controller
     public function get_customer_details($customerId)
     {
         $customer = $this->accounting_customers_model->getCustomerDetails($customerId);
-
         echo json_encode($customer[0]);
     }
 
@@ -9344,7 +9343,6 @@ class Accounting_modals extends MY_Controller
 
     private function options_estimate($data)
     {
-        // $this->form_validation->set_rules('item[]', 'Item', 'required');
         $this->form_validation->set_rules('customer', 'Customer', 'required');
         $this->form_validation->set_rules('estimate_no', 'Estimate #', 'required');
         $this->form_validation->set_rules('estimate_date', 'Estimate Date', 'required');
@@ -9352,11 +9350,28 @@ class Accounting_modals extends MY_Controller
         $this->form_validation->set_rules('estimate_type', 'Estimate Type', 'required');
         $this->form_validation->set_rules('estimate_status', 'Estimate Status', 'required');
 
+
+        if(($data['table_1_total'] <= 0) || ($data['table_2_total'] <= 0)) {
+            $return['data']    = null;
+            $return['success'] = false;
+            $return['message'] = "Error: Items Amount must not contain 0 amount.";  
+            return $return;
+            exit;  
+        }
+
         $return = [];
         if ($this->form_validation->run() === false) {
-            $return['data'] = null;
-            $return['success'] = false;
-            $return['message'] = 'Error';
+
+            if( !isset($data['customer']) || $data['customer'] == '' ){
+                $return['data'] = null;
+                $return['success'] = false;
+                $return['message'] = 'Please select customer.';
+            }else{
+                $return['data'] = null;
+                $return['success'] = false;
+                $return['message'] = 'Cannot create option estimate, please check all required field.';
+            }            
+
         } else {
             $company_id  = getLoggedCompanyID();
             $user_id  = getLoggedUserID();
