@@ -206,13 +206,13 @@ class Login extends CI_Controller
             'time_zone_update'	=>	date('Y-m-d H:m:i'),
         ]);*/
 
-        $this->load->model('Activity_model', 'activity');
-        $activity['activityName'] = "User Login";
-        $activity['activity'] = " User " . logged('username') . " is loggedin";
-        $activity['createdAt']   = date("Y-m-d H:i:s");
-        $activity['user_id'] = logged('id');
+        // $this->load->model('Activity_model', 'activity');
+        // $activity['activityName'] = "User Login";
+        // $activity['activity'] = " User " . logged('username') . " is loggedin";
+        // $activity['createdAt']   = date("Y-m-d H:i:s");
+        // $activity['user_id'] = logged('id');
 
-        $isUserInserted = $this->activity->addEsignActivity($activity);
+        // $isUserInserted = $this->activity->addEsignActivity($activity);
 
         if ($is_startup == 1) {
             redirect('onboarding/business_info');

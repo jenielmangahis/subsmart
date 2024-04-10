@@ -371,6 +371,11 @@ class Estimate extends MY_Controller
             // }
             $userid = logged('id');
 
+            //Activity Logs
+            $this->load->model('Activity_model');
+            $activity_name = 'Created Estimate Number ' . $estimate_number; 
+            $this->Activity_model->add($activity_name,$userid);
+
             $getname = $this->estimate_model->getname($userid);
 
             $notif = [
