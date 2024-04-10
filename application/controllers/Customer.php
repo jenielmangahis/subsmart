@@ -2258,6 +2258,12 @@ class Customer extends MY_Controller
                         $data_arr = ['success' => true, 'profile_id' => $profile_id];
                     }
                 }
+
+                //Activity Logs
+                $this->load->model('Activity_model');
+                $user_id = logged('id');
+                $activity_name = $activity_action . ' customer record - ' . $input_profile['first_name'] . ' ' . $input_profile['last_name']; 
+                $this->Activity_model->add($activity_name,$user_id);
             }
         } else {
             $data_arr = ['success' => false, 'message' => 'Customer Already Exist!'];
@@ -3329,6 +3335,12 @@ class Customer extends MY_Controller
             $input['company_id'] = logged('company_id');
             $input['status'] = 'New';
             if ($this->customer_ad_model->add($input, 'acs_profile')) {
+                //Activity Logs
+                $this->load->model('Activity_model');
+                $user_id = logged('id');
+                $activity_name = 'Created customer record - ' . $input['first_name'] . ' ' . $input['last_name']; 
+                $this->Activity_model->add($activity_name,$user_id);
+                
                 echo 'Success';
             } else {
                 echo 'Error';
