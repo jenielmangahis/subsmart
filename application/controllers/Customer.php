@@ -15,6 +15,7 @@ class Customer extends MY_Controller
         $this->page_data['page']->menu = 'customers';
 
         // load Models
+        $this->load->model('Customer_model','company'); 
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('Esign_model', 'Esign_model');
         $this->load->model('Activity_model', 'activity');
@@ -109,6 +110,34 @@ class Customer extends MY_Controller
         $this->page_data['companyId'] = logged('company_id');
         $this->page_data['enabled_table_headers'] = $enabled_table_headers;
         $this->load->view('v2/pages/customer/list', $this->page_data);
+    }
+
+    public function CompanyList(){
+
+        $this->page_data['page']->title = 'Company';
+        $this->page_data['page']->parent = 'Customers';
+
+        $this->page_data['companies'] = $this->company->getAllCommercialCustomers(logged('company_id'),'Commercial');
+
+        $this->load->view('v2/pages/customer/company', $this->page_data);
+    }
+    public function getCompanyList(){
+
+        $this->page_data['page']->title = 'Company';
+        $this->page_data['page']->parent = 'Customers';
+
+        $this->page_data['companies'] = $this->company->getAllCommercialCustomers(logged('company_id'),'Commercial');
+         
+        echo json_encode($this->page_data);
+    }
+    public function PersonList(){
+
+        $this->page_data['page']->title = 'Person';
+        $this->page_data['page']->parent = 'Customers';
+
+        $this->page_data['persons'] = $this->company->getAllCommercialCustomers(logged('company_id'),'Residential');
+
+        $this->load->view('v2/pages/customer/person', $this->page_data);
     }
 
     public function ajax_customer_lists()

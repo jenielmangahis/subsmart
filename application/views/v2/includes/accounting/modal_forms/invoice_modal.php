@@ -284,7 +284,8 @@
 
                                     <div class="row">
                                         <?php
-                                        $string = $number;
+
+                                        $string = $number->invoice_number;
                                         $invoiceNumber = preg_replace_callback('/(\d+)/', function ($matches) {
                                             return str_pad($matches[1] + 1, 7, '0', STR_PAD_LEFT);
                                         }, $string);
@@ -587,15 +588,21 @@
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody id="package-items-table">
-                                                                                <?php foreach ($packageItems as $packageItem) : ?>
-                                                                                    <?php $item = $this->items_model->getItemById($packageItem->item_id)[0]; ?>
-                                                                                    <tr class="package-item">
-                                                                                        <td><?= $item->title ?></td>
-                                                                                        <td><?= $packageItem->quantity ?></td>
-                                                                                        <td><?= number_format(floatval($packageItem->price), 2, '.', ',') ?></td>
-                                                                                    </tr>
-                                                                                <?php endforeach; ?>
-                                                                            </tbody>
+                                                                    <?php if (is_array($packageItems) && count($packageItems) > 0) : ?>
+                                                                        <?php foreach ($packageItems as $packageItem) : ?>
+                                                                            <?php $item = $this->items_model->getItemById($packageItem->item_id)[0]; ?>
+                                                                            <tr class="package-item">
+                                                                                <td><?= $item->title ?></td>
+                                                                                <td><?= $packageItem->quantity ?></td>
+                                                                                <td><?= number_format(floatval($packageItem->price), 2, '.', ',') ?></td>
+                                                                            </tr>
+                                                                        <?php endforeach; ?>
+                                                                    <?php else : ?>
+                                                                        <tr>
+                                                                            <td colspan="3">No package items found.</td>
+                                                                        </tr>
+                                                                    <?php endif; ?>
+                                                                </tbody>
                                                                         </table>
                                                                     </td>
                                                                     <td></td>

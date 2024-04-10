@@ -345,6 +345,9 @@ class Invoice extends MY_Controller
         $this->load->view('v2/pages/invoice/add', $this->page_data);
     }
 
+    public function standard_invoice_template(){
+    $this->load->view('v2/pages/invoice/standard_invoice_template');
+   }
     public function estimateConversion($id)
     {
         

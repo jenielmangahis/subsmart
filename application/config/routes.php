@@ -100,7 +100,9 @@ $route['customer/_update_customer_status'] = 'Customer/ajax_update_customer_stat
 $route['customer/_delete_customer_status'] = 'Customer/ajax_delete_customer_status';
 $route['customer/_quick_add_customer'] = 'Customer/ajax_quick_add_customer';
 $route['customer/_quick_add_lead'] = 'Customer/ajax_quick_add_lead';
-
+$route['customer/company'] = 'Customer/CompanyList';
+$route['customer/person'] = 'Customer/PersonList';
+$route['customer/getCompanyList'] = 'Customer/getCompanyList';
 // Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
 $route['credit_bureau/add_new'] = 'Credit_Bureau/add_new';
@@ -295,6 +297,8 @@ $route['invoice/_process_square_payment'] = 'Invoice/ajax_square_process_payment
 $route['invoice/_process_cash_payment'] = 'Invoice/ajax_process_cash_payment';
 $route['invoice/customer_view/(:any)'] = 'Invoice/front_pay_now/$1';
 $route['invoice/_create_invoice'] = 'Invoice/ajax_create_invoice';
+$route['invoice/standard_invoice'] = 'Invoice/standard_invoice_template';
+
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
 

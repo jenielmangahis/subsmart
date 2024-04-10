@@ -126,7 +126,7 @@
                                         <option value="10001">Select All</option>
                                         <?php if(!empty($sales_rep)): ?>
                                             <?php foreach ($sales_rep as $employee): ?>
-                                                <option <?= $default_user == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.','.$employee->LName; ?></option>
+                                                <option <?= $default_user == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.', '.$employee->LName; ?></option>
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </select>                                

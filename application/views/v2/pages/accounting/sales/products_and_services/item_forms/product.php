@@ -33,7 +33,7 @@
                                 <input type="text" name="sku" id="sku" class="form-control nsm-field">
                             </div>
                         </div>
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-4" style="margin-bottom: -39px;">
                             <input type="file" name="icon" id="icon" class="d-none">
                             <div class="icon-preview h-75">
                                 <div class="no-icon border" onclick="document.getElementById('icon').click()"></div>
@@ -41,10 +41,10 @@
                                     <img src="" alt="Preview image" class="image-prev w-100">
                                 </div>
                             </div>
-                            <ul class="h-25 d-flex justify-content-around list-unstyled">
+                            <!-- <ul class="h-25 d-flex justify-content-around list-unstyled">
                                 <li class="d-flex align-items-center"><a href="#" onclick="document.getElementById('icon').click()" class="text-muted"><i class="bx bx-fw bx-pencil"></i></a></li>
                                 <li class="d-flex align-items-center"><a href="#" id="remove-item-icon" class="text-muted"><i class="bx bx-fw bx-trash"></i></a></li>
-                            </ul>
+                            </ul> -->
                         </div>
                     </div>
                     <div class="row">
