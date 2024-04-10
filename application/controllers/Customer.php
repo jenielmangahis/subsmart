@@ -2226,10 +2226,13 @@ class Customer extends MY_Controller
                     $this->general->update_with_key_field($input_profile, $input['customer_id'], 'acs_profile', 'prof_id');
                     $profile_id = $input['customer_id'];
                     customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Updated customer '.$input['first_name'].' '.$input['last_name']);
+
+                    $activity_action = 'Updated';
                 } else {
                     $profile_id = $this->general->add_return_id($input_profile, 'acs_profile');
 
                     customerAuditLog(logged('id'), $profile_id, $profile_id, 'Customer', 'Created customer '.$input['first_name'].' '.$input['last_name']);
+                    $activity_action = 'Created';
                 }
 
                 $companyId = logged('company_id');
@@ -3340,7 +3343,7 @@ class Customer extends MY_Controller
                 $user_id = logged('id');
                 $activity_name = 'Created customer record - ' . $input['first_name'] . ' ' . $input['last_name']; 
                 $this->Activity_model->add($activity_name,$user_id);
-                
+
                 echo 'Success';
             } else {
                 echo 'Error';
