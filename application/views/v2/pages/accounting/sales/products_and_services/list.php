@@ -236,6 +236,10 @@
         justify-content: center;
         margin: auto;
     }
+
+    .nsm-counter:hover {
+        cursor: pointer;
+    }
 </style>
 
 <div class="row page-content g-0">

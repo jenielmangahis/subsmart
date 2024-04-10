@@ -345,6 +345,9 @@ class Invoice extends MY_Controller
         $this->load->view('v2/pages/invoice/add', $this->page_data);
     }
 
+    public function standard_invoice_template(){
+    $this->load->view('v2/pages/invoice/standard_invoice_template');
+   }
     public function estimateConversion($id)
     {
         
@@ -1224,13 +1227,14 @@ class Invoice extends MY_Controller
         $this->load->model('CompanyOnlinePaymentAccount_model');
 
         $invoice = get_invoice_by_id($id);
+
         if( $invoice->view_flag == 1 ){
             redirect('invoice');
         }
 
         $user = get_user_by_id(logged('id'));
         $cid  = logged('company_id');        
-
+        
         if (!empty($invoice)) {
             foreach ($invoice as $key => $value) {
                 if (is_serialized($value)) {
@@ -1239,6 +1243,8 @@ class Invoice extends MY_Controller
             }
             $this->page_data['invoice'] = $invoice;
             $this->page_data['user'] = $user;
+        } else {
+            redirect('invoice');
         }
 
         $invoiceLogs = $this->CustomerAuditLog_model->getAllByObjIdAndModule($id, 'Invoice');

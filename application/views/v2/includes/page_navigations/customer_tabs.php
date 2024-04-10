@@ -30,6 +30,19 @@
                 <span>Leads</span>
             </a>
         </li>
+     
+        <li class="<?php if($page->title == 'Person'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?php echo base_url('customer/person') ?>">
+            <i class='bx bxs-face'></i>
+                <span>Person</span>
+            </a>
+        </li>
+        <li class="<?php if($page->title == 'Company'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?php echo base_url('customer/company') ?>">
+            <i class='bx bx-building'></i>
+                <span>Company</span>
+            </a>
+        </li>
         <li class="<?php if($page->title == 'Sales Area' || $page->title == 'Lead Source' || $page->title == 'Lead Types' || $page->title == 'Rate Plans' || $page->title == 'Activation Fee' || $page->title == 'System Package Type' || $page->title == 'Headers'): echo 'active'; endif; ?>">
             <div class="dropdown" id="test_dropdown">
                 <a class="nsm-page-link dropdown-toggle" role="button" href="javascript:void(0);">

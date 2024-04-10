@@ -3092,6 +3092,9 @@ class Customers extends MY_Controller {
 
     public function export()
     {
+        //$this->load->library('PHPXLSXWriter');
+        //$this->load->helper('pdf_helper');
+
         $user_id = logged('id');
         $items =  $this->customer_ad_model->getExportData();
 
@@ -3132,7 +3135,7 @@ class Customers extends MY_Controller {
             foreach ($items as $item) {
                 $csvData = array();
                 foreach($fieldNames as $fieldName){
-                    array_push($csvData, $item->$fieldName);
+                    array_push($csvData, $item->fieldName);
                 }
                 fputcsv($f, $csvData, $delimiter);
             }

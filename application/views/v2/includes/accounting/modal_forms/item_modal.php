@@ -1,3 +1,9 @@
+<style>
+    .image-height{
+        height: 100px;
+        margin: auto;
+    }
+</style>
 <div class="modal-right-side">
     <div class="modal right fade nsm-modal" tabindex="-1" id="item-modal" role="dialog">
         <div class="modal-dialog" role="document" style="width: 25%">
@@ -12,9 +18,8 @@
                             <tr data-href="product">
                                 <td>
                                     <div class="row" style="height: 117px">
-                                        <div class="col-12 col-md-3">
-                                            <div class="type-icon"
-                                                style="background-image: url('/assets/img/accounting/inventory.png')">
+                                        <div class="col-12 col-md-3 image-height">
+                                            <div class="type-icon" style="background-image: url('/assets/img/accounting/inventory.png')">
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-9 d-flex align-items-center">
@@ -30,9 +35,8 @@
                             <tr data-href="non-inventory">
                                 <td>
                                     <div class="row" style="height: 117px">
-                                        <div class="col-12 col-md-3">
-                                            <div class="type-icon"
-                                                style="background-image: url('/assets/img/accounting/non-inventory.png')">
+                                        <div class="col-12 col-md-3 image-height">
+                                            <div class="type-icon" style="background-image: url('/assets/img/accounting/non-inventory.png')">
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-9 d-flex align-items-center">
@@ -50,9 +54,8 @@
                             <tr data-href="service">
                                 <td>
                                     <div class="row" style="height: 117px">
-                                        <div class="col-12 col-md-3">
-                                            <div class="type-icon"
-                                                style="background-image: url('/assets/img/accounting/service.png')">
+                                        <div class="col-12 col-md-3 image-height">
+                                            <div class="type-icon" style="background-image: url('/assets/img/accounting/service.png')">
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-9 d-flex align-items-center">
@@ -66,27 +69,26 @@
                                     </div>
                                 </td>
                             </tr>
-                            <?php if($field === 'product' || $field === '') : ?>
-                            <tr data-href="bundle">
-                                <td>
-                                    <div class="row" style="height: 117px">
-                                        <div class="col-12 col-md-3">
-                                            <div class="type-icon"
-                                                style="background-image: url('/assets/img/accounting/bundle.png')">
+                            <?php if ($field === 'product' || $field === '') : ?>
+                                <tr data-href="bundle">
+                                    <td>
+                                        <div class="row" style="height: 117px">
+                                            <div class="col-12 col-md-3 image-height">
+                                                <div class="type-icon" style="background-image: url('/assets/img/accounting/bundle.png')">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-9 d-flex align-items-center">
+                                                <div class="type-description">
+                                                    <h5 class="m-0">Bundle</h5>
+                                                    <span>A collection of products and/or
+                                                        services that you sell together, for
+                                                        example, a gift basket of fruit, cheese,
+                                                        and wine.</span>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-9 d-flex align-items-center">
-                                            <div class="type-description">
-                                                <h5 class="m-0">Bundle</h5>
-                                                <span>A collection of products and/or
-                                                    services that you sell together, for
-                                                    example, a gift basket of fruit, cheese,
-                                                    and wine.</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
                             <?php endif; ?>
                         </tbody>
                     </table>

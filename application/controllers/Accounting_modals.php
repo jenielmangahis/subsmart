@@ -67,6 +67,8 @@ class Accounting_modals extends MY_Controller
         $this->load->model('accounting_paychecks_model');
         $this->load->model('timesheet_model');
         $this->load->library('form_validation');
+        
+        $this->load->model('General_model', 'general');
     }
 
     public function index($view ="")
@@ -504,6 +506,24 @@ class Accounting_modals extends MY_Controller
                     $this->page_data['est_number'] = $estNum;
                     $this->page_data['ac_tax_rates'] = $this->invoice_model->ac_tax_rates();
                 break;
+            }
+
+            if($view == 'sales_receipt_modal') {
+                $comp_id = logged('company_id');
+                $get_sales_rep = array(
+                    'where' => array(
+                        'users.company_id' => $comp_id
+                    ),
+                    'table' => 'users',
+                    'distinct' => true,
+                    'select' => 'users.id, users.FName, users.LName',
+                    'join' => array(
+                        'table' => 'acs_office',
+                        'statement' => 'users.id = acs_office.fk_sales_rep_office',
+                        'join_as' => 'left',
+                    ),
+                );
+                $this->page_data['sales_rep'] = $this->general->get_data_with_param($get_sales_rep);                
             }
 
             $this->load->view("v2/includes/accounting/modal_forms/". $view, $this->page_data);
@@ -7771,11 +7791,15 @@ class Accounting_modals extends MY_Controller
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
+            $return['message'] = 'Error: Please check your form; some fields are required.';
         } elseif (!isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
+        }elseif(!isset($data['email'])) {
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Email is required.';
         } else {
             $salesReceiptData = [
                 'company_id' => logged('company_id'),
@@ -11232,6 +11256,9 @@ class Accounting_modals extends MY_Controller
             case 'term' :
                 $return = $this->get_terms_choices($return, $search);
             break;
+            case 'sales-representatives' :
+                $return = $this->get_sales_representatives($return, $search);
+            break;
             case 'vendor-expense-account' :
                 $accountTypes = [
                     'Cost of Goods Sold',
@@ -11809,9 +11836,6 @@ class Accounting_modals extends MY_Controller
     {
         $customers = $this->accounting_customers_model->getAllByCompany();
        
-    
-
-
         if(!isset($choices['results'])) {
             $choices['results'] = [];
         }
@@ -11887,6 +11911,29 @@ class Accounting_modals extends MY_Controller
         }
 
         return $choices;
+    }
+
+    private function get_sales_representatives($choices, $search = null, $field)
+    {
+        /**
+         * Note:
+         *   Todo: fetching of correct sales representative values
+         */
+
+        /*$get_sales_rep = array(
+            'where' => array(
+                'users.company_id' => $comp_id
+            ),
+            'table' => 'users',
+            'distinct' => true,
+            'select' => 'users.id, users.FName, users.LName',
+            'join' => array(
+                'table' => 'acs_office',
+                'statement' => 'users.id = acs_office.fk_sales_rep_office',
+                'join_as' => 'left',
+            ),
+        );
+        $this->page_data['sales_rep'] = $this->general->get_data_with_param($get_sales_rep);*/
     }
 
     private function get_employee_choices($choices, $search = null, $field)
@@ -14298,6 +14345,7 @@ class Accounting_modals extends MY_Controller
 
     private function view_invoice($invoiceId)
     {
+
         $invoice = $this->invoice_model->getinvoice($invoiceId);
         $invoiceItems = $this->invoice_model->get_invoice_items($invoiceId);
         $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
@@ -14400,7 +14448,7 @@ class Accounting_modals extends MY_Controller
         $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
         $this->page_data['customer'] = $customer;
         $this->page_data['linkableTransactions'] = $linkableTransactions;
-        $this->page_data['invoice_prefix'] = $invoiceSettings->invoice_num_prefix;
+        $this->page_data['invoice_prefix'] = (string) $invoiceSettings->invoice_num_prefix;
         $this->page_data['paymentMethods'] = $paymentMethods;
         $this->page_data['invoice'] = $invoice;
         $this->page_data['items'] = $invoiceItems;
@@ -14410,7 +14458,9 @@ class Accounting_modals extends MY_Controller
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Invoice', $invoiceId);
         $this->page_data['number'] = $this->invoice_model->getlastInsert();
         $this->page_data['ac_tax_rates'] = $this->invoice_model->ac_tax_rates();
+        var_dump($this->page_data['packageItems']);
         $this->load->view("v2/includes/accounting/modal_forms/invoice_modal", $this->page_data);
+
     }
 
     private function view_estimate($estimateId)
@@ -24025,10 +24075,12 @@ class Accounting_modals extends MY_Controller
             $invoiceNum = str_replace($invoiceSettings->invoice_num_prefix, '', $invoice->invoice_number);
             $invoiceId = $invoice->id;
 
+            $baseurl = base_url('/');
             if (!empty($invoice->customer_id)) {
-                $description = "<a href='/invoice/genview/$invoiceId' class='text-decoration-none'>Invoice #$invoiceNum</a> (" . date("m/d/Y", strtotime($invoice->date_issued)) . ")";
+                //$description = "<a href='/invoice/genview/$invoiceId' class='text-decoration-none'>Invoice #$invoiceNum</a> (" . date("m/d/Y", strtotime($invoice->date_issued)) . ")";
+                $description = "<a href=" . site_url() . "invoice/genview/$invoiceId class='text-decoration-none'>Invoice #$invoiceNum</a> (" . date("m/d/Y", strtotime($invoice->date_issued)) . ")";
             } else {
-                $description = "Invoice #$invoiceNum (No customer ID)";
+                $description = "<a href=" . site_url() . "invoice/genview/$invoiceId class='text-decoration-none'>Invoice #$invoiceNum</a> (" . date("m/d/Y", strtotime($invoice->date_issued)) . ")";
             }
 
             $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
