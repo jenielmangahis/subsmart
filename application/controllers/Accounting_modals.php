@@ -14345,6 +14345,7 @@ class Accounting_modals extends MY_Controller
 
     private function view_invoice($invoiceId)
     {
+
         $invoice = $this->invoice_model->getinvoice($invoiceId);
         $invoiceItems = $this->invoice_model->get_invoice_items($invoiceId);
         $paymentRecords = $this->accounting_invoices_model->get_invoice_payment_records($invoice->invoice_number);
@@ -14447,7 +14448,7 @@ class Accounting_modals extends MY_Controller
         $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
         $this->page_data['customer'] = $customer;
         $this->page_data['linkableTransactions'] = $linkableTransactions;
-        $this->page_data['invoice_prefix'] = $invoiceSettings->invoice_num_prefix;
+        $this->page_data['invoice_prefix'] = (string) $invoiceSettings->invoice_num_prefix;
         $this->page_data['paymentMethods'] = $paymentMethods;
         $this->page_data['invoice'] = $invoice;
         $this->page_data['items'] = $invoiceItems;
@@ -14457,7 +14458,9 @@ class Accounting_modals extends MY_Controller
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Invoice', $invoiceId);
         $this->page_data['number'] = $this->invoice_model->getlastInsert();
         $this->page_data['ac_tax_rates'] = $this->invoice_model->ac_tax_rates();
+        var_dump($this->page_data['packageItems']);
         $this->load->view("v2/includes/accounting/modal_forms/invoice_modal", $this->page_data);
+
     }
 
     private function view_estimate($estimateId)

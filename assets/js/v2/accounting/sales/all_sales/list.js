@@ -1196,13 +1196,12 @@ $(document).on("click", "#transactions-table .view-edit-invoice", function (e) {
   e.preventDefault();
   var row = $(this).closest("tr");
   var id = row.find(".select-one").val();
-
   var data = {
     id: id,
     type: row.find("td:nth-child(3)").text().trim(),
   };
-
-  $.get("/accounting/view-transaction/invoice/" + id, function (res) {
+  console.log('view/edit invoice');
+  $.get(`/accounting/view-transaction/invoice/${id}`, function (res) {
     if ($("div#modal-container").length > 0) {
       $("div#modal-container").html(res);
     } else {
