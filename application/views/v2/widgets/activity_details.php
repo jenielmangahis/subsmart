@@ -1,7 +1,9 @@
 <?php if ($activity_logs) { ?>
-    <table class="nsm-table" id="dashboard-activity-logs">
+    <table class="nsm-table" id="dashboard_activity_logs">
         <thead>
-            <tr><td data-name="ActivityLogs"></td></tr>
+            <tr>
+                <td data-name="LogsDetails"></td>
+            </tr>
         </thead>
         <tbody>
             <?php foreach ($activity_logs as $logs) : ?>
@@ -41,7 +43,6 @@
             <?php endforeach; ?>
         </tbody>
     </table>
-                            </div>
 <?php } else { ?>
     <div class="nsm-empty">
         <i class='bx bx-meh-blank'></i>
@@ -50,6 +51,7 @@
 <?php } ?>
 <script>
 $(function(){
-    $("#dashboard-activity-logs").nsmPagination({itemsPerPage:5});
+    $("#dashboard_activity_logs").nsmPagination({itemsPerPage:5});
+    resizeSidebar();
 });
 </script>

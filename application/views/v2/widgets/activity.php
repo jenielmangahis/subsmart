@@ -41,6 +41,7 @@
         $.ajax({
             url: '<?php echo base_url(); ?>activity_logs/getV2ActivityLogs',
             method: 'GET',
+            async: false,
             success: function (response) {
                 $('.activity-logs-container').html(response);
                 resizeSidebar();
