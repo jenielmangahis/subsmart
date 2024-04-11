@@ -1,5 +1,5 @@
 <script>
-    $(function(){
+    $(function() {
         $("#fk_sa_id").select2({
             placeholder: "Select Sales Area"
         });
@@ -140,24 +140,24 @@
     });
     $(function() {
         $("nav:first").addClass("closed");
-        $(".date_checkbox").on( 'change', function (event) {
+        $(".date_checkbox").on('change', function(event) {
             const date_id = this.value;
             if (event.currentTarget.checked) {
                 event.preventDefault();
-                $('#'+date_id).prop("disabled", false);
+                $('#' + date_id).prop("disabled", false);
             } else {
                 event.preventDefault();
-                $('#'+date_id).val(""); // Element(s) are now enabled.
-                $('#'+date_id).prop("disabled", true); // Element(s) are now enabled.
+                $('#' + date_id).val(""); // Element(s) are now enabled.
+                $('#' + date_id).prop("disabled", true); // Element(s) are now enabled.
             }
         });
     });
 
-    $(document).on('click', '#btn-notify-customer-new-pw', function(e){
+    $(document).on('click', '#btn-notify-customer-new-pw', function(e) {
         e.preventDefault();
 
-        var url = base_url + 'customer/_send_login_details';    
-        var cid = $(this).attr('data-id');     
+        var url = base_url + 'customer/_send_login_details';
+        var cid = $(this).attr('data-id');
 
         Swal.fire({
             title: 'Email Notification',
@@ -172,9 +172,11 @@
                     type: 'POST',
                     url: url,
                     dataType: 'json',
-                    data: {cid:cid},
+                    data: {
+                        cid: cid
+                    },
                     success: function(o) {
-                        if( o.is_success == 1 ){   
+                        if (o.is_success == 1) {
                             Swal.fire({
                                 title: 'Email Sent!',
                                 text: "An email was sent to customer of their login details!",
@@ -183,15 +185,15 @@
                                 confirmButtonText: 'Okay'
                             }).then((result) => {
                                 //if (result.value) {
-                                
+
                                 //}
                             });
-                        }else{
-                          Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            html: o.msg
-                          });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: o.msg
+                            });
                         }
                     },
                 });
@@ -201,14 +203,14 @@
 </script>
 
 <script>
-    $(document).ready(function () {
+    $(document).ready(function() {
 
-        $("body").delegate(".remove_item_row", "click", function(){
+        $("body").delegate(".remove_item_row", "click", function() {
             $(this).parent().parent().remove();
         });
 
-        $("#add_field").click(function () {
-            const custom_field_form= "<div class=\"row form_line\">\n" +
+        $("#add_field").click(function() {
+            const custom_field_form = "<div class=\"row form_line\">\n" +
                 "                <div class=\"col-md-5\">\n" +
                 "                    Name\n" +
                 "                    <input type=\"text\" class=\"form-control\" name=\"custom_name[]\" id=\"office_custom_field1\" value=\"\" />\n" +
@@ -230,27 +232,27 @@
                 //console.log("Selected date: " + dateText + "; input's current value: " + this.value);
             },
             dateFormat: 'dd/mm/yy'
-        }).on("changeDate", function (e) {
+        }).on("changeDate", function(e) {
             console.log(e.date);
             var selected_data = moment(e.date).format('L');
             var contract = $('#contract_term').val();
-            var plus_date = moment.utc(selected_data).add(contract,'months');
+            var plus_date = moment.utc(selected_data).add(contract, 'months');
 
             $('#bill_end_date').datepicker("setDate", plus_date.toDate());
             $('#bill_day').val(plus_date.format('D')).trigger("change");
         });
 
-        $("#contract_term").change(function(){
+        $("#contract_term").change(function() {
             var terms = $(this).val();
             var start_date = $("#bill_start_date").val();
-            if( start_date != '' ){
+            if (start_date != '') {
                 var selected_data = moment(start_date).format('L');
-                var plus_date = moment.utc(selected_data).add(terms,'months');
+                var plus_date = moment.utc(selected_data).add(terms, 'months');
                 $('#bill_end_date').val(moment(plus_date).format('L'));
             }
         });
 
-        $( ".datepicker" ).datepicker();
+        $(".datepicker").datepicker();
         $("#recurring_end_date").datepicker();
         $("#bill_end_date").datepicker();
         $("#date_of_birth").datepicker();
@@ -266,61 +268,63 @@
 
         //$("#businessName").hide("slow");
         //$("#fax_").hide("slow");
-       $("#customer_type").on( 'change', function () {
+        $("#customer_type").on('change', function() {
             var c_type = this.value;
-            if(c_type === 'Residential'){
+            if (c_type === 'Residential') {
                 $("#businessName").hide("slow");
                 $("#fax_").hide("slow");
-            }else{
-                $("#businessName").show('slow').css("display","");
-                $("#fax_").show('slow').css("display","");
+            } else {
+                $("#businessName").show('slow').css("display", "");
+                $("#fax_").show('slow').css("display", "");
             }
         });
 
 
         hide_all();
         card_show();
-        $("#bill_method").on( 'change', function () {
+        $("#bill_method").on('change', function() {
             var c_type = this.value;
-            if(c_type === 'CC' || c_type === 'DC' || c_type === 'OCCP'){
+            if (c_type === 'CC' || c_type === 'DC' || c_type === 'OCCP') {
                 hide_all();
                 card_show();
-            }else if(c_type === 'CASH'){
+            } else if (c_type === 'CASH') {
                 hide_all();
-            }else if(c_type === 'CHECK'){
+            } else if (c_type === 'CHECK') {
                 hide_all();
                 $("#checkNumber").show("slow");
                 route_show();
-            }else if(c_type === 'ACH'){
+            } else if (c_type === 'ACH') {
                 hide_all();
                 route_show();
-            }else if(c_type === 'Invoicing'){
+            } else if (c_type === 'Invoicing') {
                 hide_all();
                 $(".invoicing_field").show("slow");
-            }else if(c_type === 'VENMO' || c_type === 'PP' || c_type === 'SQ'){
+            } else if (c_type === 'VENMO' || c_type === 'PP' || c_type === 'SQ') {
                 hide_all();
                 $(".account_cred").show('slow');
-            }else if(c_type === 'WW' || c_type === 'HOF' || c_type === 'eT' || c_type === 'OPT'){
+            } else if (c_type === 'WW' || c_type === 'HOF' || c_type === 'eT' || c_type === 'OPT') {
                 hide_all();
                 $(".account_cred").show('slow');
                 $("#confirmationPD").hide("slow");
             }
         });
 
-        function card_show(){
+        function card_show() {
             $("#CCN").show('slow');
             $("#CCE").show('slow');
             $("#checkNumber").hide("slow");
             $("#routingNumber").hide("slow");
             $("#accountNumber").hide("slow");
         }
-        function route_show(){
+
+        function route_show() {
             $("#CCN").hide('slow');
             $("#CCE").hide('slow');
             $("#routingNumber").show("slow");
             $("#accountNumber").show("slow");
         }
-        function hide_all(){
+
+        function hide_all() {
             $(".invoicing_field").hide("slow");
             $("#checkNumber").hide("slow");
             $("#routingNumber").hide("slow");
@@ -330,7 +334,7 @@
             $(".account_cred").hide('slow');
         }
 
-        $('#ssn').keydown(function (e) {
+        $('#ssn').keydown(function(e) {
             var key = e.charCode || e.keyCode || 0;
             $text = $(this);
             if (key !== 8 && key !== 9) {
@@ -344,7 +348,7 @@
             return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
         });
 
-        $('.phone_number').keydown(function (e) {
+        $('.phone_number').keydown(function(e) {
             var key = e.charCode || e.keyCode || 0;
             $text = $(this);
             if (key !== 8 && key !== 9) {
@@ -369,24 +373,24 @@
         //     format: "LT",
         // });
 
-        $("#rep_comm").keyup(function(){
+        $("#rep_comm").keyup(function() {
             $('#rep_paid').val(this.value);
         });
 
-        $("#tech_comm").keyup(function(){
+        $("#tech_comm").keyup(function() {
             $('#tech_paid').val(this.value);
         });
 
-        $("#rep_paid").keyup(function(){
-            var repPaid=this.value;
+        $("#rep_paid").keyup(function() {
+            var repPaid = this.value;
             var techPaid = $('#tech_paid').val();
             var new_sub_total = Number(repPaid) + Number(techPaid);
             $('#labor_cost').val(new_sub_total);
             console.log(new_sub_total);
         });
 
-        $("#tech_paid").keyup(function(){
-            var repPaid=this.value;
+        $("#tech_paid").keyup(function() {
+            var repPaid = this.value;
             var techPaid = $('#rep_paid').val();
             var new_sub_total = Number(repPaid) + Number(techPaid);
             $('#labor_cost').val(new_sub_total);
@@ -396,11 +400,11 @@
 
         $('.timepicker').timepicker('setTime', new Date().toLocaleTimeString());
         //$('#tech_depart_time').timepicker('setTime', moment.utc(new Date().toLocaleTimeString()).add(2,'hours'));
-        $('#tech_depart_time').timepicker('setTime',  moment.utc(new Date().toLocaleTimeString(),'hh:mm a').add(2,'hour').format('h:mm a'));
+        $('#tech_depart_time').timepicker('setTime', moment.utc(new Date().toLocaleTimeString(), 'hh:mm a').add(2, 'hour').format('h:mm a'));
 
         $("#tech_arrive_time").on("keyup change", function(e) {
             //$('#card_fname').val(this.value);
-            $('#tech_depart_time').timepicker('setTime',  moment.utc(this.value,'hh:mm a').add(2,'hour').format('h:mm a'));
+            $('#tech_depart_time').timepicker('setTime', moment.utc(this.value, 'hh:mm a').add(2, 'hour').format('h:mm a'));
         });
 
         $("#monitor_id").on("keyup change", function(e) {
@@ -409,22 +413,22 @@
 
         var table_assign_module = $('#assign_module_table').DataTable({
             "lengthChange": false,
-            "searching" : true,
+            "searching": true,
             "pageLength": 5
         });
         var note = $('#notes_table').DataTable({
             "lengthChange": false,
-            "searching" : true,
+            "searching": true,
             "pageLength": 5
         });
-        var devices_table= $('#devices_table').DataTable({
+        var devices_table = $('#devices_table').DataTable({
             "lengthChange": false,
-            "searching" : true,
+            "searching": true,
             "pageLength": 5
         });
     });
 
-    function print_data_sheet(){
+    function print_data_sheet() {
         let currentHtml = $('#print').html();
         var a = window.open('', '_selfs', '');
         a.document.write('<html>');
@@ -447,24 +451,27 @@
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var form = $(this);
             var is_valid = 1;
-            var err_msg  = '';
+            var err_msg = '';
 
-            if( $('#lead_source').val() == null ){
+            if ($('#lead_source').val() == null) {
                 is_valid = 0;
-                err_msg  = 'Please specify lead source';
-            } 
+                err_msg = 'Please specify lead source';
+            }
 
-            if( is_valid == 1 ){
+            if (is_valid == 1) {
                 const formArray = form.serializeArray();
                 const payload = {};
-                formArray.forEach(({ name, value }) => payload[name] = value);
+                formArray.forEach(({
+                    name,
+                    value
+                }) => payload[name] = value);
                 //const prefixURL = location.hostname === "localhost" ? "/ci/nsmart_v2" : "";
                 const prefixURL = base_url;
-                const response = await fetch(`${prefixURL}Customer_Form/apiCheckDuplicate`, { 
-                    method: "post", 
+                const response = await fetch(`${prefixURL}Customer_Form/apiCheckDuplicate`, {
+                    method: "post",
                     body: JSON.stringify(payload),
-                    headers: { 
-                        accept: "application/json", 
+                    headers: {
+                        accept: "application/json",
                         "content-type": "application/json"
                     }
                 });
@@ -509,22 +516,23 @@
                     url: base_url + "customer/save_customer_profile",
                     dataType: 'json',
                     data: form.serialize(), // serializes the form's elements.
-                    success: function(data)
-                    {
+                    success: function(data) {
                         document.getElementById('overlay').style.display = "none";
-                        if(data){
-                            <?php if(isset($profile_info)): ?>
-                            sucess("Customer Information has been Updated Successfully!",data.profile_id);
-                            <?php else: ?>
-                            sucess("New Customer has been Added Successfully!",data.profile_id);
+                        if (data) {
+                            <?php if (isset($profile_info)) : ?>
+                                sucess("Customer Information has been Updated Successfully!", data.profile_id);
+                            <?php else : ?>
+                                sucess("New Customer has been Added Successfully!", data.profile_id);
                             <?php endif; ?>
-                        }else{
+                        } else {
                             error(data.message);
                         }
                         console.log(data);
-                    }, beforeSend: function() {
+                    },
+                    beforeSend: function() {
                         document.getElementById('overlay').style.display = "flex";
-                    },error: function (xhr, ajaxOptions, thrownError, data) {
+                    },
+                    error: function(xhr, ajaxOptions, thrownError, data) {
                         document.getElementById('overlay').style.display = "none";
                         Swal.fire({
                             text: 'Customer profile was successfully updated!',
@@ -535,12 +543,12 @@
                             confirmButtonText: 'Ok'
                         }).then((result) => {
                             if (result.value) {
-                                window.location.href="<?= base_url(); ?>customer";
+                                window.location.href = "<?= base_url(); ?>customer";
                             }
                         });
                     }
                 });
-            }else{
+            } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error!',
@@ -548,14 +556,92 @@
                 });
             }
         });
-        function save_sucess(information){
+
+
+
+
+        $("#person_and_company_form").submit(async function(e) {
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+            var form = $(this);
+            var is_valid = 1;
+            var err_msg = '';
+            const isCompany = $("#page_type").val() == "company" ? true : false;
+               console.log(isCompany);
+
+            if (is_valid == 1) {
+                const formArray = form.serializeArray();
+                const payload = {};
+                formArray.forEach(({
+                    name,
+                    value
+                }) => payload[name] = value);
+                const prefixURL = base_url;
+                const response = await fetch(`${prefixURL}Customer_Form/apiCheckDuplicate`, {
+                    method: "post",
+                    body: JSON.stringify(payload),
+                    headers: {
+                        accept: "application/json",
+                        "content-type": "application/json"
+                    }
+                });
+                const json = await response.json();
+                if (json.data && json.message) {
+                    const duplicateConfirmation = await Swal.fire({
+                        title: 'Possible duplicate customer',
+                        html: json.message,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#32243d',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Save anyway'
+                    });
+
+                    if (!duplicateConfirmation.isConfirmed) {
+                        return;
+                    }
+                }
+                $.ajax({
+                    type: "POST",
+                    url: base_url + "customer/save_person_profile",
+                    dataType: 'json',
+                    data: form.serialize(), // serializes the form's elements.
+                    success: function(data) {
+
+                        if (data.message === 'Data updated successfully') {
+                            isCompany == true ? success_person_and_company("Company has been Update Successfully!","company") 
+                            : success_person_and_company("Customer has been Update Successfully!","person");
+                            
+                        } else {
+                            isCompany == true ? success_person_and_company("New Company has been Added Successfully!","company") 
+                            : success_person_and_company("New Customer has been Added Successfully!","person");
+                             
+                        }
+
+
+
+                        console.log(data);
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: err_msg
+                });
+            }
+        });
+
+      
+
+        function save_sucess(information) {
             Swal.fire(
                 'Good job!',
                 information,
                 'success'
             );
         }
-        function error(information){
+
+        function error(information) {
             Swal.fire({
                 title: 'Sorry!',
                 text: information,
@@ -570,7 +656,8 @@
                 }
             });
         }
-        function sucess(information,id){
+
+        function sucess(information, id) {
             Swal.fire({
                 //title: 'Good job!',
                 text: information,
@@ -581,7 +668,28 @@
                 confirmButtonText: 'Ok'
             }).then((result) => {
                 if (result.value) {
-                    window.location.href="<?= base_url(); ?>customer/preview_/"+id;
+                    window.location.href = "<?= base_url(); ?>customer/preview_/" + id;
+                }
+            });
+        }
+
+        function success_person_and_company(information,type) {
+            Swal.fire({
+                //title: 'Good job!',
+                text: information,
+                icon: 'success',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if (result.value) {
+                    if(type === "person"){
+                        window.location.href = "<?= base_url(); ?>customer/person";
+                    }else{
+                        window.location.href = "<?= base_url(); ?>customer/company";
+                    }
+                   
                 }
             });
         }
@@ -596,15 +704,15 @@
             var newField = newFields.childNodes;
 
             //console.log(newField);
-            for (var i=0;i<newField.length;i++) {
+            for (var i = 0; i < newField.length; i++) {
                 var theName = newField[i].name;
-                if (theName){
+                if (theName) {
                     //  newField[i].name = theName+'[]';
                 }
 
             }
             var insertHere = document.getElementById('writeroot');
-            insertHere.parentNode.insertBefore(newFields,insertHere);
+            insertHere.parentNode.insertBefore(newFields, insertHere);
         }
         // window.onload = moreFields;
         // $("#moreFields").on( "click", function( event ) {
@@ -615,7 +723,7 @@
         //     moreFields();
         // });
 
-        $("body").delegate("#moreFields", "click", function(){
+        $("body").delegate("#moreFields", "click", function() {
             //alert("Delegated Button Clicked");
             //moreFields();
             counter++;
@@ -625,28 +733,30 @@
             var newField = newFields.childNodes;
 
             //console.log(newField);
-            for (var i=0;i<newField.length;i++) {
+            for (var i = 0; i < newField.length; i++) {
                 var theName = newField[i].name;
-                if (theName){
+                if (theName) {
                     //  newField[i].name = theName+'[]';
                 }
 
             }
             var insertHere = document.getElementById('writeroot');
-            insertHere.parentNode.insertBefore(newFields,insertHere);
+            insertHere.parentNode.insertBefore(newFields, insertHere);
         });
 
-        $(".remove_device").on( "click", function( event ) {
-            var ID=this.id;
+        $(".remove_device").on("click", function(event) {
+            var ID = this.id;
             //alert(ID);
             $.ajax({
                 type: "POST",
                 url: "/customer/remove_devices",
-                data: {id : ID}, // serializes the form's elements.
-                success: function(data){
-                    if(data === "Done"){
+                data: {
+                    id: ID
+                }, // serializes the form's elements.
+                success: function(data) {
+                    if (data === "Done") {
                         window.location.reload();
-                    }else{
+                    } else {
                         console.log(data);
                     }
                 }

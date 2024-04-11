@@ -14471,7 +14471,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['totalPayment'] = $totalPayment;
         $this->page_data['term'] = $term;
         $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Invoice', $invoiceId);
-        $this->page_data['number'] = $this->invoice_model->getlastInsert();
+        $this->page_data['number'] = $this->invoice_model->get_last_invoice_number(logged('company_id'), $invoiceSettings->invoice_num_prefix);
         $this->page_data['ac_tax_rates'] = $this->invoice_model->ac_tax_rates();
         var_dump($this->page_data['packageItems']);
         $this->load->view("v2/includes/accounting/modal_forms/invoice_modal", $this->page_data);

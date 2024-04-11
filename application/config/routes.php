@@ -103,6 +103,9 @@ $route['customer/_quick_add_lead'] = 'Customer/ajax_quick_add_lead';
 $route['customer/company'] = 'Customer/CompanyList';
 $route['customer/person'] = 'Customer/PersonList';
 $route['customer/getCompanyList'] = 'Customer/getCompanyList';
+$route['customer/getPersonList'] = 'Customer/getPersonList';
+$route['customer/save_person_profile'] = 'Customer/save_person_profile';
+$route['customer/delete/(:num)'] = 'customer/delete_company_or_person/$1';
 // Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
 $route['credit_bureau/add_new'] = 'Credit_Bureau/add_new';

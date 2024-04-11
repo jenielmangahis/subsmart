@@ -113,6 +113,17 @@ class Customer extends MY_Controller
     }
 
     public function CompanyList(){
+        $get_customer_groups = [
+            'where' => [
+                    'company_id' => logged('company_id'),
+            ],
+            'table' => 'customer_groups',
+            'select' => '*',
+        ];
+        $default_status_ids = defaultCompanyCustomerStatusIds();
+        $this->page_data['customer_status'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'), $default_status_ids);
+     
+        $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
 
         $this->page_data['page']->title = 'Company';
         $this->page_data['page']->parent = 'Customers';
@@ -130,14 +141,68 @@ class Customer extends MY_Controller
          
         echo json_encode($this->page_data);
     }
-    public function PersonList(){
+    public function getPersonList(){
+      
+        $get_customer_groups = [
+            'where' => [
+                    'company_id' => logged('company_id'),
+            ],
+            'table' => 'customer_groups',
+            'select' => '*',
+        ];
+    
 
-        $this->page_data['page']->title = 'Person';
+        $default_status_ids = defaultCompanyCustomerStatusIds();
+        $this->page_data['customer_status'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'), $default_status_ids);
+     
+        $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
+        $this->page_data['page']->title = 'Company';
         $this->page_data['page']->parent = 'Customers';
 
         $this->page_data['persons'] = $this->company->getAllCommercialCustomers(logged('company_id'),'Residential');
 
+        echo json_encode($this->page_data);
+    }
+    public function PersonList(){
+
+    
+
+        $get_customer_groups = [
+            'where' => [
+                    'company_id' => logged('company_id'),
+            ],
+            'table' => 'customer_groups',
+            'select' => '*',
+        ];
+
+        $default_status_ids = defaultCompanyCustomerStatusIds();
+        $this->page_data['customer_status'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'), $default_status_ids);
+        $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
+        $this->page_data['page']->title = 'Person';
+        $this->page_data['page']->parent = 'Customers';
+
+        $this->page_data['persons'] = $this->company->getAllCommercialCustomers(logged('company_id'),'Residential');
         $this->load->view('v2/pages/customer/person', $this->page_data);
+    }
+    public function delete_company_or_person($id)
+    {
+        // Check if the ID is provided
+        if (!$id) {
+            $this->session->set_flashdata('error', 'Invalid customer ID.');
+            redirect('customer/index');
+        }
+
+        // Call the deleteCustomer method from your model
+        $result = $this->company->deleteCustomer($id);
+
+        if ($result) {
+            // Deletion successful
+            $this->session->set_flashdata('success', 'Customer deleted successfully.');
+        } else {
+            // Deletion failed
+            $this->session->set_flashdata('error', 'Failed to delete customer.');
+        }
+
     }
 
     public function ajax_customer_lists()
@@ -1975,6 +2040,7 @@ class Customer extends MY_Controller
             'table' => 'customer_groups',
             'select' => '*',
         ];
+    
 
         $get_login_user = [
             'where' => [
@@ -2273,7 +2339,67 @@ class Customer extends MY_Controller
         }
         exit(json_encode($data_arr));
     }
+     
+    public function save_person_profile()
+    {
+        try {
 
+        self::addJSONResponseHeader();
+        $this->load->model('Customer_model', 'company');
+        $input = $this->input->post();
+      
+            $input_profile = [
+                'fk_user_id' => logged('id'),
+                'fk_sa_id' => $input['fk_sa_id'],
+                'company_id' => logged('company_id'),
+                'status' => $input['status'],
+                'customer_type' => $input['customer_type'],
+                'customer_group_id' => $input['customer_group'],
+                'business_name' => $input['business_name'],
+                'first_name' => $input['first_name'],
+                'last_name' => $input['last_name'],
+                'middle_name' => $input['middle_name'],
+                'prefix' => $input['prefix'],
+                'suffix' => $input['suffix'],
+                'mail_add' => $input['mail_add'],
+                'city' => $input['city'],
+                'county' => $input['county'],
+                'state' => $input['state'],
+                'country' => $input['country'],
+                'industry_type_id' => $input['industry_type'],
+                'zip_code' => $input['zip_code'],
+                'cross_street' => $input['cross_street'],
+                'subdivision' => $input['subdivision'],
+                'email' => $input['email'],
+                'ssn' => $input['ssn'],
+                'date_of_birth' => $input['date_of_birth'],
+                'phone_h' => $input['phone_h'],
+                'phone_m' => $input['phone_m'],
+                'notes' => trim($input['notes']),
+                'is_sync' => 0
+            ];
+
+            if ($input['prof_id'] == "") {
+                $insert_result = $this->company->insert_data($input_profile);
+                $response['success'] = $insert_result;
+                $response['message'] = $insert_result ? 'Data inserted successfully' : 'Failed to insert data';
+            } else {
+                $update_result = $this->company->update_data($input['prof_id'], $input_profile);
+                $response['success'] = $update_result;
+                $response['message'] = $update_result ? 'Data updated successfully' : 'Failed to update data';
+            }
+            
+            // Return the response as JSON
+            $this->output->set_content_type('application/json')->set_output(json_encode($response));
+            
+         } catch (Exception $e) {
+                // Handle any unexpected exceptions here
+                
+                log_message('error', $e->getMessage());
+                show_error('An unexpected error occurred. Please try again later.');
+            }
+    
+    }
     public function getDuplicateList($customerType)
     {
         $company_id = logged('company_id');

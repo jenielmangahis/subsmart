@@ -113,6 +113,7 @@ $(document).ready(function() {
     }) .then(response => response.json() ).then(response => {
         var {success, companies, recentCustomers } = response;
         $("#recent-customer-container").html('');
+        $("#recent-customer-container-count").html(recentCustomers.length);
         if(success == 1){
             for(var j=0; j < recentCustomers.length; j++){
             var nn = "NN";

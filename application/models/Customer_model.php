@@ -24,6 +24,21 @@ class Customer_model extends MY_Model
             return $this->getAllByUserId();
         }
     }
+    public function insert_data($data) {
+        // Insert data into the database
+        $this->db->insert($this->table, $data);
+    
+        // Check if the insertion was successful
+        return $this->db->affected_rows() > 0;
+    }
+    public function update_data($prof_id, $updated_data) {
+        // Update data in the database
+        $this->db->where('prof_id', $prof_id);
+        $this->db->update($this->table, $updated_data);
+        
+        // Check if the update was successful
+        return $this->db->affected_rows() > 0;
+    }
 
     public function getAllByCompany($company_id, $filter = array())
     {
@@ -48,6 +63,7 @@ class Customer_model extends MY_Model
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
         $this->db->where('customer_type', $customer_type);
+        $this->db->order_by('prof_id', 'desc'); // Add this line to order by descending
         $query = $this->db->get();
         return $query->result();
 
