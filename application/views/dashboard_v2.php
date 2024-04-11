@@ -18,8 +18,23 @@
     color: #c7951c;
     padding: 10px;
 }
+.summary-report-header .icon-summary-income {
+    background-color: #dc35451f;
+    color: #dc3545;
+    padding: 10px;
+}
+.summary-report-header .icon-summary-customer {
+    background-color: #6ba77c33;
+    color: #6ba77c;
+    padding: 10px;
+}
 
 .summary-report-header .icon-summary-sales {
+    background-color: #dad1e0;
+    color: #6a4a86;
+    padding: 10px;
+}
+.summary-report-header .icon-summary-estimate {
     background-color: #dad1e0;
     color: #6a4a86;
     padding: 10px;
@@ -43,7 +58,8 @@
 }
 
 .summary-report-body h1 {
-    font-size: 64px;
+    font-size: 36px;
+    font-weight: 600;
 }
 
 .nsm-card-footer {
@@ -56,6 +72,24 @@
 }
 .nsm-card-footer a i{ 
     color: #6a4a86 !important;
+}
+
+.leads-container {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+.main-widget-row{
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: start;
+}
+.main-widget-container{
+    width:245px;
+    box-shadow: 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12), 0 1px 3px 0 rgba(0,0,0,.2);
+    border-radius: .75rem;
 }
 </style>
 
@@ -185,42 +219,67 @@
 
 <div class="row page-content g-0">
     <div class="col-12">
-        <div class="row h-100 g-3 grid-row-mb nsm-draggable-container" id="nsm_widgets">
+        <div class="row  g-3 grid-row-mb nsm-draggable-container" id="nsm_widgets">
+        <div class="main-widget-row">
             <?php
-            if (count($main_widgets) > 0) {
-                foreach ($main_widgets as $wids) {
-                    if ($wids->wu_is_main) {
-                        if ($wids->wu_widget_id == 26) {
-                            echo '<div class="col-12 col-lg-4" id="droppable">';
-                            $data['class'] = 'nsm-card nsm-grid large';
-                        } else {
-                            $data['class'] = 'nsm-card nsm-grid med primary';
-                            echo '<div class="col-12 col-lg-4" id="droppable">';
-                        }
+            foreach ($widgets as $wids) {
+                if ($wids->w_main) {
+                    echo '<div >';
+                    $data['class'] = 'nsm-card nsm-grid main-widget-container';
+                    $data['isMain'] = false;
+                    $data['id'] = $wids->w_id;
+                    $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
 
-                        $data['isMain'] = true;
-                        $data['id'] = $wids->w_id;
-                        $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
-
-                        if ($wids->w_name === 'Expense') {
-                            $data = set_expense_graph_data($data);
-                        }
-
-                        if ($wids->w_name === 'Bank') {
-                            $data = set_bank_widget_data($data);
-                        }
-
-                        $this->load->view('v2/'.$wids->w_view_link, $data);
-
-                        echo '</div>';
+                    if ($wids->w_name === 'Expense') {
+                        $data = set_expense_graph_data($data);
                     }
+
+                    if ($wids->w_name === 'Bank') {
+                        $data = set_bank_widget_data($data);
+                    }
+                    // if($wids->w_view_link != 'widgets/lead_source'){
+                    //     $this->load->view("v2/" . $wids->w_view_link, $data);
+                    // }
+                    $this->load->view('v2/'.$wids->w_view_link, $data);
+
+                    echo '</div>';
                 }
             }
+?>  </div><?php
+if (count($main_widgets) > 0) {
+    foreach ($main_widgets as $wids) {
+        if ($wids->wu_is_main) {
+            if ($wids->wu_widget_id == 26) {
+                echo '<div class="col-12 col-lg-4" id="droppable">';
+                $data['class'] = 'nsm-card nsm-grid large';
+            } else {
+                $data['class'] = 'nsm-card nsm-grid med primary';
+                echo '<div class="col-12 col-lg-4" id="droppable">';
+            }
+
+            $data['isMain'] = true;
+            $data['id'] = $wids->w_id;
+            $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
+
+            if ($wids->w_name === 'Expense') {
+                $data = set_expense_graph_data($data);
+            }
+
+            if ($wids->w_name === 'Bank') {
+                $data = set_bank_widget_data($data);
+            }
+
+            $this->load->view('v2/'.$wids->w_view_link, $data);
+
+            echo '</div>';
+        }
+    }
+}
 ?>
 
             <?php
 foreach ($widgets as $wids) {
-    if (!$wids->wu_is_main) {
+    if (!$wids->wu_is_main && !$wids->w_main) {
         echo '<div class="col-12 col-lg-4">';
         $data['class'] = 'nsm-card nsm-grid';
         $data['isMain'] = false;

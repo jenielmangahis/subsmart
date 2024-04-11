@@ -63,7 +63,24 @@ class EsignCompanyTagSection_model extends MY_Model {
             'Customer' => 'Customer',
             'Invoice' => 'Invoice',
             'Company' => 'Company',
-            'Job' => 'Job'
+            'Job' => 'Job',
+            'Customer Emergency Contacts' => 'Customer Emergency Contacts'
+        ];
+
+        return $options;
+    }
+
+    public function optionCustomerEmergencyContacts()
+    {
+        $options = [
+            'Customer Primary Contact Firstname' => 'Primary Contact Firstname',
+            'Customer Primary Contact Lastname' => 'Primary Contact Lastname',
+            'Customer Primary Contact Number' => 'Primary Contact Number',
+            'Customer Primary Contact Relation' => 'Primary Contact Relation',
+            'Customer Secondary Contact Firstname' => 'Secondary Contact Firstname',
+            'Customer Secondary Contact Lastname' => 'Secondary Contact Lastname',
+            'Customer Secondary Contact Number' => 'Secondary Contact Number',
+            'Customer Secondary Contact Relation' => 'Secondary Contact Relation',
         ];
 
         return $options;
@@ -83,7 +100,7 @@ class EsignCompanyTagSection_model extends MY_Model {
             'Customer State' => 'State',
             'Customer Zip' => 'Zip',
             'Customer SSS' => 'Social Security Number',
-            'Customer Date of Birth' => 'Date of Birth'
+            'Customer Date of Birth' => 'Date of Birth',
         ];
 
         return $options;

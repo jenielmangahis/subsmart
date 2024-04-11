@@ -285,7 +285,7 @@
                                     <div class="row">
                                         <?php
 
-                                        $string = $number->invoice_number;
+                                        $string = $number;
                                         $invoiceNumber = preg_replace_callback('/(\d+)/', function ($matches) {
                                             return str_pad($matches[1] + 1, 7, '0', STR_PAD_LEFT);
                                         }, $string);

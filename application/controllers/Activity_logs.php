@@ -25,7 +25,7 @@ class Activity_logs extends MY_Controller {
 	{
 		$company_id = logged('company_id');
 		
-		$activity_logs = $this->activity_model->getActivityLogs($company_id, 10);
+		$activity_logs = $this->activity_model->getActivityLogs($company_id, 20);
 
 		foreach($activity_logs as $activity_log):
 			$activity_log->first_name = $this->users_model->getUser($activity_log->user_id)->FName;

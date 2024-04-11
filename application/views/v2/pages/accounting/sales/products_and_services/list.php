@@ -11,17 +11,21 @@
         height: 30px !important;
         line-height: 150%;
     }
-    #import-items-modal label{
+
+    #import-items-modal label {
         font-size: 12px !important;
         margin-bottom: 1px !important;
     }
-    #import-items-modal hr{
+
+    #import-items-modal hr {
         border: 2px solid #32243d !important;
         width: 100%;
     }
-    #import-items-modal .required{
-        color : red!important;
+
+    #import-items-modal .required {
+        color: red !important;
     }
+
     #import-items-modal .msg-count-cus {
         height: 30px;
         width: 30px;
@@ -29,7 +33,8 @@
         align-items: center;
         justify-content: center;
     }
-    #import-items-modal .card{
+
+    #import-items-modal .card {
         box-shadow: 0 0 13px 0 rgb(116 116 117 / 44%) !important;
     }
 
@@ -46,12 +51,14 @@
         justify-content: center;
         margin: auto;
     }
-    #import-items-modal table{
-        overflow-x:scroll !important;
-        overflow-y:scroll !important;
-        display:block !important;
-        height:500px !important;
+
+    #import-items-modal table {
+        overflow-x: scroll !important;
+        overflow-y: scroll !important;
+        display: block !important;
+        height: 500px !important;
     }
+
     /**  */
     /* #import-items-modal * {
         margin: 0;
@@ -82,6 +89,7 @@
         box-shadow: 0 2px 13px -1px rgba(0, 0, 0, 0.2);
         transition: all ease 0.25s;
     }
+
     #import-items-modal #progress-bar-container li:hover::after {
         background: #555;
     }
@@ -114,6 +122,7 @@
         border-radius: 50px;
         transition: 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.25);
     }
+
     #import-items-modal #progress-content-section {
         position: relative;
         top: 100px;
@@ -122,6 +131,7 @@
         background: #f3f3f3;
         border-radius: 4px;
     }
+
     #import-items-modal #progress-content-section .section-content {
         padding: 30px 40px;
         text-align: center;
@@ -151,16 +161,19 @@
         display: block;
         opacity: 1;
     }
+
     #import-items-modal .progress-wrapper {
         margin: auto;
         max-width: auto;
     }
+
     #import-items-modal #progress-bar-container {
         position: relative;
         margin: auto;
         height: 100%;
         margin-top: 65px;
     }
+
     #import-items-modal #progress-bar-container ul {
         padding-top: 15px;
         z-index: 999;
@@ -168,6 +181,7 @@
         width: 100%;
         margin-top: -40px;
     }
+
     #import-items-modal #progress-bar-container li::before {
         content: " ";
         display: block;
@@ -202,26 +216,43 @@
     }
 
     @keyframes FadeInUp {
-    0% {
-        transform: translateY(15px);
-        opacity: 0;
-    }
-    100% {
-        transform: translateY(0px);
-        opacity: 1;
-    }
+        0% {
+            transform: translateY(15px);
+            opacity: 0;
+        }
+
+        100% {
+            transform: translateY(0px);
+            opacity: 1;
+        }
     }
 
     #import-items-modal .btn-primary:disabled {
-        color: #fff !important;;
+        color: #fff !important;
+        ;
         background-color: #ccc !important;
-        border: 1px solid transparent !important;;
+        border: 1px solid transparent !important;
+        ;
     }
 
-    #import-items-modal .tbl { border-collapse: collapse;}
-    #import-items-modal .tbl th, .tbl td { padding: 2px; border: solid 1px #777; }
-    #import-items-modal .tbl th { background-color: lightblue; }
-    #import-items-modal .tbl-separate { border-collapse: separate; border-spacing: 5px;}
+    #import-items-modal .tbl {
+        border-collapse: collapse;
+    }
+
+    #import-items-modal .tbl th,
+    .tbl td {
+        padding: 2px;
+        border: solid 1px #777;
+    }
+
+    #import-items-modal .tbl th {
+        background-color: lightblue;
+    }
+
+    #import-items-modal .tbl-separate {
+        border-collapse: separate;
+        border-spacing: 5px;
+    }
 
     #overlay {
         display: none;
@@ -256,33 +287,46 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-							If you are not enrolled in our inventory management system, you may want to consider this feature. With this powerful feature means being able to track the products you sell and the services you provide per location. This feature means less shrinkage and more profitability.
+                            If you are not enrolled in our inventory management system, you may want to consider this feature. With this powerful feature means being able to track the products you sell and the services you provide per location. This feature means less shrinkage and more profitability.
                         </div>
                     </div>
                 </div>
                 <div class="row g-3 mb-3">
-                    <div class="col-12 col-md-6">
-                        <div class="nsm-counter primary h-100 mb-2 <?=$stock_status === 'low-stock' ? 'selected' : ''?>" id="low-stock">
+                    <div class="col-12 col-md-4">
+                        <div class="nsm-counter primary h-100 mb-2 <?= $stock_status === 'low-stock' ? 'selected' : '' ?>" id="low-stock">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year"><?=$low_stock_count?></h2>
+                                    <h2 id="lowStockCount"><?= $low_stock_count ?></h2>
                                     <span>LOW STOCK</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        <div class="nsm-counter error h-100 mb-2 <?=$stock_status === 'out-of-stock' ? 'selected' : ''?>" id="out-of-stock">
+                    <div class="col-12 col-md-4">
+                        <div class="nsm-counter error h-100 mb-2 <?= $stock_status === 'out-of-stock' ? 'selected' : '' ?>" id="out-of-stock">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year"><?=$out_of_stock?></h2>
+                                    <h2 id="outOfStockCount"><?= $out_of_stock ?></h2>
                                     <span>OUT OF STOCK</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="nsm-counter success h-100 mb-2 <?= $stock_status === 'out-of-stock' ? 'selected' : '' ?>" id="total-stock">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-receipt'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id="totalStock"><?= $total_stock ?></h2>
+                                    <span>TOTAL ITEMS</span>
                                 </div>
                             </div>
                         </div>
@@ -326,7 +370,7 @@
                             </ul>
                         </div>
 
-						<div class="dropdown d-inline-block">
+                        <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
@@ -334,43 +378,43 @@
                                 <div class="row">
                                     <div class="col">
                                         <label for="filter-status">Status</label>
-                                        <select class="nsm-field form-select" name="filter_status" id="filter-status" data-applied="<?=empty($status) ? 'active' : $status?>">
-                                            <option value="active" <?=empty($status) || $status === 'active' ? 'selected' : ''?>>Active</option>
-                                            <option value="inactive" <?=$status === 'inactive' ? 'selected' : ''?>>Inactive</option>
-                                            <option value="all" <?=$status === 'all' ? 'selected' : ''?>>All</option>
+                                        <select class="nsm-field form-select" name="filter_status" id="filter-status" data-applied="<?= empty($status) ? 'active' : $status ?>">
+                                            <option value="active" <?= empty($status) || $status === 'active' ? 'selected' : '' ?>>Active</option>
+                                            <option value="inactive" <?= $status === 'inactive' ? 'selected' : '' ?>>Inactive</option>
+                                            <option value="all" <?= $status === 'all' ? 'selected' : '' ?>>All</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col">
                                         <label for="filter-type">Type</label>
-                                        <select class="nsm-field form-select" name="filter_type" id="filter-type" data-applied="<?=empty($type) ? 'all' : $type?>">
-                                            <option value="all" <?=empty($type) || $type === 'all' ? 'selected' : ''?>>All</option>
-                                            <option value="inventory" <?=$type === 'inventory' ? 'selected' : ''?>>Inventory</option>
-                                            <option value="non-inventory" <?=$type === 'non-inventory' ? 'selected' : ''?>>Non-inventory</option>
-                                            <option value="service" <?=$type === 'service' ? 'selected' : ''?>>Service</option>
-                                            <option value="bundle" <?=$type === 'bundle' ? 'selected' : ''?>>Bundle</option>
+                                        <select class="nsm-field form-select" name="filter_type" id="filter-type" data-applied="<?= empty($type) ? 'all' : $type ?>">
+                                            <option value="all" <?= empty($type) || $type === 'all' ? 'selected' : '' ?>>All</option>
+                                            <option value="inventory" <?= $type === 'inventory' ? 'selected' : '' ?>>Inventory</option>
+                                            <option value="non-inventory" <?= $type === 'non-inventory' ? 'selected' : '' ?>>Non-inventory</option>
+                                            <option value="service" <?= $type === 'service' ? 'selected' : '' ?>>Service</option>
+                                            <option value="bundle" <?= $type === 'bundle' ? 'selected' : '' ?>>Bundle</option>
                                         </select>
                                     </div>
                                 </div>
-								<div class="row">
+                                <div class="row">
                                     <div class="col">
                                         <label for="filter-category" class="w-100">Category</label>
                                         <select name="filter_category[]" id="filter-category" class="nsm-field form-select" multiple="multiple">
-                                            <option value="0" <?=empty($selectedCategories) || in_array('0', $selectedCategories) ? 'selected' : ''?>>Uncategorized</option>
+                                            <option value="0" <?= empty($selectedCategories) || in_array('0', $selectedCategories) ? 'selected' : '' ?>>Uncategorized</option>
                                             <?php foreach ($this->items_model->getItemCategories() as $category) : ?>
-                                            <option value="<?=$category->item_categories_id?>" <?=empty($selectedCategories) || in_array($category->item_categories_id, $selectedCategories) ? 'selected' : ''?>><?=$category->name?></option>
+                                                <option value="<?= $category->item_categories_id ?>" <?= empty($selectedCategories) || in_array($category->item_categories_id, $selectedCategories) ? 'selected' : '' ?>><?= $category->name ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
                                 </div>
-								<div class="row">
+                                <div class="row">
                                     <div class="col">
                                         <label for="filter-stock-status">Stock status</label>
-                                        <select class="nsm-field form-select" name="filter_stock_status" id="filter-stock-status" data-applied="<?=empty($stock_status) ? 'all' : $stock_status?>">
-                                            <option value="all" <?=empty($stock_status) || $stock_status === 'all' ? 'selected' : ''?>>All</option>
-											<option value="low-stock" <?=$stock_status === 'low-stock' ? 'selected' : ''?>>Low stock</option>
-											<option value="out-of-stock" <?=$stock_status === 'out-of-stock' ? 'selected' : ''?>>Out of stock</option>
+                                        <select class="nsm-field form-select" name="filter_stock_status" id="filter-stock-status" data-applied="<?= empty($stock_status) ? 'all' : $stock_status ?>">
+                                            <option value="all" <?= empty($stock_status) || $stock_status === 'all' ? 'selected' : '' ?>>All</option>
+                                            <option value="low-stock" <?= $stock_status === 'low-stock' ? 'selected' : '' ?>>Low stock</option>
+                                            <option value="out-of-stock" <?= $stock_status === 'out-of-stock' ? 'selected' : '' ?>>Out of stock</option>
                                         </select>
                                     </div>
                                 </div>
@@ -419,43 +463,43 @@
                                     <input type="checkbox" checked name="col_chk" id="chk_inventory_account" class="form-check-input">
                                     <label for="chk_inventory_account" class="form-check-label">Inventory Account</label>
                                 </div>
-								<div class="form-check">
+                                <div class="form-check">
                                     <input type="checkbox" checked name="col_chk" id="chk_purch_desc" class="form-check-input">
                                     <label for="chk_purch_desc" class="form-check-label">Purchase Description</label>
                                 </div>
-								<div class="form-check">
+                                <div class="form-check">
                                     <input type="checkbox" checked name="col_chk" id="chk_qty_po" class="form-check-input">
                                     <label for="chk_qty_po" class="form-check-label">Qty on PO</label>
                                 </div>
-								<div class="form-check">
+                                <div class="form-check">
                                     <input type="checkbox" checked name="col_chk" id="chk_sku" class="form-check-input">
                                     <label for="chk_sku" class="form-check-label">SKU</label>
                                 </div>
-								<div class="form-check">
+                                <div class="form-check">
                                     <input type="checkbox" checked name="col_chk" id="chk_type" class="form-check-input">
                                     <label for="chk_type" class="form-check-label">Type</label>
                                 </div>
-								<div class="form-check">
+                                <div class="form-check">
                                     <input type="checkbox" checked name="col_chk" id="chk_sales_desc" class="form-check-input">
                                     <label for="chk_sales_desc" class="form-check-label">Sales Description</label>
                                 </div>
-								<div class="form-check">
+                                <div class="form-check">
                                     <input type="checkbox" checked name="col_chk" id="chk_sales_price" class="form-check-input">
                                     <label for="chk_sales_price" class="form-check-label">Sales Price</label>
                                 </div>
-								<div class="form-check">
+                                <div class="form-check">
                                     <input type="checkbox" checked name="col_chk" id="chk_cost" class="form-check-input">
                                     <label for="chk_cost" class="form-check-label">Cost</label>
                                 </div>
-								<div class="form-check">
+                                <div class="form-check">
                                     <input type="checkbox" checked name="col_chk" id="chk_taxable" class="form-check-input">
                                     <label for="chk_taxable" class="form-check-label">Taxable</label>
                                 </div>
-								<div class="form-check">
+                                <div class="form-check">
                                     <input type="checkbox" checked name="col_chk" id="chk_qty_on_hand" class="form-check-input">
                                     <label for="chk_qty_on_hand" class="form-check-label">Qty on hand</label>
                                 </div>
-								<div class="form-check">
+                                <div class="form-check">
                                     <input type="checkbox" checked name="col_chk" id="chk_reorder_point" class="form-check-input">
                                     <label for="chk_reorder_point" class="form-check-label">Reorder point</label>
                                 </div>
@@ -474,12 +518,12 @@
                                         <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
                                     </ul>
                                 </div>
-								<div class="form-check">
+                                <div class="form-check">
                                     <input type="checkbox" id="compact" class="form-check-input">
                                     <label for="compact" class="form-check-label">Compact</label>
                                 </div>
-								<div class="form-check">
-                                    <input type="checkbox" id="group-by-category" class="form-check-input" <?=!empty($group_by_category) ? 'checked' : ''?>>
+                                <div class="form-check">
+                                    <input type="checkbox" id="group-by-category" class="form-check-input" <?= !empty($group_by_category) ? 'checked' : '' ?>>
                                     <label for="group-by-category" class="form-check-label">Group by category</label>
                                 </div>
                             </ul>
@@ -511,91 +555,91 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(count($items) > 0) : ?>
-						<?php foreach($items as $item) : ?>
-                        <?php if($item['is_category']) : ?>
-                        <tr>
-                            <td></td>
-                            <td class="fw-bold nsm-text-primary default" colspan="15"><?=$item['name']?></td>
-                        </tr>
+                        <?php if (count($items) > 0) : ?>
+                            <?php foreach ($items as $item) : ?>
+                                <?php if ($item['is_category']) : ?>
+                                    <tr>
+                                        <td></td>
+                                        <td class="fw-bold nsm-text-primary default" colspan="15"><?= $item['name'] ?></td>
+                                    </tr>
+                                <?php else : ?>
+                                    <tr data-status="<?= $item['status'] ?>" data-id="<?= $item['id'] ?>">
+                                        <td>
+                                            <?php if ($item['type'] !== 'Bundle') : ?>
+                                                <div class="table-row-icon table-checkbox">
+                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?= $item['id'] ?>">
+                                                </div>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="nsm-text-primary nsm-link default"><?= $item['name'] ?></td>
+                                        <td><?= $item['sku'] ?></td>
+                                        <td><?= $item['type'] ?></td>
+                                        <td><?= $item['sales_desc'] ?></td>
+                                        <td data-id="<?= $item['income_account_id'] ?>"><?= $item['income_account'] ?></td>
+                                        <td data-id="<?= $item['expense_account_id'] ?>"><?= $item['expense_account'] ?></td>
+                                        <td data-id="<?= $item['inventory_account_id'] ?>"><?= $item['inventory_account'] ?></td>
+                                        <td><?= $item['purch_desc'] ?></td>
+                                        <td><?= $item['sales_price'] ?></td>
+                                        <td><?= $item['cost'] ?></td>
+                                        <td>
+                                            <?php if ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "") : ?>
+                                                <div class="table-row-icon table-checkbox">
+                                                    <input class="form-check-input select-one table-select" type="checkbox" disabled checked>
+                                                </div>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td><?= $item['qty_on_hand'] ?></td>
+                                        <td><?= $item['qty_po'] ?></td>
+                                        <td><?= $item['reorder_point'] ?></td>
+                                        <td>
+                                            <?php if ($item['type'] === 'Product') : ?>
+                                                <button class="nsm-button btn-sm see-item-locations">See Locations</button>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <div class="dropdown float-end">
+                                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <?php if ($item['status'] !== "0") : ?>
+                                                        <li>
+                                                            <a class="dropdown-item edit-item" href="#">Edit</a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item make-inactive" href="#">Make inactive</a>
+                                                        </li>
+                                                        <?php if ($item['type'] !== 'Bundle') : ?>
+                                                            <li>
+                                                                <a class="dropdown-item" href="#">Run report</a>
+                                                            </li>
+                                                        <?php endif; ?>
+                                                        <li>
+                                                            <a class="dropdown-item duplicate" href="#">Duplicate</a>
+                                                        </li>
+                                                    <?php else : ?>
+                                                        <li>
+                                                            <a class="dropdown-item make-active" href="#">Make active</a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item" href="#">Run report</a>
+                                                        </li>
+                                                    <?php endif; ?>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
                         <?php else : ?>
-						<tr data-status="<?=$item['status']?>" data-id="<?=$item['id']?>">
-							<td>
-                                <?php if($item['type'] !== 'Bundle') : ?>
-                                <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$item['id']?>">
-                                </div>
-                                <?php endif; ?>
-                            </td>
-                            <td class="nsm-text-primary nsm-link default"><?=$item['name']?></td>
-							<td><?=$item['sku']?></td>
-							<td><?=$item['type']?></td>
-							<td><?=$item['sales_desc']?></td>
-							<td data-id="<?=$item['income_account_id']?>"><?=$item['income_account']?></td>
-							<td data-id="<?=$item['expense_account_id']?>"><?=$item['expense_account']?></td>
-							<td data-id="<?=$item['inventory_account_id']?>"><?=$item['inventory_account']?></td>
-							<td><?=$item['purch_desc']?></td>
-							<td><?=$item['sales_price']?></td>
-							<td><?=$item['cost']?></td>
-							<td>
-								<?php if($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "") : ?>
-								<div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox" disabled checked>
-                                </div>
-								<?php endif; ?>
-							</td>
-							<td><?=$item['qty_on_hand']?></td>
-							<td><?=$item['qty_po']?></td>
-							<td><?=$item['reorder_point']?></td>
-                            <td>
-                                <?php if($item['type'] === 'Product') : ?>
-                                    <button class="nsm-button btn-sm see-item-locations">See Locations</button>
-                                <?php endif; ?>
-                            </td>
-							<td>
-                                <div class="dropdown float-end">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <?php if($item['status'] !== "0") : ?>
-                                        <li>
-                                            <a class="dropdown-item edit-item" href="#">Edit</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item make-inactive" href="#">Make inactive</a>
-                                        </li>
-                                        <?php if($item['type'] !== 'Bundle') : ?>
-                                        <li>
-                                            <a class="dropdown-item" href="#">Run report</a>
-                                        </li>
-                                        <?php endif; ?>
-                                        <li>
-                                            <a class="dropdown-item duplicate" href="#">Duplicate</a>
-                                        </li>
-                                        <?php else : ?>
-                                        <li>
-                                            <a class="dropdown-item make-active" href="#">Make active</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="#">Run report</a>
-                                        </li>
-                                        <?php endif; ?>
-                                    </ul>
-                                </div>
-                            </td>
-						</tr>
+                            <tr>
+                                <td colspan="15">
+                                    <div class="nsm-empty">
+                                        <span>No results found.</span>
+                                    </div>
+                                </td>
+                            </tr>
                         <?php endif; ?>
-						<?php endforeach; ?>
-						<?php else : ?>
-						<tr>
-							<td colspan="15">
-								<div class="nsm-empty">
-									<span>No results found.</span>
-								</div>
-							</td>
-						</tr>
-						<?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -604,3 +648,17 @@
 </div>
 
 <?php include viewPath('v2/includes/footer'); ?>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const lowStockElement = document.getElementById('lowStockCount');
+        const outOfStockElement = document.getElementById('outOfStockCount');
+        const totalStockElement = document.getElementById('totalStock');
+
+        const lowStockCount = parseInt(lowStockElement.innerText);
+        const outOfStockCount = parseInt(outOfStockElement.innerText);
+
+        const totalStock = lowStockCount + outOfStockCount;
+
+        totalStockElement.innerText = totalStock.toString();
+    });
+</script>

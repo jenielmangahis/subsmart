@@ -13,24 +13,23 @@ class Activity_model extends MY_Model {
         
         public function getActivityLogs($company_id, $limit)
         {
-            $this->db->where('company_id', $company_id);
+            $this->db->select('activity_logs.*, users.company_id');
+            $this->db->join('users', 'activity_logs.user_id = users.id', 'LEFT');
+            $this->db->where('users.company_id', $company_id);            
+            $this->db->order_by('activity_logs.id', 'DESC');
             $this->db->limit($limit);
-            //$this->db->order_by('createdAt', 'DESC');
-            $this->db->order_by('activity_id', 'DESC');
-            return $this->db->get('esign_activity')->result();
+
+            return $this->db->get($this->table)->result();
         }
 
 	public function add($message, $user_id = 0, $ip_address = false)
 	{
 		return $this->create([
-			'title' => $message,
-			'user' => ($user_id==0) ? logged('id') : $user_id,
-			'ip_address' => !empty($ip_address) ? $ip_address : ip_address(),
+			'activity_name' => $message,
+			'user_id' => ($user_id==0) ? logged('id') : $user_id,			
 			'created_at' => date("Y-m-d H:i:s"),
 			'updated_at' => date("Y-m-d H:i:s")
 		]);
-
-
 	}
 	
 	public function addEsignActivity($data){
@@ -43,7 +42,7 @@ class Activity_model extends MY_Model {
 
         $this->db->select('activity_logs.*, users.id AS uid, users.company_id');
         $this->db->from($this->table);
-        $this->db->join('users', 'activity_logs.user = users.id', 'LEFT');
+        $this->db->join('users', 'activity_logs.user_id = users.id', 'LEFT');
 
         if ( !empty($filters) ) {
             if ( !empty($filters['search']) ) {

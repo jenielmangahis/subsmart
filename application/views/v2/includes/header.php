@@ -338,13 +338,13 @@ if ($this->session->userdata('usertimezone') == null) {
                     <ul class="mt-3">
                     <li class="<?php if ($page->title == 'Customer') : echo 'selected';
                                     endif; ?>">
-                            <a href="<?= base_url("person") ?>">
+                            <a href="<?= base_url("customer/person") ?>">
                             <i class='bx bxs-face'></i>&nbsp;&nbsp;Persons
                             </a>
                         </li>
                         <li class="<?php if ($page->title == 'Customer') : echo 'selected';
                                     endif; ?>">
-                            <a href="<?= base_url("company") ?>">
+                            <a href="<?= base_url("customer/company") ?>">
                             <i class='bx bx-building'></i>&nbsp;&nbsp;Company
                             </a>
                         </li>

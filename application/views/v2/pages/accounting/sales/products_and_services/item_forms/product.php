@@ -95,15 +95,6 @@
                                     </button>
                                 </td>
                             </tr>
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td>
-                                    <button type="button" class="nsm-button delete-location">
-                                        <i class='bx bx-fw bx-trash'></i>
-                                    </button>
-                                </td>
-                            </tr>
                         </tbody>
                         <tfoot>
                             <tr>

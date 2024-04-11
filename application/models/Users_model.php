@@ -435,7 +435,7 @@ class Users_model extends MY_Model
 
 
 
-        $this->activity_model->add($row->FName.' ('.$row->username.') Logged in', $row->id);
+        $this->activity_model->add('Logged In', $row->id);
     }
 
 

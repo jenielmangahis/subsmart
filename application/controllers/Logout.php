@@ -16,6 +16,7 @@ class Logout extends CI_Controller {
 	public function index()
 	{
 		$this->load->model('CalendarSettings_model');
+		$this->load->model('Activity_model', 'activity');
 
 		if(is_logged()){
 			$company_id = logged('company_id');
@@ -24,16 +25,14 @@ class Logout extends CI_Controller {
             if( $calendarSettings && $calendarSettings->timezone != '' ){
             	date_default_timezone_set($calendarSettings->timezone);                
             }
-
-			$this->load->model('Activity_model', 'activity');
-			$activity['activityName'] = "User Logout";
-			$activity['activity'] = " User ".logged('username')." is logged out";
-			$activity['user_id'] = logged('id');
-			$activity['createdAt']   = date("Y-m-d H:i:s");
-			$this->activity->addEsignActivity($activity);
-		}
-
-		$this->activity_model->add("User: ".getLoggedFullName(logged('id')).' Logged Out'); 
+			
+			// $activity['activityName'] = "User Logout";
+			// $activity['activity']     = "Logged out";
+			// $activity['user_id'] = logged('id');
+			// $activity['createdAt']   = date("Y-m-d H:i:s");
+			// $this->activity->addEsignActivity($activity);
+			$this->activity_model->add('Logged Out'); 
+		}		
 
 		$this->users_model->logout();
 		$this->session->unset_userdata('multi_account_parent_company_id');

@@ -6052,18 +6052,13 @@ $(function () {
             <td></td>
             <td><button type="button" class="nsm-button delete-${type}"><i class='bx bx-fw bx-trash'></i></button></td>
         </tr>
-        <tr>
-            <td></td>
-            <td></td>
-            <td><button type="button" class="nsm-button delete-${type}"><i class='bx bx-fw bx-trash'></i></button></td>
-        </tr>
         `);
     });
 
     $(document).on('click', '#modal-container #item-modal #bundle-items-table .delete-item, #modal-container #item-modal #storage-locations .delete-location', function (e) {
         e.preventDefault();
 
-        if ($(this).parent().parent().parent().children('tr').length > 2) {
+        if ($(this).parent().parent().parent().children('tr').length > 0 ) {
             $(this).parent().parent().remove();
         } else {
             $(this).parent().parent().children('td:not(:last-child)').html('');
@@ -13596,6 +13591,17 @@ const resetCreditMemoFilter = (e) => {
         };
     }
  }
+
+ function countCheckedCheckboxes() {
+    var checkedCount = $('#invoices-table tbody input[type="checkbox"]:checked').length;
+    var totalCount = $('#invoices-table tbody input[type="checkbox"]').length;
+
+    if (checkedCount === totalCount && totalCount > 0) {
+        $('#invoices-table .select-all').prop('checked', true);
+    } else {
+        $('#invoices-table .select-all').prop('checked', false);
+    }
+}
 $(document).on('change', '#invoices-table .select-all', function() {
     // Get the checked status of the "check all" checkbox
     var isChecked = $(this).prop('checked');
@@ -13605,23 +13611,11 @@ $(document).on('change', '#invoices-table .select-all', function() {
     $('#invoices-table .select-one').prop('checked', isChecked);
     console.log("customer invoices clicked select-all"+isChecked);
 });
+
 $(document).on('change', '#invoices-table tbody .select-one', function(event) {
-
-    var isChecked = $(this).prop('checked');
-    $(this).prop('checked', !isChecked);
-
-    $('#invoices-table .select-one').prop('checked', isChecked);
-    var allChecked = true;
-    $('#invoices-table tbody .select-one').each(function() {
-        if (!$(this).prop('checked')) {
-            allChecked = false;
-            return false; // Exit the loop early if any checkbox is unchecked
-        }
-    });
-
-    // Update select-all checkbox based on collective checkbox state
-    $('#invoices-table .select-all').prop('checked', allChecked);
+    countCheckedCheckboxes();
 });
+
 const loadCustomerInvoices = () => {
     var data = new FormData();
     data.set('search', $('#receivePaymentModal #search-invoice-no').val() || '');
