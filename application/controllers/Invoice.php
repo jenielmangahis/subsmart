@@ -2637,7 +2637,7 @@ class Invoice extends MY_Controller
                     $storage_id = $post['storageLocIds'][$key];
                     $invoice_item_data = [
                         'invoice_id' => $invoice_id,
-                        'storage_loc_id' => $storage_id,
+                        'location_id' => $storage_id,
                         'location_id' => $storage_id,
                         'item_type' => 'Product',
                         'item_name' => $item->title,
