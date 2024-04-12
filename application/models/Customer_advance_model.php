@@ -988,4 +988,58 @@ class Customer_advance_model extends MY_Model {
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function convertLeadToCustomer($lead_id, $cid, $uid)
+    {
+        $is_converted = 0;
+        $prof_id = 0;
+        $msg     = 'Cannot convert to customer';
+
+        $this->db->select('*');
+        $this->db->from('ac_leads');
+        $this->db->where('leads_id', $lead_id);
+        
+        $query = $this->db->get();
+        $lead  = $query->row();
+        if( $lead ){
+            $customer_data = [
+                'company_id' => $cid,
+                'fk_user_id' => $uid,
+                'industry_type_id' => 0,
+                'status' => 'New',
+                'customer_type' => 'Residential',
+                'first_name' => $lead->firstname,
+                'middle_name' => $lead->middlename,
+                'last_name' => $lead->lastname,
+                'suffix' => $lead->suffix,
+                'mail_add' => $lead->address,
+                'city' => $lead->city,
+                'state' => $lead->state,
+                'zip_code' => $lead->zip,
+                'cross_street' => $lead->address,
+                'country' => $lead->country,
+                'ssn' => $lead->sss_num,
+                'date_of_birth' => date("Y-m-d",strtotime($lead->date_of_birth)),
+                'email' => $lead->email_add,
+                'phone_h' => $lead->phone_home,
+                'phone_m' => $lead->phone_cell,
+                'county' => $lead->county
+            ];
+
+            $this->db->insert('acs_profile', $customer_data);
+            $prof_id = $this->db->insert_id();
+            
+            if( $prof_id > 0 ){
+                $lead_data = ['status' => 'Converted', 'prof_id' => $prof_id];
+                $this->db->update('ac_leads', $lead_data, ['leads_id' => $lead_id]);
+
+                $is_converted = 1;
+                $msg = '';
+            }
+        }
+
+        $return = ['is_converted' => $is_converted, 'msg' => $msg, 'prof_id' => $prof_id];
+
+        return $return;
+    }
 }
