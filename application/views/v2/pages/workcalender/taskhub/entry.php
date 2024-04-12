@@ -152,6 +152,7 @@ if (isset($selected_participants)) {
                                         </select>
                                     </div>
 
+                                    <!--
                                     <div class="col-12 col-md-4">
                                         <label class="content-subtitle fw-bold d-block mb-2">Participants</label>
                                         <select class="nsm-field form-select" name="participants" id="participants">
@@ -173,6 +174,7 @@ if (isset($selected_participants)) {
                                             ?>
                                         </select>
                                     </div>
+                                    -->
 
                                     <div class="col-12 col-md-4">
                                         <?php
