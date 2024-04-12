@@ -1,6 +1,14 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/calendar/calendar_modals'); ?>
+<style>
+.nsm-profile-name{
+  margin-top:9px;  
+}
+.taskhub-list .nsm-badge{
+    font-size:14px;
 
+}
+</style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
         <i class="bx bx-plus"></i>
@@ -59,115 +67,134 @@
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
-                    <thead>
-                        <tr>
-                            <td class="table-icon"></td>
-                            <td data-name="Subject">Subject</td>
-                            <td data-name="Priority">Priority</td>
-                            <td data-name="Customer">Customer</td>
-                            <td data-name="Assigned">Assigned</td>
-                            <td data-name="Status">Status</td>
-                            <td data-name="Date Completion">Date Completion</td>
-                            <td data-name="Date Created">Date Created</td>
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (count($tasks) > 0) : ?>
-                            <?php foreach ($tasks as $key => $row) : ?>
-                                <tr>
-                                    <td>
-                                        <div class="table-row-icon">
-                                            <i class='bx bx-task'></i>
-                                        </div>
-                                    </td>
-                                    <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo url('taskhub/view/' . $row->task_id) ?>'"><?php echo $row->subject; ?></td>
-                                    <td>
+                <div class="nsm-widget-table">
+                    <table class="nsm-table taskhub-list">
+                        <thead>
+                            <tr>
+                                <td class="table-icon"></td>
+                                <td data-name="Subject" style="width:40%;">Task</td>     
+                                <td data-name="Assigned" style="width:20%;">Assigned To</td>           
+                                <td data-name="Priority">Priority</td>
+                                <td data-name="Status">Status</td>
+                                <td data-name="Date Completion">Completion Date</td>
+                                <td data-name="Date Created">Date Created</td>
+                                <td data-name="Manage"></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (count($tasks) > 0) : ?>
+                                <?php foreach ($tasks as $key => $row) : ?>
+                                    <tr>
+                                        <td>
+                                            <div class="table-row-icon">
+                                                <i class='bx bx-task'></i>
+                                            </div>
+                                        </td>
+                                        <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo url('taskhub/view/' . $row->task_id) ?>'">
+                                            <?php echo $row->subject; ?>
+                                        </td>   
+                                        <td>
+                                            <div class="widget-item">
+                                                <?php $assignedUser = getTaskAssignedUserV2($row->task_id); ?>
+                                                <?php if( $assignedUser['user_id'] > 0 ){ ?>
+                                                    <?php $image = userProfilePicture($assignedUser['user_id']); ?>
+                                                    <?php if (is_null($image)) { ?>
+                                                        <div class="nsm-profile" style="">
+                                                            <span><?php echo getLoggedNameInitials($assignedUser['name']); ?></span>
+                                                        </div>
+                                                    <?php } else { ?>
+                                                        <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
+                                                        <span class="nsm-profile-name"><?= $assignedUser['name']; ?></span>
+                                                    <?php } ?>
+                                                <?php }else{ ?>
+                                                    No Assigned User
+                                                <?php } ?>        
+                                            </div>                                
+                                        </td>                                       
+                                        <td>
+                                            <?php
+                                            switch ($row->priority):
+                                                case 'High':
+                                                    $class_priority = "error";
+                                                    break;
+                                                case 'Medium':
+                                                    $class_priority = "secondary";
+                                                    break;
+                                                case 'Low':
+                                                    $class_priority = "";
+                                                    break;
+                                            endswitch;
+                                            ?>
+                                            <span class="nsm-badge <?= $class_priority ?>"><?php echo ucwords($row->priority); ?></span>
+                                        </td>
+                                        <td>
                                         <?php
-                                        switch ($row->priority):
-                                            case 'High':
-                                                $class_priority = "error";
-                                                break;
-                                            case 'Medium':
-                                                $class_priority = "secondary";
-                                                break;
-                                            case 'Low':
-                                                $class_priority = "";
-                                                break;
-                                        endswitch;
-                                        ?>
-                                        <span class="nsm-badge <?= $class_priority ?>"><?php echo ucwords($row->priority); ?></span>
-                                    </td>
-                                    <td><?= getAcsProfileCustomerName($row->prof_id); ?></td>
-                                    <td><?= getTaskAssignedUser($row->task_id); ?></td>
-                                    <td>
-                                    <?php
-                                        switch ($row->status_text):
-                                            case 'New':
-                                                $task_status = "primary";
-                                                break;
-                                            case 'Resumed':
-                                                $task_status = "primary";
-                                                break;
-                                            case 'On Hold':
-                                                $task_status = "error";
-                                                break;
-                                            case 'Completed':
-                                                $task_status = "success";
-                                                break;
-                                            case 'Complete':
-                                                $task_status = "success";
-                                                break;
-                                            case 'Re-opened':
-                                                $task_status = "primary";
-                                                break;
-                                            case 'On Going':
-                                                $task_status = "secondary";
-                                                break;
-                                            default:
-                                                $task_status = "";
-                                                break;
-                                        endswitch;
-                                        ?>
-                                        <span class="nsm-badge <?= $task_status ?>"><?php echo $row->status_text; ?></span>
-                                    </td>
-                                    <td><?php echo date("F d, Y", strtotime($row->estimated_date_complete)); ?></td>
-                                    <td><?php echo date("F d, Y", strtotime($row->date_created)); ?></td>
-                                    <td>
-                                        <div class="dropdown table-management">
-                                            <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item" name="dropdown_edit" href="<?php echo url('taskhub/entry/' . $row->task_id) ?>">Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item btn-complete-task" name="dropdown_completed" href="javascript:void(0);" data-subject="<?= $row->subject; ?>" data-id="<?= $row->task_id; ?>">Mark Completed</a>
-                                                </li>
-                                                <!-- <li>
-                                                    <a class="dropdown-item" name="dropdown_updated" href="<?php echo url('taskhub/addupdate/' . $row->task_id) ?>">Add Update</a>
-                                                </li> -->
-                                                <li>
-                                                    <a class="dropdown-item" name="dropdown_view_comments" href="<?php echo url('taskhub/view/' . $row->task_id) ?>">Add Update</a>
-                                                </li>
-                                            </ul>
+                                            switch ($row->status_text):
+                                                case 'New':
+                                                    $task_status = "primary";
+                                                    break;
+                                                case 'Resumed':
+                                                    $task_status = "primary";
+                                                    break;
+                                                case 'On Hold':
+                                                    $task_status = "error";
+                                                    break;
+                                                case 'Completed':
+                                                    $task_status = "success";
+                                                    break;
+                                                case 'Complete':
+                                                    $task_status = "success";
+                                                    break;
+                                                case 'Re-opened':
+                                                    $task_status = "primary";
+                                                    break;
+                                                case 'On Going':
+                                                    $task_status = "secondary";
+                                                    break;
+                                                default:
+                                                    $task_status = "";
+                                                    break;
+                                            endswitch;
+                                            ?>
+                                            <span class="nsm-badge <?= $task_status ?>"><?= $row->status_text != '' ? $row->status_text : 'Draft'; ?></span>
+                                        </td>
+                                        <td><?php echo date("F d, Y", strtotime($row->estimated_date_complete)); ?></td>
+                                        <td><?php echo date("F d, Y", strtotime($row->date_created)); ?></td>
+                                        <td>
+                                            <div class="dropdown table-management">
+                                                <a href="#" name="dropdown_link" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                                </a>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li>
+                                                        <a class="dropdown-item" name="dropdown_edit" href="<?php echo url('taskhub/entry/' . $row->task_id) ?>">Edit</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item btn-complete-task" name="dropdown_completed" href="javascript:void(0);" data-subject="<?= $row->subject; ?>" data-id="<?= $row->task_id; ?>">Mark Completed</a>
+                                                    </li>
+                                                    <!-- <li>
+                                                        <a class="dropdown-item" name="dropdown_updated" href="<?php echo url('taskhub/addupdate/' . $row->task_id) ?>">Add Update</a>
+                                                    </li> -->
+                                                    <li>
+                                                        <a class="dropdown-item" name="dropdown_view_comments" href="<?php echo url('taskhub/view/' . $row->task_id) ?>">Add Update</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <tr>
+                                    <td colspan="9">
+                                        <div class="nsm-empty">
+                                            <span>No results found.</span>
                                         </div>
                                     </td>
                                 </tr>
-                            <?php endforeach; ?>
-                        <?php else : ?>
-                            <tr>
-                                <td colspan="9">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>                
             </div>
         </div>
     </div>
