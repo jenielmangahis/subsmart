@@ -7675,6 +7675,55 @@ class Customer extends MY_Controller
         echo json_encode($lead);
     }
 
+    public function ajax_quick_add_lead()
+    {
+        $is_valid = 1;
+        $msg      = '';      
+        $customer = [];  
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['first_name'] == '' || $post['last_name'] == ''){
+            $is_valid = 0;
+            $msg = 'Please enter lead name';
+        }
+
+        if( $post['email'] == '' ){
+            $is_valid = 0;
+            $msg = 'Please enter lead email';
+        }
+
+        if( $is_valid == 1 ){
+            $lead_data = [
+                'company_id' => $cid,
+                'firstname' => $post['first_name'],
+                'middlename' => $post['middle_name'],
+                'lastname' => $post['last_name'],
+                'address' => $post['address'],
+                'city' => $post['city'],
+                'state' => $post['state'],
+                'zip' => $post['zip_code'],
+                'phone_home' => $post['phone_home'],
+                'phone_cell' => $post['phone_cell'],
+                'email_add' => $post['email'],
+                'sss_num' => $post['sss_num'],
+                'status' => 'New',
+                'date_created' => date("Y-m-d H:i:s")
+            ];
+
+            $lead_id = $this->customer_ad_model->createLead($lead_data);
+
+            $customer = [
+                'id' => $lead_id,
+                'name' => $post['first_name'] . ' ' . $post['last_name']
+            ];
+        }
+
+        $json_data = ['is_success' => $is_valid, 'msg' => $msg, 'customer' => $customer];
+        echo json_encode($json_data);
+    }
+
     public function ajax_convert_lead_to_customer()
     {
         $is_success = 0;
