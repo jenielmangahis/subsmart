@@ -2021,7 +2021,7 @@ $(document).on("change", "#transactions-table tbody .select-one", function () {
 
 $("#send-transactions").on("click", function (e) {
   var data = new FormData();
-
+  var count= 0;
   $("#transactions-table tbody .select-one:checked").each(function () {
     var row = $(this).closest("tr");
     var id = $(this).val();
@@ -2031,6 +2031,8 @@ $("#send-transactions").on("click", function (e) {
     var type = $(row.find("td")[typeIndex]).text().trim().toLowerCase();
 
     data.append("transactions[]", `${type.replaceAll(" ", "_")}-${id}`);
+
+    count++;
   });
 
   $.ajax({
@@ -2041,13 +2043,13 @@ $("#send-transactions").on("click", function (e) {
     contentType: false,
     success: function (result) {
       var res = JSON.parse(result);
-
+           console.log(res);
       Swal.fire({
-        text: res.message,
-        icon: res.success ? "success" : "error",
+        text: `${count} out of ${count} transactions sent.`,
+        icon:  "success",
         showConfirmButton: false,
         showCloseButton: true,
-        timer: 1500,
+        timer: 2000,
       });
     },
   });

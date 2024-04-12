@@ -209,19 +209,19 @@ class All_sales extends MY_Controller
             'Type',
             'No.',
             'Customer',
-            'Method',
-            'Source',
+            // 'Method',
+            // 'Source',
             'Memo',
             'Due date',
-            'Aging',
+            // 'Aging',
             'Balance',
             'Total',
-            'Last Delivered',
+            // 'Last Delivered',
             'Email',
-            'Attachments',
+            // 'Attachments',
             'Status',
-            'P.O. Number',
-            'Sales Rep',
+            // 'P.O. Number',
+            // 'Sales Rep',
         ];
 
         $settingsCols = [
@@ -309,13 +309,13 @@ class All_sales extends MY_Controller
                     'Memo',
                     'Expiration Date',
                     'Total',
-                    'Last Delivered',
+                    // 'Last Delivered',
                     'Email',
-                    'Accepted Date',
-                    'Attachments',
+                    // 'Accepted Date',
+                    // 'Attachments',
                     'Status',
-                    'P.O. Number',
-                    'Sales Rep',
+                    // 'P.O. Number',
+                    // 'Sales Rep',
                 ];
 
                 $settingsCols = [
@@ -379,15 +379,15 @@ class All_sales extends MY_Controller
                     'Customer',
                     'Memo',
                     'Due date',
-                    'Aging',
+                    // 'Aging',
                     'Balance',
                     'Total',
-                    'Last Delivered',
+                    // 'Last Delivered',
                     'Email',
-                    'Attachments',
+                    // 'Attachments',
                     'Status',
-                    'P.O. Number',
-                    'Sales Rep',
+                    // 'P.O. Number',
+                    // 'Sales Rep',
                 ];
 
                 $settingsCols = [
@@ -453,17 +453,17 @@ class All_sales extends MY_Controller
                     'Type',
                     'No.',
                     'Customer',
-                    'Method',
-                    'Source',
+                    // 'Method',
+                    // 'Source',
                     'Memo',
                     'Due date',
                     'Total',
-                    'Last Delivered',
+                    // 'Last Delivered',
                     'Email',
-                    'Attachments',
+                    // 'Attachments',
                     'Status',
-                    'P.O. Number',
-                    'Sales Rep',
+                    // 'P.O. Number',
+                    // 'Sales Rep',
                 ];
 
                 $settingsCols = [
@@ -531,12 +531,12 @@ class All_sales extends MY_Controller
                     'Customer',
                     'Memo',
                     'Total',
-                    'Last Delivered',
+                    // 'Last Delivered',
                     'Email',
-                    'Attachments',
+                    // 'Attachments',
                     'Status',
-                    'P.O. Number',
-                    'Sales Rep',
+                    // 'P.O. Number',
+                    // 'Sales Rep',
                 ];
 
                 $settingsCols = [
@@ -639,20 +639,20 @@ class All_sales extends MY_Controller
                     'Type',
                     'No.',
                     'Customer',
-                    'Method',
-                    'Source',
+                    // 'Method',
+                    // 'Source',
                     'Memo',
                     'Due date',
                     'Aging',
                     'Balance',
                     'Total',
-                    'Last Delivered',
+                    // 'Last Delivered',
                     'Email',
                     'Latest Payment',
-                    'Attachments',
+                    // 'Attachments',
                     'Status',
-                    'P.O. Number',
-                    'Sales Rep',
+                    // 'P.O. Number',
+                    // 'Sales Rep',
                 ];
 
                 $settingsCols = [
@@ -732,10 +732,10 @@ class All_sales extends MY_Controller
                     'Customer',
                     'Memo',
                     'Total',
-                    'Attachments',
+                    // 'Attachments',
                     'Status',
-                    'P.O. Number',
-                    'Sales Rep',
+                    // 'P.O. Number',
+                    // 'Sales Rep',
                 ];
 
                 $settingsCols = [
@@ -783,8 +783,8 @@ class All_sales extends MY_Controller
                     'Start Date',
                     'End Date',
                     'Statement Type',
-                    'P.O. Number',
-                    'Sales Rep',
+                    // 'P.O. Number',
+                    // 'Sales Rep',
                 ];
 
                 $settingsCols = [
@@ -1303,7 +1303,7 @@ class All_sales extends MY_Controller
         foreach ($estimates as $estimate) {
             $customer = $this->accounting_customers_model->get_by_id($estimate->customer_id);
             $customerName = $customer->first_name.' '.$customer->last_name;
-
+            $customerEmail = $customer->email;
             $manageCol = "<div class='dropdown table-management'>
                 <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
@@ -1407,7 +1407,7 @@ class All_sales extends MY_Controller
                         'expiration_date' => date('m/d/Y', strtotime($estimate->expiry_date)),
                         'total' => number_format(floatval(str_replace(',', '', $grandTotal)), 2, '.', ','),
                         'last_delivered' => '',
-                        'email' => '',
+                        'email' => $customerEmail,
                         'accepted_date' => !empty($estimate->accepted_date) && in_array($estimate->status, ['Accepted', 'Invoiced']) ? date('m/d/Y', strtotime($estimate->accepted_date)) : '',
                         'attachments' => '',
                         'status' => $estimate->status,
@@ -1432,7 +1432,7 @@ class All_sales extends MY_Controller
                         'balance' => '0.00',
                         'total' => number_format(floatval(str_replace(',', '', $grandTotal)), 2, '.', ','),
                         'last_delivered' => '',
-                        'email' => '',
+                        'email' => $customerEmail,
                         'attachments' => '',
                         'status' => $estimate->status,
                         'po_number' => '',

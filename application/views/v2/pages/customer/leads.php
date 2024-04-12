@@ -107,7 +107,7 @@
                                         <small class="text-muted"><?= $lead->city . ', ' . $lead->state . ' ' . $lead->zip; ?><small>
                                     </td>
                                     <td><?= $lead->FName ? $lead->FName . ' ' . $lead->LName : 'Not Specified';  ?></td>
-                                    <td><?= $lead->lead_type ? $lead->lead_type : 'Not Specified'; ?></td>
+                                    <td><?= $lead->lead_name ? $lead->lead_name : 'Not Specified'; ?></td>
                                     <td><span class="nsm-badge row-lead-status <?= $badge ?>"><?= $lead->status; ?></span></td>
                                     <td>
                                         <div class="dropdown table-management">

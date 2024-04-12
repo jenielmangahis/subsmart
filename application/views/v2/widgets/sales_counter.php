@@ -43,8 +43,8 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         </div>
     </div>
     <div class='nsm-card-footer'>
-        <a role="button" class="nsm-button btn-sm m-0 me-2" href="invoice">
-            <i class='bx bx-right-arrow-alt'></i>
+        <a role="button" class=" btn-sm m-0 me-2" href="accounting/allsales">
+            <i class='bx bx-right-arrow-alt' style="color: #6a4a86"></i>
         </a>
     </div>
 </div>

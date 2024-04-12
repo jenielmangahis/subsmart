@@ -285,6 +285,15 @@
                         $('#add_widget_container').html(response);
                     }
                 });
+
+                $.ajax({
+                    url: '<?php echo base_url(); ?>dashboard/getThumbnailsList',
+                    method: 'get',
+                    data: {},
+                    success: function (response) {
+                        $('#add_thumbnail_container').html(response);
+                    }
+                });
             });
 
             var offset = new Date().getTimezoneOffset();
@@ -497,6 +506,36 @@
             }
         }
 
+        
+        function manipulateThumbnail(dis, id){
+            if ($(dis).is(":checked"))
+            {
+                addThumbnail(id);
+            } else {
+                removeThumbnail(id);
+            }
+        }
+
+        function addThumbnail(id){
+            var isGlobal = $('#widgetGlobal_' + id).is(":checked") ? '1' : 0;
+            var isMain = $('#widgetMain_' + id).is(":checked") ? '1' : 0;
+
+            $.ajax({
+                url: '<?php echo base_url(); ?>widgets/addV2Thumbnail',
+                method: 'POST',
+                data: {id: id, isGlobal: isGlobal, isMain: isMain},
+                //dataType: 'json',
+                success: function (response) {
+                    console.log(response);
+                    if (isMain != '1') {
+                        $("#nsm_thumbnail").append(response);
+                    }
+                }
+            });
+        }
+
+        
+
         function addToMain(id, isMain, isGlobal){
             console.log(id, isMain, isGlobal);
             if(!isGlobal){
@@ -533,6 +572,23 @@
             });
         }
 
+        function removeThumbnail(dis){
+            $.ajax({
+                url: '<?php echo base_url(); ?>widgets/removeWidget',
+                method: 'POST',
+                data: {id: dis},
+                dataType: 'json',
+                success: function (response) {
+                    console.log(response);
+                    if (response.success){
+                        $('#widget_' + dis).remove();
+                    }else{
+                        alert(response.message);
+                    }
+                }
+            });
+        }
+
         function removeWidget(dis){
             $.ajax({
                 url: '<?php echo base_url(); ?>widgets/removeWidget',
@@ -542,6 +598,7 @@
                 success: function (response) {
                     console.log(response);
                     if (response.success){
+                        $('#widget_' + dis).parent().remove();
                         $('#widget_' + dis).remove();
                     }else{
                         alert(response.message);

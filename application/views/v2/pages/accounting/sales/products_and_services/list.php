@@ -291,8 +291,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row g-3 mb-3">
-                    <div class="col-12 col-md-4">
+                <div class="row mb-3">
+                    <div class="col-md-3">
                         <div class="nsm-counter primary h-100 mb-2 <?= $stock_status === 'low-stock' ? 'selected' : '' ?>" id="low-stock">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
@@ -305,7 +305,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4">
+                    <div class="col-md-3">
                         <div class="nsm-counter error h-100 mb-2 <?= $stock_status === 'out-of-stock' ? 'selected' : '' ?>" id="out-of-stock">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
@@ -318,7 +318,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4">
+                    <div class="col-md-3">
                         <div class="nsm-counter success h-100 mb-2 <?= $stock_status === 'out-of-stock' ? 'selected' : '' ?>" id="total-stock">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
@@ -401,9 +401,9 @@
                                     <div class="col">
                                         <label for="filter-category" class="w-100">Category</label>
                                         <select name="filter_category[]" id="filter-category" class="nsm-field form-select" multiple="multiple">
-                                            <option value="0" <?= empty($selectedCategories) || in_array('0', $selectedCategories) ? 'selected' : '' ?>>Uncategorized</option>
+                                            <option value="0">Uncategorized</option>
                                             <?php foreach ($this->items_model->getItemCategories() as $category) : ?>
-                                                <option value="<?= $category->item_categories_id ?>" <?= empty($selectedCategories) || in_array($category->item_categories_id, $selectedCategories) ? 'selected' : '' ?>><?= $category->name ?></option>
+                                                <option value="<?= $category->item_categories_id ?>"><?= $category->name ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
@@ -539,11 +539,11 @@
                             <td data-name="Name">NAME</td>
                             <td data-name="SKU">SKU</td>
                             <td data-name="Type">TYPE</td>
-                            <td data-name="Sales Description">SALES DESCRIPTION</td>
+                            <!-- <td data-name="Sales Description">SALES DESCRIPTION</td>
                             <td data-name="Income Account">INCOME ACCOUNT</td>
                             <td data-name="Expense Account">EXPENSE ACCOUNT</td>
                             <td data-name="Inventory Account">INVENTORY ACCOUNT</td>
-                            <td data-name="Purchase Description">PURCHASE DESCRIPTION</td>
+                            <td data-name="Purchase Description">PURCHASE DESCRIPTION</td> -->
                             <td data-name="Sales Price">SALES PRICE</td>
                             <td data-name="Cost">COST</td>
                             <td data-name="Taxable">TAXABLE</td>
@@ -574,11 +574,11 @@
                                         <td class="nsm-text-primary nsm-link default"><?= $item['name'] ?></td>
                                         <td><?= $item['sku'] ?></td>
                                         <td><?= $item['type'] ?></td>
-                                        <td><?= $item['sales_desc'] ?></td>
+                                        <!-- <td><?= $item['sales_desc'] ?></td>
                                         <td data-id="<?= $item['income_account_id'] ?>"><?= $item['income_account'] ?></td>
                                         <td data-id="<?= $item['expense_account_id'] ?>"><?= $item['expense_account'] ?></td>
                                         <td data-id="<?= $item['inventory_account_id'] ?>"><?= $item['inventory_account'] ?></td>
-                                        <td><?= $item['purch_desc'] ?></td>
+                                        <td><?= $item['purch_desc'] ?></td> -->
                                         <td><?= $item['sales_price'] ?></td>
                                         <td><?= $item['cost'] ?></td>
                                         <td>
