@@ -4676,6 +4676,27 @@ if (!function_exists('getTaskAssignedUser')) {
     }
 }
 
+if (!function_exists('getTaskAssignedUserV2')) {
+
+    function getTaskAssignedUserV2($task_id)
+    {
+        $CI =& get_instance();
+        $CI->db->select('tasks_participants.*, CONCAT(users.FName, " ", users.LName)AS assigned_user');
+        $CI->db->from('tasks_participants');
+        $CI->db->join('users','tasks_participants.user_id = users.id','left');
+        $CI->db->where('task_id', $task_id);
+        $CI->db->where('is_assigned', 1);
+        $taskAssigned = $CI->db->get()->row();        
+        if ($taskAssigned && $taskAssigned->user_id > 0) {            
+            $assignedUser = ['user_id' => $taskAssigned->user_id, 'name' => ucwords($taskAssigned->assigned_user)];
+        }else{
+            $assignedUser = ['user_id' => 0, 'name' => ''];            
+        }
+
+        return $assignedUser;
+    }
+}
+
 if(!function_exists('set_bank_widget_data')) {
     function set_bank_widget_data($data)
     {
@@ -5234,21 +5255,18 @@ function defaultCompanyCustomerStatusIds()
     return $status_ids;
 }
 
-if (!function_exists('getAcsProfileCustomerName')) {
-
-    function getAcsProfileCustomerName($prof_id)
-    {
-        $CI =& get_instance();
-        $CI->db->select('first_name,last_name');
-        $CI->db->from('acs_profile');
-        $CI->db->where('prof_id', $prof_id);
-        $customer = $CI->db->get()->row();
-        
-        $customer_name = '---';
-        if ($customer) {
-            $customer_name = ucwords($customer->first_name . ' ' . $customer->last_name);
-        }
-
-        return $customer_name;
+function getAcsProfileCustomerName($prof_id)
+{
+    $CI =& get_instance();
+    $CI->db->select('first_name,last_name');
+    $CI->db->from('acs_profile');
+    $CI->db->where('prof_id', $prof_id);
+    $customer = $CI->db->get()->row();
+    
+    $customer_name = '';
+    if ($customer) {
+        $customer_name = ucwords($customer->first_name . ' ' . $customer->last_name);
     }
+
+    return $customer_name;
 }
