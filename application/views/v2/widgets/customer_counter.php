@@ -42,8 +42,8 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         </div>
     </div>
     <div class='nsm-card-footer'>
-        <a role="button" class="nsm-button btn-sm m-0 me-2" href="customer/leads">
-            <i class='bx bx-right-arrow-alt'></i>
+        <a role="button" class=" btn-sm m-0 me-2" href="customer">
+            <i class='bx bx-right-arrow-alt' style="color: #6ba77ced"></i>
         </a>
     </div>
 </div>

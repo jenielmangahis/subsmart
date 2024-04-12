@@ -24,6 +24,12 @@ class Customer_model extends MY_Model
             return $this->getAllByUserId();
         }
     }
+    public function count_customer_type($customer_type) {
+        // Assuming your table name is 'your_table_name'
+        $this->db->where('customer_type', $customer_type);
+        $query = $this->db->count_all_results($this->table);
+        return $query;
+    }
     public function insert_data($data) {
         // Insert data into the database
         $this->db->insert($this->table, $data);

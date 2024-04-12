@@ -125,6 +125,14 @@ class Dashboard extends Widgets
         $this->load->view('v2/widgets/add_widgets_details', $this->page_data);
     }
 
+    public function getThumbnailsList()
+    {
+        $this->load->model('widgets_model');
+        $user_id = logged('id');
+        $this->page_data['widgets'] = $this->widgets_model->getThumbnailsList($user_id);
+        $this->load->view('v2/widgets/add_thumbnail_details', $this->page_data);
+    }
+
     public function index()
     {
         // load necessary model and functions

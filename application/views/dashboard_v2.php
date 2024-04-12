@@ -70,9 +70,7 @@
     font-size: 36px !important;
     border: none;
 }
-.nsm-card-footer a i{ 
-    color: #6a4a86 !important;
-}
+
 
 .leads-container {
     display: flex;
@@ -87,9 +85,14 @@
     justify-content: start;
 }
 .main-widget-container{
-    width:245px;
+    width:222px;
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12), 0 1px 3px 0 rgba(0,0,0,.2);
     border-radius: .75rem;
+    height: 280px;
+    max-height: 280px;
+}
+.nav-pills .nav-link.active{
+    background-color: #6a4a86 !important;
 }
 </style>
 
@@ -220,11 +223,10 @@
 <div class="row page-content g-0">
     <div class="col-12">
         <div class="row  g-3 grid-row-mb nsm-draggable-container" id="nsm_widgets">
-        <div class="main-widget-row">
+        <div class="main-widget-row" id="nsm_thumbnail">
             <?php
             foreach ($widgets as $wids) {
                 if ($wids->w_main) {
-                    echo '<div >';
                     $data['class'] = 'nsm-card nsm-grid main-widget-container';
                     $data['isMain'] = false;
                     $data['id'] = $wids->w_id;
@@ -242,7 +244,6 @@
                     // }
                     $this->load->view('v2/'.$wids->w_view_link, $data);
 
-                    echo '</div>';
                 }
             }
 ?>  </div><?php

@@ -588,21 +588,21 @@
                                                                                 </tr>
                                                                             </thead>
                                                                             <tbody id="package-items-table">
-                                                                    <?php if (is_array($packageItems) && count($packageItems) > 0) : ?>
-                                                                        <?php foreach ($packageItems as $packageItem) : ?>
-                                                                            <?php $item = $this->items_model->getItemById($packageItem->item_id)[0]; ?>
-                                                                            <tr class="package-item">
-                                                                                <td><?= $item->title ?></td>
-                                                                                <td><?= $packageItem->quantity ?></td>
-                                                                                <td><?= number_format(floatval($packageItem->price), 2, '.', ',') ?></td>
-                                                                            </tr>
-                                                                        <?php endforeach; ?>
-                                                                    <?php else : ?>
-                                                                        <tr>
-                                                                            <td colspan="3">No package items found.</td>
-                                                                        </tr>
-                                                                    <?php endif; ?>
-                                                                </tbody>
+                                                                                <?php if (is_array($packageItems) && count($packageItems) > 0) : ?>
+                                                                                    <?php foreach ($packageItems as $packageItem) : ?>
+                                                                                        <?php $item = $this->items_model->getItemById($packageItem->item_id)[0]; ?>
+                                                                                        <tr class="package-item">
+                                                                                            <td><?= $item->title ?></td>
+                                                                                            <td><?= $packageItem->quantity ?></td>
+                                                                                            <td><?= number_format(floatval($packageItem->price), 2, '.', ',') ?></td>
+                                                                                        </tr>
+                                                                                    <?php endforeach; ?>
+                                                                                <?php else : ?>
+                                                                                    <tr>
+                                                                                        <td colspan="3">No package items found.</td>
+                                                                                    </tr>
+                                                                                <?php endif; ?>
+                                                                            </tbody>
                                                                         </table>
                                                                     </td>
                                                                     <td></td>
@@ -657,7 +657,22 @@
                                                 <div class="col-12 title-header">
                                                     <h5>Payment Schedule</h5>
                                                     <span class="help help-sm help-block">Split the balance into multiple payment milestones.</span>
-                                                    <p><a href="#" id="manage-payment-schedule" style="color:#02A32C;"><i class="bx bx-fw bxs-plus-square" aria-hidden="true"></i> Manage payment schedule </a></p>
+                                                    <p><a href="#" id="manage-payment-schedule" style="color: #02A32C;"><i class="bx bx-fw bxs-plus-square" aria-hidden="true"></i> Manage payment schedule</a></p>
+                                                    <div id="payment-schedule-input" style="display: none;">
+                                                        <div class="row">
+                                                            <div class="col-md-3 mb-3">
+                                                                <label for="payment-schedule-date" class="form-label">Payment schedule:</label>
+                                                                <input type="date" class="form-control nsm-field" id="payment-schedule-date" name="payment-schedule-date">
+                                                            </div>
+                                                            <div class="col-md-3 mb-3">
+                                                                <label for="payment-schedule-months" class="form-label">Months to pay:</label>
+                                                                <select class="form-select nsm-field" id="payment-schedule-months">
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <span>Monthly payment:</span>
+                                                        <span>$0.00</span>
+                                                    </div>
                                                 </div>
                                                 <div class="col-12 title-header">
                                                     <h5>Accepted payment methods</h5>
@@ -695,7 +710,7 @@
                                                             <input class="form-check-input" type="checkbox" name="deposit" value="1" <?= isset($paymentMethods) && in_array('Deposit', $paymentMethods) || !isset($invoice) ? 'checked' : '' ?> id="deposit-payment">
                                                             <label for="deposit-payment" class="form-check-label"><span>Deposit</span></label>
                                                         </div>
-                                                    </div>                                                    
+                                                    </div>
                                                 </div>
 
                                                 <div class="row">
@@ -713,7 +728,6 @@
                                                     </div>
                                                 </div>
 
-                                             
                                             </div>
                                         </div>
 
@@ -838,16 +852,16 @@
                                     
                                     <div class="row">
                                         <div class="col-12 col-md-6">
-                                        <hr />
+                                            <hr />
                                             <div class="row">
                                                 <div class="col-12 col-md-6">
                                                     <h5 class="title-header">Message to Customer</h5>
-                                                    <span class="help help-sm help-block">Add a message that will be displayed on the <br/> invoice.</span>
+                                                    <span class="help help-sm help-block">Add a message that will be displayed on the <br /> invoice.</span>
                                                     <textarea name="message_to_customer" cols="40" rows="4" class="form-control nsm-field mb-2"><?= isset($invoice) ? $invoice->message_to_customer : 'Thank you for your business.' ?></textarea>
                                                 </div>
                                                 <div class="col-12 col-md-6">
                                                     <h5 class="title-header">Terms &amp; Conditions</h5>
-                                                    <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the <br/> invoice.</span>
+                                                    <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the <br /> invoice.</span>
                                                     <textarea name="terms_and_conditions" cols="40" rows="4" class="form-control nsm-field mb-2"><?= isset($invoice) ? $invoice->terms_and_conditions : '' ?></textarea>
                                                 </div>
                                             </div>
@@ -1008,5 +1022,48 @@
                 return 'Optional if you want to display the purchase order number on invoice.';
             }
         });
+    });
+</script>
+<script>
+    function generateMonthOptions(defaultMonth) {
+        var monthsDropdown = document.getElementById('payment-schedule-months');
+
+        monthsDropdown.innerHTML = '';
+
+        var defaultOption = document.createElement('option');
+        defaultOption.value = '';
+        defaultOption.textContent = 'Select month';
+        monthsDropdown.appendChild(defaultOption);
+
+        for (var i = 1; i <= 12; i++) {
+            var option = document.createElement('option');
+            option.value = i;
+            option.textContent = i + (i === 1 ? ' month' : ' months');
+
+            monthsDropdown.appendChild(option);
+        }
+
+        if (defaultMonth) {
+            monthsDropdown.value = defaultMonth;
+        }
+    }
+
+    document.getElementById('manage-payment-schedule').addEventListener('click', function(event) {
+        event.preventDefault();
+        var paymentScheduleContainer = document.getElementById('payment-schedule-input');
+
+        if (paymentScheduleContainer.style.display === 'none') {
+            paymentScheduleContainer.style.display = 'block';
+            this.innerHTML = '<i class="bx bx-fw bxs-minus-square" aria-hidden="true"></i> Hide payment schedule';
+
+            generateMonthOptions();
+        } else {
+            paymentScheduleContainer.style.display = 'none';
+            this.innerHTML = '<i class="bx bx-fw bxs-plus-square" aria-hidden="true"></i> Manage payment schedule';
+        }
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        generateMonthOptions();
     });
 </script>
