@@ -1148,6 +1148,10 @@ class Users extends MY_Controller
 				//End Trac360
 
 		        if ($last_id > 0 ){
+					//Activity Logs
+					$activity_name = 'Created User ' . $fname . ' ' . $lname; 
+					createActivityLog($activity_name);
+
 		            echo json_encode(1);
 		        }else{
 		            echo json_encode(0);
@@ -1924,6 +1928,10 @@ class Users extends MY_Controller
 						$this->EmployeeCommissionSetting_model->create($employee_commission_setting);
 					}
 				}
+
+				//Activity Logs
+                $activity_name = 'Updated User ' . $post['firstname'] . ' ' . $post['lastname']; 
+                createActivityLog($activity_name);
 
 				$msg  = '';
 			}

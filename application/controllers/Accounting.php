@@ -8192,8 +8192,7 @@ class Accounting extends MY_Controller
         $this->page_data['getSettings'] = $this->workorder_model->getSettings($company_id);
 
         $this->page_data['page']->title = 'New Invoice';
-        $this->page_data['page']->parent = 'Sales';
-
+        $this->page_data['page']->parent = 'Sales';        
         $this->load->view('accounting/addInvoice', $this->page_data);
     }
 

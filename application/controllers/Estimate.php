@@ -372,9 +372,8 @@ class Estimate extends MY_Controller
             $userid = logged('id');
 
             //Activity Logs
-            $this->load->model('Activity_model');
             $activity_name = 'Created Estimate Number ' . $estimate_number; 
-            $this->Activity_model->add($activity_name,$userid);
+            createActivityLog($activity_name);
 
             $getname = $this->estimate_model->getname($userid);
 
@@ -674,6 +673,10 @@ class Estimate extends MY_Controller
             'logs' => "$action",
         ];
         $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogPayload);
+
+        //Activity Logs
+        $activity_name = 'Deleted Estimate Number : ' . $estimateInfo->estimate_number; 
+        createActivityLog($activity_name);
 
         $delete = $this->estimate_model->deleteEstimate($data);
 
@@ -2148,6 +2151,11 @@ class Estimate extends MY_Controller
             exit;*/
             $json_data['is_success'] = 0;
             $json_data['error'] = 'Mailer Error: '.$mail->ErrorInfo;
+            
+        }else{
+            //Activity Logs
+            $activity_name = 'Sent to Customer Email Estimate Number : ' . $workData->estimate_number; 
+            createActivityLog($activity_name);
         }
 
         return $json_data;
@@ -2585,23 +2593,31 @@ class Estimate extends MY_Controller
 
     public function duplicate_estimate()
     {
+        $this->load->model('EstimateSettings_model');
+
         $company_id = getLoggedCompanyID();
-        // $user_id        = getLoggedUserID();
-        $user_id = logged('id');
-        $est_num = $this->input->post('est_num');
+        $user_id    = logged('id');
+        $est_num    = $this->input->post('est_num');
 
         $datas = $this->estimate_model->getDataByESTID($est_num);
 
-        $number = $this->estimate_model->getlastInsertByComp($company_id);
-        foreach ($number as $num) {
-            $next = $num->estimate_number;
-            $arr = explode('-', $next);
-            $date_start = $arr[0];
-            $nextNum = $arr[1];
-            //    echo $number;
+        // Generate Estimate Number
+        $setting = $this->EstimateSettings_model->getEstimateSettingByCompanyId($company_id);
+        if ($setting) {
+            $next_num = $setting->estimate_num_next;
+            $prefix = $setting->estimate_num_prefix;
+        } else {
+            $lastInsert = $this->estimate_model->getlastInsertByComp($company_id);
+            if ($lastInsert) {
+                $next_num = $lastInsert->id + 1;
+            } else {
+                $next_num = 1;
+            }
+            $prefix = 'EST-';
         }
-        $val = $nextNum + 1;
-        $estimate_number = 'EST-'.str_pad($val, 9, '0', STR_PAD_LEFT);
+
+        $estimate_number = str_pad($next_num, 9, '0', STR_PAD_LEFT);
+        $estimate_number = $prefix.$estimate_number;
 
         $curr_date_7 = strtotime('+7 day');
         $current_date_7 = date('Y-m-d', $curr_date_7);
@@ -2667,6 +2683,37 @@ class Estimate extends MY_Controller
          ];
 
         $addQuery = $this->estimate_model->save_estimate($new_data);
+
+        //Activity Logs
+        $activity_name = 'Created Estimate Number ' . $estimate_number . ' - Cloned from Estimated Number ' . $datas->estimate_number; 
+        createActivityLog($activity_name);
+
+        // Update estimate setting
+        if ($setting) {
+            $estimate_setting = ['estimate_num_next' => $next_num + 1];
+            $this->EstimateSettings_model->update($setting->id, $estimate_setting);
+        }else{
+            $default_terms_condition = 'BY SIGNING THIS AGREEMENT, YOU SPECIFICALLY ACKNOWLEDGE AND ACCEPT THE TERMS AND CONDITIONS AND INDICATE YOUR INTENT TO BE LEGALLY BOUND TO THE PROPOSAL AND THIS AGREEMENT. BY SIGNING THIS AGREEMENT, THE CLIENT REPRESENTS THAT THE PERSON SIGNING ON ITS BEHALF HAS THE AUTHORITY TO BIND THE CLIENT TO THIS PROPOSAL AND AGREEMENT';                
+            $data = [
+                'company_id' => $company_id,
+                'estimate_num_prefix' => $prefix,
+                'estimate_num_next' => $next_num,
+                'residential_message' => '',
+                'residential_terms_and_conditions' => $default_terms_condition,
+                'commercial_message' => '',
+                'commercial_terms_and_conditions' => $default_terms_condition,
+                'is_residential_message_default' => 0,
+                'default_expire_period' => 'weeks',
+                'capture_customer_signature' => 1,
+                'hide_item_price' => 1,
+                'hide_item_qty' => 1,
+                'hide_item_tax' => 1,
+                'hide_item_discount' => 1,
+                'hide_item_total' => 1,
+                'hide_grand_total' => 1,
+            ];
+            $this->EstimateSettings_model->create($data);
+        }
     }
 
     public function estimate_settings()
@@ -2831,6 +2878,10 @@ class Estimate extends MY_Controller
 
                 $this->EstimateSettings_model->create($data);
             }
+
+            //Activity Logs
+            $activity_name = 'Updated Estimate Settings'; 
+            createActivityLog($activity_name);
 
             $is_success = 1;
             $msg = '';

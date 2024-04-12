@@ -3588,6 +3588,10 @@ class Workorder extends MY_Controller
             ];
         }
 
+        //Activity Logs
+        $activity_name = 'Updated Workorder Settings'; 
+        createActivityLog($activity_name);
+
         echo json_encode($json_data);
     }
 
@@ -5480,6 +5484,12 @@ class Workorder extends MY_Controller
             
             $this->workorder_model->add_work_order_details($data_items);
         }
+
+        //Activity Logs
+        $this->load->model('Activity_model');
+        $user_id = logged('id');
+        $activity_name = 'Created Workorder Number : ' . $work_order_number . ' - Cloned from Workorder Number : ' . $clonedData->work_order_number; 
+        $this->Activity_model->add($activity_name,$user_id);
     }
 
     public function ajax_update_workorder(){
@@ -5637,6 +5647,10 @@ class Workorder extends MY_Controller
         );
 
         $addQuery = $this->workorder_model->update($workorder->id, $workoder_data);
+
+        //Activity Logs
+        $activity_name = 'Updated Workorder Number : ' . $workorder->work_order_number; 
+        createActivityLog($activity_name);
         
         //SMS Notification        
         createCronAutoSmsNotification($company_id, $addQuery, 'workorder', $this->input->post('status'), $user_id, 0, $user_id);        
@@ -6861,12 +6875,16 @@ class Workorder extends MY_Controller
         $id = $this->input->post('id');
 
         $workOrder = $this->workorder_model->getDataByWO($id);
-        if( $workOrder ){            
+        if( $workOrder ){    
             $data = array(
                 'id' => $id,
                 'view_flag' => '1',
             );
             $is_success = $this->workorder_model->deleteWorkorder($data);
+
+            //Activity Logs            
+            $activity_name = 'Deleted Workorder Number : ' . $workOrder->work_order_number; 
+            createActivityLog($activity_name);
 
             customerAuditLog(logged('id'), $workOrder->customer_id, $workOrder->id, 'Workorder', 'Deleted work order #'.$workOrder->work_order_number);
         }        
@@ -12860,7 +12878,11 @@ class Workorder extends MY_Controller
                     'table' => 'work_orders',
                     'select' => '*',
                 );
-                $workorder_data = $this->general->get_data_with_param($get_work_order_data);
+                $workorder_data = $this->general->get_data_with_param($get_work_order_data, false);
+
+                //Activity Logs
+                $activity_name = 'Converted Workorder Number ' . $workorder_data->work_order_number . ' to Job Number ' . $job_number; 
+                createActivityLog($activity_name);
 
                 $check_exist = array(
                     'where' => array('fk_prof_id' => $post['customer_id']),
