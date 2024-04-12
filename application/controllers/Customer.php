@@ -113,17 +113,6 @@ class Customer extends MY_Controller
     }
 
     public function CompanyList(){
-        $get_customer_groups = [
-            'where' => [
-                    'company_id' => logged('company_id'),
-            ],
-            'table' => 'customer_groups',
-            'select' => '*',
-        ];
-        $default_status_ids = defaultCompanyCustomerStatusIds();
-        $this->page_data['customer_status'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'), $default_status_ids);
-     
-        $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
 
         $this->page_data['page']->title = 'Company';
         $this->page_data['page']->parent = 'Customers';
@@ -141,6 +130,7 @@ class Customer extends MY_Controller
          
         echo json_encode($this->page_data);
     }
+
     public function getPersonList(){
       
         $get_customer_groups = [
@@ -163,10 +153,8 @@ class Customer extends MY_Controller
 
         echo json_encode($this->page_data);
     }
+
     public function PersonList(){
-
-    
-
         $get_customer_groups = [
             'where' => [
                     'company_id' => logged('company_id'),
@@ -184,6 +172,7 @@ class Customer extends MY_Controller
         $this->page_data['persons'] = $this->company->getAllCommercialCustomers(logged('company_id'),'Residential');
         $this->load->view('v2/pages/customer/person', $this->page_data);
     }
+
     public function delete_company_or_person($id)
     {
         // Check if the ID is provided
@@ -2040,7 +2029,6 @@ class Customer extends MY_Controller
             'table' => 'customer_groups',
             'select' => '*',
         ];
-    
 
         $get_login_user = [
             'where' => [
@@ -2329,17 +2317,15 @@ class Customer extends MY_Controller
                 }
 
                 //Activity Logs
-                $this->load->model('Activity_model');
-                $user_id = logged('id');
                 $activity_name = $activity_action . ' customer record - ' . $input_profile['first_name'] . ' ' . $input_profile['last_name']; 
-                $this->Activity_model->add($activity_name,$user_id);
+                createActivityLog($activity_name);
             }
         } else {
             $data_arr = ['success' => false, 'message' => 'Customer Already Exist!'];
         }
         exit(json_encode($data_arr));
     }
-     
+
     public function save_person_profile()
     {
         try {
@@ -2393,13 +2379,14 @@ class Customer extends MY_Controller
             $this->output->set_content_type('application/json')->set_output(json_encode($response));
             
          } catch (Exception $e) {
-                // Handle any unexpected exceptions here
-                
-                log_message('error', $e->getMessage());
-                show_error('An unexpected error occurred. Please try again later.');
-            }
+            // Handle any unexpected exceptions here
+            
+            log_message('error', $e->getMessage());
+            show_error('An unexpected error occurred. Please try again later.');
+        }
     
     }
+
     public function getDuplicateList($customerType)
     {
         $company_id = logged('company_id');
@@ -3214,8 +3201,17 @@ class Customer extends MY_Controller
         $input['field_name'] = 'leads_id';
         $input['id'] = $_POST['lead_id'];
         $input['tablename'] = 'ac_leads';
-        $this->customer_ad_model->delete($input);
-        echo 'Done';
+
+        $lead = $this->customer_ad_model->get_data_by_id('leads_id', $_POST['lead_id'], 'ac_leads');
+        if( $lead ){
+            $this->customer_ad_model->delete($input);
+
+            //Activity Logs
+            $activity_name = 'Deleted Lead ' . $lead->firstname . ' ' . $lead->lastname; 
+            createActivityLog($activity_name);
+            
+            echo 'Done';
+        }
     }
 
     public function remove_devices()
@@ -3364,6 +3360,10 @@ class Customer extends MY_Controller
             $input['phone_cell'] = formatPhoneNumber($input['phone_cell']);
             if ($input['leads_id'] != null) {
                 if ($this->customer_ad_model->update_data($input, 'ac_leads', 'leads_id')) {
+                    //Activity Logs
+                    $activity_name = 'Updated Lead ' . $input['firstname'] . ' ' . $input['lastname']; 
+                    createActivityLog($activity_name);
+
                     // SMS Notification
                     createCronAutoSmsNotification($company_id, $input['leads_id'], 'lead', $input['status'], $uid, $input['fk_assign_id']);
                     echo 'Saved';
@@ -3374,6 +3374,10 @@ class Customer extends MY_Controller
             
                 $input['company_id'] = logged('company_id');
                 if ($lastid = $this->customer_ad_model->add($input, 'ac_leads')) {
+                    //Activity Logs
+                    $activity_name = 'Created New Lead ' . $input['firstname'] . ' ' . $input['lastname']; 
+                    createActivityLog($activity_name);
+
                     // SMS Notification
                     createCronAutoSmsNotification($company_id, $lastid, 'lead', $input['status'], $uid, $input['fk_assign_id']);
                     echo 'Saved';
@@ -3465,10 +3469,8 @@ class Customer extends MY_Controller
             $input['status'] = 'New';
             if ($this->customer_ad_model->add($input, 'acs_profile')) {
                 //Activity Logs
-                $this->load->model('Activity_model');
-                $user_id = logged('id');
                 $activity_name = 'Created customer record - ' . $input['first_name'] . ' ' . $input['last_name']; 
-                $this->Activity_model->add($activity_name,$user_id);
+                createActivityLog($activity_name);
 
                 echo 'Success';
             } else {
@@ -7446,7 +7448,13 @@ class Customer extends MY_Controller
         $post = $this->input->post();
         $customer = $this->Customer_model->getCustomer($post['cid']);
         if ($customer && $customer->company_id == $company_id) {
+            $customer_name = $customer->first_name . ' ' . $customer->last_name;
             $this->Customer_model->deleteCustomer($post['cid']);
+
+            //Activity Logs
+            $activity_name = 'Deleted Customer  ' . $customer_name; 
+            createActivityLog($activity_name);
+
             $is_success = 1;
             $msg = '';
         }
@@ -7665,5 +7673,84 @@ class Customer extends MY_Controller
         }
 
         echo json_encode($lead);
+    }
+
+    public function ajax_quick_add_lead()
+    {
+        $is_valid = 1;
+        $msg      = '';      
+        $customer = [];  
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        if( $post['first_name'] == '' || $post['last_name'] == ''){
+            $is_valid = 0;
+            $msg = 'Please enter lead name';
+        }
+
+        if( $post['email'] == '' ){
+            $is_valid = 0;
+            $msg = 'Please enter lead email';
+        }
+
+        if( $is_valid == 1 ){
+            $lead_data = [
+                'company_id' => $cid,
+                'firstname' => $post['first_name'],
+                'middlename' => $post['middle_name'],
+                'lastname' => $post['last_name'],
+                'address' => $post['address'],
+                'city' => $post['city'],
+                'state' => $post['state'],
+                'zip' => $post['zip_code'],
+                'phone_home' => $post['phone_home'],
+                'phone_cell' => $post['phone_cell'],
+                'email_add' => $post['email'],
+                'sss_num' => $post['sss_num'],
+                'status' => 'New',
+                'date_created' => date("Y-m-d H:i:s")
+            ];
+
+            $lead_id = $this->customer_ad_model->createLead($lead_data);
+
+            $customer = [
+                'id' => $lead_id,
+                'name' => $post['first_name'] . ' ' . $post['last_name']
+            ];
+        }
+
+        $json_data = ['is_success' => $is_valid, 'msg' => $msg, 'customer' => $customer];
+        echo json_encode($json_data);
+    }
+
+    public function ajax_convert_lead_to_customer()
+    {
+        $is_success = 0;
+        $msg        = 'Cannot find data';
+        $prof_id    = 0;
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post = $this->input->post();
+
+        $lead = $this->customer_ad_model->getByLeadId($post['lead_id']);
+        if( $lead ){
+            $result = $this->customer_ad_model->convertLeadToCustomer($post['lead_id'], $cid, $uid);
+            
+            if( $result['is_converted'] == 1 ){
+
+                //Activity Logs
+                $activity_name = 'Converted Lead ' . $lead->firstname . ' ' . $lead->lastname . ' to Customer'; 
+                createActivityLog($activity_name);
+
+                $prof_id = $result['prof_id'];
+                $is_success = 1;
+                $msg = '';
+            }
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg, 'prof_id' => $prof_id];
+        echo json_encode($json_data);
     }
 }

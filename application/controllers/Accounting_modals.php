@@ -5690,7 +5690,6 @@ class Accounting_modals extends MY_Controller
     public function get_customer_details($customerId)
     {
         $customer = $this->accounting_customers_model->getCustomerDetails($customerId);
-
         echo json_encode($customer[0]);
     }
 
@@ -9344,7 +9343,6 @@ class Accounting_modals extends MY_Controller
 
     private function options_estimate($data)
     {
-        // $this->form_validation->set_rules('item[]', 'Item', 'required');
         $this->form_validation->set_rules('customer', 'Customer', 'required');
         $this->form_validation->set_rules('estimate_no', 'Estimate #', 'required');
         $this->form_validation->set_rules('estimate_date', 'Estimate Date', 'required');
@@ -9352,11 +9350,28 @@ class Accounting_modals extends MY_Controller
         $this->form_validation->set_rules('estimate_type', 'Estimate Type', 'required');
         $this->form_validation->set_rules('estimate_status', 'Estimate Status', 'required');
 
+
+        if(($data['table_1_total'] <= 0) || ($data['table_2_total'] <= 0)) {
+            $return['data']    = null;
+            $return['success'] = false;
+            $return['message'] = "Error: Items Amount must not contain 0 amount.";  
+            return $return;
+            exit;  
+        }
+
         $return = [];
         if ($this->form_validation->run() === false) {
-            $return['data'] = null;
-            $return['success'] = false;
-            $return['message'] = 'Error';
+
+            if( !isset($data['customer']) || $data['customer'] == '' ){
+                $return['data'] = null;
+                $return['success'] = false;
+                $return['message'] = 'Please select customer.';
+            }else{
+                $return['data'] = null;
+                $return['success'] = false;
+                $return['message'] = 'Cannot create option estimate, please check all required field.';
+            }            
+
         } else {
             $company_id  = getLoggedCompanyID();
             $user_id  = getLoggedUserID();
@@ -25234,10 +25249,10 @@ class Accounting_modals extends MY_Controller
                     $subject = "New payment request from $company->business_name - invoice $invoice->invoice_number";
                     $message = "Dear $customer->first_name $customer->last_name,
 
-Here's your invoice! We appreciate your prompt payment.
+                    Here's your invoice! We appreciate your prompt payment.
 
-Thanks for your business!
-$company->business_name";
+                    Thanks for your business!
+                    $company->business_name";
                 break;
                 case 'estimate' :
                     $this->load->helper('pdf_helper');
@@ -25362,11 +25377,11 @@ $company->business_name";
                     $subject = "Estimate $estimate->estimate_number from $company->business_name";
                     $message = "Dear $customer->first_name $customer->last_name,
 
-Please review the estimate below. Feel free to contact us if you have any questions.
-We look forward to working with you.
+                        Please review the estimate below. Feel free to contact us if you have any questions.
+                        We look forward to working with you.
 
-Thanks for your business!
-$company->business_name";
+                        Thanks for your business!
+                        $company->business_name";
                 break;
                 case 'credit_memo' :
                     $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($explode[1]);
@@ -25394,10 +25409,10 @@ $company->business_name";
                     $subject = "Credit Memo $creditMemo->ref_no from $company->business_name";
                     $message = "Dear $customer->first_name $customer->last_name,
 
-Your credit memo is attached. We have reduced your account balance by the amount shown on the credit memo.
+                    Your credit memo is attached. We have reduced your account balance by the amount shown on the credit memo.
 
-Have a great day!
-$company->business_name";
+                    Have a great day!
+                    $company->business_name";
                 break;
                 case 'sales_receipt' :
                     $salesReceipt = $this->accounting_sales_receipt_model->getSalesReceiptDetails_by_id($explode[1]);
@@ -25425,11 +25440,11 @@ $company->business_name";
                     $subject = "Sales Receipt $salesReceipt->ref_no from $company->business_name";
                     $message = "Dear $customer->first_name $customer->last_name,
 
-Please review the sales receipt below.
-We appreciate it very much.
+                    Please review the sales receipt below.
+                    We appreciate it very much.
 
-Thanks for your business!
-$company->business_name";
+                    Thanks for your business!
+                    $company->business_name";
                 break;
                 case 'refund' :
                     $refundReceipt = $this->accounting_refund_receipt_model->getRefundReceiptDetails_by_id($explode[1]);
@@ -25459,12 +25474,12 @@ $company->business_name";
                     $subject = "Refund Receipt from $company->business_name";
                     $message = "Dear $customer->first_name $customer->last_name,
 
-Please find your refund receipt attached to this email.
+                    Please find your refund receipt attached to this email.
 
-Thank you.
+                    Thank you.
 
-Have a great day!
-$company->business_name";
+                    Have a great day!
+                    $company->business_name";
                 break;
             }
 

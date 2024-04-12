@@ -284,6 +284,55 @@ class Widgets extends MY_Controller
         endif;
     }
 
+
+    public function addV2Thumbnail()
+    {
+        $this->load->library('wizardlib');
+        $this->load->model('widgets_model');
+        $this->load->model('General_model', 'general');
+
+        $id = post('id');
+        $isGlobal = post('isGlobal');
+        $isMain   = post('isMain');
+        $user_id  = logged('id');
+        $cid = logged('company_id');
+
+        $idCount = count($this->widgets_model->getWidgetsByCompanyId($cid));
+
+
+        $details = array(
+            'wu_user_id' => $user_id,
+            'wu_widget_id' => $id,
+            'wu_company_id' => $cid,
+            'wu_order' => $idCount + 1,
+            'wu_is_main' => 0
+        );
+
+        $isExists = $this->wizardlib->isWidgetUsedByCompany($id, $cid);        
+        if (!$isExists) :
+            if ($this->widgets_model->addWidgets($details, $user_id, $id)) :
+                $widget = $this->widgets_model->getWidgetByID($id);
+
+                $data['class'] = 'nsm-card nsm-grid main-widget-container';
+                $data['id'] = $id;
+                $data['dynamic_load'] = true;
+                $data['isMain'] = false;
+
+                $estimate_draft_query = [
+                    'where' => ['company_id' => logged('company_id')],
+                    'table' => 'estimates',
+                    'select' => 'id,status',
+                ];
+                $data['estimate_draft'] = $this->general->get_data_with_param($estimate_draft_query);
+                if ($widget->w_name === 'Expense') {
+                    $data = set_expense_graph_data($data);
+                }
+
+                return $this->load->view("v2/" . $widget->w_view_link, $data);
+            endif;
+        endif;
+    }
+
     public function addV2Widget_old()
     {
 
@@ -440,31 +489,37 @@ class Widgets extends MY_Controller
                 $out_count++;
             }
 ?>
-            <tr>
-                <td>
-                    <span class="tbl-employee-name"><?php echo $user->FName; ?></span> <span class="tbl-employee-name"><?php echo $user->LName; ?></span>
-                    <span class="tbl-emp-role"><?php echo $u_role; ?></span>
-                </td>
-                <td class="tbl-chk-in" data-count="<?php echo $in_count ?>">
-                    <div class="red-indicator" style="<?php echo $indicator_in ?>"></div> <span class="clock-in-time"><?php echo $time_in ?></span> <span class="clock-in-yesterday" style="display: block;"><?php echo $yesterday_in; ?></span>
-                </td>
-                <td class="tbl-chk-out" data-count="<?php echo $time_out ?>">
-                    <div class="red-indicator" style="<?php echo $indicator_out ?>"></div> <span class="clock-out-time"><?php echo $time_out ?></span>
-                </td>
-                <td class="tbl-lunch-in">
-                    <div class="red-indicator" style="<?php echo $indicator_in_break ?>"></div> <span class="break-in-time"><?php echo $break_in; ?></span>
-                </td>
-                <td class="tbl-lunch-out">
-                    <div class="red-indicator" style="<?php echo $indicator_out_break ?>"></div> <span class="break-out-time"><?php echo $break_out; ?></span>
-                </td>
-                <!-- <td class="tbl-emp-action">
+<tr>
+    <td>
+        <span class="tbl-employee-name"><?php echo $user->FName; ?></span> <span
+            class="tbl-employee-name"><?php echo $user->LName; ?></span>
+        <span class="tbl-emp-role"><?php echo $u_role; ?></span>
+    </td>
+    <td class="tbl-chk-in" data-count="<?php echo $in_count ?>">
+        <div class="red-indicator" style="<?php echo $indicator_in ?>"></div> <span
+            class="clock-in-time"><?php echo $time_in ?></span> <span class="clock-in-yesterday"
+            style="display: block;"><?php echo $yesterday_in; ?></span>
+    </td>
+    <td class="tbl-chk-out" data-count="<?php echo $time_out ?>">
+        <div class="red-indicator" style="<?php echo $indicator_out ?>"></div> <span
+            class="clock-out-time"><?php echo $time_out ?></span>
+    </td>
+    <td class="tbl-lunch-in">
+        <div class="red-indicator" style="<?php echo $indicator_in_break ?>"></div> <span
+            class="break-in-time"><?php echo $break_in; ?></span>
+    </td>
+    <td class="tbl-lunch-out">
+        <div class="red-indicator" style="<?php echo $indicator_out_break ?>"></div> <span
+            class="break-out-time"><?php echo $break_out; ?></span>
+    </td>
+    <!-- <td class="tbl-emp-action">
                     <a href="javascript:void(0)" title="Lunch in/out" data-toggle="tooltip" class="employee-break" id="<?php echo $break_id ?>" <?php echo $break; ?> data-id="<?php echo $user->id ?>" data-name="<?php echo $user->FName; ?> <?php echo $user->LName; ?>" data-approved="<?php echo $this->session->userdata('logged')['id']; ?>" data-photo="<?php echo $user_photo; ?>" data-company="<?php echo $company_id ?>"><i class="fa fa-coffee fa-lg"></i></a>
                     <a href="javascript:void(0)" title="Clock in/out" data-toggle="tooltip" class="employee-in-out" <?php echo $disabled ?> id="<?php echo $btn_action; ?>" data-attn="<?php echo $attn_id; ?>" data-name="<?php echo $user->FName; ?> <?php echo $user->LName; ?>" data-id="<?php echo $user->id; ?>" data-approved="<?php echo $this->session->userdata('logged')['id']; ?>" data-photo="<?php echo $user_photo; ?>" data-company="<?php echo $company_id ?>"><i class="fa fa-user-clock fa-lg"></i></a>
                     <i class="fa <?php echo $status; ?> status" title="<?php echo $tooltip_status; ?>" data-toggle="tooltip"></i>
                 </td>
                 <td></td> -->
-            </tr>
-            <?php
+</tr>
+<?php
             $u_role = null;
             $status = 'fa-times-circle';
             $tooltip_status = 'Not logged in';
@@ -485,7 +540,7 @@ class Widgets extends MY_Controller
             $yesterday_in = null;
             $yesterday_out = null;
             ?>
-            <?php
+<?php
         endforeach;
     }
 
@@ -612,39 +667,43 @@ class Widgets extends MY_Controller
                         $out_count++;
                     }
             ?>
-                    <div class="col-12">
-                        <div class="widget-item timesheet-item">
-                            <div class="nsm-profile">
-                                <span><?php echo getLoggedNameInitials($user->id); ?></span>
-                            </div>
-                            <div class="content">
-                                <div class="details">
-                                    <span class="content-title"><?php echo $user->FName; ?> <?php echo $user->LName; ?></span>
-                                    <span class="content-subtitle d-block"><?php echo $u_role; ?></span>
-                                </div>
-                                <div class="controls">
-                                    <div class="timesheet-group">
-                                        <div class="timesheet-time" data-count="<?php echo $in_count ?>">
-                                            <span class="content-subtitle d-block"><span class="timesheet-label">In: </span><?php echo is_null($time_in) ? '--:-- --' : $time_in; ?></span>
-                                            <span class="content-subtitle d-block"><?php echo $yesterday_in; ?></span>
-                                        </div>
-                                        <div class="timesheet-time" data-count="<?php echo $time_out ?>">
-                                            <span class="content-subtitle d-block"><span class="timesheet-label">Out: </span><?php echo is_null($time_out) ? '--:-- --' : $time_out; ?></span>
-                                        </div>
-                                    </div>
-                                    <div class="timesheet-group">
-                                        <div class="timesheet-time">
-                                            <span class="content-subtitle d-block"><span class="timesheet-label">Lunch In: </span><?php echo is_null($break_in) ? '--:-- --' : $break_in; ?></span>
-                                        </div>
-                                        <div class="timesheet-time">
-                                            <span class="content-subtitle d-block"><span class="timesheet-label">Lunch Out: </span><?php echo is_null($break_out) ? '--:-- --' : $break_out; ?></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<div class="col-12">
+    <div class="widget-item timesheet-item">
+        <div class="nsm-profile">
+            <span><?php echo getLoggedNameInitials($user->id); ?></span>
+        </div>
+        <div class="content">
+            <div class="details">
+                <span class="content-title"><?php echo $user->FName; ?> <?php echo $user->LName; ?></span>
+                <span class="content-subtitle d-block"><?php echo $u_role; ?></span>
+            </div>
+            <div class="controls">
+                <div class="timesheet-group">
+                    <div class="timesheet-time" data-count="<?php echo $in_count ?>">
+                        <span class="content-subtitle d-block"><span class="timesheet-label">In:
+                            </span><?php echo is_null($time_in) ? '--:-- --' : $time_in; ?></span>
+                        <span class="content-subtitle d-block"><?php echo $yesterday_in; ?></span>
                     </div>
-                    <?php
+                    <div class="timesheet-time" data-count="<?php echo $time_out ?>">
+                        <span class="content-subtitle d-block"><span class="timesheet-label">Out:
+                            </span><?php echo is_null($time_out) ? '--:-- --' : $time_out; ?></span>
+                    </div>
+                </div>
+                <div class="timesheet-group">
+                    <div class="timesheet-time">
+                        <span class="content-subtitle d-block"><span class="timesheet-label">Lunch In:
+                            </span><?php echo is_null($break_in) ? '--:-- --' : $break_in; ?></span>
+                    </div>
+                    <div class="timesheet-time">
+                        <span class="content-subtitle d-block"><span class="timesheet-label">Lunch Out:
+                            </span><?php echo is_null($break_out) ? '--:-- --' : $break_out; ?></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
                     $u_role = null;
                     $status = 'fa-times-circle';
                     $tooltip_status = 'Not logged in';

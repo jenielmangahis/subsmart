@@ -100,7 +100,7 @@
                             <tr>
                                 <td colspan="3">
                                     <button type="button" class="nsm-button" id="addLocationLine">
-                                        Add lines
+                                        Add location
                                     </button>
                                 </td>
                             </tr>

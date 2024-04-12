@@ -373,6 +373,12 @@ class Tickets extends MY_Controller
 
             }
 
+            //Activity Logs
+            $this->load->model('Activity_model');
+            $user_id = logged('id');
+            $activity_name = 'Created Service Ticket Number ' . $this->input->post('ticket_no'); 
+            $this->Activity_model->add($activity_name,$user_id);
+
             $temp_items             = $this->input->post('temp_items');
             $temp_item_type         = $this->input->post('temp_item_type');
             $temp_quantity          = $this->input->post('temp_quantity');
@@ -723,6 +729,12 @@ class Tickets extends MY_Controller
         );
 
         $addQuery = $this->tickets_model->updateTickets($update_data);
+
+        //Activity Logs
+        $this->load->model('Activity_model');
+        $user_id = logged('id');
+        $activity_name = 'Updated Service Ticket Number ' . $this->input->post('ticket_no'); 
+        $this->Activity_model->add($activity_name,$user_id);
 
         
         if($this->input->post('payment_method') == 'Cash'){

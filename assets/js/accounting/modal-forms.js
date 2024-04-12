@@ -946,6 +946,7 @@ $(function () {
                 } else {
                     type = type.replaceAll('_', '-');
                 }
+                
 
                 if (dropdownFields.includes(type)) {
                     $(this).select2({
@@ -5514,7 +5515,6 @@ $(function () {
 
                         $($('#weeklyTimesheetModal #timesheet-table tbody tr')[count]).find('select').each(function () {
                             var field = $(this).attr('name').replace('[]', '');
-
                             $(this).select2({
                                 ajax: {
                                     url: base_url + 'accounting/get-dropdown-choices',
@@ -5863,7 +5863,6 @@ $(function () {
 
             $('#item-modal select').each(function () {
                 var dropdownType = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
-
                 if (dropdownFields.includes(dropdownType)) {
                     $(this).select2({
                         ajax: {
@@ -8802,7 +8801,7 @@ $(function () {
             if (targetItemTable !== null) {
                 targetItemTable.children('tbody:not(#package-items-table)').append(`<tr>${fields}</tr>`);
                 targetItemTable.children('tbody:not(#package-items-table)').children('tr:last-child').children('td:nth-child(3)').remove();
-                targetItemTable.children('tbody:not(#package-items-table)').children('tr:last-child').find('input[name="discount[]"]').attr('disabled', true);
+                targetItemTable.children('tbody:not(#package-items-table)').children('tr:last-child').find('input[name="discount[]"]').attr('disabled', false);
 
                 targetItemTable.children('tbody:not(#package-items-table)').children('tr:last-child').find('select').each(function () {
                     $(this).select2({
@@ -8920,22 +8919,21 @@ $(function () {
     $(document).on('click', '#modal-container #package_list table#package-table button.addNewPackageToList', function (e) {
         e.preventDefault();
         var id = e.currentTarget.dataset.id;
-
+        
         $.get(base_url + 'accounting/get-package-details/' + id, function (res) {
             var result = JSON.parse(res);
             var details = result.package;
             var items = result.items;
-
             var fields = `
-                <td>${details.name}<input type="hidden" name="package[]" value="${details.id}"></td>
-                <td>Package</td>
-                <td></td>
-                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0" min="0" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"></td>
-                <td><span class="item-amount">${parseFloat(details.amount_set).toFixed(2)}</span></td>
-                <td></td>
-                <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="7.50"></td>
-                <td><span class="row-total">$0.00</span></td>
-                <td>
+                <td style='background-color: #f7f7f7;'><strong>${details.name}</strong><input type="hidden" name="package[]" value="${details.id}"></td>
+                <td style='background-color: #f7f7f7;'>Package</td>
+                <td style='background-color: #f7f7f7;'></td>
+                <td style='background-color: #f7f7f7;'><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0" min="0" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"></td>
+                <td style='background-color: #f7f7f7;'><span class="item-amount">${parseFloat(details.amount_set).toFixed(2)}</span></td>
+                <td style='background-color: #f7f7f7;'></td>
+                <td style='background-color: #f7f7f7;'><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="7.50"></td>
+                <td style='background-color: #f7f7f7;'><span class="row-total">$0.00</span></td>
+                <td style='background-color: #f7f7f7;'>
                     <button type="button" class="nsm-button delete-row">
                         <i class='bx bx-fw bx-trash'></i>
                     </button>
@@ -8953,11 +8951,11 @@ $(function () {
             }
 
             var packageItems = `
-                <td colspan="3">
-                    <table class="nsm-table">
+                <td colspan="4">
+                    <table class="nsm-table" style="margin-left: 35px;">
                         <thead>
                             <tr class="package-item-header">
-                                <th>Item Name</th>
+                                <th>-> Item Name</th>
                                 <th>Quantity</th>
                                 <th>Price</th>
                             </tr>
@@ -8972,7 +8970,6 @@ $(function () {
                         </tbody>
                     </table>
                 </td>
-                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
@@ -9316,14 +9313,17 @@ $(function () {
                 }
             }
             var address = '';
+            var address_with_replace = '';
             address += customer.mail_add !== "" && customer.mail_add !== null ? customer.mail_add + '\n' : "";
             address += customer.city !== "" && customer.city !== null ? customer.city + ', ' : "";
             address += customer.state !== "" && customer.state !== null ? customer.state + ' ' : "";
             address += customer.zip_code !== "" && customer.zip_code !== null ? customer.zip_code + ' ' : "";
             address += customer.country !== "" && customer.country !== null ? customer.country : "";
 
+            address_with_replace = address.replace("NA", "");
+
             $('#salesReceiptModal #billing-address').html("");
-            $('#salesReceiptModal #billing-address').append(address.trim());
+            $('#salesReceiptModal #billing-address').append(address_with_replace.trim());
             $('#salesReceiptModal #email').val(customer.email);
         });
     });
@@ -9574,6 +9574,7 @@ $(function () {
             }
         });
     });
+
 });
 
 const convertToDecimal = (el) => {
@@ -13639,7 +13640,7 @@ const loadCustomerInvoices = () => {
     }
 
     $.ajax({
-        url: `/accounting/get-customer-invoices/${$('#receivePaymentModal #customer').val() || 'get-customer-invoices'}`,
+        url: base_url + `accounting/get-customer-invoices/${$('#receivePaymentModal #customer').val() || 'get-customer-invoices'}`,
         data: data,
         type: 'post',
         processData: false,
@@ -14322,7 +14323,6 @@ const addcheck = () => {
             ];
 
             if (dropdownFields.includes(type)) {
-
                 $(this).select2({
                     ajax: {
                         url: base_url + 'accounting/get-dropdown-choices',

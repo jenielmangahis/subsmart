@@ -505,9 +505,9 @@ class DocuSign extends MYF_Controller
                     return in_array($v, $invoices_accessKeys);
                 }, ARRAY_FILTER_USE_KEY);
             }else{
-                //If not invoice data manual fetch total equipment cost from ticket_items
+                //If not invoice data manual fetch total equipment cost from tickets_items
                 $this->db->select('total,ticket_id,tax');
-                $this->db->from('ticket_items');
+                $this->db->from('tickets_items');
                 $this->db->where('ticket_id', $document->ticket_id);
                 $itemsQuery = $this->db->get();
                 $items = $itemsQuery->result();

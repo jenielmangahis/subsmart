@@ -20,7 +20,7 @@ class Notification_Counter extends MY_Controller {
         $this->load->model('Appointment_model');
         $this->load->model('EventTags_model');
         $this->load->model('Job_tags_model');
-
+		$this->load->model('Customer_model');
 		$company_id = logged('company_id');
 
 		//Calendar
@@ -30,7 +30,9 @@ class Notification_Counter extends MY_Controller {
         $scheduledEstimates = $this->Estimate_model->getAllPendingEstimatesByCompanyId($company_id);    
         $upcomingAppointments = $this->Appointment_model->getAllUpcomingAppointmentsByCompany($company_id);                 
         $total_calendar_schedule = count($upcomingJobs) + count($upcomingEvents) + count($upcomingServiceTickets) + count($scheduledEstimates) + count($upcomingAppointments); 
-
+        $total_company = $this->Customer_model->count_customer_type('Commercial');
+		$total_person = $this->Customer_model->count_customer_type('Residential');
+		
         //Taskhub
         $tasks = $this->Taskhub_model->getAllNotCompletedTasksByCompanyId($company_id);
 		$total_taskhub = count($tasks);
@@ -40,7 +42,13 @@ class Notification_Counter extends MY_Controller {
 		$total_online_booking = count($inquiries);*/
 		$total_online_booking = 0;
 
-		$json_data = ['total_calendar_schedule' => $total_calendar_schedule, 'total_taskhub' => $total_taskhub, 'total_online_booking' => $total_online_booking];
+		$json_data = [
+		'total_calendar_schedule' => $total_calendar_schedule,
+		'total_taskhub' => $total_taskhub, 
+		'total_online_booking' => $total_online_booking,
+	    'total_company' => $total_company,
+		'total_person' => $total_person,
+	];
 
 		echo json_encode($json_data);
 		exit;

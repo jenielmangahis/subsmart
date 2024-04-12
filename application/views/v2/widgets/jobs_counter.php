@@ -11,7 +11,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <div class="nsm-card-header">
                 <div class="nsm-card-title summary-report-header">
                     <div class="icon-summary-income">
-                        <i class="bx bx-detail"></i>
+                        <i class="bx bx-wrench"></i>
                     </div>
                     <span style="color:#dc3545c9 ">Job</span>
                 </div>
@@ -34,7 +34,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         <div class="row ">
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
-                    <label for="">Subscription</label>
+                    <label for="">Jobs Count </label>
                     <h1><?php echo number_format($subs->TOTAL_MMR, 2); ?></h1>
 
                 </div>
@@ -42,8 +42,8 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         </div>
     </div>
     <div class='nsm-card-footer'>
-        <a role="button" class="nsm-button btn-sm m-0 me-2" href="customer/leads">
-            <i class='bx bx-right-arrow-alt'></i>
+        <a role="button" class=" btn-sm m-0 me-2" href="job">
+            <i class='bx bx-right-arrow-alt' style="color: #dc3545c9"></i>
         </a>
     </div>
 </div>

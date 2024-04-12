@@ -246,6 +246,13 @@ if (!function_exists('getCompanyBusinessProfileImage')) {
     }
 }
 
+function createActivityLog($activity_name){
+    $CI      = &get_instance();
+    $user_id = logged('id');
+
+    $CI->activity_model->add($activity_name,$user_id);
+}
+
 if (!function_exists('licenseImage')) {
 
     function licenseImage($id)
@@ -4628,7 +4635,7 @@ if (!function_exists('is_admin_logged')) {
     }
 
     function adi_company_ids(){
-        $adi_company_ids = [24,31,58];
+        $adi_company_ids = [24,31,58, 1];
         return $adi_company_ids;
     }
 

@@ -557,6 +557,10 @@ class Events extends MY_Controller
         $event = $this->event_model->get_specific_event($_POST['job_id']);
         if( $event ){
             if($this->general->delete_($remove_event)){
+                //Activity Logs
+                $activity_name = 'Deleted Event Number ' . $event->event_number; 
+                createActivityLog($activity_name);
+
                 customerAuditLog(logged('id'), $event->customer_id, $event->id, 'Event', 'Deleted event #'.$event->event_number);
                 echo '1';
             }
@@ -647,13 +651,19 @@ class Events extends MY_Controller
         $USER_ID = logged('id');
         $COMPANY_ID = logged('company_id');
 
-        $GET_EVENT_SETTINGS = array(
-            'where' => array( 'company_id' => $COMPANY_ID ),
-            'table' => 'event_settings',
-            'select' => '*',
-        );
-        $EVENT_SETTINGS = $this->general->get_data_with_param($GET_EVENT_SETTINGS);
-        $EVENT_NUMBER = $EVENT_SETTINGS[0]->event_prefix.' - #000000'.$EVENT_SETTINGS[0]->event_next_num;
+        if( $_POST['EVENT_ID'] > 0 ){
+            $event = $this->event_model->get_specific_event($_POST['EVENT_ID']);
+            $EVENT_NUMBER = $event->event_number;
+        }else{
+            $GET_EVENT_SETTINGS = array(
+                'where' => array( 'company_id' => $COMPANY_ID ),
+                'table' => 'event_settings',
+                'select' => '*',
+            );
+            $EVENT_SETTINGS = $this->general->get_data_with_param($GET_EVENT_SETTINGS);
+            $EVENT_NUMBER = $EVENT_SETTINGS[0]->event_prefix.' - #000000'.$EVENT_SETTINGS[0]->event_next_num;
+        }
+        
         $employee_ids = json_encode($_POST['EMPLOYEE_ID']);
         $DATA = array(
             'employee_id' => $employee_ids,
@@ -681,10 +691,21 @@ class Events extends MY_Controller
             $event = $this->event_model->get_specific_event($_POST['EVENT_ID']);
             if( $event ){
                 $EVENT_ID = $event->id;
-                $this->event_model->update($_POST['EVENT_ID'],$DATA);                
+                $this->event_model->update($_POST['EVENT_ID'],$DATA);           
+                
+                //Activity Logs
+                $activity_name = 'Updated Event Number ' . $EVENT_NUMBER; 
+                createActivityLog($activity_name);
             }
         }else{
-            $EVENT_ID = $this->general->add_return_id($DATA, 'events');    
+            $EVENT_ID = $this->general->add_return_id($DATA, 'events');   
+            
+            $EVENT_SETTINGS_data = array( 'event_next_num' => $EVENT_SETTINGS[0]->event_next_num + 1,);
+            $this->general->update_with_key($EVENT_SETTINGS_data,$EVENT_SETTINGS[0]->id, 'event_settings');
+
+            //Activity Logs
+            $activity_name = 'Created Event Number ' . $EVENT_NUMBER; 
+            createActivityLog($activity_name);
         }
         
 
@@ -696,9 +717,7 @@ class Events extends MY_Controller
 
         //Google Calendar
         createSyncToCalendar($EVENT_ID, 'event', $COMPANY_ID);
-   
-        $EVENT_SETTINGS_data = array( 'event_next_num' => $EVENT_SETTINGS[0]->event_next_num + 1,);
-        $this->general->update_with_key($EVENT_SETTINGS_data,$EVENT_SETTINGS[0]->id, 'event_settings');
+        
         customerAuditLog(logged('id'), 0, $EVENT_ID, 'Events', 'Created an event #'.$EVENT_NUMBER);
 
         // if(isset($input['item_id'])){

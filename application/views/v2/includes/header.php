@@ -336,17 +336,19 @@ if ($this->session->userdata('usertimezone') == null) {
                         <i class='bx bx-fw bx-group'></i>My Customers <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
-                    <li class="<?php if ($page->title == 'Customer') : echo 'selected';
+                    <li class="d-flex align-items-center <?php if ($page->title == 'Customer') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("customer/person") ?>">
                             <i class='bx bxs-face'></i>&nbsp;&nbsp;Persons
                             </a>
+                            <div id="sidebar-persons-counter" ></div>   
                         </li>
-                        <li class="<?php if ($page->title == 'Customer') : echo 'selected';
+                        <li class="d-flex align-items-center <?php if ($page->title == 'Customer') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("customer/company") ?>">
                             <i class='bx bx-building'></i>&nbsp;&nbsp;Company
                             </a>
+                            <div id="sidebar-company-counter" ></div>   
                         </li>
                         <li class="<?php if ($page->title == 'Customer') : echo 'selected';
                                     endif; ?>">
