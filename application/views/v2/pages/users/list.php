@@ -649,6 +649,7 @@
                 dataType: "json",
                 success: function(result) {
                     if (result.is_success) {
+                        $("#change_password_modal").modal('hide');
                         Swal.fire({
                             title: 'Save Successful!',
                             text: "Employee password has been updated successfully.",
@@ -663,14 +664,13 @@
                     } else {
                         Swal.fire({
                             title: 'Failed',
-                            text: "Something is wrong in the process",
+                            text: result.msg,
                             icon: 'error',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         });
                     }
-
-                    $("#change_password_modal").modal('hide');
+                    
                     _this.trigger("reset");
 
                     _this.find("button[type=submit]").html("Save");
