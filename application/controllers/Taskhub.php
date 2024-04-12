@@ -81,10 +81,10 @@ class Taskhub extends MY_Controller {
 			$this->page_data['taskHub'] = $task;
 
 			$this->page_data['selected_participants'] = $this->db->query(
-															'select a.*, concat(b.FName, " ", b.LName) as `name` from tasks_participants a '.
-															'left join users b on b.id = a.user_id '.
-															'where a.task_id = ' . $taskid
-														)->result();
+				'select a.*, concat(b.FName, " ", b.LName) as `name` from tasks_participants a '.
+				'left join users b on b.id = a.user_id '.
+				'where a.task_id = ' . $taskid
+			)->result();
 		}
 
 		$customer = '';
@@ -269,7 +269,11 @@ class Taskhub extends MY_Controller {
 
 		            $this->taskhub_participants_model->create($data_assigned);
 
-					redirect('taskhub');
+					//Activity Logs
+					$activity_name = 'Created New Task ' . $this->input->post('subject'); 
+					createActivityLog($activity_name);
+
+					//redirect('taskhub');
 
 				} else {
 					$this->page_data['error'] = 'Error creating task';
@@ -534,6 +538,10 @@ class Taskhub extends MY_Controller {
         	}else{
         		$data = ['status_id' => 6];
 	        	$this->Taskhub_model->updateByTaskId($taskHub->task_id, $data);
+
+				//Activity Logs
+				$activity_name = 'Completed Task ' . $taskHub->subject; 
+				createActivityLog($activity_name);
 
 	        	//SMS Notification
 	        	$taskStatus   = $this->taskhub_status_model->getById(6);
