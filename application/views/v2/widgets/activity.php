@@ -43,8 +43,7 @@
             method: 'GET',
             async: false,
             success: function (response) {
-                $('.activity-logs-container').html(response);
-                resizeSidebar();
+                $('.activity-logs-container').html(response);                
             }
         });
     }
