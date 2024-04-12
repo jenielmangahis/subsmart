@@ -6244,8 +6244,9 @@ $(function () {
                 if (res.success) {
                     dropdownEl.append(`<option value="${res.data.id}" selected>${res.data.name}</option>`);
                     dropdownEl.trigger('change');
-
                     $('#payment-method-modal').modal('hide');
+                } else {
+                    alert('Payment method name is required'); 
                 }
             }
         });
@@ -8116,7 +8117,7 @@ $(function () {
             });
 
             if ($('#invoiceModal #templateName').length < 1) {
-                $.get('/accounting/get-linkable-transactions/invoice/' + $(this).val(), function (res) {
+                $.get(base_url + 'accounting/get-linkable-transactions/invoice/' + $(this).val(), function (res) {
                     var transactions = JSON.parse(res);
 
                     if (transactions.length > 0) {
@@ -14063,7 +14064,7 @@ const printPreviewRefundReceipt = () => {
 }
 
 const getInvoiceLinkableTransactions = (transactionType, transactionDate) => {
-    $.get('/accounting/get-linkable-transactions/invoice/' + $('#invoiceModal #customer').val(), function (res) {
+    $.get(base_url + 'accounting/get-linkable-transactions/invoice/' + $('#invoiceModal #customer').val(), function (res) {
         var transactions = JSON.parse(res);
 
         $.each(transactions, function (index, transaction) {
