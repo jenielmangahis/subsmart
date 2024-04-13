@@ -579,6 +579,10 @@ class Taskhub extends MY_Controller {
 	        if( count($uncompletedTasks) > 0 ){
 	        	$this->Taskhub_model->completeAllTasksByProfId($post['selected_customer_id']);
 
+				//Activity Logs
+				$activity_name = 'Updated all Tasks to Completed'; 
+				createActivityLog($activity_name);
+
 	        	$is_success = 1;
 	        	$msg = '';
 	        }else{
@@ -596,7 +600,65 @@ class Taskhub extends MY_Controller {
 	        }	
         }
 
-        
+		$json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);  
+	}
+
+	public function ajax_complete_selected_tasks()
+	{
+		$this->load->model('Taskhub_model');
+        $this->load->model('Taskhub_status_model');   
+
+        $cid = logged('company_id');
+        $uid = logged('id');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();          
+        if( $post['taskId'] ){
+        	$tasks = $this->Taskhub_model->getAllByTaskIds($post['taskId']);			
+	        if( $tasks ){
+				$task_ids = implode(",", $post['taskId']);
+	        	$this->Taskhub_model->completeAllTasksByTaskId($post['taskId']);
+
+				//Activity Logs
+				$activity_name = 'Updated selected tasks id ' . $task_ids . ' to Completed'; 
+				createActivityLog($activity_name);
+
+	        	$is_success = 1;
+	        	$msg = '';
+	        }
+        }
+ 
+		$json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);  
+	}
+
+	public function ajax_delete_task()
+	{
+		$this->load->model('Taskhub_model');
+
+        $cid = logged('company_id');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();  
+        $taskHub = $this->Taskhub_model->getById($post['tsid']);
+
+        if( $taskHub && $taskHub->company_id == $cid ){
+			$this->Taskhub_model->deleteByTaskId($taskHub->id);
+
+			//Activity Logs
+			$activity_name = 'Deleted Task ' . $taskHub->subject; 
+			createActivityLog($activity_name);
+
+        	$msg ='';
+	        $is_success = 1;   	
+        }
  
 		$json_data = ['is_success' => $is_success, 'msg' => $msg];
 
