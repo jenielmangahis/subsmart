@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class="col-12">
                         <label for="name">Name</label>
-                        <input type="text" name="name" id="name" class="form-control nsm-field mb-2" <?=isset($paymentMethod) ? "value='$paymentMethod->name'" : ''?>>
+                        <input type="text" name="name" id="name" class="form-control nsm-field mb-2" <?=isset($paymentMethod) ? "value='$paymentMethod->name'" : ''?> required>
 
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="credit_card" name="credit_card" value="1" <?=isset($paymentMethod) && $paymentMethod->credit_card ? 'checked' : ''?>>

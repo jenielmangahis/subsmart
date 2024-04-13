@@ -13001,6 +13001,16 @@ class Accounting_modals extends MY_Controller
     {
         $post = $this->input->post();
 
+        if($post['name'] == null || $post['name'] == "") {
+            $return = [
+                'data' => null,
+                'success' => false,
+                'message' => "Error: name field is required"
+            ];
+            echo json_encode($return);
+            exit;
+        }
+
         $data = [
             'company_id' => getLoggedCompanyID(),
             'name' => $post['name'],
