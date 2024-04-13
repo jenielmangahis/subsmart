@@ -1,6 +1,5 @@
 <?php
 if (!is_null($dynamic_load) && $dynamic_load == true) {
-    echo '<div class="col-12 col-lg-4">';
 }
 ?>
 
@@ -35,7 +34,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
                     <label for="">Jobs Count </label>
-                    <h1><?php echo number_format($subs->TOTAL_MMR, 2); ?></h1>
+                    <h1 id="jobs_count_thumbnail"></h1>
 
                 </div>
             </div>
@@ -50,6 +49,5 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
 
 <?php
 if (!is_null($dynamic_load) && $dynamic_load == true) {
-    echo '</div>';
 }
 ?>

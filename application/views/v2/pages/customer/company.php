@@ -39,7 +39,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Listing of all companies.
+                            Listing of all 	commercials.
                         </div>
                     </div>
                 </div>
@@ -47,10 +47,9 @@
                     <div class="col-12 col-md-4">
                         <form action="<?php echo base_url('admin/companies') ?>" method="GET">
                             <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Companies" value="<?php echo (!empty($search)) ? $search : '' ?>">                                
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Commercials" value="<?php echo (!empty($search)) ? $search : '' ?>">                                
                             </div>
-                            <button type="submit" class="nsm-button primary" style="margin:0px;">Search</button>
-                            <button type="button" class="nsm-button primary btn-reset-list" style="margin:0px;">Reset</a>
+     
                         </form>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
@@ -66,7 +65,7 @@
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <a class="nsm-button primary btn-export-list" id="openModalBtn"  style="margin-left: 10px;"><i class="bx bx-building"></i> Add Company</a>
+                            <a class="nsm-button primary btn-export-list" id="openModalBtn"  style="margin-left: 10px;"><i class="bx bx-building"></i> Add 	Commercial</a>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
                             <a class="nsm-button primary btn-export-list" href="<?= base_url('admin/export_company_list') ?>" style="margin-left: 10px;"><i class="bx bx-fw bx-file"></i> Export List</a>
@@ -171,7 +170,7 @@
             <div class="nsm-card primary">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span><i class="bx bx-building"></i><span id="person_header"> Add Company</span></span>
+            <span><i class="bx bx-building"></i><span id="person_header"> Add Commercial</span></span>
         </div>
         <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
     </div>
@@ -542,7 +541,7 @@
     
 $('#person_modal').on('hidden.bs.modal', function () {
     $("#business_name").val('');
-    $("#person_header").text(" Add Company");
+    $("#person_header").text(" Add Commercial");
     $("#status").val('');  
     $("#prof_id").val('');   
     $("#email").val('');

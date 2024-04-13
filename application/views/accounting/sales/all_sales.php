@@ -63,7 +63,7 @@
                         </div>
                     </div>
                     <div class="col nsm-counter-container">
-                        <div class="nsm-counter error h-100 mb-2 <?php echo $transaction === 'overdue-invoices' ? 'selected' : ''; ?><?php echo $transaction === 'open-invoices' ? 'co-selected' : ''; ?>" id="overdue-invoices">
+                        <div class="nsm-counter error h-100 mb-2 <?php echo $transaction === 'overdue-invoices' ? 'selected' : ''; ?>" id="overdue-invoices">
                             <div class="row h-100">
                                 <div class="col d-flex justify-content-center align-items-center">
                                     <i class="bx bx-receipt"></i>
@@ -333,7 +333,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </section>
                                 <div class="row mt-3 " id="filter_buttons">
                                     <div class="col-6">
@@ -348,16 +347,7 @@
                                     </div>
                                 </div>
                             </ul>
-                            
-                            </div>
-                       
-                  
-
-    
-                   
-
-             
-
+                        </div>
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>
@@ -384,273 +374,502 @@
                             </ul>
                         </div>
 
-                    <div class="nsm-page-buttons page-button-container">
-                        <button type="button" class="nsm-button export-transactions">
-                            <i class='bx bx-fw bx-export'></i> Export
-                        </button>
-                        <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_all_sales_transactions_modal">
-                            <i class='bx bx-fw bx-printer'></i>
-                        </button>
-                        <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
-                            <i class="bx bx-fw bx-cog"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
-                            <p class="m-0">Columns</p>
-                            <?php foreach ($settingsCols as $settingsCol) { ?>
-                                <?php echo $settingsCol; ?>
-                            <?php } ?>
-                            <p class="m-0">Rows</p>
-                            <div class="dropdown d-inline-block">
-                                <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                    <span>
-                                        10
-                                    </span> <i class='bx bx-fw bx-chevron-down'></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
-                                    <li><a class="dropdown-item active" href="javascript:void(0);">10</a></li>
-                                    <li><a class="dropdown-item " href="javascript:void(0);">50</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0);">150</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
-                                </ul>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" id="compact" class="form-check-input">
-                                <label for="compact" class="form-check-label">Compact</label>
-                            </div>
-                        </ul>
+                        <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="nsm-button export-transactions">
+                                <i class='bx bx-fw bx-export'></i> Export
+                            </button>
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_all_sales_transactions_modal">
+                                <i class='bx bx-fw bx-printer'></i>
+                            </button>
+                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
+                                <i class="bx bx-fw bx-cog"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
+                                <p class="m-0">Columns</p>
+                                <?php foreach ($settingsCols as $settingsCol) { ?>
+                                    <?php echo $settingsCol; ?>
+                                <?php } ?>
+                                <p class="m-0">Rows</p>
+                                <div class="dropdown d-inline-block">
+                                    <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                        <span>
+                                            10
+                                        </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
+                                        <li><a class="dropdown-item active" href="javascript:void(0);">10</a></li>
+                                        <li><a class="dropdown-item " href="javascript:void(0);">50</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">150</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
+                                    </ul>
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" id="compact" class="form-check-input">
+                                    <label for="compact" class="form-check-label">Compact</label>
+                                </div>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div style="overflow-x: auto; width: 100%;">
-                <table class="nsm-table" id="transactions-table">
-                    <thead>
-                        <tr>
-                            <td class="table-icon text-center">
-                                <input class="form-check-input select-all table-select" type="checkbox">
-                            </td>
-                            <?php foreach ($headers as $header) { ?>
-                                <?php if ($header !== 'Attachments') { ?>
-                                    <td data-name="<?php echo $header; ?>"><?php echo strtoupper($header); ?></td>
-                                <?php } else { ?>
-                                    <td class="table-icon text-center" data-name="<?php echo $header; ?>"><i class="bx bx-paperclip"></i>
-                                    </td>
-                                <?php } ?>
-                            <?php } ?>
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (count($transactions) > 0) { ?>
-                            <?php foreach ($transactions as $transaction) { ?>
-                                <?php switch ($type) {
-                                    case 'estimates': ?>
-                                        <tr>
-                                            <td>
-                                                <div class="table-row-icon table-checkbox">
-                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
-                                                </div>
-                                            </td>
-                                            <td style="width: 6%"><?php echo $transaction['date']; ?></td>
-                                            <td><?php echo $transaction['type']; ?></td>
-                                            <td><?php echo $transaction['no']; ?></td>
-                                            <td><?php echo $transaction['customer']; ?></td>
-                                            <td><?php echo $transaction['memo'] ?? 'No memo available'; ?></td>
-                                            <td><?php echo $transaction['expiration_date']; ?></td>
-                                            <td><?php echo $transaction['total']; ?></td>
-                                            <!-- <td><?php //echo $transaction['last_delivered']; ?></td> -->
-                                            <td><?php echo $transaction['email'] ?? 'No email provided'; ?></td>
-                                            <!-- <td><?php //echo $transaction['accepted_date']; ?></td> -->
-                                            <!-- <td><?php //echo $transaction['attachments']; ?></td> -->
-                                            <td><?php echo $transaction['status'] ?? "Draft"; ?></td>
-                                            <!-- <td><?php //echo $transaction['po_number']; ?></td>
-                                            <td><?php //echo $transaction['sales_rep']; ?></td> -->
-                                            <td><?php echo $transaction['manage']; ?></td>
-                                        </tr>
-                                    <?php break;
-                                    case 'invoices': ?>
-                                        <tr>
-                                            <td>
-                                                <div class="table-row-icon table-checkbox">
-                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
-                                                </div>
-                                            </td>
-                                            <td style="width: 6%"><?php echo $transaction['date']; ?></td>
-                                            <td><?php echo $transaction['type']; ?></td>
-                                            <td><?php echo $transaction['no']; ?></td>
-                                            <td><?php echo $transaction['customer']; ?></td>
-                                            <td><?php echo $transaction['memo'] ?? 'No memo available'; ?></td>
-                                            <td><?php echo $transaction['due_date']; ?></td>
-                                            <!-- <td><?php //echo $transaction['aging']; ?></td> -->
-                                            <td><?php echo $transaction['balance']; ?></td>
-                                            <td><?php echo $transaction['total']; ?></td>
-                                            <!-- <td><?php //echo $transaction['last_delivered']; ?></td> -->
-                                            <td><?php echo $transaction['email'] ?? 'No email provided'; ?></td>
-                                            <!-- <td><?php //echo $transaction['attachments']; ?></td> -->
-                                            <td><?php echo $transaction['status'] ?? "Draft"; ?></td>
-                                            <!-- <td><?php //echo $transaction['po_number']; ?></td>
-                                            <td><?php //echo $transaction['sales_rep']; ?></td> -->
-                                            <td><?php echo $transaction['manage']; ?></td>
-                                        </tr>
-                                    <?php break;
-                                    case 'sales-receipts': ?>
-                                        <tr>
-                                            <td>
-                                                <div class="table-row-icon table-checkbox">
-                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
-                                                </div>
-                                            </td>
-                                            <td style="width: 6%"><?php echo $transaction['date']; ?></td>
-                                            <td><?php echo $transaction['type']; ?></td>
-                                            <td><?php echo $transaction['no']; ?></td>
-                                            <td><?php echo $transaction['customer']; ?></td>
-                                            <!-- <td><?php //echo $transaction['method']; ?></td> -->
-                                            <!-- <td><?php //echo $transaction['source']; ?></td> -->
-                                            <td><?php echo $transaction['memo'] ?? 'No memo available'; ?></td>
-                                            <td><?php echo $transaction['due_date']; ?></td>
-                                            <td><?php echo $transaction['total']; ?></td>
-                                            <!-- <td><?php //echo $transaction['last_delivered']; ?></td> -->
-                                            <td><?php echo $transaction['email'] ?? 'No email provided'; ?></td>
-                                            <!-- <td><?php //echo $transaction['attachments']; ?></td> -->
-                                            <td><?php echo $transaction['status'] ?? "Draft"; ?></td>
-                                            <!-- <td><?php //echo $transaction['po_number']; ?></td>
-                                            <td><?php //echo $transaction['sales_rep']; ?></td> -->
-                                            <td><?php echo $transaction['manage']; ?></td>
-                                        </tr>
-                                    <?php break;
-                                    case 'credit-memos': ?>
-                                        <tr>
-                                            <td>
-                                                <div class="table-row-icon table-checkbox">
-                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
-                                                </div>
-                                            </td>
-                                            <td style="width: 6%"><?php echo $transaction['date']; ?></td>
-                                            <td><?php echo $transaction['type']; ?></td>
-                                            <td><?php echo $transaction['no']; ?></td>
-                                            <td><?php echo $transaction['customer']; ?></td>
-                                            <td><?php echo $transaction['memo'] ?? 'No memo available'; ?></td>
-                                            <td><?php echo $transaction['total']; ?></td>
-                                            <!-- <td><?php //echo $transaction['last_delivered']; ?></td> -->
-                                            <td><?php echo $transaction['email'] ?? 'No email provided'; ?></td>
-                                            <!-- <td><?php //echo $transaction['attachments']; ?></td> -->
-                                            <td><?php echo $transaction['status'] ?? "Draft"; ?></td>
-                                            <!-- <td><?php //echo $transaction['po_number']; ?></td>
-                                            <td><?php //echo $transaction['sales_rep']; ?></td> -->
-                                            <td><?php echo $transaction['manage']; ?></td>
-                                        </tr>
-                                    <?php break;
-                                    case 'unbilled-income': ?>
-                                        <tr>
-                                            <td>
-                                                <div class="table-row-icon table-checkbox">
-                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
-                                                </div>
-                                            </td>
-                                            <td style="width: 6%"><?php echo $transaction['date']; ?></td>
-                                            <td><?php echo $transaction['type']; ?></td>
-                                            <td><?php echo $transaction['customer']; ?></td>
-                                            <td><?php echo $transaction['charges']; ?></td>
-                                            <td><?php echo $transaction['time']; ?></td>
-                                            <td><?php echo $transaction['expenses']; ?></td>
-                                            <td><?php echo $transaction['credits']; ?></td>
-                                            <td><?php echo $transaction['unbilled_amount']; ?></td>
-                                            <td><?php echo $transaction['manage']; ?></td>
-                                        </tr>
-                                    <?php break;
-                                    case 'recently-paid': ?>
-                                        <tr>
-                                            <td>
-                                                <div class="table-row-icon table-checkbox">
-                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
-                                                </div>
-                                            </td>
-                                            <td style="width: 6%"><?php echo $transaction['date']; ?></td>
-                                            <td><?php echo $transaction['type']; ?></td>
-                                            <td><?php echo $transaction['no']; ?></td>
-                                            <td><?php echo $transaction['customer']; ?></td>
-                                            <!-- <td><?php //echo $transaction['method']; ?></td> -->
-                                            <!-- <td><?php //echo $transaction['source']; ?></td> -->
-                                            <td><?php echo $transaction['memo'] ?? 'No memo available'; ?></td>
-                                            <td><?php echo $transaction['due_date']; ?></td>
-                                            <!-- <td><?php //echo $transaction['aging']; ?></td> -->
-                                            <td><?php echo $transaction['balance']; ?></td>
-                                            <td><?php echo $transaction['total']; ?></td>
-                                            <!-- <td><?php //echo $transaction['last_delivered']; ?></td> -->
-                                            <td><?php echo $transaction['email'] ?? 'No email provided'; ?></td>
-                                            <td><?php echo $transaction['latest_payment']; ?></td>
-                                            <!-- <td><?php //echo $transaction['attachments']; ?></td> -->
-                                            <td><?php echo $transaction['status'] ?? "Draft"; ?></td>
-                                            <!-- <td><?php //echo $transaction['po_number']; ?></td>
-                                            <td><?php //echo $transaction['sales_rep']; ?></td> -->
-                                            <td><?php echo $transaction['manage']; ?></td>
-                                        </tr>
-                                    <?php break;
-                                    case 'money-received': ?>
-                                        <tr>
-                                            <td>
-                                                <div class="table-row-icon table-checkbox">
-                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
-                                                </div>
-                                            </td>
-                                            <td style="width: 6%"><?php echo $transaction['date']; ?></td>
-                                            <td><?php echo $transaction['type']; ?></td>
-                                            <td><?php echo $transaction['no']; ?></td>
-                                            <td><?php echo $transaction['customer']; ?></td>
-                                            <td><?php echo $transaction['memo'] ?? 'No memo available'; ?></td>
-                                            <td><?php echo $transaction['total']; ?></td>
-                                            <!-- <td><?php //echo $transaction['attachments']; ?></td> -->
-                                            <td><?php echo $transaction['status'] ?? "Draft"; ?></td>
-                                            <!-- <td><?php //echo $transaction['po_number']; ?></td>
-                                            <td><?php //echo $transaction['sales_rep']; ?></td> -->
-                                            <td><?php echo $transaction['manage']; ?></td>
-                                        </tr>
-                                    <?php break;
-                                    default: ?>
-                                        <tr>
-                                            <td>
-                                                <div class="table-row-icon table-checkbox">
-                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
-                                                </div>
-                                            </td>
-                                            <td style="width: 6%"><?php echo $transaction['date']; ?></td>
-                                            <td><?php echo $transaction['type']; ?></td>
-                                            <td><?php echo $transaction['no']; ?></td>
-                                            <td><?php echo $transaction['customer']; ?></td>
-                                            <!-- <td><?php //echo $transaction['method']; ?></td> -->
-                                            <!-- <td><?php //echo $transaction['source']; ?></td> -->
-                                            <td><?php echo $transaction['memo'] ?? 'No memo available'; ?></td>
-                                            <td><?php echo $transaction['due_date']; ?></td>
-                                            <!-- <td><?php //echo $transaction['aging']; ?></td> -->
-                                            <td><?php echo $transaction['balance']; ?></td>
-                                            <td><?php echo $transaction['total']; ?></td>
-                                            <!-- <td><?php //echo $transaction['last_delivered']; ?></td> -->
-                                            <td><?php echo $transaction['email'] ?? 'No email provided'; ?></td>
-                                            <!-- <td><?php //echo $transaction['attachments']; ?></td> -->
-                                            <td><?php echo $transaction['status'] ?? "Draft"; ?></td>
-                                            <!-- <td><?php //echo $transaction['po_number']; ?></td>
-                                            <td><?php //echo $transaction['sales_rep']; ?></td> -->
-                                            <td><?php echo $transaction['manage']; ?></td>
-                                        </tr>
-                                <?php break;
-                                } ?>
-                            <?php } ?>
-                        <?php } else { ?>
+                <div style="overflow-x: auto; width: 100%;">
+                    <table class="nsm-table" id="transactions-table">
+                        <thead>
                             <tr>
-                                <td colspan="19">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
+                                <td class="table-icon text-center">
+                                    <input class="form-check-input select-all table-select" type="checkbox">
                                 </td>
+                                <?php foreach ($headers as $header) { ?>
+                                    <?php if ($header !== 'Attachments') { ?>
+                                        <td data-name="<?php echo $header; ?>"><?php echo strtoupper($header); ?></td>
+                                    <?php } else { ?>
+                                        <td class="table-icon text-center" data-name="<?php echo $header; ?>"><i class="bx bx-paperclip"></i>
+                                        </td>
+                                    <?php } ?>
+                                <?php } ?>
+                                <td data-name="Manage"></td>
                             </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php if (count($transactions) > 0) { ?>
+                                <?php foreach ($transactions as $transaction) { ?>
+                                    <?php switch ($type) {
+                                        case 'estimates': ?>
+                                            <tr>
+                                                <td>
+                                                    <div class="table-row-icon table-checkbox">
+                                                        <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
+                                                    </div>
+                                                </td>
+                                                <td style="width: 6%"><?php echo $transaction['date']; ?></td>
+                                                <td><?php echo $transaction['type']; ?></td>
+                                                <td><?php echo $transaction['no']; ?></td>
+                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['memo'])) {
+                                                        echo $transaction['memo'];
+                                                    } else {
+                                                        echo 'No memo available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php echo $transaction['expiration_date']; ?></td>
+                                                <td><?php echo $transaction['total']; ?></td>
+                                                <!-- <td><?php //echo $transaction['last_delivered']; 
+                                                            ?></td> -->
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['email'])) {
+                                                        echo $transaction['email'];
+                                                    } else {
+                                                        echo 'No email provided';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <!-- <td><?php //echo $transaction['accepted_date']; 
+                                                            ?></td> -->
+                                                <!-- <td><?php //echo $transaction['attachments']; 
+                                                            ?></td> -->
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['status'])) {
+                                                        echo $transaction['status'];
+                                                    } else {
+                                                        echo 'No status provided';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <!-- <td><?php //echo $transaction['po_number']; 
+                                                            ?></td>
+                                            <td><?php //echo $transaction['sales_rep']; 
+                                                ?></td> -->
+                                                <td><?php echo $transaction['manage']; ?></td>
+                                            </tr>
+                                        <?php break;
+                                        case 'invoices': ?>
+                                            <tr>
+                                                <td>
+                                                    <div class="table-row-icon table-checkbox">
+                                                        <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
+                                                    </div>
+                                                </td>
+                                                <td style="width: 6%"><?php echo $transaction['date']; ?></td>
+                                                <td><?php echo $transaction['type']; ?></td>
+                                                <td><?php echo $transaction['no']; ?></td>
+                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['memo'])) {
+                                                        echo $transaction['memo'];
+                                                    } else {
+                                                        echo 'No memo available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['due_date'])) {
+                                                        echo $transaction['due_date'];
+                                                    } else {
+                                                        echo 'No due date set';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <!-- <td><?php //echo $transaction['aging']; 
+                                                            ?></td> -->
+                                                <td><?php echo $transaction['balance']; ?></td>
+                                                <td><?php echo $transaction['total']; ?></td>
+                                                <!-- <td><?php //echo $transaction['last_delivered']; 
+                                                            ?></td> -->
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['email'])) {
+                                                        echo $transaction['email'];
+                                                    } else {
+                                                        echo 'No email provided';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <!-- <td><?php //echo $transaction['attachments']; 
+                                                            ?></td> -->
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['status'])) {
+                                                        echo $transaction['status'];
+                                                    } else {
+                                                        echo 'No status provided';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <!-- <td><?php //echo $transaction['po_number']; 
+                                                            ?></td>
+                                            <td><?php //echo $transaction['sales_rep']; 
+                                                ?></td> -->
+                                                <td><?php echo $transaction['manage']; ?></td>
+                                            </tr>
+                                        <?php break;
+                                        case 'sales-receipts': ?>
+                                            <tr>
+                                                <td>
+                                                    <div class="table-row-icon table-checkbox">
+                                                        <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
+                                                    </div>
+                                                </td>
+                                                <td style="width: 6%"><?php echo $transaction['date']; ?></td>
+                                                <td><?php echo $transaction['type']; ?></td>
+                                                <td><?php echo $transaction['no']; ?></td>
+                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <!-- <td><?php //echo $transaction['method']; 
+                                                            ?></td> -->
+                                                <!-- <td><?php //echo $transaction['source']; 
+                                                            ?></td> -->
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['memo'])) {
+                                                        echo $transaction['memo'];
+                                                    } else {
+                                                        echo 'No memo available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['due_date'])) {
+                                                        echo $transaction['due_date'];
+                                                    } else {
+                                                        echo 'No due date set';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php echo $transaction['total']; ?></td>
+                                                <!-- <td><?php //echo $transaction['last_delivered']; 
+                                                            ?></td> -->
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['email'])) {
+                                                        echo $transaction['email'];
+                                                    } else {
+                                                        echo 'No email provided';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <!-- <td><?php //echo $transaction['attachments']; 
+                                                            ?></td> -->
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['status'])) {
+                                                        echo $transaction['status'];
+                                                    } else {
+                                                        echo 'No status provided';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <!-- <td><?php //echo $transaction['po_number']; 
+                                                            ?></td>
+                                            <td><?php //echo $transaction['sales_rep']; 
+                                                ?></td> -->
+                                                <td><?php echo $transaction['manage']; ?></td>
+                                            </tr>
+                                        <?php break;
+                                        case 'credit-memos': ?>
+                                            <tr>
+                                                <td>
+                                                    <div class="table-row-icon table-checkbox">
+                                                        <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
+                                                    </div>
+                                                </td>
+                                                <td style="width: 6%"><?php echo $transaction['date']; ?></td>
+                                                <td><?php echo $transaction['type']; ?></td>
+                                                <td><?php echo $transaction['no']; ?></td>
+                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['memo'])) {
+                                                        echo $transaction['memo'];
+                                                    } else {
+                                                        echo 'No memo available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php echo $transaction['total']; ?></td>
+                                                <!-- <td><?php //echo $transaction['last_delivered']; 
+                                                            ?></td> -->
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['email'])) {
+                                                        echo $transaction['email'];
+                                                    } else {
+                                                        echo 'No email provided';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <!-- <td><?php //echo $transaction['attachments']; 
+                                                            ?></td> -->
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['status'])) {
+                                                        echo $transaction['status'];
+                                                    } else {
+                                                        echo 'No status provided';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <!-- <td><?php //echo $transaction['po_number']; 
+                                                            ?></td>
+                                            <td><?php //echo $transaction['sales_rep']; 
+                                                ?></td> -->
+                                                <td><?php echo $transaction['manage']; ?></td>
+                                            </tr>
+                                        <?php break;
+                                        case 'unbilled-income': ?>
+                                            <tr>
+                                                <td>
+                                                    <div class="table-row-icon table-checkbox">
+                                                        <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
+                                                    </div>
+                                                </td>
+                                                <td style="width: 6%"><?php echo $transaction['date']; ?></td>
+                                                <td><?php echo $transaction['type']; ?></td>
+                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td><?php echo $transaction['charges']; ?></td>
+                                                <td><?php echo $transaction['time']; ?></td>
+                                                <td><?php echo $transaction['expenses']; ?></td>
+                                                <td><?php echo $transaction['credits']; ?></td>
+                                                <td><?php echo $transaction['unbilled_amount']; ?></td>
+                                                <td><?php echo $transaction['manage']; ?></td>
+                                            </tr>
+                                        <?php break;
+                                        case 'recently-paid': ?>
+                                            <tr>
+                                                <td>
+                                                    <div class="table-row-icon table-checkbox">
+                                                        <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
+                                                    </div>
+                                                </td>
+                                                <td style="width: 6%"><?php echo $transaction['date']; ?></td>
+                                                <td><?php echo $transaction['type']; ?></td>
+                                                <td><?php echo $transaction['no']; ?></td>
+                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <!-- <td><?php //echo $transaction['method']; 
+                                                            ?></td> -->
+                                                <!-- <td><?php //echo $transaction['source']; 
+                                                            ?></td> -->
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['memo'])) {
+                                                        echo $transaction['memo'];
+                                                    } else {
+                                                        echo 'No memo available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['due_date'])) {
+                                                        echo $transaction['due_date'];
+                                                    } else {
+                                                        echo 'No due date set';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <!-- <td><?php //echo $transaction['aging']; 
+                                                            ?></td> -->
+                                                <td><?php echo $transaction['balance']; ?></td>
+                                                <td><?php echo $transaction['total']; ?></td>
+                                                <!-- <td><?php //echo $transaction['last_delivered']; 
+                                                            ?></td> -->
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['email'])) {
+                                                        echo $transaction['email'];
+                                                    } else {
+                                                        echo 'No email provided';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php echo $transaction['latest_payment']; ?></td>
+                                                <!-- <td><?php //echo $transaction['attachments']; 
+                                                            ?></td> -->
+                                               <td>
+                                                    <?php
+                                                    if (!empty($transaction['status'])) {
+                                                        echo $transaction['status'];
+                                                    } else {
+                                                        echo 'No status provided';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <!-- <td><?php //echo $transaction['po_number']; 
+                                                            ?></td>
+                                            <td><?php //echo $transaction['sales_rep']; 
+                                                ?></td> -->
+                                                <td><?php echo $transaction['manage']; ?></td>
+                                            </tr>
+                                        <?php break;
+                                        case 'money-received': ?>
+                                            <tr>
+                                                <td>
+                                                    <div class="table-row-icon table-checkbox">
+                                                        <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
+                                                    </div>
+                                                </td>
+                                                <td style="width: 6%"><?php echo $transaction['date']; ?></td>
+                                                <td><?php echo $transaction['type']; ?></td>
+                                                <td><?php echo $transaction['no']; ?></td>
+                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['memo'])) {
+                                                        echo $transaction['memo'];
+                                                    } else {
+                                                        echo 'No memo available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td><?php echo $transaction['total']; ?></td>
+                                                <!-- <td><?php //echo $transaction['attachments']; 
+                                                            ?></td> -->
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['status'])) {
+                                                        echo $transaction['status'];
+                                                    } else {
+                                                        echo 'No status provided';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <!-- <td><?php //echo $transaction['po_number']; 
+                                                            ?></td>
+                                            <td><?php //echo $transaction['sales_rep']; 
+                                                ?></td> -->
+                                                <td><?php echo $transaction['manage']; ?></td>
+                                            </tr>
+                                        <?php break;
+                                        default: ?>
+                                            <tr>
+                                                <td>
+                                                    <div class="table-row-icon table-checkbox">
+                                                        <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
+                                                    </div>
+                                                </td>
+                                                <td style="width: 6%"><?php echo $transaction['date']; ?></td>
+                                                <td><?php echo $transaction['type']; ?></td>
+                                                <td><?php echo $transaction['no']; ?></td>
+                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <!-- <td><?php //echo $transaction['method']; 
+                                                            ?></td> -->
+                                                <!-- <td><?php //echo $transaction['source']; 
+                                                            ?></td> -->
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['memo'])) {
+                                                        echo $transaction['memo'];
+                                                    } else {
+                                                        echo 'No memo available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['due_date'])) {
+                                                        echo $transaction['due_date'];
+                                                    } else {
+                                                        echo 'No due date set';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <!-- <td><?php //echo $transaction['aging']; 
+                                                            ?></td> -->
+                                                <td><?php echo $transaction['balance']; ?></td>
+                                                <td><?php echo $transaction['total']; ?></td>
+                                                <!-- <td><?php //echo $transaction['last_delivered']; 
+                                                            ?></td> -->
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['email'])) {
+                                                        echo $transaction['email'];
+                                                    } else {
+                                                        echo 'No email provided';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <!-- <td><?php //echo $transaction['attachments']; 
+                                                            ?></td> -->
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['status'])) {
+                                                        echo $transaction['status'];
+                                                    } else {
+                                                        echo 'No status provided';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <!-- <td><?php //echo $transaction['po_number']; 
+                                                            ?></td>
+                                            <td><?php //echo $transaction['sales_rep']; 
+                                                ?></td> -->
+                                                <td><?php echo $transaction['manage']; ?></td>
+                                            </tr>
+                                    <?php break;
+                                    } ?>
+                                <?php } ?>
+                            <?php } else { ?>
+                                <tr>
+                                    <td colspan="19">
+                                        <div class="nsm-empty">
+                                            <span>No results found.</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 
 <script>

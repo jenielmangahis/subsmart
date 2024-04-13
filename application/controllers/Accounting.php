@@ -8135,34 +8135,38 @@ class Accounting extends MY_Controller
 
     public function addnewInvoice()
     {
-        // $this->load->helper('url');
-        // $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        // $this->page_data['items'] = $this->items_model->getItemlist();
-        // $this->page_data['invoices'] = $this->accounting_invoices_model->getInvoices();
-        // $this->page_data['page_title'] = "Invoices";
-        // // print_r($this->page_data);
-        // $this->load->view('accounting/addInvoice', $this->page_data);
+        $this->load->helper('functions');
+        $this->load->model('JobTags_model');
+        $this->load->model('TaxRates_model');
 
-        $user_id = logged('id');
-        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
+        add_footer_js(array(        
+            'assets/js/v2/add_items.js',                
+        ));
 
-        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
-        $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
-        // } else {
-        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
-        // }
-
-        $company_id = logged('company_id'); //clients
-        $role = logged('role');
-        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
-        if ($role == 1 || $role == 2) {
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        } else {
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+        $query       = $this->input->get();        
+        $workorder   = array();
+        $w_customer  = array();
+        $w_items     = array();
+        if( isset($query['workorder']) ){            
+            $this->load->model('Workorder_model');
+            $this->load->model('AcsProfile_model');
+            $workorder   = $this->Workorder_model->getByWhere(['work_order_number' => $query['workorder']]);
+            $w_items     = $this->Workorder_model->getworkorderItems($workorder[0]->id);
+            $w_customer  = $this->AcsProfile_model->getByProfId($workorder[0]->customer_id);
         }
 
-        $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+        $user_id = logged('id');
+        $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
+        $company_id = logged('company_id');
+        $role = logged('role');
+        if ($role == 1 || $role == 2) {            
+            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
+        } else {            
+            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        }
 
+
+        $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
         $terms = $this->accounting_terms_model->getCompanyTerms_a($company_id);
         $this->page_data['number'] = $this->invoice_model->getlastInsert();
 
@@ -8176,24 +8180,32 @@ class Accounting extends MY_Controller
             $this->page_data['terms'] = $terms;
         }
 
-        $this->page_data['clients'] = $this->invoice_model->getclientsData(logged('company_id'));
+        $default_cust_id = 0;
+        if( $this->input->get('cus_id') ){
+            $default_cust_id = $this->input->get('cus_id');
+        }
+        
+        $defaullTaxRate = $this->TaxRates_model->getDefaultTaxRateByCompanyId($company_id);
+        if( $defaullTaxRate ){
+            $default_tax_percentage = $defaullTaxRate->rate;
+        }else{
+            $default_tax_percentage = 7.5;
+        }
 
-        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
-        // $this->page_data['number'] = $this->estimate_model->getlastInsert();
-        $this->page_data['items'] = $this->items_model->getItemlist();
-        $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
+        $this->page_data['default_tax_percentage'] = $default_tax_percentage;
         $this->page_data['clients'] = $this->workorder_model->getclientsById();
-        $this->page_data['lead_source'] = $this->workorder_model->getlead_source($company_id);
-        $this->page_data['packages'] = $this->workorder_model->getPackagelist($company_id);
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
-        $this->page_data['companyDet'] = $this->workorder_model->companyDet($company_id);
-        $this->page_data['itemPackages'] = $this->workorder_model->getPackageDetailsByCompany($company_id);
-        $this->page_data['getSettings'] = $this->workorder_model->getSettings($company_id);
+        $this->page_data['default_cust_id'] = $default_cust_id;
+        $this->page_data['workorder']  = $workorder;
+        $this->page_data['w_customer'] = $w_customer;
+        $this->page_data['w_items']    = $w_items;
+        $this->page_data['page_title'] = "Invoice Add";
+        $this->page_data['page']->title = 'Invoices & Payments';
+        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['tags'] = $this->JobTags_model->getAllByCompanyId($company_id);        
+        $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
+        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
 
-        $this->page_data['page']->title = 'New Invoice';
-        $this->page_data['page']->parent = 'Sales';        
-        $this->load->view('accounting/addInvoice', $this->page_data);
+        $this->load->view('accounting/addInvoice_v2', $this->page_data);
     }
 
     public function addnewcreditmemo()

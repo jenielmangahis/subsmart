@@ -345,7 +345,7 @@
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Employee Name</label>
                             <input type="hidden" name="change_password_user_id" id="changePasswordUserId">
-                            <input type="text" class="nsm-field form-control" id="changePasswordEmployeeName" required />
+                            <input type="text" class="nsm-field form-control" id="changePasswordEmployeeName" readonly="" disabled="" />
                         </div>
                     </div>
                     <div class="row gy-3 mb-4">

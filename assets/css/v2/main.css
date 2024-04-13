@@ -1233,6 +1233,11 @@ a.nsm-button {
   overflow: auto;
 }
 
+#manage_widgets_modal #add_thumbnail_container {
+  max-height: 580px;
+  overflow: auto;
+}
+
 .nsm-table {
   width: 100%;
   font-size: 15px;

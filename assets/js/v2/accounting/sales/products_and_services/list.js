@@ -488,9 +488,9 @@ $('#items-table .make-active').on('click', function (e) {
     Swal.fire({
         title: 'Are you sure?',
         html: `You want to make <b>${name}</b> active?`,
-        icon: 'warning',
+        icon: 'question',
         showCloseButton: false,
-        confirmButtonColor: '#2ca01c',
+        confirmButtonColor: '#6a4a86',
         confirmButtonText: 'Yes',
         showCancelButton: true,
         cancelButtonText: 'No',
@@ -518,9 +518,9 @@ $('#items-table .make-inactive').on('click', function (e) {
     Swal.fire({
         title: 'Are you sure?',
         html: `You want to make <b>${name}</b> inactive?`,
-        icon: 'warning',
+        icon: 'question',
         showCloseButton: false,
-        confirmButtonColor: '#2ca01c',
+        confirmButtonColor: '#6a4a86',
         confirmButtonText: 'Yes',
         showCancelButton: true,
         cancelButtonText: 'No',
@@ -713,7 +713,8 @@ $('#items-table .edit-item').on('click', function (e) {
 
         $('#item-modal label[for="asOfDate"]').parent().parent().remove();
 
-        var qtyPo = row.find('td:nth-child(14)').html().trim() !== '' ? row.find('td:nth-child(14)').html().trim() : 0;
+        var qtyPo = parseInt($('#qty_po').text().trim() || '0');
+        // var qtyPo = row.find('td:nth-child(14)').html().trim() !== '' ? row.find('td:nth-child(14)').html().trim() : 0;
 
         $(`<div class="row">
 			<div class="col-6">
@@ -721,7 +722,7 @@ $('#items-table .edit-item').on('click', function (e) {
 				<p class="m-0">Adjust: <a class="text-decoration-none adjust-quantity" href="#">Quantity</a> | <a class="text-decoration-none adjust-starting-value" href="#">Starting value</a></p>
 			</div>
 			<div class="col-6">
-				<p class="text-end m-0">${row.find('td:nth-child(13)').html().trim()}</p>
+				<p class="text-end m-0">${row.find('td:nth-child(13)').html()}</p>
 			</div>
 		</div>`).insertAfter('#item-modal #storage-locations');
         $('#item-modal #storage-locations').parent().append(`<div class="row">

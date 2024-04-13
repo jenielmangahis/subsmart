@@ -290,6 +290,8 @@ class Widgets extends MY_Controller
         $this->load->library('wizardlib');
         $this->load->model('widgets_model');
         $this->load->model('General_model', 'general');
+        $this->load->model('event_model');
+        $this->load->model('Customer_advance_model', 'customer_ad_model');
 
         $id = post('id');
         $isGlobal = post('isGlobal');
@@ -317,6 +319,17 @@ class Widgets extends MY_Controller
                 $data['id'] = $id;
                 $data['dynamic_load'] = true;
                 $data['isMain'] = false;
+                $data['subs'] = $this->event_model->getAllsubsByCompanyId($cid);
+                $data['leads'] = count($this->customer_ad_model->get_leads_data());
+
+                $past_due = $this->widgets_model->getCurrentCompanyOverdueInvoices();
+              
+                $invoices_total_due = 0;
+                foreach($past_due as $total_due){
+                    $invoices_total_due +=  $total_due->balance;
+                }
+               $data['invoices_count'] = count($past_due);
+               $data['invoices_total_due'] = $invoices_total_due;
 
                 $estimate_draft_query = [
                     'where' => ['company_id' => logged('company_id')],

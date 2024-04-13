@@ -1,6 +1,5 @@
 <?php
 if (!is_null($dynamic_load) && $dynamic_load == true) {
-    echo '<div class="col-12 col-lg-4">';
 }
 ?>
 
@@ -50,6 +49,5 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
 
 <?php
 if (!is_null($dynamic_load) && $dynamic_load == true) {
-    echo '</div>';
 }
 ?>

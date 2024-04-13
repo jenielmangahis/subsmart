@@ -401,6 +401,7 @@ fetch('<?= base_url('Dashboard/jobs') ?>',{
         
     }
     var jobs = $("#jobs_chart");
+    $('#jobs_count_thumbnail').html(previousJob+ prevJob+ curJob);
     new Chart(jobs, {
         type: 'line',
         data: {

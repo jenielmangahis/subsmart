@@ -1759,19 +1759,29 @@ class Users extends MY_Controller
 		$upload_data  = json_decode($upload_photo);
 
 		if (!empty($_FILES['user_photo']['name'])) {
-			$target_dir = "./uploads/users/user-profile/";
+			$user = $this->Users_model->getUserByID($post['user_id_prof']);
+			if( $user ){
+				$target_dir = "./uploads/users/user-profile/";
 
-			if (!file_exists($target_dir)) {
-				mkdir($target_dir, 0777, true);
+				if (!file_exists($target_dir)) {
+					mkdir($target_dir, 0777, true);
+				}
+
+				$tmp_name = $_FILES['user_photo']['tmp_name'];
+				$name = basename($_FILES["user_photo"]["name"]);
+				move_uploaded_file($tmp_name, "./uploads/users/user-profile/" . $name);
+				$image_name = $name;
+
+				$this->Users_model->update($post['user_id_prof'], array('profile_img' => $image_name));
+
+				//Activity Logs
+				$activity_name = 'Updated Profile Image for User ' . $user->FName . ' ' . $user->LName; 
+				createActivityLog($activity_name);
+
+				echo json_encode(1);
+			}else{
+				echo json_encode(0);
 			}
-
-			$tmp_name = $_FILES['user_photo']['tmp_name'];
-			$name = basename($_FILES["user_photo"]["name"]);
-			move_uploaded_file($tmp_name, "./uploads/users/user-profile/" . $name);
-			$image_name = $name;
-
-			$user = $this->Users_model->update($post['user_id_prof'], array('profile_img' => $image_name));
-			echo json_encode(1);
 		} else {
 			echo json_encode(0);
 		}
@@ -2097,7 +2107,12 @@ class Users extends MY_Controller
 				'password_plain' => $new_password,
 			);
 	
-			$user = $this->Users_model->update($user_id,$data);
+			$this->Users_model->update($user_id,$data);
+			$user = $this->Users_model->getUser($user_id);
+
+			//Activity Logs
+			$activity_name = 'Changed Password for User ' . $user->FName . ' ' . $user->LName; 
+			createActivityLog($activity_name);
 	
 			$is_success = true;
 		}
@@ -2423,23 +2438,31 @@ class Users extends MY_Controller
 	public function ajax_delete_user()
 	{
 		$is_success = false;
-		$msg = "";
+		$msg = "Cannot find user data";
 
 		$post = $this->input->post();
 		$id   = $post['eid'];
+		$cid  = logged('company_id');
 
-		$user = $this->users_model->delete($id);
+		$user = $this->Users_model->getUser($id);
+		if( $user && $user->company_id == $cid ){
+			$this->users_model->delete($id);
 
-		//Delete Timesheet 
-		$this->load->model('TimesheetTeamMember_model');
-		$this->TimesheetTeamMember_model->deleteByUserId($id);
-		//Delete Tract360
-		$this->load->model('Trac360_model');
-		$this->Trac360_model->deleteUser('trac360_people', $id);
+			//Delete Timesheet 
+			$this->load->model('TimesheetTeamMember_model');
+			$this->TimesheetTeamMember_model->deleteByUserId($id);
+			//Delete Tract360
+			$this->load->model('Trac360_model');
+			$this->Trac360_model->deleteUser('trac360_people', $id);
 
-		$this->activity_model->add("User #$id Deleted by User:" . logged('name'));
+			//Activity Logs
+			$activity_name = 'Deleted User ' . $user->FName . ' ' . $user->LName; 
+			createActivityLog($activity_name);
 
-		$is_success = true;
+			$is_success = true;
+			$msg = '';
+		}
+
 		$json_data = [
 			'is_success' => $is_success,
 			'msg' => $msg

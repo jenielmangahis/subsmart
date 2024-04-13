@@ -91,6 +91,9 @@
     height: 280px;
     max-height: 280px;
 }
+.main-widget-container  .nsm-card-header{
+    height: 50px;
+}
 .nav-pills .nav-link.active{
     background-color: #6a4a86 !important;
 }

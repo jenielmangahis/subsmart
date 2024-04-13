@@ -36,7 +36,7 @@ class Taskhub_model extends MY_Model {
         $this->db->select('tasks.*, tasks_status.status_text, tasks_status.status_color, CONCAT(acs_profile.first_name," ",acs_profile.last_name)AS customer_name');
         $this->db->from($this->table);
         $this->db->join('acs_profile','tasks.prof_id = acs_profile.prof_id', 'left');
-        $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','right');
+        $this->db->join('tasks_status','tasks.status_id = tasks_status.status_id','left');
         $this->db->where('tasks.task_id', $id);
         $query = $this->db->get();
         return $query->row();
@@ -121,6 +121,15 @@ class Taskhub_model extends MY_Model {
         $this->db->where('tasks.company_id', $company_id);
         $this->db->where('tasks.status_id', $status_id); //Refer to task status table. 6 = completed
         $this->db->order_by('tasks.date_created','DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllByTaskIds($ids = array())
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where_in('task_id', $ids);
         $query = $this->db->get();
         return $query->result();
     }
@@ -214,6 +223,14 @@ class Taskhub_model extends MY_Model {
         $this->db->from($this->table);
         $this->db->set(['status_id' => 6]);
         $this->db->where('prof_id', $prof_id);
+        $this->db->update();
+    }
+
+    public function completeAllTasksByTaskId($ids = array())
+    {
+        $this->db->from($this->table);
+        $this->db->set(['status_id' => 6]);
+        $this->db->where_in('task_id', $ids);
         $this->db->update();
     }
 
