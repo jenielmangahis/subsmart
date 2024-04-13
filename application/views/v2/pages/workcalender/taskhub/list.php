@@ -26,7 +26,7 @@
             </div>
             <span class="nsm-fab-label">Search Task</span>
         </li> -->
-        <li onclick="location.href='<?php echo base_url('taskhub/create') ?>'">
+        <li onclick="location.href='<?php echo base_url('taskhub/entry') ?>'">
             <div class="nsm-fab-icon">
                 <i class="bx bx-user-plus"></i>
             </div>
@@ -45,21 +45,33 @@
                 <div class="row">
                     <div class="col-12 grid-mb">
                         <div class="nsm-callout primary">
-                            You can set up Tasks for yourself and assign them to other people in your organization. To Add a Task, in the Account, click on the ‘ + Add ‘ button. There are dropdown options for each field and a date picker.
+                            You can set up Tasks for yourself and assign them to other people in your organization.
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <?php if( $selected_customer_id == 0 ){ ?>
-                            <button name="btn_clear" type="button" class="nsm-button btn-clear-all">
+                            <div class="dropdown d-inline-block">
+                                <input type="hidden" class="nsm-field form-control" id="selected_ids">
+                                <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                    <span>
+                                        Batch Actions
+                                    </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end batch-actions">                                
+                                    <li><a class="dropdown-item" href="javascript:void(0);" id="btn-mark-completed"><i class='bx bx-fw bx-check'></i> Mark Completed</a></li>
+                                </ul>
+                            </div>
+
+                            <?php //if( $selected_customer_id == 0 ){ ?>
+                            <!-- <button name="btn_clear" type="button" class="nsm-button btn-clear-all">
                                 <i class='bx bx-fw bx-check'></i> Clear All
-                            </button>
-                            <button name="btn_add" type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('taskhub/create'); ?>'">
+                            </button> -->
+                            <button name="btn_add" type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('taskhub/entry'); ?>'">
                                 <i class='bx bx-fw bx-plus'></i> Add Task
                             </button>
-                            <?php } ?>
+                            <?php //} ?>
                             <!-- <button name="btn_search" type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-search'></i> Search Task
                             </button> -->
@@ -68,9 +80,13 @@
                     </div>
                 </div>
                 <div class="nsm-widget-table">
+                    <form id="frm-taskhub" method="POST">
                     <table class="nsm-table taskhub-list">
                         <thead>
                             <tr>
+                                <td class="table-icon text-center">
+                                    
+                                </td>
                                 <td class="table-icon"></td>
                                 <td data-name="Subject" style="width:40%;">Task</td>     
                                 <td data-name="Assigned" style="width:20%;">Assigned To</td>           
@@ -85,6 +101,11 @@
                             <?php if (count($tasks) > 0) : ?>
                                 <?php foreach ($tasks as $key => $row) : ?>
                                     <tr>
+                                        <td>
+                                            <div class="table-row-icon table-checkbox">
+                                                <input class="form-check-input select-one table-select" name="taskId[]" type="checkbox" value="<?=$row->task_id?>">
+                                            </div>
+                                        </td>
                                         <td>
                                             <div class="table-row-icon">
                                                 <i class='bx bx-task'></i>
@@ -170,6 +191,9 @@
                                                         <a class="dropdown-item" name="dropdown_edit" href="<?php echo url('taskhub/entry/' . $row->task_id) ?>">Edit</a>
                                                     </li>
                                                     <li>
+                                                        <a class="dropdown-item btn-delete-task" href="javascript:void(0);" data-subject="<?= $row->subject; ?>" data-id="<?= $row->task_id; ?>">Delete</a>
+                                                    </li>
+                                                    <li>
                                                         <a class="dropdown-item btn-complete-task" name="dropdown_completed" href="javascript:void(0);" data-subject="<?= $row->subject; ?>" data-id="<?= $row->task_id; ?>">Mark Completed</a>
                                                     </li>
                                                     <!-- <li>
@@ -194,6 +218,7 @@
                             <?php endif; ?>
                         </tbody>
                     </table>
+                    </form>
                 </div>                
             </div>
         </div>
@@ -204,14 +229,11 @@
     $(document).ready(function() {
         $(".nsm-table").nsmPagination();
 
-        $(".btn-clear-all").on("click", function() {
-            let id = $(this).attr('data-id');
-            let name = $(this).attr("data-name");
-            let selected_customer_id = '<?= $selected_customer_id; ?>';
+        $("#btn-mark-completed").on("click", function() {
 
             Swal.fire({
-                title: 'Clear All',
-                text: "This will mark all tasks as completed. Proceed with action?",
+                title: 'Complete All',
+                text: "This will mark all selected tasks as completed. Proceed with action?",
                 icon: 'question',
                 confirmButtonText: 'Proceed',
                 showCancelButton: true,
@@ -220,9 +242,9 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: "<?php echo base_url('taskhub/_mark_all_completed'); ?>",
+                        url: "<?php echo base_url('taskhub/_complete_selected_tasks'); ?>",
                         dataType: 'json',
-                        data: {selected_customer_id:selected_customer_id},
+                        data: $('#frm-taskhub').serialize(),
                         success: function(result) {
                             if (result.is_success == 1) {
                                 Swal.fire({
@@ -232,20 +254,20 @@
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
                                 }).then((result) => {
-                                    if (result.value) {
+                                    //if (result.value) {
                                         location.reload();
-                                    }
+                                    //}
                                 });
                             } else {
                                 Swal.fire({
                                     title: 'An Error Occured',
-                                    text: "No changes will be made.",
+                                    text: result.msg,
                                     icon: 'error',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
                                 }).then((result) => {
                                     if (result.value) {
-                                        location.reload();
+                                        //location.reload();
                                     }
                                 });
                             }
@@ -299,6 +321,59 @@
                                 }).then((result) => {
                                     if (result.value) {
                                         location.reload();
+                                    }
+                                });
+                            }
+                        },
+                    });
+                }
+            });
+        });
+
+        $(document).on("click", ".btn-delete-task", function() {
+            let id = $(this).attr('data-id');
+            let subject = $(this).attr("data-subject");
+
+            Swal.fire({
+                title: 'Delete Task',
+                text: "Are you sure you want to delete task: " + subject + "?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo base_url('taskhub/_delete_task'); ?>",
+                        dataType: 'json',
+                        data: {
+                            tsid: id
+                        },
+                        success: function(result) {
+                            console.log(result);
+                            if (result.is_success == 1) {
+                                Swal.fire({
+                                    title: 'Delete Successful!',
+                                    text: "Taskhub data is successfully updated!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'An Error Occured',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        //location.reload();
                                     }
                                 });
                             }
