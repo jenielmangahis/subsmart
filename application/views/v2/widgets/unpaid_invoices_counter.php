@@ -13,7 +13,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                     <div class="icon-summary-sales">
                         <i class="bx bx-fw bx-receipt"></i>
                     </div>
-                    <span style="color:#6a4a86 ">Sales</span>
+                    <span style="color:#6a4a86 ">Unpaid Invoices</span>
                 </div>
             </div>
         </div>
@@ -33,8 +33,8 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         <div class="row ">
         <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
-                    <label for="">Total Sales</label>
-                    <h1>$<?php echo get_invoice_amount('total'); ?></h1>
+                    <label for="">Total Unpaid</label>
+                    <h1>$<?php echo get_invoice_amount('balance') ?></h1>
 
                 </div>
             </div>

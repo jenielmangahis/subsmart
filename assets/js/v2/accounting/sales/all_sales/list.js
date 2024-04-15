@@ -2042,8 +2042,6 @@ $("#send-transactions").on("click", function (e) {
     processData: false,
     contentType: false,
     success: function (result) {
-      var res = JSON.parse(result);
-           console.log(res);
       Swal.fire({
         text: `${count} out of ${count} transactions sent.`,
         icon:  "success",

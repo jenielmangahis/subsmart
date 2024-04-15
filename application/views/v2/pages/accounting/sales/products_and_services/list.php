@@ -271,6 +271,19 @@
     .nsm-counter:hover {
         cursor: pointer;
     }
+
+
+    .dropdown-menu {
+        width: 400px !important;
+    }
+
+    .nsm-field.form-select {
+        width: 100%;
+        max-width: 300px;
+        box-sizing: border-box;
+        margin-bottom: 10px;
+    }
+
 </style>
 
 <div class="row page-content g-0">
@@ -353,8 +366,8 @@
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-inactive">Make inactive</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="adjust-quantity">Adjust quantity</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="reorder">Reorder</a></li>
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-non-inventory">Make non-inventory</a></li>
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-service">Make service</a></li>
+                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-non-inventory">Change to Non-Inventory</a></li>
+                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-service">Change to Services</a></li>
                             </ul>
                         </div>
 
@@ -545,6 +558,7 @@
                             <td data-name="Inventory Account">INVENTORY ACCOUNT</td>
                             <td data-name="Purchase Description">PURCHASE DESCRIPTION</td> -->
                             <td data-name="Sales Price">SALES PRICE</td>
+                            <td data-name="Category">Category</td>
                             <td data-name="Cost">COST</td>
                             <td data-name="Taxable">TAXABLE</td>
                             <td data-name="Qty on hand">QTY ON HAND</td>
@@ -580,6 +594,7 @@
                                         <td data-id="<?= $item['inventory_account_id'] ?>"><?= $item['inventory_account'] ?></td>
                                         <td><?= $item['purch_desc'] ?></td> -->
                                         <td><?= $item['sales_price'] ?></td>
+                                        <td><?= $item['category'] ?></td>
                                         <td><?= $item['cost'] ?></td>
                                         <td>
                                             <?php if ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "") : ?>
@@ -589,7 +604,7 @@
                                             <?php endif; ?>
                                         </td>
                                         <td><?= $item['qty_on_hand'] ?></td>
-                                        <td><?= $item['qty_po'] ?></td>
+                                        <td id="qty_po"><?php //echo $item['qty_po']?? 0; ?>0</td>
                                         <td><?= $item['reorder_point'] ?></td>
                                         <td>
                                             <?php if ($item['type'] === 'Product') : ?>

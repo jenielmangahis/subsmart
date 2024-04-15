@@ -31,16 +31,16 @@
             </a>
         </li>
      
-        <li class="<?php if($page->title == 'Person'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Residential'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('customer/person') ?>">
             <i class='bx bxs-face'></i>
-                <span>Person</span>
+                <span>Residential</span>
             </a>
         </li>
         <li class="<?php if($page->title == 'Company'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('customer/company') ?>">
             <i class='bx bx-building'></i>
-                <span>Company</span>
+                <span>Commercial</span>
             </a>
         </li>
         <li class="<?php if($page->title == 'Sales Area' || $page->title == 'Lead Source' || $page->title == 'Lead Types' || $page->title == 'Rate Plans' || $page->title == 'Activation Fee' || $page->title == 'System Package Type' || $page->title == 'Headers'): echo 'active'; endif; ?>">

@@ -1,5 +1,5 @@
 <?php include viewPath('v2/includes/header'); ?>
-<?php include viewPath('v2/includes/customer/customer_modals'); ?>
+<?php //include viewPath('v2/includes/customer/customer_modals'); ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" />
 <style>
     .select2-dropdown{
@@ -19,6 +19,12 @@
     }
     .close-btn i{
         font-size: 2.285714em;
+    }
+    #person-list_filter{
+        display: none;
+    }
+    #person-list_length{
+        display: none;
     }
 </style>
 
@@ -40,7 +46,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Listing of all Persons.
+                            Listing of all Residentials.
                         </div>
                     </div>
                 </div>
@@ -48,10 +54,9 @@
                     <div class="col-12 col-md-4">
                         <form action="<?php echo base_url('admin/companies') ?>" method="GET">
                             <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Person" value="<?php echo (!empty($search)) ? $search : '' ?>">                                
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="PERSON_SEARCHBAR" name="search" placeholder="Search Residential" value="<?php echo (!empty($search)) ? $search : '' ?>">                                
                             </div>
-                            <button type="submit" class="nsm-button primary" style="margin:0px;">Search</button>
-                            <button type="button" class="nsm-button primary btn-reset-list" style="margin:0px;">Reset</a>
+
                         </form>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
@@ -60,18 +65,18 @@
                                 <span>Filter by: <?= $cid_search; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/companies'); ?>">All Companies</a></li>
-                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/companies?status=active'); ?>">Status Active</a></li>
-                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/companies?status=deactivated'); ?>">Status Deactivated</a></li>
-                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/companies?status=expired'); ?>">Status Expired</a></li>
+                                <li><a class="dropdown-item" data-id="filter_all" href="">All Person</a></li>
+                                <li><a class="dropdown-item" data-id="filter_all" href="">Status Active</a></li>
+                                <li><a class="dropdown-item" data-id="filter_all" href="">Status Deactivated</a></li>
+                                <li><a class="dropdown-item" data-id="filter_all" href="">Status Expired</a></li>
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <a class="nsm-button primary btn-export-list" id="openModalBtn"  style="margin-left: 10px;"> <i class='bx bxs-face'></i> Add Person</a>
+                            <a class="nsm-button primary btn-export-list" id="openModalBtn"  style="margin-left: 10px; cursor: pointer;"> <i class='bx bxs-face'></i> Add Residential</a>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
                             <!-- <a class="nsm-button primary btn-export-list" href="<?= base_url('admin/export_company_list') ?>" style="margin-left: 10px;"><i class="bx bx-fw bx-file"></i> Export List</a> -->
-                            <a class="nsm-button primary btn-export-list"  style="margin-left: 10px;"><i class="bx bx-fw bx-file"></i> Export List</a>
+                            <a class="nsm-button primary btn-export-list"  style="margin-left: 10px; cursor: pointer;"><i class="bx bx-fw bx-file"></i> Export List</a>
                             <!-- <a class="nsm-button primary btn-add-user" href="javascript:void(0);"><i class='bx bx-fw bx-user'></i> Create User</a> -->                            
                         </div>
                     </div>
@@ -81,77 +86,17 @@
                     <thead>
                         <tr>
              
-                            <td data-name="Contact Name">Contact Name</td>
-                            <td data-name="Industry">Email</td>
-                            <td data-name="Plan">Phone</td>
-                            <td data-name="Num License" style="width:10%;">Customer Type</td>
-                            <td data-name="Status" style="width:10%;">Status</td>
+                            <th data-name="Name">Contact Name</th>
+                            <th data-name="Email">Email</th>
+                            <th data-name="Phone">Phone</th>
+                            <th data-name="Customer Type" style="width:10%;">Customer Type</th>
+                            <th data-name="Status" style="width:10%;">Status</th>
+                            <td></td>
                      
                         </tr>
                     </thead>
-                    <?php foreach ($persons as $person): ?>                    
-                                <tr>
-                         
-                                    <td class="center">
-                                    <?php echo $person->first_name ." ".$person->last_name ; ?>
-                                    </td>
-                                    <td class="center"> <?php echo $person->email; ?></td>
-                                    <td class="center">
-                                       <p>Phone (H) :  <?php echo $person->phone_h; ?></p>
-                                       <p>Phone (M) :  <?php echo $person->phone_m; ?></p>
-                                  
-                                    </td>
-                                    <td class="center"><?php echo $person->customer_type ?></td>
-                                    <td class="center">                                
-                                    <?php echo $person->status?>
-                            <!-- <span class="badge" style="background-color: #6a4a86; color: #ffffff;display: block; margin: 5px;"><?php echo $company->status?></span> -->
-                                        
-                                    </td>
-                                    <td class="center actions-col">
-                                        <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                             
-                                                <li>
-                                                    <a class="dropdown-item btn-manage-company-modules edit_person"  href="javascript:void(0)" 
-                                                    data-status="<?php echo $person->status; ?>" 
-                                                    data-id="<?php echo $person->prof_id; ?>" 
-                                                    data-email="<?php echo $person->email; ?>"
-                                                    data-customer_group="<?php echo $person->customer_group; ?>"
-                                                    data-first_name="<?php echo $person->first_name; ?>"
-                                                    data-middle_name="<?php echo $person->middle_name; ?>"
-                                                    data-last_name="<?php echo $person->last_name; ?>"
-                                                    data-prefix="<?php echo $person->prefix; ?>"
-                                                    data-suffix="<?php echo $person->suffix; ?>"
-                                                    data-country="<?php echo $person->country; ?>"
-                                                    data-mail_add="<?php echo $person->mail_add; ?>"
-                                                    data-city="<?php echo $person->city; ?>"
-                                                    data-county="<?php echo $person->county; ?>"
-                                                    data-state="<?php echo $person->state; ?>"
-                                                    data-country="<?php echo $person->country; ?>"
-                                                    data-zip_code="<?php echo $person->zip_code; ?>"
-                                                    data-cross_street="<?php echo $person->cross_street; ?>"
-                                                    data-subdivision="<?php echo $person->subdivision; ?>"
-                                                    data-ssn="<?php echo $person->ssn; ?>"
-                                                    data-phone_h="<?php echo $person->phone_h; ?>"
-                                                    data-phone_m="<?php echo $person->phone_m; ?>"
-                                                    data-date_of_birth="<?php echo $person->date_of_birth; ?>"
-                                                    
-                                                    >
-                                                    <i class="bx bx-fw bx-edit"></i>View/Edit</a>
-                                                </li>
-                                              
-                                                <li>
-                                                    <a class="dropdown-item delete-company" href="javascript:void(0);"onclick="deleteItem(<?php echo $person->prof_id; ?>)"><i class="bx bx-fw bx-trash"></i> Delete</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                 
-                                <?php endforeach; ?>
+                    <tbody>   
+                  
                     </tbody>
                 </table>
             </div>
@@ -170,7 +115,7 @@
             <div class="nsm-card primary">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span><i class='bx bxs-face'></i> <span id="person_header">Add Person</span></span>
+            <span><i class='bx bxs-face'></i> <span id="person_header">Add Residential</span></span>
         </div>
         <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
     </div>
@@ -248,9 +193,11 @@
                 Sales Area
             </div>
             <div class="col-md-8">
-                <select name="fk_sa_id" data-type="customer_sales_area" class="form-control">
-                    <?php if( $salesAreaSelected ){ ?>
-                        <option value="<?= $salesAreaSelected->sa_id; ?>"><?= $salesAreaSelected->sa_name; ?></option>
+                <select name="fk_sa_id" id="fk_sa_id" data-type="customer_sales_area" class="form-control">
+                    <?php foreach( $salesAreaSelected as $salesArea){
+
+                        ?>
+                        <option value="<?= $salesArea->sa_id; ?>"><?=  $salesArea->sa_name; ?></option>
                     <?php } ?>
                 </select>
                 
@@ -446,13 +393,14 @@
     </div>
     </form>
 </div>
+
 <?php include viewPath('v2/includes/footer'); ?>
 <script>
     function deleteItem(itemId) {
   Swal.fire({
     title: 'Are you sure?',
     text: 'You will not be able to recover this item!',
-    icon: 'warning',
+    icon: 'question',
     showCancelButton: true,
     confirmButtonColor: '#3085d6',
     cancelButtonColor: '#d33',
@@ -466,7 +414,7 @@
         data: { id: itemId },
         success: function(response) {
           Swal.fire(
-            'Deleted!',
+            '',
             'The item has been deleted.',
             'success'
           ).then(() => {
@@ -486,18 +434,30 @@
 }
        $(document).ready(function() {
         
-        // var PERSON_LIST_TABLE = $('#person-list').DataTable({
-        //     "ordering": false,
-        //     "processing": true,
-        //     "serverSide": true,
-        //     // "order": [],
-        //     "ajax": {
-        //         "url": "<?= base_url('customer/getPersonList'); ?>",
-        //         "type": "POST"
-        //     },
-        // });
+        var PERSON_LIST_TABLE = $('#person-list').DataTable({
+            "ordering": false,
+            "processing": true,
+            "serverSide": true,
+            "lengthMenu": [10, 25, 50, 75, 100], // Display options for the length menu
+            "pageLength": 10,
+            "ajax": {
+                "url": "<?= base_url('customer/getPersonList'); ?>",
+                "type": "POST",
+                "dataSrc": function (json) {
+            // Handle the response here
+            console.log(json);
+            // Return the data portion of the response
+            return json.data;
+        }
+            },
+           
+        });
         
-    $(".nsm-table").nsmPagination();
+        $("#PERSON_SEARCHBAR").keyup(function() {
+            PERSON_LIST_TABLE.search($(this).val()).draw();
+
+        });
+
     $(".edit_person").click(function(){
         // Get data attributes from the button
         
@@ -530,7 +490,7 @@
     });
 
 $('#person_modal').on('hidden.bs.modal', function () {
-    $("#person_header").text("Add Person");
+    $("#person_header").text("Add Residential");
     $("#status").val('');  
     $("#prof_id").val('');   
     $("#email").val('');
@@ -562,5 +522,5 @@ $('#person_modal').on('hidden.bs.modal', function () {
 
 </script>
 
-<script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
-<?php include viewPath('v2/pages/customer/js/add_advance_js'); ?> 
+
+ <?php include viewPath('v2/pages/customer/js/add_advance_js'); ?> 

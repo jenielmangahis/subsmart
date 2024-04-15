@@ -667,11 +667,38 @@
                                                             <div class="col-md-3 mb-3">
                                                                 <label for="payment-schedule-months" class="form-label">Months to pay:</label>
                                                                 <select class="form-select nsm-field" id="payment-schedule-months">
+                                                                        <option value="">Select month</option>
+                                                                    <option value="1">1 month</option>
+                                                                    <option value="2">2 months</option>
+                                                                    <option value="3">3 months</option>
+                                                                    <option value="4">4 months</option>
+                                                                    <option value="5">5 months</option>
+                                                                    <option value="6">6 months</option>
+                                                                    <option value="7">7 months</option>
+                                                                    <option value="8">8 months</option>
+                                                                    <option value="9">9 months</option>
+                                                                    <option value="10">10 months</option>
+                                                                    <option value="11">11 months</option>
+                                                                    <option value="12">12 months</option>
+                                                                    <option value="13">13 months</option>
+                                                                    <option value="14">14 months</option>
+                                                                    <option value="15">15 months</option>
+                                                                    <option value="16">16 months</option>
+                                                                    <option value="17">17 months</option>
+                                                                    <option value="18">18 months</option>
+                                                                    <option value="19">19 months</option>
+                                                                    <option value="20">20 months</option>
+                                                                    <option value="21">21 months</option>
+                                                                    <option value="22">22 months</option>
+                                                                    <option value="23">23 months</option>
+                                                                    <option value="24">24 months</option>
+                                                                 
                                                                 </select>
                                                             </div>
                                                         </div>
+                                                     
                                                         <span>Monthly payment:</span>
-                                                        <span>$0.00</span>
+                                                        <span id="monthly_amount">$0.00</span>
                                                     </div>
                                                 </div>
                                                 <div class="col-12 title-header">
@@ -830,7 +857,7 @@
                                                             <tr>
                                                                 <td>Grand Total ($)</td>
                                                                 <td>
-                                                                    <span class="transaction-grand-total" style="">
+                                                                    <span class="transaction-grand-total" id="transaction-grand-total">
                                                                         <?php if (isset($invoice)) : ?>
                                                                             <?php
                                                                             $amount = '$' . number_format(floatval($invoice->grand_total), 2, '.', ',');
@@ -1025,45 +1052,44 @@
     });
 </script>
 <script>
-    function generateMonthOptions(defaultMonth) {
-        var monthsDropdown = document.getElementById('payment-schedule-months');
+   
 
-        monthsDropdown.innerHTML = '';
+    $(document).ready(function() {
+     $('#manage-payment-schedule').on('click', function(event) {
+    event.preventDefault();
+    var paymentScheduleContainer = $('#payment-schedule-input');
 
-        var defaultOption = document.createElement('option');
-        defaultOption.value = '';
-        defaultOption.textContent = 'Select month';
-        monthsDropdown.appendChild(defaultOption);
+    if (paymentScheduleContainer.is(':hidden')) {
+      paymentScheduleContainer.show();
+      $(this).html('<i class="bx bx-fw bxs-minus-square" aria-hidden="true"></i> Hide payment schedule');
+      return;
+    } 
 
-        for (var i = 1; i <= 12; i++) {
-            var option = document.createElement('option');
-            option.value = i;
-            option.textContent = i + (i === 1 ? ' month' : ' months');
+      paymentScheduleContainer.hide();
+      $(this).html('<i class="bx bx-fw bxs-plus-square" aria-hidden="true"></i> Manage payment schedule');
+  
+  });
+  $('#transaction-grand-total').on('DOMSubtreeModified', function() {
+    var grandTotal = parseFloat($(this).text().replace(/[^0-9.-]+/g, ""));
+    var selectedMonths = $('#payment-schedule-months').val();
 
-            monthsDropdown.appendChild(option);
-        }
+    if (!isNaN(grandTotal) && !isNaN(selectedMonths) && selectedMonths !== '') {
+      var monthlyPayment = grandTotal / selectedMonths;
+      $('#monthly_amount').html('$'+monthlyPayment.toFixed(2));
+    } 
+  });
 
-        if (defaultMonth) {
-            monthsDropdown.value = defaultMonth;
-        }
+  $('#payment-schedule-months').on('change', function() {
+    var selectedMonths = $(this).val();
+    var grandTotal = parseFloat($('#transaction-grand-total').text().replace(/[^0-9.-]+/g, ""));
+     
+    if (!isNaN(grandTotal) && !isNaN(selectedMonths) && selectedMonths !== '') {
+      var monthlyPayment = grandTotal / selectedMonths;
+      $('#monthly_amount').html('$'+monthlyPayment.toFixed(2));
     }
+ 
+  })
+});
 
-    document.getElementById('manage-payment-schedule').addEventListener('click', function(event) {
-        event.preventDefault();
-        var paymentScheduleContainer = document.getElementById('payment-schedule-input');
 
-        if (paymentScheduleContainer.style.display === 'none') {
-            paymentScheduleContainer.style.display = 'block';
-            this.innerHTML = '<i class="bx bx-fw bxs-minus-square" aria-hidden="true"></i> Hide payment schedule';
-
-            generateMonthOptions();
-        } else {
-            paymentScheduleContainer.style.display = 'none';
-            this.innerHTML = '<i class="bx bx-fw bxs-plus-square" aria-hidden="true"></i> Manage payment schedule';
-        }
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-        generateMonthOptions();
-    });
 </script>
