@@ -1570,6 +1570,9 @@ $route['taskhub/_save_task'] = 'Taskhub/ajax_save_task';
 $route['taskhub/_task_mark_completed'] = 'Taskhub/ajax_complete_task';
 $route['taskhub/_mark_all_completed'] = 'Taskhub/ajax_company_complete_all_tasks';
 
+$route['taskhub/create'] = 'Taskhub/create';
+$route['taskhub/edit/(:num)'] = 'Taskhub/edit/$1';
+
 // SMS
 $route['messages'] = 'Sms/index';
 $route['messages/_company_send'] = 'Sms/ajax_company_send_sms';

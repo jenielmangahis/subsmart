@@ -111,7 +111,7 @@
                 </table>
             </div>
 
-            <!--Add New Task Status modal-->
+            <!-- Status modal-->
             <div class="modal fade nsm-modal fade" id="modalAddNewTaskStatus" tabindex="-1" aria-labelledby="modalAddNewTaskStatusLabel" aria-hidden="true">
                 <div class="modal-dialog modal-md">
                     <div class="modal-content">
