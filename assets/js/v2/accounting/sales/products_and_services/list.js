@@ -411,7 +411,7 @@ $('.nsm-counter').on('click', function () {
 $('#add-item-button').on('click', function (e) {
     e.preventDefault();
 
-    $.get(`/accounting/get-dropdown-modal/item_modal?field=product`, function (result) {
+    $.get(`${base_url}accounting/get-dropdown-modal/item_modal?field=product`, function (result) {
         if ($('#modal-container').length > 0) {
             $('div#modal-container').html(`<div class="full-screen-modal">${result}</div>`);
         } else {
@@ -634,7 +634,7 @@ $('#items-table .edit-item').on('click', function (e) {
     var type = row.find('td:nth-child(4)').html().trim();
     type = type.toLowerCase();
 
-    $.get('/accounting/item-form/' + type, function (result) {
+    $.get(base_url+'accounting/item-form/' + type, function (result) {
         if ($('#modal-container').length > 0) {
             $('div#modal-container').html(`<div class="full-screen-modal">
 				<div class="modal-right-side">
@@ -746,7 +746,7 @@ $('#items-table .edit-item').on('click', function (e) {
 });
 
 function occupyFields(id, type, action = 'edit') {
-    $.get(`/accounting/products-and-services/get-item-details/${type}/${id}`, function (result) {
+    $.get(`${base_url}accounting/products-and-services/get-item-details/${type}/${id}`, function (result) {
         var item = JSON.parse(result);
 
         var name = action === 'duplicate' ? item.name + ' - copy' : item.name;
@@ -854,7 +854,7 @@ $('#items-table .see-item-locations').on('click', function (e) {
 
     var itemId = $(this).closest('tr').find('.select-one').val();
 
-    $.get(`/accounting/products-and-services/get-item-locations/${itemId}`, function (result) {
+    $.get(`${base_url}accounting/products-and-services/get-item-locations/${itemId}`, function (result) {
         var locations = JSON.parse(result);
 
         $('#item-locations-modal #item-locations-table tbody').empty();
@@ -1006,7 +1006,7 @@ function sweetAlert(title, icon, information, is_reload) {
         text: information,
         icon: icon,
         showCancelButton: false,
-        confirmButtonColor: '#32243d',
+        confirmButtonColor: '#6a4a86',
         cancelButtonColor: '#d33',
         confirmButtonText: 'Ok'
     }).then((result) => {
@@ -1056,7 +1056,7 @@ function changeType(type) {
         itemFormData.set('id', itemId);
     }
 
-    $.get(`/accounting/get-dropdown-modal/item_modal?field=${type}`, function (result) {
+    $.get(`${base_url}accounting/get-dropdown-modal/item_modal?field=${type}`, function (result) {
         $('#modal-container .full-screen-modal').append(result);
 
         itemTypeSelection = $('#modal-container .full-screen-modal .modal-right-side:last-child() .modal').find('.modal-content').html();

@@ -216,10 +216,10 @@ $(document).ready(function() {
         // Check if all required fields have values
         var name = $('#name').val().trim();
         var sku = $('#sku').val().trim();
-        var category = $('#category').val().trim();
-        
+        var category = $('#category').val();
+        var upc  = $('#upc').val().trim();
         // If name and sku are not empty, enable the button
-        if (name !== '' && sku !== '' && category !=='') {
+        if (name !== '' && sku !== '' && category !=='' && upc !=='') {
             $('#save-and-close').prop('disabled', false);
         } else {
             // If any required field is empty, disable the button
