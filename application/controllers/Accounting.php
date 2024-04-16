@@ -1278,16 +1278,105 @@ class Accounting extends MY_Controller
     // }
     public function jobs()
     {
-        add_css(array(
-            'assets/css/accounting/jobs.css',
-        ));
-        $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['page_title'] = "Jobs";
-        // $this->page_data['jobs'] = $this->accounting_invoices_model->getDataInvoices();
-        $this->page_data['jobs'] = $this->jobs_model->get_all_jobs();
+        $this->isAllowedModuleAccess(15);
+        $userId = get('user_id');
+        $leaderBoardType = get('leader_board_type');
 
-        $this->page_data['page']->title = 'Jobs';
-        $this->page_data['page']->parent = 'Sales';
+        if (get('job_tag')) {
+            $tag_id = get('job_tag');
+            $jobs = $this->jobs_model->get_all_jobs_by_tag($tag_id, $userId, $leaderBoardType);
+        } else {
+            $jobs = $this->jobs_model->get_all_jobs($userId, $leaderBoardType);
+        }
+
+        $this->page_data['jobs'] = $jobs;
+        $this->page_data['title'] = 'Jobs';
+
+        $jobIds = array_map(function ($job) {
+            return $job->id;
+        }, $jobs);
+
+        if (!empty($jobIds)) {
+            // Calculate job amount based on saved job's items.
+
+            $this->db->select('job_items.job_id,items.id,items.title,items.price,job_items.total,job_items.cost,job_items.qty,job_items.tax');
+            $this->db->from('job_items');
+            $this->db->join('items', 'items.id = job_items.items_id', 'left');
+            $this->db->where_in('job_items.job_id', $jobIds);
+            $itemsQuery = $this->db->get();
+            $items = $itemsQuery->result();
+
+            $jobAmounts = [];
+            foreach ($items as $item) {
+                if (!array_key_exists($item->job_id, $jobAmounts)) {
+                    $jobAmounts[$item->job_id] = 0;
+                }
+
+                //$total = (((float) $item->cost) * (float) $item->qty); // include tax? (float) $item->tax
+                $total = (float) $item->total; // include tax? (float) $item->tax
+                $jobAmounts[$item->job_id] = $jobAmounts[$item->job_id] + $total;
+            }
+
+            $jobs = array_map(function ($job) use ($jobAmounts) {
+                if (!array_key_exists($job->id, $jobAmounts)) {
+                    return $job;
+                }
+
+                // make sure to calculate amount from items
+                //$job->amount = ((float) ($job->tax_rate)) + $jobAmounts[$job->id];
+                $job->amount = $jobAmounts[$job->id];
+                return $job;
+            }, $jobs);
+        }
+
+        $jobs = array_map(function ($job) {
+            if (!$job->work_order_id) {
+                return $job;
+            }
+
+            $this->db->select('installation_cost,otp_setup,monthly_monitoring');
+            $this->db->where('id', $job->work_order_id);
+            $workorderQuery = $this->db->get('work_orders');
+            $workorder = $workorderQuery->row();
+
+            if (!$workorder) {
+                return $job;
+            }
+
+            // make sure to include adjustment to total
+            if ($workorder->installation_cost) {
+                $job->amount = (float) $job->amount + (float) $workorder->installation_cost;
+            }
+            if ($workorder->otp_setup) {
+                $job->amount = (float) $job->amount + (float) $workorder->otp_setup;
+            }
+            if ($workorder->monthly_monitoring) {
+                $job->amount = (float) $job->amount + (float) $workorder->monthly_monitoring;
+            }
+
+            return $job;
+        }, $jobs);
+
+        $companyId = logged('company_id');
+        $user_id   = logged('id');
+        $user_type = logged('user_type');
+
+        $this->db->select('id,name,marker_icon');
+        $this->db->where('company_id', $companyId);
+        $tagsQuery = $this->db->get('job_tags');
+        $this->page_data['tags'] = $tagsQuery->result_array();
+
+        $this->db->select('id, FName, LName');
+        $this->db->where('company_id', $companyId);
+        $employeesQuery = $this->db->get('users');
+        $employees = $employeesQuery->result_array();
+        $employees = array_map(function ($employee) {
+            $employee['avatar'] = userProfileImage((int) $employee['id']);
+            return $employee;
+        }, $employees);
+
+        $this->page_data['user_type'] = $user_type;
+        $this->page_data['employees'] = $employees;
         $this->load->view('accounting/jobs', $this->page_data);
     }
 
