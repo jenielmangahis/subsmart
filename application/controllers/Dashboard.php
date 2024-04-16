@@ -144,7 +144,7 @@ class Dashboard extends Widgets
         $this->load->helper('functions');
         $this->load->helper('functions_helper');
         $this->load->model('widgets_model');
-        
+
         add_css([
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             'assets/libs/jcanvas/global.css',
@@ -199,8 +199,8 @@ class Dashboard extends Widgets
         ;
         $past_due = $this->widgets_model->getCurrentCompanyOverdueInvoices();
         $invoices_total_due = 0;
-        foreach($past_due as $total_due){
-            $invoices_total_due +=  $total_due->balance;
+        foreach ($past_due as $total_due) {
+            $invoices_total_due += $total_due->balance;
         }
         $this->page_data['invoices_count'] = count($past_due);
         $this->page_data['invoices_total_due'] = $invoices_total_due;
@@ -290,7 +290,7 @@ class Dashboard extends Widgets
             'table' => 'invoices',
             'select' => 'count(*) as total',
         ];
-        $this->page_data['total_invoice_paid'] = $this->general->get_data_with_param($total_invoice_paid, false);
+              $this->page_data['total_invoice_paid'] = $this->general->get_data_with_param($total_invoice_paid, false);
 
         // get customer subscription history
         $feeds_query = [
@@ -312,6 +312,12 @@ class Dashboard extends Widgets
         $this->page_data['total_recurring_payment'] = $this->getTotalRecurringPayment();
         $this->page_data['total_agreements_to_expire_in_30_days'] = $this->getAgreementsToExpireIn30Days();
 
+        $invoices = $this->invoice_model->get_all_company_invoice(logged('company_id'));
+        $openInvoices = array_filter($invoices, function ($v, $k) {
+            return !in_array($v->status, ['Draft', 'Declined', 'Paid']);
+        }, ARRAY_FILTER_USE_BOTH);
+
+        $this->page_data['open_invoices'] = $openInvoices;
         // Plaid
         $this->load->model('PlaidAccount_model');
         $plaid_handler_open = 0;
@@ -348,10 +354,10 @@ class Dashboard extends Widgets
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['serviceType'] = $this->tickets_model->getServiceType($company_id);
         $this->page_data['headers'] = $this->tickets_model->getHeaders($company_id);
-        $this->page_data['companyName'] = $this->tickets_model->getCompany($company_id);
+        $this->page_data['companyName'] = $this->tickets_model->getCompany(logged('company_id'));
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['estimates'] = $this->estimate_model->getAllOpenEstimatesByCompanyId($companyId);
-        $this->page_data['leads'] = count($this->customer_ad_model->get_leads_data());
+         $this->page_data['leads'] = count($this->customer_ad_model->get_leads_data());
         // $this->load->view('dashboard', $this->page_data);
         $this->load->view('dashboard_v2', $this->page_data);
     }

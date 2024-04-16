@@ -17,9 +17,7 @@
         border: none;
         background-color: transparent;
     }
-    .close-btn i{
-        font-size: 2.285714em;
-    }
+
     #person-list_filter{
         display: none;
     }
@@ -62,21 +60,30 @@
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Filter by: <?= $cid_search; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span>Filter by : <span id="filter-selected">All Status</span></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a class="dropdown-item" data-id="filter_all" href="">All Person</a></li>
-                                <li><a class="dropdown-item" data-id="filter_all" href="">Status Active</a></li>
-                                <li><a class="dropdown-item" data-id="filter_all" href="">Status Deactivated</a></li>
-                                <li><a class="dropdown-item" data-id="filter_all" href="">Status Expired</a></li>
+                                 <li><a class="dropdown-item"data-value="" href="#">All Status</a></li>
+                                <li><a class="dropdown-item" data-value="Contract Review" href="#">Contract Review</a></li>
+                                <li><a class="dropdown-item" data-value="Design Team/Engineering Stamps" href="#">Design Team/Engineering Stamps</a></li>
+                                <li><a class="dropdown-item" data-value="Acceptance Pending" href="#">Acceptance Pending </a></li>
+                                <li><a class="dropdown-item" data-value="Loan Documents to be Executed" href="#">Loan Documents to be Executed</a></li>
+                                <li><a class="dropdown-item" data-value="Interconnection" href="#">Interconnection</a></li>
+                                <li><a class="dropdown-item" data-value="Inspection" href="#">Inspection</a></li>
+                                <li><a class="dropdown-item" data-value="Site Survey" href="#">Site Survey</a></li>
+                                <li><a class="dropdown-item" data-value="CAD/Permitting" href="#">CAD/Permitting</a></li>
+                                <li><a class="dropdown-item" data-value="Proposal" href="#">Proposal</a></li>
+                                <li><a class="dropdown-item" data-value="Lead" href="#">Lead</a></li>
+                                <li><a class="dropdown-item" data-value="Installed" href="#">Installed</a></li>
+                                <li><a class="dropdown-item" data-value="Cancel Pending" href="#">Cancel Pending</a></li>
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
                             <a class="nsm-button primary btn-export-list" id="openModalBtn"  style="margin-left: 10px; cursor: pointer;"> <i class='bx bxs-face'></i> Add Residential</a>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <!-- <a class="nsm-button primary btn-export-list" href="<?= base_url('admin/export_company_list') ?>" style="margin-left: 10px;"><i class="bx bx-fw bx-file"></i> Export List</a> -->
-                            <a class="nsm-button primary btn-export-list"  style="margin-left: 10px; cursor: pointer;"><i class="bx bx-fw bx-file"></i> Export List</a>
+                            
+                            <a class="nsm-button primary btn-export-list"   id="export-csv-button" style="margin-left: 10px; cursor: pointer;"><i class="bx bx-fw bx-file"></i> Export List</a>
                             <!-- <a class="nsm-button primary btn-add-user" href="javascript:void(0);"><i class='bx bx-fw bx-user'></i> Create User</a> -->                            
                         </div>
                     </div>
@@ -85,7 +92,6 @@
                 <table class="nsm-table" id="person-list">
                     <thead>
                         <tr>
-             
                             <th data-name="Name">Contact Name</th>
                             <th data-name="Email">Email</th>
                             <th data-name="Phone">Phone</th>
@@ -117,7 +123,8 @@
         <div class="nsm-card-title">
             <span><i class='bx bxs-face'></i> <span id="person_header">Add Residential</span></span>
         </div>
-        <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+        <button type="button"  class="close-btn"  data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
+       
     </div>
   
     <div class="nsm-card-content">
@@ -432,9 +439,46 @@
     }
   });
 }
+function cleanPhoneNumber(phoneHtml) {
+    const regex = /(?:<p>Phone \(\w\) : )([\d\+\-\(\) ]+)(?:<\/p>)/g;
+    const matches = phoneHtml.matchAll(regex);
+    const phoneNumbers = Array.from(matches, match => match[1]);
+    return phoneNumbers.join(', '); // Concatenate multiple phone numbers with commas
+}
+
+// Function to convert data to CSV format using Papa Parse
+function convertDataToCSV(data, headers) {
+    // Prepare Papa Parse config for CSV conversion
+    var csvConfig = {
+        quotes: false, // Disable quotes for each field
+        delimiter: ",", // Set delimiter as comma
+        header: true, // Include headers in CSV output
+    };
+
+    // Map and transform each row of data
+    var csvData = data.map(row => {
+        // Exclude the last column (assuming it's the 5th column based on your provided data)
+        var rowSubset = row.slice(0, -1); // Exclude the last element in the row
+
+        return {
+            [headers[0]]: rowSubset[0], // Contact Name
+            [headers[1]]: rowSubset[1], // Email
+            [headers[2]]: cleanPhoneNumber(rowSubset[2]), // Phone (cleaned)
+            [headers[3]]: rowSubset[3], // Customer Type
+            [headers[4]]: rowSubset[4],//Status
+        };
+    });
+
+    // Convert data to CSV format using Papa Parse
+    var csv = Papa.unparse(csvData, csvConfig);
+
+    return csv; // Return the generated CSV string
+}
        $(document).ready(function() {
-        
+        var csv_data;
         var PERSON_LIST_TABLE = $('#person-list').DataTable({
+            
+       
             "ordering": false,
             "processing": true,
             "serverSide": true,
@@ -443,76 +487,56 @@
             "ajax": {
                 "url": "<?= base_url('customer/getPersonList'); ?>",
                 "type": "POST",
+                "data": function (d) {
+                // Include custom parameters for filtering
+                d.filter_status = $('#filter-selected').text().trim(); // Get filter value from UI element
+            },
                 "dataSrc": function (json) {
             // Handle the response here
             console.log(json);
             // Return the data portion of the response
+            csv_data = json.data;
+            console.log(csv_data);
             return json.data;
+
         }
             },
            
+           
         });
+
+
+        $('#export-csv-button').on('click', function() {
+            var headers = ["Contact Name", "Email", "Phone", "Customer Type", "Status"];
+            var csvData = convertDataToCSV(csv_data, headers);
+            var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+            saveAs(blob, "residential.csv");
+    });
         
         $("#PERSON_SEARCHBAR").keyup(function() {
             PERSON_LIST_TABLE.search($(this).val()).draw();
 
         });
 
-    $(".edit_person").click(function(){
-        // Get data attributes from the button
-        
-    $("#person_header").text("View/Edit Person");
-    $("#status").val($(this).data('status'));  
-    $("#prof_id").val($(this).data('id'));   
-    $("#email").val($(this).data('email'));
-    $("#customer_group").val($(this).data('customer_group'));
-    $("#first_name").val($(this).data('first_name'));
-    $("#middle_name").val($(this).data('middle_name'));
-    $("#last_name").val($(this).data('last_name'));
-    $("#prefix").val($(this).data('prefix'));
-    $("#suffix").val($(this).data('suffix'));
-    $("#country").val($(this).data('country'));
-    $("#mail_address").val($(this).data('mail_add'));
-    $("#city").val($(this).data('city'));
-    $("#county").val($(this).data('county'));
-    $("#state").val($(this).data('state'));
-    $("#zip_code").val($(this).data('zip_code'));
-    $("#cross_street").val($(this).data('cross_street'));
-    $("#subdivision").val($(this).data('subdivision'));
-    $("#ssn").val($(this).data('ssn'));
-    $("#phone_h").val($(this).data('phone_h'));
-    $("#phone_m").val($(this).data('phone_m'));
-    $("#date_of_birth").val($(this).data('date_of_birth'));
-    
-    // Show the modal
-    $("#person_modal").modal('show');
-    });
+
+
+    $('.select-filter .dropdown-item').on('click', function(e) {
+            e.preventDefault();
+
+            // Get data-value and text of the clicked item
+            var filterValue = $(this).attr('data-value');
+            var filterText = $(this).text();
+
+            // Update the text inside #filter-selected span
+            $('#filter-selected').text(filterText);
+
+            PERSON_LIST_TABLE.ajax.reload();
+
+        });
+  
     });
 
-$('#person_modal').on('hidden.bs.modal', function () {
-    $("#person_header").text("Add Residential");
-    $("#status").val('');  
-    $("#prof_id").val('');   
-    $("#email").val('');
-    $("#customer_group").val('');
-    $("#first_name").val('');
-    $("#middle_name").val('');
-    $("#last_name").val('');
-    $("#prefix").val('');
-    $("#suffix").val('');
-    $("#country").val('');
-    $("#mail_address").val('');
-    $("#city").val('');
-    $("#county").val('');
-    $("#state").val('');
-    $("#zip_code").val('');
-    $("#cross_street").val('');
-    $("#subdivision").val('');
-    $("#ssn").val('');
-    $("#phone_h").val('');
-    $("#phone_m").val('');
-    $("#date_of_birth").val('');
-});
+
 
     $("#openModalBtn").click(function(){
         // Show the modal

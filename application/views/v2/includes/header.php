@@ -338,14 +338,14 @@ if ($this->session->userdata('usertimezone') == null) {
                     <ul class="mt-3">
                     <li class="d-flex align-items-center <?php if ($page->title == 'Customer') : echo 'selected';
                                     endif; ?>">
-                            <a href="<?= base_url("customer/person") ?>">
+                            <a href="<?= base_url("customer/residential") ?>">
                             <i class='bx bxs-face'></i>&nbsp;&nbsp;Residential
                             </a>
                             <div id="sidebar-persons-counter" ></div>   
                         </li>
                         <li class="d-flex align-items-center <?php if ($page->title == 'Customer') : echo 'selected';
                                     endif; ?>">
-                            <a href="<?= base_url("customer/company") ?>">
+                            <a href="<?= base_url("customer/commercial") ?>">
                             <i class='bx bx-building'></i>&nbsp;&nbsp;Commercial
                             </a>
                             <div id="sidebar-company-counter" ></div>   

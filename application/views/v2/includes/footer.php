@@ -23,114 +23,116 @@
           </div>
           <!-- DataTables -->
           <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
-          <!-- <script src="<?php echo $url->assets ?>plugins/datatables.net/export/dataTables.buttons.min.js"> -->
+          <!-- <script src="<?php echo $url->assets; ?>plugins/datatables.net/export/dataTables.buttons.min.js"> -->
 
-          <script src="<?php echo $url->assets ?>plugins/datatables.net/export/dataTables.buttons.min.js">
+          <script src="<?php echo $url->assets; ?>plugins/datatables.net/export/dataTables.buttons.min.js">
           </script>
-          <script src="<?php echo $url->assets ?>plugins/datatables.net/export/buttons.bootstrap.min.js">
+          <script src="<?php echo $url->assets; ?>plugins/datatables.net/export/buttons.bootstrap.min.js">
           </script>
-          <script src="<?php echo $url->assets ?>plugins/datatables.net/export/jszip.min.js">
+          <script src="<?php echo $url->assets; ?>plugins/datatables.net/export/jszip.min.js">
           </script>
-          <script src="<?php echo $url->assets ?>plugins/datatables.net/export/pdfmake.min.js">
+          <script src="<?php echo $url->assets; ?>plugins/datatables.net/export/pdfmake.min.js">
           </script>
-          <script src="<?php echo $url->assets ?>plugins/datatables.net/export/vfs_fonts.js">
+          <script src="<?php echo $url->assets; ?>plugins/datatables.net/export/vfs_fonts.js">
           </script>
-          <script src="<?php echo $url->assets ?>plugins/datatables.net/export/buttons.html5.min.js">
+          <script src="<?php echo $url->assets; ?>plugins/datatables.net/export/buttons.html5.min.js">
           </script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
           <!-- Validate  -->
-          <script src="<?php echo $url->assets ?>plugins/switchery/switchery.min.js">
+          <script src="<?php echo $url->assets; ?>plugins/switchery/switchery.min.js">
           </script>
-          <script src="<?php echo $url->assets ?>plugins/jquery.validate.min.js"></script>
-          <script src="<?php echo $url->assets ?>plugins/bootstrap-treeview/bootstrap-treeview.js">
+          <script src="<?php echo $url->assets; ?>plugins/jquery.validate.min.js"></script>
+          <script src="<?php echo $url->assets; ?>plugins/bootstrap-treeview/bootstrap-treeview.js">
           </script>
           <!-- Chart JS -->
-          <script src="<?= base_url("assets/js/v2/chart.min.js") ?>"></script>
+          <script src="<?php echo base_url('assets/js/v2/chart.min.js'); ?>"></script>
           <!-- Boostrap JS -->
-          <script src="<?= base_url("assets/js/v2/bootstrap.bundle.min.js") ?>" crossorigin="anonymous"></script>
+          <script src="<?php echo base_url('assets/js/v2/bootstrap.bundle.min.js'); ?>" crossorigin="anonymous"></script>
           <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
           <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.13/js/jquery.dataTables.js">
           </script>
 
 
           <!-- Timepicker -->
-          <script src="<?php echo $url->assets ?>plugins/jquery-timepicker/jquery.timepicker.min.js"></script>
+          <script src="<?php echo $url->assets; ?>plugins/jquery-timepicker/jquery.timepicker.min.js"></script>
           <!-- Custom JS -->
-          <script src="<?php echo $url->assets ?>js/custom.js"></script>
+          <script src="<?php echo $url->assets; ?>js/custom.js"></script>
           <!-- Sweetalert JS -->
-          <script src="<?= base_url("assets/js/v2/sweetalert2.min.js") ?>"></script>
+          <script src="<?php echo base_url('assets/js/v2/sweetalert2.min.js'); ?>"></script>
           <!-- Pusher JS -->
           <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
           <!-- Datepicker -->
-          <script type="text/javascript" src="<?= base_url("assets/js/v2/bootstrap-datepicker.min.js") ?>"></script>
+          <script type="text/javascript" src="<?php echo base_url('assets/js/v2/bootstrap-datepicker.min.js'); ?>"></script>
           <!-- TagsInput -->
           <script type="text/javascript"
-              src="<?= base_url("assets/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js") ?>"></script>
+              src="<?php echo base_url('assets/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js'); ?>"></script>
           <!-- Datetimepicker -->
-          <script type="text/javascript" src="<?= base_url("assets/js/v2/moment.min.js") ?>"></script>
-          <script type="text/javascript" src="<?= base_url("assets/js/v2/bootstrap-datetimepicker.min.js") ?>">
+          <script type="text/javascript" src="<?php echo base_url('assets/js/v2/moment.min.js'); ?>"></script>
+          <script type="text/javascript" src="<?php echo base_url('assets/js/v2/bootstrap-datetimepicker.min.js'); ?>">
 console.log("datetimepicker");
           </script>
           <!-- Sidebar counbter -->
-          <script type="text/javascript" src="<?= base_url("assets/js/v2/sidebar-counter.js") ?>"></script>
+          <script type="text/javascript" src="<?php echo base_url('assets/js/v2/sidebar-counter.js'); ?>"></script>
           <!-- Select2 -->
-          <script src="<?= base_url("assets/plugins/select2/dist/js/select2.full.min.js"); ?>"></script>
+          <script src="<?php echo base_url('assets/plugins/select2/dist/js/select2.full.min.js'); ?>"></script>
           <!-- Input Mask -->
-          <?php if( isset($enable_input_mask) ){ ?>
-          <script src="<?= base_url("assets/plugins/inputmask/dist/jquery.inputmask.bundle.js"); ?>"></script>
+          <?php if (isset($enable_input_mask)) { ?>
+          <script src="<?php echo base_url('assets/plugins/inputmask/dist/jquery.inputmask.bundle.js'); ?>"></script>
           <?php } ?>
           <!-- Twilio Call -->
-          <?php if( isset($enable_twilio_call) ){ ?>
-          <script src="<?= base_url("assets/js/twilio.min.js"); ?>"></script>
+          <?php if (isset($enable_twilio_call)) { ?>
+          <script src="<?php echo base_url('assets/js/twilio.min.js'); ?>"></script>
           <?php } ?>
 
-          <?php if( isset($enable_ringcentral_call) ){ ?>
+          <?php if (isset($enable_ringcentral_call)) { ?>
           <script type="text/javascript" src="//cdn.jsdelivr.net/es6-promise/3.1.2/es6-promise.js"></script>
           <script type="text/javascript" src="//cdn.pubnub.com/sdk/javascript/pubnub.4.4.2.js"></script>
           <script type="text/javascript" src="//cdn.rawgit.com/onsip/SIP.js/0.7.7/dist/sip-0.7.7.js"></script>
           <script type="text/javascript" src="//cdn.rawgit.com/ringcentral/ringcentral-js/3.1.0/build/ringcentral.js">
           </script>
-          <script src="<?= base_url("assets/js/ringcentral/ringcentral-web-phone.js"); ?>"></script>
+          <script src="<?php echo base_url('assets/js/ringcentral/ringcentral-web-phone.js'); ?>"></script>
           <?php } ?>
 
-          <?php if( isset($enable_tracklocation) ){ ?>
-          <script src="<?php echo $url->assets ?>js/timesheet/tracklocation.js"></script>
+          <?php if (isset($enable_tracklocation)) { ?>
+          <script src="<?php echo $url->assets; ?>js/timesheet/tracklocation.js"></script>
           <?php } ?>
 
-          <?php if( isset($enable_popper_tooltip) ){ ?>
+          <?php if (isset($enable_popper_tooltip)) { ?>
           <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
           <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
           <?php } ?>
 
           <!-- Switchery -->
-          <script src="<?= base_url("assets/plugins/switchery/switchery.min.js"); ?>"></script>
+          <script src="<?php echo base_url('assets/plugins/switchery/switchery.min.js'); ?>"></script>
 
           <!-- Ckeditor -->
-          <script type="text/javascript" src="<?= base_url("assets/ckeditor/ckeditor.js"); ?>"></script>
+          <script type="text/javascript" src="<?php echo base_url('assets/ckeditor/ckeditor.js'); ?>"></script>
 
           <!-- Multiselect -->
-          <script src="<?= base_url("assets/js/v2/multiple-select.min.js") ?>"></script>
+          <script src="<?php echo base_url('assets/js/v2/multiple-select.min.js'); ?>"></script>
 
           <!-- FullCalendar -->
-          <!-- <script src="<?= base_url("assets/js/v2/full-calendar-main.js") ?>"></script> -->
+          <!-- <script src="<?php echo base_url('assets/js/v2/full-calendar-main.js'); ?>"></script> -->
 
           <!-- Fancybox -->
-          <script src="<?= base_url("assets/js/v2/fancybox.umd.js") ?>"></script>
+          <script src="<?php echo base_url('assets/js/v2/fancybox.umd.js'); ?>"></script>
 
           <!-- Switchery -->
-          <!-- <script src="<?php echo $url->assets ?>plugins/switchery/switchery.min.js"></script> -->
+          <!-- <script src="<?php echo $url->assets; ?>plugins/switchery/switchery.min.js"></script> -->
 
           <!-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script> -->
           <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script> -->
 
           <!-- Main Script -->
-          <script type="text/javascript" src="<?= base_url("assets/js/v2/main.js") ?>"></script>
-          <script type="text/javascript" src="<?= base_url("assets/js/v2/nsm.draggable.js") ?>"></script>
-          <script type="text/javascript" src="<?= base_url("assets/js/v2/nsm.table.js") ?>"></script>
-          <script src="<?php echo $url->assets;?>js/timesheet/clock.js"></script>
+          <script type="text/javascript" src="<?php echo base_url('assets/js/v2/main.js'); ?>"></script>
+          <script type="text/javascript" src="<?php echo base_url('assets/js/v2/nsm.draggable.js'); ?>"></script>
+          <script type="text/javascript" src="<?php echo base_url('assets/js/v2/nsm.table.js'); ?>"></script>
+          <script src="<?php echo $url->assets; ?>js/timesheet/clock.js"></script>
           <script type="text/javascript">
 var notification_badge_value = 0;
-var current_user_company_id = <?=logged('company_id')?>;
+var current_user_company_id = <?php echo logged('company_id'); ?>;
 var all_notifications_html = '';
 var notification_badge_value = 0;
 var notification_html_holder_ctr = 0;
@@ -302,7 +304,7 @@ $(document).ready(function() {
         offset_zone = "+" + offset_zone;
     }
     $.ajax({
-        url: "<?= base_url() ?>/timesheet/timezonesetter",
+        url: "<?php echo base_url(); ?>/timesheet/timezonesetter",
         type: "POST",
         dataType: "json",
         data: {
@@ -432,7 +434,7 @@ function getNotificationsAll() {
 function sendFeed() {
     $.ajax({
         type: "POST",
-        url: "<?= base_url() ?>/dashboard/sendFeed",
+        url: "<?php echo base_url(); ?>/dashboard/sendFeed",
         dataType: 'json',
         data: {
             subject: $('#feedSubject').val(),
@@ -460,7 +462,7 @@ function sendNewsLetter() {
     _sendBtn.html("Sending...");
 
     $.ajax({
-        url: '<?= base_url(); ?>newsletter/saveNewsBulletin',
+        url: '<?php echo base_url(); ?>newsletter/saveNewsBulletin',
         method: 'POST',
         data: formdata,
         cache: false,
@@ -491,7 +493,7 @@ function notifyUser(title, text, icon, location = null) {
             if (location === "reload") {
                 window.location.reload(true);
             } else if (location !== null && location !== "") {
-                window.location.href = '<?= base_url(); ?>' + location;
+                window.location.href = '<?php echo base_url(); ?>' + location;
             }
         }
     });
@@ -541,8 +543,23 @@ function manipulateThumbnail(dis, id) {
     $('#check_count_thumbnails').val(count);
 }
 
+function fetchCollections(){
+    fetch('<?php echo base_url('Dashboard/todays_stats'); ?>', {
+        method: 'GET',
+    }) .then(response => response.json() ).then(response => {
+        var {success, data, paymentInvoice, jobsCompleted, onlineBooking, lostAccount, collectedAccounts } = response;
+
+        if(success){
+            var collectedAcc = collectedAccounts == '' ? '0' : collectedAccounts[0]['total'];
+            $("#collections-thumbnail").text(collectedAcc);
+        }
+    }).catch((error) => {
+        console.log('Error:', error);
+    });
+}
+
 function fetchJobs() {
-    fetch('<?= base_url('Dashboard/jobs') ?>', {
+    fetch('<?php echo base_url('Dashboard/jobs'); ?>', {
 
     }).then(response => response.json()).then(response => {
         var date1 = new Date();
@@ -607,7 +624,7 @@ function fetchJobs() {
 }
 
 function fetchNewCustomer(){
-    fetch('<?= base_url('dashboard/_recent_customers') ?>', {
+    fetch('<?php echo base_url('dashboard/_recent_customers'); ?>', {
         method: 'GET',
     }) .then(response => response.json() ).then(response => {
         var {success, companies, recentCustomers } = response;
@@ -639,6 +656,7 @@ function addThumbnail(id) {
             }
             fetchJobs();
             fetchNewCustomer();
+            fetchCollections();
 
         }
     });
@@ -740,14 +758,14 @@ async function notificationRing() {
     }
 }
 
-<?php if( logged('user_type') == 1 || isAdminBypass() ){ ?>
+<?php if (logged('user_type') == 1 || isAdminBypass()) { ?>
 $(document).on('click', '.btn-admin-switch', function() {
     $.ajax({
         url: '<?php echo base_url(); ?>user/_admin_switch',
         dataType: 'json',
         success: function(e) {
             if (e.is_valid == 1) {
-                location.href = '<?= base_url('admin/users'); ?>';
+                location.href = '<?php echo base_url('admin/users'); ?>';
             } else {
                 Swal.fire({
                     icon: 'error',
@@ -762,7 +780,7 @@ $(document).on('click', '.btn-admin-switch', function() {
 });
 <?php } ?>
 
-<?php if( logged('user_type') == 7 ){ ?>
+<?php if (logged('user_type') == 7) { ?>
 $(document).on('click', '.btn-adt-sales-portal', function() {
     $('#modalConnectAdtPortal').modal('show');
     $('.adt-connect-msg').html('Connecting to ADT Sales Portal...');
@@ -846,10 +864,10 @@ jQuery(document).ready(function() {
           </script>
 
           <!-- Added footer assets -->
-          <?php echo put_footer_assets();?>
+          <?php echo put_footer_assets(); ?>
 
           <!-- taxes page -->
-          <!-- <script src="<?php echo $url->assets ?>dashboard/js/custom.js"></script> -->
+          <!-- <script src="<?php echo $url->assets; ?>dashboard/js/custom.js"></script> -->
           <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script>
           <!-- global script that can be use all over the site pages -->
           <script>
@@ -867,7 +885,7 @@ function notifyUser(title, text, icon, location = null) {
             if (location === "reload") {
                 window.location.reload(true);
             } else if (location !== null && location !== "") {
-                window.location.href = '<?= base_url(); ?>' + location;
+                window.location.href = '<?php echo base_url(); ?>' + location;
             }
         }
     });

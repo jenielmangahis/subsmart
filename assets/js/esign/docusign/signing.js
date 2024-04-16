@@ -998,7 +998,7 @@ function Signing(hash) {
         const fid = 0;
 
         if( window.__ismobile ){
-          alert('Sign in mobile:'+fid+':'+fieldId+':'+recipient.id);
+          alert('Sign in mobile:'+fid+':'+fieldId+':'+recipient.id+':'+recipient.docfile_id);
         }else{
           $signatureModal.modal("show");
         }           
@@ -2360,6 +2360,10 @@ function Signing(hash) {
           const jsonData = await response.json();
           //console.log(jsonData);
         }
+      }
+
+      if( window.__ismobile ){
+        alert('Mobile signing finished:'+data.data.docfile_id);
       }
 
       if (data.hash) {

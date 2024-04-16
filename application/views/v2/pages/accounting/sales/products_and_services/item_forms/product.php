@@ -51,7 +51,7 @@
                         <div class="col-12 col-md-6">
                             <div class="mb-2">
                                 <label for="upc">UPC</label>
-                                <input type="text" name="upc" id="upc" class="form-control nsm-field">
+                                <input type="text" name="upc" id="upc" class="form-control nsm-field" required>
                             </div>
                         </div>
                         <div class="col-12 col-md-6">
@@ -112,7 +112,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <div class="nsm-field-group calendar">
-                                <input type="text" class="form-control nsm-field date" id="asOfDate" name="as_of_date" placeholder="MM/DD/YYYY">
+                                <input type="text" class="form-control nsm-field date" id="asOfDate" required name="as_of_date" placeholder="MM/DD/YYYY">
                             </div>
                         </div>
                     </div>
@@ -121,7 +121,7 @@
                             <label for="reorderPoint" class="col-form-label">Reorder point</label>
                         </div>
                         <div class="col-12 col-md-6">
-                            <input type="number" class="text-end form-control nsm-field" id="reorderPoint" name="reorder_point">
+                            <input type="number" class="text-end form-control nsm-field" id="reorderPoint" name="reorder_point" required>
                         </div>
                     </div>
                 </td>
@@ -147,7 +147,7 @@
                         </div>
                         <div class="col-12 col-md-6 mb-2">
                             <label for="price">Sales price/rate</label>
-                            <input type="number" name="price" id="price" step="0.01" class="form-control nsm-field text-end" onchange="convertToDecimal(this)">
+                            <input type="number" name="price" id="price" step="0.01" class="form-control nsm-field text-end" onchange="convertToDecimal(this)" required>
                         </div>
                         <div class="col-12 col-md-6 mb-2">
                             <label for="income_account">Income account</label>
@@ -177,7 +177,7 @@
                         </div>
                         <div class="col-12 col-md-6 mb-2">
                             <label for="cost">Cost</label>
-                            <input type="number" name="cost" id="cost" class="form-control nsm-field text-end" onchange="convertToDecimal(this)">
+                            <input type="number" required name="cost" id="cost" class="form-control nsm-field text-end" onchange="convertToDecimal(this)">
                         </div>
                         <div class="col-12 col-sm-6 mb-2">
                             <label for="item_expense_account">Expense account</label>
@@ -195,7 +195,7 @@
 </div>
 <div class="modal-footer position-fixed w-100 bottom-0 bg-white">
     <div class="btn-group dropup float-end" role="group">
-        <button type="submit" disabled class="nsm-button success" id="save-and-close">
+        <button type="submit" class="nsm-button success" id="save-and-close">
             Save and close
         </button>
         <div class="btn-group" role="group">
@@ -210,66 +210,4 @@
 </div>
 
 </form>
-<script>
-$(document).ready(function() {
-    $('input, textarea, select').on('input change', function() {
-        // Check if all required fields have values
-        var name = $('#name').val().trim();
-        var sku = $('#sku').val().trim();
-        var category = $('#category').val();
-        var upc  = $('#upc').val().trim();
-        // If name and sku are not empty, enable the button
-        if (name !== '' && sku !== '' && category !=='' && upc !=='') {
-            $('#save-and-close').prop('disabled', false);
-        } else {
-            // If any required field is empty, disable the button
-            $('#save-and-close').prop('disabled', true);
-        }
-    });
 
-    
-  $('#product-item-form').on('submit', function(event) {
-    var isValid = true;
-
-    // Check if required fields are empty
-    $(this).find('.nsm-field[required]').each(function() {
-      if ($(this).val().trim() === '') {
-        isValid = false;
-        return false; // Exit the loop
-      }
-    });
-
-    if (!isValid) {
-      event.preventDefault(); // Prevent form submission
-      // Prevent the "Save and close" button from closing the modal
-      $('#save-and-close').prop('disabled', true);
-      return;
-    }
-
-    event.preventDefault(); // Prevent the form from submitting
-
-    // Your saving logic goes here
-    var formData = new FormData(this);
-
-    $.ajax({
-      url: $(this).attr('action'),
-      type: $(this).attr('method'),
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function(response) {
-        console.log('Form submitted successfully');
-        // Handle the success response
-        // Optionally, re-enable the "Save and close" button after successful submission
-        $('#save-and-close').prop('disabled', false);
-      },
-      error: function(xhr, status, error) {
-        console.error('Form submission failed:', error);
-        // Handle the error response
-        // Optionally, re-enable the "Save and close" button after failed submission
-        $('#save-and-close').prop('disabled', false);
-      }
-    });
-  });
-});
-</script>

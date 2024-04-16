@@ -17,8 +17,12 @@
         border: none;
         background-color: transparent;
     }
-    .close-btn i{
-        font-size: 2.285714em;
+ 
+    #company-list_filter{
+        display: none;
+    }
+    #company-list_length{
+        display: none;
     }
 </style>
 
@@ -45,31 +49,40 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-4">
-                        <form action="<?php echo base_url('admin/companies') ?>" method="GET">
+                        <form >
                             <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Search Commercials" value="<?php echo (!empty($search)) ? $search : '' ?>">                                
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="COMMERCIAL_SEARCHBAR" name="search" placeholder="Search Commercials" >                                
                             </div>
      
                         </form>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Filter by: <?= $cid_search; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
+                        <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>Filter by : <span id="filter-selected">All Status</span></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/companies'); ?>">All Companies</a></li>
-                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/companies?status=active'); ?>">Status Active</a></li>
-                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/companies?status=deactivated'); ?>">Status Deactivated</a></li>
-                                <li><a class="dropdown-item" data-id="filter_all" href="<?= base_url('admin/companies?status=expired'); ?>">Status Expired</a></li>
+                                 <li><a class="dropdown-item"data-value="" href="#">All Status</a></li>
+                                <li><a class="dropdown-item" data-value="Contract Review" href="#">Contract Review</a></li>
+                                <li><a class="dropdown-item" data-value="Design Team/Engineering Stamps" href="#">Design Team/Engineering Stamps</a></li>
+                                <li><a class="dropdown-item" data-value="Acceptance Pending" href="#">Acceptance Pending </a></li>
+                                <li><a class="dropdown-item" data-value="Loan Documents to be Executed" href="#">Loan Documents to be Executed</a></li>
+                                <li><a class="dropdown-item" data-value="Interconnection" href="#">Interconnection</a></li>
+                                <li><a class="dropdown-item" data-value="Inspection" href="#">Inspection</a></li>
+                                <li><a class="dropdown-item" data-value="Site Survey" href="#">Site Survey</a></li>
+                                <li><a class="dropdown-item" data-value="CAD/Permitting" href="#">CAD/Permitting</a></li>
+                                <li><a class="dropdown-item" data-value="Proposal" href="#">Proposal</a></li>
+                                <li><a class="dropdown-item" data-value="Lead" href="#">Lead</a></li>
+                                <li><a class="dropdown-item" data-value="Installed" href="#">Installed</a></li>
+                                <li><a class="dropdown-item" data-value="Cancel Pending" href="#">Cancel Pending</a></li>
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <a class="nsm-button primary btn-export-list" id="openModalBtn"  style="margin-left: 10px;"><i class="bx bx-building"></i> Add 	Commercial</a>
+                            <a class="nsm-button primary btn-export-list" id="openModalBtn"  style="margin-left: 10px; cursor:pointer"><i class="bx bx-building"></i> Add 	Commercial</a>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <a class="nsm-button primary btn-export-list" href="<?= base_url('admin/export_company_list') ?>" style="margin-left: 10px;"><i class="bx bx-fw bx-file"></i> Export List</a>
-                            <!-- <a class="nsm-button primary btn-add-user" href="javascript:void(0);"><i class='bx bx-fw bx-user'></i> Create User</a> -->                            
+                            <a class="nsm-button primary btn-export-list" id="export-csv-button"href="#" style="margin-left: 10px;"><i class="bx bx-fw bx-file"></i>Export List</a>
+                            
                         </div>
                     </div>
                 </div>
@@ -84,74 +97,11 @@
                             <td data-name="Plan">Phone</td>
                             <td data-name="Customer Type" style="width:10%;">Customer Type</td>
                             <td data-name="Status" style="width:10%;">Status</td>
+                            <td></td>
                          
                         </tr>
                     </thead>
-                    <?php foreach ($companies as $company): ?>                    
-                                <tr>
-                                    <td class="center"><?php echo $company->business_name; ?></td>
-                                    <td class="center">
-                                    <?php echo $company->first_name ." ".$company->last_name ; ?>
-                                    </td>
-                                    <td class="center"> <?php echo $company->email; ?></td>
-                                    <td class="center">
-                                       <p>Phone (H) : <?php echo $company->phone_h; ?></p>
-                                       <p>Phone (M) :  <?php echo $company->phone_m; ?></p>
-                                  
-                                    </td>
-                                    <td class="center"><?php echo $company->customer_type ?></td>
-                                    <td class="center">                                
-                                    <?php echo $company->status?>
-                            <!-- <span class="badge" style="background-color: #6a4a86; color: #ffffff;display: block; margin: 5px;"><?php echo $company->status?></span> -->
-                                        
-                                    </td>
-                                    <td class="center actions-col">
-                                        <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                             
-                                                <li>
-                                                    <a class="dropdown-item btn-manage-company-modules edit_person"  href="javascript:void(0)" 
-                                                  " 
-                                                    data-status="<?php echo $company->status; ?>" 
-                                                    data-id="<?php echo $company->prof_id; ?>" 
-                                                    data-business_name="<?php echo $company->business_name; ?>"
-                                                    data-email="<?php echo $company->email; ?>"
-                                                    data-customer_group="<?php echo $company->customer_group; ?>"
-                                                    data-first_name="<?php echo $company->first_name; ?>"
-                                                    data-middle_name="<?php echo $company->middle_name; ?>"
-                                                    data-last_name="<?php echo $company->last_name; ?>"
-                                                    data-prefix="<?php echo $company->prefix; ?>"
-                                                    data-suffix="<?php echo $company->suffix; ?>"
-                                                    data-country="<?php echo $company->country; ?>"
-                                                    data-mail_add="<?php echo $company->mail_add; ?>"
-                                                    data-city="<?php echo $company->city; ?>"
-                                                    data-county="<?php echo $company->county; ?>"
-                                                    data-state="<?php echo $company->state; ?>"
-                                                    data-country="<?php echo $company->country; ?>"
-                                                    data-zip_code="<?php echo $company->zip_code; ?>"
-                                                    data-cross_street="<?php echo $company->cross_street; ?>"
-                                                    data-subdivision="<?php echo $company->subdivision; ?>"
-                                                    data-ssn="<?php echo $company->ssn; ?>"
-                                                    data-phone_h="<?php echo $company->phone_h; ?>"
-                                                    data-phone_m="<?php echo $company->phone_m; ?>"
-                                                    data-date_of_birth="<?php echo $company->date_of_birth; ?>"
-                                                    
-                                                    >
-                                                    <i class="bx bx-fw bx-edit"></i>View/Edit</a>
-                                                </li>
-                                              
-                                                <li>
-                                                    <a class="dropdown-item delete-company" href="javascript:void(0);" onclick="deleteItem(<?php echo $company->prof_id; ?>)"><i class="bx bx-fw bx-trash"></i> Delete</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                 
-                                <?php endforeach; ?>
+                    <tbody>
                     </tbody>
                 </table>
             </div>
@@ -248,9 +198,11 @@
                 Sales Area
             </div>
             <div class="col-md-8">
-                <select name="fk_sa_id" data-type="customer_sales_area" class="form-control">
-                    <?php if( $salesAreaSelected ){ ?>
-                        <option value="<?= $salesAreaSelected->sa_id; ?>"><?= $salesAreaSelected->sa_name; ?></option>
+                <select name="fk_sa_id" id="fk_sa_id" data-type="customer_sales_area" class="form-control">
+                <?php foreach( $salesAreaSelected as $salesArea){
+
+                    ?>
+                    <option value="<?= $salesArea->sa_id; ?>"><?=  $salesArea->sa_name; ?></option>
                     <?php } ?>
                 </select>
                 
@@ -491,80 +443,108 @@
       });
     }
   });
+
 }
+  function cleanPhoneNumber(phoneHtml) {
+    const regex = /(?:<p>Phone \(\w\) : )([\d\+\-\(\) ]+)(?:<\/p>)/g;
+    const matches = phoneHtml.matchAll(regex);
+    const phoneNumbers = Array.from(matches, match => match[1]);
+    return phoneNumbers.join(', '); // Concatenate multiple phone numbers with commas
+}
+     
+
+// Function to convert data to CSV format using Papa Parse
+function convertDataToCSV(data, headers) {
+    // Prepare Papa Parse config for CSV conversion
+    var csvConfig = {
+        quotes: false, // Disable quotes for each field
+        delimiter: ",", // Set delimiter as comma
+        header: true, // Include headers in CSV output
+    };
+
+    // Map and transform each row of data
+    var csvData = data.map(row => {
+        // Exclude the last column (assuming it's the 5th column based on your provided data)
+        var rowSubset = row.slice(0, -1); // Exclude the last element in the row
+
+        return {
+            [headers[0]]: rowSubset[0], // Contact Name
+            [headers[1]]: rowSubset[1], // Email
+            [headers[2]]: rowSubset[2], 
+            [headers[3]]: cleanPhoneNumber(rowSubset[3]), 
+            [headers[4]]: rowSubset[4],// Customer Type
+            [headers[5]]: rowSubset[5],//Status
+        };
+    });
+
+    // Convert data to CSV format using Papa Parse
+    var csv = Papa.unparse(csvData, csvConfig);
+
+    return csv; // Return the generated CSV string
+}
+
        $(document).ready(function() {
-    //   var COMPANY_LIST_TABLE = $('#company-list').DataTable({
-    //         "ordering": false,
-    //         "processing": true,
-    //         "serverSide": true,
-    //         "ajax": {
-    //             "url": "<?= base_url('customer/getCompanyList'); ?>",
-    //             "type": "POST"
-    //         },
 
-        
-    //     });
-    $(".nsm-table").nsmPagination();
-    $(".edit_person").click(function(){
-        // Get data attributes from the button
-        
-    $("#person_header").text(" View/Edit Company");
-    $("#status").val($(this).data('status'));  
-    $("#prof_id").val($(this).data('id'));   
-    $("#email").val($(this).data('email'));
-    $("#customer_group").val($(this).data('customer_group'));
-    $("#first_name").val($(this).data('first_name'));
-    $("#middle_name").val($(this).data('middle_name'));
-    $("#last_name").val($(this).data('last_name'));
-    $("#prefix").val($(this).data('prefix'));
-    $("#suffix").val($(this).data('suffix'));
-    $("#country").val($(this).data('country'));
-    $("#mail_address").val($(this).data('mail_add'));
-    $("#city").val($(this).data('city'));
-    $("#county").val($(this).data('county'));
-    $("#state").val($(this).data('state'));
-    $("#zip_code").val($(this).data('zip_code'));
-    $("#cross_street").val($(this).data('cross_street'));
-    $("#subdivision").val($(this).data('subdivision'));
-    $("#ssn").val($(this).data('ssn'));
-    $("#phone_h").val($(this).data('phone_h'));
-    $("#phone_m").val($(this).data('phone_m'));
-    $("#date_of_birth").val($(this).data('date_of_birth'));
-    $("#business_name").val($(this).data('business_name'));
-    
-    // Show the modal
-    $("#person_modal").modal('show');
+        var csv_data;
+        var COMPANY_LIST_TABLE = $('#company-list').DataTable({
+            
+       
+            "ordering": false,
+            "processing": true,
+            "serverSide": true,
+            "lengthMenu": [10, 25, 50, 75, 100], // Display options for the length menu
+            "pageLength": 10,
+            "ajax": {
+                "url": "<?= base_url('customer/getCompanyList'); ?>",
+                "type": "POST",
+                "data": function (d) {
+                // Include custom parameters for filtering
+                d.filter_status = $('#filter-selected').text().trim(); // Get filter value from UI element
+            },
+                "dataSrc": function (json) {
+            // Handle the response here
+            console.log(json);
+            // Return the data portion of the response
+            csv_data = json.data;
+            console.log(csv_data);
+            return json.data;
+
+        }
+            },
+           
+           
+        });
+
+        $('#export-csv-button').on('click', function() {
+            var headers = ["Company Name", "Contact Name", "Email", "Phone",'Customer Type', "Status"];
+            var csvData = convertDataToCSV(csv_data, headers);
+            var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+            saveAs(blob, "commercial.csv");
     });
- 
+
+        $("#COMMERCIAL_SEARCHBAR").keyup(function() {
+            COMPANY_LIST_TABLE.search($(this).val()).draw();
+
+        });
+        $('.select-filter .dropdown-item').on('click', function(e) {
+            e.preventDefault();
+
+            // Get data-value and text of the clicked item
+            var filterValue = $(this).attr('data-value');
+            var filterText = $(this).text();
+
+            // Update the text inside #filter-selected span
+            $('#filter-selected').text(filterText);
+
+            COMPANY_LIST_TABLE.ajax.reload();
+
+        });
 
     });
     
-$('#person_modal').on('hidden.bs.modal', function () {
-    $("#business_name").val('');
-    $("#person_header").text(" Add Commercial");
-    $("#status").val('');  
-    $("#prof_id").val('');   
-    $("#email").val('');
-    $("#customer_group").val('');
-    $("#first_name").val('');
-    $("#middle_name").val('');
-    $("#last_name").val('');
-    $("#prefix").val('');
-    $("#suffix").val('');
-    $("#country").val('');
-    $("#mail_address").val('');
-    $("#city").val('');
-    $("#county").val('');
-    $("#state").val('');
-    $("#zip_code").val('');
-    $("#cross_street").val('');
-    $("#subdivision").val('');
-    $("#ssn").val('');
-    $("#phone_h").val('');
-    $("#phone_m").val('');
-    $("#date_of_birth").val('');
-});
-
+  
+  
+    
     $("#openModalBtn").click(function(){
         // Show the modal
         $("#person_modal").modal('show');

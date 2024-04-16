@@ -64,11 +64,15 @@ class Customer_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
-    public function getAllCommercialCustomers($search = null,$company_id,$customer_type){
+    public function getAllCommercialCustomers($search = null,$company_id,$customer_type,$filter_status = null){
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
         $this->db->where('customer_type', $customer_type);
+
+        if(!empty($filter_status)){
+            $this->db->where('status',$filter_status); 
+        }
 
         if (!empty($search)) {
             $this->db->group_start(); // Start grouping the OR conditions

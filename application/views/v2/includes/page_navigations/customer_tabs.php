@@ -32,13 +32,13 @@
         </li>
      
         <li class="<?php if($page->title == 'Residential'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer/person') ?>">
+            <a class="nsm-page-link" href="<?php echo base_url('customer/residential') ?>">
             <i class='bx bxs-face'></i>
                 <span>Residential</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Company'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer/company') ?>">
+        <li class="<?php if($page->title == 'Commercial'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?php echo base_url('customer/commercial') ?>">
             <i class='bx bx-building'></i>
                 <span>Commercial</span>
             </a>

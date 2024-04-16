@@ -292,7 +292,8 @@ class Widgets extends MY_Controller
         $this->load->model('General_model', 'general');
         $this->load->model('event_model');
         $this->load->model('Customer_advance_model', 'customer_ad_model');
-
+        $this->load->model('invoice_model');
+        $this->load->model('Tickets_model', 'tickets_model');
         $id = post('id');
         $isGlobal = post('isGlobal');
         $isMain   = post('isMain');
@@ -321,9 +322,17 @@ class Widgets extends MY_Controller
                 $data['isMain'] = false;
                 $data['subs'] = $this->event_model->getAllsubsByCompanyId($cid);
                 $data['leads'] = count($this->customer_ad_model->get_leads_data());
-
+                $data['total_recurring_payment'] = $this->getTotalRecurringPayment();
+                $data['companyName'] = $this->tickets_model->getCompany(logged('company_id'));
+               
                 $past_due = $this->widgets_model->getCurrentCompanyOverdueInvoices();
-              
+                
+                $invoices = $this->invoice_model->get_all_company_invoice(logged('company_id'));
+                $openInvoices = array_filter($invoices, function ($v, $k) {
+                    return !in_array($v->status, ['Draft', 'Declined', 'Paid']);
+                }, ARRAY_FILTER_USE_BOTH);
+        
+                $data['open_invoices'] = $openInvoices;
                 $invoices_total_due = 0;
                 foreach($past_due as $total_due){
                     $invoices_total_due +=  $total_due->balance;
@@ -345,6 +354,22 @@ class Widgets extends MY_Controller
             endif;
         endif;
     }
+
+    private function getTotalRecurringPayment()
+    {
+        $companyId = logged('company_id');
+        $this->db->select('SUM(acs_billing.mmr) AS SUM_RECURRING_PAYMENT');
+        $this->db->from('acs_billing');
+        $this->db->join('acs_alarm', 'acs_billing.fk_prof_id = acs_alarm.fk_prof_id', 'left');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = acs_alarm.fk_prof_id', 'left');
+        $this->db->where("acs_profile.status = 'Installed'");
+        $query = $this->db->get();
+        $result = $query->row();
+
+        return $result;
+ 
+    }
+
 
     public function addV2Widget_old()
     {

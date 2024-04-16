@@ -113,34 +113,33 @@ class Customer extends MY_Controller
     }
 
     public function CompanyList(){
-        $search ='';
+        $get_customer_groups = [
+            'where' => [
+                    'company_id' => logged('company_id'),
+            ],
+            'table' => 'customer_groups',
+            'select' => '*',
+        ];
+
+        $default_status_ids = defaultCompanyCustomerStatusIds();
+        $this->page_data['customer_status'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'), $default_status_ids);
+        $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
         $this->page_data['page']->title = 'Commercial';
         $this->page_data['page']->parent = 'Customers';
-
-        $this->page_data['companies'] = $this->company->getAllCommercialCustomers($search,logged('company_id'),'Commercial');
-
+        $this->page_data['salesAreaSelected']= $this->customer_ad_model->getAllSettingsSalesAreaByCompanyId(logged('company_id'));
         $this->load->view('v2/pages/customer/company', $this->page_data);
     }
     public function getCompanyList(){
 
-        $this->page_data['page']->title = 'Company';
-        $this->page_data['page']->parent = 'Customers';
-
-        $this->page_data['companies'] = $this->company->getAllCommercialCustomers(logged('company_id'),'Commercial');
-         
-        echo json_encode($this->page_data);
-    }
-
-    public function getPersonList()
-    {
-    $request = $_REQUEST;
+        $request = $_REQUEST;
     $draw = isset($request['draw']) ? intval($request['draw']) : 0;
     $start = isset($request['start']) ? intval($request['start']) : 0;
     $length = isset($request['length']) ? intval($request['length']) : 10;
     $search = isset($request['search']['value']) ? $request['search']['value'] : '';
-       
-    
-        $persons = $this->company->getAllCommercialCustomers($search,logged('company_id'), 'Residential');
+    $filter_status = isset($request['filter_status']) ? $request['filter_status'] : '';
+     
+
+        $persons = $this->company->getAllCommercialCustomers($search,logged('company_id'), 'Commercial',$filter_status == 'All Status' ? '' :$filter_status);
         $filteredPersons = array_slice($persons, $start, $length);
     
         $totalRecords = count($persons);
@@ -153,7 +152,8 @@ class Customer extends MY_Controller
             if (!empty($person->email) && !empty($contactName)) {
             $row = array();
             // Contact Name
-       
+              
+            $row[] = $person->business_name;
             $row[] = $contactName;
         
             // Email
@@ -170,7 +170,7 @@ class Customer extends MY_Controller
             }
             $row[] = $phone;
             $row[] = $person->customer_type;
-            $row[] = $person->status;
+            $row[] = empty($person->status) ? 'No status selected' : $person->status;
             $actionColumn = '<div class="dropdown table-management">
             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                 <i class="bx bx-fw bx-dots-vertical-rounded"></i>
@@ -202,6 +202,87 @@ class Customer extends MY_Controller
             'recordsTotal' => $totalRecords,
             'recordsFiltered' => $filteredRecords,
             'data' => $data,
+            'filter_status' => $filter_status
+        );
+
+       
+    
+        echo json_encode($response);
+    }
+
+    public function getPersonList()
+    {
+    $request = $_REQUEST;
+    $draw = isset($request['draw']) ? intval($request['draw']) : 0;
+    $start = isset($request['start']) ? intval($request['start']) : 0;
+    $length = isset($request['length']) ? intval($request['length']) : 10;
+    $search = isset($request['search']['value']) ? $request['search']['value'] : '';
+    $filter_status = isset($request['filter_status']) ? $request['filter_status'] : '';
+     
+
+        $persons = $this->company->getAllCommercialCustomers($search,logged('company_id'), 'Residential',$filter_status == 'All Status' ? '' :$filter_status);
+        $filteredPersons = array_slice($persons, $start, $length);
+    
+        $totalRecords = count($persons);
+        $filteredRecords = count($persons);
+    
+        $data = array();
+
+        foreach ($filteredPersons as $person) {
+            $contactName = $person->first_name . ' ' . $person->last_name;
+            if (!empty($person->email) && !empty($contactName)) {
+            $row = array();
+            // Contact Name
+       
+            $row[] = $contactName;
+        
+            // Email
+            $row[] = $person->email;
+        
+            // Phone
+            $phone = '';
+        
+            if (!empty($person->phone_h)) {
+                $phone .= '<p>Phone (M) : '. $person->phone_h .'</p>';
+            }
+            if (!empty($person->phone_m)) {
+                $phone .= (!empty($phone) ? ' ' : '') . '<p>Phone (H) : '.$person->phone_m.'</p>';
+            }
+            $row[] = $phone;
+            $row[] = $person->customer_type;
+            $row[] = empty($person->status) ? 'No status selected' : $person->status;
+            $actionColumn = '<div class="dropdown table-management">
+            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                <i class="bx bx-fw bx-dots-vertical-rounded"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <li>
+                    <a class="dropdown-item btn-manage-company-modules edit_person" href="'.base_url('customer/preview_/' . $person->prof_id). '"
+                    > <i class="bx bx-fw bx-show-alt"></i>Preview
+                    </a>
+                    <a class="dropdown-item btn-manage-company-modules edit_person" href="'.base_url('customer/add_advance/' .$person->prof_id).'"
+                    > <i class="bx bx-fw bx-edit"></i>Edit
+                    </a>
+                </li>
+                <li>
+                    <a class="dropdown-item delete-company" href="javascript:void(0);" onclick="deleteItem(' . $person->prof_id . ')">
+                        <i class="bx bx-fw bx-trash"></i> Delete
+                    </a>
+                </li>
+            </ul>
+        </div>';
+    
+        $row[] = $actionColumn;
+            $data[] = $row;
+        }
+    }
+    
+        $response = array(
+            'draw' => $draw,
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $filteredRecords,
+            'data' => $data,
+            'filter_status' => $filter_status
         );
 
        
@@ -210,7 +291,6 @@ class Customer extends MY_Controller
     }
 
     public function PersonList(){
-        $search = ""; 
         $get_customer_groups = [
             'where' => [
                     'company_id' => logged('company_id'),
@@ -225,7 +305,6 @@ class Customer extends MY_Controller
         $this->page_data['page']->title = 'Residential';
         $this->page_data['page']->parent = 'Customers';
         $this->page_data['salesAreaSelected']= $this->customer_ad_model->getAllSettingsSalesAreaByCompanyId(logged('company_id'));
-        $this->page_data['persons'] = $this->company->getAllCommercialCustomers($search,logged('company_id'),'Residential');
         $this->load->view('v2/pages/customer/person', $this->page_data);
     }
   
