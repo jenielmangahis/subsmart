@@ -1569,7 +1569,8 @@ $route['taskhub/_add_new_task'] = 'Taskhub/ajax_add_new_task';
 $route['taskhub/_save_task'] = 'Taskhub/ajax_save_task';
 $route['taskhub/_task_mark_completed'] = 'Taskhub/ajax_complete_task';
 $route['taskhub/_mark_all_completed'] = 'Taskhub/ajax_company_complete_all_tasks';
-
+$route['taskhub/_delete_task'] = 'Taskhub/ajax_delete_task';
+$route['taskhub/_complete_selected_tasks'] = 'Taskhub/ajax_complete_selected_tasks';
 $route['taskhub/create'] = 'Taskhub/create';
 $route['taskhub/edit/(:num)'] = 'Taskhub/edit/$1';
 
