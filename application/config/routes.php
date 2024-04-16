@@ -100,8 +100,8 @@ $route['customer/_update_customer_status'] = 'Customer/ajax_update_customer_stat
 $route['customer/_delete_customer_status'] = 'Customer/ajax_delete_customer_status';
 $route['customer/_quick_add_customer'] = 'Customer/ajax_quick_add_customer';
 $route['customer/_quick_add_lead'] = 'Customer/ajax_quick_add_lead';
-$route['customer/company'] = 'Customer/CompanyList';
-$route['customer/person'] = 'Customer/PersonList';
+$route['customer/commercial'] = 'Customer/CompanyList';
+$route['customer/residential'] = 'Customer/PersonList';
 $route['customer/getCompanyList'] = 'Customer/getCompanyList';
 $route['customer/getPersonList'] = 'Customer/getPersonList';
 $route['customer/save_person_profile'] = 'Customer/save_person_profile';
@@ -1569,6 +1569,10 @@ $route['taskhub/_add_new_task'] = 'Taskhub/ajax_add_new_task';
 $route['taskhub/_save_task'] = 'Taskhub/ajax_save_task';
 $route['taskhub/_task_mark_completed'] = 'Taskhub/ajax_complete_task';
 $route['taskhub/_mark_all_completed'] = 'Taskhub/ajax_company_complete_all_tasks';
+$route['taskhub/_delete_task'] = 'Taskhub/ajax_delete_task';
+$route['taskhub/_complete_selected_tasks'] = 'Taskhub/ajax_complete_selected_tasks';
+$route['taskhub/create'] = 'Taskhub/create';
+$route['taskhub/edit/(:num)'] = 'Taskhub/edit/$1';
 
 // SMS
 $route['messages'] = 'Sms/index';
@@ -1618,6 +1622,7 @@ $route['tracker/estimate_image_tracker'] = 'Tracker/estimateImageTracker';
 $route['_launch_plaid_accounts'] = 'PlaidAccount/ajax_plaid_api';
 $route['_create_plaid_account'] = 'PlaidAccount/ajax_create_plaid_account';
 $route['_load_connected_bank_accounts'] = 'PlaidAccount/ajax_load_connected_bank_accounts';
+$route['_load_connected_bank_accounts_thumbnail'] = 'PlaidAccount/ajax_load_connected_bank_accounts_thumbnail';
 
 // Plaid Accounts
 $route['plaid_accounts'] = 'PlaidAccount/list';

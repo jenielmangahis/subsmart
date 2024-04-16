@@ -117,13 +117,13 @@ class Tickets_model extends MY_Model
 
     public function getCompany($id)
     {
-        $where = array(
-            'company_id' => $id,
-        );
+        // $where = array(
+        //     'company_id' => $id,
+        // );
 
         $this->db->select('*');
         $this->db->from('business_profile');
-		$this->db->where($where);
+		$this->db->where('company_id',$id);
         $query = $this->db->get();
         return $query->row();
     }

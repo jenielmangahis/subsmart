@@ -30,7 +30,7 @@
                             </div>
                             <div class="mb-2">
                                 <label for="sku">SKU</label>
-                                <input type="text" name="sku" id="sku" class="form-control nsm-field">
+                                <input type="text" name="sku" id="sku" class="form-control nsm-field" required>
                             </div>
                         </div>
                         <div class="col-12 col-md-4">
@@ -78,7 +78,7 @@
                         </div>
                         <div class="col-12 col-md-6 mb-2">
                             <label for="price">Sales price/rate</label>
-                            <input type="number" name="price" id="price" step="0.01" class="form-control nsm-field text-end" onchange="convertToDecimal(this)">
+                            <input type="number" name="price" id="price" required step="0.01" class="form-control nsm-field text-end" onchange="convertToDecimal(this)">
                         </div>
                         <div class="col-12 col-md-6 mb-2">
                             <label for="income_account">Income account</label>
@@ -130,7 +130,7 @@
 </div>
 <div class="modal-footer position-fixed w-100 bottom-0 bg-white">
     <div class="btn-group dropup float-end" role="group">
-        <button type="button" disabled class="nsm-button success" id="save-and-close">
+        <button type="button"  class="nsm-button success" id="save-and-close">
             Save and close
         </button>
         <div class="btn-group" role="group">
@@ -144,67 +144,3 @@
     </div>
 </div>
 </form>
-<script>
-    $(document).ready(function() {
-    $('input, textarea, select').on('input change', function() {
-        // Check if all required fields have values
-        var name = $('#name').val().trim();
-        var sku = $('#sku').val().trim();
-        var category = $('#category').val();
-        var price = $('#price').val().trim();
-        
-        // If name and sku are not empty, enable the button
-        if (name !== '' && sku !== '' && category !=='' && price !=='') {
-            $('#save-and-close').prop('disabled', false);
-        } else {
-            // If any required field is empty, disable the button
-            $('#save-and-close').prop('disabled', true);
-        }
-    });
-
-    
-  $('#non-inventory-item-form').on('submit', function(event) {
-    var isValid = true;
-
-    // Check if required fields are empty
-    $(this).find('.nsm-field[required]').each(function() {
-      if ($(this).val().trim() === '') {
-        isValid = false;
-        return false; // Exit the loop
-      }
-    });
-
-    if (!isValid) {
-      event.preventDefault(); // Prevent form submission
-      // Prevent the "Save and close" button from closing the modal
-      $('#save-and-close').prop('disabled', true);
-      return;
-    }
-
-    event.preventDefault(); // Prevent the form from submitting
-
-    // Your saving logic goes here
-    var formData = new FormData(this);
-
-    $.ajax({
-      url: $(this).attr('action'),
-      type: $(this).attr('method'),
-      data: formData,
-      processData: false,
-      contentType: false,
-      success: function(response) {
-        console.log('Form submitted successfully');
-        // Handle the success response
-        // Optionally, re-enable the "Save and close" button after successful submission
-        $('#save-and-close').prop('disabled', false);
-      },
-      error: function(xhr, status, error) {
-        console.error('Form submission failed:', error);
-        // Handle the error response
-        // Optionally, re-enable the "Save and close" button after failed submission
-        $('#save-and-close').prop('disabled', false);
-      }
-    });
-  });
-});
-</script>

@@ -273,7 +273,7 @@
     }
 
 
-    .dropdown-menu {
+    .table-filter {
         width: 400px !important;
     }
 
@@ -282,6 +282,10 @@
         max-width: 300px;
         box-sizing: border-box;
         margin-bottom: 10px;
+    }
+    .reset-indicator{
+        border-color: #9c27b066 !important;
+    box-shadow: 0 0 0 0.25rem rgb(156 39 176 / 17%) !important;
     }
 
 </style>
@@ -414,6 +418,7 @@
                                     <div class="col">
                                         <label for="filter-category" class="w-100">Category</label>
                                         <select name="filter_category[]" id="filter-category" class="nsm-field form-select" multiple="multiple">
+                                            <option value="all">All</option>
                                             <option value="0">Uncategorized</option>
                                             <?php foreach ($this->items_model->getItemCategories() as $category) : ?>
                                                 <option value="<?= $category->item_categories_id ?>"><?= $category->name ?></option>
@@ -585,27 +590,25 @@
                                                 </div>
                                             <?php endif; ?>
                                         </td>
-                                        <td class="nsm-text-primary nsm-link default"><?= $item['name'] ?></td>
-                                        <td><?= $item['sku'] ?></td>
-                                        <td><?= $item['type'] ?></td>
-                                        <!-- <td><?= $item['sales_desc'] ?></td>
-                                        <td data-id="<?= $item['income_account_id'] ?>"><?= $item['income_account'] ?></td>
-                                        <td data-id="<?= $item['expense_account_id'] ?>"><?= $item['expense_account'] ?></td>
-                                        <td data-id="<?= $item['inventory_account_id'] ?>"><?= $item['inventory_account'] ?></td>
-                                        <td><?= $item['purch_desc'] ?></td> -->
-                                        <td><?= $item['sales_price'] ?></td>
-                                        <td><?= $item['category'] ?></td>
-                                        <td><?= $item['cost'] ?></td>
+                                        <td class="nsm-text-primary nsm-link default"><?= $item['name'] ?: 'No name provided' ?></td>
+                                        <td><?= $item['sku'] ?: 'No SKU available' ?></td>
+                                        <td><?= $item['type'] ?: 'No type provided' ?></td>
+                                        <td><?= $item['sales_price'] ?: 'No sales price' ?></td>
+                                        <td><?= $item['category'] ?: 'No category available' ?></td>
+                                        <td><?= $item['cost'] ?: 'No cost available' ?></td>
                                         <td>
                                             <?php if ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "") : ?>
                                                 <div class="table-row-icon table-checkbox">
                                                     <input class="form-check-input select-one table-select" type="checkbox" disabled checked>
                                                 </div>
+                                            <?php else : ?>
+                                                No tax available
                                             <?php endif; ?>
                                         </td>
-                                        <td><?= $item['qty_on_hand'] ?></td>
-                                        <td id="qty_po"><?php //echo $item['qty_po']?? 0; ?>0</td>
-                                        <td><?= $item['reorder_point'] ?></td>
+
+                                        <td><?= $item['qty_on_hand'] ?: 'No quantity on hand available' ?></td>
+                                        <td><?= $item['qty_po'] ?: 'No quantity available' ?></td>
+                                        <td><?= $item['reorder_point'] ?: 'No reorder point avaliable' ?></td>
                                         <td>
                                             <?php if ($item['type'] === 'Product') : ?>
                                                 <button class="nsm-button btn-sm see-item-locations">See Locations</button>
@@ -675,5 +678,70 @@
         const totalStock = lowStockCount + outOfStockCount;
 
         totalStockElement.innerText = totalStock.toString();
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $('#filter-category').change(function() {
+            if ($(this).val() && $(this).val().includes('all')) {
+                console.log('All option selected');
+                $('#filter-category option').prop('selected', true);
+            } else {
+                console.log('Other option selected');
+            }
+        });
+    });
+
+    $(document).ready(function() {
+        function updateURLWithSelectedCategories() {
+            var selectedCategories = $('#filter-category').val();
+
+            if (!selectedCategories || selectedCategories.length === 0) {
+                selectedCategories = ['all'];
+            }
+
+            var categoryParams = [];
+            var totalItemCount = 0;
+            var totalCountParam = '';
+
+            if (selectedCategories.includes('all')) {
+                $('#filter-category option[value!="all"]').each(function() {
+                    var categoryId = $(this).val();
+                    var categoryName = $(this).text();
+                    var itemCount = getItemCountForCategory(categoryId);
+                    totalItemCount += itemCount;
+                    categoryParams.push(`${encodeURIComponent(categoryName)}:${itemCount}`);
+                });
+
+                totalCountParam = 'total_count=' + totalItemCount;
+            } else {
+                selectedCategories.forEach(function(categoryId) {
+                    var categoryName = $('#filter-category option[value="' + categoryId + '"]').text();
+                    var itemCount = getItemCountForCategory(categoryId);
+                    categoryParams.push(`${encodeURIComponent(categoryName)}:${itemCount}`);
+                });
+            }
+
+            var filterCategoryParam = 'filter_category=' + categoryParams.join(',');
+            var currentPathname = window.location.pathname;
+            var newURL = currentPathname + '?' + filterCategoryParam;
+
+            if (totalCountParam && selectedCategories.includes('all')) {
+                newURL += '&' + totalCountParam;
+            }
+
+            history.replaceState(null, null, newURL);
+        }
+
+        function getItemCountForCategory(categoryId) {
+            var itemCount = Math.floor(Math.random() * 100);
+            return itemCount;
+        }
+
+        $('#filter-category').on('change', function() {
+            updateURLWithSelectedCategories();
+        });
+
+        updateURLWithSelectedCategories();
     });
 </script>

@@ -318,7 +318,6 @@ $('#adjust-quantity').on('click', function (e) {
                                     modal: 'inventoryModal'
                                 }
 
-                                // Query parameters will be ?search=[term]&type=public&field=[type]
                                 return query;
                             }
                         },
@@ -345,24 +344,53 @@ $('#make-non-inventory, #make-service, #make-inactive').on('click', function (e)
     e.preventDefault();
 
     var action = $(this).attr('id');
+    var actionText = '';
 
-    var data = new FormData();
+    switch (action) {
+        case 'make-non-inventory':
+            actionText = 'make non-inventory';
+            break;
+        case 'make-service':
+            actionText = 'make service';
+            break;
+        case 'make-inactive':
+            actionText = 'make inactive';
+            break;
+    }
 
-    var items = [];
-    $('#items-table tbody tr:visible .select-one:checked').each(function () {
-        items.push($(this).val());
-    });
+    var checkedItems = $('#items-table tbody tr:visible .select-one:checked');
 
-    data.append('items', JSON.stringify(items));
+    Swal.fire({
+        title: 'Are you sure?',
+        text: `This action will ${actionText} for selected items.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#6a4a86',
+        confirmButtonText: `Yes, ${actionText}`
+    }).then((result) => {
+        if (result.isConfirmed) {
+            var data = new FormData();
+            var items = [];
 
-    $.ajax({
-        url: `products-and-services/batch-action/${action}`,
-        data: data,
-        type: 'post',
-        processData: false,
-        contentType: false,
-        success: function (result) {
-            location.reload();
+            checkedItems.each(function () {
+                items.push($(this).val());
+            });
+
+            data.append('items', JSON.stringify(items));
+
+            $.ajax({
+                url: `products-and-services/batch-action/${action}`,
+                data: data,
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                success: function (result) {
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
         }
     });
 });
@@ -498,7 +526,7 @@ $('#items-table .make-active').on('click', function (e) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: `/accounting/products-and-services/active/${type.toLowerCase()}/${row.find('.select-one').val()}`,
+                url: `${base_url}/accounting/products-and-services/active/${type.toLowerCase()}/${row.find('.select-one').val()}`,
                 type: 'GET',
                 success: function (result) {
                     location.reload();
@@ -528,7 +556,7 @@ $('#items-table .make-inactive').on('click', function (e) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: `/accounting/products-and-services/inactive/${type.toLowerCase()}/${row.find('.select-one').val()}`,
+                url: `${base_url}/accounting/products-and-services/inactive/${type.toLowerCase()}/${row.find('.select-one').val()}`,
                 type: 'DELETE',
                 success: function (result) {
                     location.reload();
@@ -590,7 +618,7 @@ $('#items-table .duplicate').on('click', function (e) {
             if (dropdownFields.includes(dropdownType)) {
                 $(this).select2({
                     ajax: {
-                        url: '/accounting/get-dropdown-choices',
+                        url: `${base_url}/accounting/get-dropdown-choices`,
                         dataType: 'json',
                         data: function (params) {
                             var query = {
@@ -736,7 +764,7 @@ $('#items-table .edit-item').on('click', function (e) {
         $('#item-modal #storage-locations').remove();
 
         $('#item-modal form').attr('id', `update-${type}-form`);
-        $(`#item-modal form`).attr('action', `/accounting/products-and-services/update/${type}/${row.find('.select-one').val()}`);
+        $(`#item-modal form`).attr('action', `${base_url}/accounting/products-and-services/update/${type}/${row.find('.select-one').val()}`);
 
         $(`#modal-container #item-modal`).attr('data-bs-backdrop', 'static');
         $(`#modal-container #item-modal`).attr('data-bs-keyboard', 'false');

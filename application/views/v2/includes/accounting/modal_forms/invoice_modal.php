@@ -1073,6 +1073,9 @@
   $('#transaction-grand-total').on('DOMSubtreeModified', function() {
     var grandTotal = parseFloat($(this).text().replace(/[^0-9.-]+/g, ""));
     var selectedMonths = $('#payment-schedule-months').val();
+     if(selectedMonths === ''){
+        $('#monthly_amount').html('$'+grandTotal);
+     }
 
     if (!isNaN(grandTotal) && !isNaN(selectedMonths) && selectedMonths !== '') {
       var monthlyPayment = grandTotal / selectedMonths;

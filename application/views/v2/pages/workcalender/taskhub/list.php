@@ -26,7 +26,7 @@
             </div>
             <span class="nsm-fab-label">Search Task</span>
         </li> -->
-        <li onclick="location.href='<?php echo base_url('taskhub/entry') ?>'">
+        <li onclick="location.href='<?php echo base_url('taskhub/create') ?>'">
             <div class="nsm-fab-icon">
                 <i class="bx bx-user-plus"></i>
             </div>
@@ -68,7 +68,7 @@
                             <!-- <button name="btn_clear" type="button" class="nsm-button btn-clear-all">
                                 <i class='bx bx-fw bx-check'></i> Clear All
                             </button> -->
-                            <button name="btn_add" type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('taskhub/entry'); ?>'">
+                            <button name="btn_add" type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('taskhub/create'); ?>'">
                                 <i class='bx bx-fw bx-plus'></i> Add Task
                             </button>
                             <?php //} ?>
@@ -188,7 +188,7 @@
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-menu-end">
                                                     <li>
-                                                        <a class="dropdown-item" name="dropdown_edit" href="<?php echo url('taskhub/entry/' . $row->task_id) ?>">Edit</a>
+                                                        <a class="dropdown-item" name="dropdown_edit" href="<?php echo url('taskhub/edit/' . $row->task_id) ?>">Edit</a>
                                                     </li>
                                                     <li>
                                                         <a class="dropdown-item btn-delete-task" href="javascript:void(0);" data-subject="<?= $row->subject; ?>" data-id="<?= $row->task_id; ?>">Delete</a>

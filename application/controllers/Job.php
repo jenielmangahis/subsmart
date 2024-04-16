@@ -1978,13 +1978,23 @@ class Job extends MY_Controller
 
     public function delete_tag()
     {
+        $this->load->model('JobTags_model');
+
         $remove_tag = array(
             'where' => array(
                 'id' => $_POST['tag_id']
             ),
             'table' => 'job_tags'
         );
+
+        $jobTag = $this->JobTags_model->getById($_POST['tag_id']);
+
         if ($this->general->delete_($remove_tag)) {
+            
+            //Activity Logs
+            $activity_name = 'Deleted Job Tag '.$jobTag->name; 
+            createActivityLog($activity_name);
+
             echo '1';
         }
     }
@@ -1997,7 +2007,14 @@ class Job extends MY_Controller
             ),
             'table' => 'job_types'
         );
+
+        $jobType = $this->JobType_model->getById($_POST['type_id']);
+
         if ($this->general->delete_($remove_jobtype)) {
+            //Activity Logs
+            $activity_name = 'Deleted Job Type '.$jobType->title; 
+            createActivityLog($activity_name);
+
             echo '1';
         }
     }
@@ -2716,6 +2733,12 @@ class Job extends MY_Controller
 
                 customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #' . $job_number);
 
+                //Activity Logs
+                $this->load->model('Activity_model');
+                $user_id = logged('id');
+                $activity_name = 'Created Job Number ' . $job_number; 
+                $this->Activity_model->add($activity_name,$user_id);
+
                 //Google Calendar
                 createSyncToCalendar($jobs_id, 'job', $comp_id);
 
@@ -2811,6 +2834,12 @@ class Job extends MY_Controller
                     'datetime_signed' => $input['datetime_signed'],
                 );
                 $this->general->update_with_key_field($jobs_approval_data, $isJob->id, 'jobs_approval', 'jobs_id');
+
+                //Activity Logs
+                $this->load->model('Activity_model');
+                $user_id = logged('id');
+                $activity_name = 'Updated Job Number ' . $job_number; 
+                $this->Activity_model->add($activity_name,$user_id);
                 
                 // Update payments
                 $job_payment_query = [
@@ -3313,6 +3342,10 @@ class Job extends MY_Controller
 
                 $job_type_id = $this->JobType_model->create($data_job_type);
                 if ($job_type_id > 0) {
+                    //Activity Logs
+                    $activity_name = 'Created Job Type'; 
+                    createActivityLog($activity_name);
+
                     $this->session->set_flashdata('message', 'Add new job type was successful');
                     $this->session->set_flashdata('alert_class', 'alert-success');
 
@@ -3338,6 +3371,10 @@ class Job extends MY_Controller
 
                     $job_type_id = $this->JobType_model->create($data_job_type);
                     if ($job_type_id > 0) {
+                        //Activity Logs
+                        $activity_name = 'Created Job Type'; 
+                        createActivityLog($activity_name);
+
                         $this->session->set_flashdata('message', 'Add new job type was successful');
                         $this->session->set_flashdata('alert_class', 'alert-success');
 
@@ -3412,6 +3449,10 @@ class Job extends MY_Controller
                 ];
 
                 $this->JobType_model->updateJobTypeById($post['eid'], $data_job_type);
+
+                //Activity Logs
+                $activity_name = 'Updated Job Type '.$post['job_type_name']; 
+                createActivityLog($activity_name);
 
                 $this->session->set_flashdata('message', 'Job Type was successful updated');
                 $this->session->set_flashdata('alert_class', 'alert-success');
@@ -3654,6 +3695,11 @@ class Job extends MY_Controller
             ];
 
             $this->JobTags_model->create($data);
+
+            //Activity Logs
+            $activity_name = 'Created Job Tag '.$post['job_tag_name']; 
+            createActivityLog($activity_name);
+
         } else {
             $marker_icon = $this->jobTagsMoveUploadedFile();
             if ($marker_icon != '') {
@@ -3665,6 +3711,11 @@ class Job extends MY_Controller
                 ];
 
                 $this->JobTags_model->create($data);
+
+                //Activity Logs
+                $activity_name = 'Created Job Tag '.$post['job_tag_name']; 
+                createActivityLog($activity_name);
+
             } else {
                 $this->session->set_flashdata('message', 'Cannot update job tag');
                 $this->session->set_flashdata('alert_class', 'alert-danger');
@@ -3709,6 +3760,10 @@ class Job extends MY_Controller
             ];
 
             $this->JobTags_model->update($post['jid'], $data);
+
+            //Activity Logs
+            $activity_name = 'Updated Job Tag '.$post['job_tag_name']; 
+            createActivityLog($activity_name);
 
             $this->session->set_flashdata('message', 'Update job tag was successful');
             $this->session->set_flashdata('alert_class', 'alert-success');

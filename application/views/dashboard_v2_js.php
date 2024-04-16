@@ -21,7 +21,7 @@ $(document).ready(function() {
         });
     });
 
-    fetch('<?= base_url('Dashboard/todays_stats') ?>', {
+    fetch('<?php echo base_url('Dashboard/todays_stats'); ?>', {
         method: 'GET',
     }) .then(response => response.json() ).then(response => {
         var {success, data, paymentInvoice, jobsCompleted, onlineBooking, lostAccount, collectedAccounts } = response;
@@ -70,13 +70,14 @@ $(document).ready(function() {
             $("#jobs_added").text(onlineBookingCount); // total jobs added
             $("#lost_accounts").text(lostAcc); // total lost account
             $("#collections").text(collectedAcc); // total collected account
+            $("#collections-thumbnail").text(collectedAcc);
             $("#collected").text('$'+totalCollected); // total earned
         }
     }).catch((error) => {
         console.log('Error:', error);
     });
 
-    fetch('<?= base_url('dashboard/_recent_customers') ?>', {
+    fetch('<?php echo base_url('dashboard/_recent_customers'); ?>', {
         method: 'GET',
     }) .then(response => response.json() ).then(response => {
         var {success, companies, recentCustomers } = response;
@@ -98,7 +99,7 @@ $(document).ready(function() {
         console.log('Error:', error);
     });
 
-    fetch('<?= base_url('dashboard/_recent_leads') ?>', {
+    fetch('<?php echo base_url('dashboard/_recent_leads'); ?>', {
         method: 'GET',
     }) .then(response => response.json() ).then(response => {
         var {success, recentLeads } = response;
@@ -119,7 +120,7 @@ $(document).ready(function() {
         console.log('Error:', error);
     });
 
-    // fetch('<?= base_url('Dashboard/upcoming_jobs') ?>', {
+    // fetch('<?php echo base_url('Dashboard/upcoming_jobs'); ?>', {
     //     method: 'GET',
     // }) .then(response => response.json() ).then(response => {
     //     var {success, companies, upcomingJobs } = response;
@@ -155,7 +156,7 @@ $(document).ready(function() {
     //     console.log('Error:', error);
     // });
 
-    fetch('<?= base_url('Dashboard/customer_status') ?>', {
+    fetch('<?php echo base_url('Dashboard/customer_status'); ?>', {
         method: 'GET',
     }) .then(response => response.json() ).then(response => {
         var {success, status} = response;
@@ -234,7 +235,7 @@ $(document).ready(function() {
         `;
     }
     
-    fetch('<?= base_url('Dashboard/sales_leaderboard') ?>',{
+    fetch('<?php echo base_url('Dashboard/sales_leaderboard'); ?>',{
         method: 'GET'
     }) .then(response => response.json()).then(response => {
 
@@ -277,7 +278,7 @@ $(document).ready(function() {
         console.log(error);
     })
 
-    fetch('<?= base_url('Dashboard/tech_leaderboard') ?>',{
+    fetch('<?php echo base_url('Dashboard/tech_leaderboard'); ?>',{
         
     }).then(response => response.json()).then(response => {
         if (response.is_new) {
@@ -333,7 +334,7 @@ $(document).ready(function() {
         )        
     });
 
-    // fetch('<?= base_url('Dashboard/jobs_status')?>',{
+    // fetch('<?php echo base_url('Dashboard/jobs_status'); ?>',{
     // }).then(response => response.json()).then(response => {
     //     var { success, jobsStatus} = response;
 
@@ -349,7 +350,7 @@ $(document).ready(function() {
     // })
 
 
-fetch('<?= base_url('Dashboard/jobs') ?>',{
+fetch('<?php echo base_url('Dashboard/jobs'); ?>',{
 
 }).then(response => response.json()).then(response=>{
     var date1 = new Date();
@@ -506,7 +507,7 @@ fetch('<?= base_url('Dashboard/jobs') ?>',{
         
 
 
-fetch('<?= base_url('Dashboard/accounting_sales') ?>',{
+fetch('<?php echo base_url('Dashboard/accounting_sales'); ?>',{
 }).then(response => response.json()).then(response =>{
     var amountFirst = amountSecond = amountThird = amountFourth = amountFifth = amountSixth = amountSevent = amountEight = amountNinth = amountTenth = amountEleven = amountTwelve = 0;
     var {success, mmr} = response;

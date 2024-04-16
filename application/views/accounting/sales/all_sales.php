@@ -442,10 +442,42 @@
                                                         <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
                                                     </div>
                                                 </td>
-                                                <td style="width: 6%"><?php echo $transaction['date']; ?></td>
-                                                <td><?php echo $transaction['type']; ?></td>
-                                                <td><?php echo $transaction['no']; ?></td>
-                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td style="width: 6%">
+                                                    <?php
+                                                    if (!empty($transaction['date'])) {
+                                                        echo $transaction['date'];
+                                                    } else {
+                                                        echo 'No date available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['type'])) {
+                                                        echo $transaction['type'];
+                                                    } else {
+                                                        echo 'No type available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['no'])) {
+                                                        echo $transaction['no'];
+                                                    } else {
+                                                        echo 'No number available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['customer'])) {
+                                                        echo $transaction['customer'];
+                                                    } else {
+                                                        echo 'No customer';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <td>
                                                     <?php
                                                     if (!empty($transaction['memo'])) {
@@ -455,8 +487,24 @@
                                                     }
                                                     ?>
                                                 </td>
-                                                <td><?php echo $transaction['expiration_date']; ?></td>
-                                                <td><?php echo $transaction['total']; ?></td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['expiration_date'])) {
+                                                        echo $transaction['expiration_date'];
+                                                    } else {
+                                                        echo 'No due date provided';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['total'])) {
+                                                        echo $transaction['total'];
+                                                    } else {
+                                                        echo 'No total available';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <!-- <td><?php //echo $transaction['last_delivered']; 
                                                             ?></td> -->
                                                 <td>
@@ -495,10 +543,42 @@
                                                         <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
                                                     </div>
                                                 </td>
-                                                <td style="width: 6%"><?php echo $transaction['date']; ?></td>
-                                                <td><?php echo $transaction['type']; ?></td>
-                                                <td><?php echo $transaction['no']; ?></td>
-                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td style="width: 6%">
+                                                    <?php
+                                                    if (!empty($transaction['date'])) {
+                                                        echo $transaction['date'];
+                                                    } else {
+                                                        echo 'No date available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['type'])) {
+                                                        echo $transaction['type'];
+                                                    } else {
+                                                        echo 'No type available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['no'])) {
+                                                        echo $transaction['no'];
+                                                    } else {
+                                                        echo 'No number available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['customer'])) {
+                                                        echo $transaction['customer'];
+                                                    } else {
+                                                        echo 'No customer';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <td>
                                                     <?php
                                                     if (!empty($transaction['memo'])) {
@@ -519,8 +599,24 @@
                                                 </td>
                                                 <!-- <td><?php //echo $transaction['aging']; 
                                                             ?></td> -->
-                                                <td><?php echo $transaction['balance']; ?></td>
-                                                <td><?php echo $transaction['total']; ?></td>
+                                                <td>
+                                                    <?php
+                                                    if (isset($transaction['balance'])) {
+                                                        echo $transaction['balance'];
+                                                    } else {
+                                                        echo 'No balance available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['total'])) {
+                                                        echo $transaction['total'];
+                                                    } else {
+                                                        echo 'No total available';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <!-- <td><?php //echo $transaction['last_delivered']; 
                                                             ?></td> -->
                                                 <td>
@@ -557,10 +653,42 @@
                                                         <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
                                                     </div>
                                                 </td>
-                                                <td style="width: 6%"><?php echo $transaction['date']; ?></td>
-                                                <td><?php echo $transaction['type']; ?></td>
-                                                <td><?php echo $transaction['no']; ?></td>
-                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td style="width: 6%">
+                                                    <?php
+                                                    if (!empty($transaction['date'])) {
+                                                        echo $transaction['date'];
+                                                    } else {
+                                                        echo 'No date available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['type'])) {
+                                                        echo $transaction['type'];
+                                                    } else {
+                                                        echo 'No type available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['no'])) {
+                                                        echo $transaction['no'];
+                                                    } else {
+                                                        echo 'No number available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['customer'])) {
+                                                        echo $transaction['customer'];
+                                                    } else {
+                                                        echo 'No customer';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <!-- <td><?php //echo $transaction['method']; 
                                                             ?></td> -->
                                                 <!-- <td><?php //echo $transaction['source']; 
@@ -583,7 +711,15 @@
                                                     }
                                                     ?>
                                                 </td>
-                                                <td><?php echo $transaction['total']; ?></td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['total'])) {
+                                                        echo $transaction['total'];
+                                                    } else {
+                                                        echo 'No total available';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <!-- <td><?php //echo $transaction['last_delivered']; 
                                                             ?></td> -->
                                                 <td>
@@ -620,10 +756,42 @@
                                                         <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
                                                     </div>
                                                 </td>
-                                                <td style="width: 6%"><?php echo $transaction['date']; ?></td>
-                                                <td><?php echo $transaction['type']; ?></td>
-                                                <td><?php echo $transaction['no']; ?></td>
-                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td style="width: 6%">
+                                                    <?php
+                                                    if (!empty($transaction['date'])) {
+                                                        echo $transaction['date'];
+                                                    } else {
+                                                        echo 'No date available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['type'])) {
+                                                        echo $transaction['type'];
+                                                    } else {
+                                                        echo 'No type available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['no'])) {
+                                                        echo $transaction['no'];
+                                                    } else {
+                                                        echo 'No number available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['customer'])) {
+                                                        echo $transaction['customer'];
+                                                    } else {
+                                                        echo 'No customer';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <td>
                                                     <?php
                                                     if (!empty($transaction['memo'])) {
@@ -633,7 +801,15 @@
                                                     }
                                                     ?>
                                                 </td>
-                                                <td><?php echo $transaction['total']; ?></td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['total'])) {
+                                                        echo $transaction['total'];
+                                                    } else {
+                                                        echo 'No total available';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <!-- <td><?php //echo $transaction['last_delivered']; 
                                                             ?></td> -->
                                                 <td>
@@ -670,14 +846,79 @@
                                                         <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
                                                     </div>
                                                 </td>
-                                                <td style="width: 6%"><?php echo $transaction['date']; ?></td>
-                                                <td><?php echo $transaction['type']; ?></td>
-                                                <td><?php echo $transaction['customer']; ?></td>
-                                                <td><?php echo $transaction['charges']; ?></td>
-                                                <td><?php echo $transaction['time']; ?></td>
-                                                <td><?php echo $transaction['expenses']; ?></td>
-                                                <td><?php echo $transaction['credits']; ?></td>
-                                                <td><?php echo $transaction['unbilled_amount']; ?></td>
+                                                <td style="width: 6%">
+                                                    <?php
+                                                    if (!empty($transaction['date'])) {
+                                                        echo $transaction['date'];
+                                                    } else {
+                                                        echo 'No date available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['type'])) {
+                                                        echo $transaction['type'];
+                                                    } else {
+                                                        echo 'No type available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['customer'])) {
+                                                        echo $transaction['customer'];
+                                                    } else {
+                                                        echo 'No customer';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['charges'])) {
+                                                        echo $transaction['charges'];
+                                                    } else {
+                                                        echo 'No charges';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['time'])) {
+                                                        echo $transaction['time'];
+                                                    } else {
+                                                        echo 'Time not set';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['expenses'])) {
+                                                        echo $transaction['expenses'];
+                                                    } else {
+                                                        echo 'No expenses available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['credits'])) {
+                                                        echo $transaction['credits'];
+                                                    } else {
+                                                        echo 'No credits available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['unbilled_amount'])) {
+                                                        echo $transaction['unbilled_amount'];
+                                                    } else {
+                                                        echo 'No unbilled ammount';
+                                                    }
+                                                    ?>
+                                                </td>
+
                                                 <td><?php echo $transaction['manage']; ?></td>
                                             </tr>
                                         <?php break;
@@ -688,10 +929,42 @@
                                                         <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
                                                     </div>
                                                 </td>
-                                                <td style="width: 6%"><?php echo $transaction['date']; ?></td>
-                                                <td><?php echo $transaction['type']; ?></td>
-                                                <td><?php echo $transaction['no']; ?></td>
-                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td style="width: 6%">
+                                                    <?php
+                                                    if (!empty($transaction['date'])) {
+                                                        echo $transaction['date'];
+                                                    } else {
+                                                        echo 'No date available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['type'])) {
+                                                        echo $transaction['type'];
+                                                    } else {
+                                                        echo 'No type available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['no'])) {
+                                                        echo $transaction['no'];
+                                                    } else {
+                                                        echo 'No number available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['customer'])) {
+                                                        echo $transaction['customer'];
+                                                    } else {
+                                                        echo 'No customer';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <!-- <td><?php //echo $transaction['method']; 
                                                             ?></td> -->
                                                 <!-- <td><?php //echo $transaction['source']; 
@@ -716,10 +989,25 @@
                                                 </td>
                                                 <!-- <td><?php //echo $transaction['aging']; 
                                                             ?></td> -->
-                                                <td><?php echo $transaction['balance']; ?></td>
-                                                <td><?php echo $transaction['total']; ?></td>
-                                                <!-- <td><?php //echo $transaction['last_delivered']; 
-                                                            ?></td> -->
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['balance'])) {
+                                                        echo $transaction['balance'];
+                                                    } else {
+                                                        echo 'No balance available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['total'])) {
+                                                        echo $transaction['total'];
+                                                    } else {
+                                                        echo 'No total available';
+                                                    }
+                                                    ?>
+                                                </td> <!-- <td><?php //echo $transaction['last_delivered']; 
+                                                                ?></td> -->
                                                 <td>
                                                     <?php
                                                     if (!empty($transaction['email'])) {
@@ -729,10 +1017,16 @@
                                                     }
                                                     ?>
                                                 </td>
-                                                <td><?php echo $transaction['latest_payment']; ?></td>
+                                                <td> <?php
+                                                        if (!empty($transaction['latest_payment'])) {
+                                                            echo $transaction['latest_payment'];
+                                                        } else {
+                                                            echo 'No latest payment available';
+                                                        }
+                                                        ?></td>
                                                 <!-- <td><?php //echo $transaction['attachments']; 
                                                             ?></td> -->
-                                               <td>
+                                                <td>
                                                     <?php
                                                     if (!empty($transaction['status'])) {
                                                         echo $transaction['status'];
@@ -755,10 +1049,42 @@
                                                         <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
                                                     </div>
                                                 </td>
-                                                <td style="width: 6%"><?php echo $transaction['date']; ?></td>
-                                                <td><?php echo $transaction['type']; ?></td>
-                                                <td><?php echo $transaction['no']; ?></td>
-                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td style="width: 6%">
+                                                    <?php
+                                                    if (!empty($transaction['date'])) {
+                                                        echo $transaction['date'];
+                                                    } else {
+                                                        echo 'No date available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['type'])) {
+                                                        echo $transaction['type'];
+                                                    } else {
+                                                        echo 'No type available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['no'])) {
+                                                        echo $transaction['no'];
+                                                    } else {
+                                                        echo 'No number available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['customer'])) {
+                                                        echo $transaction['customer'];
+                                                    } else {
+                                                        echo 'No customer';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <td>
                                                     <?php
                                                     if (!empty($transaction['memo'])) {
@@ -768,7 +1094,15 @@
                                                     }
                                                     ?>
                                                 </td>
-                                                <td><?php echo $transaction['total']; ?></td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['total'])) {
+                                                        echo $transaction['total'];
+                                                    } else {
+                                                        echo 'No total available';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <!-- <td><?php //echo $transaction['attachments']; 
                                                             ?></td> -->
                                                 <td>
@@ -794,10 +1128,42 @@
                                                         <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $transaction['id']; ?>">
                                                     </div>
                                                 </td>
-                                                <td style="width: 6%"><?php echo $transaction['date']; ?></td>
-                                                <td><?php echo $transaction['type']; ?></td>
-                                                <td><?php echo $transaction['no']; ?></td>
-                                                <td><?php echo $transaction['customer']; ?></td>
+                                                <td style="width: 6%">
+                                                    <?php
+                                                    if (!empty($transaction['date'])) {
+                                                        echo $transaction['date'];
+                                                    } else {
+                                                        echo 'No date available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['type'])) {
+                                                        echo $transaction['type'];
+                                                    } else {
+                                                        echo 'No type available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['no'])) {
+                                                        echo $transaction['no'];
+                                                    } else {
+                                                        echo 'No number available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['customer'])) {
+                                                        echo $transaction['customer'];
+                                                    } else {
+                                                        echo 'No customer';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <!-- <td><?php //echo $transaction['method']; 
                                                             ?></td> -->
                                                 <!-- <td><?php //echo $transaction['source']; 
@@ -822,8 +1188,24 @@
                                                 </td>
                                                 <!-- <td><?php //echo $transaction['aging']; 
                                                             ?></td> -->
-                                                <td><?php echo $transaction['balance']; ?></td>
-                                                <td><?php echo $transaction['total']; ?></td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['balance'])) {
+                                                        echo $transaction['balance'];
+                                                    } else {
+                                                        echo 'No balance available';
+                                                    }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                    if (!empty($transaction['total'])) {
+                                                        echo $transaction['total'];
+                                                    } else {
+                                                        echo 'No total available';
+                                                    }
+                                                    ?>
+                                                </td>
                                                 <!-- <td><?php //echo $transaction['last_delivered']; 
                                                             ?></td> -->
                                                 <td>

@@ -5895,7 +5895,7 @@ $(function () {
 
             if (typeof itemFormData !== 'undefined' && itemFormData.has('name') && type !== 'bundle') {
                 if (itemFormData.has('id')) {
-                    $('#item-modal form').attr('action', `/accounting/products-and-services/update/${type}/${itemFormData.get('id')}`);
+                    $('#item-modal form').attr('action', `${base_url}/accounting/products-and-services/update/${type}/${itemFormData.get('id')}`);
                     $('#item-modal form').attr('id', `update-${type}-form`);
                     $(`#item-modal a#select-item-type`).attr('onclick', `changeType('${itemFormData.get('type')}')`);
                 } else {
@@ -6111,18 +6111,115 @@ $(function () {
     $(document).on('click', '#item-modal .modal-footer #save-and-close', function (e) {
         e.preventDefault();
 
-        $('#item-modal form').trigger('submit');
+        var formIsValid = true;
+        $('#item-modal form').find('input[required], textarea[required]').each(function() {
+            if (!$(this).val().trim()) {
+              
+                formIsValid = false;
+                return false; // Exit the loop early
+          
+            }
+        });
+        $('#item-modal form').find('input[required], textarea[required]').each(function() {
+            if (!$(this).val().trim()) {
+                $(this).addClass('reset-indicator');
+            }
+        });
+
+        // If any required field is empty, show SweetAlert and prevent form submission
+        if (!formIsValid) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill in all required fields.',
+                confirmButtonColor: '#6a4a86',
+            });
+            return false; // Prevent further execution
+        }
+
+        // If all required fields are filled, hide the modal and submit the form
         $('#item-modal').modal('hide');
+        $('#item-modal form').trigger('submit');
+     
     });
 
     $(document).on('click', '#item-modal .modal-footer #save-and-new', function (e) {
         e.preventDefault();
+        var form = $('#item-modal form');
+        var formData = form.serialize();
+        var actionUrl = form.attr('action'); 
 
-        $('#item-modal form').trigger('submit');
-        $('#item-modal form select').val('').trigger('change');
-        $('#item-modal form input:not([type="checkbox"])').val('');
-        $('#item-modal form input[type="checkbox"]').prop('checked', false);
-        $('#item-modal form textarea').val('');
+        var formIsValid = true;
+        $('#item-modal form').find('input[required], textarea[required]').each(function() {
+            if (!$(this).val().trim()) {
+                $(this).addClass('reset-indicator');
+            }
+        });
+        $('#item-modal form').find('input[required], textarea[required]').each(function() {
+            if (!$(this).val().trim()) {
+                $(this).addClass('reset-indicator');
+                formIsValid = false;
+                return false; // Exit the loop early
+          
+            }
+        });
+
+
+        if (!formIsValid) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill in all required fields.',
+                confirmButtonColor: '#6a4a86',
+            });
+            return false; // Prevent further execution
+        }
+        form.find('input, select, textarea').addClass('reset-indicator');
+        $.ajax({
+            url: actionUrl, // Use the form's action URL
+            type: 'POST',
+            data: formData,
+            success: function(response) {
+                // Display success message with SweetAlert
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Form submitted successfully.',
+                    confirmButtonColor: '#6a4a86',
+                    showConfirmButton: false,
+                    timer: 1500, // Close alert after 1.5 seconds
+                }).then((result) => {
+                    // Reopen the modal after SweetAlert closes
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        $('#item-modal').modal('show');
+                    }
+                });
+
+                // Close the current modal
+                form.trigger('reset');
+                form.find('select').each(function() {
+                    $(this).val(null).trigger('change'); // Reset select2 value and trigger change event
+                });
+                setTimeout(function() {
+                    form.find('input, select, textarea').removeClass('reset-indicator');
+                }, 2000); 
+               
+            },
+            error: function(xhr, status, error) {
+                // Handle error cases, if needed
+                console.log('Error:', error);
+
+                // Display error message with SweetAlert
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong. Please try again.',
+                    confirmButtonColor: '#6a4a86',
+                });
+            }
+        });
+  
+       
     });
 
     $(document).on('submit', '#item-category-modal form', function (e) {
