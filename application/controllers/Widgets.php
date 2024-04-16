@@ -35,7 +35,8 @@ class Widgets extends MY_Controller
         $date_from = post('tech_leaderboard_date_from');
         $date_to   = post('tech_leaderboard_date_to');
 
-        $techs     = $this->Users_model->getCompanyUsers($cid);
+        $tech_field_user_type = 6;
+        $techs     = $this->Users_model->getCompanyUsersByUserType($cid, $tech_field_user_type);
 
         $techLeaderBoards = [];
         $date_range       = ['from' => $date_from, 'to' => $date_to];
@@ -62,7 +63,10 @@ class Widgets extends MY_Controller
         $cid       = getLoggedCompanyID();
         $date_from = post('sales_leaderboard_date_from') . ' 00:00:00';
         $date_to   = post('sales_leaderboard_date_to') . ' 23:59:59';
-        $sales     = $this->Users_model->getCompanyUsers($cid);
+
+        $sales_field_user_type = 5;
+        $sales     = $this->Users_model->getCompanyUsersByUserType($cid, $sales_field_user_type);
+        //$sales     = $this->Users_model->getCompanyUsers($cid);
 
         $salesLeaderBoards = [];
         $date_range        = ['from' => $date_from, 'to' => $date_to];
