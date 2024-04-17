@@ -263,6 +263,27 @@ let status_filter = `<div class="row">
 </div>`;
 $(document).ready(function() {
 
+  $('#send-transaction-form').submit(function(event) {
+    // Prevent default form submission
+    event.preventDefault();
+
+    // Perform AJAX form submission
+    $.ajax({
+        type: $(this).attr('method'),
+        url: $(this).attr('action'),
+        data: $(this).serialize(), // Serialize form data
+        success: function(response) {
+            // Handle success response
+            console.log('Form submitted successfully');
+        },
+        error: function(xhr, status, error) {
+            // Handle error response
+            console.error('Form submission error:', error);
+        }
+    });
+});
+
+
 // Listen for input event on dynamically generated input field
 $(document).on('input', '.select2-search__field', function() {
     console.log('User is inputting');
@@ -1686,7 +1707,7 @@ ${companyName}`);
 
   $("#send-transaction-email #send-transaction-form").attr(
     "action",
-    `/accounting/customers/send-transaction/estimate/${id}`
+    `${base_url}accounting/customers/send-transaction/estimate/${id}`
   );
   $("#send-transaction-email #send-transaction-form").attr("method", `post`);
   $("#send-transaction-email").modal("show");
@@ -1778,7 +1799,7 @@ ${companyName}`);
 
   $("#send-transaction-email #send-transaction-form").attr(
     "action",
-    `/accounting/customers/send-transaction/invoice/${id}`
+    `${base_url}accounting/customers/send-transaction/invoice/${id}`
   );
   $("#send-transaction-email #send-transaction-form").attr("method", `post`);
   $("#send-transaction-email").modal("show");
@@ -1818,7 +1839,7 @@ ${companyName}`);
 
   $("#send-transaction-email #send-transaction-form").attr(
     "action",
-    `/accounting/customers/send-transaction/credit-memo/${id}`
+    `${base_url}accounting/customers/send-transaction/credit-memo/${id}`
   );
   $("#send-transaction-email #send-transaction-form").attr("method", `post`);
   $("#send-transaction-email").modal("show");
@@ -1859,7 +1880,7 @@ ${companyName}`);
 
   $("#send-transaction-email #send-transaction-form").attr(
     "action",
-    `/accounting/customers/send-transaction/sales-receipt/${id}`
+    `${base_url}accounting/customers/send-transaction/sales-receipt/${id}`
   );
   $("#send-transaction-email #send-transaction-form").attr("method", `post`);
   $("#send-transaction-email").modal("show");
@@ -1901,7 +1922,7 @@ ${companyName}`);
 
   $("#send-transaction-email #send-transaction-form").attr(
     "action",
-    `/accounting/customers/send-transaction/refund-receipt/${id}`
+    `${base_url}accounting/customers/send-transaction/refund-receipt/${id}`
   );
   $("#send-transaction-email #send-transaction-form").attr("method", `post`);
   $("#send-transaction-email").modal("show");
@@ -2036,7 +2057,7 @@ $("#send-transactions").on("click", function (e) {
   });
 
   $.ajax({
-    url: `/accounting/send-sales-transactions`,
+    url: `${base_url}/accounting/send-sales-transactions`,
     data: data,
     type: "post",
     processData: false,

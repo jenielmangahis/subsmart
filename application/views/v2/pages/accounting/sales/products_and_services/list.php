@@ -283,11 +283,11 @@
         box-sizing: border-box;
         margin-bottom: 10px;
     }
-    .reset-indicator{
-        border-color: #9c27b066 !important;
-    box-shadow: 0 0 0 0.25rem rgb(156 39 176 / 17%) !important;
-    }
 
+    .reset-indicator {
+        border-color: #9c27b066 !important;
+        box-shadow: 0 0 0 0.25rem rgb(156 39 176 / 17%) !important;
+    }
 </style>
 
 <div class="row page-content g-0">
@@ -336,7 +336,7 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div class="nsm-counter success h-100 mb-2 <?= $stock_status === 'out-of-stock' ? 'selected' : '' ?>" id="total-stock">
+                        <div class="nsm-counter success h-100 mb-2">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
@@ -525,11 +525,12 @@
                                 <div class="dropdown d-inline-block">
                                     <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                         <span>
-                                            50
+                                            10
                                         </span> <i class='bx bx-fw bx-chevron-down'></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
-                                        <li><a class="dropdown-item active" href="javascript:void(0);">50</a></li>
+                                        <li><a class="dropdown-item active" href="javascript:void(0);">10</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">50</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">150</a></li>
@@ -584,11 +585,11 @@
                                 <?php else : ?>
                                     <tr data-status="<?= $item['status'] ?>" data-id="<?= $item['id'] ?>">
                                         <td>
-                                            <?php if ($item['type'] !== 'Bundle') : ?>
+                                        
                                                 <div class="table-row-icon table-checkbox">
                                                     <input class="form-check-input select-one table-select" type="checkbox" value="<?= $item['id'] ?>">
                                                 </div>
-                                            <?php endif; ?>
+                             
                                         </td>
                                         <td class="nsm-text-primary nsm-link default"><?= $item['name'] ?: 'No name provided' ?></td>
                                         <td><?= $item['sku'] ?: 'No SKU available' ?></td>
@@ -682,6 +683,25 @@
 </script>
 <script>
     $(document).ready(function() {
+        $("#items-table").nsmPagination({
+            itemsPerPage: 10,
+        });
+
+        function updateRowsPerPage(numRows) {
+            $("#items-table").nsmPagination({
+                itemsPerPage: numRows
+            });
+            $("#items-table tbody tr").hide();
+            $("#items-table tbody tr").slice(0, numRows).show();
+        }
+
+        document.getElementById("table-rows").querySelectorAll(".dropdown-item").forEach(function(item) {
+            item.addEventListener("click", function() {
+                var numRows = parseInt(this.textContent);
+                updateRowsPerPage(numRows);
+            });
+        });
+
         $('#filter-category').change(function() {
             if ($(this).val() && $(this).val().includes('all')) {
                 console.log('All option selected');
@@ -690,58 +710,5 @@
                 console.log('Other option selected');
             }
         });
-    });
-
-    $(document).ready(function() {
-        function updateURLWithSelectedCategories() {
-            var selectedCategories = $('#filter-category').val();
-
-            if (!selectedCategories || selectedCategories.length === 0) {
-                selectedCategories = ['all'];
-            }
-
-            var categoryParams = [];
-            var totalItemCount = 0;
-            var totalCountParam = '';
-
-            if (selectedCategories.includes('all')) {
-                $('#filter-category option[value!="all"]').each(function() {
-                    var categoryId = $(this).val();
-                    var categoryName = $(this).text();
-                    var itemCount = getItemCountForCategory(categoryId);
-                    totalItemCount += itemCount;
-                    categoryParams.push(`${encodeURIComponent(categoryName)}:${itemCount}`);
-                });
-
-                totalCountParam = 'total_count=' + totalItemCount;
-            } else {
-                selectedCategories.forEach(function(categoryId) {
-                    var categoryName = $('#filter-category option[value="' + categoryId + '"]').text();
-                    var itemCount = getItemCountForCategory(categoryId);
-                    categoryParams.push(`${encodeURIComponent(categoryName)}:${itemCount}`);
-                });
-            }
-
-            var filterCategoryParam = 'filter_category=' + categoryParams.join(',');
-            var currentPathname = window.location.pathname;
-            var newURL = currentPathname + '?' + filterCategoryParam;
-
-            if (totalCountParam && selectedCategories.includes('all')) {
-                newURL += '&' + totalCountParam;
-            }
-
-            history.replaceState(null, null, newURL);
-        }
-
-        function getItemCountForCategory(categoryId) {
-            var itemCount = Math.floor(Math.random() * 100);
-            return itemCount;
-        }
-
-        $('#filter-category').on('change', function() {
-            updateURLWithSelectedCategories();
-        });
-
-        updateURLWithSelectedCategories();
     });
 </script>

@@ -195,7 +195,23 @@ class Customer_advance_model extends MY_Model {
         return $query->result();
     }
 
-
+    public function get_leads_data_this_week() {
+        $cid = logged('company_id');
+        
+        // Calculate the start and end dates of the current week
+        $startOfWeek = date('Y-m-d', strtotime('last Sunday'));
+        $endOfWeek = date('Y-m-d', strtotime('next Saturday'));
+        
+        $this->db->from("ac_leads");
+        $this->db->select('ac_leads.*, users.FName, users.LName, ac_leadtypes.lead_name');
+        $this->db->join('users', 'users.id = ac_leads.fk_sr_id', 'left');
+        $this->db->join('ac_leadtypes', 'ac_leadtypes.lead_id = ac_leads.fk_lead_type_id', 'left');
+        $this->db->order_by('id', "DESC");
+        $this->db->where("ac_leads.company_id", $cid);
+        $this->db->where("DATE(ac_leads.date_created) BETWEEN '$startOfWeek' AND '$endOfWeek'");
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     public function get_leads_data(){
         $cid=logged('company_id');

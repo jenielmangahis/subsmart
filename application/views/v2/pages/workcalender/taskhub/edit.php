@@ -141,8 +141,10 @@ if (isset($selected_participants)) {
                                                         echo '<option value="' . $row->id . '"' . $tag . $hidden . '>' . $row->name . '</option>';
                                                     }*/
                                                 ?>
-                                            </select> -->
-                                            <select name="assigned_to" id="taskhub-user-id" class="nsm-field mb-2 form-control" required=""></select>
+                                            </select> -->                                                                                       
+                                            <select name="assigned_to" id="taskhub-user-id" class="nsm-field mb-2 form-control" required="">      
+                                                <option value="" selected="selected">My Self</option>                                          
+                                            </select>
                                         </div>
                                     <?php } ?>
 
@@ -191,8 +193,8 @@ if (isset($selected_participants)) {
                                             $date = date("m/d/Y",strtotime($taskHub->estimated_date_complete));
                                         }
                                         ?>
-                                        <label class="content-subtitle fw-bold d-block mb-2">Estimated Date of Competion</label>
-                                        <input type="text" name="estimated_date_complete" class="nsm-field form-control datepicker" value="<?= $date ?>" required>
+                                        <label class="content-subtitle fw-bold d-block mb-2">Estimated Date of Completion</label>
+                                        <input type="text" name="estimated_date_complete" class="nsm-field form-control estimate-date-complete-datepicker" id="estimate-date-complete-datepicker" value="<?= $date ?>" required>
                                     </div>
 
                                     <div class="col-12">
@@ -250,7 +252,6 @@ if (isset($selected_participants)) {
             maximumSelectionLength: 5,
             minimumInputLength: 0,
             templateResult: formatRepoUser,
-            //dropdownParent: $('#modalAddTaskHub'),
             templateSelection: formatRepoSelectionUser
         });  
 
@@ -263,9 +264,10 @@ if (isset($selected_participants)) {
         }
         $('#participants').children('option[value="' + prev_assigned_to + '"]').prop('hidden', true);
 
-        $('.datepicker').datepicker({
+        $('#estimate-date-complete-datepicker').datepicker({
             format: 'mm/dd/yyyy',
-        });
+            autoclose: true,
+        });     
 
         $("#customer_id").select2({
             ajax: {
@@ -438,7 +440,7 @@ if (isset($selected_participants)) {
         }
 
         var $container = $(
-            '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.phone_h + ' / ' + repo.email + '</small></div>'
+            '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.phone_m + ' / ' + repo.email + '</small></div>'
         );
 
         return $container;

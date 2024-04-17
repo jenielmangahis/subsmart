@@ -35,8 +35,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row mb-3">
-                    <div class="col nsm-counter-container">
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-3">
                         <div class="nsm-counter primary h-100 mb-2 <?php echo $transaction === 'estimates' ? 'selected' : ''; ?>" id="estimates">
                             <div class="row h-100">
                                 <div class="col d-flex justify-content-center align-items-center">
@@ -49,7 +49,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col nsm-counter-container">
+                    <div class="col-12 col-md-3">
                         <div class="nsm-counter secondary h-100 mb-2 <?php echo $transaction === 'unbilled-income' ? 'selected' : ''; ?>" id="unbilled-income">
                             <div class="row h-100">
                                 <div class="col d-flex justify-content-center align-items-center">
@@ -62,7 +62,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col nsm-counter-container">
+                    <div class="col-12 col-md-3">
                         <div class="nsm-counter error h-100 mb-2 <?php echo $transaction === 'overdue-invoices' ? 'selected' : ''; ?>" id="overdue-invoices">
                             <div class="row h-100">
                                 <div class="col d-flex justify-content-center align-items-center">
@@ -75,7 +75,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col nsm-counter-container">
+                    <div class="col-12 col-md-3">
                         <div class="nsm-counter h-100 mb-2 <?php echo $transaction === 'open-invoices' ? 'selected' : ''; ?>" id="open-invoices">
                             <div class="row h-100">
                                 <div class="col d-flex justify-content-center align-items-center">
@@ -88,7 +88,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col nsm-counter-container">
+                </div>
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-6">
                         <div class="nsm-counter success h-100 mb-2 <?php echo $transaction === 'recently-paid' ? 'selected' : ''; ?>" id="recently-paid">
                             <div class="row h-100">
                                 <div class="col d-flex justify-content-center align-items-center">
@@ -97,6 +99,23 @@
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                                     <h2 id="total_this_year"><?php echo count($recent_payments); ?></h2>
                                     <span>PAID LAST 30 DAYS</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php
+                    $total_sales = count($open_estimates) + count($unbilledActs) + count($overdue_invoices) + count($open_invoices) + count($recent_payments);
+                    ?>
+                    <div class="col-12 col-md-6">
+                        <div class="nsm-counter primary h-100 mb-2">
+                            <div class="row h-100">
+                                <div class="col d-flex justify-content-center align-items-center">
+                                    <i class="bx bx-receipt"></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id="total_this_year"><?php echo $total_sales; ?></h2>
+                                    <span>TOTAL SALES</span>
                                 </div>
                             </div>
                         </div>

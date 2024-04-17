@@ -273,7 +273,9 @@ $('#reorder').on('click', function (e) {
 $('#adjust-quantity').on('click', function (e) {
     e.preventDefault();
 
-    $.get('/accounting/get-other-modals/inventory_qty_modal', function (res) {
+
+    $.get(`${base_url}accounting/get-other-modals/inventory_qty_modal`, function (res) {
+
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -662,7 +664,7 @@ $('#items-table .edit-item').on('click', function (e) {
     var type = row.find('td:nth-child(4)').html().trim();
     type = type.toLowerCase();
 
-    $.get(base_url+'accounting/item-form/' + type, function (result) {
+    $.get(base_url + 'accounting/item-form/' + type, function (result) {
         if ($('#modal-container').length > 0) {
             $('div#modal-container').html(`<div class="full-screen-modal">
 				<div class="modal-right-side">

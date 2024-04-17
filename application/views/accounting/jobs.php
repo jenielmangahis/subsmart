@@ -1,12 +1,89 @@
-<?php include viewPath('v2/includes/accounting_header'); ?>
+<?php
+function jobsmodule__formatJobNumber($number) {
+    $formatFunc = function ($prefix, $number) {
+        $numericPart = (int) str_replace($prefix, '', $number);
+        return 'JOB-' . str_pad($numericPart, 7, '0', STR_PAD_LEFT);
+    };
+
+    if (strpos(strtoupper($number), 'JOB-') === 0) {
+        return $formatFunc('JOB-', $number);
+    }
+
+    if (strpos(strtoupper($number), 'JOB') === 0) {
+        return $formatFunc('JOB', $number);
+    }
+
+    return $number;
+}
+
+
+function jobsmodule__endsWith($haystack, $needle) {
+    $length = strlen( $needle );
+    if(!$length) return true;
+    return substr( $haystack, -$length ) === $needle;
+}
+
+function jobsmodule__getEmployeeAvatar($employee) {
+    $avatar = $employee['avatar'];
+    $firstName = $employee['FName'];
+    $lastName = $employee['LName'];
+    $name = $firstName . ' ' . $lastName;
+
+    if (!jobsmodule__endsWith($avatar, 'default.png')) {
+        return "<div title=\"$name\" class=\"nsm-profile\" style=\"background-image: url('$avatar');\"></div>";
+    }
+
+    $initials = $firstName[0] . '' . $lastName[0];
+    return "<div title=\"$name\" class=\"nsm-profile\"><span>$initials</span></div>";
+}
+?>
+<?php include viewPath('v2/includes/header'); ?>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
+<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
 
 <style>
     .nsm-table {
-        display: none;
+        /*display: none;*/
     }
     .nsm-badge.primary-enhanced {
         background-color: #6a4a86;
     }
+        table {
+        width: 100% !important;
+    }
+    .dataTables_filter, .dataTables_length{
+        display: none;
+    }
+    table.dataTable thead th, table.dataTable thead td {
+    padding: 10px 18px;
+    border-bottom: 1px solid lightgray;
+}
+table.dataTable.no-footer {
+     border-bottom: 0px solid #111; 
+     margin-bottom: 10px;
+}
+#CUSTOM_FILTER_DROPDOWN:hover {
+     border-color: gray !important; 
+     background-color: white !important; 
+     color: black !important; 
+     cursor: pointer;
+}
+
+.techs {
+    display: flex;
+    padding-left: 12px;
+}
+.techs > .nsm-profile {
+    border: 2px solid #fff;
+    box-sizing: content-box;
+    margin-left: -12px;
+}
+.nsm-profile {
+    --size: 35px;
+    max-width: var(--size);
+    height: var(--size);
+    min-width: var(--size);
+}
 </style>
 
 <?php
@@ -34,7 +111,19 @@ foreach ($jobs as $job) {
 }
 ?>
 
+<div class="nsm-fab-container">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('job/new_job1') ?>'">
+        <i class='bx bx-briefcase'></i>
+    </div>
+</div>
+
 <div class="row page-content g-0">
+    <?php if(!empty($this->session->flashdata('alert'))): ?>
+        <div class="alert alert-<?= $this->session->flashdata('alert-type') ?>">
+            <?= $this->session->flashdata('alert') ?>
+        </div>
+    <?php endif; ?>
+
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/sales'); ?>
     </div>
@@ -50,9 +139,23 @@ foreach ($jobs as $job) {
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                    <div class="col-6 grid-mb">
+                        <div class="nsm-field-group search form-group">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_JOB_SEARCHBAR" placeholder="Search Job...">
+                            <input class="d-none" id="CUSTOM_FILTER_SEARCHBAR" type="text" placeholder="Filter" data-index="20">
+                        </div>
+                    </div>
+                    <div class="col-6 grid-mb text-end">
                         <div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <select id="CUSTOM_FILTER_DROPDOWN" class="dropdown-toggle nsm-button">
+                                    <option selected value="">All</option>
+                                    <option value="Scheduled">Scheduled</option>
+                                    <option value="Started">Started</option>
+                                    <option value="Approved">Approved</option>
+                                    <option value="Invoiced">Invoiced</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+                            <!-- <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter by All</span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
@@ -62,16 +165,16 @@ foreach ($jobs as $job) {
                                 <li><a class="dropdown-item" data-id="filter_approved" href="javascript:void(0);">Approved</a></li>
                                 <li><a class="dropdown-item" data-id="filter_invoiced" href="javascript:void(0);">Invoiced</a></li>
                                 <li><a class="dropdown-item" data-id="filter_completed" href="javascript:void(0);">Completed</a></li>
-                            </ul>
+                            </ul> -->
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('job/new_job1') ?>'">
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('job/add') ?>'">
                                 <i class='bx bx-fw bx-briefcase'></i> New Job
                             </button>
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table" id="filter_all">
+                <table id="JOB_LIST_TABLE" class="nsm-table w-100">
                     <thead>
                         <tr>
                             <td class="table-icon"></td>
@@ -79,21 +182,20 @@ foreach ($jobs as $job) {
                             <td data-name="Date">Date</td>
                             <td data-name="Customer">Customer</td>
                             <td data-name="Sales Rep">Sales Rep</td>
-                            <td data-name="Tech Rep">Tech Rep</td>
+                            <td data-name="Tech Rep">Tech Reps</td>
                             <td data-name="Status">Status</td>
                             <td data-name="Amount">Job Amount</td>
                             <td data-name="Job Type">Job Type</td>
                             <td data-name="Job Tag">Job Tag</td>
                             <td data-name="Priority">Priority</td>
+                            <td class="d-none" data-name="Status"></td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
-                        if (!empty($jobs)) :
-                        ?>
-                            <?php
-                            foreach ($jobs as $job) :
+                            if (!empty($jobs)) {
+                                foreach ($jobs as $job) {
                                 switch($job->status):
                                     case "New":
                                         $badgeCount = 1;
@@ -117,583 +219,256 @@ foreach ($jobs as $job) {
                                         $badgeCount = 7;
                                         break;
                                     case "Completed":
+                                    case "Finished":
                                         $badgeCount = 8;
                                         break;
                                 endswitch;
                             ?>
-                                <tr>
-                                    <td>
-                                        <div class="table-row-icon">
-                                            <i class='bx bx-briefcase'></i>
-                                        </div>
-                                    </td>
-                                    <td class="fw-bold nsm-text-primary"><?= $job->job_number; ?></td>
-                                    <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
-                                    <td><?= $job->first_name . ' ' . $job->last_name; ?></td>
-                                    <td><?= $job->FName . ' ' . $job->LName; ?></td>
-                                    <td></td>
-                                    <td>
-                                        <?php
-                                            for($x=1;$x<=$badgeCount;$x++){
-                                                ?>
-                                                    <span class="nsm-badge primary-enhanced"></span>
-                                                <?php
-                                            }
-                                            for($y=1;$y < 8 - $badgeCount;$y++){
-                                                ?>
-                                                    <span class="nsm-badge primary"></span>
-                                                <?php
-                                            }
-                                        ?>
-                                    </td>
-                                    <td>$<?= number_format((float)$job->amount, 2, '.', ',');  ?></td>
-                                    <td><?php echo $job->job_type; ?></td>
-                                    <td><?php echo $job->name; ?></td>
-                                    <td><?= $job->priority; ?></td>
-                                    <td>
-                                        <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item" href="<?= base_url('job/job_preview/') . $job->id; ?>">Preview</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?= base_url('job/new_job1/') . $job->id; ?>">Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $job->id; ?>">Delete</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php
-                            endforeach;
-                            ?>
-                        <?php
-                        else :
-                        ?>
-                            <tr>
-                                <td colspan="11">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php
-                        endif;
-                        ?>
-                    </tbody>
-                </table>
-                <table class="nsm-table" id="filter_scheduled">
-                    <thead>
                         <tr>
-                            <td class="table-icon"></td>
-                            <td data-name="Job Number">Job Number</td>
-                            <td data-name="Date">Date</td>
-                            <td data-name="Customer">Customer</td>
-                            <td data-name="Sales Rep">Sales Rep</td>
-                            <td data-name="Tech Rep">Tech Rep</td>
-                            <td data-name="Status">Status</td>
-                            <td data-name="Amount">Amount</td>
-                            <td data-name="Job Type">Job Type</td>
-                            <td data-name="Job Tag">Job Tag</td>
-                            <td data-name="Priority">Priority</td>
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (!empty($jobs)) :
-                        ?>
-                            <?php
-                            if ($scheduled > 0) :
-                                foreach ($jobs as $job) :
-                                    if ($job->status == 'Scheduled') :
-                            ?>
-                                        <tr>
-                                            <td>
-                                                <div class="table-row-icon">
-                                                    <i class='bx bx-briefcase'></i>
-                                                </div>
-                                            </td>
-                                            <td class="fw-bold nsm-text-primary"><?= $job->job_number; ?></td>
-                                            <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
-                                            <td><?= $job->first_name . ' ' . $job->last_name; ?></td>
-                                            <td><?= $job->FName . ' ' . $job->LName; ?></td>
-                                            <td><?= $job->status; ?></td>
-                                            <td>$<?= number_format((float)$job->amount, 2, '.', ',');  ?></td>
-                                            <td><?php echo $job->job_type; ?></td>
-                                            <td><?php echo $job->name; ?></td>
-                                            <td><?= $job->priority; ?></td>
-                                            <td>
-                                                <div class="dropdown table-management">
-                                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                    </a>
-                                                    <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li>
-                                                            <a class="dropdown-item" href="<?= base_url('job/job_preview/') . $job->id; ?>">Preview</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item" href="<?= base_url('job/new_job1/') . $job->id; ?>">Edit</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $job->id; ?>">Delete</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
+                            <td>
+                                <div class="table-row-icon"><i class='bx bx-briefcase'></i></div>
+                            </td>
+                            <td class="fw-bold nsm-text-primary">
+                                <!-- <?= jobsmodule__formatJobNumber($job->job_number); ?> -->                                    
+                                <?= $job->job_number; ?>
+                            </td>
+                            <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
+                            <td>
+                                <?php 
+                                    if( $job->first_name != '' ||  $job->last_name != ''){
+                                        echo $job->first_name . ' ' . $job->last_name;
+                                    }else{
+                                        echo 'Customer Not Found';
+                                    }
+                                ?>                                
+                            </td>
+                            <td>
+                                <?php 
+                                    if( $job->FName != '' ||  $job->LName != ''){
+                                        echo $job->FName . ' ' . $job->LName;
+                                    }else{
+                                        echo 'Sales Representative Not Specified';
+                                    }
+                                ?>                                  
+                            </td>
+                            <td>
                                 <?php
-                                    endif;
-                                endforeach;
-                            else :
+                                    $employeeFields = [
+                                        'employee_id',
+                                        'employee2_id',
+                                        'employee3_id',
+                                        'employee4_id',
+                                        'employee5_id',
+                                        'employee6_id',
+                                    ];
                                 ?>
-                                <tr>
-                                    <td colspan="11">
-                                        <div class="nsm-empty">
-                                            <span>No results found.</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php
-                            endif;
-                            ?>
-                        <?php
-                        else :
-                        ?>
-                            <tr>
-                                <td colspan="11">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
+                                <?php if(!empty($employees)): ?>
+                                    <div class="techs">
+                                        <?php foreach ($employees as $employee): ?>
+                                            <?php foreach ($employeeFields as $employeeField): ?>
+                                                <?php if ($job->$employeeField == $employee['id']): ?>
+                                                    <?= jobsmodule__getEmployeeAvatar($employee); ?>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
+                                        <?php endforeach; ?>
                                     </div>
-                                </td>
-                            </tr>
-                        <?php
-                        endif;
-                        ?>
-                    </tbody>
-                </table>
-                <table class="nsm-table" id="filter_started">
-                    <thead>
-                        <tr>
-                            <td class="table-icon"></td>
-                            <td data-name="Job Number">Job Number</td>
-                            <td data-name="Date">Date</td>
-                            <td data-name="Customer">Customer</td>
-                            <td data-name="Sales Rep">Sales Rep</td>
-                            <td data-name="Tech Rep">Tech Rep</td>
-                            <td data-name="Status">Status</td>
-                            <td data-name="Amount">Amount</td>
-                            <td data-name="Job Type">Job Type</td>
-                            <td data-name="Job Tag">Job Tag</td>
-                            <td data-name="Priority">Priority</td>
-                            <td data-name="Manage"></td>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <div>
+                                    <?php for($x=1;$x<=$badgeCount;$x++){ ?> 
+                                        <span class="nsm-badge primary-enhanced"></span>
+                                    <?php } for($y=1;$y < 9 - $badgeCount;$y++){ ?> 
+                                        <span class="nsm-badge primary"></span>
+                                    <?php } ?>
+                                </div>
+                                <small class="content-subtitle d-block mt-1"><?= $job->status; ?></small>
+                            </td>
+                            <td>$<?php echo number_format((float)$job->amount, 2, '.', ',');  ?></td>
+                            <td><?= $job->job_type != '' && !is_numeric($job->job_type) ? $job->job_type : 'Job Type Not Specified'; ?></td>
+                            <td><?= $job->tags != '' ? $job->tags : 'Job Tags Not Specified'; ?></td>
+                            <td><?php echo $job->priority; ?></td>
+                            <td class="d-none"><?php echo $job->status; ?></td>
+                            <td>
+                                <div class="dropdown table-management">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <!-- <a class="dropdown-item" href="<?php echo base_url('job/job_preview/') . $job->id; ?>">Preview</a> -->
+                                            <a class="dropdown-item view-job-row" href="javascript:void(0);" data-id="<?= $job->id; ?>">Preview</a>
+                                        </li>
+                                        
+                                        <?php if( $user_type == 7 || $user_type == 1 ){ //Admin ?>
+                                        <li><a class="dropdown-item" href="<?php echo base_url('job/new_job1/') . $job->id; ?>">Edit</a></li>
+                                        <li class="DELETE_ITEM" onclick="DELETE_JOB(<?php echo $job->id; ?>)"><a class="dropdown-item" href="javascript:void(0);" data-id="<?= $job->id; ?>">Delete</a></li>
+                                        <?php } ?>
+
+                                        <?php if( $user_type == 6 ){ //Field tech ?>
+                                            <li><a class="dropdown-item add-item" href="<?= base_url('job/edit_job_item/' . $job->id); ?>">Add Item</a></li>
+                                        <?php } ?>
+                                    </ul>
+                                </div>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (!empty($jobs)) :
-                        ?>
-                            <?php
-                            if ($started > 0) :
-                                foreach ($jobs as $job) :
-                                    if ($job->status == 'Started') :
-                            ?>
-                                        <tr>
-                                            <td>
-                                                <div class="table-row-icon">
-                                                    <i class='bx bx-briefcase'></i>
-                                                </div>
-                                            </td>
-                                            <td class="fw-bold nsm-text-primary"><?= $job->job_number; ?></td>
-                                            <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
-                                            <td><?= $job->first_name . ' ' . $job->last_name; ?></td>
-                                            <td><?= $job->FName . ' ' . $job->LName; ?></td>
-                                            <td><?= $job->status; ?></td>
-                                            <td>$<?= number_format((float)$job->amount, 2, '.', ',');  ?></td>
-                                            <td><?php echo $job->job_type; ?></td>
-                                            <td><?php echo $job->name; ?></td>
-                                            <td><?= $job->priority; ?></td>
-                                            <td>
-                                                <div class="dropdown table-management">
-                                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                    </a>
-                                                    <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li>
-                                                            <a class="dropdown-item" href="<?= base_url('job/job_preview/') . $job->id; ?>">Preview</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item" href="<?= base_url('job/new_job1/') . $job->id; ?>">Edit</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $job->id; ?>">Delete</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                <?php
-                                    endif;
-                                endforeach;
-                            else :
-                                ?>
-                                <tr>
-                                    <td colspan="11">
-                                        <div class="nsm-empty">
-                                            <span>No results found.</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php
-                            endif;
-                            ?>
-                        <?php
-                        else :
-                        ?>
-                            <tr>
-                                <td colspan="11">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php
-                        endif;
-                        ?>
-                    </tbody>
-                </table>
-                <table class="nsm-table" id="filter_approved">
-                    <thead>
-                        <tr>
-                            <td class="table-icon"></td>
-                            <td data-name="Job Number">Job Number</td>
-                            <td data-name="Date">Date</td>
-                            <td data-name="Customer">Customer</td>
-                            <td data-name="Sales Rep">Sales Rep</td>
-                            <td data-name="Tech Rep">Tech Rep</td>
-                            <td data-name="Status">Status</td>
-                            <td data-name="Amount">Amount</td>
-                            <td data-name="Job Type">Job Type</td>
-                            <td data-name="Job Tag">Job Tag</td>
-                            <td data-name="Priority">Priority</td>
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (!empty($jobs)) :
-                        ?>
-                            <?php
-                            if ($approved > 0) :
-                                foreach ($jobs as $job) :
-                                    if ($job->status == 'Approved') :
-                            ?>
-                                        <tr>
-                                            <td>
-                                                <div class="table-row-icon">
-                                                    <i class='bx bx-briefcase'></i>
-                                                </div>
-                                            </td>
-                                            <td class="fw-bold nsm-text-primary"><?= $job->job_number; ?></td>
-                                            <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
-                                            <td><?= $job->first_name . ' ' . $job->last_name; ?></td>
-                                            <td><?= $job->FName . ' ' . $job->LName; ?></td>
-                                            <td><?= $job->status; ?></td>
-                                            <td>$<?= number_format((float)$job->amount, 2, '.', ',');  ?></td>
-                                            <td><?php echo $job->job_type; ?></td>
-                                            <td><?php echo $job->name; ?></td>
-                                            <td><?= $job->priority; ?></td>
-                                            <td>
-                                                <div class="dropdown table-management">
-                                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                    </a>
-                                                    <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li>
-                                                            <a class="dropdown-item" href="<?= base_url('job/job_preview/') . $job->id; ?>">Preview</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item" href="<?= base_url('job/new_job1/') . $job->id; ?>">Edit</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $job->id; ?>">Delete</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                <?php
-                                    endif;
-                                endforeach;
-                            else :
-                                ?>
-                                <tr>
-                                    <td colspan="11">
-                                        <div class="nsm-empty">
-                                            <span>No results found.</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php
-                            endif;
-                            ?>
-                        <?php
-                        else :
-                        ?>
-                            <tr>
-                                <td colspan="11">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php
-                        endif;
-                        ?>
-                    </tbody>
-                </table>
-                <table class="nsm-table" id="filter_invoiced">
-                    <thead>
-                        <tr>
-                            <td class="table-icon"></td>
-                            <td data-name="Job Number">Job Number</td>
-                            <td data-name="Date">Date</td>
-                            <td data-name="Customer">Customer</td>
-                            <td data-name="Sales Rep">Sales Rep</td>
-                            <td data-name="Tech Rep">Tech Rep</td>
-                            <td data-name="Status">Status</td>
-                            <td data-name="Amount">Amount</td>
-                            <td data-name="Job Type">Job Type</td>
-                            <td data-name="Job Tag">Job Tag</td>
-                            <td data-name="Priority">Priority</td>
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (!empty($jobs)) :
-                        ?>
-                            <?php
-                            if ($invoiced > 0) :
-                                foreach ($jobs as $job) :
-                                    if ($job->status == 'Invoiced' || $job->status == 'Finished') :
-                            ?>
-                                        <tr>
-                                            <td>
-                                                <div class="table-row-icon">
-                                                    <i class='bx bx-briefcase'></i>
-                                                </div>
-                                            </td>
-                                            <td class="fw-bold nsm-text-primary"><?= $job->job_number; ?></td>
-                                            <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
-                                            <td><?= $job->first_name . ' ' . $job->last_name; ?></td>
-                                            <td><?= $job->FName . ' ' . $job->LName; ?></td>
-                                            <td><?= $job->status; ?></td>
-                                            <td>$<?= number_format((float)$job->amount, 2, '.', ',');  ?></td>
-                                            <td><?php echo $job->job_type; ?></td>
-                                            <td><?php echo $job->name; ?></td>
-                                            <td><?= $job->priority; ?></td>
-                                            <td>
-                                                <div class="dropdown table-management">
-                                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                    </a>
-                                                    <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li>
-                                                            <a class="dropdown-item" href="<?= base_url('job/job_preview/') . $job->id; ?>">Preview</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item" href="<?= base_url('job/new_job1/') . $job->id; ?>">Edit</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $job->id; ?>">Delete</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                <?php
-                                    endif;
-                                endforeach;
-                            else :
-                                ?>
-                                <tr>
-                                    <td colspan="11">
-                                        <div class="nsm-empty">
-                                            <span>No results found.</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php
-                            endif;
-                            ?>
-                        <?php
-                        else :
-                        ?>
-                            <tr>
-                                <td colspan="11">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php
-                        endif;
-                        ?>
-                    </tbody>
-                </table>
-                <table class="nsm-table" id="filter_completed">
-                    <thead>
-                        <tr>
-                            <td class="table-icon"></td>
-                            <td data-name="Job Number">Job Number</td>
-                            <td data-name="Date">Date</td>
-                            <td data-name="Customer">Customer</td>
-                            <td data-name="Sales Rep">Sales Rep</td>
-                            <td data-name="Tech Rep">Tech Rep</td>
-                            <td data-name="Status">Status</td>
-                            <td data-name="Amount">Amount</td>
-                            <td data-name="Job Type">Job Type</td>
-                            <td data-name="Job Tag">Job Tag</td>
-                            <td data-name="Priority">Priority</td>
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (!empty($jobs)) :
-                        ?>
-                            <?php
-                            if ($completed > 0) :
-                                foreach ($jobs as $job) :
-                                    if ($job->status == 'Completed') :
-                            ?>
-                                        <tr>
-                                            <td>
-                                                <div class="table-row-icon">
-                                                    <i class='bx bx-briefcase'></i>
-                                                </div>
-                                            </td>
-                                            <td class="fw-bold nsm-text-primary"><?= $job->job_number; ?></td>
-                                            <td><?php echo date_format(date_create($job->start_date), "m/d/Y"); ?></td>
-                                            <td><?= $job->first_name . ' ' . $job->last_name; ?></td>
-                                            <td><?= $job->FName . ' ' . $job->LName; ?></td>
-                                            <td><?= $job->status; ?></td>
-                                            <td>$<?= number_format((float)$job->amount, 2, '.', ',');  ?></td>
-                                            <td><?php echo $job->job_type; ?></td>
-                                            <td><?php echo $job->name; ?></td>
-                                            <td><?= $job->priority; ?></td>
-                                            <td>
-                                                <div class="dropdown table-management">
-                                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                                    </a>
-                                                    <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li>
-                                                            <a class="dropdown-item" href="<?= base_url('job/job_preview/') . $job->id; ?>">Preview</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item" href="<?= base_url('job/new_job1/') . $job->id; ?>">Edit</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $job->id; ?>">Delete</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                <?php
-                                    endif;
-                                endforeach;
-                            else :
-                                ?>
-                                <tr>
-                                    <td colspan="11">
-                                        <div class="nsm-empty">
-                                            <span>No results found.</span>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php
-                            endif;
-                            ?>
-                        <?php
-                        else :
-                        ?>
-                            <tr>
-                                <td colspan="11">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php
-                        endif;
-                        ?>
+                        <?php } } ?>
                     </tbody>
                 </table>
             </div>
+
+            <div class="modal fade nsm-modal fade" id="modal-quick-view-job" data-source="" tabindex="-1" aria-labelledby="modal-quick-view-upcoming-schedule-label" aria-hidden="true">
+                <div class="modal-dialog modal-lg">        
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title">View Job</span>
+                            <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                        </div>
+                        <div class="modal-body" style="max-height:700px; overflow: auto;">
+                            <div class="view-schedule-container row"></div>
+                        </div>                                    
+                    </div>        
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        loadJobs();
+var JOB_LIST_TABLE = $("#JOB_LIST_TABLE").DataTable({
+    "ordering": false,
+    language: {
+        processing: '<span>Fetching data...</span>'
+    },
+});
 
-        $("#filter_all").nsmPagination();
-        $("#filter_scheduled").nsmPagination();
-        $("#filter_started").nsmPagination();
-        $("#filter_approved").nsmPagination();
-        $("#filter_invoiced").nsmPagination();
-        $("#filter_completed").nsmPagination();
+$("#CUSTOM_JOB_SEARCHBAR").keyup(function() {
+    JOB_LIST_TABLE.search($(this).val()).draw()
+});
+JOB_LIST_TABLE_SETTINGS = JOB_LIST_TABLE.settings();
 
-        $(".select-filter .dropdown-item").on("click", function() {
-            let _this = $(this);
+$('#CUSTOM_FILTER_DROPDOWN').change(function(event) {
+    $('#CUSTOM_FILTER_SEARCHBAR').val($('#CUSTOM_FILTER_DROPDOWN').val());
+    JOB_LIST_TABLE.columns(11).search(this.value).draw();
+});
 
-            _this.closest(".dropdown").find(".dropdown-toggle span").html("Filter by " + _this.html());
-            loadJobs(_this.attr("data-id"));
-        });
-
-        $(document).on("click", ".delete-item", function(event) {
-            var ID = $(this).attr("data-id");
-
-            Swal.fire({
-                title: 'Continue to REMOVE this Job?',
-                text: "",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes',
-                cancelButtonText: 'No',
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        type: "POST",
-                        url: "<?= base_url('job/delete_job') ?>",
-                        data: {
-                            job_id: ID
-                        }, // serializes the form's elements.
-                        success: function(data) {
-                            if (data === "1") {
+function DELETE_JOB(job_id){
+    Swal.fire({
+            title: 'Continue to REMOVE this Job?',
+            text: "",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo base_url('job/delete_job'); ?>",
+                    data: {
+                        job_id: job_id
+                    }, // serializes the form's elements.
+                    success: function(data) {
+                        if (data === "1") {
+                            Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Job deleted successfully!',
+                            }).then((result) => {
                                 window.location.reload();
-                            } else {
-                                alert(data);
-                            }
+                            });
+                        } else {
+                           Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to Delete Job!',
+                            });
                         }
-                    });
-                }
-            });
+                    }
+                });
+            }
         });
+}
+
+// $(".DELETE_ITEM > a").click(function(event) {
+//     var job_id = $(".DELETE_ITEM > a").attr("data-id");
+//         Swal.fire({
+//             title: 'Continue to REMOVE this Job?',
+//             text: "",
+//             icon: 'warning',
+//             showCancelButton: true,
+//             confirmButtonText: 'Yes',
+//             cancelButtonText: 'No',
+//         }).then((result) => {
+//             if (result.isConfirmed) {
+//                 $.ajax({
+//                     type: "POST",
+//                     url: "<?php echo base_url('job/delete_job'); ?>",
+//                     data: {
+//                         job_id: job_id
+//                     }, // serializes the form's elements.
+//                     success: function(data) {
+//                         if (data === "1") {
+//                             Swal.fire({
+//                             icon: 'success',
+//                             title: 'Success',
+//                             text: 'Job deleted successfully!',
+//                             }).then((result) => {
+//                                 window.location.reload();
+//                             });
+//                         } else {
+//                            Swal.fire({
+//                             icon: 'error',
+//                             title: 'Error',
+//                             text: 'Failed to Delete Job!',
+//                             });
+//                         }
+//                     }
+//                 });
+//             }
+//         });
+// });
+
+$(document).ready(function() {
+    // loadJobs();
+
+    $("#filter_all").nsmPagination();
+    $("#filter_scheduled").nsmPagination();
+    $("#filter_started").nsmPagination();
+    $("#filter_approved").nsmPagination();
+    $("#filter_invoiced").nsmPagination();
+    $("#filter_completed").nsmPagination();
+
+    $(".select-filter .dropdown-item").on("click", function() {
+        let _this = $(this);
+
+        _this.closest(".dropdown").find(".dropdown-toggle span").html("Filter by " + _this.html());
+        loadJobs(_this.attr("data-id"));
     });
 
-    function loadJobs(id = "filter_all") {
-        $(".nsm-table").hide();
-        $("#" + id).show();
-    }
+    $('.view-job-row').on('click', function(){
+        var appointment_id = $(this).attr('data-id');
+        var url = base_url + "job/_quick_view_details";  
+
+        $('#modal-quick-view-job').modal('show');
+        showLoader($(".view-schedule-container")); 
+
+        setTimeout(function () {
+          $.ajax({
+             type: "POST",
+             url: url,
+             data: {appointment_id:appointment_id},
+             success: function(o)
+             {          
+                $(".view-schedule-container").html(o);
+             }
+          });
+        }, 500);
+    });
+});
+
+// function loadJobs(id = "filter_all") {
+//     $(".nsm-table").hide();
+//     $("#" + id).show();
+// }        
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

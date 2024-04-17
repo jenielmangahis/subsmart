@@ -138,6 +138,7 @@ var notification_badge_value = 0;
 var notification_html_holder_ctr = 0;
 
 $(document).ready(function() {
+    updateFontSize();
     getNotificationsAll();
 
     $(".check-input-rules").click(function() {
@@ -635,11 +636,20 @@ function fetchNewCustomer(){
     });
 
 }
+function updateFontSize() {
+    $('.summary-report-body h1').each(function() {
+        var h1Text = $(this).text().replace(/\$/g, ''); // Remove dollar sign
+        var number = parseInt(h1Text.replace(/[^0-9.]/g, ''), 10); // Convert to integer
+        if (number >= 1000000) {
+            $(this).css('font-size', '33px'); 
+        }
+    });
+}
 
 function addThumbnail(id) {
     var isGlobal = $('#widgetGlobal_' + id).is(":checked") ? '1' : 0;
     var isMain = $('#widgetMain_' + id).is(":checked") ? '1' : 0;
-
+    $("#nsm_thumbnail").append('<div class="nsm-card nsm-grid main-widget-container position-relative" id="widget_loader"><span class="loader position-absolute top-50 start-50 translate-middle"></span></div>');
     $.ajax({
         url: '<?php echo base_url(); ?>widgets/addV2Thumbnail',
         method: 'POST',
@@ -650,9 +660,17 @@ function addThumbnail(id) {
         },
         //dataType: 'json',
         success: function(response) {
+          
             console.log(response);
             if (isMain != '1') {
-                $("#nsm_thumbnail").append(response);
+                setTimeout(function() {
+            // Remove the loader
+            updateFontSize();
+            $("#widget_loader").remove();
+
+            // Append the response
+            $("#nsm_thumbnail").append(response);
+        }, 1000); 
             }
             fetchJobs();
             fetchNewCustomer();

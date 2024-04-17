@@ -34,7 +34,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
                     <label for="">Total New Customer</label>
-                    <h1 id='recent-customer-container-count'></h1>
+                    <h1 id='recent-customer-container-count'> <span class="bx bx-loader bx-spin"></span></h1>
 
                 </div>
             </div>

@@ -191,7 +191,7 @@ if (isset($selected_participants)) {
                                             $date = date("m/d/Y",strtotime($taskHub->estimated_date_complete));
                                         }
                                         ?>
-                                        <label class="content-subtitle fw-bold d-block mb-2">Estimated Date of Competion</label>
+                                        <label class="content-subtitle fw-bold d-block mb-2">Estimated Date of Completion</label>
                                         <input type="text" name="estimated_date_complete" class="nsm-field form-control datepicker" value="<?= $date ?>" required>
                                     </div>
 
@@ -264,6 +264,7 @@ if (isset($selected_participants)) {
 
         $('.datepicker').datepicker({
             format: 'mm/dd/yyyy',
+            autoclose: true,
         });
 
         $("#customer_id").select2({
@@ -437,7 +438,7 @@ if (isset($selected_participants)) {
         }
 
         var $container = $(
-            '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.phone_h + ' / ' + repo.email + '</small></div>'
+            '<div>' + repo.first_name + ' ' + repo.last_name + '<br /><small>' + repo.phone_m + ' / ' + repo.email + '</small></div>'
         );
 
         return $container;

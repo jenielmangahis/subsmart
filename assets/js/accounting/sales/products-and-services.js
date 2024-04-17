@@ -435,6 +435,7 @@ $(document).on('change', '#update-bundle-form #bundle-items-table tbody select, 
 
 $(document).on('click', '#bundle-form-modal #addBundleItem, #inventory-form-modal #addLocationLine', function(e) {
 	e.preventDefault();
+
 	$(this).prev().children('tbody').append(`
 	<tr>
 		<td></td>

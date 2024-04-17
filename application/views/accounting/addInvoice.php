@@ -377,12 +377,12 @@ input:checked + .slider:before {
                                         <div class="row form-group">
                                             <div class="col-md-3">
                                             <label>Terms</label>
-                                                <select class="form-control" name="terms" id="addNewTermsInvoice">
-                                                    <option></option>
-                                                    <option value="0">Add New</option>
+                                                <select class="form-control" name="terms" id="addNewTermsInvoice">                                                    
                                                     <?php foreach($terms as $term) : ?>
-                                                    <option value="<?php echo $term->id; ?>"><?php echo $term->name . ' ' . $term->net_due_days; ?></option>
-                                                    <?php endforeach; ?>
+                                                        <?php if( $term->name != '' ){ ?>
+                                                            <option value="<?php echo $term->id; ?>"><?php echo $term->name . ' ' . $term->net_due_days; ?></option>
+                                                        <?php } ?>
+                                                    <?php endforeach; ?>                                                    
                                                 </select>
                                             </div>
                                             <div class="col-md-3">
@@ -537,101 +537,7 @@ input:checked + .slider:before {
                                             </tr>
                                             </thead>
                                             <tbody id="jobs_items_table_body">
-                                            <!-- <tr>
-                                                <td><input type="text" class="form-control getItems"
-                                                        onKeyup="getItems(this)" name="item[]">
-                                                    <ul class="suggestions"></ul>
-                                                </td>
-                                                <td><select name="item_type[]" class="form-control">
-                                                        <option value="service">Service</option>
-                                                        <option value="material">Material</option>
-                                                        <option value="product">Product</option>
-                                                    </select></td>
-                                                <td><input type="text" class="form-control quantity" name="quantity[]"
-                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                                <td><input type="number" class="form-control price" name="price[]"
-                                                        data-counter="0" id="price_0" min="0" value="0"></td>
-                                                <td><input type="number" class="form-control discount" name="discount[]"
-                                                        data-counter="0" id="discount_0" min="0" value="0" ></td>
-                                                <td><input type="hidden" class="form-control tax" name="tax[]"
-                                                        data-counter="0" id="tax_0" min="0" value="0">
-                                                        <span id="span_tax_0">0.00 (7.5%)</span></td>
-                                                <td><input type="hidden" class="form-control " name="total[]"
-                                                        data-counter="0" id="item_total_0" min="0" value="0">
-                                                        $<span id="span_total_0">0.00</span></td>
-                                            </tr> -->
-                                            <?php if( empty($w_items) ){ ?>
-                                                <!-- <tr>
-                                                    <td width="30%">
-                                                        <input type="text" class="form-control getItems"
-                                                            onKeyup="getItems(this)" name="items[]">
-                                                        <ul class="suggestions"></ul>
-                                                        <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                        <input type="hidden" name="itemid[]" id="itemid" class="itemid">
-                                                    </td>
-                                                    <td width="20%">
-                                                    <div class="dropdown-wrapper">
-                                                        <select name="item_type[]" id="item_typeid" class="form-control">
-                                                            <option value="product">Product</option>
-                                                            <option value="material">Material</option>
-                                                            <option value="service">Service</option>
-                                                            <option value="fee">Fee</option>
-                                                        </select>
-                                                    </div>
-
-                                                        </td>
-                                                    <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                            data-counter="0" id="quantity_0" value="1"></td>
-                                                    <td width="10%"><input type="number" class="form-control price hidden_mobile_view" name="price[]"
-                                                            data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0"> 
-                                                            <div class="show_mobile_view"><span class="price">0</span>
-                                                            </div><input id="priceM_qty0" value=""  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                                    <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                            data-counter="0" id="discount_0" min="0" value="0"  readonly></td>
-                                                    <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                            data-counter="0" id="tax1_0" min="0" value="0">
-                                                            </td>
-                                                    <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                            data-counter="0" id="item_total_0" min="0" value="0">
-                                                            $<span id="span_total_0">0.00</span></td>
-                                                    <td><a href="#" class="remove btn btn-sm btn-success" id="0"><i class="bx bx-fw bx-trash"></i></a></td>
-                                                </tr> -->
-                                                <tr style="display:;">
-                                                    <td width="30%">
-                                                        <input type="text" class="form-control getItems"
-                                                            onKeyup="getItems(this)" name="items[]">
-                                                        <ul class="suggestions"></ul>
-                                                        <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                        <input type="hidden" name="item_id[]" id="itemid" class="itemid" value="0">
-                                                        <input type="hidden" name="packageID[]" value="0">
-                                                    </td>
-                                                    <td width="20%">
-                                                    <div class="dropdown-wrapper">
-                                                        <select name="item_type[]" id="item_typeid" class="form-control">
-                                                            <option value="product">Product</option>
-                                                            <option value="material">Material</option>
-                                                            <option value="service">Service</option>
-                                                            <option value="fee">Fee</option>
-                                                        </select>
-                                                    </div>
-                                                        </td>
-                                                    <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                            data-counter="0" id="quantity_0" value="1"></td>
-                                                    <td width="10%"><input type="text" class="form-control price price hidden_mobile_view" name="price[]"
-                                                            data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0" value="0"> 
-                                                            <div class="show_mobile_view">
-                                                            </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                                    <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                            data-counter="0" id="discount_0" min="0" value="0"></td>
-                                                    <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                            data-counter="0" id="tax1_0" min="0" value="0" >
-                                                            </td>
-                                                    <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                            data-counter="0" id="item_total_0" min="0" value="0">
-                                                            $<span id="span_total_0">0.00</span></td>
-                                                    <td><a href="#" class="remove btn btn-sm btn-danger" id="0"><i class="fa fa-trash" aria-hidden="true"></i>Remove</a></td>
-                                                </tr>
-                                            <?php }else{ ?>
+                                            <?php if( $w_items ){ ?>
                                                 <?php $item_row = 0; foreach($w_items as $data){ ?>
 
                                                 <tr>
@@ -646,7 +552,7 @@ input:checked + .slider:before {
                                                     <div class="dropdown-wrapper">
                                                         <select name="item_type[]" id="item_typeid" class="form-control">
                                                             <option value="<?php echo $data->type; ?>"><?php echo $data->type; ?></option>
-                                                            <option value="product">Product</option>
+                                                            <option value="product">Product1</option>
                                                             <option value="material">Material</option>
                                                             <option value="service">Service</option>
                                                             <option value="fee">Fee</option>
@@ -739,12 +645,20 @@ input:checked + .slider:before {
                                                         <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
                                                     </tr>
                                                     <tr>
-                                                        <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1"></td>
-                                                        <td align="center">
-                                                        <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;">
-                                                            <span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span>
+                                                        <td>
+                                                            <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:85%; display:inline-block; border: 1px dashed #d1d1d1">
+                                                            <i id="help-popover-adjustment" class='bx bx-fw bx-info-circle ms-2 text-muted' style="display:inline-block;margin-top: 0px !important;" data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=""></i>
                                                         </td>
-                                                        <td><span id="adjustmentText">0.00</span></td>
+                                                        <td colspan="2">
+                                                            <div class="input-group mb-2" style="width: 40%;float: right;">
+                                                                <div class="input-group-prepend">
+                                                                <div class="input-group-text">$</div>
+                                                                </div>
+                                                                <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;text-align: right;padding:0px;">
+                                                            </div>
+                                                            <span id="adjustmentText" style="display: none;">0.00</span>
+                                                        </td>
+                                                        <!-- <td><span id="adjustmentText">0.00</span></td> -->
                                                     </tr>
                                                     <!-- <tr>
                                                         <td>Markup $<span id="span_markup"></td> -->
@@ -757,9 +671,8 @@ input:checked + .slider:before {
                                                         <td><span id="offer_cost">0.00</span><input type="hidden" name="voucher_value" id="offer_cost_input"></td>
                                                     </tr>
                                                     <tr style="color:blue;font-weight:bold;font-size:16px;">
-                                                        <td><b>Grand Total ($)</b></td>
-                                                        <td></td>
-                                                        <td><b><span id="grand_total">0.00</span>
+                                                        <td><b>Grand Total ($)</b></td>                                                        
+                                                        <td colspan="2" align="right"><b><span id="grand_total">0.00</span>
                                                             <input type="hidden" name="grand_total" id="grand_total_input" value='0'></b></td>
                                                     </tr>
                                                 </table>
@@ -776,16 +689,11 @@ input:checked + .slider:before {
                                         <h5>Request a Deposit</h5>
                                         <span class="help help-sm help-block">You can request an upfront payment on accept estimate.</span>
                                     </div>
-                                    <div class="col-md-4 form-group">
-                                        <select name="deposit_request_type" class="form-control">
-                                            <option value="$" selected="selected">Deposit amount $</option>
-                                            <option value="%">Percentage %</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-4 form-group">
+                                    <div class="col-auto mt-1">
+                                        <input type="hidden" value="$" name="deposit_request_type" class="form-control" />    
                                         <div class="input-group">
-                                            <input type="text" name="deposit_amount" value="0" class="form-control"
-                                                autocomplete="off">
+                                            <div class="input-group-text">$</div>
+                                            <input type="number" step="any" name="deposit_amount" value="0" class="form-control" autocomplete="off">
                                         </div>
                                     </div>
                                 </div>
@@ -803,67 +711,72 @@ input:checked + .slider:before {
                                         <h5>Accepted payment methods</h5>
                                         <span class="help help-sm help-block">Select the payment methods that will appear on this invoice.</span>
                                     </div>
-                                    <div class="col-md-6">
-                                        <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
-                                            <input type="checkbox" name="credit_card_payments" value="1"
-                                                    checked id="credit_card_payments">
-                                            <label for="credit_card_payments"><span>Credit Card Payments ()</span></label>
+                                    <div class="row">
+                                        <div class="col-md-5">
+                                            <div class="row">
+                                                <div class="col-md-3">                                                                            
+                                                    <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
+                                                        <input type="checkbox" name="credit_card_payments" value="1" <?=isset($paymentMethods) && in_array('Credit Card', $paymentMethods) || !isset($invoice) ? 'checked' : ''?> id="credit-card-payments">
+                                                        <label for="credit-card-payments"><span>Credit Card Payments</span></label>
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-md-3">   
+                                                    <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
+                                                        <input type="checkbox" name="bank_transfer" value="1" <?=isset($paymentMethods) && in_array('Bank Transfer', $paymentMethods) || !isset($invoice) ? 'checked' : ''?> id="bank-transfer">
+                                                        <label for="bank-transfer"><span>Bank Transfer</span></label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">   
+                                                    <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
+                                                        <input type="checkbox" name="instapay" value="1" <?=isset($paymentMethods) && in_array('Instapay', $paymentMethods) || !isset($invoice) ? 'checked' : ''?> id="instapay-payment">
+                                                        <label for="instapay-payment"><span>Instapay</span></label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">   
+                                                    <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
+                                                        <input type="checkbox" name="check" value="1" <?=isset($paymentMethods) && in_array('Check', $paymentMethods) || !isset($invoice) ? 'checked' : ''?> id="check-payment">
+                                                        <label for="check-payment"><span>Check</span></label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">   
+                                                    <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
+                                                        <input type="checkbox" name="cash" value="1" <?=isset($paymentMethods) && in_array('Cash', $paymentMethods) || !isset($invoice) ? 'checked' : ''?> id="cash-payment">
+                                                        <label for="cash-payment"><span>Cash</span></label>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-3">   
+                                                    <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
+                                                        <input type="checkbox" name="deposit" value="1" <?=isset($paymentMethods) && in_array('Deposit', $paymentMethods) || !isset($invoice) ? 'checked' : ''?> id="deposit-payment">
+                                                        <label for="deposit-payment"><span>Deposit</span></label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            
                                         </div>
-                                        <span class="help help-sm help-block">Your client can pay your invoice using credit card or bank account online. You will be notified when your client makes a payment and the money will be transferred to your bank account automatically. </span>
-                                        <div class="float-left mini-stat-img mr-4"><img src="<?php echo $url->assets ?>frontend/images/credit_cards.png" alt=""></div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <span class="help help-sm help-block">Your payment processor is not set up
-                                        <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
-                                        data-target="#modalNewCustomer">setup payment</a></span>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
-                                            <input type="checkbox" name="bank_transfer" value="1"
-                                                    checked id="bank_transfer">
-                                            <label for="bank_transfer"><span>Bank Transfer</span></label>
+                                        <div class="col-md-5">                                            
+                                            <span class="help help-sm help-block" style="padding:10px; display:block;text-align:left;">Your client can pay your invoice using credit card or bank account online. You will be notified when your client makes a payment and the money will be transferred to your bank account automatically. </span>
+                                            <div class="float-left mini-stat-img mr-4" style="padding:10px;"><img src="<?php echo $url->assets ?>frontend/images/credit_cards.png" alt=""></div>                                            
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
-                                        <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
-                                            <input type="checkbox" name="instapay" value="1"
-                                                    checked id="instapay">
-                                            <label for="instapay"><span>Instapay</span></label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
-                                            <input type="checkbox" name="check" value="1"
-                                                    checked id="check">
-                                            <label for="check"><span>Check</span></label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
-                                            <input type="checkbox" name="cash" value="1"
-                                                    checked id="cash">
-                                            <label for="cash"><span>Cash</span></label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="checkbox checkbox-sec margin-right my-0 mr-3 pt-2 pb-2">
-                                            <input type="checkbox" name="deposit" value="1"
-                                                    checked id="deposit">
-                                            <label for="deposit"><span>Deposit</span></label>
-                                        </div>
-                                </div>
+                                    
                                 <div class="row" style="background-color:white;">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                 <br><br>
                                         <h5>Message to Customer</h5>
                                         <span class="help help-sm help-block">Add a message that will be displayed on the invoice.</span>
-                                        <textarea name="message_to_customer" cols="40" rows="2" class="form-control">Thank you for your business.</textarea>
+                                        <textarea name="message_to_customer" style="height:80px;" class="form-control ckeditor">Thank you for your business.</textarea>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                     <br><br>
                                         <h5>Terms &amp; Conditions</h5>
                                         <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the invoice.</span>
-                                        <textarea name="terms_and_conditions" cols="40" rows="2" class="form-control ckeditor editor1_tc"><?= !empty($workorder[0]) ? htmlentities($workorder[0]->terms_and_conditions) : ''; ?></textarea>
+                                        <textarea name="terms_and_conditions" style="height:80px;" class="form-control ckeditor editor1_tc"><?= !empty($workorder[0]) ? htmlentities($workorder[0]->terms_and_conditions) : ''; ?></textarea>
                                     </div>
                                 </div>
                                 </div>
@@ -896,9 +809,9 @@ input:checked + .slider:before {
                                 <br>
                                 <div class="row" style="background-color:white;padding-top:10px;">
                                     <div class="col-md-12 form-group">
-                                        <button class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;" data-action="update">Save</button>
-                                        <button class="btn btn-success but" style="border-radius: 0 !important;" data-action="send">Preview</button>
-                                        <a href="<?php echo url('invoice') ?>" class="btn but-red">cancel this</a>
+                                        <a href="<?php echo url('invoice') ?>" class="nsm-button">Cancel</a>
+                                        <button class="nsm-button primary but" data-action="update">Save</button>
+                                        <!-- <button class="btn btn-success but" style="border-radius: 0 !important;" data-action="send">Preview</button> -->                                        
                                     </div>
                                 </div>
 
@@ -1132,70 +1045,64 @@ input:checked + .slider:before {
     </div>
 </div>
 <!-- Modal -->
-<div class="modal fade lamesa" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table id="items_table_estimate" class="table table-hover" style="width: 100%;">
-                                        <thead>
-                                        <tr>
-                                            <td> Name</td>
-                                            <td> Rebatable</td>
-                                            <td> Qty</td>
-                                            <td> Price</td>
-                                            <td> Action</td>
-                                        </tr>
-                                        </thead>
-                                        <tbody class="">
-                                        <?php foreach($items as $item){ // print_r($item); ?>
-                                            <tr>
-                                                <td><?php echo $item->title; ?></td>
-                                                <td><?php if($item->rebate == 1){ ?>
-                                                    <!-- <label class="switch">
-                                                    <input type="checkbox" id="rebatable_toggle" checked>
-                                                    <span class="slider round"></span> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>"  value="1"  data-toggle="toggle" data-size="xs" checked >
-                                                    </label>
-                                                <?php }else{ ?>
-                                                    <!-- <label class="switch">
-                                                    <input type="checkbox">
-                                                    <span class="slider round"></span>
-                                                    </label> -->
-
-                                                    <!-- <input type="checkbox" data-toggle="toggle" data-size="xs"> -->
-                                                    <input type="checkbox" class="toggle_checkbox" id="rebatable_toggle" item-id="<?php echo $item->id; ?>" value="0" data-toggle="toggle" data-size="xs">
-
-                                                <?php  } ?></td>
-                                                <td></td>
-                                                <td><?php echo $item->price; ?></td>
-                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">
-                                                <!-- <span class="fa fa-plus"></span> -->
-                                                <i class="bx bx-fw bx-plus"></i>
-                                            </button></td>
-                                            </tr>
-                                            
-                                        <?php } ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer modal-footer-detail">
-                            <div class="button-modal-list">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                            </div>
-                        </div>
+<div class="modal fade nsm-modal" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
+                <button type="button" class="close" data-dismiss="modal" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="bx bx-fw bx-x m-0"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <table id="modal_items_list" class="table-hover" style="width: 100%;">
+                            <thead>
+                            <tr>
+                                <td></td>
+                                <td>Name</td>
+                                <td>On Hand</td>                                                
+                                <td>Price</td>  
+                                <td>Type</td>                                              
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach($items as $item){ ?>
+                                <tr>
+                                    <td style="width: 5% !important;">
+                                        <button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="nsm-button primary small select_item">
+                                        <i class='bx bx-plus-medical'></i>
+                                        </button>
+                                    </td>
+                                    <td><?php echo $item->title; ?></td>                                                
+                                    <td>
+                                    <?php 
+                                        foreach($itemsLocation as $itemLoc){
+                                            if($itemLoc->item_id == $item->id){
+                                                echo "<div class='data-block'>";
+                                                echo $itemLoc->name. " = " .$itemLoc->qty;
+                                                echo "</div>";
+                                            } 
+                                        }
+                                    ?>
+                                    </td>                                                    
+                                    <td><?php echo $item->price; ?></td>                                                    
+                                    <td><?php echo $item->type; ?></td>
+                                </tr>
+                                
+                            <?php } ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+            <div class="modal-footer modal-footer-detail">
+                
+            </div>
+        </div>
+    </div>
+    </div>
 <?php include viewPath('accounting/add_new_term'); ?>
 <?php include viewPath('v2/pages/job/modals/new_customer'); ?>
 <?php include viewPath('v2/includes/job/quick_add'); ?>
@@ -1222,8 +1129,31 @@ input:checked + .slider:before {
 //   })
 $(document).ready(function () {
 
+    $('#modal_items_list').DataTable({
+        "autoWidth" : false,
+        "columnDefs": [
+        { width: 540, targets: 0 },
+        { width: 100, targets: 0 },
+        { width: 100, targets: 0 }
+        ],
+        "ordering": false,
+    });
+
     $('.btn-quick-add-job-tag').on('click', function(){
         $('#quick_add_job_tag').modal('show');
+    });
+
+    $('#help-popover-adjustment').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
+        } 
+    }); 
+
+    $('#add_another_new_invoice2').on('click', function(){
+        $('#item_list').modal('show');
     });
 
     //iterate through all the divs - get their ids, hide them, then call the on click
