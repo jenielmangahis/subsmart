@@ -33,7 +33,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         <div class="row ">
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
-                    <label for="">Total Leads</label>
+                    <label for="">Total Contacts</label>
                     <h1><?php echo $leads; ?></h1>
 
                 </div>

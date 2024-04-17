@@ -6009,49 +6009,73 @@ $(function () {
         FR.readAsDataURL(files[0]);
     });
 
-    $(document).on('click', '#modal-container #item-modal #storage-locations tbody tr td:not(:last-child)', function () {
-        if ($(this).parent().find('select[name="location_id[]"]').length < 1) {
-            $(this).parent().children('td:first-child').append('<select name="location_id[]" class="form-control nsm-field"></select>');
-            $(this).parent().children('td:nth-child(2)').append('<input type="number" name="quantity[]" class="text-right form-control nsm-field">');
+    // $(document).on('click', '#modal-container #item-modal #storage-locations tbody tr td:not(:last-child)', function () {
+    //     if ($(this).parent().find('select[name="location_id[]"]').length < 1) {
+    //         $(this).parent().children('td:first-child').append('<select name="location_id[]" class="form-control nsm-field"></select>');
+    //         $(this).parent().children('td:nth-child(2)').append('<input type="number" name="quantity[]" class="text-right form-control nsm-field">');
 
-            $(this).parent().find('select').select2({
-                ajax: {
-                    url: base_url + 'accounting/get-dropdown-choices',
-                    dataType: 'json',
-                    data: function (params) {
-                        var query = {
-                            search: params.term,
-                            type: 'public',
-                            field: 'item-locations',
-                            modal: 'item-modal'
-                        }
+    //         $(this).parent().find('select').select2({
+    //             ajax: {
+    //                 url: base_url + 'accounting/get-dropdown-choices',
+    //                 dataType: 'json',
+    //                 data: function (params) {
+    //                     var query = {
+    //                         search: params.term,
+    //                         type: 'public',
+    //                         field: 'item-locations',
+    //                         modal: 'item-modal'
+    //                     }
 
-                        // Query parameters will be ?search=[term]&type=public&field=[type]
-                        return query;
-                    }
-                },
-                templateResult: formatResult,
-                templateSelection: optionSelect,
-                dropdownParent: $('#modal-container #item-modal')
-            });
-        }
-    });
+    //                     // Query parameters will be ?search=[term]&type=public&field=[type]
+    //                     return query;
+    //                 }
+    //             },
+    //             templateResult: formatResult,
+    //             templateSelection: optionSelect,
+    //             dropdownParent: $('#modal-container #item-modal')
+    //         });
+    //     }
+    // });
+   
+    
 
     $(document).on('click', '#modal-container #item-modal #addBundleItem, #modal-container #item-modal #addLocationLine', function (e) {
         e.preventDefault();
-
+      
         if ($(this).attr('id').includes('Bundle')) {
             var type = 'item';
+            var id_type = 'item';
         } else {
             var type = 'location';
+            var id_type = 'location_id';
         }
         $(this).closest('table').children('tbody').append(`
         <tr>
-            <td></td>
-            <td></td>
+            <td><select name="${id_type}[]" class="form-control"></select></td>
+            <td><input type="number" name="quantity[]" class="text-right form-control"></td>
             <td><button type="button" class="nsm-button delete-${type}"><i class='bx bx-fw bx-trash'></i></button></td>
         </tr>
         `);
+        $(this).closest('table').find('tbody tr:last-child').find(`select[name="${id_type}[]"]`).select2({
+            ajax: {
+                url: base_url + 'accounting/get-dropdown-choices',
+                dataType: 'json',
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        field: type == 'item' ? 'item' : 'item-locations',
+                        modal: 'item-modal'
+                    }
+        
+                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                    return query;
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: optionSelect,
+            dropdownParent: $('#modal-container #item-modal')
+        });
     });
 
     $(document).on('click', '#modal-container #item-modal #bundle-items-table .delete-item, #modal-container #item-modal #storage-locations .delete-location', function (e) {

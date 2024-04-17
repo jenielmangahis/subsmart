@@ -7,6 +7,67 @@
 <?php include viewPath('v2/includes/calendar/quick_access_calendar_js'); ?>
 <?php include viewPath('dashboard_v2_js'); ?>
 <style>
+ .loader {
+    display: block;
+    color:#6a4a86;
+  font-size: 10px;
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+  text-indent: -9999em;
+  animation: mulShdSpin 1.3s infinite linear;
+  transform: translateZ(0);
+}
+
+@keyframes mulShdSpin {
+  0%,
+  100% {
+    box-shadow: 0 -3em 0 0.2em, 
+    2em -2em 0 0em, 3em 0 0 -1em, 
+    2em 2em 0 -1em, 0 3em 0 -1em, 
+    -2em 2em 0 -1em, -3em 0 0 -1em, 
+    -2em -2em 0 0;
+  }
+  12.5% {
+    box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 
+    3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em, 
+    -2em 2em 0 -1em, -3em 0 0 -1em, 
+    -2em -2em 0 -1em;
+  }
+  25% {
+    box-shadow: 0 -3em 0 -0.5em, 
+    2em -2em 0 0, 3em 0 0 0.2em, 
+    2em 2em 0 0, 0 3em 0 -1em, 
+    -2em 2em 0 -1em, -3em 0 0 -1em, 
+    -2em -2em 0 -1em;
+  }
+  37.5% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+     3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em, 
+     -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+  }
+  50% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+     3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em, 
+     -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+  }
+  62.5% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+     3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0, 
+     -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+  }
+  75% {
+    box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 
+    3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, 
+    -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+  }
+  87.5% {
+    box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 
+    3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, 
+    -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+  }
+}
+     
 .summary-report-header {
     display: flex;
     align-items: center;
@@ -56,7 +117,9 @@
     font-size: 25px;
     width: 25px;
 }
-
+.summary-report-body{
+    text-align: center !important;
+}
 .summary-report-body h1 {
     font-size: 36px;
     font-weight: 600;
@@ -74,23 +137,60 @@
 
 .leads-container {
     display: flex;
-    justify-content: start;
+    justify-content: center;
     align-items: center;
+    height: 130px;
 }
 .main-widget-row{
     display: flex;
-    gap: 20px;
+    gap: 35px;
     flex-wrap: wrap;
     align-content: flex-start;
     justify-content: start;
 }
 .main-widget-container{
-    width:222px;
+    width:280px;
     box-shadow: 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12), 0 1px 3px 0 rgba(0,0,0,.2);
     border-radius: .75rem;
     height: 280px;
     max-height: 280px;
 }
+@media screen and (max-width: 1500px) {
+    .main-widget-row {
+        gap: 20px;
+    }
+    .main-widget-container {
+        width: 260px;
+    }
+    
+}
+
+@media screen and (max-width: 1366px) {
+    .main-widget-container {
+        width: 245px;
+    }
+    
+}
+
+@media screen and (max-width: 1200px) {
+    .main-widget-container {
+        width: 23%;
+    }
+    
+}
+
+@media screen and (max-width: 991px) {
+    .main-widget-container {
+        width: 48%;
+    }
+    
+}
+@media screen and (max-width: 600px) {
+    .main-widget-container {
+        width: 100%;
+    }
+}
+
 .main-widget-container  .nsm-card-header{
     height: 50px;
 }
@@ -246,7 +346,6 @@
                     //     $this->load->view("v2/" . $wids->w_view_link, $data);
                     // }
                     $this->load->view('v2/'.$wids->w_view_link, $data);
-
                 }
             }
 ?>  </div><?php
@@ -582,5 +681,21 @@ $(document).on('click', '#btn-quick-add-job', function() {
         });
     }, 500);
 });
+
+load_plaid_accounts();
+
+function load_plaid_accounts() {
+    var url = base_url + '_load_connected_bank_accounts_thumbnail';
+    $('#plaid-accounts-thumbnail').html('<h1><span class="bx bx-loader bx-spin"></span></h1>');
+    $.ajax({
+            type: "POST",
+            url: url,
+            success: function(o) {
+
+                $('#plaid-accounts-thumbnail').html(o);
+            }
+        });
+}
 </script>
+
 <?php include viewPath('v2/includes/footer'); ?>

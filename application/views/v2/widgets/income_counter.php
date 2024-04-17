@@ -34,7 +34,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
                     <label for="">Subscription</label>
-                    <h1><?php echo number_format($subs->TOTAL_MMR, 2); ?></h1>
+                    <h1 style="font-size:<?php intval($subs->TOTAL_MMR) >= 1000000 ?'33px':'' ?>;"><?php echo number_format($subs->TOTAL_MMR, 2); ?></h1>
 
                 </div>
             </div>

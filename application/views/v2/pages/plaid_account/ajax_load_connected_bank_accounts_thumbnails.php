@@ -33,29 +33,29 @@
 </head>
 <body>
 
-<?php if($is_valid == 1 && !empty($plaidBankAccounts)){ ?>
+<?php if ($is_valid == 1 && !empty($plaidBankAccounts)) { ?>
     <div id="discover_carousel" class="carousel slide h-100 pb-4" data-bs-ride="carousel">
         <div class="carousel-indicators">
-            <?php for($i = 0; $i < count($plaidBankAccounts); $i++) { ?>
-                <button type="button" data-bs-target="#discover_carousel" data-bs-slide-to="<?= $i ?>" <?= $i == 0 ? 'class="active"' : '' ?> aria-current="true" aria-label="Slide <?= $i+1 ?>"></button>
+            <?php for ($i = 0; $i < count($plaidBankAccounts); ++$i) { ?>
+                <button type="button" data-bs-target="#discover_carousel" data-bs-slide-to="<?php echo $i; ?>" <?php echo $i == 0 ? 'class="active"' : ''; ?> aria-current="true" aria-label="Slide <?php echo $i + 1; ?>"></button>
             <?php } ?>
         </div>
         <div class="carousel-inner h-100">
-            <?php foreach($plaidBankAccounts as $key => $pa) { ?>
-                <div class="carousel-item <?= $key == 0 ? 'active' : '' ?>">
+            <?php foreach ($plaidBankAccounts as $key => $pa) { ?>
+                <div class="carousel-item <?php echo $key == 0 ? 'active' : ''; ?>">
                     <div class="row h-100">
                         <div class="widget-item">
                             <div class="content ms-2">
                                 <div class="details">
-                                    <span class="content-title mb-1"><?= $pa->institution_name . ' - ' . $pa->account_name; ?></span>
+                                    <span class="content-title mb-1"><?php echo $pa->institution_name.' - '.$pa->account_name; ?></span>
                                     <span class="content-subtitle d-block">
                                         <?php
-                                        if(is_numeric($pa->balance_available)) {
-                                            echo 'Balance : $' . number_format($pa->balance_available, 2);
+                                        if (is_numeric($pa->balance_available)) {
+                                            echo 'Balance : $'.number_format($pa->balance_available, 2);
                                         } else {
                                             echo $pa->balance_available;
                                         }
-                                        ?>
+                ?>
                                     </span>
                                 </div>
                                 <div class="controls">
@@ -75,8 +75,6 @@
     </div>
 <?php } ?>
 
-<!-- Bootstrap JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

@@ -34,7 +34,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
                     <label for="">Total Unpaid</label>
-                    <h1>$<?php echo get_invoice_amount('balance') ?></h1>
+                    <h1 style="font-size:<?php intval(get_invoice_amount('balance')) >= 1000000 ?'33px':'' ?>;">$<?php echo get_invoice_amount('balance') ?></h1>
 
                 </div>
             </div>
@@ -42,7 +42,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         </div>
     </div>
     <div class='nsm-card-footer'>
-        <a role="button" class=" btn-sm m-0 me-2" href="accounting/allsales">
+        <a role="button" class=" btn-sm m-0 me-2" href="accounting/all-sales">
             <i class='bx bx-right-arrow-alt' style="color: #6a4a86"></i>
         </a>
     </div>

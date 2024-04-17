@@ -2450,7 +2450,7 @@ class Accounting_modals extends MY_Controller
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
+            $return['message'] = validation_errors();
         } elseif (!isset($data['product']) && !isset($data['new_qty']) && !isset($data['change_in_qty'])) {
             $return['data'] = null;
             $return['success'] = false;
@@ -10488,7 +10488,7 @@ class Accounting_modals extends MY_Controller
 
         switch ($type) {
             case 'regular':
-                $checks = $this->expenses_model->get_checks_to_print($filters);
+                $checks = $this->expenses_model->get_checks_to_print();
             break;
             case 'bill-payment':
                 $billPayments = $this->expenses_model->get_bill_payments_to_print($filters);

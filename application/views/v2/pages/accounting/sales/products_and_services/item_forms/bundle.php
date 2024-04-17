@@ -80,8 +80,10 @@
                                 </thead>
                                 <tbody class="cursor-pointer">
                                     <tr>
-                                        <td></td>
-                                        <td></td>
+                                        <td> <select name="item[]" class="form-control nsm-field select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+                                       
+                                       </select></td>
+                                        <td> <input type="number" name="quantity[]" class="text-right form-control nsm-field"></td>
                                         <td>
                                             <button type="button" class="nsm-button delete-item">
                                                 <i class='bx bx-fw bx-trash'></i>
@@ -89,8 +91,10 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td></td>
-                                        <td></td>
+                                        <td><select name="item[]" class="form-control nsm-field select2-hidden-accessible" tabindex="-1" aria-hidden="true">
+                                       
+                                       </select></td>
+                                        <td><input type="number" name="quantity[]" class="text-right form-control nsm-field"></td>
                                         <td>
                                             <button type="button" class="nsm-button delete-item">
                                                 <i class='bx bx-fw bx-trash'></i>
@@ -130,4 +134,28 @@
         </div>
     </div>
 </div>
+<script>
+            $(document).ready(function() {
+             $('select[name="item[]"]').select2({
+            ajax: {
+                url: base_url + 'accounting/get-dropdown-choices',
+                dataType: 'json',
+                data: function (params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        field: 'item',
+                        modal: 'item-modal'
+                    }
+    
+                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                    return query;
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: optionSelect,
+            dropdownParent: $('#modal-container #item-modal')
+        });
+    });
+        </script>
 </form>

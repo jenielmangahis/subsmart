@@ -2361,9 +2361,9 @@ function Signing(hash) {
           //console.log(jsonData);
         }
       }
-
+      
       if( window.__ismobile ){
-        alert('Mobile signing finished:'+data.data.docfile_id);
+        alert('Mobile signing finished:'+data.data.docfile_id+':'+data.data.id);
       }
 
       if (data.hash) {

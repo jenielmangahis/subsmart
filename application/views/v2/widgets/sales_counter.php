@@ -40,7 +40,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
                     <label for="">Total Sales</label>
-                    <h1 class='sales-count'>$<?php echo get_invoice_amount('total'); ?></h1>
+                    <h1 class='sales-count' style="font-size:<?php intval(get_invoice_amount('total')) >= 1000000 ?'33px':'' ?>;">$<?php echo get_invoice_amount('total'); ?></h1>
 
                 </div>
             </div>

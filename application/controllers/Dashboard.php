@@ -197,10 +197,12 @@ class Dashboard extends Widgets
         $this->page_data['upcomingInvoice'] = $this->event_model->getUnpaidInvoices();
         $this->page_data['subs'] = $this->event_model->getAllsubsByCompanyId($companyId)
         ;
-        $past_due = $this->widgets_model->getCurrentCompanyOverdueInvoices();
+        $past_due = $this->widgets_model->getCurrentCompanyOverdueInvoices2();
         $invoices_total_due = 0;
         foreach ($past_due as $total_due) {
-            $invoices_total_due += $total_due->balance;
+            if($total_due->status != 'paid'){
+                $invoices_total_due += $total_due->balance;
+            }
         }
         $this->page_data['invoices_count'] = count($past_due);
         $this->page_data['invoices_total_due'] = $invoices_total_due;
@@ -357,7 +359,7 @@ class Dashboard extends Widgets
         $this->page_data['companyName'] = $this->tickets_model->getCompany(logged('company_id'));
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['estimates'] = $this->estimate_model->getAllOpenEstimatesByCompanyId($companyId);
-         $this->page_data['leads'] = count($this->customer_ad_model->get_leads_data());
+         $this->page_data['leads'] = count($this->customer_ad_model->get_leads_data_this_week());
         // $this->load->view('dashboard', $this->page_data);
         $this->load->view('dashboard_v2', $this->page_data);
     }
