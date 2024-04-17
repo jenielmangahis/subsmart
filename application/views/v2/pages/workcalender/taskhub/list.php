@@ -61,6 +61,7 @@
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end batch-actions">                                
                                     <li><a class="dropdown-item" href="javascript:void(0);" id="btn-mark-completed"><i class='bx bx-fw bx-check'></i> Mark Completed</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0);" id="btn-delete-tasks"><i class='bx bx-fw bx-trash'></i> Delete</a></li>
                                 </ul>
                             </div>
 
@@ -85,7 +86,7 @@
                         <thead>
                             <tr>
                                 <td class="table-icon text-center">
-                                    
+                                    <input class="form-check-input table-select check-input-all-tasks" id="check-input-all-tasks" type="checkbox">
                                 </td>
                                 <td class="table-icon"></td>
                                 <td data-name="Subject" style="width:40%;">Task</td>     
@@ -103,7 +104,7 @@
                                     <tr>
                                         <td>
                                             <div class="table-row-icon table-checkbox">
-                                                <input class="form-check-input select-one table-select" name="taskId[]" type="checkbox" value="<?=$row->task_id?>">
+                                                <input class="form-check-input select-one table-select check-input-task" id="check-input-task" name="taskId[]" type="checkbox" value="<?=$row->task_id?>">
                                             </div>
                                         </td>
                                         <td>
@@ -276,6 +277,54 @@
                 }
             });
         });
+
+        $("#btn-delete-tasks").on("click", function() {
+
+            Swal.fire({
+                title: 'Delete All',
+                text: "This will delete all selected tasks. Proceed with action?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo base_url('taskhub/_delete_selected_tasks'); ?>",
+                        dataType: 'json',
+                        data: $('#frm-taskhub').serialize(),
+                        success: function(result) {
+                            if (result.is_success == 1) {
+                                Swal.fire({
+                                    title: 'Delete Successful!',
+                                    text: "Taskhub data is successfully deleted!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'An Error Occured',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        //location.reload();
+                                    }
+                                });
+                            }
+                        },
+                    });
+                }
+            });
+        });        
 
         $(document).on("click", ".btn-complete-task", function() {
             let id = $(this).attr('data-id');
