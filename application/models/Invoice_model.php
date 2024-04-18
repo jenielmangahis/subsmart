@@ -219,6 +219,16 @@ class Invoice_model extends MY_Model
         return $query->row();
     }
 
+    public function getById($id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);   
+        $this->db->where('id', $id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
     // public function getinvoice_invNO($invoice_id)
     // {
     //     $this->db->select('*');

@@ -204,6 +204,18 @@ class Users_model extends MY_Model
         return $query->result();
     }
 
+    public function getCompanyUsersByUserType($company_id, $user_type)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('user_type', $user_type);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+    
+
     public function getActiveCompanyUsers($company_id)
     {
         $this->db->select('*');
