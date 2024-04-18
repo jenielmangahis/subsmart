@@ -1,8 +1,6 @@
 <style>
 .btn-manage-tags{
-    position: relative;
-    left: 77%;
-    top: 22px;
+    float:right;
 }
 </style>
 <?php
@@ -29,8 +27,8 @@
         </div>
     </div>
     <div class="nsm-card-content">
-        <a class="nsm-button primary btn-manage-tags" href="<?= base_url('job/job_tags'); ?>">Manage Tags</a>
-        <div class="nsm-badge-group tags-container">            
+        <a class="nsm-button primary btn-manage-tags" href="<?= base_url('job/job_tags'); ?>">Manage Tags</a>        
+        <div class="nsm-badge-group tags-container" style="clear:both;">            
             <div class="nsm-loader">
                 <i class='bx bx-loader-alt bx-spin'></i>
             </div>

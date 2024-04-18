@@ -243,22 +243,69 @@
                         <hr />
                         <div class="row">
                             <div class="col-md-8 mt-2">
-                                <div class="col-md-12">
-                                    <h5>Request a Deposit</h5>
-                                    <span class="help help-sm help-block">You can request an upfront payment on accept estimate.</span>
-                                </div>
-                                <div class="col-md-2 mt-1">
-                                    <input type="hidden" value="$" name="deposit_request_type" class="form-control" />    
-                                    <div class="input-group">
-                                        <div class="input-group-text">$</div>
-                                        <input type="number" step="any" name="deposit_amount" value="0" class="form-control" autocomplete="off">
-                                    </div>
-                                </div>
-                                <div class="col-md-12 mt-4">
-                                    <h5>Accepted payment methods</h5>
-                                    <span class="help help-sm help-block">Select the payment methods that will appear on this invoice.</span>
-                                </div>
                                 <div class="row">
+                                    <div class="col-md-6">
+                                        <h5>Request a Deposit</h5>
+                                        <span class="help help-sm help-block">You can request an upfront payment on accept estimate.</span>
+                                        <input type="hidden" value="$" name="deposit_request_type" class="form-control" />    
+                                        <div class="input-group">
+                                            <div class="input-group-text">$</div>
+                                            <input type="number" step="any" name="deposit_amount" value="0" class="form-control" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5>Payment Schedule</h5>
+                                        <span class="help help-sm help-block">Split the balance into multiple payment milestones.</span>
+                                        <p><a href="#" id="manage-payment-schedule" style="color: #02A32C;"><i class="bx bx-fw bxs-plus-square" aria-hidden="true"></i> Manage payment schedule</a></p>
+                                        <div id="payment-schedule-input" style="display: none;">
+                                            <div class="row">
+                                                <div class="col-md-3 mb-3">
+                                                    <label for="payment-schedule-date" class="form-label">Payment schedule:</label>
+                                                    <input type="date" class="form-control nsm-field" id="payment-schedule-date" name="payment-schedule-date">
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <label for="payment-schedule-months" class="form-label">Months to pay:</label>
+                                                    <select class="form-select nsm-field" id="payment-schedule-months">
+                                                            <option value="">Select month</option>
+                                                        <option value="1">1 month</option>
+                                                        <option value="2">2 months</option>
+                                                        <option value="3">3 months</option>
+                                                        <option value="4">4 months</option>
+                                                        <option value="5">5 months</option>
+                                                        <option value="6">6 months</option>
+                                                        <option value="7">7 months</option>
+                                                        <option value="8">8 months</option>
+                                                        <option value="9">9 months</option>
+                                                        <option value="10">10 months</option>
+                                                        <option value="11">11 months</option>
+                                                        <option value="12">12 months</option>
+                                                        <option value="13">13 months</option>
+                                                        <option value="14">14 months</option>
+                                                        <option value="15">15 months</option>
+                                                        <option value="16">16 months</option>
+                                                        <option value="17">17 months</option>
+                                                        <option value="18">18 months</option>
+                                                        <option value="19">19 months</option>
+                                                        <option value="20">20 months</option>
+                                                        <option value="21">21 months</option>
+                                                        <option value="22">22 months</option>
+                                                        <option value="23">23 months</option>
+                                                        <option value="24">24 months</option>
+                                                        
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            
+                                            <span>Monthly payment:</span>
+                                            <span id="monthly_amount">$0.00</span>
+                                        </div>
+                                    </div>
+                                </div>                                
+                                <div class="row">
+                                    <div class="col-md-12 mt-4">
+                                        <h5>Accepted payment methods</h5>
+                                        <span class="help help-sm help-block">Select the payment methods that will appear on this invoice.</span>
+                                    </div>
                                     <div class="col-md-6">  
                                         <div class="row">   
                                             <div class="col-md-3">                                                                            
@@ -537,6 +584,32 @@ $(document).ready(function() {
         } 
     });
 
+    $('#manage-payment-schedule').on('click', function(event) {
+        event.preventDefault();
+        var paymentScheduleContainer = $('#payment-schedule-input');
+
+        if (paymentScheduleContainer.is(':hidden')) {
+        paymentScheduleContainer.show();
+        $(this).html('<i class="bx bx-fw bxs-minus-square" aria-hidden="true"></i> Hide payment schedule');
+        return;
+        } 
+
+      paymentScheduleContainer.hide();
+      $(this).html('<i class="bx bx-fw bxs-plus-square" aria-hidden="true"></i> Manage payment schedule');
+  
+    });
+
+    $('#payment-schedule-months').on('change', function() {
+        var selectedMonths = $(this).val();
+        var grandTotal = parseFloat($('#grand_total_input').val());
+        
+        if (!isNaN(grandTotal) && !isNaN(selectedMonths) && selectedMonths !== '') {
+            var monthlyPayment = grandTotal / selectedMonths;
+            $('#monthly_amount').html('$'+monthlyPayment.toFixed(2));
+        }
+    
+    })
+
     $('#help-popover-terms-conditions').popover({
         placement: 'top',
         html : true, 
@@ -669,7 +742,7 @@ $(document).ready(function() {
         var invoice_tax_total = parseFloat(product_total_tax) + parseFloat(service_total_tax);
 
         $('#span_sub_total_invoice').html(invoice_sub_total.toFixed(2));
-        $('#item_subtotal').val(invoice_sub_total.toFixed(2));
+        $('#item_subtotal').val(invoice_sub_total.toFixed(2));        
 
         $('#span_total_tax_invoice').html(invoice_tax_total.toFixed(2))
         $('#item_total_tax').val(invoice_tax_total.toFixed(2));
@@ -689,10 +762,11 @@ $(document).ready(function() {
         }else{
             var grand_total = parseFloat(invoice_sub_total) + parseFloat(invoice_tax_total) + parseFloat(total_adjustment_selectors);
         }
-
         
         $('#grand_total').html(grand_total.toFixed(2));
         $('#grand_total_input').val(grand_total.toFixed(2));
+
+        $('#monthly_amount').text('$' + grand_total.toFixed(2))
     }
 
     //Adjustments

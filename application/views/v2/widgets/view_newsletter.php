@@ -2,9 +2,9 @@
     <div class="details">                                                    
         <span class="content-title">
             <?= $newsLetter->title ?>
-            <span class="content-news-date text-muted"><i class='bx bxs-calendar'></i> <?= date('F d, Y g:i A', strtotime($newsLetter->date_created)) ?></span>
+            <span class="content-news-date text-muted" style="margin-top:4px;"><i class='bx bxs-calendar'></i> <?= date('F d, Y g:i A', strtotime($newsLetter->date_created)) ?></span>
         </span>
-        <span class="content-subtitle d-block mt-4"><?= $newsLetter->message ?></span>
+        <div class="content-subtitle d-block mt-4" style="line-height:22px;"><?= $newsLetter->message ?></div>
     </div>
     <div class="controls mt-3">
         <?php if( $newsLetter->file_link != '' ){ ?>

@@ -178,7 +178,7 @@ div#controls div#call-controls div#volume-indicators > div {
                                 endswitch;
                                 ?>
                                 <span class="nsm-badge <?= $badge ?>"><?= !is_null($profile_info->status) ? $profile_info->status : 'Pending'; ?></span>
-                                <span class="content-subtitle d-block"><?= substr($profile_info->phone_h, 0, 13); ?></span>
+                                <span class="content-subtitle d-block"><?= formatPhoneNumber($profile_info->phone_m); ?></span>
                             </div>
                         </div>
                     </div>

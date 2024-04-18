@@ -264,12 +264,14 @@
             </div>
             <span class="nsm-fab-label">News Feed</span>
         </li>
+        <?php if( logged('company_id') == 1 ){ ?>
         <li data-bs-toggle="modal" data-bs-target="#news_letter_modal">
             <div class="nsm-fab-icon">
                 <i class="bx bx-news"></i>
             </div>
             <span class="nsm-fab-label">Add Newsletter</span>
         </li>
+        <?php } ?>
         <li data-bs-toggle="modal" data-bs-target="#manage_widgets_modal">
             <div class="nsm-fab-icon">
                 <i class="bx bx-cog"></i>
@@ -312,10 +314,12 @@
         <button name="button" type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_feed_modal">
             <i class='bx bx-fw bx-comment'></i> News Feed
         </button>
+        <?php if( logged('company_id') == 1 ){ ?>
         <button name="button" type="button" class="nsm-button" data-bs-toggle="modal"
             data-bs-target="#news_letter_modal">
             <i class='bx bx-fw bx-news'></i> Add Newsletter
         </button>
+        <?php } ?>
         <button name="button" type="button" class="nsm-button primary" data-bs-toggle="modal"
             data-bs-target="#manage_widgets_modal">
             <i class='bx bx-fw bx-cog'></i>
@@ -619,11 +623,13 @@ $(function() {
     $("#dashboard-feeds").nsmPagination({
         itemsPerPage: 5
     });
+
+    load_company_newsletter();
 });
 
 function load_company_newsletter() {
     $.ajax({
-        url: base_url + 'widgets/_company_newsletter',
+        url: base_url + 'dashboard/_company_newsletter',
         method: 'post',
         success: function(response) {
             $('#dashboard-newsletter').html(response);
@@ -633,6 +639,23 @@ function load_company_newsletter() {
         },
     });
 }
+
+$(document).on('click', '.view-newsletter-details', function(){
+    var newsid = $(this).attr('data-id');
+
+    $('#modalViewNewsLetter').modal('show');        
+    $.ajax({
+        url: base_url + 'dashboard/_view_newsletter',
+        method: 'post',   
+        data:{newsid:newsid},         
+        success: function (response) {
+            $('#modal-view-newsletter-container').html(response);
+        },
+        beforeSend: function() {
+            showLoader($("#modal-view-newsletter-container"));  
+        },
+    });
+});
 
 $(document).on('click', '#btn-quick-add-service-ticket', function() {
     var url = base_url + "ticket/_quick_add_service_ticket_form";

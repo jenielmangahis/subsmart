@@ -21,6 +21,39 @@ $(document).ready(function() {
         });
     });
 
+    $('#frm-newsletter').on('submit', function(e){
+        e.preventDefault();
+
+        var formData = new FormData(this);
+
+        $.ajax({
+            type: "POST",
+            url: base_url + "dashboard/_create_newsletter",
+            dataType: 'json',
+            data: formData, 
+            success: function (data) {                               
+                if(data.success == 1){
+                    $('#news_letter_modal').modal('hide');    
+                    load_company_newsletter();                
+                    notifyUser('',data.msg,'success');
+                    $('#news-subject').val('');
+                    $('#news-content').val('');
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: data.msg
+                    });
+                }
+            }, beforeSend: function() {
+                
+            },
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+    });
+
     fetch('<?php echo base_url('Dashboard/todays_stats'); ?>', {
         method: 'GET',
     }) .then(response => response.json() ).then(response => {
