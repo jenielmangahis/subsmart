@@ -490,7 +490,7 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if (!empty($transaction['customer'])) {
+                                                    if (!empty($transaction['customer']) && trim($transaction['customer']) != '') {
                                                         echo $transaction['customer'];
                                                     } else {
                                                         echo 'No customer';
@@ -591,7 +591,7 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if (!empty($transaction['customer'])) {
+                                                    if (!empty($transaction['customer']) && trim($transaction['customer']) != '') {
                                                         echo $transaction['customer'];
                                                     } else {
                                                         echo 'No customer';
@@ -701,7 +701,7 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if (!empty($transaction['customer'])) {
+                                                    if (!empty($transaction['customer']) && trim($transaction['customer']) != '') {
                                                         echo $transaction['customer'];
                                                     } else {
                                                         echo 'No customer';
@@ -804,7 +804,7 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if (!empty($transaction['customer'])) {
+                                                    if (!empty($transaction['customer']) && trim($transaction['customer']) != '') {
                                                         echo $transaction['customer'];
                                                     } else {
                                                         echo 'No customer';
@@ -885,7 +885,7 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if (!empty($transaction['customer'])) {
+                                                    if (!empty($transaction['customer']) && trim($transaction['customer']) != '') {
                                                         echo $transaction['customer'];
                                                     } else {
                                                         echo 'No customer';
@@ -977,7 +977,7 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if (!empty($transaction['customer'])) {
+                                                    if (!empty($transaction['customer']) && trim($transaction['customer']) != '') {
                                                         echo $transaction['customer'];
                                                     } else {
                                                         echo 'No customer';
@@ -1097,7 +1097,7 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if (!empty($transaction['customer'])) {
+                                                    if (!empty($transaction['customer']) && trim($transaction['customer']) != '') {
                                                         echo $transaction['customer'];
                                                     } else {
                                                         echo 'No customer';
@@ -1176,7 +1176,7 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if (!empty($transaction['customer'])) {
+                                                    if (!empty($transaction['customer']) && trim($transaction['customer']) != '') {
                                                         echo $transaction['customer'];
                                                     } else {
                                                         echo 'No customer';
