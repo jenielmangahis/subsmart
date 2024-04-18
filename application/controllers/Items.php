@@ -409,6 +409,22 @@ class Items extends MY_Controller
         $this->load->view('v2/pages/items/ajax_add_product_list', $this->page_data);
     }
 
+    public function ajax_edit_product_stock()
+    {
+        $this->load->model('Items_model');
+        
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+        
+        $item = $this->Items_model->getCompanyItemById($cid,$post['product_id']);         
+        $storageLocation  = $this->Items_model->getLocationById($post['strorage_id']);
+        $itemLocation = $this->Items_model->getItemLocation($post['strorage_id'], $post['product_id']);
+        $this->page_data['item'] = $item;
+        $this->page_data['storageLocation']  = $storageLocation;
+        $this->page_data['itemLocation'] = $itemLocation;
+        $this->load->view('v2/pages/items/ajax_edit_product_stock', $this->page_data);
+    }
+
     public function ajax_add_services_list()
     {
         $this->load->model('Items_model');
@@ -436,6 +452,84 @@ class Items extends MY_Controller
 
         $this->page_data['companyServices'] = $companyServices;
         $this->load->view('v2/pages/items/ajax_add_services_list', $this->page_data);
+    }
+
+    public function ajax_update_product_stock()
+    {
+        $this->load->model('Items_model');
+        
+        $is_success = 1;
+		$msg  = '';
+        
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post = $this->input->post();
+
+        if( $post['itemid'] <= 0 ){
+            $msg = 'Cannot find product data';
+            $is_success = 0;
+        }
+
+        if( $post['product_stock'] <= 0 ){
+            $msg = 'Please specify product stock';
+            $is_success = 0;
+        }
+        if( $is_success == 1 ){
+            $itemLocation = $this->Items_model->getItemLocation($post['storagelocid'], $post['itemid']);
+            if( $itemLocation ){
+                //Check if storage exists
+                $storageLocation  = $this->Items_model->getLocationById($itemLocation->loc_id);
+                if( $storageLocation ){
+                    //Update stock
+                    $item_has_storage_data = [
+                        'name' => $post['storage_location_name'],
+                        'inserted_by' => $uid,
+                        'qty' => $post['product_stock'],
+                        'location_name' => $post['storage_location_name']
+                    ];
+                    $condition = ['id' => $itemLocation->id];
+                    $this->Items_model->updateLocationDetails($item_has_storage_data, $condition);
+                    
+                    //Update storage location name
+                    $storage_data = ['location_name' => $post['storage_location_name']];
+                    $this->Items_model->updateStorageLocationByLocId($post['storagelocid'], $storage_data);
+                }else{
+                    //Create new storage if not exists
+                    $storage_data = [
+                        'location_name' => $post['storage_location_name'],
+                        'company_id' => $cid,
+                        'default' => ''
+                    ];
+                    $new_location_id = $this->Items_model->add_new_location($storage_data);
+                    if( $new_location_id > 0 ){
+                        //Create item has storage location data
+                        $item_has_storage_data = [
+                            'item_id' => $post['itemid'],
+                            'name' => $post['storage_location_name'],
+                            'inserted_by' => $uid,
+                            'insert_date' => date("Y-m-d H:i:s"),
+                            'qty' => $post['product_stock'],
+                            'initial_qty' => $post['product_stock'],
+                            'company_id' => $cid,
+                            'loc_id' => $new_location_id,
+                            'location_name' => $post['storage_location_name']
+                        ];
+                        $this->Items_model->saveNewItemLocation($item_has_storage_data);      
+                        $this->Items_model->deleteLocation($itemLocation->id, false);             
+                    }else{
+                        $is_success = 0;
+                        $msg = 'Cannot create storage location.';
+                    }
+                }
+
+                $activity_name = 'User id '.$uid.' has updated product stock for item id '.$post['itemid'];
+                $this->activity_model->add($activity_name,$uid);
+                
+            }
+        }
+
+        $data = ['msg' => $msg, 'is_success' => $is_success];
+		echo json_encode($data);
     }
 }
 

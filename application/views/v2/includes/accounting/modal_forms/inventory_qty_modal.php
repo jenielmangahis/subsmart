@@ -34,25 +34,31 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="row">
-                                        <div class="col-12 col-md-3 grid-mb">
-                                            <label for="adjustmentDate">Adjustment Date</label>
-                                            <div class="nsm-field-group calendar">
-                                                <input type="text" class="form-control nsm-field date" name="adjustment_date" id="adjustmentDate" value="<?= !isset($adjustment) ? date('m/d/Y') : date('m/d/Y', strtotime($adjustment->adjustment_date)) ?>" />
+                                        <div class="col-12 col-md-4">
+                                            <div class="form-group">
+                                                <label class="control-label" for="adjustmentDate">Adjustment Date</label>
+                                                <div class="nsm-field-group calendar">
+                                                    <input type="text" class="form-control nsm-field date" name="adjustment_date" id="adjustmentDate" value="<?= !isset($adjustment) ? date('m/d/Y') : date('m/d/Y', strtotime($adjustment->adjustment_date)) ?>" />
+                                                </div>
+                                                <label for="inventoryAdjAccount">Inventory Adjustment Account</label>
+                                                <select name="inventory_adj_account" id="inventory_adj_account" class="form-control nsm-field" required>
+                                                    <?php if (isset($adjustment)) : ?>
+                                                        <option value="<?= $adjustment->account->id ?>"><?= $adjustment->account->name ?></option>
+                                                    <?php endif; ?>
+                                                </select>
                                             </div>
                                         </div>
-
-                                        <div class="col-12 col-md-3 offset-md-6 grid-mb">
-                                            <label for="referenceNo">Reference no.</label>
-                                            <input type="number" required name="reference_no" id="referenceNo" class="form-control nsm-field" value="<?= $adjustment_no ?>">
+                                        <div class="col-12 col-md-4">
+                                            <div class="form-group">
+                                                <label class="control-label" for="memo">Memo</label>
+                                                <textarea name="memo" id="memo" rows="4" class="nsm-field form-control"><?= isset($adjustment) ? str_replace("<br />", "", $adjustment->memo) : '' ?></textarea>
+                                            </div>
                                         </div>
-
-                                        <div class="col-12 col-md-3 grid-mb">
-                                            <label for="inventoryAdjAccount">Inventory Adjustment Account</label>
-                                            <select name="inventory_adj_account" id="inventory_adj_account" class="form-control nsm-field" required>
-                                                <?php if (isset($adjustment)) : ?>
-                                                    <option value="<?= $adjustment->account->id ?>"><?= $adjustment->account->name ?></option>
-                                                <?php endif; ?>
-                                            </select>
+                                        <div class="col-12 col-md-4">
+                                            <div class="form-group">
+                                                <label class="control-label" for="referenceNo">Reference no.</label>
+                                                <input type="number" required name="reference_no" id="referenceNo" class="form-control nsm-field" value="<?= $adjustment_no ?>">
+                                            </div>
                                         </div>
                                     </div>
 
@@ -96,25 +102,11 @@
                                                                         <td><input type="number" name="new_qty[]" class="form-control nsm-field text-end" required></td>
                                                                         <td><input type="number" name="change_in_qty[]" class="form-control nsm-field text-end" required></td>
                                                                         <td>
-                                                                            <button type="button" class="nsm-button delete-row">
+                                                                            <!-- <button type="button" class="nsm-button delete-row">
                                                                                 <i class='bx bx-fw bx-trash'></i>
-                                                                            </button>
+                                                                            </button> -->
                                                                         </td>
                                                                     </tr>
-                                                                    <!-- <tr>
-                                                                        <td>2</td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td></td>
-                                                                        <td>
-                                                                            <button type="button" class="nsm-button delete-row">
-                                                                                <i class='bx bx-fw bx-trash'></i>
-                                                                            </button>
-                                                                        </td>
-                                                                    </tr> -->
                                                                 </tbody>
                                                                 <tfoot>
                                                                     <tr>
@@ -204,17 +196,6 @@
                                                     </div>
                                                 </div>
                                             <?php endif; ?>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-12 col-md-6">
-                                            <div class="row">
-                                                <div class="col-12 col-md-12">
-                                                    <label for="memo">Memo</label>
-                                                    <textarea name="memo" id="memo" rows="4" class="nsm-field form-control"><?= isset($adjustment) ? str_replace("<br />", "", $adjustment->memo) : '' ?></textarea>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>

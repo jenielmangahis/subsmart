@@ -19,6 +19,14 @@
     display: block;
     width: 100%;
 }
+.badge-error{
+    color: #fff;
+    background-color: #dc3545;
+    padding: 5px;
+    border-radius: 0px;
+    margin-top: 5px;
+    display: block;
+}
 </style>
 <?php
 if (!is_null($dynamic_load) && $dynamic_load == true) :
@@ -83,11 +91,23 @@ function formatEstimateNumber($number) {
                                         $class = "badge-primary";
                                         break;
                                 endswitch;    
+
+                                $datetime1 = new DateTime(date("Y-m-d",strtotime($estimate->updated_at)));
+                                $datetime2 = new DateTime(date("Y-m-d"));
+                                $difference = $datetime1->diff($datetime2);
+
+                                $show_no_movement_notice = 0;
+                                if( $difference->days >= 14 && ($estimate->status == 'Draft' || $estimate->status == 'Submitted' || $estimate->status == 'Accepted') ){
+                                    $show_no_movement_notice = 1;
+                                }
                             ?>
                             <tr>                    
                                 <td>
                                     <span class="content-title"><?= $estimate->estimate_number; ?></span>
                                     <span class="content-subtitle d-block"><?= $estimate->first_name . ' ' . $estimate->last_name; ?></span>
+                                    <?php if( $show_no_movement_notice == 1 ){  ?>
+                                        <span class="nsm-badge badge-error">Last update was <b><?= $difference->d . ' days ago' ?></b> - Needs update</span>
+                                    <?php } ?>
                                 </td>                                    
                                 <td>
                                     <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$<?= $estimate->grand_total == NULL || $estimate->grand_total == 0 ? '0.00' : number_format($estimate->grand_total,2); ?></span>

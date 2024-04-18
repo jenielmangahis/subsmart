@@ -227,7 +227,7 @@ class Estimate_model extends MY_Model
             'adjustment_value'          => $adjustment_value,
             'markup_type'               => $markup_type,
             'markup_amount'             => $markup_amount,
-            
+            'updated_at'                => date('Y-m-d H:i:s')
         ));
         return true;
     }

@@ -397,7 +397,7 @@ if ($this->session->userdata('usertimezone') == null) {
                     </ul>
                 </li>
                 <li>
-                    <a href="<?= base_url("vault/beforeafter") ?>">
+                    <a href="<?= base_url("vault_v2/beforeafter") ?>">
                         <i class='bx bx-fw bx-camera'></i> Photos Gallery
                     </a>
                     <ul>

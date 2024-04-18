@@ -3,7 +3,11 @@ if (!is_null($dynamic_load) && $dynamic_load == true) :
     echo '<div class="col-12 col-lg-4">';
 endif;
 ?>
-
+<style>
+.widget-tile-paid-invoices:hover{
+    cursor:pointer;
+}
+</style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
@@ -25,33 +29,43 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content">
-        <div class="row h-100">
-            <div class="col-12">
-                <div class="nsm-counter primary h-100">
-                    <div class="row h-100">
-                        <div class="col-12 col-md-4 mb-2 mb-md-0 d-flex justify-content-center align-items-center">
-                            <i class='bx bx-receipt'></i>
+        <div class="row">
+            <div class="col-12 col-md-12">
+                <div class="nsm-counter primary mb-2 widget-tile-paid-invoices">
+                    <div class="row">
+                        <div class="col-12 col-md-2 d-flex justify-content-center align-items-center">
+                            <i class='bx bx-dollar-circle'></i>
                         </div>
-                        <div class="col-12 col-md-8 d-flex justify-content-center align-items-center">
-                            <div class="row" style="height: 100%; max-height: 150px;">
-                                <div class="col-12 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2>$<?= number_format((float)$total_amount_invoice->total, 2, '.', ','); ?></h2>
-                                    <span>Paid</span>
-                                </div>
-                                <div class="col-12 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2><?= $total_invoice_paid->total; ?></h2>
-                                    <span>All paid invoices</span>
-                                </div>
-                            </div>
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                            <h2>$<?= number_format((float)$total_amount_invoice->total, 2, '.', ','); ?></h2>
+                            <span>Total Amount Paid Invoices</span>
                         </div>
-
-
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-12">
+                <div class="nsm-counter primary mb-2 widget-tile-paid-invoices">
+                    <div class="row">
+                        <div class="col-12 col-md-2 d-flex justify-content-center align-items-center">
+                            <i class='bx bx-box'></i>
+                        </div>
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                            <h2><?= $total_invoice_paid->total; ?></h2>
+                            <span>Total Paid invoices</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </div>    
 </div>
+<script>
+$(function(){
+    $('.widget-tile-paid-invoices').on('click', function(){
+        location.href = base_url + 'invoice/tab/5';
+    });
+});
+</script>
 
 <?php
 if (!is_null($dynamic_load) && $dynamic_load == true) :

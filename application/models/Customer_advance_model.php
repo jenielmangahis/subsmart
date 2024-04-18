@@ -88,13 +88,23 @@ class Customer_advance_model extends MY_Model {
         return $query->result();
     }
 
-    public function getAllSettingsCustomerStatusByCompanyId($company_id, $default_ids = array())
+    // public function getAllSettingsCustomerStatusByCompanyId($company_id, $default_ids = array())
+    // {
+    //     $this->db->select('*');        
+    //     $this->db->where('company_id', $company_id);
+    //     if( $default_ids ){
+    //         $this->db->or_where_in('id', $default_ids);
+    //     }
+    //     $this->db->order_by('id', 'DESC');
+    //     $query = $this->db->get('acs_cust_status');
+    //     return $query->result();
+    // }
+
+    public function getAllSettingsCustomerStatusByCompanyId($company_id)
     {
         $this->db->select('*');        
         $this->db->where('company_id', $company_id);
-        if( $default_ids ){
-            $this->db->or_where_in('id', $default_ids);
-        }
+        
         $this->db->order_by('id', 'DESC');
         $query = $this->db->get('acs_cust_status');
         return $query->result();

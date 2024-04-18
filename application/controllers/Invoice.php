@@ -1963,7 +1963,7 @@ class Invoice extends MY_Controller
 
         $post    = $this->input->post();
         $company_id = logged('company_id');
-        $invoice    = $this->invoice_model->getinvoice($post['invoice_id']);
+        $invoice    = $this->invoice_model->getById($post['invoice_id']);
         if( $invoice ){
             $invoice->status = 'Draft'; 
             $invoice_id = $this->invoice_model->cloneData($invoice);               
@@ -2034,12 +2034,17 @@ class Invoice extends MY_Controller
                     'recurring' => ''
                 ];
 
-                $this->Invoice_settings_model->create($invoice_settings_data);
+                $this->Invoice_settings_model->create($invoice_settings_data);                
             }
 
             $newInvoice    = $this->invoice_model->getinvoice($invoice_id);
             customerAuditLog(logged('id'), $invoice->customer_id, $post['invoice_id'], 'Invoice', 'Cloned invoice. New invoice number '.$newInvoice->invoice_number);
             customerAuditLog(logged('id'), $newInvoice->customer_id, $newInvoice->id, 'Invoice', 'Created invoice #'.$newInvoice->invoice_number);
+
+            //Activity Logs
+            $activity_name = 'Created New Invoice Number ' . $invoiceNumber . ' - Cloned from Invoice Number ' . $invoice->invoice_number; 
+            createActivityLog($activity_name);
+
 
             $is_success = 1;
             $msg = '';

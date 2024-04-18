@@ -1025,9 +1025,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer modal-footer-detail">
-                                <div class="button-modal-list">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" data-bs-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                                </div>
+                                
                             </div>
                         </div>
                     </div>

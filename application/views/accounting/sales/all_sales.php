@@ -50,7 +50,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-counter secondary h-100 mb-2 <?php echo $transaction === 'unbilled-income' ? 'selected' : ''; ?>" id="unbilled-income">
+                        <div class="nsm-counter success h-100 mb-2 <?php echo $transaction === 'unbilled-income' ? 'selected' : ''; ?>" id="unbilled-income">
                             <div class="row h-100">
                                 <div class="col d-flex justify-content-center align-items-center">
                                     <i class="bx bx-receipt"></i>
@@ -76,7 +76,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-3">
-                        <div class="nsm-counter h-100 mb-2 <?php echo $transaction === 'open-invoices' ? 'selected' : ''; ?>" id="open-invoices">
+                        <div class="nsm-counter secondary h-100 mb-2 <?php echo $transaction === 'open-invoices' ? 'selected' : ''; ?>" id="open-invoices">
                             <div class="row h-100">
                                 <div class="col d-flex justify-content-center align-items-center">
                                     <i class="bx bx-receipt"></i>
@@ -90,8 +90,8 @@
                     </div>
                 </div>
                 <div class="row g-3 mb-3">
-                    <div class="col-12 col-md-6">
-                        <div class="nsm-counter success h-100 mb-2 <?php echo $transaction === 'recently-paid' ? 'selected' : ''; ?>" id="recently-paid">
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter primary h-100 mb-2 <?php echo $transaction === 'recently-paid' ? 'selected' : ''; ?>" id="recently-paid">
                             <div class="row h-100">
                                 <div class="col d-flex justify-content-center align-items-center">
                                     <i class="bx bx-receipt"></i>
@@ -103,18 +103,18 @@
                             </div>
                         </div>
                     </div>
-
-                    <?php
-                    $total_sales = count($open_estimates) + count($unbilledActs) + count($overdue_invoices) + count($open_invoices) + count($recent_payments);
-                    ?>
-                    <div class="col-12 col-md-6">
-                        <div class="nsm-counter primary h-100 mb-2">
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter success h-100 mb-2  <?php echo $transaction === 'all-transactions' ? 'selected' : ''; ?>" id="all-transactions">
                             <div class="row h-100">
                                 <div class="col d-flex justify-content-center align-items-center">
                                     <i class="bx bx-receipt"></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year"><?php echo $total_sales; ?></h2>
+                                    <?php if (isset($transaction['total'])) : ?>
+                                        <h2 id="total_this_year">$<?php echo $transaction['total']; ?></h2>
+                                    <?php else : ?>
+                                        <h2 id="total_this_year">N/A</h2>
+                                    <?php endif; ?>
                                     <span>TOTAL SALES</span>
                                 </div>
                             </div>
@@ -490,7 +490,7 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if (!empty($transaction['customer'])) {
+                                                    if (!empty($transaction['customer']) && trim($transaction['customer']) != '') {
                                                         echo $transaction['customer'];
                                                     } else {
                                                         echo 'No customer';
@@ -526,32 +526,16 @@
                                                 </td>
                                                 <!-- <td><?php //echo $transaction['last_delivered']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['email'])) {
-                                                        echo $transaction['email'];
-                                                    } else {
-                                                        echo 'No email provided';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?= $transaction['email'] ?: 'No email provided' ?></td>
                                                 <!-- <td><?php //echo $transaction['accepted_date']; 
                                                             ?></td> -->
                                                 <!-- <td><?php //echo $transaction['attachments']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['status'])) {
-                                                        echo $transaction['status'];
-                                                    } else {
-                                                        echo 'No status provided';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?= $transaction['status'] ?: 'No status provided' ?></td>
                                                 <!-- <td><?php //echo $transaction['po_number']; 
                                                             ?></td>
-                                            <td><?php //echo $transaction['sales_rep']; 
-                                                ?></td> -->
+                                                <td><?php //echo $transaction['sales_rep']; 
+                                                    ?></td> -->
                                                 <td><?php echo $transaction['manage']; ?></td>
                                             </tr>
                                         <?php break;
@@ -591,7 +575,7 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if (!empty($transaction['customer'])) {
+                                                    if (!empty($transaction['customer']) && trim($transaction['customer']) != '') {
                                                         echo $transaction['customer'];
                                                     } else {
                                                         echo 'No customer';
@@ -618,46 +602,14 @@
                                                 </td>
                                                 <!-- <td><?php //echo $transaction['aging']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (isset($transaction['balance'])) {
-                                                        echo $transaction['balance'];
-                                                    } else {
-                                                        echo 'No balance available';
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['total'])) {
-                                                        echo $transaction['total'];
-                                                    } else {
-                                                        echo 'No total available';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?= $transaction['balance'] ?: 'No balance available' ?></td>
+                                                <td><?= $transaction['total'] ?: 'No total available' ?></td>
                                                 <!-- <td><?php //echo $transaction['last_delivered']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['email'])) {
-                                                        echo $transaction['email'];
-                                                    } else {
-                                                        echo 'No email provided';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?= $transaction['email'] ?: 'No email provided' ?></td>
                                                 <!-- <td><?php //echo $transaction['attachments']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['status'])) {
-                                                        echo $transaction['status'];
-                                                    } else {
-                                                        echo 'No status provided';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?= $transaction['status'] ?: 'No status provided' ?></td>
                                                 <!-- <td><?php //echo $transaction['po_number']; 
                                                             ?></td>
                                             <td><?php //echo $transaction['sales_rep']; 
@@ -701,7 +653,7 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if (!empty($transaction['customer'])) {
+                                                    if (!empty($transaction['customer']) && trim($transaction['customer']) != '') {
                                                         echo $transaction['customer'];
                                                     } else {
                                                         echo 'No customer';
@@ -712,55 +664,15 @@
                                                             ?></td> -->
                                                 <!-- <td><?php //echo $transaction['source']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['memo'])) {
-                                                        echo $transaction['memo'];
-                                                    } else {
-                                                        echo 'No memo available';
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['due_date'])) {
-                                                        echo $transaction['due_date'];
-                                                    } else {
-                                                        echo 'No due date set';
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['total'])) {
-                                                        echo $transaction['total'];
-                                                    } else {
-                                                        echo 'No total available';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?= $transaction['memo'] ?: 'No memo available' ?></td>
+                                                <td><?= $transaction['expiration_date'] ?? 'No due date provided' ?></td>
+                                                <td><?= $transaction['total'] ?: 'No total available' ?></td>
                                                 <!-- <td><?php //echo $transaction['last_delivered']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['email'])) {
-                                                        echo $transaction['email'];
-                                                    } else {
-                                                        echo 'No email provided';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?= $transaction['email'] ?: 'No email provided' ?></td>
                                                 <!-- <td><?php //echo $transaction['attachments']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['status'])) {
-                                                        echo $transaction['status'];
-                                                    } else {
-                                                        echo 'No status provided';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?= $transaction['status'] ?: 'No status provided' ?></td>
                                                 <!-- <td><?php //echo $transaction['po_number']; 
                                                             ?></td>
                                             <td><?php //echo $transaction['sales_rep']; 
@@ -804,7 +716,7 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if (!empty($transaction['customer'])) {
+                                                    if (!empty($transaction['customer']) && trim($transaction['customer']) != '') {
                                                         echo $transaction['customer'];
                                                     } else {
                                                         echo 'No customer';
@@ -831,26 +743,10 @@
                                                 </td>
                                                 <!-- <td><?php //echo $transaction['last_delivered']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['email'])) {
-                                                        echo $transaction['email'];
-                                                    } else {
-                                                        echo 'No email provided';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?= $transaction['email'] ?: 'No email provided' ?></td>
                                                 <!-- <td><?php //echo $transaction['attachments']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['status'])) {
-                                                        echo $transaction['status'];
-                                                    } else {
-                                                        echo 'No status provided';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?= $transaction['status'] ?: 'No status provided' ?></td>
                                                 <!-- <td><?php //echo $transaction['po_number']; 
                                                             ?></td>
                                             <td><?php //echo $transaction['sales_rep']; 
@@ -885,7 +781,7 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if (!empty($transaction['customer'])) {
+                                                    if (!empty($transaction['customer']) && trim($transaction['customer']) != '') {
                                                         echo $transaction['customer'];
                                                     } else {
                                                         echo 'No customer';
@@ -977,7 +873,7 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if (!empty($transaction['customer'])) {
+                                                    if (!empty($transaction['customer']) && trim($transaction['customer']) != '') {
                                                         echo $transaction['customer'];
                                                     } else {
                                                         echo 'No customer';
@@ -988,72 +884,18 @@
                                                             ?></td> -->
                                                 <!-- <td><?php //echo $transaction['source']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['memo'])) {
-                                                        echo $transaction['memo'];
-                                                    } else {
-                                                        echo 'No memo available';
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['due_date'])) {
-                                                        echo $transaction['due_date'];
-                                                    } else {
-                                                        echo 'No due date set';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?= $transaction['memo'] ?: 'No memo available' ?></td>
+                                                <td><?= $transaction['due_date'] ?: 'No due date' ?></td>
+
                                                 <!-- <td><?php //echo $transaction['aging']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['balance'])) {
-                                                        echo $transaction['balance'];
-                                                    } else {
-                                                        echo 'No balance available';
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['total'])) {
-                                                        echo $transaction['total'];
-                                                    } else {
-                                                        echo 'No total available';
-                                                    }
-                                                    ?>
-                                                </td> <!-- <td><?php //echo $transaction['last_delivered']; 
-                                                                ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['email'])) {
-                                                        echo $transaction['email'];
-                                                    } else {
-                                                        echo 'No email provided';
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td> <?php
-                                                        if (!empty($transaction['latest_payment'])) {
-                                                            echo $transaction['latest_payment'];
-                                                        } else {
-                                                            echo 'No latest payment available';
-                                                        }
-                                                        ?></td>
+                                                <td><?= $transaction['balance'] ?: 'No balance available' ?></td>
+                                                <td><?= $transaction['total'] ?: 'No total available' ?></td>
+                                                <td><?= $transaction['email'] ?: 'No email provided' ?></td>
+                                                <td><?= $transaction['latest_payment'] ?: 'No latest payment available' ?></td>
                                                 <!-- <td><?php //echo $transaction['attachments']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['status'])) {
-                                                        echo $transaction['status'];
-                                                    } else {
-                                                        echo 'No status provided';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?= $transaction['status'] ?: 'No status provided' ?></td>
                                                 <!-- <td><?php //echo $transaction['po_number']; 
                                                             ?></td>
                                             <td><?php //echo $transaction['sales_rep']; 
@@ -1097,7 +939,7 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if (!empty($transaction['customer'])) {
+                                                    if (!empty($transaction['customer']) && trim($transaction['customer']) != '') {
                                                         echo $transaction['customer'];
                                                     } else {
                                                         echo 'No customer';
@@ -1124,15 +966,7 @@
                                                 </td>
                                                 <!-- <td><?php //echo $transaction['attachments']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['status'])) {
-                                                        echo $transaction['status'];
-                                                    } else {
-                                                        echo 'No status provided';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?= $transaction['status'] ?: 'No status provided' ?></td>
                                                 <!-- <td><?php //echo $transaction['po_number']; 
                                                             ?></td>
                                             <td><?php //echo $transaction['sales_rep']; 
@@ -1176,7 +1010,7 @@
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    if (!empty($transaction['customer'])) {
+                                                    if (!empty($transaction['customer']) && trim($transaction['customer']) != '') {
                                                         echo $transaction['customer'];
                                                     } else {
                                                         echo 'No customer';
@@ -1187,66 +1021,18 @@
                                                             ?></td> -->
                                                 <!-- <td><?php //echo $transaction['source']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['memo'])) {
-                                                        echo $transaction['memo'];
-                                                    } else {
-                                                        echo 'No memo available';
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['due_date'])) {
-                                                        echo $transaction['due_date'];
-                                                    } else {
-                                                        echo 'No due date set';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?= $transaction['memo'] ?: 'No memo available' ?></td>
+                                                <td><?= $transaction['due_date'] ?: 'No due date' ?></td>
                                                 <!-- <td><?php //echo $transaction['aging']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['balance'])) {
-                                                        echo $transaction['balance'];
-                                                    } else {
-                                                        echo 'No balance available';
-                                                    }
-                                                    ?>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['total'])) {
-                                                        echo $transaction['total'];
-                                                    } else {
-                                                        echo 'No total available';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?= $transaction['balance'] ?: 'No balance available' ?></td>
+                                                <td><?= $transaction['total'] ?: 'No total available' ?></td>
                                                 <!-- <td><?php //echo $transaction['last_delivered']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['email'])) {
-                                                        echo $transaction['email'];
-                                                    } else {
-                                                        echo 'No email provided';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?= $transaction['email'] ?: 'No email provided' ?></td>
                                                 <!-- <td><?php //echo $transaction['attachments']; 
                                                             ?></td> -->
-                                                <td>
-                                                    <?php
-                                                    if (!empty($transaction['status'])) {
-                                                        echo $transaction['status'];
-                                                    } else {
-                                                        echo 'No status provided';
-                                                    }
-                                                    ?>
-                                                </td>
+                                                <td><?= $transaction['status'] ?: 'No status provided' ?></td>
                                                 <!-- <td><?php //echo $transaction['po_number']; 
                                                             ?></td>
                                             <td><?php //echo $transaction['sales_rep']; 

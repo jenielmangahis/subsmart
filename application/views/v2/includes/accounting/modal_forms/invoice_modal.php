@@ -755,7 +755,6 @@
                                                     </div>
                                                 </div>
 
-
                                             </div>
                                         </div>
 
@@ -877,7 +876,7 @@
                                             </div>
                                         </div>
                                     </div>
-
+                                    
                                     <div class="row">
                                         <div class="col-12 col-md-6">
                                             <hr />
@@ -1057,19 +1056,19 @@
 
     $(document).ready(function() {
      $('#manage-payment-schedule').on('click', function(event) {
-    event.preventDefault();
-    var paymentScheduleContainer = $('#payment-schedule-input');
+        event.preventDefault();
+        var paymentScheduleContainer = $('#payment-schedule-input');
 
-    if (paymentScheduleContainer.is(':hidden')) {
-      paymentScheduleContainer.show();
-      $(this).html('<i class="bx bx-fw bxs-minus-square" aria-hidden="true"></i> Hide payment schedule');
-      return;
-    } 
+        if (paymentScheduleContainer.is(':hidden')) {
+        paymentScheduleContainer.show();
+        $(this).html('<i class="bx bx-fw bxs-minus-square" aria-hidden="true"></i> Hide payment schedule');
+        return;
+        } 
 
       paymentScheduleContainer.hide();
       $(this).html('<i class="bx bx-fw bxs-plus-square" aria-hidden="true"></i> Manage payment schedule');
   
-  });
+    });
   $('#transaction-grand-total').on('DOMSubtreeModified', function() {
     var grandTotal = parseFloat($(this).text().replace(/[^0-9.-]+/g, ""));
     var selectedMonths = $('#payment-schedule-months').val();
