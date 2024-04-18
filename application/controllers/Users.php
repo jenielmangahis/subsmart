@@ -2284,6 +2284,10 @@ class Users extends MY_Controller
 			$workImages  = unserialize($profiledata->work_images);
 			$workImages[] = ['file' => $name, 'caption' => 'Work Picture'];
 			$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
+
+			//Activity Logs
+            $activity_name = 'Uploaded New Portfolio Image'; 
+            createActivityLog($activity_name);
 		}
 	}
 
@@ -2299,6 +2303,10 @@ class Users extends MY_Controller
 		$workImages  = unserialize($profiledata->work_images);
 		unset($workImages[$post['image_key']]);
 		$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
+
+		//Activity Logs
+		$activity_name = 'Deleted Portfolio Image'; 
+		createActivityLog($activity_name);
 
 		$json_data = [
 			'is_success' => $is_success,
@@ -2320,6 +2328,10 @@ class Users extends MY_Controller
 		$workImages  = unserialize($profiledata->work_images);
 		$workImages[$post['image_key']]['caption'] = $post['image_caption'];
 		$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
+
+		//Activity Logs
+		$activity_name = 'Set Portfolio Image Caption to ' . $post['image_caption']; 
+		createActivityLog($activity_name);
 
 		$json_data = [
 			'is_success' => $is_success,
