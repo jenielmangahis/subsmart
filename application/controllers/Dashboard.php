@@ -618,6 +618,23 @@ class Dashboard extends Widgets
         exit(json_encode($data_arr));
     }
 
+    public function ajax_recent_customers_thubnails()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $is_success = 1;
+        $cid = logged('company_id');
+
+        $recentCustomers = $this->AcsProfile_model->getAllRecentCustomerByCompanyId2($cid, 10);
+        if (empty($recentCustomers)) {
+            $is_success = 0;
+        }
+
+        $data_arr = ['success' => $is_success, 'recentCustomers' => $recentCustomers];
+        exit(json_encode($data_arr));
+    }
+
+
     public function ajax_recent_leads()
     {
         $this->load->model('Customer_advance_model');

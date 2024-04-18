@@ -79,7 +79,8 @@ class Widgets_model extends MY_Model
         $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
         $this->db->where('invoices.company_id', $company_id);
         $this->db->where('invoices.grand_total >', 0);
-        $this->db->where('invoices.status !=','paid');
+        $this->db->where('invoices.status !=','Draft');
+        $this->db->where('invoices.status !=','Paid');
         $this->db->where('invoices.due_date !=', null);
         $this->db->where("STR_TO_DATE(invoices.due_date, '%Y-%m-%d') < CURRENT_DATE()");
         $this->db->group_by('invoices.id');
