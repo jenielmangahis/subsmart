@@ -2110,7 +2110,6 @@ class Customer extends MY_Controller
 
         $userid = $id;
         $user_id = logged('id');
-        $this->page_data['test'] = getLoggedUserID();
         if (isset($userid) || !empty($userid)) {
             $billing = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
             $customer = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
