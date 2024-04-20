@@ -40,6 +40,9 @@
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="tab2" role="tabpanel" aria-labelledby="tab2-tab">
+                                    <div class="my-5 text-center">
+                                    <label class="content-subtitle">Select 8 different widgets to display in  your dashboard.</label>
+                                    </div>
                                     <div class="col-12" id="add_thumbnail_container">
                                             <div class="nsm-loader">
                                                 <i class='bx bx-loader-alt bx-spin'></i>

@@ -110,12 +110,21 @@ $(document).ready(function() {
         console.log('Error:', error);
     });
 
+    fetch('<?php echo base_url('dashboard/_recent_customers_thumbnail'); ?>', {
+        method: 'GET',
+    }) .then(response => response.json() ).then(response => {
+        var {success, companies, recentCustomers } = response;
+        $("#recent-customer-container-count").html(recentCustomers.length);
+
+    }).catch((error) => {
+        console.log('Error:', error);
+    });
+
     fetch('<?php echo base_url('dashboard/_recent_customers'); ?>', {
         method: 'GET',
     }) .then(response => response.json() ).then(response => {
         var {success, companies, recentCustomers } = response;
         $("#recent-customer-container").html('');
-        $("#recent-customer-container-count").html(recentCustomers.length);
         if(success == 1){
             for(var j=0; j < recentCustomers.length; j++){
             var nn = "NN";

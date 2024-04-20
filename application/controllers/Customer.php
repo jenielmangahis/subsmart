@@ -1295,6 +1295,29 @@ class Customer extends MY_Controller
         $this->load->view('customer/subscription_details', $this->page_data);
     }
 
+    // public function settingStatus()
+    // {
+    //     $this->page_data['page']->title = 'Customer Status';
+    //     $this->page_data['page']->parent = 'Customers';
+    //     $this->hasAccessModule(9);
+
+    //     $user_id = logged('id');
+    //     $company_id = logged('company_id');
+
+    //     // set a global data for customer profile id
+    //     $this->page_data['customer_profile_id'] = $user_id;
+
+    //     if (isset($userid) || !empty($userid)) {
+    //         $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
+    //         $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
+    //     }
+
+    //     $default_ids = defaultCompanyCustomerStatusIds();
+    //     $this->page_data['customerStatus'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id, $default_ids);
+
+    //     $this->load->view('v2/pages/customer/settings_customer_status', $this->page_data);
+    // }
+
     public function settingStatus()
     {
         $this->page_data['page']->title = 'Customer Status';
@@ -1311,10 +1334,9 @@ class Customer extends MY_Controller
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
             $this->page_data['cust_modules'] = $this->customer_ad_model->getModulesList();
         }
-
-        $default_ids = defaultCompanyCustomerStatusIds();
+        
+        // $default_ids = defaultCompanyCustomerStatusIds();
         $this->page_data['customerStatus'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id);
-
         $this->load->view('v2/pages/customer/settings_customer_status', $this->page_data);
     }
 

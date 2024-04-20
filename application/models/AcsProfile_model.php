@@ -503,6 +503,21 @@ class AcsProfile_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllRecentCustomerByCompanyId2($company_id, $limit = 10)
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);        
+        $this->db->where('first_name !=', '');
+        $this->db->where("WEEK(created_at) = WEEK(CURDATE())");
+        $this->db->order_by('prof_id', 'DESC');
+        $this->db->limit($limit);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function update_customer_status($prof_id)
     {
         $this->db->where('prof_id', $prof_id);
