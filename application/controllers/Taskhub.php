@@ -726,6 +726,70 @@ class Taskhub extends MY_Controller {
 				}
 			}
 		}
+	}
+	
+	public function ajax_save_taskhub_task()
+	{
+		$this->load->model('Taskhub_model');
+        $this->load->model('Taskhub_participants_model');
+        $this->load->model('Taskhub_status_model');   
+
+        $cid = logged('company_id');
+        $uid = logged('id');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();  
+
+        if( $post['subject'] != '' ){
+            $taskStatus = $this->Taskhub_status_model->getById($post['status']);
+
+            $prof_id = 0;
+            if( $post['customer_id'] > 0 ){
+            	$prof_id = $post['customer_id'];
+            }
+            
+            $task_data = [
+                'prof_id' => $prof_id,
+                'subject' => $post['subject'],
+                'description' => $post['description'],
+                'created_by' => $uid,
+                'date_created' => date('Y-m-d h:i:s'),
+                'estimated_date_complete' => date('Y-m-d', strtotime($post['estimated_date_complete'])),
+                'actual_date_complete' => '',
+                'task_color' => $taskStatus->status_color,
+                'status_id' => $taskStatus->status_id,
+                'priority' => $post['priority'],
+                'company_id' => $cid,
+                'view_count' => 0
+            ];
+
+            $taskId = $this->Taskhub_model->create($task_data);
+
+			$assigned_to = $this->input->post('assigned_to');
+			if($assigned_to == ''){
+				$assigned_to = $uid;
+			}			
+
+            $data_participant = [
+                'task_id' => $taskId,
+                'user_id' => $assigned_to,
+                'is_assigned' => 1
+            ];
+
+            $this->Taskhub_participants_model->create($data_participant);
+
+            $is_success = 1;
+            $msg = '';
+
+        }else{
+            $msg = 'Please enter subject';
+        }
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);  
 	}	
 
 	public function view($id){
