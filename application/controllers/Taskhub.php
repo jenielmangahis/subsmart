@@ -729,6 +729,8 @@ class Taskhub extends MY_Controller {
 	}	
 
 	public function view($id){
+		$company_id = logged('company_id');
+
 		$this->page_data['taskHub'] = $task = $this->db->query(
 			'select '.
 			'a.*, '.
@@ -768,7 +770,7 @@ class Taskhub extends MY_Controller {
 			'left join users b on b.id = a.user_id '.
 			'where a.relation_id = '. $id . ' ' .
 			  'and a.type = "task" '.
-
+			  'and a.company_id = '. $company_id . ' ' .
 			'order by `update_date` ASC '
 		)->result();
 
@@ -1079,6 +1081,38 @@ class Taskhub extends MY_Controller {
 		$json_data = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json_data);  
+	}
+
+	public function ajax_ongoing_selected_tasks()
+	{
+		$this->load->model('Taskhub_model');
+        $this->load->model('Taskhub_status_model');   
+
+        $cid = logged('company_id');
+        $uid = logged('id');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();          
+        if( $post['taskId'] ){
+        	$tasks = $this->Taskhub_model->getAllByTaskIds($post['taskId']);			
+	        if( $tasks ){
+				$task_ids = implode(",", $post['taskId']);
+	        	$this->Taskhub_model->onGoingAllTasksByTaskId($post['taskId']);
+
+				//Activity Logs
+				$activity_name = 'Updated selected tasks id ' . $task_ids . ' to Ongoing'; 
+				createActivityLog($activity_name);
+
+	        	$is_success = 1;
+	        	$msg = '';
+	        }
+        }
+ 
+		$json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);		
 	}
 
 	public function ajax_delete_task()
