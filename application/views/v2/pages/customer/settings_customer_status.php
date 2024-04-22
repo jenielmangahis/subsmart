@@ -55,7 +55,7 @@
                                         </div>
                                     </td>
                                     <td class="fw-bold nsm-text-primary"><?= $cs->name; ?></td>
-                                    <td><?= date("Y-m-d", strtotime($cs->date_created)); ?></td>
+                                    <td><?= date("m/d/Y h:i A", strtotime($cs->date_created)); ?></td>
                                     <td>
                                         <?php if( $cs->company_id > 0 ){ ?>
                                         <div class="dropdown table-management">

@@ -99,7 +99,7 @@ if (isset($selected_participants)) {
                                     <?php if (isset($status_selection)) { ?>
                                         <div class="col-12 col-md-4">
                                             <label class="content-subtitle fw-bold d-block mb-2">Status</label>
-                                            <select name="status" class="nsm-field form-select">
+                                            <select name="status" id="status-select" class="nsm-field form-select status-select">
                                                 <?php
                                                 if ((empty(set_value('status'))) && (isset($task))) {
                                                     $sel_status = $taskHub->status_id;
@@ -148,7 +148,7 @@ if (isset($selected_participants)) {
 
                                     <div class="col-12 col-md-4">
                                         <label class="content-subtitle fw-bold d-block mb-2">Priority</label>
-                                        <select name="priority" class="nsm-field form-select">
+                                        <select name="priority" id="priority-select" class="nsm-field form-select priority-select">
                                             <?php foreach ($optionPriority as $key => $value) { ?>
                                                 <?php if ($task) { ?>
                                                     <option <?= $taskHub->priority == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
@@ -225,6 +225,9 @@ if (isset($selected_participants)) {
 
 <script type="text/javascript">
     $(function(){
+        $('#status-select').select2();
+        $('#priority-select').select2();
+        
         $('#taskhub-user-id').select2({
             ajax: {
                 url: base_url + 'autocomplete/_company_users',

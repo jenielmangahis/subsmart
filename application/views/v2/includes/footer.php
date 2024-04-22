@@ -207,6 +207,18 @@ $(document).ready(function() {
         }
     });
 
+    $(".check-input-all-tasks").click(function() {
+        if (this.checked) {
+            $('.check-input-task').each(function() {
+                this.checked = true;
+            });
+        } else {
+            $('.check-input-task').each(function() {
+                this.checked = false;
+            });
+        }
+    });
+
     $('.hdr-drpdown-multi-accounts').on('click', function() {
         var parent = $(this).closest('li');
         if (parent.hasClass('shown')) {

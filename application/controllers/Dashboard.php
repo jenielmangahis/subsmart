@@ -121,7 +121,7 @@ class Dashboard extends Widgets
     {
         $this->load->model('widgets_model');
         $user_id = logged('id');
-        $this->page_data['widgets'] = $this->widgets_model->getWidgetsList($user_id);
+        $this->page_data['widgets'] = $this->widgets_model->getWidgetsList();
         $this->load->view('v2/widgets/add_widgets_details', $this->page_data);
     }
 
@@ -144,6 +144,7 @@ class Dashboard extends Widgets
         $this->load->helper('functions');
         $this->load->helper('functions_helper');
         $this->load->model('widgets_model');
+        $this->load->model('Invoice_model');
 
         add_css([
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
@@ -195,6 +196,9 @@ class Dashboard extends Widgets
         // $this->page_data['events'] = $this->event_model->get_all_events(5);
         // $this->page_data['upcomingEvents'] = $this->event_model->getAllUpComingEventsByCompanyId(logged('company_id'));
         $this->page_data['upcomingInvoice'] = $this->event_model->getUnpaidInvoices();
+        $this->page_data['upcomingInvoice'] = $this->event_model->getUnpaidInvoices();
+        $this->page_data['dueInvoices'] = $this->Invoice_model->getCompanyDueInvoices($companyId);
+        $this->page_data['overdueInvoices'] = $this->Invoice_model->getCompanyOverDueInvoices($companyId);
         $this->page_data['subs'] = $this->event_model->getAllsubsByCompanyId($companyId)
         ;
         $past_due = $this->widgets_model->getCurrentCompanyOverdueInvoices2();

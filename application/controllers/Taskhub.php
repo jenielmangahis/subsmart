@@ -1108,5 +1108,42 @@ class Taskhub extends MY_Controller {
 
         echo json_encode($json_data);  
 	}
+
+	public function ajax_delete_selected_tasks()
+	{
+		$this->load->model('Taskhub_model'); 
+
+        $cid = logged('company_id');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post_data = $this->input->post();		
+
+		if(!empty($post_data) && isset($post_data['taskId'])) {
+			foreach($post_data['taskId'] as $id) {
+				$taskHub = $this->Taskhub_model->getById($id);
+				if( $taskHub && $taskHub->company_id == $cid ){			
+					$this->Taskhub_model->deleteByTaskId($taskHub->task_id);
+	
+					//Activity Logs
+					$activity_name = 'Deleted Task ' . $taskHub->subject; 
+					createActivityLog($activity_name);
+		
+					$msg = 'Delete tasks successful.';
+					$is_success = 1;   	
+				}
+			}
+
+			$json_data = ['is_success' => 1, 'msg' => $msg];
+			echo json_encode($json_data);  			
+		} else {
+			$json_data = ['is_success' => 0, 'msg' => 'No selected task'];
+			echo json_encode($json_data);  			
+
+		}
+
+
+	}
 }
 ?>

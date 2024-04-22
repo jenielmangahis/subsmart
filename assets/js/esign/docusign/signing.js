@@ -2362,9 +2362,9 @@ function Signing(hash) {
         }
       }
       
-      if( window.__ismobile ){
-        alert('Mobile signing finished:'+data.data.docfile_id+':'+data.data.id);
-      }
+      // if( window.__ismobile ){
+      //   alert('Mobile signing finished:'+data.data.docfile_id+':'+data.data.id);
+      // }
 
       if (data.hash) {
         window.location = `${prefixURL}/eSign/signing?hash=${data.hash}`;

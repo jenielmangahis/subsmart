@@ -30,6 +30,7 @@ class Widgets extends MY_Controller
         $this->load->model('widgets_model');
         $this->load->model('Users_model');
         $this->load->model('Jobs_model');
+        $this->load->model('Tickets_model');
 
         $cid       = getLoggedCompanyID();
         $date_from = post('tech_leaderboard_date_from');
@@ -37,13 +38,32 @@ class Widgets extends MY_Controller
 
         $tech_field_user_type = 6;
         $techs     = $this->Users_model->getCompanyUsersByUserType($cid, $tech_field_user_type);
+        
+        //Service Tickets
+        $tickets = $this->Tickets_model->get_tickets_by_company_id($cid);
+        $user_tickets = [];
+        foreach( $tickets as $t ){
+            $ticketTechs = unserialize($t->technicians);
+            foreach($ticketTechs as $uid){
+                if( $user_tickets[$uid] ){
+                    $user_tickets[$uid] = $user_tickets[$uid] + 1;
+                }else{
+                    $user_tickets[$uid] = 1;
+                }
+            }
+        }
 
         $techLeaderBoards = [];
         $date_range       = ['from' => $date_from, 'to' => $date_to];
         foreach( $techs as $t ){
             $tech_name  = $t->FName . ' ' . $t->LName;
-            $jobs = $this->Jobs_model->countAssignedJobsByUserId($t->id , $date_range);
-            $techLeaderBoards[] = ['uid' => $t->id, 'name' => $tech_name, 'email' => $t->email, 'total_jobs' => $jobs->total_jobs_assigned];
+            $jobs = $this->Jobs_model->countAssignedJobsByUserId($t->id , $date_range);    
+            if( $user_tickets[$t->id] ){
+                $total_jobs_assigned = $jobs->total_jobs_assigned + $user_tickets[$t->id];
+            }else{
+                $total_jobs_assigned = $jobs->total_jobs_assigned;
+            }
+            $techLeaderBoards[] = ['uid' => $t->id, 'name' => $tech_name, 'email' => $t->email, 'total_jobs' => $total_jobs_assigned];
         }
 
         usort($techLeaderBoards, function($a, $b) {
@@ -64,18 +84,18 @@ class Widgets extends MY_Controller
         $date_from = post('sales_leaderboard_date_from') . ' 00:00:00';
         $date_to   = post('sales_leaderboard_date_to') . ' 23:59:59';
 
-        $sales_field_user_type = 5;
-        $sales     = $this->Users_model->getCompanyUsersByUserType($cid, $sales_field_user_type);
-        //$sales     = $this->Users_model->getCompanyUsers($cid);
+        // $sales_field_user_type = 5;
+        // $sales     = $this->Users_model->getCompanyUsersByUserType($cid, $sales_field_user_type);
+        $sales     = $this->Users_model->getCompanyUsers($cid);
 
         $salesLeaderBoards = [];
         $date_range        = ['from' => $date_from, 'to' => $date_to];
         foreach( $sales as $s ){
-            $sales_name = $s->FName . ' ' . $s->LName;
-            $sales = $this->Jobs_model->getTotalSalesBySalesRepresentative($s->id, $date_range);
-            //if( $sales->total_sales > 0 ){
+            if( $sales->total_sales > 0 ){
+                $sales_name = $s->FName . ' ' . $s->LName;
+                $sales = $this->Jobs_model->getTotalSalesBySalesRepresentative($s->id, $date_range);
                 $salesLeaderBoards[] = ['uid' => $s->id, 'name' => $sales_name, 'email' => $s->email, 'total_sales' => $sales->total_sales];
-            //}            
+            }            
         }
 
         usort($salesLeaderBoards, function($a, $b) {
