@@ -59,9 +59,10 @@
                                         Batch Actions
                                     </span> <i class='bx bx-fw bx-chevron-down'></i>
                                 </button>
-                                <ul class="dropdown-menu dropdown-menu-end batch-actions">                                
-                                    <li><a class="dropdown-item" href="javascript:void(0);" id="btn-mark-completed"><i class='bx bx-fw bx-check'></i> Mark Completed</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0);" id="btn-delete-tasks"><i class='bx bx-fw bx-trash'></i> Delete</a></li>
+                                <ul class="dropdown-menu dropdown-menu-end batch-actions">
+                                    <li><a class="dropdown-item dropdown-item-mark-ongoing disabled" href="javascript:void(0);" id="btn-mark-ongoing"><i class='bx bx-fw bx-pen'></i> Mark Ongoing</a></li>                                                               
+                                    <li><a class="dropdown-item dropdown-item-mark-complete disabled" href="javascript:void(0);" id="btn-mark-completed"><i class='bx bx-fw bx-check'></i> Mark Completed</a></li>
+                                    <li><a class="dropdown-item dropdown-item-delete disabled" href="javascript:void(0);" id="btn-delete-tasks"><i class='bx bx-fw bx-trash'></i> Delete</a></li>
                                 </ul>
                             </div>
 
@@ -86,7 +87,7 @@
                         <thead>
                             <tr>
                                 <td class="table-icon text-center">
-                                    <input class="form-check-input table-select check-input-all-tasks" id="check-input-all-tasks" type="checkbox">
+                                    <input class="form-check-input table-select select-all-tasks check-input-all-tasks" id="check-input-all-tasks" type="checkbox">
                                 </td>
                                 <td class="table-icon"></td>
                                 <td data-name="Subject" style="width:40%;">Task</td>     
@@ -228,7 +229,7 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $(".nsm-table").nsmPagination();
+        $(".nsm-table").nsmPagination({itemsPerPage:10});
 
         $("#btn-mark-completed").on("click", function() {
 
@@ -244,6 +245,54 @@
                     $.ajax({
                         type: 'POST',
                         url: "<?php echo base_url('taskhub/_complete_selected_tasks'); ?>",
+                        dataType: 'json',
+                        data: $('#frm-taskhub').serialize(),
+                        success: function(result) {
+                            if (result.is_success == 1) {
+                                Swal.fire({
+                                    title: 'Update Successful!',
+                                    text: "Taskhub data is successfully updated!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'An Error Occured',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        //location.reload();
+                                    }
+                                });
+                            }
+                        },
+                    });
+                }
+            });
+        });
+
+        $("#btn-mark-ongoing").on("click", function() {
+
+            Swal.fire({
+                title: 'Ongoing All',
+                text: "This will mark all selected tasks as ongoing. Proceed with action?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "<?php echo base_url('taskhub/_ongoing_selected_tasks'); ?>",
                         dataType: 'json',
                         data: $('#frm-taskhub').serialize(),
                         success: function(result) {
@@ -431,6 +480,6 @@
                 }
             });
         });
-    });
+    });        
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

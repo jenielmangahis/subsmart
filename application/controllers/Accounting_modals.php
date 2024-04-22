@@ -2432,6 +2432,172 @@ class Accounting_modals extends MY_Controller
         return $delete;
     }
 
+    // private function inventory_qty_adjustment($data)
+    // {
+    //     $this->form_validation->set_rules('adjustment_date', 'Date', 'required');
+    //     $this->form_validation->set_rules('reference_no', 'Reference No.', 'required');
+    //     $this->form_validation->set_rules('inventory_adj_account', 'Inventory Adjustment Account', 'required');
+
+    //     if (isset($data['product']) && isset($data['new_qty']) && isset($data['change_in_qty']) && isset($data['location'])) {
+    //         $this->form_validation->set_rules('product[]', 'Product', 'required');
+    //         $this->form_validation->set_rules('location[]', 'Location', 'required');
+    //         $this->form_validation->set_rules('new_qty[]', 'New Quantity', 'required');
+    //         $this->form_validation->set_rules('change_in_qty[]', 'Change in Quantity', 'required');
+    //     }
+
+    //     $return = [];
+
+    //     if ($this->form_validation->run() === false) {
+    //         $return['data'] = null;
+    //         $return['success'] = false;
+    //         $return['message'] = validation_errors();
+    //     } elseif (!isset($data['product']) && !isset($data['new_qty']) && !isset($data['change_in_qty'])) {
+    //         $return['data'] = null;
+    //         $return['success'] = false;
+    //         $return['message'] = 'Please enter at least one inventory item.';
+    //     } else {
+    //         $total = 0.00;
+    //         foreach ($data['product'] as $key => $value) {
+    //             $item = $this->items_model->getItemById($value)[0];
+    //             $startingValAdj = $this->starting_value_model->get_by_item_id($value);
+
+    //             if(!is_null($startingValAdj)) {
+    //                 $total += floatval(str_replace(',', '', $data['change_in_qty'][$key])) * floatval(str_replace(',', '', $startingValAdj->initial_cost));
+    //             } else {
+    //                 $total += floatval(str_replace(',', '', $data['change_in_qty'][$key])) *  floatval(str_replace(',', '', $item->cost));
+    //             }
+    //         }
+
+    //         if (!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
+    //             $adjustmentData = [
+    //                 'adjustment_no' => $data['reference_no'],
+    //                 'company_id' => logged('company_id'),
+    //                 'adjustment_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
+    //                 'inventory_adjustment_account_id' => $data['inventory_adj_account'],
+    //                 'memo' => $data['memo'],
+    //                 'total_amount' => floatval(str_replace(',', '', $total)),
+    //                 'created_by' => logged('id'),
+    //                 'status' => 1
+    //             ];
+
+    //             $adjustmentId = $this->accounting_inventory_qty_adjustments_model->create($adjustmentData);
+
+    //             $successMessage = 'Entry Successful!';
+    //         } else {
+    //             $revert = $this->revert_inventory_qty_adjustment($data);
+
+    //             if ($revert) {
+    //                 $adjustmentData = [
+    //                     'adjustment_no' => $data['reference_no'],
+    //                     'adjustment_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
+    //                     'inventory_adjustment_account_id' => $data['inventory_adj_account'],
+    //                     'memo' => $data['memo'],
+    //                     'total_amount' => floatval(str_replace(',', '', $total)),
+    //                     'created_by' => logged('id'),
+    //                     'status' => 1,
+    //                     'updated_at' => date('Y-m-d h:i:s')
+    //                 ];
+    
+    //                 $update = $this->accounting_inventory_qty_adjustments_model->update($data['transaction_id'], $adjustmentData);
+    
+    //                 if ($update) {
+    //                     $adjustmentId = $data['transaction_id'];
+    //                 }
+    //             }
+
+    //             $successMessage = 'Update successful.';
+    //         }
+
+    //         if ($adjustmentId > 0) {
+    //             $adjustmentProducts = [];
+    //             $locationData = [];
+    //             foreach ($data['product'] as $key => $value) {
+    //                 $adjustmentProducts[] = [
+    //                     'adjustment_id' => $adjustmentId,
+    //                     'product_id' => $value,
+    //                     'location_id' => $data['location'][$key],
+    //                     'new_quantity' => $data['new_qty'][$key],
+    //                     'change_in_quantity' => $data['change_in_qty'][$key]
+    //                 ];
+
+    //                 $locationData[] = [
+    //                     'id' => $data['location'][$key],
+    //                     'qty' => $data['new_qty'][$key]
+    //                 ];
+
+    //                 $adjustmentItemId = $this->accounting_inventory_qty_adjustments_model->add_adjustment_product($adjustmentProducts);
+
+    //                 $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
+    //                 $startingValAdj = $this->starting_value_model->get_by_item_id($value);
+    //                 $item = $this->items_model->getItemById($value)[0];
+
+    //                 if(!is_null($startingValAdj)) {
+    //                     $amount = floatval(str_replace(',', '', $data['change_in_qty'][$key])) * floatval(str_replace(',', '', $startingValAdj->initial_cost));
+    //                 } else {
+    //                     $amount = floatval(str_replace(',', '', $data['change_in_qty'][$key])) *  floatval(str_replace(',', '', $item->cost));
+    //                 }
+
+    //                 $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
+    //                 $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) + $amount;
+    //                 $newBalance = number_format($newBalance, 2, '.', ',');
+
+    //                 $invAssetAccData = [
+    //                     'id' => $invAssetAcc->id,
+    //                     'company_id' => logged('company_id'),
+    //                     'balance' => floatval(str_replace(',', '', $newBalance))
+    //                 ];
+
+    //                 $this->chart_of_accounts_model->updateBalance($invAssetAccData);
+
+    //                 $accTransacData = [
+    //                     'account_id' => $invAssetAcc->id,
+    //                     'transaction_type' => 'Inventory Qty Adjust',
+    //                     'transaction_id' => $adjustmentId,
+    //                     'amount' => $amount,
+    //                     'transaction_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
+    //                     'type' => 'increase',
+    //                     'is_item_category' => 1,
+    //                     'child_id' => $adjustmentItemId
+    //                 ];
+    
+    //                 $this->accounting_account_transactions_model->create($accTransacData);
+    //             }
+
+    //             $adjustQuantity = $this->items_model->updateBatchLocations($locationData);
+    //             // $adjustmentProdId = $this->accounting_inventory_qty_adjustments_model->insertAdjProduct($adjustmentProducts);
+
+    //             $adjustmentAcc = $this->chart_of_accounts_model->getById($data['inventory_adj_account']);
+    //             $newBalance = floatval(str_replace(',', '', $adjustmentAcc->balance)) - $total;
+    //             $newBalance = number_format($newBalance, 2, '.', ',');
+
+    //             $adjustmentAccData = [
+    //                 'id' => $adjustmentAcc->id,
+    //                 'company_id' => logged('company_id'),
+    //                 'balance' => floatval(str_replace(',', '', $newBalance))
+    //             ];
+
+    //             $this->chart_of_accounts_model->updateBalance($adjustmentAccData);
+
+    //             $accTransacData = [
+    //                 'account_id' => $adjustmentAcc->id,
+    //                 'transaction_type' => 'Inventory Qty Adjust',
+    //                 'transaction_id' => $adjustmentId,
+    //                 'amount' => $total,
+    //                 'transaction_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
+    //                 'type' => 'decrease'
+    //             ];
+
+    //             $this->accounting_account_transactions_model->create($accTransacData);
+    //         }
+
+    //         $return['data'] = $adjustmentId;
+    //         $return['success'] = $adjustmentId && $adjustmentProdId && $adjustQuantity > 0 ? true : false;
+    //         $return['message'] = $adjustmentId && $adjustmentProdId && $adjustQuantity > 0 ? $successMessage : 'An unexpected error occured!';
+    //     }
+
+    //     return $return;
+    // }
+
     private function inventory_qty_adjustment($data)
     {
         $this->form_validation->set_rules('adjustment_date', 'Date', 'required');
@@ -2451,151 +2617,70 @@ class Accounting_modals extends MY_Controller
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = validation_errors();
-        } elseif (!isset($data['product']) && !isset($data['new_qty']) && !isset($data['change_in_qty'])) {
-            $return['data'] = null;
-            $return['success'] = false;
-            $return['message'] = 'Please enter at least one inventory item.';
         } else {
-            $total = 0.00;
-            foreach ($data['product'] as $key => $value) {
-                $item = $this->items_model->getItemById($value)[0];
-                $startingValAdj = $this->starting_value_model->get_by_item_id($value);
+            try {
+                $total = 0.00;
 
-                if(!is_null($startingValAdj)) {
-                    $total += floatval(str_replace(',', '', $data['change_in_qty'][$key])) * floatval(str_replace(',', '', $startingValAdj->initial_cost));
-                } else {
-                    $total += floatval(str_replace(',', '', $data['change_in_qty'][$key])) *  floatval(str_replace(',', '', $item->cost));
-                }
-            }
-
-            if (!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
-                $adjustmentData = [
-                    'adjustment_no' => $data['reference_no'],
-                    'company_id' => logged('company_id'),
-                    'adjustment_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
-                    'inventory_adjustment_account_id' => $data['inventory_adj_account'],
-                    'memo' => $data['memo'],
-                    'total_amount' => floatval(str_replace(',', '', $total)),
-                    'created_by' => logged('id'),
-                    'status' => 1
-                ];
-
-                $adjustmentId = $this->accounting_inventory_qty_adjustments_model->create($adjustmentData);
-
-                $successMessage = 'Entry Successful!';
-            } else {
-                $revert = $this->revert_inventory_qty_adjustment($data);
-
-                if ($revert) {
-                    $adjustmentData = [
-                        'adjustment_no' => $data['reference_no'],
-                        'adjustment_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
-                        'inventory_adjustment_account_id' => $data['inventory_adj_account'],
-                        'memo' => $data['memo'],
-                        'total_amount' => floatval(str_replace(',', '', $total)),
-                        'created_by' => logged('id'),
-                        'status' => 1,
-                        'updated_at' => date('Y-m-d h:i:s')
-                    ];
-    
-                    $update = $this->accounting_inventory_qty_adjustments_model->update($data['transaction_id'], $adjustmentData);
-    
-                    if ($update) {
-                        $adjustmentId = $data['transaction_id'];
-                    }
-                }
-
-                $successMessage = 'Update successful.';
-            }
-
-            if ($adjustmentId > 0) {
-                $adjustmentProducts = [];
-                $locationData = [];
                 foreach ($data['product'] as $key => $value) {
-                    $adjustmentProducts[] = [
-                        'adjustment_id' => $adjustmentId,
-                        'product_id' => $value,
-                        'location_id' => $data['location'][$key],
-                        'new_quantity' => $data['new_qty'][$key],
-                        'change_in_quantity' => $data['change_in_qty'][$key]
-                    ];
-
-                    $locationData[] = [
-                        'id' => $data['location'][$key],
-                        'qty' => $data['new_qty'][$key]
-                    ];
-
-                    $adjustmentItemId = $this->accounting_inventory_qty_adjustments_model->add_adjustment_product($adjustmentProducts);
-
-                    $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
-                    $startingValAdj = $this->starting_value_model->get_by_item_id($value);
                     $item = $this->items_model->getItemById($value)[0];
+                    $startingValAdj = $this->starting_value_model->get_by_item_id($value);
 
-                    if(!is_null($startingValAdj)) {
-                        $amount = floatval(str_replace(',', '', $data['change_in_qty'][$key])) * floatval(str_replace(',', '', $startingValAdj->initial_cost));
+                    if (!is_null($startingValAdj)) {
+                        $total += floatval(str_replace(',', '', $data['change_in_qty'][$key])) * floatval(str_replace(',', '', $startingValAdj->initial_cost));
                     } else {
-                        $amount = floatval(str_replace(',', '', $data['change_in_qty'][$key])) *  floatval(str_replace(',', '', $item->cost));
+                        $total += floatval(str_replace(',', '', $data['change_in_qty'][$key])) * floatval(str_replace(',', '', $item->cost));
                     }
-
-                    $invAssetAcc = $this->chart_of_accounts_model->getById($itemAccDetails->inv_asset_acc_id);
-                    $newBalance = floatval(str_replace(',', '', $invAssetAcc->balance)) + $amount;
-                    $newBalance = number_format($newBalance, 2, '.', ',');
-
-                    $invAssetAccData = [
-                        'id' => $invAssetAcc->id,
-                        'company_id' => logged('company_id'),
-                        'balance' => floatval(str_replace(',', '', $newBalance))
-                    ];
-
-                    $this->chart_of_accounts_model->updateBalance($invAssetAccData);
-
-                    $accTransacData = [
-                        'account_id' => $invAssetAcc->id,
-                        'transaction_type' => 'Inventory Qty Adjust',
-                        'transaction_id' => $adjustmentId,
-                        'amount' => $amount,
-                        'transaction_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
-                        'type' => 'increase',
-                        'is_item_category' => 1,
-                        'child_id' => $adjustmentItemId
-                    ];
-    
-                    $this->accounting_account_transactions_model->create($accTransacData);
                 }
 
-                $adjustQuantity = $this->items_model->updateBatchLocations($locationData);
-                // $adjustmentProdId = $this->accounting_inventory_qty_adjustments_model->insertAdjProduct($adjustmentProducts);
+                $adjustmentId = $this->saveAdjustment($data, $total);
 
-                $adjustmentAcc = $this->chart_of_accounts_model->getById($data['inventory_adj_account']);
-                $newBalance = floatval(str_replace(',', '', $adjustmentAcc->balance)) - $total;
-                $newBalance = number_format($newBalance, 2, '.', ',');
+                if ($adjustmentId > 0) {
+                    $return['data'] = $adjustmentId;
+                    $return['success'] = true;
+                    $return['message'] = 'Inventory adjustment successful!';
+                } else {
+                    $return['data'] = null;
+                    $return['success'] = false;
+                    $return['message'] = 'An unexpected error occurred during inventory adjustment.';
+                }
+            } catch (Exception $e) {
+                log_message('error', 'Exception in inventory_qty_adjustment(): ' . $e->getMessage());
 
-                $adjustmentAccData = [
-                    'id' => $adjustmentAcc->id,
-                    'company_id' => logged('company_id'),
-                    'balance' => floatval(str_replace(',', '', $newBalance))
-                ];
-
-                $this->chart_of_accounts_model->updateBalance($adjustmentAccData);
-
-                $accTransacData = [
-                    'account_id' => $adjustmentAcc->id,
-                    'transaction_type' => 'Inventory Qty Adjust',
-                    'transaction_id' => $adjustmentId,
-                    'amount' => $total,
-                    'transaction_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
-                    'type' => 'decrease'
-                ];
-
-                $this->accounting_account_transactions_model->create($accTransacData);
+                $return['data'] = null;
+                $return['success'] = false;
+                $return['message'] = 'An unexpected error occurred. Please try again.';
             }
-
-            $return['data'] = $adjustmentId;
-            $return['success'] = $adjustmentId && $adjustmentProdId && $adjustQuantity > 0 ? true : false;
-            $return['message'] = $adjustmentId && $adjustmentProdId && $adjustQuantity > 0 ? $successMessage : 'An unexpected error occured!';
         }
 
         return $return;
+    }
+
+    private function saveAdjustment($data, $total)
+    {
+        $adjustmentData = [
+            'adjustment_no' => $data['reference_no'],
+            'company_id' => logged('company_id'),
+            'adjustment_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
+            'inventory_adjustment_account_id' => $data['inventory_adj_account'],
+            'memo' => $data['memo'],
+            'total_amount' => floatval(str_replace(',', '', $total)),
+            'created_by' => logged('id'),
+            'status' => 1
+        ];
+
+        if (!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
+            return $this->accounting_inventory_qty_adjustments_model->create($adjustmentData);
+        } else {
+            $revert = $this->revert_inventory_qty_adjustment($data);
+
+            if ($revert) {
+                $adjustmentData['updated_at'] = date('Y-m-d H:i:s');
+                $this->accounting_inventory_qty_adjustments_model->update($data['transaction_id'], $adjustmentData);
+                return $data['transaction_id'];
+            }
+        }
+
+        return 0;
     }
 
     private function weekly_timesheet($data)
