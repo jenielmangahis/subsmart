@@ -44,11 +44,13 @@ class Widgets extends MY_Controller
         $user_tickets = [];
         foreach( $tickets as $t ){
             $ticketTechs = unserialize($t->technicians);
-            foreach($ticketTechs as $uid){
-                if( $user_tickets[$uid] ){
-                    $user_tickets[$uid] = $user_tickets[$uid] + 1;
-                }else{
-                    $user_tickets[$uid] = 1;
+            if( !empty($ticketTechs) ){
+                foreach($ticketTechs as $uid){
+                    if( $user_tickets[$uid] ){
+                        $user_tickets[$uid] = $user_tickets[$uid] + 1;
+                    }else{
+                        $user_tickets[$uid] = 1;
+                    }
                 }
             }
         }
