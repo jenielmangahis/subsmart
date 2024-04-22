@@ -946,7 +946,7 @@ $(function () {
                 } else {
                     type = type.replaceAll('_', '-');
                 }
-                
+
 
                 if (dropdownFields.includes(type)) {
                     $(this).select2({
@@ -2102,7 +2102,7 @@ $(function () {
 
     $(document).on('change', '#inventory-adjustments-table select[name="product[]"]', function () {
         var input = $(this);
-        var row = $(this).parent().parent();
+        var row = input.closest('tr');
 
         if (input.val() !== 'add-new') {
             $.get(base_url + `accounting/get-item-details/${input.val()}`, function (res) {
@@ -2110,13 +2110,26 @@ $(function () {
 
                 row.children(':nth-child(3)').html(result.item.description);
 
-                row.children(':nth-child(4)').children('select').html('<option value="" disabled selected>&nbsp;</option>');
-                row.children(':nth-child(5)').html('');
-                row.children(':nth-child(6)').children('input').val('');
+                var selectElement = row.children(':nth-child(4)').children('select');
+                selectElement.empty();
+
+                result.locations.forEach(function (location) {
+                    if (!location.disabled) {
+                        selectElement.append(`<option value="${location.id}" data-quantity="${location.qty}">${location.name}</option>`);
+                    }
+                });
+
+                selectElement.on('change', function () {
+                    var selectedOption = $(this).find('option:selected');
+                    var selectedQuantity = selectedOption.data('quantity');
+
+                    var quantityInput = row.children(':nth-child(6)').children('input');
+                    quantityInput.val(selectedQuantity);
+                });
+
+                selectElement.trigger('change');
+
                 row.children(':nth-child(7)').children('input').val('');
-                for (i in result.locations) {
-                    row.children(':nth-child(4)').children('select').append(`<option value="${result.locations[i].id}" data-quantity="${result.locations[i].qty}">${result.locations[i].name}</option>`);
-                }
             });
         }
     });
@@ -6036,12 +6049,12 @@ $(function () {
     //         });
     //     }
     // });
-   
-    
+
+
 
     $(document).on('click', '#modal-container #item-modal #addBundleItem, #modal-container #item-modal #addLocationLine', function (e) {
         e.preventDefault();
-      
+
         if ($(this).attr('id').includes('Bundle')) {
             var type = 'item';
             var id_type = 'item';
@@ -6067,7 +6080,7 @@ $(function () {
                         field: type == 'item' ? 'item' : 'item-locations',
                         modal: 'item-modal'
                     }
-        
+
                     // Query parameters will be ?search=[term]&type=public&field=[type]
                     return query;
                 }
@@ -6081,7 +6094,7 @@ $(function () {
     $(document).on('click', '#modal-container #item-modal #bundle-items-table .delete-item, #modal-container #item-modal #storage-locations .delete-location', function (e) {
         e.preventDefault();
 
-        if ($(this).parent().parent().parent().children('tr').length > 0 ) {
+        if ($(this).parent().parent().parent().children('tr').length > 0) {
             $(this).parent().parent().remove();
         } else {
             $(this).parent().parent().children('td:not(:last-child)').html('');
@@ -6136,15 +6149,15 @@ $(function () {
         e.preventDefault();
 
         var formIsValid = true;
-        $('#item-modal form').find('input[required], textarea[required]').each(function() {
+        $('#item-modal form').find('input[required], textarea[required]').each(function () {
             if (!$(this).val().trim()) {
-              
+
                 formIsValid = false;
                 return false; // Exit the loop early
-          
+
             }
         });
-        $('#item-modal form').find('input[required], textarea[required]').each(function() {
+        $('#item-modal form').find('input[required], textarea[required]').each(function () {
             if (!$(this).val().trim()) {
                 $(this).addClass('reset-indicator');
             }
@@ -6164,27 +6177,27 @@ $(function () {
         // If all required fields are filled, hide the modal and submit the form
         $('#item-modal').modal('hide');
         $('#item-modal form').trigger('submit');
-     
+
     });
 
     $(document).on('click', '#item-modal .modal-footer #save-and-new', function (e) {
         e.preventDefault();
         var form = $('#item-modal form');
         var formData = form.serialize();
-        var actionUrl = form.attr('action'); 
+        var actionUrl = form.attr('action');
 
         var formIsValid = true;
-        $('#item-modal form').find('input[required], textarea[required]').each(function() {
+        $('#item-modal form').find('input[required], textarea[required]').each(function () {
             if (!$(this).val().trim()) {
                 $(this).addClass('reset-indicator');
             }
         });
-        $('#item-modal form').find('input[required], textarea[required]').each(function() {
+        $('#item-modal form').find('input[required], textarea[required]').each(function () {
             if (!$(this).val().trim()) {
                 $(this).addClass('reset-indicator');
                 formIsValid = false;
                 return false; // Exit the loop early
-          
+
             }
         });
 
@@ -6203,7 +6216,7 @@ $(function () {
             url: actionUrl, // Use the form's action URL
             type: 'POST',
             data: formData,
-            success: function(response) {
+            success: function (response) {
                 // Display success message with SweetAlert
                 Swal.fire({
                     icon: 'success',
@@ -6221,15 +6234,15 @@ $(function () {
 
                 // Close the current modal
                 form.trigger('reset');
-                form.find('select').each(function() {
+                form.find('select').each(function () {
                     $(this).val(null).trigger('change'); // Reset select2 value and trigger change event
                 });
-                setTimeout(function() {
+                setTimeout(function () {
                     form.find('input, select, textarea').removeClass('reset-indicator');
-                }, 2000); 
-               
+                }, 2000);
+
             },
-            error: function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 // Handle error cases, if needed
                 console.log('Error:', error);
 
@@ -6242,8 +6255,8 @@ $(function () {
                 });
             }
         });
-  
-       
+
+
     });
 
     $(document).on('submit', '#item-category-modal form', function (e) {
@@ -6367,7 +6380,7 @@ $(function () {
                     dropdownEl.trigger('change');
                     $('#payment-method-modal').modal('hide');
                 } else {
-                    alert('Payment method name is required'); 
+                    alert('Payment method name is required');
                 }
             }
         });
@@ -9041,7 +9054,7 @@ $(function () {
     $(document).on('click', '#modal-container #package_list table#package-table button.addNewPackageToList', function (e) {
         e.preventDefault();
         var id = e.currentTarget.dataset.id;
-        
+
         $.get(base_url + 'accounting/get-package-details/' + id, function (res) {
             var result = JSON.parse(res);
             var details = result.package;
@@ -10313,22 +10326,72 @@ const computeBankDepositeTotal = () => {
 const addTableLines = (e) => {
     e.preventDefault();
     var table = e.currentTarget.dataset.target;
-    var lastRow = $(`table${table} tbody tr:last-child() td:first-child()`)
+    var lastRow = $(`table${table} tbody tr:last-child() td:first-child()`);
     var lastRowCount = parseInt(lastRow.html());
 
     for (var i = 0; i < rowCount; i++) {
         lastRowCount++;
+        var newRowHtml = '';
+
         if (table !== '#category-details-table' && table !== '#item-details-table') {
-            $(`table${table} tbody`).append(`<tr>${blankRow}</tr>`);
+            newRowHtml = `<tr>${blankRow}</tr>`;
         } else {
-            $(`table${table} tbody`).append(`<tr>${catDetailsBlank}</tr>`);
+            newRowHtml = `<tr>${catDetailsBlank}</tr>`;
 
             if ($(`table${table} thead tr th`).length > $(`table${table} tbody tr:last-child td`).length) {
-                $(`<td></td>`).insertBefore($(`table${table} tbody tr:last-child td:last-child`));
+                newRowHtml = `<td></td>` + newRowHtml;
             }
         }
+
+        $(`table${table} tbody`).append(newRowHtml);
         $(`table${table} tbody tr:last-child() td:first-child()`).html(lastRowCount);
+
+        var deleteButtonHtml = `<button type="button" class="nsm-button delete-row">
+            <i class='bx bx-fw bx-trash'></i>
+        </button>`;
+        $(`table${table} tbody tr:last-child()`).append(`<td>${deleteButtonHtml}</td>`);
+
+        populateDropdowns($(`table${table} tbody tr:last-child()`), table);
+
+        $(`table${table} tbody tr:last-child() .delete-row-btn`).on('click', function () {
+            $(this).closest('tr').remove();
+            updateRowCount(table);
+        });
     }
+}
+
+function populateDropdowns(row, table) {
+    var productOptions = [];
+    var locationOptions = [];
+
+    $(`${table} tbody tr`).each(function () {
+        var productId = $(this).find('select[name="product[]"]').val();
+        var productName = $(this).find('select[name="product[]"] option:selected').text();
+        var locationId = $(this).find('select[name="location[]"]').val();
+        var locationName = $(this).find('select[name="location[]"] option:selected').text();
+
+        if (productId && !productOptions.some(option => option.value === productId)) {
+            productOptions.push({ value: productId, text: productName });
+        }
+
+        if (locationId && !locationOptions.some(option => option.value === locationId)) {
+            locationOptions.push({ value: locationId, text: locationName });
+        }
+    });
+
+    var productSelect = row.find('select[name="product[]"]');
+    productSelect.empty();
+    productSelect.append('<option value="" selected disabled>Select Product</option>'); // Add empty default option
+    productOptions.forEach(function (option) {
+        productSelect.append(`<option value="${option.value}">${option.text}</option>`);
+    });
+
+    var locationSelect = row.find('select[name="location[]"]');
+    locationSelect.empty();
+    locationSelect.append('<option value="" selected disabled>Select Location</option>'); // Add empty default option
+    locationOptions.forEach(function (option) {
+        locationSelect.append(`<option value="${option.value}">${option.text}</option>`);
+    });
 }
 
 const clearTableLines = (e) => {
@@ -12198,7 +12261,7 @@ const updateTransaction = (event, el) => {
                         // Element found, extract its HTML content and replace '$' if necessary
                         var rowTotalHtml = rowTotalElement.html();
                         var rowTotalValue = rowTotalHtml.replace('$', '');
-                        
+
                         // Append the extracted value to the FormData object
                         data.append('item_total[]', rowTotalValue);
                     }
@@ -13713,9 +13776,9 @@ const resetCreditMemoFilter = (e) => {
             id: split[split.length - 1]
         };
     }
- }
+}
 
- function countCheckedCheckboxes() {
+function countCheckedCheckboxes() {
     var checkedCount = $('#invoices-table tbody input[type="checkbox"]:checked').length;
     var totalCount = $('#invoices-table tbody input[type="checkbox"]').length;
 
@@ -13725,17 +13788,17 @@ const resetCreditMemoFilter = (e) => {
         $('#invoices-table .select-all').prop('checked', false);
     }
 }
-$(document).on('change', '#invoices-table .select-all', function() {
+$(document).on('change', '#invoices-table .select-all', function () {
     // Get the checked status of the "check all" checkbox
     var isChecked = $(this).prop('checked');
 
     // Set all individual checkboxes' checked status based on the "check all" checkbox
     $('#invoices-table .select-all').prop('checked', isChecked);
     $('#invoices-table .select-one').prop('checked', isChecked);
-    console.log("customer invoices clicked select-all"+isChecked);
+    console.log("customer invoices clicked select-all" + isChecked);
 });
 
-$(document).on('change', '#invoices-table tbody .select-one', function(event) {
+$(document).on('change', '#invoices-table tbody .select-one', function (event) {
     countCheckedCheckboxes();
 });
 
@@ -13758,7 +13821,7 @@ const loadCustomerInvoices = () => {
             </td>
         </tr>
     `);
-        return; 
+        return;
     }
 
     $.ajax({

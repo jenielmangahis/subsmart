@@ -585,11 +585,11 @@
                                 <?php else : ?>
                                     <tr data-status="<?= $item['status'] ?>" data-id="<?= $item['id'] ?>">
                                         <td>
-                                        
-                                                <div class="table-row-icon table-checkbox">
-                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?= $item['id'] ?>">
-                                                </div>
-                             
+
+                                            <div class="table-row-icon table-checkbox">
+                                                <input class="form-check-input select-one table-select" type="checkbox" value="<?= $item['id'] ?>">
+                                            </div>
+
                                         </td>
                                         <td class="nsm-text-primary nsm-link default"><?= $item['name'] ?: 'No name provided' ?></td>
                                         <td><?= $item['sku'] ?: 'No SKU available' ?></td>
@@ -710,5 +710,46 @@
                 console.log('Other option selected');
             }
         });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        function constructCategoryFilterQueryString(selectedCategories) {
+            if (!selectedCategories || selectedCategories.length === 0 || selectedCategories.includes('all')) {
+                return '';
+            }
+
+            var categoryParams = [];
+
+            selectedCategories.forEach(function(categoryId) {
+                var categoryName = $('#filter-category option[value="' + categoryId + '"]').text();
+                var itemCount = getItemCountForCategory(categoryId);
+                categoryParams.push(`${encodeURIComponent(categoryName)}:${itemCount}`);
+            });
+
+            return 'filter_category=' + categoryParams.join(',');
+        }
+
+        function updateURLWithCategoryFilter() {
+            var selectedCategories = $('#filter-category').val();
+            var queryString = constructCategoryFilterQueryString(selectedCategories);
+
+            if (queryString) {
+                var currentPathname = window.location.pathname;
+                var newURL = currentPathname + '?' + queryString;
+                history.replaceState(null, null, newURL);
+            }
+        }
+
+        $('#filter-category').on('change', function() {
+            updateURLWithCategoryFilter();
+        });
+
+        function getItemCountForCategory(categoryId) {
+            var itemCount = Math.floor(Math.random() * 100);
+            return itemCount;
+        }
+
+        updateURLWithCategoryFilter();
     });
 </script>
