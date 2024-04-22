@@ -88,15 +88,15 @@ class Widgets extends MY_Controller
 
         // $sales_field_user_type = 5;
         // $sales     = $this->Users_model->getCompanyUsersByUserType($cid, $sales_field_user_type);
-        $sales     = $this->Users_model->getCompanyUsers($cid);
+        $users = $this->Users_model->getCompanyUsers($cid);
 
         $salesLeaderBoards = [];
         $date_range        = ['from' => $date_from, 'to' => $date_to];
-        foreach( $sales as $s ){
+        foreach( $users as $u ){
+            $sales = $this->Jobs_model->getTotalSalesBySalesRepresentative($u->id, $date_range);
             if( $sales->total_sales > 0 ){
-                $sales_name = $s->FName . ' ' . $s->LName;
-                $sales = $this->Jobs_model->getTotalSalesBySalesRepresentative($s->id, $date_range);
-                $salesLeaderBoards[] = ['uid' => $s->id, 'name' => $sales_name, 'email' => $s->email, 'total_sales' => $sales->total_sales];
+                $sales_name = $u->FName . ' ' . $u->LName;                
+                $salesLeaderBoards[] = ['uid' => $u->id, 'name' => $sales_name, 'email' => $u->email, 'total_sales' => $sales->total_sales];
             }            
         }
 
