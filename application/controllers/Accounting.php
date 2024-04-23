@@ -1410,13 +1410,16 @@ class Accounting extends MY_Controller
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
         $terms = $this->accounting_terms_model->getCompanyTerms_a($comp_id);
 
-        $this->page_data['invoice'] = $this->invoice_model->getinvoice($id);
+        $invoice  = $this->invoice_model->getinvoice($id);
+        $customer = $this->AcsProfile_model->getByProfId($invoice->customer_id);
+        $this->page_data['invoice'] = $invoice;
+        $this->page_data['customer'] = $customer;
         $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['itemsDetails'] = $this->invoice_model->getInvoiceItems($id);
         $this->page_data['terms'] = $terms;
-        // print_r($this->page_data['invoice']);
-
-        $this->load->view('accounting/invoice_edit', $this->page_data);
+        // print_r($this->page_data['invoice']);            
+        //$this->load->view('accounting/invoice_edit', $this->page_data);
+        $this->load->view('accounting/invoice_edit_v2', $this->page_data);
     }
 
     public function addQuote()
