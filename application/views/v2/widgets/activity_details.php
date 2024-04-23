@@ -2,7 +2,8 @@
     <table class="nsm-table" id="dashboard_activity_logs">
         <thead>
             <tr>
-                <td data-name="LogsDetails"></td>
+                <td data-name="LogsDetailsProfile" style="width:75%;"></td>
+                <td data-name="LogsDetailsDetails"></td>
             </tr>
         </thead>
         <tbody>
@@ -20,24 +21,25 @@
                         <?php } ?>
                         <div class="content">
                             <div class="details" style="width:98% !important;">
-                                <span class="content-title"><?= $logs->first_name . " " . $logs->last_name ?></span>                            
-                                <span class="nsm-badge success" style="-webkit-border-radius: 0px; font-size:11px; width: 100%;white-space: inherit;padding: 6px;margin-top: 10px;">
-                                <span class="content-subtitle d-block" style="font-size:11px;"><i class='bx bx-calendar' style="position:relative;top:3px;color:#000000;font-size:17px;"></i> <?= date('F d, Y g:i A', strtotime($logs->created_at)) ?></span>
-                                <i class='bx bx-list-ul' style="position:relative;top:3px;color:#000000;font-size:17px;"></i> 
-                                <?php 
-                                    if( strpos($logs->activity_name, 'Logged in') !== false ){
-                                        echo 'Logged In';
-                                    }elseif( strpos($logs->activity_name, 'Logged Out') !== false ){
-                                        echo 'Logged Out';
-                                    }else{
-                                        echo $logs->activity_name;
-                                    }
-                                ?>
+                                <span class="content-title"><?= $logs->first_name . " " . $logs->last_name ?></span>  
+                                <span class="content-subtitle d-block"><?= $logs->email; ?></span>      
+                                <span class="content-subtitle d-block" style="margin-top:7px;font-weight:bold;line-height:18px;">
+                                    <?php 
+                                        if( strpos($logs->activity_name, 'Logged in') !== false ){
+                                            echo 'Logged In';
+                                        }elseif( strpos($logs->activity_name, 'Logged Out') !== false ){
+                                            echo 'Logged Out';
+                                        }else{
+                                            echo $logs->activity_name;
+                                        }
+                                    ?>
                                 </span>
-                            </div>
-                            <div class="controls"></div>
+                            </div>                            
                         </div>
                     </div>
+                </td>
+                <td>
+                    <span class="content-subtitle d-block" style="font-size:11px;"><i class='bx bx-calendar' style="position:relative;top:3px;color:#000000;font-size:17px;"></i> <?= date('F d, Y g:i A', strtotime($logs->created_at)) ?></span>
                 </td>
             </tr>
             <?php endforeach; ?>

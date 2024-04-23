@@ -71,9 +71,8 @@
                                         </select>
                                     </div>
                                     <div class="nsm-page-buttons page-button-container">
-                                        <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_printable_checks_modal">
-                                            <i class='bx bx-fw bx-printer'></i>
-                                        </button>
+                                        <!-- <button type="button" class="nsm-button primary" data-bs-toggle="modal" data-bs-target="#print_printable_checks_modal"><i class='bx bx-fw bx-printer'></i></button> -->
+                                        <button type="button" class="nsm-button primary checkListPrintAction"><i class='bx bx-fw bx-printer'></i></button>
                                         <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
                                             <i class="bx bx-fw bx-cog"></i>
                                         </button>
@@ -189,7 +188,7 @@
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
-                <table class="nsm-table">
+                <table id="checkListTable" class="nsm-table ">
                     <thead>
                         <tr>
                             <td data-name="Date">Date</td>

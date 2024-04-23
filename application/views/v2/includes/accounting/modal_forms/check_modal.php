@@ -691,16 +691,25 @@
 </div>
 <script>
 $(function(){
-
-    //  Override script, Select the last used bank account option
+    //  Override script, Get the last used bank account option
     $.ajax({
         type: "POST",
         url: window.origin + "/accounting/getDefaultAccount",
-        data: "data",
         dataType: "JSON",
         success: function (response) {
             var newOption = new Option(response.account_name, response.account_id, false, false);
             $('#bank_account').append(newOption).trigger('change');
+        }
+    });
+
+    //  Override script, Get the last check no.
+    $.ajax({
+        type: "POST",
+        url: window.origin + "/accounting/getCheckNo",
+        dataType: "JSON",
+        success: function (response) {
+            const check_no = parseInt(response.check_no);
+            $('#check_no').val(check_no + 1);
         }
     });
 

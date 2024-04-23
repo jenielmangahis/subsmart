@@ -3764,6 +3764,8 @@ class Accounting_modals extends MY_Controller
 
     private function check($data)
     {
+        $company_id = logged('company_id');
+
         $this->form_validation->set_rules('bank_account', 'Bank account', 'required');
 
         if (isset($data['expense_account'])) {
@@ -3839,6 +3841,9 @@ class Accounting_modals extends MY_Controller
         }else {
             $payee = explode('-', $data['payee']);
 
+            $checkNo = $this->account_model->getLastCheckNo($company_id);
+            $lastCheckNo = intval($checkNo->check_no) + 1;
+
             $checkData = [
                 'company_id' => logged('company_id'),
                 'payee_type' => $payee[0],
@@ -3846,7 +3851,7 @@ class Accounting_modals extends MY_Controller
                 'bank_account_id' => $data['bank_account'],
                 'mailing_address' => nl2br($data['mailing_address']),
                 'payment_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['payment_date'])) : null,
-                'check_no' => isset($data['print_later']) ? null : ($data['check_no'] === '' ? null : $data['check_no']),
+                'check_no' => isset($data['print_later']) ? $lastCheckNo : ($data['check_no'] === '' ? $lastCheckNo : $data['check_no']),
                 'to_print' => $data['print_later'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 'memo' => $data['save_method'] !== 'save-and-void' ? $data['memo'] : 'Voided',
@@ -5561,7 +5566,7 @@ class Accounting_modals extends MY_Controller
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
+            $return['message'] = validation_errors();
         } elseif (!isset($data['expense_account']) && !isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
@@ -10573,7 +10578,7 @@ class Accounting_modals extends MY_Controller
 
         switch ($type) {
             case 'regular':
-                $checks = $this->expenses_model->get_checks_to_print();
+                $checks = $this->expenses_model->get_checks_to_print($filters);
             break;
             case 'bill-payment':
                 $billPayments = $this->expenses_model->get_bill_payments_to_print($filters);
@@ -10795,7 +10800,7 @@ class Accounting_modals extends MY_Controller
 
                 $checkData = [
                     'check_no' => $startingCheckNo,
-                    'to_print' => null
+                    'to_print' => 1
                 ];
 
                 $this->vendors_model->update_check($id, $checkData);

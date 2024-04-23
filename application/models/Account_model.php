@@ -98,4 +98,15 @@ class Account_model extends MY_Model {
 		$result = $query->row();
 		return $result;
 	}
+
+	public function getLastCheckNo($company_id) {
+		$this->db->select('accounting_check.check_no as check_no');
+		$this->db->from('accounting_check');
+		$this->db->where('accounting_check.company_id', $company_id);
+		$this->db->order_by('accounting_check.created_at', 'DESC');
+		$this->db->limit(1);
+		$query = $this->db->get();
+		$result = $query->row();
+		return $result;
+	}
 }
