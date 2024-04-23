@@ -4,7 +4,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
 ?>
 
 
-<div class="<?php echo $class; ?>" data-id="<?php echo $id; ?>" id="widget_<?php echo $id; ?>" draggable="true">
+<div class="<?php echo $class; ?>" data-id="<?php echo $id; ?>" id="thumbnail_<?php echo $id; ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
             <div class="nsm-card-header">
@@ -12,11 +12,12 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                     <div class="icon-summary-estimate">
                         <i class="bx bx-bar-chart-square"></i>
                     </div>
-                    <span style="color:#6a4a86" id='company_meter_title'><?php echo $companyName->business_name; ?>
+                    <span style="color:#6a4a86; " id='company_meter_title'><?php echo $companyName->business_name; ?>
                         Meter</span>
                 </div>
             </div>
         </div>
+        
         <div class="nsm-card-controls">
 
             <div class="dropdown">
@@ -25,8 +26,8 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
 
-                    <li><a class="dropdown-item" href="#" onclick="removeWidget('<?php echo $id; ?>');">Remove
-                            Widget</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="removeThumbnail('<?php echo $id; ?>');">Remove
+                            Thumbnail</a></li>
                 </ul>
             </div>
         </div>
@@ -35,9 +36,11 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         <div class="row ">
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
-                    <label for="">Plaid Accounts</label>
-                    <h1></h1>
-                    <div id="plaid-accounts-thumbnail"></div>
+                    <label for="" id="plaid_label">Plaid Accounts</label>
+               
+                    <div id="plaid-accounts-thumbnail">
+                  
+                    </div>
 
                 </div>
             </div>

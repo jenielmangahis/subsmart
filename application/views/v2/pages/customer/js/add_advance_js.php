@@ -685,9 +685,9 @@
             }).then((result) => {
                 if (result.value) {
                     if(type === "person"){
-                        window.location.href = "<?= base_url(); ?>customer/person";
+                        window.location.href = "<?= base_url(); ?>customer/residential";
                     }else{
-                        window.location.href = "<?= base_url(); ?>customer/company";
+                        window.location.href = "<?= base_url(); ?>customer/commercial";
                     }
                    
                 }

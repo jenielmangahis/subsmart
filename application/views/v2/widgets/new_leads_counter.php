@@ -4,7 +4,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
 ?>
 
 
-<div class="<?php echo $class; ?> position-relative" data-id="<?php echo $id; ?>" id="widget_<?php echo $id; ?>" draggable="true">
+<div class="<?php echo $class; ?> position-relative" data-id="<?php echo $id; ?>" id="thumbnail_<?php echo $id; ?>" draggable="true">
 
 
    <div class="nsm-card-header">
@@ -28,7 +28,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                  </a>
                  <ul class="dropdown-menu dropdown-menu-end">
                  
-                     <li><a class="dropdown-item" href="#" onclick="removeWidget('<?php echo $id; ?>');">Remove Widget</a></li>
+                     <li><a class="dropdown-item" href="#" onclick="removeWidget('<?php echo $id; ?>');">Remove Thumbnail</a></li>
                  </ul>
              </div>
          </div>

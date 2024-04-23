@@ -1148,6 +1148,9 @@ class Invoice_model extends MY_Model
         $this->db->where('company_id', $companyId);
         $this->db->where('is_recurring', 0);
         $this->db->where('view_flag', 0);
+        $this->db->where('status !=', 'Draft');
+        $this->db->where('status !=', 'Paid');
+        $this->db->where('status !=', '');
         $query = $this->db->get('invoices');
         return $query->result();
     }

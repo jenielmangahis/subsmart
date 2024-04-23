@@ -986,9 +986,9 @@ $(function () {
     $(document).on('click', 'div#modal-container .modal-body table:not(#category-details-table,#item-details-table, #item-table) tbody tr td button.delete-row', function () {
         var parentTable = $(this).parent().parent().parent().parent();
         $(this).parent().parent().remove();
-        if (parentTable.find('tbody tr').length < rowCount) {
-            parentTable.find('tbody').append(`<tr>${blankRow}</tr>`);
-        }
+        // if (parentTable.find('tbody tr').length < rowCount) {
+        //     parentTable.find('tbody').append(`<tr>${blankRow}</tr>`);
+        // }
 
         var num = 1;
 
@@ -1052,12 +1052,12 @@ $(function () {
         if (el.closest('tr').find('input[name="category_linked_transaction[]"]').length < 1) {
             el.closest('tr').remove();
 
-            if ($('#category-details-table tbody tr').length < rowCount) {
-                $('#category-details-table tbody').append(`<tr>${catDetailsBlank}</tr>`);
-                if ($('#category-details-table thead tr th').length > $('#category-details-table tbody tr:last-child td').length) {
-                    $('<td></td>').insertBefore($('#category-details-table tbody tr:last-child td:last-child'));
-                }
-            }
+            // if ($('#category-details-table tbody tr').length < rowCount) {
+            //     $('#category-details-table tbody').append(`<tr>${catDetailsBlank}</tr>`);
+            //     if ($('#category-details-table thead tr th').length > $('#category-details-table tbody tr:last-child td').length) {
+            //         $('<td></td>').insertBefore($('#category-details-table tbody tr:last-child td:last-child'));
+            //     }
+            // }
 
             var num = 1;
 
@@ -2182,13 +2182,14 @@ $(function () {
 
     $(document).on('change', '#checkModal #print_later', function () {
         if ($(this).prop('checked')) {
-            $('#checkModal #check_no').prop('disabled', true);
-            $('#checkModal #check_no').val('To print').trigger('change');
+            $('#checkModal #check_no').prop('readonly', true);
+            // $('#checkModal #check_no').val('To print').trigger('change');
         } else {
-            $('#checkModal #check_no').prop('disabled', false);
-            $('#checkModal #check_no').val('').trigger('change');
+            $('#checkModal #check_no').prop('readonly', false);
+            // $('#checkModal #check_no').val('').trigger('change');
         }
     });
+
 
     $(document).on('change', '#checkModal #check_no', function () {
         if ($(this).val() !== "") {
@@ -5048,6 +5049,8 @@ $(function () {
 
     // do not remove
     var checkID;
+    var filterDate;
+    var filterType;
 
     $(document).on('change', '#printChecksModal #payment_account, #printChecksModal #sort-by, #printChecksModal #check-type', function () {
         var data = new FormData();
@@ -5063,8 +5066,8 @@ $(function () {
             processData: false,
             contentType: false,
             success: function (result) {
-                var checks = JSON.parse(result);
-
+                var jsonResultData = JSON.parse(result);
+                let checks = jsonResultData.filter(jsonResultData => jsonResultData.date == window.filterDate && jsonResultData.type == window.filterType);
                 $('#printChecksModal #checks-table tbody tr').remove();
                 $('#print_printable_checks_modal table tbody tr').remove();
                 $('#print_preview_printable_checks_modal #printable_checks_table_print tbody tr').remove();
@@ -5090,7 +5093,7 @@ $(function () {
                 } else {
                     checks.forEach(function (check) {
                         $('#printChecksModal #checks-table tbody').append(`
-                        <tr>
+                        <tr class=''>
                             <td>
                                 <div class="table-row-icon table-checkbox">
                                     <input class="form-check-input select-one table-select" type="checkbox" value="${check.id}">
@@ -5343,16 +5346,30 @@ $(function () {
 
         data.set('payment_account', $('#printChecksModal #payment_account').val());
 
+        // $.ajax({
+        //     url: '/accounting/success-print-checks',
+        //     data: data,
+        //     type: 'post',
+        //     processData: false,
+        //     contentType: false,
+        //     success: function (result) {
+        //         // Increment Starting Check after Print
+        //         var currentStartingNo = parseInt($('#starting-check-no').val());
+        //         $('#starting-check-no').val(currentStartingNo + 1);
+
+        //         $('#successPrintCheck').modal('hide');
+        //         $('#printChecksModal #payment_account').trigger('change');
+        //     }
+        // });
+
+        //  Override script, Select the last check no.
         $.ajax({
-            url: '/accounting/success-print-checks',
-            data: data,
-            type: 'post',
-            processData: false,
-            contentType: false,
-            success: function (result) {
-                // Increment Starting Check after Print
-                var currentStartingNo = parseInt($('#starting-check-no').val());
-                $('#starting-check-no').val(currentStartingNo + 1);
+            type: "POST",
+            url: window.origin + "/accounting/getCheckNo",
+            dataType: "JSON",
+            success: function (response) {
+                const check_no = parseInt(response.check_no);
+                $('#starting-check-no').val(check_no + 1);
 
                 $('#successPrintCheck').modal('hide');
                 $('#printChecksModal #payment_account').trigger('change');
@@ -6182,82 +6199,63 @@ $(function () {
 
     $(document).on('click', '#item-modal .modal-footer #save-and-new', function (e) {
         e.preventDefault();
-        var form = $('#item-modal form');
-        var formData = form.serialize();
+
+        var form = $('#product-item-form');
+        var formData = new FormData(form[0]); // Use FormData to handle file uploads
         var actionUrl = form.attr('action');
 
-        var formIsValid = true;
-        $('#item-modal form').find('input[required], textarea[required]').each(function () {
-            if (!$(this).val().trim()) {
-                $(this).addClass('reset-indicator');
-            }
-        });
-        $('#item-modal form').find('input[required], textarea[required]').each(function () {
-            if (!$(this).val().trim()) {
-                $(this).addClass('reset-indicator');
-                formIsValid = false;
-                return false; // Exit the loop early
-
-            }
-        });
-
-
-        if (!formIsValid) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Please fill in all required fields.',
-                confirmButtonColor: '#6a4a86',
-            });
-            return false; // Prevent further execution
+        // Perform form validation before proceeding
+        if (!form[0].checkValidity()) {
+            form.addClass('was-validated');
+            return false;
         }
-        form.find('input, select, textarea').addClass('reset-indicator');
+
+        // Submit the form via AJAX
         $.ajax({
-            url: actionUrl, // Use the form's action URL
+            url: actionUrl,
             type: 'POST',
             data: formData,
+            processData: false, // Prevent jQuery from automatically processing data
+            contentType: false, // Ensure proper content type for file uploads
             success: function (response) {
-                // Display success message with SweetAlert
+                // Display success message
                 Swal.fire({
                     icon: 'success',
                     title: 'Success!',
                     text: 'Form submitted successfully.',
                     confirmButtonColor: '#6a4a86',
                     showConfirmButton: false,
-                    timer: 1500, // Close alert after 1.5 seconds
-                }).then((result) => {
-                    // Reopen the modal after SweetAlert closes
-                    if (result.dismiss === Swal.DismissReason.timer) {
-                        $('#item-modal').modal('show');
-                    }
-                });
+                    timer: 1500
+                }).then(() => {
+                    // Reload table content using AJAX
+                    $.ajax({
+                        url: '/accounting/sales/products_and_services/item_forms/product.php', // Specify the endpoint to fetch updated data
+                        type: 'GET',
+                        success: function (tableHtml) {
+                            // Replace table content with updated data
+                            $('#imported_items').html(tableHtml);
+                        },
+                        error: function (xhr, status, error) {
+                            console.log('Error fetching table data:', error);
+                        }
+                    });
 
-                // Close the current modal
-                form.trigger('reset');
-                form.find('select').each(function () {
-                    $(this).val(null).trigger('change'); // Reset select2 value and trigger change event
+                    // Reset form fields and remove validation state
+                    form.trigger('reset').removeClass('was-validated');
                 });
-                setTimeout(function () {
-                    form.find('input, select, textarea').removeClass('reset-indicator');
-                }, 2000);
-
             },
             error: function (xhr, status, error) {
-                // Handle error cases, if needed
-                console.log('Error:', error);
-
-                // Display error message with SweetAlert
+                // Display error message
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Something went wrong. Please try again.',
-                    confirmButtonColor: '#6a4a86',
+                    confirmButtonColor: '#6a4a86'
                 });
             }
         });
-
-
     });
+
 
     $(document).on('submit', '#item-category-modal form', function (e) {
         e.preventDefault();
@@ -7968,7 +7966,11 @@ $(function () {
             } else {
                 table.children('tbody').html('');
                 $.each(transactions, function (key, transaction) {
-                    table.children('tbody').append(`<tr data-id="${transaction.id}" onclick="printcheck(${transaction.id}, ${transaction.bank_account_id}, '${transaction.bank_account}')">
+
+                    const transType = transaction.type;
+                    const transTypeTrim = transType.split("No.")[0].trim();
+
+                    table.children('tbody').append(`<tr data-id="${transaction.id}" onclick="printcheck(${transaction.id}, '${transaction.date}', '${transTypeTrim}', ${transaction.bank_account_id}, '${transaction.bank_account}')">
                         <td>${transaction.type}</td>
                         <td>${transaction.date}</td>
                         <td>${transaction.amount}</td>
@@ -10346,12 +10348,7 @@ const addTableLines = (e) => {
         $(`table${table} tbody`).append(newRowHtml);
         $(`table${table} tbody tr:last-child() td:first-child()`).html(lastRowCount);
 
-        var deleteButtonHtml = `<button type="button" class="nsm-button delete-row">
-            <i class='bx bx-fw bx-trash'></i>
-        </button>`;
-        $(`table${table} tbody tr:last-child()`).append(`<td>${deleteButtonHtml}</td>`);
-
-        populateDropdowns($(`table${table} tbody tr:last-child()`), table);
+        // populateDropdowns($(`table${table} tbody tr:last-child()`), table);
 
         $(`table${table} tbody tr:last-child() .delete-row-btn`).on('click', function () {
             $(this).closest('tr').remove();
@@ -10360,39 +10357,39 @@ const addTableLines = (e) => {
     }
 }
 
-function populateDropdowns(row, table) {
-    var productOptions = [];
-    var locationOptions = [];
+// function populateDropdowns(row, table) {
+//     var productOptions = [];
+//     var locationOptions = [];
 
-    $(`${table} tbody tr`).each(function () {
-        var productId = $(this).find('select[name="product[]"]').val();
-        var productName = $(this).find('select[name="product[]"] option:selected').text();
-        var locationId = $(this).find('select[name="location[]"]').val();
-        var locationName = $(this).find('select[name="location[]"] option:selected').text();
+//     $(`${table} tbody tr`).each(function () {
+//         var productId = $(this).find('select[name="product[]"]').val();
+//         var productName = $(this).find('select[name="product[]"] option:selected').text();
+//         var locationId = $(this).find('select[name="location[]"]').val();
+//         var locationName = $(this).find('select[name="location[]"] option:selected').text();
 
-        if (productId && !productOptions.some(option => option.value === productId)) {
-            productOptions.push({ value: productId, text: productName });
-        }
+//         if (productId && !productOptions.some(option => option.value === productId)) {
+//             productOptions.push({ value: productId, text: productName });
+//         }
 
-        if (locationId && !locationOptions.some(option => option.value === locationId)) {
-            locationOptions.push({ value: locationId, text: locationName });
-        }
-    });
+//         if (locationId && !locationOptions.some(option => option.value === locationId)) {
+//             locationOptions.push({ value: locationId, text: locationName });
+//         }
+//     });
 
-    var productSelect = row.find('select[name="product[]"]');
-    productSelect.empty();
-    productSelect.append('<option value="" selected disabled>Select Product</option>'); // Add empty default option
-    productOptions.forEach(function (option) {
-        productSelect.append(`<option value="${option.value}">${option.text}</option>`);
-    });
+//     var productSelect = row.find('select[name="product[]"]');
+//     productSelect.empty();
+//     productSelect.append('<option value="" selected disabled>Select Product</option>');
+//     productOptions.forEach(function (option) {
+//         productSelect.append(`<option value="${option.value}">${option.text}</option>`);
+//     });
 
-    var locationSelect = row.find('select[name="location[]"]');
-    locationSelect.empty();
-    locationSelect.append('<option value="" selected disabled>Select Location</option>'); // Add empty default option
-    locationOptions.forEach(function (option) {
-        locationSelect.append(`<option value="${option.value}">${option.text}</option>`);
-    });
-}
+//     var locationSelect = row.find('select[name="location[]"]');
+//     locationSelect.empty();
+//     locationSelect.append('<option value="" selected disabled>Select Location</option>');
+//     locationOptions.forEach(function (option) {
+//         locationSelect.append(`<option value="${option.value}">${option.text}</option>`);
+//     });
+// }
 
 const clearTableLines = (e) => {
     e.preventDefault();
@@ -13514,6 +13511,16 @@ const clearForm = () => {
         $('#purchase-order-no').val('');
     }
 
+    $.ajax({
+        type: "POST",
+        url: window.origin + "/accounting/getCheckNo",
+        dataType: "JSON",
+        success: function (response) {
+            const check_no = parseInt(response.check_no);
+            $('#check_no').val(check_no + 1);
+        }
+    });
+
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -14397,7 +14404,7 @@ const billTableRows = (el) => {
     });
 }
 
-const printcheck = (checkID, bankAccountID, bankAccount) => {
+const printcheck = (checkID, filterDate, filterType, bankAccountID, bankAccount) => {
     $.get(GET_OTHER_MODAL_URL + 'print_checks_modal', function (res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
@@ -14465,6 +14472,20 @@ const printcheck = (checkID, bankAccountID, bankAccount) => {
         const newOption = new Option(bankAccount, bankAccountID, false, false);
         $('#payment_account').append(newOption).val(bankAccountID).change();
         window.checkID = checkID;
+        window.filterDate = filterDate;
+        window.filterType = filterType;
+
+        //  Override script, Select the last check no.
+        $.ajax({
+            type: "POST",
+            url: window.origin + "/accounting/getCheckNo",
+            dataType: "JSON",
+            success: function (response) {
+                const check_no = parseInt(response.check_no);
+                $('#starting-check-no').val(check_no + 1);
+            }
+        });
+
     });
 }
 

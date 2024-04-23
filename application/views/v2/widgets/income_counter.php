@@ -4,7 +4,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
 ?>
 
 
-<div class="<?php echo $class; ?>" data-id="<?php echo $id; ?>" id="widget_<?php echo $id; ?>" draggable="true">
+<div class="<?php echo $class; ?>" data-id="<?php echo $id; ?>" id="thumbnail_<?php echo $id; ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
             <div class="nsm-card-header">
@@ -24,7 +24,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
                 
-                    <li><a class="dropdown-item" href="#" onclick="removeWidget('<?php echo $id; ?>');">Remove Widget</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="removeThumbnail('<?php echo $id; ?>');">Remove Thumbnail</a></li>
                 </ul>
             </div>
         </div>
@@ -34,7 +34,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
                     <label for="">Subscription</label>
-                    <h1 style="font-size:<?php intval($subs->TOTAL_MMR) >= 1000000 ?'33px':'' ?>;"><?php echo number_format($subs->TOTAL_MMR, 2); ?></h1>
+                    <h1 style="font-size:<?php intval($subs->TOTAL_MMR) >= 1000000 ? '33px' : ''; ?>;"><?php echo number_format($subs->TOTAL_MMR, 2); ?></h1>
 
                 </div>
             </div>

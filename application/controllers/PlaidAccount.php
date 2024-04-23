@@ -295,7 +295,7 @@ class PlaidAccount extends MY_Controller {
         $user_type = logged('user_type');
         
         if( $user_type == 7 || $role_id == 3 ){
-            $plaidBankAccounts = $this->PlaidBankAccount_model->getAllByCompanyId($cid);        
+            $plaidBankAccounts = $this->PlaidBankAccount_model->getAllByCompanyId($cid);     
             $plaidAccount  = $this->PlaidAccount_model->getDefaultCredentials();
             $recentTransactions = array();
             if( $plaidAccount ){
@@ -303,13 +303,13 @@ class PlaidAccount extends MY_Controller {
                     try{
                         $start_date = date('Y-m-d', strtotime("-1 week"));
                         $end_date   = date("Y-m-d");
-
+                        $highest_balance = getHighestBalance($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $pc->account_id);
                         $balance = balanceGet($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $pc->account_id);
                         $plaidTransactions = transactionGet($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $start_date, $end_date, $pc->account_id, 5);  
                         if( isset($balance->error_code) && $balance->error_code != '' ){
                             $pc->balance_available = 'Cannot fetch bank account balance';
                             $pc->balance_current   = 'Cannot fetch bank account balance';
-
+                            $pc->highest_balance   = $highest_balance;
                             $err_data = [
                                 'user_id' => $uid,
                                 'log_date' => date("Y-m-d H:i:s"),
@@ -321,6 +321,7 @@ class PlaidAccount extends MY_Controller {
                             if( !empty($balance->accounts) ){
                                 $pc->balance_available = $balance->accounts[0]->balances->available;
                                 $pc->balance_current   = $balance->accounts[0]->balances->current;
+                                $pc->highest_balance   = $highest_balance;
                             }
                         }
 
@@ -347,7 +348,7 @@ class PlaidAccount extends MY_Controller {
            $recentTransactions = array(); 
         }
         
-        
+       
         $this->page_data['is_valid'] = $is_valid;
         $this->page_data['plaidBankAccounts']  = $plaidBankAccounts;
         $this->page_data['recentTransactions'] = $recentTransactions;

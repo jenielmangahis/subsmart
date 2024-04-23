@@ -193,6 +193,47 @@ function identityGet($client_id, $client_secret, $access_token){
 
     return $data;
 }
+function getHighestBalance($client_id, $client_secret, $access_token, $account_id) {
+
+    $start_date = date('Y-01-01');
+  
+    $end_date = date('Y-m-d');
+
+    $post = [
+        'client_id' => $client_id,
+        'secret' => $client_secret,
+        'access_token' => $access_token,
+        'start_date' => $start_date,
+        'end_date' => $end_date,
+        'options' => ['account_ids' => [$account_id]]    
+    ];
+
+    $url = PLAID_API_URL . '/transactions/get';
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+    $response = curl_exec($ch);
+    $data = json_decode($response, true);
+
+    if (isset($data['transactions'])) {
+        $highest_balance = 0;
+        $current_balance = 0;
+
+        foreach ($data['transactions'] as $transaction) {
+            $current_balance += $transaction['amount'];
+            if ($current_balance > $highest_balance) {
+                $highest_balance = $current_balance;
+            }
+        }
+
+        return $highest_balance;
+    } else {
+        return 0; 
+    }
+}
 
 /*Get transactions*/
 function transactionGet($client_id, $client_secret, $access_token, $start_date, $end_date, $account_id, $count = 10){    

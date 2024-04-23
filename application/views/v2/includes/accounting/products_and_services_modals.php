@@ -243,7 +243,7 @@
                                 <div id="progress-content-section">
                                     <div class="section-content step1 active">
                                         <h2>Step 1</h2>
-                                        <p>Industry Type Select and CSV Upload</p>
+                                        <p>Select and CSV Upload</p>
 
                                         <form id="import_item" enctype="multipart/form-data" style="text-align: center;">
                                             <input id="file-upload" name="file" type="file" accept=".csv"/>

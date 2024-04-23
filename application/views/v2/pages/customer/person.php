@@ -24,6 +24,21 @@
     #person-list_length{
         display: none;
     }
+    .form_line{
+        margin-bottom: 10px;
+    }
+    .nsm-counter .bx{
+        font-size: 1em;
+        padding: 2px;
+        display: none;
+
+    }
+    .nsm-counter h2{
+        font-size: 16px;
+    }
+    .nsm-counter {
+    padding: 0.8rem 1rem;
+    }
 </style>
 
 <div class="nsm-fab-container">
@@ -48,6 +63,36 @@
                         </div>
                     </div>
                 </div>
+                <div class="row g-3 mb-3">
+                    <?php 
+                      $colorClasses = ['primary', 'success', 'error', 'secondary'];
+                      $index = 0;
+                    foreach($statusCounts as $status => $count){?>
+                    <div class="col-6 col-md-3 col-lg-2">
+                        <div class="nsm-counter <?php echo $colorClasses[$index % 4]; ?> h-100 mb-2 " id="estimates">
+                            <div class="row h-100 w-auto">
+                                
+                                <div class=" w-100 col-md-8 text-start d-flex align-items-center  justify-content-between">
+                                <span><i class="bx bx-receipt"></i> <?php 
+                                if($status == 'Design Team/Engineering Stamps')
+                                {
+                                  echo 'Design/Eng Stamps';
+                                }
+                                elseif($status == 'Loan Documents to be Executed')
+                                {
+                                    echo 'Loan Docs to be Executed';
+                                }else{
+                                   echo $status; 
+                                }
+                                ?></span>
+                                <h2 id="total_this_year"><?php echo $count ?></h2>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php $index++;}; ?>
+                </div>
                 <div class="row">
                     <div class="col-12 col-md-4">
                         <form action="<?php echo base_url('admin/companies') ?>" method="GET">
@@ -64,18 +109,10 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
                                  <li><a class="dropdown-item"data-value="" href="#">All Status</a></li>
-                                <li><a class="dropdown-item" data-value="Contract Review" href="#">Contract Review</a></li>
-                                <li><a class="dropdown-item" data-value="Design Team/Engineering Stamps" href="#">Design Team/Engineering Stamps</a></li>
-                                <li><a class="dropdown-item" data-value="Acceptance Pending" href="#">Acceptance Pending </a></li>
-                                <li><a class="dropdown-item" data-value="Loan Documents to be Executed" href="#">Loan Documents to be Executed</a></li>
-                                <li><a class="dropdown-item" data-value="Interconnection" href="#">Interconnection</a></li>
-                                <li><a class="dropdown-item" data-value="Inspection" href="#">Inspection</a></li>
-                                <li><a class="dropdown-item" data-value="Site Survey" href="#">Site Survey</a></li>
-                                <li><a class="dropdown-item" data-value="CAD/Permitting" href="#">CAD/Permitting</a></li>
-                                <li><a class="dropdown-item" data-value="Proposal" href="#">Proposal</a></li>
-                                <li><a class="dropdown-item" data-value="Lead" href="#">Lead</a></li>
-                                <li><a class="dropdown-item" data-value="Installed" href="#">Installed</a></li>
-                                <li><a class="dropdown-item" data-value="Cancel Pending" href="#">Cancel Pending</a></li>
+                                 <?php  foreach($statusCounts as $status => $count){?>
+                                <li><a class="dropdown-item" data-value="<?= $status ?>" href="#"><?= $status ?></a></li>
+                              
+                                <?php } ?>
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
@@ -93,8 +130,10 @@
                     <thead>
                         <tr>
                             <th data-name="Name">Contact Name</th>
+                            <th data-name="Address">Address</th>
                             <th data-name="Email">Email</th>
                             <th data-name="Phone">Phone</th>
+                            <th data-name="Last Income">Last Income</th>
                             <th data-name="Customer Type" style="width:10%;">Customer Type</th>
                             <th data-name="Status" style="width:10%;">Status</th>
                             <td></td>

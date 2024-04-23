@@ -221,8 +221,46 @@ $(document).ready(function () {
     });
 
     $(document).on("click", "#print_printable_checks_modal #btn_print_printable_checks", function() {
-        $("#print_preview_printable_checks_modal #printable_checks_table_print").printThis();
+        // $("#print_preview_printable_checks_modal #printable_checks_table_print").printThis({
+        //     importStyle: $(this).hasClass('checkListTable')
+        // });
     });
+
+    $(document).on('click', '.checkListPrintAction', function () {
+        function fileID(length) {
+            var result = '';
+            var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            var charactersLength = characters.length;
+            for (var i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+        var filename = "[" + fileID(6) + "] Check list";
+        var tab = document.getElementById('checkListTable');
+        var style = "<style>";
+        style = style + "table {width: 100% !important;}";
+        style = style + "* {font-family: SEGOE UI;}";
+        style = style + "table, th, td {border: solid 1px gray; border-collapse: collapse; padding: 3px 5px;text-align: left; font-size: 18px;}";
+        style = style + "</style>";
+
+        const left = (screen.width - 1280) / 2;
+        const top = (screen.height - 720) / 2;
+        var win = window.open("", "Check List", "width=" + 1280 + ", height=" + 720 + ", top=" + top + ", left=" + left);
+
+        win.document.write("<h2><strong>NSMARTRAC</strong></h2>");
+        win.document.write("<h4 style='margin: -20px 0px 15px 0px; font-weight: normal;'>Check list</h4>");
+        win.document.write(tab.outerHTML);
+        win.document.write(style);
+        win.document.write("<style>th, h2, h4 {text-transform: uppercase;} h4{font-size: 18px !important;}</style>");
+        win.document.write("<style>.checkListTable>tbody>tr>td{font-family: SEGOE UI !important;} .checkListTable>thead>tr>th{font-family: SEGOE UI !important;}</style>");
+        win.document.title = filename;
+        setTimeout(function() {
+            win.print();
+            win.close();
+        }, 500);
+    });
+
 
     $(document).on('hidden.bs.modal', '#printSetupModal', function() {
         $('#modal-container').remove();
