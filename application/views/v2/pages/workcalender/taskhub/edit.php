@@ -123,7 +123,8 @@ if (isset($selected_participants)) {
 
                                     <?php if (isset($users_selection)) { ?>
                                         <div class="col-12 col-md-4">
-                                            <label class="content-subtitle fw-bold d-block mb-2">Assign To</label>
+                                            <label class="content-subtitle fw-bold d-block mb-2">Assign To
+                                            </label>
                                             <!-- <select class="nsm-field form-select" name="assigned_to" id="assigned_to">
                                                 <option value="">Myself</option>
                                                 <?php
@@ -140,6 +141,9 @@ if (isset($selected_participants)) {
                                                         $hidden = '';
                                                         echo '<option value="' . $row->id . '"' . $tag . $hidden . '>' . $row->name . '</option>';
                                                     }*/
+                                                    if (set_value('assigned_to') != '') {
+                                                        $sel_assigned_to = set_value('assigned_to');
+                                                    }                                                   
                                                 ?>
                                             </select> -->                                                                                       
                                             <select name="assigned_to" id="taskhub-user-id" class="nsm-field mb-2 form-control" required="">      
@@ -228,6 +232,9 @@ if (isset($selected_participants)) {
 <script type="text/javascript">
 
     $(function(){
+        var default_assigned_to = '<?php echo isset($assignedUser['user_id']) ? $assignedUser['user_id'] : $assigned_to; ?>';
+        var default_assigned_to_text = '<?php echo isset($assignedUser['name']) ? $assignedUser['name'] : 'My Self'; ?>';
+
         $('#status-select').select2();
         $('#priority-select').select2();
         $('#taskhub-user-id').select2({
@@ -254,7 +261,10 @@ if (isset($selected_participants)) {
             maximumSelectionLength: 5,
             minimumInputLength: 0,
             templateResult: formatRepoUser,
-            templateSelection: formatRepoSelectionUser
+            templateSelection: formatRepoSelectionUser,
+            initSelection: function(element, callback) {
+                callback({id: default_assigned_to, text: default_assigned_to_text });
+            }
         });  
 
     });
