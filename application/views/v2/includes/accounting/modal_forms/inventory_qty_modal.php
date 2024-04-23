@@ -102,9 +102,9 @@
                                                                         <td><input type="number" name="new_qty[]" class="form-control nsm-field text-end" required></td>
                                                                         <td><input type="number" name="change_in_qty[]" class="form-control nsm-field text-end" required></td>
                                                                         <td>
-                                                                            <!-- <button type="button" class="nsm-button delete-row">
+                                                                            <button type="button" class="nsm-button delete-row">
                                                                                 <i class='bx bx-fw bx-trash'></i>
-                                                                            </button> -->
+                                                                            </button>
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
@@ -234,17 +234,3 @@
             <!--end of modal-->
             </form>
 </div>
-<script>
-    $(document).ready(function() {
-        $('#inventory-adjustments-table').on('click', '.delete-row', function() {
-            $(this).closest('tr').remove();
-            updateRowNumbers();
-        });
-
-        function updateRowNumbers() {
-            $('#inventory-adjustments-table tbody tr').each(function(index) {
-                $(this).find('td:first').text(index + 1);
-            });
-        }
-    });
-</script>

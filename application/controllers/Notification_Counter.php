@@ -30,8 +30,8 @@ class Notification_Counter extends MY_Controller {
         $scheduledEstimates = $this->Estimate_model->getAllPendingEstimatesByCompanyId($company_id);    
         $upcomingAppointments = $this->Appointment_model->getAllUpcomingAppointmentsByCompany($company_id);                 
         $total_calendar_schedule = count($upcomingJobs) + count($upcomingEvents) + count($upcomingServiceTickets) + count($scheduledEstimates) + count($upcomingAppointments); 
-        $total_company = $this->Customer_model->count_customer_type('Commercial');
-		$total_person = $this->Customer_model->count_customer_type('Residential');
+        $total_company = count($this->Customer_model->getAllCommercialCustomers('',logged('company_id'), 'Commercial',''));
+		$total_person =count($this->Customer_model->getAllCommercialCustomers('',logged('company_id'), 'Residential','')); 
 		
         //Taskhub
         $tasks = $this->Taskhub_model->getAllNotCompletedTasksByCompanyId($company_id);

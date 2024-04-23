@@ -138,7 +138,7 @@ var notification_badge_value = 0;
 var notification_html_holder_ctr = 0;
 
 $(document).ready(function() {
-    updateFontSize();
+
     getNotificationsAll();
 
     $(".check-input-rules").click(function() {
@@ -540,6 +540,18 @@ function manipulateWidget(dis, id) {
     }
 }
 
+function manipulateShowGraph(dis, id){
+    if ($(dis).is(":checked")) {
+        $(`#thumbnail_content_graph_${id}`).show();
+        $(`#thumbnail_content_list${id}`).hide();
+
+    }else{
+        $(`#thumbnail_content_graph_${id}`).hide();
+        $(`#thumbnail_content_list${id}`).show();
+
+    }
+}
+
 
 function manipulateThumbnail(dis, id) {
     var count = $('#check_count_thumbnails').val();
@@ -668,15 +680,6 @@ function fetchNewCustomer(){
     });
 
 }
-function updateFontSize() {
-    $('.summary-report-body h1').each(function() {
-        var h1Text = $(this).text().replace(/\$/g, ''); // Remove dollar sign
-        var number = parseInt(h1Text.replace(/[^0-9.]/g, ''), 10); // Convert to integer
-        if (number >= 1000000) {
-            $(this).css('font-size', '33px'); 
-        }
-    });
-}
 
 function addThumbnail(id) {
     var isGlobal = $('#widgetGlobal_' + id).is(":checked") ? '1' : 0;
@@ -697,7 +700,7 @@ function addThumbnail(id) {
             if (isMain != '1') {
                 setTimeout(function() {
             // Remove the loader
-            updateFontSize();
+  
             $("#widget_loader").remove();
 
             // Append the response
@@ -767,7 +770,7 @@ function removeThumbnail(dis) {
         success: function(response) {
             console.log(response);
             if (response.success) {
-                $('#widget_' + dis).remove();
+                $('#thumbnail_' + dis).remove();
             } else {
                 alert(response.message);
             }

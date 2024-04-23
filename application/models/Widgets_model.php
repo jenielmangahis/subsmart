@@ -82,7 +82,9 @@ class Widgets_model extends MY_Model
         $this->db->where('invoices.status !=','Draft');
         $this->db->where('invoices.status !=','Paid');
         $this->db->where('invoices.due_date !=', null);
-        $this->db->where("STR_TO_DATE(invoices.due_date, '%Y-%m-%d') < CURRENT_DATE()");
+        $current_date = date("Y-m-d");
+        $this->db->where("invoices.due_date <=", $current_date);
+        $this->db->where('invoices.view_flag', 0);
         $this->db->group_by('invoices.id');
         $this->db->order_by("STR_TO_DATE(invoices.due_date, '%Y-%m-%d') ASC");
         $query = $this->db->get();

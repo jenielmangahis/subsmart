@@ -157,6 +157,12 @@ table.dataTable thead th, table.dataTable thead td{
 #customerDuplicateTable > tbody > tr:hover {
     cursor: pointer;
 }
+
+.removeDuplicatedEntry2:focus, .removeDuplicatedEntry2:active:focus, .removeDuplicatedEntry2.active:focus{
+    outline:none;
+    box-shadow:none;
+}
+
 </style>
 
 <div class="nsm-fab-container">
@@ -1194,6 +1200,29 @@ table.dataTable thead th, table.dataTable thead td{
                             confirmButtonText: "OK"
                         });
                     }
+                });
+            } 
+        });
+    });
+
+    $(document).on('click', '.removeDuplicatedEntry2', function () {
+        const entryID = $(this).attr('data-prof_id');
+        const entryName = $(this).attr('data-entry-name');
+
+        Swal.fire({
+            icon: "warning",
+            title: "Remove Entry",
+            html: "Are you sure you want to remove entry <strong>" + entryName + " #" + entryID + "</strong> ?",
+            showCancelButton: true,
+            confirmButtonText: "Remove",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $('.data_' + entryID).remove();
+                $.ajax({
+                    type: "POST",
+                    url: URL_ORIGIN + "/Customer/ajax_delete_customer",
+                    data: "cid=" + entryID,
+                    success: function (response) {}
                 });
             } 
         });

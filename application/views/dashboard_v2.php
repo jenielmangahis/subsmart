@@ -7,67 +7,75 @@
 <?php include viewPath('v2/includes/calendar/quick_access_calendar_js'); ?>
 <?php include viewPath('dashboard_v2_js'); ?>
 <style>
- .loader {
+.loader {
     display: block;
-    color:#6a4a86;
-  font-size: 10px;
-  width: 1em;
-  height: 1em;
-  border-radius: 50%;
-  text-indent: -9999em;
-  animation: mulShdSpin 1.3s infinite linear;
-  transform: translateZ(0);
+    color: #6a4a86;
+    font-size: 10px;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    text-indent: -9999em;
+    animation: mulShdSpin 1.3s infinite linear;
+    transform: translateZ(0);
 }
 
 @keyframes mulShdSpin {
-  0%,
-  100% {
-    box-shadow: 0 -3em 0 0.2em, 
-    2em -2em 0 0em, 3em 0 0 -1em, 
-    2em 2em 0 -1em, 0 3em 0 -1em, 
-    -2em 2em 0 -1em, -3em 0 0 -1em, 
-    -2em -2em 0 0;
-  }
-  12.5% {
-    box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em, 
-    3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em, 
-    -2em 2em 0 -1em, -3em 0 0 -1em, 
-    -2em -2em 0 -1em;
-  }
-  25% {
-    box-shadow: 0 -3em 0 -0.5em, 
-    2em -2em 0 0, 3em 0 0 0.2em, 
-    2em 2em 0 0, 0 3em 0 -1em, 
-    -2em 2em 0 -1em, -3em 0 0 -1em, 
-    -2em -2em 0 -1em;
-  }
-  37.5% {
-    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
-     3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em, 
-     -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
-  }
-  50% {
-    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
-     3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em, 
-     -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
-  }
-  62.5% {
-    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
-     3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0, 
-     -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
-  }
-  75% {
-    box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em, 
-    3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, 
-    -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
-  }
-  87.5% {
-    box-shadow: 0em -3em 0 0, 2em -2em 0 -1em, 
-    3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em, 
-    -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
-  }
+
+    0%,
+    100% {
+        box-shadow: 0 -3em 0 0.2em,
+            2em -2em 0 0em, 3em 0 0 -1em,
+            2em 2em 0 -1em, 0 3em 0 -1em,
+            -2em 2em 0 -1em, -3em 0 0 -1em,
+            -2em -2em 0 0;
+    }
+
+    12.5% {
+        box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em,
+            3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em,
+            -2em 2em 0 -1em, -3em 0 0 -1em,
+            -2em -2em 0 -1em;
+    }
+
+    25% {
+        box-shadow: 0 -3em 0 -0.5em,
+            2em -2em 0 0, 3em 0 0 0.2em,
+            2em 2em 0 0, 0 3em 0 -1em,
+            -2em 2em 0 -1em, -3em 0 0 -1em,
+            -2em -2em 0 -1em;
+    }
+
+    37.5% {
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+            3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em,
+            -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+    }
+
+    50% {
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+            3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em,
+            -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+    }
+
+    62.5% {
+        box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+            3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0,
+            -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+    }
+
+    75% {
+        box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em,
+            3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em,
+            -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+    }
+
+    87.5% {
+        box-shadow: 0em -3em 0 0, 2em -2em 0 -1em,
+            3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em,
+            -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+    }
 }
-     
+
 .summary-report-header {
     display: flex;
     align-items: center;
@@ -79,11 +87,13 @@
     color: #c7951c;
     padding: 10px;
 }
+
 .summary-report-header .icon-summary-income {
     background-color: #dc35451f;
     color: #dc3545;
     padding: 10px;
 }
+
 .summary-report-header .icon-summary-customer {
     background-color: #6ba77c33;
     color: #6ba77c;
@@ -95,6 +105,7 @@
     color: #6a4a86;
     padding: 10px;
 }
+
 .summary-report-header .icon-summary-estimate {
     background-color: #dad1e0;
     color: #6a4a86;
@@ -117,9 +128,11 @@
     font-size: 25px;
     width: 25px;
 }
-.summary-report-body{
+
+.summary-report-body {
     text-align: center !important;
 }
+
 .summary-report-body h1 {
     font-size: 36px;
     font-weight: 600;
@@ -129,7 +142,8 @@
     display: flex;
     justify-content: end;
 }
-.nsm-card-footer a { 
+
+.nsm-card-footer a {
     font-size: 36px !important;
     border: none;
 }
@@ -141,60 +155,70 @@
     align-items: center;
     height: 130px;
 }
-.main-widget-row{
+
+.main-widget-row {
     display: flex;
     gap: 35px;
     flex-wrap: wrap;
     align-content: flex-start;
     justify-content: start;
 }
-.main-widget-container{
-    width:280px;
-    box-shadow: 0 1px 1px 0 rgba(0,0,0,.14), 0 2px 1px -1px rgba(0,0,0,.12), 0 1px 3px 0 rgba(0,0,0,.2);
+
+.main-widget-container {
+    width: 280px;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .14), 0 2px 1px -1px rgba(0, 0, 0, .12), 0 1px 3px 0 rgba(0, 0, 0, .2);
     border-radius: .75rem;
-    height: 280px;
-    max-height: 280px;
+    height: 340px;
+    max-height: 340px;
 }
+
 @media screen and (max-width: 1500px) {
     .main-widget-row {
         gap: 20px;
     }
+
     .main-widget-container {
         width: 260px;
     }
-    
+
 }
 
 @media screen and (max-width: 1366px) {
     .main-widget-container {
         width: 245px;
+        height: 310px;
+        max-height: 310px;
     }
-    
+
+
 }
 
 @media screen and (max-width: 1200px) {
     .main-widget-container {
         width: 23%;
+     
     }
-    
+
 }
 
 @media screen and (max-width: 991px) {
     .main-widget-container {
         width: 48%;
     }
-    
+
 }
+
 @media screen and (max-width: 600px) {
     .main-widget-container {
         width: 100%;
     }
 }
 
-.main-widget-container  .nsm-card-header{
+.main-widget-container .nsm-card-header {
     height: 50px;
 }
-.nav-pills .nav-link.active{
+
+.nav-pills .nav-link.active {
     background-color: #6a4a86 !important;
 }
 </style>
@@ -230,12 +254,13 @@
             </div>
             <span class="nsm-fab-label">New Task</span>
         </li>
-        <!-- <li onclick="location.href='<?php // echo base_url('customer/add_advance')?>'"> -->
+        <!-- <li onclick="location.href='<?php // echo base_url('customer/add_advance')
+                                            ?>'"> -->
         <li class="<?php if ($page->title == '') {
-            echo 'active';
-        } ?>">
+                        echo 'active';
+                    } ?>">
             <a class="nsm-page-link" href="javascript:void(0);"
-                onclick="window.open('<?php echo base_url('job/new_job1?cus_id='.$cus_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');">
+                onclick="window.open('<?php echo base_url('job/new_job1?cus_id=' . $cus_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');">
                 <i class='bx bx-fw bx-message-square-error'></i>
                 <span>Jobs</span>
             </a>
@@ -314,6 +339,7 @@
         <button name="button" type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#new_feed_modal">
             <i class='bx bx-fw bx-comment'></i> News Feed
         </button>
+
         <?php if( logged('company_id') == 1 ){ ?>
         <button name="button" type="button" class="nsm-button" data-bs-toggle="modal"
             data-bs-target="#news_letter_modal">
@@ -322,6 +348,7 @@
         <?php } ?>
         <button name="button" type="button" class="nsm-button primary" data-bs-toggle="modal"
             data-bs-target="#manage_widgets_modal">
+
             <i class='bx bx-fw bx-cog'></i>
         </button>
     </div>
@@ -330,11 +357,66 @@
 <div class="row page-content g-0">
     <div class="col-12">
         <div class="row  g-3 grid-row-mb nsm-draggable-container" id="nsm_widgets">
-        <div class="main-widget-row" id="nsm_thumbnail">
+            <div class="main-widget-row" id="nsm_thumbnail">
+                <?php
+                foreach ($widgets as $wids) {
+                    if ($wids->w_main) {
+                        $data['class'] = 'nsm-card nsm-grid main-widget-container';
+                        $data['isMain'] = false;
+                        $data['id'] = $wids->w_id;
+                        $data['isListView'] = $wids->w_list_view;
+                        $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
+
+                        if ($wids->w_name === 'Expense') {
+                            $data = set_expense_graph_data($data);
+                        }
+
+                        if ($wids->w_name === 'Bank') {
+                            $data = set_bank_widget_data($data);
+                        }
+                        // if($wids->w_view_link != 'widgets/lead_source'){
+                        //     $this->load->view("v2/" . $wids->w_view_link, $data);
+                        // }
+                        $this->load->view('v2/' . $wids->w_view_link, $data);
+                    }
+                }
+                ?> </div><?php
+                            if (count($main_widgets) > 0) {
+                                foreach ($main_widgets as $wids) {
+                                    if ($wids->wu_is_main) {
+                                        if ($wids->wu_widget_id == 26) {
+                                            echo '<div class="col-12 col-lg-4" id="droppable">';
+                                            $data['class'] = 'nsm-card nsm-grid large';
+                                        } else {
+                                            $data['class'] = 'nsm-card nsm-grid med primary';
+                                            echo '<div class="col-12 col-lg-4" id="droppable">';
+                                        }
+
+                                        $data['isMain'] = true;
+                                        $data['id'] = $wids->w_id;
+                                        $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
+
+                                        if ($wids->w_name === 'Expense') {
+                                            $data = set_expense_graph_data($data);
+                                        }
+
+                                        if ($wids->w_name === 'Bank') {
+                                            $data = set_bank_widget_data($data);
+                                        }
+
+                                        $this->load->view('v2/' . $wids->w_view_link, $data);
+
+                                        echo '</div>';
+                                    }
+                                }
+                            }
+                            ?>
+
             <?php
             foreach ($widgets as $wids) {
-                if ($wids->w_main) {
-                    $data['class'] = 'nsm-card nsm-grid main-widget-container';
+                if (!$wids->wu_is_main && !$wids->w_main) {
+                    echo '<div class="col-12 col-lg-4">';
+                    $data['class'] = 'nsm-card nsm-grid';
                     $data['isMain'] = false;
                     $data['id'] = $wids->w_id;
                     $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
@@ -349,66 +431,12 @@
                     // if($wids->w_view_link != 'widgets/lead_source'){
                     //     $this->load->view("v2/" . $wids->w_view_link, $data);
                     // }
-                    $this->load->view('v2/'.$wids->w_view_link, $data);
+                    $this->load->view('v2/' . $wids->w_view_link, $data);
+
+                    echo '</div>';
                 }
             }
-?>  </div><?php
-if (count($main_widgets) > 0) {
-    foreach ($main_widgets as $wids) {
-        if ($wids->wu_is_main) {
-            if ($wids->wu_widget_id == 26) {
-                echo '<div class="col-12 col-lg-4" id="droppable">';
-                $data['class'] = 'nsm-card nsm-grid large';
-            } else {
-                $data['class'] = 'nsm-card nsm-grid med primary';
-                echo '<div class="col-12 col-lg-4" id="droppable">';
-            }
-
-            $data['isMain'] = true;
-            $data['id'] = $wids->w_id;
-            $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
-
-            if ($wids->w_name === 'Expense') {
-                $data = set_expense_graph_data($data);
-            }
-
-            if ($wids->w_name === 'Bank') {
-                $data = set_bank_widget_data($data);
-            }
-
-            $this->load->view('v2/'.$wids->w_view_link, $data);
-
-            echo '</div>';
-        }
-    }
-}
-?>
-
-            <?php
-foreach ($widgets as $wids) {
-    if (!$wids->wu_is_main && !$wids->w_main) {
-        echo '<div class="col-12 col-lg-4">';
-        $data['class'] = 'nsm-card nsm-grid';
-        $data['isMain'] = false;
-        $data['id'] = $wids->w_id;
-        $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
-
-        if ($wids->w_name === 'Expense') {
-            $data = set_expense_graph_data($data);
-        }
-
-        if ($wids->w_name === 'Bank') {
-            $data = set_bank_widget_data($data);
-        }
-        // if($wids->w_view_link != 'widgets/lead_source'){
-        //     $this->load->view("v2/" . $wids->w_view_link, $data);
-        // }
-        $this->load->view('v2/'.$wids->w_view_link, $data);
-
-        echo '</div>';
-    }
-}
-?>
+            ?>
         </div>
     </div>
 </div>
@@ -537,34 +565,35 @@ foreach ($widgets as $wids) {
         <div class="nsm-card pb-1 pt-2">
             <div class="tradingview-widget-container">
                 <div class="tradingview-widget-container__widget"></div>
-                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
-                    {
-                        "symbols": [{
-                                "proName": "FOREXCOM:SPXUSD",
-                                "title": "S&P 500"
-                            },
-                            {
-                                "proName": "FOREXCOM:NSXUSD",
-                                "title": "Nasdaq 100"
-                            },
-                            {
-                                "proName": "FX_IDC:EURUSD",
-                                "title": "EUR/USD"
-                            },
-                            {
-                                "proName": "BITSTAMP:BTCUSD",
-                                "title": "BTC/USD"
-                            },
-                            {
-                                "proName": "BITSTAMP:ETHUSD",
-                                "title": "ETH/USD"
-                            }
-                        ],
-                        "colorTheme": "light",
-                        "isTransparent": true,
-                        "showSymbolLogo": true,
-                        "locale": "en"
-                    }
+                <script type="text/javascript"
+                    src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
+                {
+                    "symbols": [{
+                            "proName": "FOREXCOM:SPXUSD",
+                            "title": "S&P 500"
+                        },
+                        {
+                            "proName": "FOREXCOM:NSXUSD",
+                            "title": "Nasdaq 100"
+                        },
+                        {
+                            "proName": "FX_IDC:EURUSD",
+                            "title": "EUR/USD"
+                        },
+                        {
+                            "proName": "BITSTAMP:BTCUSD",
+                            "title": "BTC/USD"
+                        },
+                        {
+                            "proName": "BITSTAMP:ETHUSD",
+                            "title": "ETH/USD"
+                        }
+                    ],
+                    "colorTheme": "light",
+                    "isTransparent": true,
+                    "showSymbolLogo": true,
+                    "locale": "en"
+                }
                 </script>
             </div>
         </div>
@@ -617,7 +646,8 @@ foreach ($widgets as $wids) {
 
 
 <script type="module" src="<?php echo base_url('assets/js/dashboard/index.js'); ?>"></script>
-<?php // include viewPath('tickets/add_modal');?>
+<?php // include viewPath('tickets/add_modal');
+?>
 <script>
 $(function() {
     $("#dashboard-feeds").nsmPagination({
@@ -640,22 +670,61 @@ function load_company_newsletter() {
     });
 }
 
-$(document).on('click', '.view-newsletter-details', function(){
+$(document).on('click', '.view-newsletter-details', function() {
     var newsid = $(this).attr('data-id');
 
-    $('#modalViewNewsLetter').modal('show');        
+    $('#modalViewNewsLetter').modal('show');
     $.ajax({
         url: base_url + 'dashboard/_view_newsletter',
-        method: 'post',   
-        data:{newsid:newsid},         
-        success: function (response) {
+        method: 'post',
+        data: {
+            newsid: newsid
+        },
+        success: function(response) {
             $('#modal-view-newsletter-container').html(response);
         },
         beforeSend: function() {
-            showLoader($("#modal-view-newsletter-container"));  
+            showLoader($("#modal-view-newsletter-container"));
         },
     });
 });
+
+$(document).on('click', '#btn-quick-add-service-ticket', function() {
+    var url = base_url + "ticket/_quick_add_service_ticket_form";
+    var default_date = moment(new Date());
+    var date_selected = default_date.format('YYYY-MM-DD');
+    calendar_modal_source = 'quick-add-service-ticket';
+    $('#modal-quick-add-service-ticket').modal('show');
+
+    showLoader($("#quick-add-service-ticket-form-container"));
+
+    setTimeout(function() {
+        $.ajax({
+            type: "GET",
+            url: url,
+            data: {
+                date_selected: date_selected
+            },
+            success: function(o) {
+                $("#quick-add-service-ticket-form-container").html(o);
+            }
+
+        });
+    });
+});
+
+function load_company_newsletter() {
+    $.ajax({
+        url: base_url + 'widgets/_company_newsletter',
+        method: 'post',
+        success: function(response) {
+            $('#dashboard-newsletter').html(response);
+        },
+        beforeSend: function() {
+            $('#dashboard-newsletter').html("<span class='bx bx-loader bx-spin'></span>");
+        },
+    });
+}
 
 $(document).on('click', '#btn-quick-add-service-ticket', function() {
     var url = base_url + "ticket/_quick_add_service_ticket_form";
@@ -707,17 +776,145 @@ $(document).on('click', '#btn-quick-add-job', function() {
 
 load_plaid_accounts();
 
+function formatAmount(amount) {
+    if (typeof amount !== 'number' || isNaN(amount)) {
+        return amount; 
+    }
+
+    if (amount >= 1000000000) {
+        return (amount / 1000000000).toFixed(1) + 'B';
+    } else if (amount >= 1000000) {
+        return (amount / 1000000).toFixed(1) + 'M';
+    } else if (amount >= 1000) {
+        return (amount / 1000).toFixed(1) + 'K';
+    } else {
+        return amount.toLocaleString();
+    }
+}
+
+var gaugeCharts = [];
+var initialChartData = {};
+
+function load_plaid_gauge_chart() {
+    var gaugeCanvases = $(".GuageChart");
+    gaugeCanvases.each(function() {
+        var canvas = $(this);
+        var canvasId = canvas.attr("id");
+        var dataValue = canvas.data("value");
+        var dataRemaining = canvas.data("remaining");
+        var dataHighest = canvas.data("highest");
+        var ctx = this.getContext('2d'); // Get the canvas context inside each iteration
+        var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(107, 167, 124, 1)'); // Start color
+        gradient.addColorStop(1, 'rgba(7, 232, 70, 1)'); // End color
+        initialChartData[canvasId] = {
+            dataValue,
+            dataRemaining,
+            dataHighest
+        };
+        var gaugeData = {
+            labels: ['Score', 'Gray Area'],
+            datasets: [{
+                label: 'Weekly Sales',
+                data: [dataValue, dataHighest],
+                backgroundColor: [
+                    gradient,
+                    'rgb(240,240,240)'
+                ],
+                borderColor: [
+                    gradient,
+                    'rgb(240,240,240)'
+                ],
+                borderWidth: 1,
+                cutout: '80%',
+                circumference: 180,
+                rotation: 270
+            }]
+        };
+
+        var gaugeChartText = {
+            id: 'gaugeChartText',
+            afterDatasetDraw(chart, args, pluginOptions) {
+                const {
+                    ctx,
+                    data,
+                    chartArea: {
+                        top,
+                        bottom,
+                        left,
+                        right,
+                        width,
+                        height
+                    },
+                    scales: {
+                        r
+                    }
+                } = chart;
+                ctx.save();
+                const xCoor = chart.getDatasetMeta(0).data[0].x;
+                const yCoor = chart.getDatasetMeta(0).data[0].y;
+                const amount = data.datasets[0].data[0];
+                ctx.font = '10px sans-serif';
+                ctx.fillStyle = "rgb(40, 40, 43)";
+                ctx.textBaseLine = 'top';
+                ctx.textAlign = 'left';
+                ctx.fillText('$0', left + 3, yCoor + 12);
+                ctx.textAlign = 'right';
+                ctx.fillText('$' + formatAmount(dataHighest), right, yCoor + 12);
+                ctx.font = '25px sans-serif'
+                ctx.textAlign = 'center';
+                ctx.textBaseLine = 'bottom';
+                ctx.fillText('$' + formatAmount(amount), xCoor, yCoor - 20);
+                ctx.font = '15px sans-serif'
+                ctx.textAlign = 'center';
+                ctx.textBaseLine = 'bottom';
+                ctx.fillText('Total Balance', xCoor, yCoor);
+            }
+        }
+
+        var gaugeConfig = {
+            type: 'doughnut',
+            data: gaugeData,
+            options: {
+                aspectRatio: 1.5,
+                layout: {
+                    padding: 10,
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false
+                    }
+                }
+            },
+            plugins: [gaugeChartText]
+        };
+
+        // Render the gauge chart
+        var gaugeChart = new Chart(document.getElementById(canvasId), gaugeConfig);
+        gaugeCharts.push(gaugeChart);
+    });
+}
+
+
+
 function load_plaid_accounts() {
     var url = base_url + '_load_connected_bank_accounts_thumbnail';
     $('#plaid-accounts-thumbnail').html('<h1><span class="bx bx-loader bx-spin"></span></h1>');
     $.ajax({
-            type: "POST",
-            url: url,
-            success: function(o) {
+        type: "POST",
+        url: url,
+        success: function(o) {
 
-                $('#plaid-accounts-thumbnail').html(o);
-            }
-        });
+            $('#plaid-accounts-thumbnail').html(o);
+            $('#plaid_label').hide();
+            load_plaid_gauge_chart();
+
+            console.log(initialChartData);
+        }
+    });
 }
 </script>
 

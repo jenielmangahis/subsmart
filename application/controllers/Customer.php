@@ -120,8 +120,43 @@ class Customer extends MY_Controller
             'table' => 'customer_groups',
             'select' => '*',
         ];
+        $commercials = $this->company->getAllCommercialCustomers('',logged('company_id'), 'Commercial','');
+        $statusCounts = array(
+            "Acceptance Pending" => 0,
+            "Active" => 0,
+            "Active w/RAR" => 0,
+            "Active w/RMR" => 0,
+            "Active w/RQR" => 0,
+            "Active w/RYR" => 0,
+            "CAD/Permitting" => 0,
+            "Cancel Pending" => 0,
+            "Cancelled" => 0,
+            "Charge Back" => 0,
+            "Collection" => 0,
+            "Competition Lost" => 0,
+            "Contract Review" => 0,
+            "Design Team/Engineering Stamps" => 0,
+            "Funded" => 0,
+            "Inactive" => 0,
+            "Inactive w/RMM" => 0,
+            "Inspection" => 0,
+            "Installed" => 0,
+            "Interconnection" => 0,
+            "Lead" => 0,
+            "Loan Documents to be Executed" => 0,
+            "Proposal" => 0,
+            "Site Survey" => 0
+        );
+        
+        foreach ($commercials as $commercial) {
+            $status = trim($commercial->status);
+            if (array_key_exists($status, $statusCounts)) {
+                $statusCounts[$status]++;
+            }
+        }
 
         $default_status_ids = defaultCompanyCustomerStatusIds();
+        $this->page_data['statusCounts']= $statusCounts;
         $this->page_data['customer_status'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'), $default_status_ids);
         $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
         $this->page_data['page']->title = 'Commercial';
@@ -138,8 +173,9 @@ class Customer extends MY_Controller
     $search = isset($request['search']['value']) ? $request['search']['value'] : '';
     $filter_status = isset($request['filter_status']) ? $request['filter_status'] : '';
      
-
+      
         $persons = $this->company->getAllCommercialCustomers($search,logged('company_id'), 'Commercial',$filter_status == 'All Status' ? '' :$filter_status);
+       
         $filteredPersons = array_slice($persons, $start, $length);
     
         $totalRecords = count($persons);
@@ -149,7 +185,7 @@ class Customer extends MY_Controller
 
         foreach ($filteredPersons as $person) {
             $contactName = $person->first_name . ' ' . $person->last_name;
-            if (!empty($person->email) && !empty($contactName)) {
+  
             $row = array();
             // Contact Name
               
@@ -194,7 +230,7 @@ class Customer extends MY_Controller
     
         $row[] = $actionColumn;
             $data[] = $row;
-        }
+     
     }
     
         $response = array(
@@ -230,12 +266,15 @@ class Customer extends MY_Controller
 
         foreach ($filteredPersons as $person) {
             $contactName = $person->first_name . ' ' . $person->last_name;
-            if (!empty($person->email) && !empty($contactName)) {
+      
             $row = array();
             // Contact Name
        
             $row[] = $contactName;
         
+            // Address
+            $row[] = (isset($person->customer_address)) ? $person->customer_address : "Not Specified";
+
             // Email
             $row[] = $person->email;
         
@@ -249,6 +288,11 @@ class Customer extends MY_Controller
                 $phone .= (!empty($phone) ? ' ' : '') . '<p>Phone (H) : '.$person->phone_m.'</p>';
             }
             $row[] = $phone;
+
+            // Last income
+            $row[] = (isset($person->customer_mmr)) ? '$' . number_format($person->customer_mmr, 2) : "$0.00";
+
+
             $row[] = $person->customer_type;
             $row[] = empty($person->status) ? 'No status selected' : $person->status;
             $actionColumn = '<div class="dropdown table-management">
@@ -274,7 +318,7 @@ class Customer extends MY_Controller
     
         $row[] = $actionColumn;
             $data[] = $row;
-        }
+     
     }
     
         $response = array(
@@ -298,8 +342,43 @@ class Customer extends MY_Controller
             'table' => 'customer_groups',
             'select' => '*',
         ];
+        $persons = $this->company->getAllCommercialCustomers('',logged('company_id'), 'Residential','');
+        $statusCounts = array(
+            "Acceptance Pending" => 0,
+            "Active" => 0,
+            "Active w/RAR" => 0,
+            "Active w/RMR" => 0,
+            "Active w/RQR" => 0,
+            "Active w/RYR" => 0,
+            "CAD/Permitting" => 0,
+            "Cancel Pending" => 0,
+            "Cancelled" => 0,
+            "Charge Back" => 0,
+            "Collection" => 0,
+            "Competition Lost" => 0,
+            "Contract Review" => 0,
+            "Design Team/Engineering Stamps" => 0,
+            "Funded" => 0,
+            "Inactive" => 0,
+            "Inactive w/RMM" => 0,
+            "Inspection" => 0,
+            "Installed" => 0,
+            "Interconnection" => 0,
+            "Lead" => 0,
+            "Loan Documents to be Executed" => 0,
+            "Proposal" => 0,
+            "Site Survey" => 0
+        );
+        
+        foreach ($persons as $person) {
+            $status = trim($person->status);
+            if (array_key_exists($status, $statusCounts)) {
+                $statusCounts[$status]++;
+            }
+        }
 
         $default_status_ids = defaultCompanyCustomerStatusIds();
+        $this->page_data['statusCounts']= $statusCounts;
         $this->page_data['customer_status'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'), $default_status_ids);
         $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
         $this->page_data['page']->title = 'Residential';
@@ -2658,9 +2737,9 @@ class Customer extends MY_Controller
 
                 $html .= "
                 <div class='col-lg-1 w-auto entryDuplicateData'>
-                    <table class='table table-hover'>
+                    <table class='table table-hover data_$fetchDatas->prof_id'>
                         <tbody>
-                            <tr><td class='align-middle fw-xnormal'><small class='logsCount'>$customer_logs activity logs</small></td></tr>
+                            <tr><td class='align-middle fw-xnormal'><small class='logsCount'>$customer_logs activity logs</small><button class='btn btn-outline-danger btn-sm border-0 float-end removeDuplicatedEntry2' data-prof_id='$fetchDatas->prof_id' data-entry-name='$first_name $last_name' style='margin: -2px;'>Remove</button></td></tr>
                             <tr><td class='align-middle profileData' data-logscount='$customer_logs activity logs'>
                                     <div class='float-start'>
                                         <div class='nsm-profile'><span class='entryDuplicateInitials'>".$first_name[0].' '.$last_name[0]."</span></div>
