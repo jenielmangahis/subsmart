@@ -1706,6 +1706,8 @@ $route['dashboard/_create_news_feeds'] = 'Dashboard/sendFeed';
 $route['dashboard/_create_newsletter'] = 'Newsletter/saveNewsBulletin';
 $route['dashboard/_company_newsletter'] = 'Newsletter/ajax_company_newsletter';
 $route['dashboard/_view_newsletter'] = 'Newsletter/ajax_view_newsletter';
+$route['widgets/_load_income_stat'] = 'Widgets/ajax_load_income_stat';
+$route['widgets/_load_sales_chart'] = 'Widgets/ajax_load_sales_chart';
 
 //Esign
 $route['esign_v2/_tags_sections'] = 'Esign_v2/ajax_company_tags_sections';
