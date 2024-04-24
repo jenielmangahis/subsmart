@@ -212,12 +212,32 @@ $(document).ready(function() {
             $('.check-input-task').each(function() {
                 this.checked = true;
             });
+            $(".dropdown-item-mark-complete").removeClass("disabled");
+            $(".dropdown-item-delete").removeClass("disabled");
+            $(".dropdown-item-mark-ongoing").removeClass("disabled");
         } else {
             $('.check-input-task').each(function() {
                 this.checked = false;
             });
+            $('.dropdown-item-mark-complete').addClass('disabled');
+            $('.dropdown-item-mark-ongoing').addClass('disabled');
+            $('.dropdown-item-delete').addClass('disabled');
         }
     });
+
+    $(".check-input-task").click(function() {
+        var count_task_list_check = $('.check-input-task').filter(':checked').length;
+        if (count_task_list_check > 0) {
+            $(".dropdown-item-mark-complete").removeClass("disabled");
+            $(".dropdown-item-delete").removeClass("disabled");
+            $(".dropdown-item-mark-ongoing").removeClass("disabled");
+        } else {
+            $('.dropdown-item-mark-complete').addClass('disabled');
+            $('.dropdown-item-delete').addClass('disabled');
+            $('.dropdown-item-mark-ongoing').addClass('disabled');
+        }
+    })
+
 
     $('.hdr-drpdown-multi-accounts').on('click', function() {
         var parent = $(this).closest('li');

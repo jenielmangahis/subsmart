@@ -535,7 +535,23 @@ class AcsProfile_model extends MY_Model
         $this->db->from($this->table);
         $cust = $this->db->update($this->table, ['status' => 'Inactive']);
 		return $cust;        
-    }        
+    }     
+    
+    public function getCompanyTotalSubscriptions($cid, $date_range = array())
+    {
+        $this->db->select('acs_billing.bill_id, COALESCE(SUM(acs_billing.mmr),0) AS total_subscription');
+        $this->db->from($this->table2);
+        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_profile.company_id', $cid);    
+        
+        if( !empty($date_range) ){
+            $this->db->where('acs_billing.bill_end_date >=', $date_range['from']);
+            $this->db->where('acs_billing.bill_end_date <=', $date_range['to']);
+        }
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
 }
 
 /* End of file AcsProfile_model.php */

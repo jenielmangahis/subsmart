@@ -840,7 +840,7 @@ class Customer_advance_model extends MY_Model {
                 $this->db->where('acs_profile.company_id', $company_id);
                 $this->db->where('acs_profile.first_name !=', '');
                 $this->db->where('acs_profile.last_name !=', '');
-                $this->db->group_by('TRIM(acs_profile.first_name), TRIM(acs_profile.last_name), TRIM(acs_profile.customer_type)');
+                $this->db->group_by('TRIM(acs_profile.first_name), TRIM(acs_profile.last_name), TRIM(acs_profile.customer_type), TRIM(acs_profile.mail_add)');
                 $this->db->having('COUNT(*) > 1');
                 $this->db->order_by('TRIM(acs_profile.first_name), TRIM(acs_profile.last_name)');
                 $query = $this->db->get();
@@ -901,7 +901,7 @@ class Customer_advance_model extends MY_Model {
             (SELECT COUNT(*) AS duplicate_count
             FROM acs_profile
             WHERE company_id = $company_id AND customer_type = 'Residential'
-            GROUP BY first_name, last_name
+            GROUP BY first_name, last_name, mail_add
             HAVING COUNT(*) > 1) AS subquery
          ");
         $query = $this->db->get();
@@ -954,8 +954,10 @@ class Customer_advance_model extends MY_Model {
     
         foreach ($tableList as $tableLists) {
             foreach ($duplicateID as $duplicateIDs) {
-                $this->db->where('customer_id', $duplicateIDs->prof_id);
-                $status &= $this->db->update($tableLists->TABLE_NAME, array("customer_id" => $entryID));
+                if ($tableLists->TABLE_NAME != "acs_papers") {
+                    $this->db->where('customer_id', $duplicateIDs->prof_id);
+                    $status &= $this->db->update($tableLists->TABLE_NAME, array("customer_id" => $entryID));
+                }
             }
         }
     

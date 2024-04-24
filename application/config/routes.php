@@ -1567,10 +1567,12 @@ $route['booking/save_booking_inquiry'] = 'Pages/save_product_booking';
 $route['taskhub/_load_taskhub_list'] = 'Taskhub/ajax_load_company_list';
 $route['taskhub/_add_new_task'] = 'Taskhub/ajax_add_new_task';
 $route['taskhub/_save_task'] = 'Taskhub/ajax_save_task';
+$route['taskhub/_save_taskhub_task'] = 'Taskhub/ajax_save_taskhub_task';
 $route['taskhub/_task_mark_completed'] = 'Taskhub/ajax_complete_task';
 $route['taskhub/_mark_all_completed'] = 'Taskhub/ajax_company_complete_all_tasks';
 $route['taskhub/_delete_task'] = 'Taskhub/ajax_delete_task';
 $route['taskhub/_complete_selected_tasks'] = 'Taskhub/ajax_complete_selected_tasks';
+$route['taskhub/_ongoing_selected_tasks'] = 'Taskhub/ajax_ongoing_selected_tasks';
 $route['taskhub/_delete_selected_tasks'] = 'Taskhub/ajax_delete_selected_tasks';
 $route['taskhub/create'] = 'Taskhub/create';
 $route['taskhub/edit/(:num)'] = 'Taskhub/edit/$1';
@@ -1704,6 +1706,8 @@ $route['dashboard/_create_news_feeds'] = 'Dashboard/sendFeed';
 $route['dashboard/_create_newsletter'] = 'Newsletter/saveNewsBulletin';
 $route['dashboard/_company_newsletter'] = 'Newsletter/ajax_company_newsletter';
 $route['dashboard/_view_newsletter'] = 'Newsletter/ajax_view_newsletter';
+$route['widgets/_load_income_stat'] = 'Widgets/ajax_load_income_stat';
+$route['widgets/_load_sales_chart'] = 'Widgets/ajax_load_sales_chart';
 
 //Esign
 $route['esign_v2/_tags_sections'] = 'Esign_v2/ajax_company_tags_sections';

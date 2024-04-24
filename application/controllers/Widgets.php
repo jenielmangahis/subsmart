@@ -909,4 +909,58 @@ class Widgets extends MY_Controller
         $this->page_data['upcomingSchedules'] = $upcomingSchedules;
         $this->load->view('v2/widgets/ajax_load_upcoming_schedules', $this->page_data);
     }
+
+    public function ajax_load_income_stat()
+    {
+        $this->load->model('Invoice_model');
+        $this->load->model('AcsProfile_model');
+
+        $cid = logged('company_id');
+        $date_from = date("Y-m-d", strtotime(post('sales_leaderboard_date_from')));
+        $date_to   = date("Y-m-d", strtotime(post('sales_leaderboard_date_to')));
+
+        $date_range = ['from' => post('filter_date_from'), 'to' => post('filter_date_to')];
+        $unpaidInvoices    = $this->Invoice_model->getCompanyUnpaidInvoices($cid, $date_range);
+        $overDueInvoices   = $this->Invoice_model->getCompanyOverDueInvoices($cid, $date_range);
+        $totalPaidInvoices = $this->Invoice_model->getCompanyTotalAmountPaidInvoices($cid, $date_range);
+        $subscriptions     = $this->AcsProfile_model->getCompanyTotalSubscriptions($cid, $date_range);
+
+        $totalUnpaidInvoices  = count($unpaidInvoices);
+        $totalOverdueInvoices = count($overDueInvoices);
+
+        $return = [
+            'total_unpaid_invoices' => $totalUnpaidInvoices,
+            'total_overdue_invoices' => $totalOverdueInvoices,
+            'total_amount_paid_invoices' => number_format($totalPaidInvoices->total_paid,2,'.',''),
+            'total_amount_subscriptions' => number_format($subscriptions->total_subscription,2,'.','')
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_load_sales_chart()
+    {   
+        $this->load->model('Invoice_model');
+
+        $cid  = logged('company_id');
+        $year = date("Y");
+        $sales_data   = [];
+        $chart_labels = [];
+        for( $start = 1; $start <= 12; $start++ ){
+            $start_date = $year . '-' . $start . '-' . 1;
+            $start_date = date("Y-m-d", strtotime($start_date));
+            $end_date   = date("Y-m-t", strtotime($start_date));
+            $date_range = ['total_sales' => $totalPaidInvoices->total_paid, 'from' => $start_date, 'to' => $end_date];  
+            $totalPaidInvoices = $this->Invoice_model->getCompanyTotalAmountPaidInvoices($cid, $date_range);
+
+            $sales_data[]   = number_format($totalPaidInvoices->total_paid, 2, '.', '');
+            $chart_month    = date('F', strtotime($start_date));
+            $chart_end_day  = date("t", strtotime($start_date));
+            //$chart_labels[] = $chart_month . ' 01-'.$chart_end_day;
+            $chart_labels[] = $chart_month;
+        } 
+
+        $return = ['chart_labels' => $chart_labels, 'chart_data' => $sales_data];
+        echo json_encode($return);
+    }
 }

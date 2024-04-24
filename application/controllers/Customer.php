@@ -2739,7 +2739,7 @@ class Customer extends MY_Controller
                 <div class='col-lg-1 w-auto entryDuplicateData'>
                     <table class='table table-hover data_$fetchDatas->prof_id'>
                         <tbody>
-                            <tr><td class='align-middle fw-xnormal'><small class='logsCount'>$customer_logs activity logs</small><button class='btn btn-outline-danger btn-sm border-0 float-end removeDuplicatedEntry2' data-prof_id='$fetchDatas->prof_id' data-entry-name='$first_name $last_name' style='margin: -2px;'>Remove</button></td></tr>
+                            <tr><td class='align-middle fw-xnormal'><small class='logsCount'>$customer_logs activity logs</small><button class='btn btn-outline-danger btn-sm border-0 float-end removeDuplicatedEntry2' data-prof_id='$fetchDatas->prof_id' data-entry-name='$first_name $last_name' style='margin: -2px;'><i class='fas fa-trash'></i></button><button class='btn btn-outline-secondary copyColumnEntry btn-sm border-0 float-end' data-prof_id='$fetchDatas->prof_id' style='margin: -2px; margin-right: 5px;'><i class='fas fa-copy'></i></button></td></tr>
                             <tr><td class='align-middle profileData' data-logscount='$customer_logs activity logs'>
                                     <div class='float-start'>
                                         <div class='nsm-profile'><span class='entryDuplicateInitials'>".$first_name[0].' '.$last_name[0]."</span></div>
@@ -2761,7 +2761,7 @@ class Customer extends MY_Controller
                             <tr><td class='align-middle fw-xnormal namePrefixField'><span>$prefix</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
                             <tr><td class='align-middle fw-xnormal suffixField'><span>$suffix</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
                             <tr><td class='align-middle fw-xnormal countryField'><span>$country</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
-                            <tr><td class='align-middle fw-xnormal addressField'><span>$mail_add Clayton Road</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal addressField'><span>$mail_add</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
                             <tr><td class='align-middle fw-xnormal cityField'><span>$city</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
                             <tr><td class='align-middle fw-xnormal countyField'><span>$county</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
                             <tr><td class='align-middle fw-xnormal stateField'><span>$state</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
@@ -2808,9 +2808,9 @@ class Customer extends MY_Controller
 
                 $html .= "
                 <div class='col-lg-1 w-auto entryDuplicateData'>
-                    <table class='table table-hover'>
+                    <table class='table table-hover data_$fetchDatas->prof_id'>
                         <tbody>
-                            <tr><td class='align-middle fw-xnormal'><small class='logsCount'>$customer_logs activity logs</small></td></tr>
+                            <tr><td class='align-middle fw-xnormal'><small class='logsCount'>$customer_logs activity logs</small><button class='btn btn-outline-danger btn-sm border-0 float-end removeDuplicatedEntry2' data-prof_id='$fetchDatas->prof_id' data-entry-name='$first_name $last_name' style='margin: -2px;'><i class='fas fa-trash'></i></button><button class='btn btn-outline-secondary copyColumnEntry btn-sm border-0 float-end' data-prof_id='$fetchDatas->prof_id' style='margin: -2px; margin-right: 5px;'><i class='fas fa-copy'></i></button></td></tr>
                             <tr><td class='align-middle profileData' data-logscount='$customer_logs activity logs'>
                                     <div class='float-start'>
                                         <div class='nsm-profile'><span class='entryDuplicateInitials'>".$first_name[0].' '.$last_name[0]."</span></div>
@@ -2832,7 +2832,7 @@ class Customer extends MY_Controller
                             <tr><td class='align-middle fw-xnormal namePrefixField'><span>$prefix</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
                             <tr><td class='align-middle fw-xnormal suffixField'><span>$suffix</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
                             <tr><td class='align-middle fw-xnormal countryField'><span>$country</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
-                            <tr><td class='align-middle fw-xnormal addressField'><span>$mail_add Clayton Road</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
+                            <tr><td class='align-middle fw-xnormal addressField'><span>$mail_add</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
                             <tr><td class='align-middle fw-xnormal cityField'><span>$city</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
                             <tr><td class='align-middle fw-xnormal countyField'><span>$county</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>
                             <tr><td class='align-middle fw-xnormal stateField'><span>$state</span><i class='fas fa-check checkSize align-middle float-end'></i></td></tr>

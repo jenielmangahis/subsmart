@@ -11,13 +11,15 @@ class Activity_model extends MY_Model {
 		parent::__construct();
 	}
         
-        public function getActivityLogs($company_id, $limit)
+        public function getActivityLogs($company_id, $limit = 0)
         {
-            $this->db->select('activity_logs.*, users.company_id');
+            $this->db->select('activity_logs.*, users.company_id, users.FName AS first_name, users.LName AS last_name, users.email');
             $this->db->join('users', 'activity_logs.user_id = users.id', 'LEFT');
             $this->db->where('users.company_id', $company_id);            
             $this->db->order_by('activity_logs.id', 'DESC');
-            $this->db->limit($limit);
+            if( $limit > 0 ){
+                $this->db->limit($limit);
+            }            
 
             return $this->db->get($this->table)->result();
         }

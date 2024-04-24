@@ -229,15 +229,78 @@ class Invoice_model extends MY_Model
         return $query->row();
     }
 
-    // public function getinvoice_invNO($invoice_id)
-    // {
-    //     $this->db->select('*');
-    //     $this->db->from($this->table);
-    //     $this->db->where('id', $invoice_id);
+    public function getCompanyDueInvoices($cid)
+    {
+        $current_date = date("Y-m-d");
 
-    //     $query = $this->db->get();
-    //     return $query->row();
-    // }
+        $this->db->select('*');        
+        $this->db->from($this->table);   
+        $this->db->where('company_id', $cid);
+        $this->db->where('view_flag', 0);
+        $this->db->where('due_date >=', $current_date);
+        $this->db->order_by('invoices.id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getCompanyUnpaidInvoices($cid, $date_range = array())
+    {
+        $this->db->select('*');        
+        $this->db->from($this->table);   
+        $this->db->where('company_id', $cid);
+        $this->db->where('view_flag', 0);
+        $this->db->where_in('status', ['Submitted', 'Partially Paid', 'Due', 'Overdue', 'Approved', 'Schedule']);
+
+        if( !empty($date_range) ){
+            $this->db->where('date_issued >=', $date_range['from']);
+            $this->db->where('date_issued <=', $date_range['to']);
+        }
+        
+        $this->db->order_by('invoices.id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getCompanyTotalAmountPaidInvoices($cid, $date_range = array())
+    {
+        $this->db->select('id, COALESCE(SUM(grand_total),0) AS total_paid');    
+        $this->db->from($this->table);   
+        $this->db->where('company_id', $cid);
+        $this->db->where('view_flag', 0);
+        $this->db->where('status', 'Paid');
+
+        if( !empty($date_range) ){
+            $this->db->where('date_issued >=', $date_range['from']);
+            $this->db->where('date_issued <=', $date_range['to']);
+        }
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getCompanyOverDueInvoices($cid, $date_range = array())
+    {
+        $current_date = date("Y-m-d");
+
+        $this->db->select('*');        
+        $this->db->from($this->table);   
+        $this->db->where('company_id', $cid);
+        $this->db->where('view_flag', 0);
+
+        if( !empty($date_range) ){
+            $this->db->where('due_date >=', $date_range['from']);
+            $this->db->where('due_date <=', $date_range['to']);
+        }else{
+            $this->db->where('due_date <=', $current_date);
+        }
+        
+        $this->db->order_by('invoices.id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 
     public function getItems($id)
     {

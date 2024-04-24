@@ -55,7 +55,7 @@ if (isset($selected_participants)) {
                         </div>
                     </div>
                 </div>
-                <?php echo form_open_multipart(null, ['class' => 'form-validate require-validation', 'id' => 'taskhub_entry']); ?>
+                <?php echo form_open_multipart(null, ['class' => 'form-validate require-validation', 'id' => 'frm-taskhub-add']); ?>
                 <?php
                 if (isset($task)) {
                     $task_id = $taskHub->task_id;
@@ -392,11 +392,11 @@ if (isset($selected_participants)) {
             });
         }      
 
-        $("#taskhub_entry").on("submit", function(e) {            
+        /*$("#frm-taskhub-add").on("submit", function(e) {            
             e.preventDefault();
 
             let _this = $(this);
-            var url = "<?php echo base_url('taskhub/entry'); ?>";
+            var url = "<?php //echo base_url('taskhub/entry'); ?>";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -424,7 +424,54 @@ if (isset($selected_participants)) {
                     _this.find("button[type=submit]").prop("disabled", false);
                 },
             });
-        });
+        });*/
+
+        $("#frm-taskhub-add").on("submit", function(e) {            
+            e.preventDefault();
+
+            let _this = $(this);
+            var url   = base_url + 'taskhub/_save_taskhub_task';
+            var formData = new FormData($("#frm-taskhub-add")[0]); 
+            
+            _this.find("button[type=submit]").html('<span class="bx bx-loader bx-spin"></span>');
+            _this.find("button[type=submit]").prop("disabled", true);
+
+            setTimeout(function () {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    dataType: 'json',
+                    contentType: false,
+                    cache: false,
+                    processData:false,
+                    data: formData, //_this.serialize()
+                    success: function(o)
+                    {          
+                        if( o.is_success == 1 ){   
+                            $("#modalAddTaskHub").modal("hide");         
+                            Swal.fire({
+                                title: 'Save Successful!',
+                                text: "Task was successfully created.",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                location.href = "<?php echo base_url('taskhub'); ?>";
+                            });
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: o.msg
+                            });
+                        } 
+
+                        _this.find("button[type=submit]").html("Save");
+                        _this.find("button[type=submit]").prop("disabled", false);                        
+                    }
+                });
+            }, 800); 
+        });             
     });
 
     function formatRepoCustomerSelection(repo) {
