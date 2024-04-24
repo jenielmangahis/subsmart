@@ -26,7 +26,49 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-4">
+                        <div class="nsm-counter primary h-100 mb-2">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-dollar'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id="total_this_year">$<?= number_format($ticketTotalAmount->total_amount, 2, '.', ''); ?></h2>
+                                    <span>Income</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="nsm-counter secondary h-100 mb-2">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-receipt'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id="pending_total">$<?php echo get_invoice_amount('unpaid') ?></h2>
+                                    <span>Total Service Tickets</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="nsm-counter success h-100 mb-2">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-receipt'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id="paid_total">$<?php echo get_invoice_amount('paid') ?></h2>
+                                    <span>Total Open Service Tickets</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-5">
                     <div class="col-12 col-md-4">
                         <form action="<?php echo base_url('estimate') ?>" method="GET">
                             <div class="nsm-field-group search">
