@@ -18,12 +18,12 @@
                 <span>Online Booking</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Priority'): echo 'active'; endif; ?>">
+        <!-- <li class="<?php if($page->title == 'Priority'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('workorder/priority/') ?>">
                 <i class='bx bx-fw bx-list-check'></i>
                 <span>Priority</span>
             </a>
-        </li>
+        </li> -->
         <li class="<?php if($page->title == ''): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('workorder/map') ?>">
                 <i class='bx bx-fw bx-show-alt'></i>
