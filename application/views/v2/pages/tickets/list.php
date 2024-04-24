@@ -47,7 +47,7 @@
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="pending_total">$<?php echo get_invoice_amount('unpaid') ?></h2>
+                                    <h2 id="pending_total"><?= count($tickets); ?></h2>
                                     <span>Total Service Tickets</span>
                                 </div>
                             </div>
@@ -60,7 +60,7 @@
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="paid_total">$<?php echo get_invoice_amount('paid') ?></h2>
+                                    <h2 id="paid_total"><?= count($openTickets); ?></h2>
                                     <span>Total Open Service Tickets</span>
                                 </div>
                             </div>
