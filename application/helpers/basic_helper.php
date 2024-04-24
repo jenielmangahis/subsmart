@@ -2441,11 +2441,11 @@ function get_invoice_amount($type)
 
     switch ($type) {
         case "year":
-            $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date));
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'view_flag' => 0));
             return total_invoice_amount($result);
 
         case "pending":
-            $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Draft'));
+            $result = $CI->invoice_model->getByWhere(array('company_id' => $company_id, 'date_issued >=' => $start_date, 'date_issued <=' => $end_date, 'status' => 'Draft', 'view_flag' => 0));
             return total_invoice_amount($result);
         case "total":
             $resultInvoice  = $CI->invoice_model->getTotalInvoiceAmountByCompanyId($company_id);
