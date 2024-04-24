@@ -5459,12 +5459,15 @@ class Customer extends MY_Controller
     }
 
     public function ticketslist()
-    {
+    {        
         $this->page_data['page']->title = 'Tickets';
         $this->page_data['page']->parent = 'Sales';
 
         $this->hasAccessModule(39);
         // $user_id = logged('id');
+        $cid = logged('company_id');
+        $this->page_data['openTickets'] = $this->tickets_model->getCompanyOpenServiceTickets($cid);
+        $this->page_data['ticketTotalAmount'] = $this->tickets_model->getCompanyTotalAmountServiceTickets($cid);
         $this->page_data['tickets'] = $this->tickets_model->get_tickets_data();
         $this->load->view('v2/pages/tickets/list', $this->page_data);
     }
