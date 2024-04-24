@@ -250,7 +250,7 @@ class Invoice_model extends MY_Model
         $this->db->from($this->table);   
         $this->db->where('company_id', $cid);
         $this->db->where('view_flag', 0);
-        $this->db->where_in('status', ['Submitted', 'Partially Paid', 'Due', 'Overdue', 'Approved', 'Schedule']);
+        $this->db->where_in('status', ['Draft', 'Submitted', 'Partially Paid', 'Due', 'Overdue', 'Approved', 'Schedule']);
 
         if( !empty($date_range) ){
             $this->db->where('date_issued >=', $date_range['from']);
@@ -269,7 +269,7 @@ class Invoice_model extends MY_Model
         $this->db->from($this->table);   
         $this->db->where('company_id', $cid);
         $this->db->where('view_flag', 0);
-        $this->db->where_in('status', ['Unpaid', '', 'Submitted', 'Partially Paid', 'Due', 'Overdue', 'Approved', 'Schedule']);
+        $this->db->where_in('status', ['Draft', 'Unpaid', '', 'Submitted', 'Partially Paid', 'Due', 'Overdue', 'Approved', 'Schedule']);
 
         if( !empty($date_range) ){
             $this->db->where('date_issued >=', $date_range['from']);
