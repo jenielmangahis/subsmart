@@ -516,9 +516,10 @@ class Invoice_model extends MY_Model
 
     public function getTotalInvoiceAmountByCompanyId($company_id)
     {
-        $this->db->select('SUM(grand_total)AS total_invoice_amount');
+        $this->db->select('SUM(grand_total) AS total_invoice_amount');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
+        $this->db->where('invoices.view_flag', 0);
         
         $query = $this->db->get();
         return $query->row();
