@@ -103,15 +103,27 @@
                             </div>
                         </div>
                     </div>
+                    <?php
+                    // Calculate total sales
+                    $totalSales = 0;
+                    foreach ($transactions as $transaction) {
+                        if (isset($transaction['total'])) {
+                            // Remove commas and convert to float
+                            $totalSales += floatval(str_replace(',', '', $transaction['total']));
+                        }
+                    }
+                    ?>
+
+                    <!-- Display the total sales -->
                     <div class="col-12 col-md-3">
-                        <div class="nsm-counter success h-100 mb-2  <?php echo $transaction === 'all-transactions' ? 'selected' : ''; ?>" id="all-transactions">
+                        <div class="nsm-counter success h-100 mb-2 <?php echo $transaction === 'all-transactions' ? 'selected' : ''; ?>" id="all-transactions">
                             <div class="row h-100">
                                 <div class="col d-flex justify-content-center align-items-center">
                                     <i class="bx bx-receipt"></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <?php if (isset($transaction['total'])) : ?>
-                                        <h2 id="total_this_year">$<?php echo $transaction['total']; ?></h2>
+                                    <?php if ($totalSales > 0) : ?>
+                                        <h2 id="total_this_year">$<?php echo number_format($totalSales, 2) ?></h2>
                                     <?php else : ?>
                                         <h2 id="total_this_year">N/A</h2>
                                     <?php endif; ?>

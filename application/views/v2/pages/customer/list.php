@@ -136,7 +136,7 @@ table.dataTable thead th, table.dataTable thead td{
 }
 
 .mergeOutputEntryWidth {
-    width: 316px;
+    width: 400px;
 }
 
 .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
@@ -1226,6 +1226,11 @@ table.dataTable thead th, table.dataTable thead td{
                 });
             } 
         });
+    });
+
+    $(document).on('click', '.copyColumnEntry', function () {
+        const entryID = $(this).attr('data-prof_id');
+        $('.data_' + entryID + ' > tbody > tr > td').click();
     });
 
     var data_selector = "";
