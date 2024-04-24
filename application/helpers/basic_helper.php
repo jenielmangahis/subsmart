@@ -2454,6 +2454,13 @@ function get_invoice_amount($type)
                 $total_invoice = $resultInvoice->total_invoice_amount;
             }
             return number_format($total_invoice, 2, '.', ',');
+        case "unpaid":
+            $resultInvoice  = $CI->invoice_model->getCompanyTotalAmountUnPaidInvoices($company_id);
+            $total_invoice = 0;
+            if( $resultInvoice ){
+                $total_invoice = $resultInvoice->total_amount;
+            }
+            return number_format($total_invoice, 2, '.', ',');
         case "balance":
             $date_range = ['from' => $start_date, 'to' => $end_date];
             $resultInvoice  = $CI->invoice_model->getTotalInvoiceAmountByCompanyId($company_id);
