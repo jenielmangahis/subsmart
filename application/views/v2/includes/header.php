@@ -230,12 +230,12 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-book-content'></i> Online Booking
                             </a>
                         </li>
-                        <li class="<?php if ($page->title == 'Priority') : echo 'selected';
+                        <!-- <li class="<?php if ($page->title == 'Priority') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("workorder/priority/") ?>">
                                 <i class='bx bx-fw bx-list-check'></i> Priority
                             </a>
-                        </li>
+                        </li> -->
                         <li class="<?php if ($page->title == '') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("workorder/map") ?>">

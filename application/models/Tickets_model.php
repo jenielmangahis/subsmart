@@ -625,6 +625,40 @@ class Tickets_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function getCompanyTotalAmountServiceTickets($cid, $date_range = array())
+    {
+        $this->db->select('id, COALESCE(SUM(grandtotal),0) AS total_amount');       
+        $this->db->from($this->table);   
+        $this->db->where('company_id', $cid);
+
+        if( !empty($date_range) ){
+            $this->db->where('ticket_date >=', $date_range['from']);
+            $this->db->where('ticket_date <=', $date_range['to']);
+        }
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getCompanyOpenServiceTickets($cid, $date_range = array())
+    {
+        $this->db->select('*');        
+        $this->db->from($this->table);   
+        $this->db->where('tickets.company_id', $cid);       
+        $this->db->join('acs_profile', 'tickets.customer_id  = acs_profile.prof_id'); 
+        $this->db->where_in('ticket_status', ['New', 'Draft', 'Scheduled', 'Arrived', 'Started', 'Approved', 'Finished', 'Invoiced']);
+
+        if( !empty($date_range) ){
+            $this->db->where('date_issued >=', $date_range['from']);
+            $this->db->where('date_issued <=', $date_range['to']);
+        }
+        
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 ?>

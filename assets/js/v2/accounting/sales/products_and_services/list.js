@@ -102,7 +102,19 @@ $('#apply-button').on('click', function () {
     url += search !== '' ? `search=${search}&` : '';
     url += filterStatus !== 'active' ? `status=${filterStatus}&` : '';
     url += filterType !== 'all' ? `type=${filterType}&` : '';
-    url += $('#filter-category option').length !== $('#filter-category option:selected').length && $('#filter-category option:selected').length > 0 ? `category=${filterCategory}&` : '';
+    if (filterCategory && filterCategory.length > 0) {
+        var categoryNames = filterCategory.map(function (categoryId) {
+            var categoryName = $('#filter-category option[value="' + categoryId + '"]').text().trim();
+            return encodeURIComponent(categoryName);
+        });
+
+        url += `category=${categoryNames.join(',')}&`;
+
+        if ($('#filter-category option').length !== $('#filter-category option:selected').length && $('#filter-category option:selected').length > 0) {
+            var categoryFilter = filterCategory.join(',');
+            url += `category=${encodeURIComponent(categoryFilter)}&`;
+        }
+    }
     url += filterStockStat !== 'all' ? `stock-status=${filterStockStat}&` : '';
     url += groupByCat.prop('checked') ? 'group-by-category=1' : '';
 
@@ -301,6 +313,7 @@ $('#adjust-quantity').on('click', function (e) {
 
             $(`#inventoryModal #inventory-adjustments-table tbody tr:nth-child(${count})`).find('select').each(function () {
                 var type = $(this).attr('id');
+                console.log('id', type);
                 if (type === undefined) {
                     type = $(this).attr('name').replaceAll('[]', '').replaceAll('_', '-');
                 } else {

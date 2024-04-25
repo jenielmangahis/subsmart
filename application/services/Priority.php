@@ -39,6 +39,7 @@ class Priority
 
 
         $this->app->page_data['priorityList'] = $this->app->priorityList_model->getAll();
+        $this->app->page_data['page']->title = 'Workorder Priority';        
         // $this->app->load->view('workorder/priority-list/list', $this->app->page_data);
         $this->app->load->view('v2/pages/workorder/priority-list/list', $this->app->page_data);
     }

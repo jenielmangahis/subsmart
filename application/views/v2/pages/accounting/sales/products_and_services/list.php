@@ -335,6 +335,14 @@
                             </div>
                         </div>
                     </div>
+                    <?php
+                    $total_items = 0;
+                    foreach ($items as $item) {
+                        if (isset($item['qty_on_hand'])) {
+                            $total_items += floatval(str_replace(',', '', $item['qty_on_hand']));
+                        }
+                    }
+                    ?>
                     <div class="col-md-3">
                         <div class="nsm-counter success h-100 mb-2">
                             <div class="row h-100">
@@ -342,8 +350,37 @@
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="totalStock"><?= $total_stock ?></h2>
+                                    <?php if ($total_items > 0) : ?>
+                                        <h2 id="totalItems"><?php echo number_format($total_items, 0) ?></h2>
+                                    <?php else : ?>
+                                        <h2 id="totalItems">N/A</h2>
+                                    <?php endif; ?>
                                     <span>TOTAL ITEMS</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php
+                    $total_service = 0;
+                    foreach ($items as $item) {
+                        if (isset($item['id']) && !empty($item['id'])) {
+                            $total_service++;
+                        }
+                    }
+                    ?>
+                    <div class="col-md-3">
+                        <div class="nsm-counter secondary h-100 mb-2">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-receipt'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <?php if ($total_service > 0) : ?>
+                                        <h2 id="totalService"><?php echo number_format($total_service, 0) ?></h2>
+                                    <?php else : ?>
+                                        <h2 id="totalService">N/A</h2>
+                                    <?php endif; ?>
+                                    <span>TOTAL SERVICES</span>
                                 </div>
                             </div>
                         </div>
@@ -667,7 +704,7 @@
 </div>
 
 <?php include viewPath('v2/includes/footer'); ?>
-<script>
+<!-- <script>
     document.addEventListener("DOMContentLoaded", function() {
         const lowStockElement = document.getElementById('lowStockCount');
         const outOfStockElement = document.getElementById('outOfStockCount');
@@ -680,7 +717,7 @@
 
         totalStockElement.innerText = totalStock.toString();
     });
-</script>
+</script> -->
 <script>
     $(document).ready(function() {
         $("#items-table").nsmPagination({
@@ -710,46 +747,5 @@
                 console.log('Other option selected');
             }
         });
-    });
-</script>
-<script>
-    $(document).ready(function() {
-        function constructCategoryFilterQueryString(selectedCategories) {
-            if (!selectedCategories || selectedCategories.length === 0 || selectedCategories.includes('all')) {
-                return '';
-            }
-
-            var categoryParams = [];
-
-            selectedCategories.forEach(function(categoryId) {
-                var categoryName = $('#filter-category option[value="' + categoryId + '"]').text();
-                var itemCount = getItemCountForCategory(categoryId);
-                categoryParams.push(`${encodeURIComponent(categoryName)}:${itemCount}`);
-            });
-
-            return 'filter_category=' + categoryParams.join(',');
-        }
-
-        function updateURLWithCategoryFilter() {
-            var selectedCategories = $('#filter-category').val();
-            var queryString = constructCategoryFilterQueryString(selectedCategories);
-
-            if (queryString) {
-                var currentPathname = window.location.pathname;
-                var newURL = currentPathname + '?' + queryString;
-                history.replaceState(null, null, newURL);
-            }
-        }
-
-        $('#filter-category').on('change', function() {
-            updateURLWithCategoryFilter();
-        });
-
-        function getItemCountForCategory(categoryId) {
-            var itemCount = Math.floor(Math.random() * 100);
-            return itemCount;
-        }
-
-        updateURLWithCategoryFilter();
     });
 </script>

@@ -250,7 +250,7 @@ class Invoice_model extends MY_Model
         $this->db->from($this->table);   
         $this->db->where('company_id', $cid);
         $this->db->where('view_flag', 0);
-        $this->db->where_in('status', ['Submitted', 'Partially Paid', 'Due', 'Overdue', 'Approved', 'Schedule']);
+        $this->db->where_in('status', ['Draft', 'Submitted', 'Partially Paid', 'Due', 'Overdue', 'Approved', 'Schedule']);
 
         if( !empty($date_range) ){
             $this->db->where('date_issued >=', $date_range['from']);
@@ -261,6 +261,23 @@ class Invoice_model extends MY_Model
 
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function getCompanyTotalAmountUnPaidInvoices($cid, $date_range = array())
+    {
+        $this->db->select('id, COALESCE(SUM(grand_total),0) AS total_amount');       
+        $this->db->from($this->table);   
+        $this->db->where('company_id', $cid);
+        $this->db->where('view_flag', 0);
+        $this->db->where_in('status', ['Draft', 'Unpaid', '', 'Submitted', 'Partially Paid', 'Due', 'Overdue', 'Approved', 'Schedule']);
+
+        if( !empty($date_range) ){
+            $this->db->where('date_issued >=', $date_range['from']);
+            $this->db->where('date_issued <=', $date_range['to']);
+        }
+
+        $query = $this->db->get()->row();
+        return $query;
     }
 
     public function getCompanyTotalAmountPaidInvoices($cid, $date_range = array())
@@ -516,9 +533,10 @@ class Invoice_model extends MY_Model
 
     public function getTotalInvoiceAmountByCompanyId($company_id)
     {
-        $this->db->select('SUM(grand_total)AS total_invoice_amount');
+        $this->db->select('SUM(grand_total) AS total_invoice_amount');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
+        $this->db->where('invoices.view_flag', 0);
         
         $query = $this->db->get();
         return $query->row();

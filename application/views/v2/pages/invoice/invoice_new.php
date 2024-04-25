@@ -50,7 +50,7 @@
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="pending_total">$<?php echo get_invoice_amount('balance') ?></h2>
+                                    <h2 id="pending_total">$<?php echo get_invoice_amount('unpaid') ?></h2>
                                     <span>Unpaid</span>
                                 </div>
                             </div>
@@ -192,7 +192,7 @@
                                         $badge = "error";
                                         break;
                                     default:
-                                        $badge = "secondary";
+                                        $badge = "error";
                                         break;
                                 endswitch;
                             ?>
