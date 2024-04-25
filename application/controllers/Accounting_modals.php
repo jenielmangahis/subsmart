@@ -2525,7 +2525,7 @@ class Accounting_modals extends MY_Controller
     //                     'qty' => $data['new_qty'][$key]
     //                 ];
 
-    //                 $adjustmentItemId = $this->accounting_inventory_qty_adjustments_model->add_adjustment_product($adjustmentProducts);
+    //                 $adjustmentItemId = $this->accounting_inventory_qty_adjustments_model->insertAdjProduct($adjustmentProducts);
 
     //                 $itemAccDetails = $this->items_model->getItemAccountingDetails($value);
     //                 $startingValAdj = $this->starting_value_model->get_by_item_id($value);
@@ -2618,37 +2618,94 @@ class Accounting_modals extends MY_Controller
             $return['success'] = false;
             $return['message'] = validation_errors();
         } else {
-            try {
-                $total = 0.00;
+            $total = 0.00;
 
-                foreach ($data['product'] as $key => $value) {
-                    $item = $this->items_model->getItemById($value)[0];
-                    $startingValAdj = $this->starting_value_model->get_by_item_id($value);
+            foreach ($data['product'] as $key => $value) {
+                $item = $this->items_model->getItemById($value)[0];
+                $startingValAdj = $this->starting_value_model->get_by_item_id($value);
 
-                    if (!is_null($startingValAdj)) {
-                        $total += floatval(str_replace(',', '', $data['change_in_qty'][$key])) * floatval(str_replace(',', '', $startingValAdj->initial_cost));
-                    } else {
-                        $total += floatval(str_replace(',', '', $data['change_in_qty'][$key])) * floatval(str_replace(',', '', $item->cost));
-                    }
-                }
-
-                $adjustmentId = $this->saveAdjustment($data, $total);
-
-                if ($adjustmentId > 0) {
-                    $return['data'] = $adjustmentId;
-                    $return['success'] = true;
-                    $return['message'] = 'Inventory adjustment successful!';
+                if (!is_null($startingValAdj)) {
+                    $total += floatval(str_replace(',', '', $data['change_in_qty'][$key])) * floatval(str_replace(',', '', $startingValAdj->initial_cost));
                 } else {
-                    $return['data'] = null;
-                    $return['success'] = false;
-                    $return['message'] = 'An unexpected error occurred during inventory adjustment.';
+                    $total += floatval(str_replace(',', '', $data['change_in_qty'][$key])) * floatval(str_replace(',', '', $item->cost));
                 }
-            } catch (Exception $e) {
-                log_message('error', 'Exception in inventory_qty_adjustment(): ' . $e->getMessage());
+            }
 
+            if (!isset($data['transaction_id']) || is_null($data['transaction_id'])) {
+                $adjustmentData = [
+                    'adjustment_no' => $data['reference_no'],
+                    'company_id' => logged('company_id'),
+                    'adjustment_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
+                    'inventory_adjustment_account_id' => $data['inventory_adj_account'],
+                    'memo' => $data['memo'],
+                    'total_amount' => floatval(str_replace(',', '', $total)),
+                    'created_by' => logged('id'),
+                    'status' => 1
+                ];
+
+                $adjustmentId = $this->accounting_inventory_qty_adjustments_model->create($adjustmentData);
+
+                $successMessage = 'Entry Successful!';
+            } else {
+                $revert = $this->revert_inventory_qty_adjustment($data);
+
+                if ($revert) {
+                    $adjustmentData = [
+                        'adjustment_no' => $data['reference_no'],
+                        'adjustment_date' => date('Y-m-d', strtotime($data['adjustment_date'])),
+                        'inventory_adjustment_account_id' => $data['inventory_adj_account'],
+                        'memo' => $data['memo'],
+                        'total_amount' => floatval(str_replace(',', '', $total)),
+                        'created_by' => logged('id'),
+                        'status' => 1,
+                        'updated_at' => date('Y-m-d h:i:s')
+                    ];
+
+                    $update = $this->accounting_inventory_qty_adjustments_model->update($data['transaction_id'], $adjustmentData);
+
+                    if ($update) {
+                        $adjustmentId = $data['transaction_id'];
+                        $successMessage = 'Update successful.';
+                    } else {
+                        $adjustmentId = null; 
+                        $successMessage = 'Update failed.';
+                    }
+                } else {
+                    $adjustmentId = null; 
+                    $successMessage = 'Revert failed.';
+                }
+            }
+
+            if ($adjustmentId) {
+                $adjustmentProducts = [];
+                $locationData = [];
+                foreach ($data['product'] as $key => $value) {
+                    $adjustmentProducts[] = [
+                        'adjustment_id' => $adjustmentId,
+                        'product_id' => $value,
+                        'location_id' => $data['location'][$key],
+                        'new_quantity' => $data['new_qty'][$key],
+                        'change_in_quantity' => $data['change_in_qty'][$key]
+                    ];
+
+                    $locationData[] = [
+                        'id' => $data['location'][$key],
+                        'qty' => $data['new_qty'][$key]
+                    ];
+
+                    $adjustmentItemId = $this->accounting_inventory_qty_adjustments_model->insertAdjProduct($adjustmentProducts);
+
+                }
+
+                $adjustQuantity = $this->items_model->updateBatchLocations($locationData);
+
+                $return['data'] = $adjustmentId;
+                $return['success'] = $adjustmentId && $adjustQuantity > 0 ? true : false;
+                $return['message'] = $adjustmentId && $adjustQuantity > 0 ? $successMessage : 'An unexpected error occurred!';
+            } else {
                 $return['data'] = null;
                 $return['success'] = false;
-                $return['message'] = 'An unexpected error occurred. Please try again.';
+                $return['message'] = 'An unexpected error occurred!';
             }
         }
 

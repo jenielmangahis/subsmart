@@ -6,7 +6,7 @@
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
-                <table class="nsm-table">
+                <table class="nsm-table" id="print-items-list">
                     <thead>
                         <tr>
                             <td data-name="Name">NAME</td>
@@ -26,31 +26,42 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(count($items) > 0) : ?>
-						<?php foreach($items as $item) : ?>
-                        <tr>
-                            <td class="fw-bold nsm-text-primary nsm-link default"><?=$item['name']?><?=$item['status'] === '0' ? ' (deleted)' : ''?></td>
-							<td><?=$item['sku']?></td>
-							<td><?=$item['type']?></td>
-							<td><?=$item['sales_desc']?></td>
-							<td data-incomeaccountid="<?=$item['income_account_id']?>"><?=$item['income_account']?></td>
-							<td data-expenseaccountid="<?=$item['expense_account_id']?>"><?=$item['expense_account']?></td>
-							<td data-inventoryaccountid="<?=$item['inventory_account_id']?>"><?=$item['inventory_account']?></td>
-							<td><?=$item['purch_desc']?></td>
-							<td><?=$item['sales_price']?></td>
-							<td><?=$item['cost']?></td>
-							<td>
-								<?php if($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "") : ?>
-								<div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox" disabled checked>
-                                </div>
-								<?php endif; ?>
-							</td>
-							<td><?=$item['qty_on_hand']?></td>
-							<td><?=$item['qty_po']?></td>
-							<td><?=$item['reorder_point']?></td>
-                        </tr>
-                        <?php endforeach; ?>
+                        <?php if (count($items) > 0) : ?>
+                            <?php foreach ($items as $item) : ?>
+                                <tr>
+                                    <td class="fw-bold nsm-text-primary nsm-link default">
+                                        <?= $item['name'] . ($item['status'] === '0' ? ' (deleted)' : 'No name provided') ?>
+                                    </td>
+                                    <td><?= $item['sku'] ?: 'SKU unavailable' ?></td>
+                                    <td><?= $item['type'] ?: 'No type provided' ?></td>
+                                    <td><?= $item['sales_desc'] ?: 'No sales description' ?></td>
+                                    <td data-incomeaccountid="<?= $item['income_account_id'] ?>">
+                                        <?= $item['income_account'] ?: 'Income account unavailable' ?>
+                                    </td>
+                                    <td data-expenseaccountid="<?= $item['expense_account_id'] ?>">
+                                        <?= $item['expense_account'] ?: 'Expense account unavailable' ?>
+                                    </td>
+                                    <td data-inventoryaccountid="<?= $item['inventory_account_id'] ?>">
+                                        <?= $item['inventory_account'] ?: 'Inventory account unavailable' ?>
+                                    </td>
+                                    <td><?= $item['purch_desc'] ?: 'No purchase description' ?></td>
+                                    <td><?= $item['sales_price'] ?: 'Sales price unavailable' ?></td>
+                                    <td><?= $item['cost'] ?: 'Cost unavailable' ?></td>
+                                    <td>
+                                        <?= ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "No tax provided") ? '<div class="table-row-icon table-checkbox"><input class="form-check-input select-one table-select" type="checkbox" disabled checked></div>' : 'No tax provided' ?>
+                                    </td>
+                                    <!-- <td>
+                                        <?php if ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "No tax provided") : ?>
+                                            <div class="table-row-icon table-checkbox">
+                                                <input class="form-check-input select-one table-select" type="checkbox" disabled checked>
+                                            </div>
+                                        <?php endif; ?> -->
+                                    </td>
+                                    <td><?= $item['qty_on_hand'] ?: 'Quantity on hand unavailable' ?></td>
+                                    <td><?= $item['qty_po'] ?: 'Quanity on PO unavailable' ?></td>
+                                    <td><?= $item['reorder_point'] ?: 'No reorder point provided' ?></td>
+                                </tr>
+                            <?php endforeach; ?>
                         <?php else : ?>
                             <tr>
                                 <td colspan="13">
@@ -99,31 +110,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(count($items) > 0) : ?>
-						<?php foreach($items as $item) : ?>
-                        <tr>
-                            <td class="fw-bold nsm-text-primary nsm-link default"><?=$item['name']?><?=$item['status'] === '0' ? ' (deleted)' : ''?></td>
-							<td><?=$item['sku']?></td>
-							<td><?=$item['type']?></td>
-							<td><?=$item['sales_desc']?></td>
-							<td data-incomeaccountid="<?=$item['income_account_id']?>"><?=$item['income_account']?></td>
-							<td data-expenseaccountid="<?=$item['expense_account_id']?>"><?=$item['expense_account']?></td>
-							<td data-inventoryaccountid="<?=$item['inventory_account_id']?>"><?=$item['inventory_account']?></td>
-							<td><?=$item['purch_desc']?></td>
-							<td><?=$item['sales_price']?></td>
-							<td><?=$item['cost']?></td>
-							<td>
-								<?php if($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "") : ?>
-								<div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox" disabled checked>
-                                </div>
-								<?php endif; ?>
-							</td>
-							<td><?=$item['qty_on_hand']?></td>
-							<td><?=$item['qty_po']?></td>
-							<td><?=$item['reorder_point']?></td>
-                        </tr>
-                        <?php endforeach; ?>
+                        <?php if (count($items) > 0) : ?>
+                            <?php foreach ($items as $item) : ?>
+                                <tr>
+                                    <td class="fw-bold nsm-text-primary nsm-link default"><?= $item['name'] ?><?= $item['status'] === '0' ? ' (deleted)' : '' ?></td>
+                                    <td><?= $item['sku'] ?></td>
+                                    <td><?= $item['type'] ?></td>
+                                    <td><?= $item['sales_desc'] ?></td>
+                                    <td data-incomeaccountid="<?= $item['income_account_id'] ?>"><?= $item['income_account'] ?></td>
+                                    <td data-expenseaccountid="<?= $item['expense_account_id'] ?>"><?= $item['expense_account'] ?></td>
+                                    <td data-inventoryaccountid="<?= $item['inventory_account_id'] ?>"><?= $item['inventory_account'] ?></td>
+                                    <td><?= $item['purch_desc'] ?></td>
+                                    <td><?= $item['sales_price'] ?></td>
+                                    <td><?= $item['cost'] ?></td>
+                                    <td>
+                                        <?php if ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "") : ?>
+                                            <div class="table-row-icon table-checkbox">
+                                                <input class="form-check-input select-one table-select" type="checkbox" disabled checked>
+                                            </div>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><?= $item['qty_on_hand'] ?></td>
+                                    <td><?= $item['qty_po'] ?></td>
+                                    <td><?= $item['reorder_point'] ?></td>
+                                </tr>
+                            <?php endforeach; ?>
                         <?php else : ?>
                             <tr>
                                 <td colspan="13">
@@ -246,8 +257,8 @@
                                         <p>Select and CSV Upload</p>
 
                                         <form id="import_item" enctype="multipart/form-data" style="text-align: center;">
-                                            <input id="file-upload" name="file" type="file" accept=".csv"/>
-                                            <input  name="file2" value="1" type="hidden"/>
+                                            <input id="file-upload" name="file" type="file" accept=".csv" />
+                                            <input name="file2" value="1" type="hidden" />
                                             <br><br>
                                         </form>
                                     </div>
@@ -256,8 +267,8 @@
                                         <h2>Step 2</h2>
                                         <p>Map Headings</p>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                                                <b >Product/Service Name</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                <b>Product/Service Name</b> <span class='mapping-line'></span>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector0" onclick="test()">
@@ -266,8 +277,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                                                <b >SKU</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                <b>SKU</b> <span class='mapping-line'></span>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector1" onclick="test()">
@@ -276,8 +287,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                                                <b >Type</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                <b>Type</b> <span class='mapping-line'></span>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector2" onclick="test()">
@@ -286,8 +297,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                                                <b >Sales Description</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                <b>Sales Description</b> <span class='mapping-line'></span>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector3" onclick="test()">
@@ -296,8 +307,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                                                <b >Sales Price/Rate</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                <b>Sales Price/Rate</b> <span class='mapping-line'></span>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector4" onclick="test()">
@@ -306,8 +317,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                                                <b >Rebatable</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                <b>Rebatable</b> <span class='mapping-line'></span>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector5" onclick="test()">
@@ -316,8 +327,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                                                <b >Purchase Description</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                <b>Purchase Description</b> <span class='mapping-line'></span>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector6" onclick="test()">
@@ -326,8 +337,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                                                <b >Purchase Cost</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                <b>Purchase Cost</b> <span class='mapping-line'></span>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector7" onclick="test()">
@@ -336,8 +347,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                                                <b >Location</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                <b>Location</b> <span class='mapping-line'></span>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector8" onclick="test()">
@@ -346,8 +357,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                                                <b >Quantity On Hand</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                <b>Quantity On Hand</b> <span class='mapping-line'></span>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector9" onclick="test()">
@@ -356,8 +367,8 @@
                                             </div>
                                         </div>
                                         <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-center">
-                                                <b >Reorder Point</b> <span class='mapping-line'>-----------------</span>
+                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                <b>Reorder Point</b> <span class='mapping-line'></span>
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector10" onclick="test()">
@@ -403,7 +414,16 @@
 
 <div id="overlay">
     <div>
-        <img src="<?=base_url()?>/assets/img/uploading.gif" class="" style="width: 80px;" alt="" />
-        <center><p>Processing...</p></center>
+        <img src="<?= base_url() ?>/assets/img/uploading.gif" class="" style="width: 80px;" alt="" />
+        <center>
+            <p>Processing...</p>
+        </center>
     </div>
 </div>
+<script>
+    $(document).ready(function() {
+        $("#print-items-list").nsmPagination({
+            itemsPerPage: 10,
+        });
+    });
+</script>

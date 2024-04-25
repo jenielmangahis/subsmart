@@ -104,17 +104,13 @@
                         </div>
                     </div>
                     <?php
-                    // Calculate total sales
                     $totalSales = 0;
                     foreach ($transactions as $transaction) {
                         if (isset($transaction['total'])) {
-                            // Remove commas and convert to float
                             $totalSales += floatval(str_replace(',', '', $transaction['total']));
                         }
                     }
                     ?>
-
-                    <!-- Display the total sales -->
                     <div class="col-12 col-md-3">
                         <div class="nsm-counter success h-100 mb-2 <?php echo $transaction === 'all-transactions' ? 'selected' : ''; ?>" id="all-transactions">
                             <div class="row h-100">
