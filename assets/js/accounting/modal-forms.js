@@ -2182,14 +2182,13 @@ $(function () {
 
     $(document).on('change', '#checkModal #print_later', function () {
         if ($(this).prop('checked')) {
-            $('#checkModal #check_no').prop('readonly', true);
-            // $('#checkModal #check_no').val('To print').trigger('change');
+            $('#checkModal #check_no').prop('disabled', true);
+            $('#checkModal #check_no').val('To print').trigger('change');
         } else {
-            $('#checkModal #check_no').prop('readonly', false);
-            // $('#checkModal #check_no').val('').trigger('change');
+            $('#checkModal #check_no').prop('disabled', false);
+            $('#checkModal #check_no').val('').trigger('change');
         }
     });
-
 
     $(document).on('change', '#checkModal #check_no', function () {
         if ($(this).val() !== "") {
@@ -5049,8 +5048,6 @@ $(function () {
 
     // do not remove
     var checkID;
-    var filterDate;
-    var filterType;
 
     $(document).on('change', '#printChecksModal #payment_account, #printChecksModal #sort-by, #printChecksModal #check-type', function () {
         var data = new FormData();
@@ -5066,8 +5063,8 @@ $(function () {
             processData: false,
             contentType: false,
             success: function (result) {
-                var jsonResultData = JSON.parse(result);
-                let checks = jsonResultData.filter(jsonResultData => jsonResultData.date == window.filterDate && jsonResultData.type == window.filterType);
+                var checks = JSON.parse(result);
+
                 $('#printChecksModal #checks-table tbody tr').remove();
                 $('#print_printable_checks_modal table tbody tr').remove();
                 $('#print_preview_printable_checks_modal #printable_checks_table_print tbody tr').remove();
@@ -5093,7 +5090,7 @@ $(function () {
                 } else {
                     checks.forEach(function (check) {
                         $('#printChecksModal #checks-table tbody').append(`
-                        <tr class=''>
+                        <tr>
                             <td>
                                 <div class="table-row-icon table-checkbox">
                                     <input class="form-check-input select-one table-select" type="checkbox" value="${check.id}">
@@ -5346,30 +5343,16 @@ $(function () {
 
         data.set('payment_account', $('#printChecksModal #payment_account').val());
 
-        // $.ajax({
-        //     url: '/accounting/success-print-checks',
-        //     data: data,
-        //     type: 'post',
-        //     processData: false,
-        //     contentType: false,
-        //     success: function (result) {
-        //         // Increment Starting Check after Print
-        //         var currentStartingNo = parseInt($('#starting-check-no').val());
-        //         $('#starting-check-no').val(currentStartingNo + 1);
-
-        //         $('#successPrintCheck').modal('hide');
-        //         $('#printChecksModal #payment_account').trigger('change');
-        //     }
-        // });
-
-        //  Override script, Select the last check no.
         $.ajax({
-            type: "POST",
-            url: window.origin + "/accounting/getCheckNo",
-            dataType: "JSON",
-            success: function (response) {
-                const check_no = parseInt(response.check_no);
-                $('#starting-check-no').val(check_no + 1);
+            url: '/accounting/success-print-checks',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function (result) {
+                // Increment Starting Check after Print
+                var currentStartingNo = parseInt($('#starting-check-no').val());
+                $('#starting-check-no').val(currentStartingNo + 1);
 
                 $('#successPrintCheck').modal('hide');
                 $('#printChecksModal #payment_account').trigger('change');
@@ -7966,11 +7949,7 @@ $(function () {
             } else {
                 table.children('tbody').html('');
                 $.each(transactions, function (key, transaction) {
-
-                    const transType = transaction.type;
-                    const transTypeTrim = transType.split("No.")[0].trim();
-
-                    table.children('tbody').append(`<tr data-id="${transaction.id}" onclick="printcheck(${transaction.id}, '${transaction.date}', '${transTypeTrim}', ${transaction.bank_account_id}, '${transaction.bank_account}')">
+                    table.children('tbody').append(`<tr data-id="${transaction.id}" onclick="printcheck(${transaction.id}, ${transaction.bank_account_id}, '${transaction.bank_account}')">
                         <td>${transaction.type}</td>
                         <td>${transaction.date}</td>
                         <td>${transaction.amount}</td>
@@ -13511,16 +13490,6 @@ const clearForm = () => {
         $('#purchase-order-no').val('');
     }
 
-    $.ajax({
-        type: "POST",
-        url: window.origin + "/accounting/getCheckNo",
-        dataType: "JSON",
-        success: function (response) {
-            const check_no = parseInt(response.check_no);
-            $('#check_no').val(check_no + 1);
-        }
-    });
-
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
     var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -14404,7 +14373,7 @@ const billTableRows = (el) => {
     });
 }
 
-const printcheck = (checkID, filterDate, filterType, bankAccountID, bankAccount) => {
+const printcheck = (checkID, bankAccountID, bankAccount) => {
     $.get(GET_OTHER_MODAL_URL + 'print_checks_modal', function (res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
@@ -14472,20 +14441,6 @@ const printcheck = (checkID, filterDate, filterType, bankAccountID, bankAccount)
         const newOption = new Option(bankAccount, bankAccountID, false, false);
         $('#payment_account').append(newOption).val(bankAccountID).change();
         window.checkID = checkID;
-        window.filterDate = filterDate;
-        window.filterType = filterType;
-
-        //  Override script, Select the last check no.
-        $.ajax({
-            type: "POST",
-            url: window.origin + "/accounting/getCheckNo",
-            dataType: "JSON",
-            success: function (response) {
-                const check_no = parseInt(response.check_no);
-                $('#starting-check-no').val(check_no + 1);
-            }
-        });
-
     });
 }
 

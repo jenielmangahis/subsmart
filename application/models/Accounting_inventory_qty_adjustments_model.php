@@ -28,7 +28,8 @@ class Accounting_inventory_qty_adjustments_model extends MY_Model {
 	function insertAdjProduct($data)
 	{
 		$this->db->insert_batch('accounting_inventory_qty_adjustment_items', $data);
-		return $this->db->insert_id();
+		// return $this->db->insert_id();
+		return $this->db->affected_rows();
 	}
 
 	public function add_adjustment_product($data)
