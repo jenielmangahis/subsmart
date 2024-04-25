@@ -43,7 +43,7 @@
     var enable_clear_all = false;
     
     $(document).ready(function(){
-        loadTasks();
+        //loadTasks();
     });
 
     $(document).on('click','.btn-task-list',function(){
