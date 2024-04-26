@@ -170,7 +170,9 @@ class Users extends MY_Controller
 
 	public function saveservices()
 	{
-		postAllowed();
+		$is_success = 0;
+		$msg = 'Cannot find data';
+		
 		$user = $this->session->userdata('logged');
 		$post = $this->input->post();
 
@@ -196,20 +198,17 @@ class Users extends MY_Controller
 					$ServiceCategory = $this->ServiceCategory_model->create($data);
 				}
 
-				$this->session->set_flashdata('message', 'Type was successfully updated');
-				$this->session->set_flashdata('alert_class', 'alert-success');
-			} else {
-				$this->session->set_flashdata('message', 'Please select a services');
-				$this->session->set_flashdata('alert_class', 'alert-danger');
+				//Activity Logs
+				$activity_name = 'Updated Business Profile Services'; 
+				createActivityLog($activity_name);
+
+				$is_success = 1;
+				$msg = '';
 			}
-
-			redirect('users/services');
-		} else {
-			$this->session->set_flashdata('message', 'Cannot find data');
-			$this->session->set_flashdata('alert_class', 'alert-danger');
-
-			redirect('users/services');
 		}
+
+		$return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
 	}
 
 	public function credentials()
@@ -236,12 +235,8 @@ class Users extends MY_Controller
         $this->page_data['page']->title = 'Availability';
         $this->page_data['page']->parent = 'Company';
 
-		//ifPermissions('businessdetail');
-		$user = (object)$this->session->userdata('logged');
-		$cid = logged('id');
-		$comp_id = logged('company_id');
-		$profiledata = $this->business_model->getByCompanyId($comp_id);
-
+		$cid = logged('company_id');
+		$profiledata = $this->business_model->getByCompanyId($cid);
 		$workingDays = unserialize($profiledata->working_days);
 
 		$data_working_days = array();
@@ -258,6 +253,8 @@ class Users extends MY_Controller
 			$data_working_days['Saturday'] = ['time_from' => '', 'time_to' => ''];
 			$data_working_days['Sunday']   = ['time_from' => '', 'time_to' => ''];
 		}
+
+		
 
 		$this->page_data['data_working_days'] = $data_working_days;
 		$this->page_data['profiledata'] = $profiledata;
@@ -370,151 +367,154 @@ class Users extends MY_Controller
 	public function savebusinessdetail()
 	{
 
+		$is_success  = 0;
+		$msg = 'Cannot find data';
+
 		$user  = (object)$this->session->userdata('logged');
+		$cid   = logged('company_id');
 		$pdata = $this->input->post();
-		$action = $pdata['btn-continue'];
-		unset($pdata['btn-continue']);
-		$bid = $pdata['id'];
+		$action = $pdata['action'];
+		unset($pdata['action']);
 		unset($pdata['id']);
-		if ($bid != '') {
-			if ($action == 'availability') {
-
-				$schedules = array();
-				foreach ($pdata['weekday'] as $value) {
-					switch ($value) {
-						case 'Monday':
-							$schedules[] = [
-								'day' => 'Monday',
-								'time_from' => $pdata['monHoursFromAvail'],
-								'time_to' => $pdata['monHoursToAvail']
-							];
-							break;
-						case 'Tuesday':
-							$schedules[] = [
-								'day' => 'Tuesday',
-								'time_from' => $pdata['tueHoursFromAvail'],
-								'time_to' => $pdata['tueHoursToAvail']
-							];
-							break;
-						case 'Wednesday':
-							$schedules[] = [
-								'day' => 'Wednesday',
-								'time_from' => $pdata['wedHoursFromAvail'],
-								'time_to' => $pdata['wedHoursToAvail']
-							];
-							break;
-						case 'Thursday':
-							$schedules[] = [
-								'day' => 'Thursday',
-								'time_from' => $pdata['thuHoursFromAvail'],
-								'time_to' => $pdata['thuHoursToAvail']
-							];
-							break;
-						case 'Friday':
-							$schedules[] = [
-								'day' => 'Friday',
-								'time_from' => $pdata['friHoursFromAvail'],
-								'time_to' => $pdata['friHoursToAvail']
-							];
-							break;
-						case 'Saturday':
-							$schedules[] = [
-								'day' => 'Saturday',
-								'time_from' => $pdata['satHoursFromAvail'],
-								'time_to' => $pdata['satHoursToAvail']
-							];
-							break;
-						case 'Sunday':
-							$schedules[] = [
-								'day' => 'Sunday',
-								'time_from' => $pdata['sunHoursFromAvail'],
-								'time_to' => $pdata['sunHoursToAvail']
-							];
-							break;
-						default:
-							break;
-					}
-				}
-				$schedules = serialize($schedules);
-				$data_availability = [
-					'working_days' => $schedules,
-					'start_time_of_day' => $pdata['timeoff_from'],
-					'end_time_of_day' => $pdata['timeoff_to']
-				];
-				$this->business_model->update($bid, $data_availability);
-			} elseif ($action == 'credentials') {
-				$is_licensed = 0;
-				if (isset($pdata['is_licensed'])) {
-					$is_licensed = 1;
-				}
-
-				$is_bonded = 0;
-				if (isset($pdata['is_bonded'])) {
-					$is_bonded = 1;
-				}
-
-				$is_insured = 0;
-				if (isset($pdata['is_insured'])) {
-					$is_insured = 1;
-				}
-
-				$is_bbb = 0;
-				if (isset($pdata['is_bbb'])) {
-					$is_bbb = 1;
-				}
-
-				$license_image_name = '';
-				if (isset($_FILES['license_image']) && $_FILES['license_image']['tmp_name'] != '') {
-					$tmp_name = $_FILES['license_image']['tmp_name'];
-					$extension = strtolower(end(explode('.', $_FILES['license_image']['name'])));
-					$license_image_name = "license_" . basename($_FILES["license_image"]["name"]);
-					move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$license_image_name");
-				}
-
-				$bond_image_name = '';
-				if (isset($_FILES['bond_image']) && $_FILES['bond_image']['tmp_name'] != '') {
-					$tmp_name = $_FILES['bond_image']['tmp_name'];
-					$extension = strtolower(end(explode('.', $_FILES['bond_image']['name'])));
-					$bond_image_name = "bond_" . basename($_FILES["bond_image"]["name"]);
-					move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$bond_image_name");
-				}
-
-				$data_availability = [
-					'is_bonded' => $is_bonded,
-					'is_licensed' => $is_licensed,
-					'is_bbb_accredited' => $is_bbb,
-					'is_business_insured' => $is_insured,
-					'insured_amount' => $pdata['insured_amount'],
-					'insurance_expiry_date' => $pdata['insured_exp_date'],
-					'bond_amount' => $pdata['bonded_amount'],
-					'bond_expiry_date' => $pdata['bonded_exp_date'],
-					'license_class' => $pdata['license_class'],
-					'license_number' => $pdata['license_number'],
-					'license_state' => $pdata['license_state'],
-					'license_expiry_date' => $pdata['license_exp_date'],
-					'bbb_link' => $pdata['bbb_url'],
-					'license_image' => $license_image_name,
-					'bond_image' => $bond_image_name
-				];
-
-				$this->business_model->update($bid, $data_availability);
-			} else {
-				$this->business_model->update($bid, $pdata);
-			}
-
-			$imbid = $pdata['user_id'];
-		} else {
-			if (isset($pdata) && isset($user)) {
-				unset($pdata['btn-save']);
-				if ($this->general_model->update_with_key_field($pdata, $user->id, "business_profile", 'user_id')) {
-					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+		
+		if ($action == 'availability') {
+			$schedules = array();
+			foreach ($pdata['weekday'] as $value) {
+				switch ($value) {
+					case 'Monday':
+						$schedules[] = [
+							'day' => 'Monday',
+							'time_from' => $pdata['monHoursFromAvail'],
+							'time_to' => $pdata['monHoursToAvail']
+						];
+						break;
+					case 'Tuesday':
+						$schedules[] = [
+							'day' => 'Tuesday',
+							'time_from' => $pdata['tueHoursFromAvail'],
+							'time_to' => $pdata['tueHoursToAvail']
+						];
+						break;
+					case 'Wednesday':
+						$schedules[] = [
+							'day' => 'Wednesday',
+							'time_from' => $pdata['wedHoursFromAvail'],
+							'time_to' => $pdata['wedHoursToAvail']
+						];
+						break;
+					case 'Thursday':
+						$schedules[] = [
+							'day' => 'Thursday',
+							'time_from' => $pdata['thuHoursFromAvail'],
+							'time_to' => $pdata['thuHoursToAvail']
+						];
+						break;
+					case 'Friday':
+						$schedules[] = [
+							'day' => 'Friday',
+							'time_from' => $pdata['friHoursFromAvail'],
+							'time_to' => $pdata['friHoursToAvail']
+						];
+						break;
+					case 'Saturday':
+						$schedules[] = [
+							'day' => 'Saturday',
+							'time_from' => $pdata['satHoursFromAvail'],
+							'time_to' => $pdata['satHoursToAvail']
+						];
+						break;
+					case 'Sunday':
+						$schedules[] = [
+							'day' => 'Sunday',
+							'time_from' => $pdata['sunHoursFromAvail'],
+							'time_to' => $pdata['sunHoursToAvail']
+						];
+						break;
+					default:
+						break;
 				}
 			}
+			
+			$schedules = serialize($schedules);
+			$data_availability = [
+				'working_days' => $schedules,
+				'start_time_of_day' => $pdata['timeoff_from'],
+				'end_time_of_day' => $pdata['timeoff_to']
+			];
+			$this->business_model->updateByCompanyId($cid, $data_availability);
 
-			$pdata['user_id'] = $user->id;
-			$imbid = $user->id;
-			$bid = $this->business_model->create($pdata);
+			//Activity Logs
+			$activity_name = 'Updated Business Profile Availability'; 
+			createActivityLog($activity_name);
+
+		} elseif ($action == 'credentials') {
+			$is_licensed = 0;
+			if (isset($pdata['is_licensed'])) {
+				$is_licensed = 1;
+			}
+
+			$is_bonded = 0;
+			if (isset($pdata['is_bonded'])) {
+				$is_bonded = 1;
+			}
+
+			$is_insured = 0;
+			if (isset($pdata['is_insured'])) {
+				$is_insured = 1;
+			}
+
+			$is_bbb = 0;
+			if (isset($pdata['is_bbb'])) {
+				$is_bbb = 1;
+			}
+
+			$license_image_name = '';
+			if (isset($_FILES['license_image']) && $_FILES['license_image']['tmp_name'] != '') {
+				$tmp_name = $_FILES['license_image']['tmp_name'];
+				$extension = strtolower(end(explode('.', $_FILES['license_image']['name'])));
+				$license_image_name = "license_" . basename($_FILES["license_image"]["name"]);
+				move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$license_image_name");
+			}
+
+			$bond_image_name = '';
+			if (isset($_FILES['bond_image']) && $_FILES['bond_image']['tmp_name'] != '') {
+				$tmp_name = $_FILES['bond_image']['tmp_name'];
+				$extension = strtolower(end(explode('.', $_FILES['bond_image']['name'])));
+				$bond_image_name = "bond_" . basename($_FILES["bond_image"]["name"]);
+				move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$bond_image_name");
+			}
+
+			$data_availability = [
+				'is_bonded' => $is_bonded,
+				'is_licensed' => $is_licensed,
+				'is_bbb_accredited' => $is_bbb,
+				'is_business_insured' => $is_insured,
+				'insured_amount' => $pdata['insured_amount'],
+				'insurance_expiry_date' => $pdata['insured_exp_date'],
+				'bond_amount' => $pdata['bonded_amount'],
+				'bond_expiry_date' => $pdata['bonded_exp_date'],
+				'license_class' => $pdata['license_class'],
+				'license_number' => $pdata['license_number'],
+				'license_state' => $pdata['license_state'],
+				'license_expiry_date' => $pdata['license_exp_date'],
+				'bbb_link' => $pdata['bbb_url'],
+				'license_image' => $license_image_name,
+				'bond_image' => $bond_image_name
+			];
+
+			$this->business_model->updateByCompanyId($cid, $data_availability);
+		} else {				
+			$this->business_model->updateByCompanyId($cid, $pdata);
+
+			//Activity Logs
+			$activity_name = 'Updated Business Profile Credentials'; 
+			createActivityLog($activity_name);
 		}
+
+		$imbid = $pdata['user_id'];
+
+		$is_success = 1;
+		$msg = '';
 
 		if (!empty($_FILES['image']['name'])) {
 
@@ -532,10 +532,13 @@ class Users extends MY_Controller
 		}
 
 		// $this->activity_model->add('New User $'.$id.' Created by User:'.logged('name'), logged('id'));
-		$this->session->set_flashdata('alert-type', 'success');
-		$this->session->set_flashdata('alert', 'Business detail updated Successfully');
+		
+		$json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
 
-		redirect('users/businessview');
+        echo json_encode($json_data);
 	}
 
 	// added for tracking Timesheet of employees: Attendance View
@@ -2343,57 +2346,85 @@ class Users extends MY_Controller
 
 	public function update_profile_setting()
 	{
-		$post    = $this->input->post();
-		$comp_id = logged('company_id');
+		$is_success = 0;
+		$msg = 'Cannot find data';
 
-		$profiledata = $this->business_model->getByCompanyId($comp_id);
-		$image_name  = $profiledata->business_cover_photo;
-		if (!empty($_FILES['cover_photo']['name'])) {
-			$target_dir = "./uploads/company_cover_photo/$comp_id/";
+		$post = $this->input->post();
+		$cid  = logged('company_id');
 
-			if (!file_exists($target_dir)) {
-				mkdir($target_dir, 0777, true);
+		$profiledata = $this->business_model->getByCompanyId($cid);
+		if( $profiledata ){
+			$image_name  = $profiledata->business_cover_photo;
+			if (!empty($_FILES['cover_photo']['name'])) {
+				$target_dir = "./uploads/company_cover_photo/$cid/";
+
+				if (!file_exists($target_dir)) {
+					mkdir($target_dir, 0777, true);
+				}
+
+				$tmp_name = $_FILES['cover_photo']['tmp_name'];
+				$extension = strtolower(end(explode('.', $_FILES['cover_photo']['name'])));
+				// basename() may prevent filesystem traversal attacks;
+				// further validation/sanitation of the filename may be appropriate
+				$name = basename($_FILES["cover_photo"]["name"]);
+				move_uploaded_file($tmp_name, "./uploads/company_cover_photo/$cid/$name");
+				$image_name = $name;
+				//$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
 			}
 
-			$tmp_name = $_FILES['cover_photo']['tmp_name'];
-			$extension = strtolower(end(explode('.', $_FILES['cover_photo']['name'])));
-			// basename() may prevent filesystem traversal attacks;
-			// further validation/sanitation of the filename may be appropriate
-			$name = basename($_FILES["cover_photo"]["name"]);
-			move_uploaded_file($tmp_name, "./uploads/company_cover_photo/$comp_id/$name");
-			$image_name = $name;
+			$slug = createSlug($post['profile_slug'], '-');
 
-			//$this->business_model->update($profiledata->id, ['work_images' => serialize($workImages)]);
+			$data = [
+				'profile_slug' => $slug,
+				'business_tags' => $post['company_tags'],
+				'business_cover_photo' => $image_name
+			];
 
+			$this->business_model->updateByCompanyId($cid, $data);
+
+			//Activity Logs
+			$activity_name = 'Updated Business Profile Settings'; 
+			createActivityLog($activity_name);
+
+			$is_success = 1;
+			$msg = '';
+			
 		}
 
-		$slug = createSlug($post['profile_slug'], '-');
-
-		$data = [
-			'profile_slug' => $slug,
-			'business_tags' => $post['company_tags'],
-			'business_cover_photo' => $image_name
+		$json_data = [
+			'is_success' => $is_success,
+			'msg' => $msg
 		];
 
-		$this->business_model->update($profiledata->id, $data);
-
-		$this->session->set_flashdata('message', 'Profile setting was successfully updated');
-		$this->session->set_flashdata('alert_class', 'alert-success');
-
-		redirect('users/profilesetting');
+		echo json_encode($json_data);
+		
 	}
 
 	public function update_social_media()
 	{
-		$comp_id = logged('company_id');
+		$is_success = 0;
+		$msg = 'Cannot find data';
+
+		$cid  = logged('company_id');
 		$post = $this->input->post();
-		$profiledata = $this->business_model->getByCompanyId($comp_id);
-		$this->business_model->update($profiledata->id, $post);
+		$profiledata = $this->business_model->getByCompanyId($cid);
+		if( $profiledata ){
+			$this->business_model->updateByCompanyId($cid, $post);
 
-		$this->session->set_flashdata('message', 'Profile setting was successfully updated');
-		$this->session->set_flashdata('alert_class', 'alert-success');
+			//Activity Logs
+			$activity_name = 'Updated Business Profile Social Media'; 
+			createActivityLog($activity_name);
 
-		redirect('users/socialMedia');
+			$is_success = 1;
+			$msg = '';
+		}
+		
+		$json_data = [
+			'is_success' => $is_success,
+			'msg' => $msg
+		];
+
+		echo json_encode($json_data);
 	}
 
 	public function user_export()
@@ -2725,6 +2756,10 @@ class Users extends MY_Controller
 
 			unset($post['image']);
 			$this->business_model->update($businessDetails->id, $post);
+
+			//Activity Logs
+			$activity_name = 'Updated business profile'; 
+			createActivityLog($activity_name);
 
 			$is_success = 1;
 			$msg = '';

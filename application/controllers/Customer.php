@@ -5306,9 +5306,11 @@ class Customer extends MY_Controller
 
     public function group()
     {
+        $this->load->helper('customer_helper');
+
         $this->page_data['page']->title = 'Customer Groups';
         $this->page_data['page']->parent = 'Customers';
-
+        
         $this->hasAccessModule(9);
         $company_id = logged('company_id');
         // pass the $this so that we can use it to load view, model, library or helper classes

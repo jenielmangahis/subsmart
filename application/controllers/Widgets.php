@@ -949,7 +949,9 @@ class Widgets extends MY_Controller
         $year = date("Y");
         $sales_data   = [];
         $chart_labels = [];
-        for( $start = 1; $start <= 12; $start++ ){
+        $start_month  = explode("/", post('filter_date_from'));
+        $end_month    = explode("/", post('filter_date_to'));  
+        for( $start = $start_month[0]; $start <= $end_month[0]; $start++ ){
             $start_date = $year . '-' . $start . '-' . 1;
             $start_date = date("Y-m-d", strtotime($start_date));
             $end_date   = date("Y-m-t", strtotime($start_date));
