@@ -398,6 +398,7 @@ include viewPath('v2/includes/accounting_header');
         </div>
     </div>
 </div>
+<?php include viewPath('v2/includes/footer'); ?>
 <script>
     var BASE_URL = window.location.origin;
 

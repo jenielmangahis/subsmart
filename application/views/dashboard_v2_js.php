@@ -697,90 +697,90 @@ $(document).ready(function() {
 
 
 
-    fetch('<?php echo base_url('Dashboard/accounting_sales'); ?>', {}).then(response => response.json()).then(
-        response => {
-            var amountFirst = amountSecond = amountThird = amountFourth = amountFifth = amountSixth =
-                amountSevent = amountEight = amountNinth = amountTenth = amountEleven = amountTwelve = 0;
-            var {
-                success,
-                mmr
-            } = response;
-            if (mmr) {
-                for (var x = 0; x < mmr.length; x++) {
-                    var installDate = mmr[x].install_date;
-                    if (installDate) {
-                        var ins = new Date('"' + installDate + '"');
+    // fetch('<?php echo base_url('Dashboard/accounting_sales'); ?>', {}).then(response => response.json()).then(
+    //     response => {
+    //         var amountFirst = amountSecond = amountThird = amountFourth = amountFifth = amountSixth =
+    //             amountSevent = amountEight = amountNinth = amountTenth = amountEleven = amountTwelve = 0;
+    //         var {
+    //             success,
+    //             mmr
+    //         } = response;
+    //         if (mmr) {
+    //             for (var x = 0; x < mmr.length; x++) {
+    //                 var installDate = mmr[x].install_date;
+    //                 if (installDate) {
+    //                     var ins = new Date('"' + installDate + '"');
 
-                        if (new Date('01/01/2022') <= ins && new Date('01/31/2022') >= ins) {
-                            amountFirst += parseInt(mmr[x].mmr);
-                        } else if (new Date('02/01/2022') <= ins && new Date('02/28/2022') >= ins) {
-                            amountSecond += parseInt(mmr[x].mmr);
-                        } else if (new Date('03/01/2022') <= ins && new Date('03/31/2022') >= ins) {
-                            amountThird += parseInt(mmr[x].mmr);
-                        } else if (new Date('04/01/2022') <= ins && new Date('04/30/2022') >= ins) {
-                            amountFourth += parseInt(mmr[x].mmr);
-                        } else if (new Date('05/01/2022') <= ins && new Date('05/31/2022') >= ins) {
-                            amountFifth += parseInt(mmr[x].mmr);
-                        } else if (new Date('06/01/2022') <= ins && new Date('06/30/2022') >= ins) {
-                            amountSixth += parseInt(mmr[x].mmr);
-                        } else if (new Date('07/01/2022') <= ins && new Date('07/31/2022') >= ins) {
-                            amountSevent += parseInt(mmr[x].mmr);
-                        } else if (new Date('08/01/2022') <= ins && new Date('08/31/2022') >= ins) {
-                            amountEight += parseInt(mmr[x].mmr);
-                        } else if (new Date('09/01/2022') <= ins && new Date('09/30/2022') >= ins) {
-                            amountNinth += parseInt(mmr[x].mmr);
-                        } else if (new Date('10/01/2022') <= ins && new Date('10/31/2022') >= ins) {
-                            amountTenth += parseInt(mmr[x].mmr);
-                        } else if (new Date('11/01/2022') <= ins && new Date('11/30/2022') >= ins) {
-                            amountEleven += parseInt(mmr[x].mmr);
-                        } else if (new Date('12/01/2022') <= ins && new Date('12/31/2022') >= ins) {
-                            amountTwelve += parseInt(mmr[x].mmr);
-                        }
-                    }
-                }
-            }
+    //                     if (new Date('01/01/2022') <= ins && new Date('01/31/2022') >= ins) {
+    //                         amountFirst += parseInt(mmr[x].mmr);
+    //                     } else if (new Date('02/01/2022') <= ins && new Date('02/28/2022') >= ins) {
+    //                         amountSecond += parseInt(mmr[x].mmr);
+    //                     } else if (new Date('03/01/2022') <= ins && new Date('03/31/2022') >= ins) {
+    //                         amountThird += parseInt(mmr[x].mmr);
+    //                     } else if (new Date('04/01/2022') <= ins && new Date('04/30/2022') >= ins) {
+    //                         amountFourth += parseInt(mmr[x].mmr);
+    //                     } else if (new Date('05/01/2022') <= ins && new Date('05/31/2022') >= ins) {
+    //                         amountFifth += parseInt(mmr[x].mmr);
+    //                     } else if (new Date('06/01/2022') <= ins && new Date('06/30/2022') >= ins) {
+    //                         amountSixth += parseInt(mmr[x].mmr);
+    //                     } else if (new Date('07/01/2022') <= ins && new Date('07/31/2022') >= ins) {
+    //                         amountSevent += parseInt(mmr[x].mmr);
+    //                     } else if (new Date('08/01/2022') <= ins && new Date('08/31/2022') >= ins) {
+    //                         amountEight += parseInt(mmr[x].mmr);
+    //                     } else if (new Date('09/01/2022') <= ins && new Date('09/30/2022') >= ins) {
+    //                         amountNinth += parseInt(mmr[x].mmr);
+    //                     } else if (new Date('10/01/2022') <= ins && new Date('10/31/2022') >= ins) {
+    //                         amountTenth += parseInt(mmr[x].mmr);
+    //                     } else if (new Date('11/01/2022') <= ins && new Date('11/30/2022') >= ins) {
+    //                         amountEleven += parseInt(mmr[x].mmr);
+    //                     } else if (new Date('12/01/2022') <= ins && new Date('12/31/2022') >= ins) {
+    //                         amountTwelve += parseInt(mmr[x].mmr);
+    //                     }
+    //                 }
+    //             }
+    //         }
 
-            var sales = $('#sales_chart');
-            const sales_labels = [
-                'Jan 1-31', 'Feb 1-28', 'Mar 1-31', 'Apr 1-30', 'May 1-31', 'Jun 1-30', 'Jul 1-31',
-                'Aug 1-31', 'Sep 1-30', 'Oct 1-31', 'Nov 1-30', 'Dec 1-31'
-            ];
-            const sales_data = {
-                labels: sales_labels,
-                datasets: [{
-                    label: 'Sales',
-                    backgroundColor: 'rgb(106, 74, 134)',
-                    borderColor: 'rgb(106, 74, 134)',
-                    data: [amountFirst, amountSecond, amountThird, amountFourth, amountFifth,
-                        amountSixth, amountSevent, amountEight, amountNinth, amountTenth,
-                        amountEleven, amountTwelve
-                    ],
+    //         var sales = $('#sales_chart');
+    //         const sales_labels = [
+    //             'Jan 1-31', 'Feb 1-28', 'Mar 1-31', 'Apr 1-30', 'May 1-31', 'Jun 1-30', 'Jul 1-31',
+    //             'Aug 1-31', 'Sep 1-30', 'Oct 1-31', 'Nov 1-30', 'Dec 1-31'
+    //         ];
+    //         const sales_data = {
+    //             labels: sales_labels,
+    //             datasets: [{
+    //                 label: 'Sales',
+    //                 backgroundColor: 'rgb(106, 74, 134)',
+    //                 borderColor: 'rgb(106, 74, 134)',
+    //                 data: [amountFirst, amountSecond, amountThird, amountFourth, amountFifth,
+    //                     amountSixth, amountSevent, amountEight, amountNinth, amountTenth,
+    //                     amountEleven, amountTwelve
+    //                 ],
 
-                }, ]
-            };
+    //             }, ]
+    //         };
 
-            new Chart(sales, {
-                type: 'line',
-                data: sales_data,
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                        },
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            suggestedMax: 10
-                        },
-                    },
-                    aspectRatio: 1.5,
-                },
-            });
-        }).catch((error) => {
-        console.log(error);
-    })
+    //         new Chart(sales, {
+    //             type: 'line',
+    //             data: sales_data,
+    //             options: {
+    //                 responsive: true,
+    //                 plugins: {
+    //                     legend: {
+    //                         position: 'bottom',
+    //                     },
+    //                 },
+    //                 scales: {
+    //                     y: {
+    //                         beginAtZero: true,
+    //                         suggestedMax: 10
+    //                     },
+    //                 },
+    //                 aspectRatio: 1.5,
+    //             },
+    //         });
+    //     }).catch((error) => {
+    //     console.log(error);
+    // })
 
 
 })

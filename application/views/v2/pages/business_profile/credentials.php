@@ -17,8 +17,8 @@
                         </div>
                     </div>
                 </div>
-                <?php echo form_open_multipart('users/savebusinessdetail', ['id' => 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
-                <input type="hidden" value="<?= $profiledata->id; ?>" name="id" />
+                <?php echo form_open_multipart(null, ['id' => 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>                
+                <input type="hidden" name="action" value="credentials" />
                 <div class="row g-3">
                     <div class="col-12">
                         <?php
@@ -252,21 +252,29 @@
                 type: 'POST',
                 url: url,
                 data: _this.serialize(),
+                dataType: 'json',
                 success: function(result) {
-                    Swal.fire({
-                        title: 'Save Successful!',
-                        text: "Services was successfully updated.",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    }).then((result) => {
-                        if (result.value) {
-                            location.reload();
-                        }
-                    });
+                    if( result.is_success == 1 ){
+                        Swal.fire({
+                            title: 'Save Successful!',
+                            text: "Services was successfully updated.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                //location.reload();
+                            }
+                        });
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: result.msg
+                        });
+                    }                   
 
-                    _this.trigger("reset");
-
+                    //_this.trigger("reset");
                     _this.find("button[type=submit]").html("Save");
                     _this.find("button[type=submit]").prop("disabled", false);
                 },

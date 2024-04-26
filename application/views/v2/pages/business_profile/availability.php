@@ -9,6 +9,7 @@
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <?php echo form_open_multipart('users/savebusinessdetail', ['id' => 'form-business-details', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
+                <input type="hidden" name="action" value="availability" />
                 <div class="row mt-3 g-3 align-items-start">
                     <div class="col-12 col-md-6">
                         <div class="nsm-card primary">
@@ -112,12 +113,12 @@
                                     </div>
 
                                     <div class="col-12 text-end">
-                                        <button class="nsm-button btn-sm btn-copy-time" data-key="tuesday"><i class='bx bx-copy-alt'></i> Tue</button>
-                                        <button class="nsm-button btn-sm btn-copy-time" data-key="wednesday"><i class='bx bx-copy-alt'></i> Wed</button>
-                                        <button class="nsm-button btn-sm btn-copy-time" data-key="thursday"><i class='bx bx-copy-alt'></i> Thu</button>
-                                        <button class="nsm-button btn-sm btn-copy-time" data-key="friday"><i class='bx bx-copy-alt'></i> Fri</button>
-                                        <button class="nsm-button btn-sm btn-copy-time" data-key="saturday"><i class='bx bx-copy-alt'></i> Sat</button>
-                                        <button class="nsm-button btn-sm btn-copy-time" data-key="sunday"><i class='bx bx-copy-alt'></i> Sun</button>
+                                        <button class="nsm-button btn-sm btn-copy-time" data-key="tuesday" type="button"><i class='bx bx-copy-alt'></i> Tue</button>
+                                        <button class="nsm-button btn-sm btn-copy-time" data-key="wednesday" type="button"><i class='bx bx-copy-alt'></i> Wed</button>
+                                        <button class="nsm-button btn-sm btn-copy-time" data-key="thursday" type="button"><i class='bx bx-copy-alt'></i> Thu</button>
+                                        <button class="nsm-button btn-sm btn-copy-time" data-key="friday" type="button"><i class='bx bx-copy-alt'></i> Fri</button>
+                                        <button class="nsm-button btn-sm btn-copy-time" data-key="saturday" type="button"><i class='bx bx-copy-alt'></i> Sat</button>
+                                        <button class="nsm-button btn-sm btn-copy-time" data-key="sunday" type="button"><i class='bx bx-copy-alt'></i> Sun</button>
                                     </div>
                                 </div>
                             </div>

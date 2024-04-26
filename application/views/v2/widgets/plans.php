@@ -10,8 +10,8 @@
             <span>Recurring Service Plans</span>
         </div>
         <div class="nsm-card-controls">
-            <a role="button" class="nsm-button btn-sm m-0 me-2" href="<?= base_url() ?>inventory/plans">
-                Setup a Plan
+            <a role="button" class="nsm-button btn-sm m-0 me-2" href="<?= base_url('customer/subscriptions'); ?>">
+                See All Subscriptions
             </a>
             <div class="dropdown">
                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -26,41 +26,41 @@
     </div>
     <div class="nsm-card-content">
         <div class="row h-100 gy-2">
-            <div class="col-12">
-                <div class="nsm-counter success h-100">
-                    <div class="row h-100">
-                        <div class="col-12 col-md-4 order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
+            <div class="col-12 col-md-12">
+                <div class="nsm-counter success mb-2 widget-tile-paid-invoices">
+                    <div class="row">
+                        <div class="col-12 col-md-2 d-flex justify-content-center align-items-center">
                             <i class='bx bx-check-circle'></i>
                         </div>
-                        <div class="col-12 col-md-8 mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                             <span>Active Service Plans</span>
-                            <h2><?= $plan_type[0]->totalPlan; ?></h2>
+                            <h2><?= $activeSubscriptions->total_active_subscriptions; ?></h2>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-12" data-action="show_users_modal" data-customers="agreement_to_expire_30_days">
-                <div class="nsm-counter error h-100">
-                    <div class="row h-100">
-                        <div class="col-12 col-md-4 order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
+            <div class="col-12 col-md-12">
+                <div class="nsm-counter error mb-2 widget-tile-paid-invoices">
+                    <div class="row">
+                        <div class="col-12 col-md-2 d-flex justify-content-center align-items-center">
                             <i class='bx bx-calendar-exclamation'></i>
                         </div>
-                        <div class="col-12 col-md-8 mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                             <span data-type="title">Agreements to expire in 30 days</span>
-                            <h2><?= $total_agreements_to_expire_in_30_days; ?></h2>
+                            <h2><?= count($activeSubscriptionsWillExpireIn30d); ?></h2>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-12" data-action="show_users_modal" data-customers="recurring_payment">
-                <div class="nsm-counter primary h-100">
-                    <div class="row h-100">
-                        <div class="col-12 col-md-4 order-sm-last mb-2 mb-md-0 d-flex justify-content-center justify-content-md-end align-items-center">
+            <div class="col-12 col-md-12">
+                <div class="nsm-counter primary mb-2 widget-tile-paid-invoices">
+                    <div class="row">
+                        <div class="col-12 col-md-2 d-flex justify-content-center align-items-center">
                             <i class='bx bx-dollar-circle'></i>
                         </div>
-                        <div class="col-12 col-md-8 mb-2 mb-md-0 d-flex flex-column align-items-center align-items-md-start justify-content-between">
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                             <span data-type="title">Total $ Recurring Payment</span>
-                            <h2><?php echo "$".number_format($total_recurring_payment->SUM_RECURRING_PAYMENT, 2); ?></h2>
+                            <h2><?php echo "$".number_format($totalAmountActiveSubscriptions->total_amount, 2); ?></h2>
                         </div>
                     </div>
                 </div>
