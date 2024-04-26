@@ -105,7 +105,7 @@ class Products_and_services extends MY_Controller {
     }
 
     public function index()
-    {
+    {        
         add_footer_js(array(
             "assets/js/v2/printThis.js",
             "assets/js/v2/accounting/sales/products_and_services/list.js"
@@ -135,6 +135,7 @@ class Products_and_services extends MY_Controller {
             $this->page_data['stock_status'] = get('stock-status');
         }
 
+        $selectedCategories = [];
         if(!is_null($this->input->get('category'))) {
             $itemCategories = $this->items_model->getItemCategories();
             $selectedCategories = explode(',', $this->input->get('category'));
@@ -154,9 +155,10 @@ class Products_and_services extends MY_Controller {
                     $filters['category'][] = $itemCat->item_categories_id;
                 }
             }
-
-            $this->page_data['selectedCategories'] = $selectedCategories;
+            
         }
+
+        $this->page_data['selectedCategories'] = $selectedCategories;
 
         if(!empty(get('search'))) {
             $filters['search'] = get('search');
