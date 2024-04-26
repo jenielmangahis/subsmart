@@ -458,7 +458,7 @@
                                             <option value="all">All</option>
                                             <option value="0">Uncategorized</option>
                                             <?php foreach ($this->items_model->getItemCategories() as $category) : ?>
-                                                <option value="<?= $category->item_categories_id ?>"><?= $category->name ?></option>
+                                                <option <?= in_array($category->item_categories_id, $selectedCategories) ? 'selected="selected"' : ''; ?> value="<?= $category->item_categories_id ?>"><?= $category->name ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
