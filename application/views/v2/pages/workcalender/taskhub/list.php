@@ -141,7 +141,17 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-12 grid-mb text-end">
+
+             
+                    <div class="col-12 col-md-4 grid-mb">
+                        <form action="<?php echo base_url('taskhub') ?>" method="get">
+                            <div class="nsm-field-group search">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Find task" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                            </div>
+                        </form>
+                    </div>   
+
+                    <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
@@ -357,6 +367,12 @@
 <script type="text/javascript">
     $(document).ready(function() {
         $(".nsm-table").nsmPagination({itemsPerPage:10});
+
+        $("#search_field").on("input", debounce(function() {
+            let _form = $(this).closest("form");
+
+            _form.submit();
+        }, 1000));        
 
         $("#btn-mark-completed").on("click", function() {
 

@@ -243,7 +243,7 @@ if (isset($selected_participants)) {
 <script type="text/javascript">
 
     $(function(){
-        var default_assigned_to = '<?php echo isset($assignedUser['user_id']) ? $assignedUser['user_id'] : $assigned_to; ?>';
+        var default_assigned_to = '<?php echo isset($assignedUser['assigned_user_id']) ? $assignedUser['assigned_user_id'] : $assigned_to; ?>';
         var default_assigned_to_text = '<?php echo isset($assignedUser['name']) ? $assignedUser['name'] : 'My Self'; ?>';
 
         $('#status-select').select2();
