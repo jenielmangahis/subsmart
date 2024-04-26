@@ -344,7 +344,7 @@
                     }
                     ?>
                     <div class="col-md-3">
-                        <div class="nsm-counter success h-100 mb-2">
+                        <div class="nsm-counter success h-100 mb-2 <?= $stock_status === 'all' ? 'selected' : '' ?>" id="all">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
@@ -353,7 +353,7 @@
                                     <?php if ($total_items > 0) : ?>
                                         <h2 id="totalItems"><?php echo number_format($total_items, 0) ?></h2>
                                     <?php else : ?>
-                                        <h2 id="totalItems">N/A</h2>
+                                        <h2 id="totalItems"><?php echo number_format($total_items, 0) ?></h2>
                                     <?php endif; ?>
                                     <span>TOTAL ITEMS</span>
                                 </div>
@@ -369,7 +369,7 @@
                     }
                     ?>
                     <div class="col-md-3">
-                        <div class="nsm-counter secondary h-100 mb-2">
+                        <div class="nsm-counter secondary h-100 mb-2 <?= $stock_status === 'all' ? 'selected' : '' ?>" id="all">
                             <div class="row h-100">
                                 <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
                                     <i class='bx bx-receipt'></i>
@@ -378,7 +378,7 @@
                                     <?php if ($total_service > 0) : ?>
                                         <h2 id="totalService"><?php echo number_format($total_service, 0) ?></h2>
                                     <?php else : ?>
-                                        <h2 id="totalService">N/A</h2>
+                                        <h2 id="totalService"><?php echo number_format($total_service, 0) ?></h2>
                                     <?php endif; ?>
                                     <span>TOTAL SERVICES</span>
                                 </div>
@@ -507,22 +507,6 @@
                             <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
                                 <p class="m-0">Columns</p>
                                 <div class="form-check">
-                                    <input type="checkbox" checked name="col_chk" id="chk_income_account" class="form-check-input">
-                                    <label for="chk_income_account" class="form-check-label">Income Account</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked name="col_chk" id="chk_expense_account" class="form-check-input">
-                                    <label for="chk_expense_account" class="form-check-label">Expense Account</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked name="col_chk" id="chk_inventory_account" class="form-check-input">
-                                    <label for="chk_inventory_account" class="form-check-label">Inventory Account</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked name="col_chk" id="chk_purch_desc" class="form-check-input">
-                                    <label for="chk_purch_desc" class="form-check-label">Purchase Description</label>
-                                </div>
-                                <div class="form-check">
                                     <input type="checkbox" checked name="col_chk" id="chk_qty_po" class="form-check-input">
                                     <label for="chk_qty_po" class="form-check-label">Qty on PO</label>
                                 </div>
@@ -620,7 +604,7 @@
                                         <td class="fw-bold nsm-text-primary default" colspan="15"><?= $item['name'] ?></td>
                                     </tr>
                                 <?php else : ?>
-                                    <tr data-status="<?= $item['status'] ?>" data-id="<?= $item['id'] ?>">
+                                    <tr data-status="<?= $item['status'] ?>" data-id="<?= $item['id'] ?>" data-category="<?= $item['category'] ?>">
                                         <td>
 
                                             <div class="table-row-icon table-checkbox">
@@ -633,7 +617,7 @@
                                         <td><?= $item['type'] ?: 'No type provided' ?></td>
                                         <td><?= $item['sales_price'] ?: 'No sales price' ?></td>
                                         <td><?= $item['category'] ?: 'No category available' ?></td>
-                                        <td><?= $item['cost'] ?: 'No cost available' ?></td>
+                                        <td><?= $item['cost'] ?: '0' ?></td>
                                         <td>
                                             <?php if ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "") : ?>
                                                 <div class="table-row-icon table-checkbox">
@@ -644,9 +628,9 @@
                                             <?php endif; ?>
                                         </td>
 
-                                        <td><?= $item['qty_on_hand'] ?: 'No quantity on hand available' ?></td>
-                                        <td><?= $item['qty_po'] ?: 'No quantity available' ?></td>
-                                        <td><?= $item['reorder_point'] ?: 'No reorder point avaliable' ?></td>
+                                        <td><?= $item['qty_on_hand'] ?: '0' ?></td>
+                                        <td><?= $item['qty_po'] ?: '0' ?></td>
+                                        <td><?= $item['reorder_point'] ?: '0' ?></td>
                                         <td>
                                             <?php if ($item['type'] === 'Product') : ?>
                                                 <button class="nsm-button btn-sm see-item-locations">See Locations</button>
@@ -747,5 +731,84 @@
                 console.log('Other option selected');
             }
         });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const rowsDropdown = document.getElementById("table-rows");
+        const compactCheckbox = document.getElementById("compact");
+        const groupByCategoryCheckbox = document.getElementById("group-by-category");
+
+        rowsDropdown.addEventListener("click", handleRowChange);
+        compactCheckbox.addEventListener("change", toggleCompactView);
+        groupByCategoryCheckbox.addEventListener("change", toggleGroupByCategory);
+
+        function handleRowChange(event) {
+            const selectedRows = event.target.getAttribute("data-rows");
+            if (selectedRows) {
+                updateDisplayedRows(selectedRows);
+            }
+        }
+
+        function updateDisplayedRows(rows) {
+            const allRows = document.querySelectorAll("#items-table tbody tr[data-category]");
+            allRows.forEach(function(row, index) {
+                if (index < rows) {
+                    row.style.display = "table-row";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        function toggleCompactView(event) {
+            const isChecked = event.target.checked;
+            const tableBody = document.querySelector("#items-table tbody");
+            if (isChecked) {
+                tableBody.classList.add("compact-view");
+            } else {
+                tableBody.classList.remove("compact-view");
+            }
+        }
+
+        function toggleGroupByCategory(event) {
+            const isChecked = event.target.checked;
+            const allRows = document.querySelectorAll("#items-table tbody tr[data-category]");
+            if (isChecked) {
+                const categories = new Set();
+                allRows.forEach(function(row) {
+                    const category = row.getAttribute("data-category");
+                    categories.add(category);
+                });
+
+                categories.forEach(function(category) {
+                    const categoryRows = document.querySelectorAll(`#items-table tbody tr[data-category="${category}"]`);
+                    const categoryGroup = document.createElement("tr");
+                    const categoryNameCell = document.createElement("td");
+                    categoryNameCell.colSpan = 15;
+                    categoryNameCell.textContent = category;
+                    categoryGroup.appendChild(categoryNameCell);
+
+                    categoryRows.forEach(function(row) {
+                        categoryGroup.appendChild(row.cloneNode(true));
+                    });
+
+                    allRows[0].parentNode.insertBefore(categoryGroup, allRows[0]);
+                });
+
+                allRows.forEach(function(row) {
+                    row.style.display = "none";
+                });
+            } else {
+                allRows.forEach(function(row) {
+                    row.style.display = "table-row";
+                });
+
+                const groupedCategories = document.querySelectorAll("#items-table tbody tr[data-category] td[colspan='15']");
+                groupedCategories.forEach(function(categoryGroup) {
+                    categoryGroup.parentNode.removeChild(categoryGroup);
+                });
+            }
+        }
     });
 </script>

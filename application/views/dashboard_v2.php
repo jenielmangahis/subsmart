@@ -76,10 +76,16 @@
     }
 }
 
-.summary-report-header {
+.summary-report-header, .summary-report-header-sub {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.summary-report-header  .summary-report-header-sub a {
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 18px;
 }
 
 .summary-report-header .icon-summary-leads {

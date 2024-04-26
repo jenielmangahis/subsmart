@@ -1,44 +1,45 @@
 <?php
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Event_model extends MY_Model
 {
-
     public $table = 'events';
     public $table_items = 'event_items';
 
-    public function get_all_events($limit = 0, $conditions = array())
+    public function get_all_events($limit = 0, $conditions = [])
     {
         $cid = logged('company_id');
         $this->db->from($this->table);
         $this->db->select('events.*,LName,FName,acs_profile.first_name,acs_profile.last_name,users.profile_img');
         $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id', 'left');
         $this->db->join('users', 'users.id = events.employee_id', 'left');
-        $this->db->where("events.company_id", $cid);
+        $this->db->where('events.company_id', $cid);
         if (!empty($conditions)) {
             foreach ($conditions as $key => $value) {
                 $this->db->where($value['field'], $value['value']);
             }
         }
-        $this->db->order_by('id', "DESC");
+        $this->db->order_by('id', 'DESC');
         if ($limit > 0) {
             $this->db->limit($limit);
         }
         $query = $this->db->get();
+
         return $query->result();
     }
 
-    public function getAllEventsAdmin($filters=array(), $limit = 0)
+    public function getAllEventsAdmin($filters = [], $limit = 0)
     {
         $this->db->from($this->table);
         $this->db->select('events.*,LName,FName,acs_profile.first_name,acs_profile.last_name,users.profile_img,business_profile.business_name');
         $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id', 'left');
         $this->db->join('business_profile', 'business_profile.company_id = events.company_id', 'left');
         $this->db->join('users', 'users.id = events.employee_id', 'left');
-        $this->db->order_by('id', "DESC");
+        $this->db->order_by('id', 'DESC');
 
-        if ( !empty($filters) ) {
-            if ( !empty($filters['search']) ) {
+        if (!empty($filters)) {
+            if (!empty($filters['search'])) {
                 $this->db->like('event_number', $filters['search'], 'both');
                 $this->db->or_like('business_profile.business_name', $filters['search'], 'both');
             }
@@ -49,6 +50,7 @@ class Event_model extends MY_Model
         }
 
         $query = $this->db->get();
+
         return $query->result();
     }
 
@@ -59,14 +61,15 @@ class Event_model extends MY_Model
         $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id', 'left');
         $this->db->join('business_profile', 'business_profile.company_id = events.company_id', 'left');
         $this->db->join('users', 'users.id = events.employee_id', 'left');
-        $this->db->order_by('id', "DESC");
-        $this->db->where('events.status', $status);        
+        $this->db->order_by('id', 'DESC');
+        $this->db->where('events.status', $status);
 
         if ($limit > 0) {
             $this->db->limit($limit);
         }
 
         $query = $this->db->get();
+
         return $query->result();
     }
 
@@ -79,8 +82,9 @@ class Event_model extends MY_Model
         $this->db->join('acs_profile', 'acs_profile.prof_id = events.customer_id', 'left');
         $this->db->join('users', 'users.id = events.employee_id', 'left');
         $this->db->join('business_profile', 'events.company_id = business_profile.id', 'left');
-        $this->db->where("events.id", $id);
+        $this->db->where('events.id', $id);
         $query = $this->db->get();
+
         return $query->row();
     }
 
@@ -89,30 +93,31 @@ class Event_model extends MY_Model
         $this->db->select('items.title,items.price,event_items.qty,event_items.event_id,event_items.items_id,event_items.item_price');
         $this->db->from('event_items');
         $this->db->join('items', 'items.id = event_items.items_id', 'left');
-        $this->db->where("event_items.event_id", $id);
+        $this->db->where('event_items.event_id', $id);
         $query = $this->db->get();
+
         return $query->result();
     }
 
     public function getAllByCompany($company_id)
     {
-
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
 
         $query = $this->db->get();
+
         return $query->result();
     }
 
     public function getAllEvents()
     {
         $this->db->select('*');
-        $this->db->from($this->table);        
+        $this->db->from($this->table);
         $query = $this->db->get();
+
         return $query->result();
     }
-
 
     public function getAllByUserId($type = '', $status = '', $emp_id = 0, $uid = 0)
     {
@@ -146,9 +151,9 @@ class Event_model extends MY_Model
         $this->db->join('users', 'users.id = events.employee_id', 'left');
 
         $start_date = date('Y-m-d');
-        $end_date = date('Y-m-d', strtotime($start_date . ' +5 day'));
+        $end_date = date('Y-m-d', strtotime($start_date.' +5 day'));
 
-        $this->db->where('start_date BETWEEN "' . $start_date . '" and "' . $end_date . '"');
+        $this->db->where('start_date BETWEEN "'.$start_date.'" and "'.$end_date.'"');
 
         $this->db->order_by('id', 'DESC');
 
@@ -165,18 +170,18 @@ class Event_model extends MY_Model
     public function getAllUpComingEventsByCompanyId($company_id = 0)
     {
         $start_date = date('Y-m-d');
-        $end_date   = date('Y-m-d', strtotime($start_date . ' +7 day'));
+        $end_date = date('Y-m-d', strtotime($start_date.' +7 day'));
 
-        /*$this->db->select('events.*,LName,FName,acs_profile.first_name,acs_profile.last_name,users.profile_img');*/
+        /* $this->db->select('events.*,LName,FName,acs_profile.first_name,acs_profile.last_name,users.profile_img'); */
         $this->db->select('*');
-        /*$this->db->join('acs_profile', 'acs_profile.prof_id = `events.customer_id', 'left');*/
-        /*$this->db->join('users', 'users.id = events.employee_id', 'left');*/
+        /* $this->db->join('acs_profile', 'acs_profile.prof_id = `events.customer_id', 'left'); */
+        /* $this->db->join('users', 'users.id = events.employee_id', 'left'); */
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
-        $this->db->where('start_date >=',$start_date);
+        $this->db->where('start_date >=', $start_date);
         $this->db->order_by('start_date', 'ASC');
 
-        //$query = $this->db->limit(5);
+        // $query = $this->db->limit(5);
         $query = $this->db->get();
 
         if ($query) {
@@ -188,17 +193,17 @@ class Event_model extends MY_Model
 
     public function getAllEventsByCompanyIdAndDate($company_id = 0, $date)
     {
-        $date = date('Y-m-d', strtotime($date));        
+        $date = date('Y-m-d', strtotime($date));
 
         $this->db->select('events.*,LName,FName,acs_profile.first_name,acs_profile.last_name,users.profile_img');
         $this->db->join('acs_profile', 'acs_profile.prof_id = `events.customer_id', 'left');
         $this->db->join('users', 'users.id = events.employee_id', 'left');
         $this->db->from($this->table);
         $this->db->where('events.company_id', $company_id);
-        $this->db->where('events.start_date',$date);
+        $this->db->where('events.start_date', $date);
         $this->db->order_by('events.start_date', 'ASC');
 
-        //$query = $this->db->limit(5);
+        // $query = $this->db->limit(5);
         $query = $this->db->get();
 
         if ($query) {
@@ -211,7 +216,7 @@ class Event_model extends MY_Model
     public function getAllInvoices()
     {
         $company_id = logged('company_id');
-        $query = $this->db->get_where('invoices', array('company_id' => $company_id));
+        $query = $this->db->get_where('invoices', ['company_id' => $company_id]);
 
         if ($query) {
             return $query->result();
@@ -247,7 +252,7 @@ class Event_model extends MY_Model
         $query = $this->db->get();
         $results = $query->result();
 
-        return array_filter($results, function($result) {
+        return array_filter($results, function ($result) {
             return $result->balance > 0;
         });
     }
@@ -258,7 +263,7 @@ class Event_model extends MY_Model
         $this->db->from('jobs');
         $this->db->select('job_payments.amount,jobs.date_issued,jobs.status');
         $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
-        $this->db->where("jobs.company_id", $company_id);
+        $this->db->where('jobs.company_id', $company_id);
         $query = $this->db->get();
 
         if ($query) {
@@ -274,8 +279,8 @@ class Event_model extends MY_Model
         $this->db->from('jobs');
         $this->db->select('job_payments.amount,jobs.date_issued,jobs.status');
         $this->db->join('job_payments', 'job_payments.job_id = jobs.id');
-        $this->db->where("jobs.company_id", $company_id);
-        $this->db->where("jobs.status", 'Completed');
+        $this->db->where('jobs.company_id', $company_id);
+        $this->db->where('jobs.status', 'Completed');
         $query = $this->db->get();
 
         if ($query) {
@@ -284,7 +289,9 @@ class Event_model extends MY_Model
             return false;
         }
     }
-    public function getLeadSource($source) {
+
+    public function getLeadSource($source)
+    {
         $this->db->select('COUNT(*) as total');
         $this->db->from('acs_office');
         $this->db->where('lead_source', $source);
@@ -295,6 +302,7 @@ class Event_model extends MY_Model
             return false;
         }
     }
+
     public function getAccountSituation($status)
     {
         // $company_id = logged('company_id');
@@ -305,18 +313,16 @@ class Event_model extends MY_Model
         // $this->db->where("acs_office.".$toCheck, date('m/d/Y'));
         // $this->db->group_by('acs_profile.prof_id');
         // $query = $this->db->get();
-        //dd($this->db->last_query());
+        // dd($this->db->last_query());
 
         $this->db->select('COUNT(*) as total');
         $this->db->from('acs_profile');
         $this->db->where('status', $status);
-        if($status === 'Cancelled') {
+        if ($status === 'Cancelled') {
             $this->db->join('acs_office', 'acs_profile.prof_id = acs_office.fk_prof_id', 'left');
-            $this->db->where("acs_office.cancel_date", date('m/d/Y'));
+            $this->db->where('acs_office.cancel_date', date('m/d/Y'));
         }
         $query = $this->db->get();
-
-
 
         if ($query) {
             return $query->result();
@@ -327,7 +333,7 @@ class Event_model extends MY_Model
 
     public function getTechLeaderboards()
     {
-        $cid=logged('company_id');
+        $cid = logged('company_id');
         $this->db->select('users.id, users.FName, users.LName, COUNT(acs_office.technician) as totalCount');
         $this->db->from('users');
         $this->db->join('acs_office', 'users.id = acs_office.technician');
@@ -336,10 +342,11 @@ class Event_model extends MY_Model
         $this->db->group_by('technician');
         $this->db->order_by('totalCount', 'desc');
         $query = $this->db->get();
+
         return $query->result();
     }
 
-    public function getCustomerCountPerId($id,$field='technician')
+    public function getCustomerCountPerId($id, $field = 'technician')
     {
         $this->db->select('count('.$field.') as totalCount');
         $this->db->from('acs_office');
@@ -347,8 +354,10 @@ class Event_model extends MY_Model
         $this->db->group_by($field);
         $this->db->order_by('totalCount', 'desc');
         $query = $this->db->get();
+
         return $query->result();
     }
+
     public function getJobCountPerId($id)
     {
         $this->db->select('count(jobs.id) as totalCount');
@@ -361,12 +370,13 @@ class Event_model extends MY_Model
         $this->db->where('DATE_FORMAT(CURDATE(), "%Y") = DATE_FORMAT(jobs.date_issued, "%Y")');
         $this->db->group_by('jobs.customer_id'); // unique by customer ?
         $query = $this->db->get();
+
         return $query->result();
     }
 
     public function getSalesLeaderboards()
     {
-        $cid=logged('company_id');
+        $cid = logged('company_id');
         $this->db->select('users.id,FName,LName, count(fk_sales_rep_office) as customerCount');
         $this->db->from('users');
         $this->db->join('acs_office', 'acs_office.fk_sales_rep_office = users.id', 'left');
@@ -376,24 +386,26 @@ class Event_model extends MY_Model
         $this->db->group_by('users.id');
         $this->db->order_by('customerCount', 'desc');
         $query = $this->db->get();
+
         return $query->result();
     }
 
-// SELECT users.id, FName, LName, COUNT(acs_office.fk_sales_rep_office) AS customerCount FROM users LEFT JOIN acs_office ON acs_office.fk_sales_rep_office = users.id LEFT JOIN acs_profile ON acs_profile.prof_id = acs_office.fk_prof_id WHERE acs_profile.company_id = 31;
+    // SELECT users.id, FName, LName, COUNT(acs_office.fk_sales_rep_office) AS customerCount FROM users LEFT JOIN acs_office ON acs_office.fk_sales_rep_office = users.id LEFT JOIN acs_profile ON acs_profile.prof_id = acs_office.fk_prof_id WHERE acs_profile.company_id = 31;
 
     /**
-     * This function will fetch lead source data with count of customer connected to it
-     * 
+     * This function will fetch lead source data with count of customer connected to it.
+     *
      * @return object List of Lead Source per company ID with count on customer
-    */
+     */
     public function getLeadSourceWithCount()
     {
         $this->db->select('acs_office.lead_source, count(acs_office.lead_source) as leadSourceCount');
         $this->db->from('acs_profile');
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
-        $this->db->where('acs_office.lead_source !=', "");
+        $this->db->where('acs_office.lead_source !=', '');
         $this->db->group_by('acs_office.lead_source');
         $query = $this->db->get();
+
         return $query->result();
     }
 
@@ -402,18 +414,19 @@ class Event_model extends MY_Model
         $this->db->select('acs_office.lead_source, count(acs_office.lead_source) as leadSourceCount');
         $this->db->from('acs_profile');
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
-        $this->db->where('acs_office.lead_source !=', "");
+        $this->db->where('acs_office.lead_source !=', '');
         $this->db->where('company_id =', $cid);
         $this->db->group_by('acs_office.lead_source');
         $query = $this->db->get();
+
         return $query->result();
     }
 
     /**
-     * This function will fetch jobs status with count
-     * 
+     * This function will fetch jobs status with count.
+     *
      * @return object List of JOB STATUS with number of count
-    */
+     */
     // public function getJobStatusWithCount()
     // {
     //     $cid=logged('company_id');
@@ -426,18 +439,17 @@ class Event_model extends MY_Model
     //     return $query->result();
     // }
 
-
- public function getStatusCount($DATE)
+    public function getStatusCount($DATE)
     {
-        $CURRENT_MONTH_COUNT = array();
-        $CURRENT_YEAR_COUNT = array();
+        $CURRENT_MONTH_COUNT = [];
+        $CURRENT_YEAR_COUNT = [];
         $COMPANY_ID = logged('company_id');
 
         // GET SCHEDULED COUNT BASED ON CURRENT MONTH
         $this->db->select('"Schedule" AS STATUS, ((SELECT COUNT(*) FROM jobs WHERE jobs.status LIKE "%Scheduled%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.start_date, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(*) FROM tickets WHERE tickets.ticket_status LIKE "%Scheduled%" AND tickets.ticket_no LIKE "%JOB%" AND DATE_FORMAT(tickets.ticket_date, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND tickets.company_id = "'.$COMPANY_ID.'" OR tickets.ticket_status LIKE "%Scheduled%" AND tickets.ticket_no LIKE "%EVENT%" AND DATE_FORMAT(tickets.ticket_date, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND tickets.company_id = "'.$COMPANY_ID.'" OR tickets.ticket_status LIKE "%Scheduled%" AND tickets.ticket_no LIKE "%SERVICES%" AND DATE_FORMAT(tickets.ticket_date, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND tickets.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(*) FROM events WHERE events.status LIKE "%Scheduled%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.start_date, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND events.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(*) FROM appointments WHERE appointments.appointment_number LIKE "%JOB%" AND DATE_FORMAT(appointments.appointment_date, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND appointments.company_id = "'.$COMPANY_ID.'" OR appointments.appointment_number LIKE "%EVENT%" AND DATE_FORMAT(appointments.appointment_date, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND appointments.company_id = "'.$COMPANY_ID.'" OR appointments.appointment_number LIKE "%SERVICES%" AND DATE_FORMAT(appointments.appointment_date, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND appointments.company_id = "'.$COMPANY_ID.'")) AS TOTAL');
         $scheduledQueryMonth = $this->db->get();
         array_push($CURRENT_MONTH_COUNT, $scheduledQueryMonth->row());
-        
+
         // GET ARRIVAL COUNT BASED ON CURRENT MONTH
         $this->db->select('"Arrival" AS STATUS, ((SELECT COUNT(jobs.status) FROM jobs WHERE jobs.status LIKE "%Arrival%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.start_date, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(events.status) FROM events WHERE events.status LIKE "%Arrival%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.start_date, "%Y-%m") = DATE_FORMAT(CURDATE(), "%Y-%m") AND events.company_id = "'.$COMPANY_ID.'")) AS TOTAL');
         $arrivalQueryMonth = $this->db->get();
@@ -470,7 +482,7 @@ class Event_model extends MY_Model
 
         // GET SCHEDULED COUNT BASED ON CURRENT YEAR
         $this->db->select('"Schedule" AS STATUS, ((SELECT COUNT(*) FROM jobs WHERE jobs.status LIKE "%Scheduled%" AND jobs.job_number LIKE "%JOB%" AND DATE_FORMAT(jobs.start_date, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND jobs.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(*) FROM tickets WHERE tickets.ticket_status LIKE "%Scheduled%" AND tickets.ticket_no LIKE "%JOB%" AND DATE_FORMAT(tickets.ticket_date, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND tickets.company_id = "'.$COMPANY_ID.'" OR tickets.ticket_status LIKE "%Scheduled%" AND tickets.ticket_no LIKE "%EVENT%" AND DATE_FORMAT(tickets.ticket_date, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND tickets.company_id = "'.$COMPANY_ID.'" OR tickets.ticket_status LIKE "%Scheduled%" AND tickets.ticket_no LIKE "%SERVICES%" AND DATE_FORMAT(tickets.ticket_date, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND tickets.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(*) FROM events WHERE events.status LIKE "%Scheduled%" AND events.event_number LIKE "%EVENT%" AND DATE_FORMAT(events.start_date, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND events.company_id = "'.$COMPANY_ID.'")+(SELECT COUNT(*) FROM appointments WHERE appointments.appointment_number LIKE "%JOB%" AND DATE_FORMAT(appointments.appointment_date, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND appointments.company_id = "'.$COMPANY_ID.'" OR appointments.appointment_number LIKE "%EVENT%" AND DATE_FORMAT(appointments.appointment_date, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND appointments.company_id = "'.$COMPANY_ID.'" OR appointments.appointment_number LIKE "%SERVICES%" AND DATE_FORMAT(appointments.appointment_date, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND appointments.company_id = "'.$COMPANY_ID.'")) AS TOTAL');
-        
+
         $scheduledQueryYear = $this->db->get();
         array_push($CURRENT_YEAR_COUNT, $scheduledQueryYear->row());
 
@@ -504,47 +516,47 @@ class Event_model extends MY_Model
         $completedQueryYear = $this->db->get();
         array_push($CURRENT_YEAR_COUNT, $completedQueryYear->row());
 
-        if ($DATE == "YEAR") {
+        if ($DATE == 'YEAR') {
             return $CURRENT_YEAR_COUNT;
         }
-        if ($DATE == "MONTH") {
+        if ($DATE == 'MONTH') {
             return $CURRENT_MONTH_COUNT;
         }
     }
 
-
-      /**
-     * This function will fetch latest jobs of each company
-     * 
+    /**
+     * This function will fetch latest jobs of each company.
+     *
      * @return object List of LATEST JOB limit 10
-    */
+     */
     public function getLatestJobs()
     {
-        $cid=logged('company_id');
+        $cid = logged('company_id');
         $this->db->select('acs_profile.first_name , acs_profile.last_name, acs_profile.city, acs_profile.state, acs_profile.zip_code, jobs.id, jobs.status, jobs.job_number, jobs.job_type, jobs.date_updated, jobs.start_date, job_payments.amount, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee_id) AS TECH_1, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee2_id) AS TECH_2, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee3_id) AS TECH_3, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee4_id) AS TECH_4, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee5_id) AS TECH_5, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee6_id) AS TECH_6');
         $this->db->from('jobs');
         $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
         $this->db->order_by('jobs.id', 'desc');
         $this->db->where('jobs.company_id', $cid);
-        if($cid == 58){
+        if ($cid == 58) {
             $this->db->limit(25); // for SOLAR COMPANY it needs to be 25
-        }else{
+        } else {
             $this->db->limit(10);
         }
-        
+
         $query = $this->db->get();
+
         return $query->result();
     }
 
     /**
-     * This function will fetch jobs status with count
-     * 
+     * This function will fetch jobs status with count.
+     *
      * @return object List of JOB STATUS with number of count
-    */
+     */
     public function getCustomerStatusWithCount()
     {
-        $cid=logged('company_id');
+        $cid = logged('company_id');
         $this->db->select('status, count(status) as statusCount');
         $this->db->from('acs_profile');
         $this->db->group_by('status');
@@ -552,14 +564,15 @@ class Event_model extends MY_Model
         $this->db->where('company_id', $cid);
         $this->db->where('status !=', null);
         $query = $this->db->get();
+
         return $query->result();
     }
 
     /**
-     * This function will fetch recent customers per company id
-     * 
+     * This function will fetch recent customers per company id.
+     *
      * @return object List of RECENT CUSTOMER added
-    */
+     */
     public function getRecentCustomer()
     {
         $company_id = logged('company_id');
@@ -577,10 +590,10 @@ class Event_model extends MY_Model
     }
 
     /**
-     * This function will fetch companies
-     * 
+     * This function will fetch companies.
+     *
      * @return object List of companies
-    */
+     */
     public function getCompanies()
     {
         $this->db->from('business_profile');
@@ -607,6 +620,7 @@ class Event_model extends MY_Model
         $this->db->where('DATE_FORMAT(CURDATE(), "%Y") = DATE_FORMAT(jobs.date_issued, "%Y")');
         // $this->db->group_by('jobs.customer_id');
         $query = $this->db->get();
+
         return $query->result();
     }
 
@@ -620,6 +634,7 @@ class Event_model extends MY_Model
         $this->db->where('DATE_FORMAT(CURDATE(), "%Y") = DATE_FORMAT(acs_info_solar.date_created, "%Y")'); // get only revenue for this year?
         $this->db->group_by('acs_office.technician');
         $query = $this->db->get();
+
         return $query->result();
     }
 
@@ -635,10 +650,11 @@ class Event_model extends MY_Model
         $this->db->where('DATE_FORMAT(CURDATE(), "%Y") = SUBSTRING(acs_billing.bill_start_date, -4)'); // get only sales for this year?
         $this->db->group_by('acs_profile.company_id');
         $query = $this->db->get();
+
         return $query->result();
     }
 
-// SELECT SUM(acs_billing.mmr) FROM acs_billing LEFT JOIN acs_office ON acs_billing.fk_prof_id = acs_office.fk_prof_id LEFT JOIN acs_profile ON acs_billing.fk_prof_id = acs_profile.prof_id WHERE acs_office.fk_sales_rep_office = 5 AND acs_profile.company_id = 31 GROUP BY acs_profile.company_id;
+    // SELECT SUM(acs_billing.mmr) FROM acs_billing LEFT JOIN acs_office ON acs_billing.fk_prof_id = acs_office.fk_prof_id LEFT JOIN acs_profile ON acs_billing.fk_prof_id = acs_profile.prof_id WHERE acs_office.fk_sales_rep_office = 5 AND acs_profile.company_id = 31 GROUP BY acs_profile.company_id;
 
     public function getSalesRepRevenueSolar($salesRepId)
     {
@@ -650,6 +666,7 @@ class Event_model extends MY_Model
         $this->db->where('DATE_FORMAT(CURDATE(), "%Y") = DATE_FORMAT(acs_info_solar.date_created, "%Y")'); // get only sales for this year?
         $this->db->group_by('fk_sales_rep_office');
         $query = $this->db->get();
+
         return $query->result();
     }
 
@@ -663,9 +680,9 @@ class Event_model extends MY_Model
         $this->db->where('acs_office.technician', $techId);
         $this->db->group_by('jobs.customer_id');
         $query = $this->db->get();
+
         return $query->result();
     }
-
 
     public function getSalesLeaderboardItems($company_id)
     {
@@ -727,48 +744,44 @@ class Event_model extends MY_Model
 
     public function getSalesLeaderboard()
     {
-        $sales [][] = "";
+        $sales[][] = '';
         $salesItems = $this->getSalesLeaderboardItems(logged('company_id'));
 
-        $z =1;
-        //var_dump($salesItems[0]->prof_id);
-        
-        for ($k = 0; $k < count($salesItems);$k++) {
+        $z = 1;
+        // var_dump($salesItems[0]->prof_id);
+
+        for ($k = 0; $k < count($salesItems); ++$k) {
             $salesOffice = $this->getSalesinOffice($salesItems[$k]->prof_id);
-            if( isset($salesOffice[$k]) ){
+            if (isset($salesOffice[$k])) {
                 $userName = $this->getUser($salesOffice[$k]->fk_sales_rep_office);
                 $roles = $this->getRoles($userName[$k]->role);
                 $x = 0;
-                
-                if ($sales[0][0] == "") {
-                    $sales[$x][0] = $userName[$k]->FName[0] . $userName[$k]->LName[0];
-                    $sales[$x][1] = $userName[$k]->FName . " " . $userName[$k]->LName;
+
+                if ($sales[0][0] == '') {
+                    $sales[$x][0] = $userName[$k]->FName[0].$userName[$k]->LName[0];
+                    $sales[$x][1] = $userName[$k]->FName.' '.$userName[$k]->LName;
                     $sales[$x][2] = $roles[$k]->title;
                     $sales[$x][3] = 1;
-                    
                 } else {
-
-                    $name = $userName[$k]->FName . " " . $userName[$k]->LName;
-                    for ($y = 0; $y < count($sales); $y++) {
+                    $name = $userName[$k]->FName.' '.$userName[$k]->LName;
+                    for ($y = 0; $y < count($sales); ++$y) {
                         if ($sales[$y][1] == $name) {
-                            $sales[$y][3]++;
+                            ++$sales[$y][3];
                         } else {
-                            if($y==0){
-                                $y++;
+                            if ($y == 0) {
+                                ++$y;
                             }
-                            $sales[$y][0] = $userName[$k]->FName[0] . $userName[$k]->LName[0];
-                            $sales[$y][1] = $userName[$k]->FName . " " . $userName[$k]->LName;
+                            $sales[$y][0] = $userName[$k]->FName[0].$userName[$k]->LName[0];
+                            $sales[$y][1] = $userName[$k]->FName.' '.$userName[$k]->LName;
                             $sales[$y][2] = $roles[$k]->title;
                             $sales[$y][3] = 1;
-                            
                         }
                     }
                 }
-            }            
+            }
         }
-       
+
         return $sales;
-       
     }
 
     public function getAllJobs()
@@ -797,12 +810,13 @@ class Event_model extends MY_Model
         $this->db->where('jobs.date_issued <=', $date_range['to']);
 
         $query = $this->db->get();
-        return $query->result();        
+
+        return $query->result();
     }
 
     public function getAllSales()
     {
-        $query = $this->db->get_where('invoices', array('company_id' => logged('company_id'), 'status' => 'Paid'));
+        $query = $this->db->get_where('invoices', ['company_id' => logged('company_id'), 'status' => 'Paid']);
 
         if ($query) {
             return $query->result();
@@ -831,15 +845,17 @@ class Event_model extends MY_Model
         // $this->db->where('MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "IN-HOUSE"');
         // $this->db->or_where('MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "PURCHASE"');
         // $this->db->where('MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_profile.status = "Installed"');
-        $this->db->where('acs_profile.status', "Installed");
+        $this->db->where('acs_profile.status', 'Installed');
 
         $query = $this->db->get();
+
         return $query->row();
         // SELECT SUM(acs_billing.mmr) TOTAL_MMR FROM acs_billing JOIN acs_alarm ON acs_billing.fk_prof_id = acs_alarm.fk_prof_id WHERE MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "PURCHASE" OR MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "IN-HOUSE";
     }
 
     public function getAllsubsByCompanyId($company_id)
     {
+        $current_date = date('Y-m-d');
         $this->db->select('SUM(acs_billing.mmr) AS TOTAL_MMR');
         $this->db->from('acs_billing');
         $this->db->join('acs_alarm', 'acs_billing.fk_prof_id = acs_alarm.fk_prof_id');
@@ -847,16 +863,20 @@ class Event_model extends MY_Model
         // $this->db->where('MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "IN-HOUSE"');
         // $this->db->or_where('MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "PURCHASE"');
         // $this->db->where('MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_profile.status = "Installed"');
-        $this->db->where('acs_profile.status', "Installed");
+        $this->db->where('acs_profile.status', 'Installed');
+        $this->db->where("STR_TO_DATE(acs_billing.bill_start_date, '%m/%d/%Y') >=", date('Y-m-d', strtotime('01-01-2000')));
+        $this->db->where('STR_TO_DATE(acs_billing.bill_end_date, "%m/%d/%Y") >=', date('Y-m-d', strtotime($current_date)));
         $this->db->where('acs_profile.company_id', $company_id);
 
         $query = $this->db->get();
+
         return $query->row();
         // SELECT SUM(acs_billing.mmr) TOTAL_MMR FROM acs_billing JOIN acs_alarm ON acs_billing.fk_prof_id = acs_alarm.fk_prof_id WHERE MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "PURCHASE" OR MONTH(STR_TO_DATE(acs_billing.next_billing_date, "%m/%d/%Y")) = MONTH(CURDATE()) AND acs_alarm.acct_type = "IN-HOUSE";
     }
+
     public function getAllJobsByCompanyId($company_id)
     {
-        $query = $this->db->get_where('jobs', array('company_id' => $company_id));
+        $query = $this->db->get_where('jobs', ['company_id' => $company_id]);
 
         if ($query) {
             return $query->result();
@@ -864,6 +884,7 @@ class Event_model extends MY_Model
             return false;
         }
     }
+
     public function getEvent($event_id)
     {
         $this->db->select('*');
@@ -871,6 +892,7 @@ class Event_model extends MY_Model
         $this->db->where('id', $event_id);
 
         $query = $this->db->get();
+
         return $query->row();
     }
 
@@ -881,24 +903,24 @@ class Event_model extends MY_Model
         $this->db->where('gevent_id', $google_event_id);
 
         $query = $this->db->get();
+
         return $query->row();
     }
 
     public function getAllEventsWithAddress()
     {
-
         $this->db->select('events.id, company_id, customer_id, employee_id, workorder_id, description, event_description, event_address, event_zip_code, event_state, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, status');
         $this->db->from($this->table);
 
         $this->db->where('events.event_address !=', '');
 
         $query = $this->db->get();
+
         return $query->result();
     }
 
     public function getAllCompanyEventsWithAddress($company_id)
     {
-
         $this->db->select('events.id, events.company_id, events.event_number, customer_id, employee_id, event_type, workorder_id, description, event_description, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, events.status, LName,FName, acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
         acs_profile.zip_code as cust_zip_code,acs_profile.phone_h,acs_profile.phone_m,acs_profile.email as cust_email');
         $this->db->from($this->table);
@@ -909,12 +931,12 @@ class Event_model extends MY_Model
         $this->db->where('events.company_id', $company_id);
 
         $query = $this->db->get();
+
         return $query->result();
     }
 
-    public function getAllUserEventsWithAddress($employee_id, $date_range = array(), $filter = array())
+    public function getAllUserEventsWithAddress($employee_id, $date_range = [], $filter = [])
     {
-
         $this->db->select('events.id, events.event_number, events.company_id, customer_id, employee_id, event_address, event_state, event_zip_code, event_type, workorder_id, description, event_description, start_date, start_time, end_date, end_time, event_color, notify_at, instructions, is_recurring, events.status, LName,FName, acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state,
         acs_profile.zip_code as cust_zip_code,acs_profile.phone_h,acs_profile.phone_m,acs_profile.email as cust_email');
         $this->db->from($this->table);
@@ -924,8 +946,8 @@ class Event_model extends MY_Model
         $this->db->where('events.event_address !=', '');
         if (!empty($date_range)) {
             $start_date = $date_range['date_from'];
-            $end_date   = $date_range['date_to'];
-            $this->db->where('start_date BETWEEN "' . $start_date . '" and "' . $end_date . '"');
+            $end_date = $date_range['date_to'];
+            $this->db->where('start_date BETWEEN "'.$start_date.'" and "'.$end_date.'"');
         }
 
         if (!empty($filter)) {
@@ -937,6 +959,7 @@ class Event_model extends MY_Model
         $this->db->where('events.employee_id', $employee_id);
 
         $query = $this->db->get();
+
         return $query->result();
     }
 }

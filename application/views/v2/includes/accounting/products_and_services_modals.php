@@ -46,7 +46,7 @@
                                     </td>
                                     <td><?= $item['purch_desc'] ?: 'No purchase description' ?></td>
                                     <td><?= $item['sales_price'] ?: 'Sales price unavailable' ?></td>
-                                    <td><?= $item['cost'] ?: 'Cost unavailable' ?></td>
+                                    <td><?= $item['cost'] ?: '0' ?></td>
                                     <td>
                                         <?= ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "No tax provided") ? '<div class="table-row-icon table-checkbox"><input class="form-check-input select-one table-select" type="checkbox" disabled checked></div>' : 'No tax provided' ?>
                                     </td>
@@ -57,9 +57,9 @@
                                             </div>
                                         <?php endif; ?> -->
                                     </td>
-                                    <td><?= $item['qty_on_hand'] ?: 'Quantity on hand unavailable' ?></td>
-                                    <td><?= $item['qty_po'] ?: 'Quanity on PO unavailable' ?></td>
-                                    <td><?= $item['reorder_point'] ?: 'No reorder point provided' ?></td>
+                                    <td><?= $item['qty_on_hand'] ?: '0' ?></td>
+                                    <td><?= $item['qty_po'] ?: '0' ?></td>
+                                    <td><?= $item['reorder_point'] ?: '0' ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         <?php else : ?>
@@ -86,7 +86,7 @@
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="print_preview_items_modal_label">Print itemss List</span>
+                <span class="modal-title content-title" id="print_preview_items_modal_label">Print items List</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">

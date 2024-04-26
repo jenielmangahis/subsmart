@@ -39,6 +39,9 @@
                 </span>            
             </div>
             <div class="controls">
+                <a class="nsm-button primary btn-widget-disconnect-plaid-bank-account" href="javascript:void(0);" data-id="<?= $pa->id; ?>">
+                    <i class='bx bx-trash' style="position:relative;top:1px;"></i>
+                </a>
                 <!-- <span class="nsm-badge">Updated 1 day ago</span> -->
             </div>
         </div>
@@ -77,3 +80,59 @@
     <span>Invalid Plaid Account</span>
 </div>
 <?php } ?>
+<script>
+$(function(){
+    $('.btn-widget-disconnect-plaid-bank-account').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Disconnect Bank Account';
+        } 
+    }); 
+
+    $('.btn-widget-disconnect-plaid-bank-account').on('click', function(){
+        var pid = $(this).attr("data-id");
+        var url = base_url + 'plaid_account/_delete_bank_account';
+
+        Swal.fire({
+            title: 'Delete Connected Bank Account',
+            html: "Are you sure you want to delete selected bank account?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                // $.ajax({
+                //     type: 'POST',
+                //     url: url,
+                //     dataType: 'json',
+                //     data: {pid:pid},
+                //     success: function(o) {
+                //         if( o.is_success == 1 ){   
+                //             Swal.fire({
+                //                 title: 'Delete Successful!',
+                //                 text: "Bank Account was Deleted Successfully!",
+                //                 icon: 'success',
+                //                 showCancelButton: false,
+                //                 confirmButtonText: 'Okay'
+                //             }).then((result) => {
+                //                 //if (result.value) {
+                //                     location.reload();
+                //                 //}
+                //             });
+                //         }else{
+                //             Swal.fire({
+                //             icon: 'error',
+                //             title: 'Error!',
+                //             html: o.msg
+                //             });
+                //         }
+                //     },
+                // });
+            }
+        });
+    });
+});
+</script>

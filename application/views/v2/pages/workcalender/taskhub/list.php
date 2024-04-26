@@ -219,6 +219,7 @@
                                 <td data-name="Assigned" style="width:20%;">Assigned To</td>           
                                 <td data-name="Priority">Priority</td>
                                 <td data-name="Status">Status</td>
+                                <td data-name="Date Started">Date Started</td>
                                 <td data-name="Date Completion">Completion Date</td>
                                 <td data-name="Date Created">Date Created</td>
                                 <td data-name="Manage"></td>
@@ -306,6 +307,7 @@
                                             ?>
                                             <span class="nsm-badge <?= $task_status ?>"><?= $row->status_text != '' ? $row->status_text : 'Draft'; ?></span>
                                         </td>
+                                        <td><?php echo date("F d, Y", strtotime($row->date_started)); ?></td>
                                         <td><?php echo date("F d, Y", strtotime($row->estimated_date_complete)); ?></td>
                                         <td><?php echo date("F d, Y", strtotime($row->date_created)); ?></td>
                                         <td>
