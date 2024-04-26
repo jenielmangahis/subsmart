@@ -108,7 +108,7 @@ $('#apply-button').on('click', function () {
             return encodeURIComponent(categoryName);
         });
 
-        url += `category=${categoryNames.join(',')}&`;
+        //url += `category=${categoryNames.join(',')}&`;
 
         if ($('#filter-category option').length !== $('#filter-category option:selected').length && $('#filter-category option:selected').length > 0) {
             var categoryFilter = filterCategory.join(',');
