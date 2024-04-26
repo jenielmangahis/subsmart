@@ -204,7 +204,7 @@ class Dashboard extends Widgets
         $past_due = $this->widgets_model->getCurrentCompanyOverdueInvoices2();
         $invoices_total_due = 0;
         foreach ($past_due as $total_due) {
-            if($total_due->status != 'paid'){
+            if ($total_due->status != 'paid') {
                 $invoices_total_due += $total_due->balance;
             }
         }
@@ -296,7 +296,7 @@ class Dashboard extends Widgets
             'table' => 'invoices',
             'select' => 'count(*) as total',
         ];
-              $this->page_data['total_invoice_paid'] = $this->general->get_data_with_param($total_invoice_paid, false);
+        $this->page_data['total_invoice_paid'] = $this->general->get_data_with_param($total_invoice_paid, false);
 
         // get customer subscription history
         $feeds_query = [
@@ -363,9 +363,97 @@ class Dashboard extends Widgets
         $this->page_data['companyName'] = $this->tickets_model->getCompany(logged('company_id'));
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['estimates'] = $this->estimate_model->getAllOpenEstimatesByCompanyId($companyId);
-         $this->page_data['leads'] = count($this->customer_ad_model->get_leads_data_this_week());
+        $this->page_data['expired_estimates'] = $this->estimate_model->getExpiredEstimatesByCompanyId($companyId);
+        $this->page_data['leads'] = count($this->customer_ad_model->get_leads_data_this_week());
         // $this->load->view('dashboard', $this->page_data);
         $this->load->view('dashboard_v2', $this->page_data);
+    }
+
+    public function loadFilterData()
+    {
+        $date_from = post('from_date').' 00:00:00';
+        $date_to = post('to_date').' 23:59:59';
+        $table = post('table');
+        $id = post('id');
+
+        $this->db->select('w_list_view');
+        $this->db->from('widgets');
+        $this->db->where('w_id', $id);
+        $query = $this->db->get();
+        $widgets = $query->row();
+
+        switch ($table) {
+            case 'estimates':
+                $total_query = [
+                    'where' => ['estimates.company_id' => logged('company_id'), 'estimates.status !=' => 'Lost',
+                'estimates.status !=' => 'Invoiced', 'estimates.view_flag' => '0', 'estimates.status !=' => 'Declined By Customer',
+                'estimates.estimate_date >=' => $date_from, 'estimates.estimate_date <=' => $date_to],
+                    'table' => 'estimates',
+                    'join' => [
+                       [
+                        'table' => 'acs_profile',
+                        'statement' => 'estimates.customer_id = acs_profile.prof_id',
+                        'join_as' => 'right',
+                       ]
+                    ],
+                    'select' => 'estimates.*',
+                    'order' => ['order_by' => 'id', 'ordering' => 'DESC'],
+                ];
+                $total = $this->general->get_data_with_param($total_query);
+                $expired_query = [
+                    'where' => ['estimates.company_id' => logged('company_id'), 'estimates.status =' => 'Lost',
+                                 'estimates.view_flag' => '0', 'acs_profile.', 'estimates.estimate_date >=' => $date_from, 'estimates.estimate_date <=' => $date_to,
+                    ],
+                    'or_where' => ['estimates.status =' => 'Cancelled'],
+                    'table' => 'estimates',
+                    'join' => [
+                        [
+                            'table' => 'acs_profile',
+                            'statement' => 'estimates.customer_id = acs_profile.prof_id',
+                            'join_as' => 'right',
+                        ],
+                    ],
+                    'select' => 'estimates.*',
+                    'order' => ['order_by' => 'id', 'ordering' => 'DESC'],
+                ];
+                
+                
+                $expired = $this->general->get_data_with_param($expired_query);
+
+                $this->output->set_output(json_encode(['first' => count($total), 'second' => count($expired), 'w_list_view' => $widgets->w_list_view]));
+                break;
+            case 'acs_billing':
+                $total_query = [
+                    'where' => ['acs_profile.company_id' => logged('company_id'), 'acs_profile.status' => 'Installed'
+                    , 'STR_TO_DATE(acs_billing.bill_start_date, "%m/%d/%Y") >=' => date('Y-m-d', strtotime($date_from)),'STR_TO_DATE(acs_billing.bill_end_date, "%m/%d/%Y") >=' =>date('Y-m-d', strtotime($date_to))],
+                    'table' => 'acs_billing',
+                    'join' => [
+                        [
+                            'table' => 'acs_alarm',
+                            'statement' => 'acs_billing.fk_prof_id = acs_alarm.fk_prof_id',
+                        ],
+                        [
+                            'table' => 'acs_profile',
+                            'statement' => 'acs_billing.fk_prof_id = acs_profile.prof_id',
+                        ],
+                    ],
+                    'select' => 'SUM(acs_billing.mmr) AS TOTAL_MMR',
+                ];
+                $total = $this->general->get_data_with_param($total_query);
+                $mmr = $this->AcsProfile_model->getSubscriptionFilter(logged('company_id'),$date_from, $date_to);
+                $this->output->set_output(json_encode(['first' => number_format($total[0]->TOTAL_MMR, 2), 'second' => null ,  'mmr' => $mmr, ]));
+
+                break;
+        }
+    }
+
+    public function updateListView()
+    {
+        $id = post('id');
+        $val = post('val');
+        $this->load->model('widgets_model');
+
+        $query = $this->widgets_model->updateListView($id, $val);
     }
 
     public function apiGetUnpaidInvoices()
@@ -638,7 +726,6 @@ class Dashboard extends Widgets
         exit(json_encode($data_arr));
     }
 
-
     public function ajax_recent_leads()
     {
         $this->load->model('Customer_advance_model');
@@ -824,6 +911,13 @@ class Dashboard extends Widgets
     public function accounting_sales()
     {
         $mmr = $this->AcsProfile_model->getCustomerMMR(logged('company_id'));
+        $data_arr = ['Success' => true, 'mmr' => $mmr];
+        exit(json_encode($data_arr));
+    }
+
+    public function income_subscription()
+    {
+        $mmr = $this->AcsProfile_model->getSubscription(logged('company_id'));
         $data_arr = ['Success' => true, 'mmr' => $mmr];
         exit(json_encode($data_arr));
     }

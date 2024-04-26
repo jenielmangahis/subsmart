@@ -121,7 +121,7 @@
                                     <?php if ($totalSales > 0) : ?>
                                         <h2 id="total_this_year">$<?php echo number_format($totalSales, 2) ?></h2>
                                     <?php else : ?>
-                                        <h2 id="total_this_year">N/A</h2>
+                                        <h2 id="total_this_year">$<?php echo number_format($totalSales, 2) ?></h2>
                                     <?php endif; ?>
                                     <span>TOTAL SALES</span>
                                 </div>

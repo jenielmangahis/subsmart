@@ -320,6 +320,8 @@ class Widgets extends MY_Controller
         $this->load->model('Customer_advance_model', 'customer_ad_model');
         $this->load->model('invoice_model');
         $this->load->model('Tickets_model', 'tickets_model');
+        $this->load->model('estimate_model');
+
         $id = post('id');
         $isGlobal = post('isGlobal');
         $isMain   = post('isMain');
@@ -350,7 +352,8 @@ class Widgets extends MY_Controller
                 $data['leads'] = count($this->customer_ad_model->get_leads_data());
                 $data['total_recurring_payment'] = $this->getTotalRecurringPayment();
                 $data['companyName'] = $this->tickets_model->getCompany(logged('company_id'));
-               
+                $data['expired_estimates'] = $this->estimate_model->getExpiredEstimatesByCompanyId(logged('company_id'));
+                $data['estimates'] = $this->estimate_model->getAllOpenEstimatesByCompanyId(logged('company_id'));
                 $past_due = $this->widgets_model->getCurrentCompanyOverdueInvoices();
                 
                 $invoices = $this->invoice_model->get_all_company_invoice(logged('company_id'));
