@@ -298,6 +298,10 @@ class Dashboard extends Widgets
         ];
         $this->page_data['total_invoice_paid'] = $this->general->get_data_with_param($total_invoice_paid, false);
 
+        $this->page_data['activeSubscriptions'] = $this->AcsProfile_model->getCompanyTotalActiveSubscriptions(logged('company_id'));
+        $this->page_data['totalAmountActiveSubscriptions'] = $this->AcsProfile_model->getCompanyTotalAmountActiveRecurringPayment(logged('company_id'));
+        $this->page_data['activeSubscriptionsWillExpireIn30d'] = $this->AcsProfile_model->getCompanyActiveSubscriptionWillExpireIn30Days(logged('company_id'));
+
         // get customer subscription history
         $feeds_query = [
             'where' => ['company_id' => logged('company_id')],

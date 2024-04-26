@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Feeds_model extends MY_Model {
 
 	public $table = 'feed';
-        private $bulletin = 'news';
+    private $bulletin = 'news';
 	
 	public function __construct()
 	{
