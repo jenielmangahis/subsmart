@@ -18,13 +18,24 @@
 #tags_chart{
     margin-bottom: 47px;
 }
+.job-tag-count{
+  display:inline-block;
+  width:20px;
+  font-weight:bold;
+}
 </style>
 <div class="row">
     <canvas id="tags_chart" class="nsm-chart" data-chart-type="tags"></canvas>
 <?php foreach ($tags as $tag){ ?>
     <div class="col-md-6">
-        <a class="tagsData" href="javascript:void(0);" onclick="window.open('<?= base_url('job?job_tag='.$tag->id) ?>', '_blank', 'location=yes,height=1080,width=1280,scrollbars=yes,status=yes');">
-            <span class="nsm-badge big badge-circle"><b><?= $tag->total_job_tags; ?></b> <span class="nsm-badge small badge-circle stat-bar stats-item" data-tag="<?= ucwords($tag->name); ?>" data-tagcount="<?= $tag->total_job_tags; ?>"></span> <?= ucwords($tag->name); ?></span>
+        <a class="tagsData" href="javascript:void(0);" onclick="window.open('<?= base_url('job?job_tag='.$tag->name) ?>', '_blank', 'location=yes,height=1080,width=1280,scrollbars=yes,status=yes');">
+
+            <span class="nsm-badge big badge-circle">
+              <span class="job-tag-count"><?= $tag->total_job_tags; ?></span>
+              <span class="nsm-badge small badge-circle stat-bar stats-item" data-tag="<?= ucwords($tag->name); ?>" data-tagcount="<?= $tag->total_job_tags; ?>"></span>
+              <?= ucwords($tag->name); ?>
+            </span>
+            
         </a>
     </div>
 <?php } ?>

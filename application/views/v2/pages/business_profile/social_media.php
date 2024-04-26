@@ -17,7 +17,7 @@
                     </div>
                 </div>
 
-                <?php echo form_open_multipart('users/update_social_media', ['id' => 'update_social_media', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
+                <?php echo form_open_multipart(null, ['id' => 'update_social_media', 'class' => 'form-validate', 'autocomplete' => 'off']); ?>
                 <div class="row g-3">
                     <div class="col-12">
                         <div class="nsm-card primary">
@@ -106,19 +106,29 @@
                 type: 'POST',
                 url: url,
                 data: _this.serialize(),
+                dataType:'json',
                 success: function(result) {
-                    Swal.fire({
-                        title: 'Save Successful!',
-                        text: "Social media links was successfully updated.",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    }).then((result) => {
-                        if (result.value) {
-                            location.reload();
-                        }
-                    });
+                    if( result.is_success == 1 ){
+                        Swal.fire({
+                            title: 'Save Successful!',
+                            text: "Social media links was successfully updated.",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                //location.reload();
+                            }
+                        });
 
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: result.msg
+                        });
+                    }
+                    
                     _this.find("button[type=submit]").html("Save Changes");
                     _this.find("button[type=submit]").prop("disabled", false);
                 },

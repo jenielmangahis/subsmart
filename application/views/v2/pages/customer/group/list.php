@@ -38,6 +38,7 @@
                             <td class="table-icon"></td>
                             <td data-name="Title">Title</td>
                             <td data-name="Description">Description</td>
+                            <td data-name="Count" style="width:10%;">Number of Customer</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -56,6 +57,7 @@
                                     </td>
                                     <td class="fw-bold nsm-text-primary"><?php echo $customerGroup->title ?></td>
                                     <td><?= $customerGroup->description; ?></td>
+                                    <td><?= countCustomerByGroup($customerGroup->id); ?></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">

@@ -5,6 +5,7 @@
 <?php include viewPath('v2/widgets/add_widgets'); ?>
 <?php include viewPath('v2/includes/calendar/quick_access_calendar_modals'); ?>
 <?php include viewPath('v2/includes/calendar/quick_access_calendar_js'); ?>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
 <?php include viewPath('dashboard_v2_js'); ?>
 <style>
 .loader {
