@@ -67,8 +67,18 @@ class General_model extends MY_Model {
             }
         }
 
-        if(array_key_exists("join",$params) && $params['join'] != NULL ){
-            $this->db->join($params['join']['table'], $params['join']['statement'],$params['join']['join_as']);
+        if (array_key_exists("join", $params)) {
+            if (is_array($params['join'])) {
+                foreach ($params['join'] as $join) {
+                    $this->db->join($join['table'], $join['statement'], $join['join_as']);
+                }
+            } else {
+                $join_statement = explode(',', $params['join']);
+                foreach ($join_statement as $join) {
+                    $join_parts = explode('|', $join);
+                    $this->db->join($join_parts[0], $join_parts[1], $join_parts[2]);
+                }
+            }
         }
 
         if(array_key_exists("order",$params)){

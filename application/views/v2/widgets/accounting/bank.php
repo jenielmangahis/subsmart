@@ -33,7 +33,7 @@ endif;
                     <div class="content ms-2">
                         <div class="details">
                             <span class="content-title mb-1"><?=$account->name; ?></span>
-                            <span class="content-subtitle d-block">Bank balance: $0.00</span>
+                            <!-- <span class="content-subtitle d-block">Bank balance: $0.00</span> -->
                             <span class="content-subtitle d-block">In nSmartrac: <?=str_replace("$-", "-$", '$'.number_format(floatval($account->balance), 2, '.', ','))?></span>
                         </div>
                         <div class="controls">

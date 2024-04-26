@@ -26,6 +26,8 @@ class Widgets_model extends MY_Model
         return $this->db->get('invoices')->result();
     }
 
+  
+
     public function getCurrentCompanyOverdueInvoices()
     {
         $company_id = logged('company_id');
@@ -290,5 +292,15 @@ class Widgets_model extends MY_Model
         $result = $this->db->get('widgets_users')->result();
 
         return $result;
+    }
+
+    public  function updateListView($id , $val)
+    {
+        $this->db->where('w_id', $id);
+        return   $this->db->update('widgets', array(
+            'w_list_view'  =>  $val,
+            
+        ));
+     
     }
 }

@@ -48,7 +48,8 @@
           <!-- Chart JS -->
           <script src="<?php echo base_url('assets/js/v2/chart.min.js'); ?>"></script>
           <!-- Boostrap JS -->
-          <script src="<?php echo base_url('assets/js/v2/bootstrap.bundle.min.js'); ?>" crossorigin="anonymous"></script>
+          <script src="<?php echo base_url('assets/js/v2/bootstrap.bundle.min.js'); ?>" crossorigin="anonymous">
+          </script>
           <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
           <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.13/js/jquery.dataTables.js">
           </script>
@@ -63,10 +64,12 @@
           <!-- Pusher JS -->
           <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
           <!-- Datepicker -->
-          <script type="text/javascript" src="<?php echo base_url('assets/js/v2/bootstrap-datepicker.min.js'); ?>"></script>
+          <script type="text/javascript" src="<?php echo base_url('assets/js/v2/bootstrap-datepicker.min.js'); ?>">
+          </script>
           <!-- TagsInput -->
           <script type="text/javascript"
-              src="<?php echo base_url('assets/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js'); ?>"></script>
+              src="<?php echo base_url('assets/plugins/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js'); ?>">
+          </script>
           <!-- Datetimepicker -->
           <script type="text/javascript" src="<?php echo base_url('assets/js/v2/moment.min.js'); ?>"></script>
           <script type="text/javascript" src="<?php echo base_url('assets/js/v2/bootstrap-datetimepicker.min.js'); ?>">
@@ -540,16 +543,257 @@ function manipulateWidget(dis, id) {
     }
 }
 
-function manipulateShowGraph(dis, id){
+function manipulateShowGraph(dis, id) {
     if ($(dis).is(":checked")) {
         $(`#thumbnail_content_graph_${id}`).show();
         $(`#thumbnail_content_list${id}`).hide();
-
-    }else{
+        updateListView(id, 1)
+    } else {
         $(`#thumbnail_content_graph_${id}`).hide();
         $(`#thumbnail_content_list${id}`).show();
+        updateListView(id, 0)
+    }
+}
+
+function updateListView(id, val) {
+    $.ajax({
+        url: base_url + 'dashboard/updateListView',
+        method: 'post',
+        data: {
+            id: id,
+            val: val,
+        },
+        success: function(response) {
+            var data = JSON.parse(response);
+            $(`#first_content_${id}`).html(data['first']);
+            $(`#second_content_${id}`).html(data['second']);
+        }
+    });
+}
+
+function filterThumbnail(val, id, table) {
+    var date = new Date();
+    switch (val) {
+        case 'all':
+            var from_date = '01-01-2000';
+            var to_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date
+                .getDate()).slice(-2);
+            break;
+        case 'week':
+            var today = new Date();
+            var from_date_temp = new Date(today.getFullYear(), today.getMonth(), today.getDate() -
+                6);
+            var to_date_temp = new Date();
+
+            var from_month = ('0' + (from_date_temp.getMonth() + 1)).slice(-2);
+            var from_day = ('0' + from_date_temp.getDate()).slice(-2);
+            var from_year = from_date_temp.getFullYear();
+            var from_date = from_month + '/' + from_day + '/' + from_year;
+
+            var to_month = ('0' + (to_date_temp.getMonth() + 1)).slice(-2);
+            var to_day = ('0' + to_date_temp.getDate()).slice(-2);
+            var to_year = to_date_temp.getFullYear();
+            var to_date = to_month + '/' + to_day + '/' + to_year;
+
+            break;
+
+
+        case 'two-week':
+            var endDate = new Date();
+            var startDate = new Date(endDate);
+
+            startDate.setDate(startDate.getDate() - 13);
+
+            var from_date = startDate.getFullYear() + '-' + String(startDate.getMonth() + 1).padStart(2, '0') + '-' +
+                String(startDate.getDate()).padStart(2, '0');
+            var to_date = endDate.getFullYear() + '-' + String(endDate.getMonth() + 1).padStart(2, '0') + '-' + String(
+                endDate.getDate()).padStart(2, '0');
+            break;
+        case 'month':
+            var endDate = new Date();
+            var startDate = new Date(endDate);
+
+            startDate.setDate(startDate.getDate() - 29);
+
+            var from_date = startDate.getFullYear() + '-' + String(startDate.getMonth() + 1).padStart(2, '0') + '-' +
+                String(startDate.getDate()).padStart(2, '0');
+            var to_date = endDate.getFullYear() + '-' + String(endDate.getMonth() + 1).padStart(2, '0') + '-' + String(
+                endDate.getDate()).padStart(2, '0');
+            break;
+        case 'two-month':
+            var endDate = new Date();
+            var startDate = new Date(endDate);
+
+            startDate.setDate(startDate.getDate() - 59);
+
+            var from_date = startDate.getFullYear() + '-' + String(startDate.getMonth() + 1).padStart(2, '0') + '-' +
+                String(startDate.getDate()).padStart(2, '0');
+            var to_date = endDate.getFullYear() + '-' + String(endDate.getMonth() + 1).padStart(2, '0') + '-' + String(
+                endDate.getDate()).padStart(2, '0');
+            break;
+        default:
+            var from_date = '';
+            var to_date = '';
+            break;
 
     }
+    loadDataFilter(from_date, to_date, table, id);
+
+}
+
+function loadDataFilter(from_date, to_date, table, id) {
+    $.ajax({
+        url: base_url + 'dashboard/loadFilterData',
+        method: 'post',
+        data: {
+            table: table,
+            from_date: from_date,
+            to_date: to_date,
+            id: id
+        },
+        success: function(response) {
+            var data = JSON.parse(response);
+            console.log('data', data['first'])
+            $(`#first_content_${id}`).html(data['first']);
+            $(`#second_content_${id}`).html(data['second']);
+            if (table == 'acs_billing') {
+                // window.subscriptionChart.destroy();
+                filterSubsciptionThumbnailGraph(data['mmr'])
+            }
+            if (table == 'estimates') {
+                window.gauge_estimate_Chart.destroy();
+                filterEstimateThumbnailGraph(data['first'], data['second'])
+            }
+        }
+    });
+}
+
+function filterSubsciptionThumbnailGraph(mmr) {
+    console.log('mmr',mmr)
+    var amountsByMonth = new Array(12).fill(0);
+
+    for (var x = 0; x < mmr.length; x++) {
+        var installDate = new Date(mmr[x].bill_end_date);
+        var month = installDate.getMonth(); 
+        var amount = parseInt(mmr[x].mmr); 
+
+     
+        amountsByMonth[month] += amount;
+    }
+
+    subscriptionChart.data.datasets[0].data = amountsByMonth;
+    subscriptionChart.update();
+
+}
+
+
+
+function filterEstimateThumbnailGraph(first, second) {
+    var openCount = second;
+    var totalCount = first;
+    var ctx = document.getElementById('GuageEstimate').getContext('2d');
+    var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(106,74,134, 1)');
+    gradient.addColorStop(1, 'rgba(142,43,227, 1)');
+    const gauge_estimate_data = {
+        labels: ['Score', 'Gray Area'],
+        datasets: [{
+            label: 'Weekly Sales',
+            data: [openCount, totalCount],
+            backgroundColor: [
+                gradient,
+                'rgb(240,240,240)'
+            ],
+            borderColor: [
+                gradient,
+                'rgb(240,240,240)'
+            ],
+            borderWidth: 1,
+            cutout: '80%',
+            circumference: 300,
+            rotation: 210
+        }]
+    };
+
+    const gaugeChartText = {
+        id: 'gaugeChartText',
+        afterDatasetDraw(chart, args, pluginOptions) {
+            const {
+                ctx,
+                data,
+                chartArea: {
+                    top,
+                    bottom,
+                    left,
+                    right,
+                    width,
+                    height
+                },
+                scales: {
+                    r
+                }
+            } = chart;
+
+            ctx.save();
+            console.log(r);
+            const xCoor = chart.getDatasetMeta(0).data[0].x;
+            const yCoor = chart.getDatasetMeta(0).data[0].y;
+
+            ctx.font = '30px FontAwesome';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillStyle = '#6a4a86'; // Color of the icon
+            ctx.fillText('\uf681', xCoor, yCoor - 30);
+
+            ctx.font = '16px sans-serif';
+            ctx.fillStyle = "rgb(40, 40, 43)";
+            ctx.textBaseLine = 'top';
+            ctx.textAlign = 'left';
+            ctx.fillText('Total', left + 80, yCoor + 5);
+            ctx.textAlign = 'right';
+            ctx.fillText('Expired', right - 70, yCoor + 5);
+            ctx.font = '16px sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText(totalCount, left + 90, yCoor + 25);
+            ctx.textAlign = 'right';
+            ctx.fillText(openCount, right - 80, yCoor + 25);
+            ctx.font = '16px sans-serif'
+            ctx.textAlign = 'center';
+            ctx.textBaseLine = 'bottom';
+
+
+        }
+    }
+
+
+    // config 
+    const gauge_estimate_config = {
+        type: 'doughnut',
+        data: gauge_estimate_data,
+        options: {
+            aspectRatio: 1.5,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        },
+        plugins: [gaugeChartText],
+    };
+    $(document).ready(function() {
+        $('#canvas_container').show();
+        $('#estimate-title').hide();
+        $('#GuageEstimateLoader').hide();
+        const gauge_estimate_Chart = new Chart(
+            document.getElementById('GuageEstimate'),
+            gauge_estimate_config
+        );
+        window.gauge_estimate_Chart = gauge_estimate_Chart;
+
+    });
 }
 
 
@@ -588,13 +832,21 @@ function manipulateThumbnail(dis, id) {
     $('#check_count_thumbnails').val(count);
 }
 
-function fetchCollections(){
+function fetchCollections() {
     fetch('<?php echo base_url('Dashboard/todays_stats'); ?>', {
         method: 'GET',
-    }) .then(response => response.json() ).then(response => {
-        var {success, data, paymentInvoice, jobsCompleted, onlineBooking, lostAccount, collectedAccounts } = response;
+    }).then(response => response.json()).then(response => {
+        var {
+            success,
+            data,
+            paymentInvoice,
+            jobsCompleted,
+            onlineBooking,
+            lostAccount,
+            collectedAccounts
+        } = response;
 
-        if(success){
+        if (success) {
             var collectedAcc = collectedAccounts == '' ? '0' : collectedAccounts[0]['total'];
             $("#collections-thumbnail").text(collectedAcc);
         }
@@ -668,13 +920,17 @@ function fetchJobs() {
     });
 }
 
-function fetchNewCustomer(){
+function fetchNewCustomer() {
     fetch('<?php echo base_url('dashboard/_recent_customers'); ?>', {
         method: 'GET',
-    }) .then(response => response.json() ).then(response => {
-        var {success, companies, recentCustomers } = response;
+    }).then(response => response.json()).then(response => {
+        var {
+            success,
+            companies,
+            recentCustomers
+        } = response;
         $("#recent-customer-container-count").html(recentCustomers.length);
-     
+
     }).catch((error) => {
         console.log('Error:', error);
     });
@@ -684,7 +940,9 @@ function fetchNewCustomer(){
 function addThumbnail(id) {
     var isGlobal = $('#widgetGlobal_' + id).is(":checked") ? '1' : 0;
     var isMain = $('#widgetMain_' + id).is(":checked") ? '1' : 0;
-    $("#nsm_thumbnail").append('<div class="nsm-card nsm-grid main-widget-container position-relative" id="widget_loader"><span class="loader position-absolute top-50 start-50 translate-middle"></span></div>');
+    $("#nsm_thumbnail").append(
+        '<div class="nsm-card nsm-grid main-widget-container position-relative" id="widget_loader"><span class="loader position-absolute top-50 start-50 translate-middle"></span></div>'
+    );
     $.ajax({
         url: '<?php echo base_url(); ?>widgets/addV2Thumbnail',
         method: 'POST',
@@ -695,17 +953,17 @@ function addThumbnail(id) {
         },
         //dataType: 'json',
         success: function(response) {
-          
+
             console.log(response);
             if (isMain != '1') {
                 setTimeout(function() {
-            // Remove the loader
-  
-            $("#widget_loader").remove();
+                    // Remove the loader
 
-            // Append the response
-            $("#nsm_thumbnail").append(response);
-        }, 1000); 
+                    $("#widget_loader").remove();
+
+                    // Append the response
+                    $("#nsm_thumbnail").append(response);
+                }, 1000);
             }
             fetchJobs();
             fetchNewCustomer();

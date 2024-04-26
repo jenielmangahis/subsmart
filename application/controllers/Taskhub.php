@@ -34,13 +34,36 @@ class Taskhub extends MY_Controller {
 		$this->hasAccessModule(6); 
 		$cid = logged('company_id');
 		$selected_customer_id = 0;
+
 		if( $this->input->get('status') && $this->input->get('cus_id') ){
 			$selected_customer_id = $this->input->get('cus_id');
 			$this->page_data['tasks'] = $this->taskhub_model->getAllTasksByCustomerIdAndStatusId($this->input->get('cus_id'), $this->input->get('status'));
 		}else{
-			$this->page_data['tasks'] = $this->taskhub_model->getAllByCompanyId($cid);	
+			if($this->input->get('status') != 0) {
+				$this->page_data['tasks'] = $this->taskhub_model->getAllByCompanyIdAndStatus($cid, $this->input->get('status'));	
+			} else {
+				$this->page_data['tasks'] = $this->taskhub_model->getAllByCompanyId($cid);	
+			}
 		}
+
+		$this->page_data['status'] = $this->input->get('status');
+
+		$total_task_new = $this->taskhub_model->getAllTasksByCompanyIdAndStatusId($cid, 1);
+		$task_ongoing   = $this->taskhub_model->getAllTasksByCompanyIdAndStatusId($cid, 2);
+
+		$task_onhold   = $this->taskhub_model->getAllTasksByCompanyIdAndStatusId($cid, 3);
+		$task_resumed  = $this->taskhub_model->getAllTasksByCompanyIdAndStatusId($cid, 4);
+		$task_for_evaluation = $this->taskhub_model->getAllTasksByCompanyIdAndStatusId($cid, 5);
+
+		$task_completed  = $this->taskhub_model->getAllTasksByCompanyIdAndStatusId($cid, 6);
 		
+		$this->page_data['total_task_new']       = count($total_task_new);
+		$this->page_data['total_task_ongoing']   = count($task_ongoing);
+		$this->page_data['total_task_hold']      = count($task_onhold);
+		$this->page_data['total_task_resumed']   = count($task_resumed);
+		$this->page_data['total_task_for_evaluation'] = count($task_for_evaluation);
+		$this->page_data['total_task_completed'] = count($task_completed);
+
 		$this->page_data['selected_customer_id'] = $selected_customer_id;
 		$this->page_data['status_selection']     = $this->taskhub_status_model->get();
 		// $this->load->view('workcalender/taskhub/list', $this->page_data);
@@ -178,6 +201,7 @@ class Taskhub extends MY_Controller {
 						'description' => $this->input->post('description'),
 						'prof_id' => $prof_id,
 						'estimated_date_complete' => date("Y-m-d",strtotime($this->input->post('estimated_date_complete'))),
+						'date_started' => date("Y-m-d",strtotime($this->input->post('date_started'))),
 						'status_id' => $status,
 						'priority' => $this->input->post('priority')
 					);
@@ -208,6 +232,7 @@ class Taskhub extends MY_Controller {
 						'created_by' => $uid,
 						'date_created' => date('Y-m-d h:i:s'),
 						'estimated_date_complete' => date("Y-m-d",strtotime($this->input->post('estimated_date_complete'))),
+						'date_started' => date("Y-m-d",strtotime($this->input->post('date_started'))),
 						'status_id' => $this->input->post('status'),
 						'company_id' => $company_id,
 						'priority' => $this->input->post('priority')
@@ -400,6 +425,7 @@ class Taskhub extends MY_Controller {
 						'description' => $this->input->post('description'),
 						'prof_id' => $prof_id,
 						'estimated_date_complete' => date("Y-m-d",strtotime($this->input->post('estimated_date_complete'))),
+						'date_started' => date("Y-m-d",strtotime($this->input->post('date_started'))),
 						'status_id' => $status,
 						'priority' => $this->input->post('priority')
 					);
@@ -430,6 +456,7 @@ class Taskhub extends MY_Controller {
 						'created_by' => $uid,
 						'date_created' => date('Y-m-d h:i:s'),
 						'estimated_date_complete' => date("Y-m-d",strtotime($this->input->post('estimated_date_complete'))),
+						'date_started' => date("Y-m-d",strtotime($this->input->post('date_started'))),
 						'status_id' => $this->input->post('status'),
 						'company_id' => $company_id,
 						'priority' => $this->input->post('priority')
@@ -632,6 +659,7 @@ class Taskhub extends MY_Controller {
 						'description' => $this->input->post('description'),
 						'prof_id' => $prof_id,
 						'estimated_date_complete' => date("Y-m-d",strtotime($this->input->post('estimated_date_complete'))),
+						'date_started' => date("Y-m-d",strtotime($this->input->post('date_started'))),
 						'status_id' => $status,
 						'priority' => $this->input->post('priority')
 					);
@@ -662,6 +690,7 @@ class Taskhub extends MY_Controller {
 						'created_by' => $uid,
 						'date_created' => date('Y-m-d h:i:s'),
 						'estimated_date_complete' => date("Y-m-d",strtotime($this->input->post('estimated_date_complete'))),
+						'date_started' => date("Y-m-d",strtotime($this->input->post('date_started'))),
 						'status_id' => $this->input->post('status'),
 						'company_id' => $company_id,
 						'priority' => $this->input->post('priority')
@@ -756,6 +785,7 @@ class Taskhub extends MY_Controller {
                 'description' => $post['description'],
                 'created_by' => $uid,
                 'date_created' => date('Y-m-d h:i:s'),
+				'date_started' => date("Y-m-d",strtotime($this->input->post('date_started'))),
                 'estimated_date_complete' => date('Y-m-d', strtotime($post['estimated_date_complete'])),
                 'actual_date_complete' => '',
                 'task_color' => $taskStatus->status_color,

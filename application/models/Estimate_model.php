@@ -374,6 +374,20 @@ class Estimate_model extends MY_Model
         
         return $query->result();
     }
+    public function getExpiredEstimatesByCompanyId($company_id)
+    {
+        $this->db->select('estimates.*, acs_profile.first_name, acs_profile.last_name');
+        $this->db->from($this->table);
+        $this->db->join('acs_profile', 'estimates.customer_id  = acs_profile.prof_id');
+        $this->db->where('estimates.company_id', $company_id);
+        $this->db->where('estimates.status =', 'Lost');
+        $this->db->or_where('estimates.status =', 'Cancelled');
+        $this->db->where('estimates.view_flag', '0');        
+        $this->db->order_by('estimates.id', 'DESC');
+        $query = $this->db->get();
+        
+        return $query->result();
+    }
 
     public function get_specific_job_items($id)
     {

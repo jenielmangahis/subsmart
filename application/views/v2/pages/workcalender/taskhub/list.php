@@ -49,9 +49,133 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter primary h-100 mb-2" id="task-completed">
+                            <div class="row h-100">
+                                <div class="col d-flex justify-content-center align-items-center">
+                                    <i class="bx bx-receipt"></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id="total_this_year"><?php echo isset($total_task_new) ? $total_task_new : 0; ?></h2>
+                                    <span>TASK NEW</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter success h-100 mb-2 " id="task-ongoing">
+                            <div class="row h-100">
+                                <div class="col d-flex justify-content-center align-items-center">
+                                    <i class="bx bx-receipt"></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id="total_this_year"><?php echo isset($total_task_hold) ? $total_task_hold : 0; ?></h2>
+                                    <span>TASK ONHOLD</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter primary h-100 mb-2" id="task-completed">
+                            <div class="row h-100">
+                                <div class="col d-flex justify-content-center align-items-center">
+                                    <i class="bx bx-receipt"></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id="total_this_year"><?php echo isset($total_task_resumed) ? $total_task_resumed : 0; ?></h2>
+                                    <span>TASK RESUMED</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter primary h-100 mb-2" id="task-completed">
+                            <div class="row h-100">
+                                <div class="col d-flex justify-content-center align-items-center">
+                                    <i class="bx bx-receipt"></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id="total_this_year"><?php echo isset($total_task_for_evaluation) ? $total_task_for_evaluation : 0; ?></h2>
+                                    <span>TASK FOR EVALUATION</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter success h-100 mb-2 " id="task-ongoing">
+                            <div class="row h-100">
+                                <div class="col d-flex justify-content-center align-items-center">
+                                    <i class="bx bx-receipt"></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id="total_this_year"><?php echo isset($total_task_ongoing) ? $total_task_ongoing : 0; ?></h2>
+                                    <span>TASK ONGOING</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter primary h-100 mb-2" id="task-completed">
+                            <div class="row h-100">
+                                <div class="col d-flex justify-content-center align-items-center">
+                                    <i class="bx bx-receipt"></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id="total_this_year"><?php echo isset($total_task_completed) ? $total_task_completed : 0; ?></h2>
+                                    <span>TASK COMPLETED</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>           
+                            <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="filter-type">Status</label>
+                                        <select class="nsm-field form-select filter-task-hub-type" name="filter_type" id="filter-task-hub-type">            
+                                            <option value="0" <?=$status == 0 ? 'selected' : ''?>>All</option>
+                                            <option value="1" <?=$status == 1 ? 'selected' : ''?>>New</option>
+                                            <option value="2" <?=$status == 2 ? 'selected' : ''?>>On Going</option>
+                                            <option value="3" <?=$status == 3 ? 'selected' : ''?>>On Hold</option>
+                                            <option value="4" <?=$status == 4 ? 'selected' : ''?>>Resumed</option>
+                                            <option value="5" <?=$status == 5 ? 'selected' : ''?>>For Evaluation</option>
+                                            <option value="6" <?=$status == 6 ? 'selected' : ''?>>Completed</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-6">
+                                        <button type="button" class="nsm-button" id="reset-button">
+                                            Reset
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button type="button" class="nsm-button primary float-end" id="apply-filter-subtask-button">
+                                            Apply
+                                        </button>
+                                    </div>
+                                </div>
+                            </ul>                            
+
+                            
                             <div class="dropdown d-inline-block">
                                 <input type="hidden" class="nsm-field form-control" id="selected_ids">
                                 <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
@@ -81,6 +205,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <div class="nsm-widget-table">
                     <form id="frm-taskhub" method="POST">
                     <table class="nsm-table taskhub-list">
@@ -94,6 +219,7 @@
                                 <td data-name="Assigned" style="width:20%;">Assigned To</td>           
                                 <td data-name="Priority">Priority</td>
                                 <td data-name="Status">Status</td>
+                                <td data-name="Date Started">Date Started</td>
                                 <td data-name="Date Completion">Completion Date</td>
                                 <td data-name="Date Created">Date Created</td>
                                 <td data-name="Manage"></td>
@@ -181,6 +307,7 @@
                                             ?>
                                             <span class="nsm-badge <?= $task_status ?>"><?= $row->status_text != '' ? $row->status_text : 'Draft'; ?></span>
                                         </td>
+                                        <td><?php echo date("F d, Y", strtotime($row->date_started)); ?></td>
                                         <td><?php echo date("F d, Y", strtotime($row->estimated_date_complete)); ?></td>
                                         <td><?php echo date("F d, Y", strtotime($row->date_created)); ?></td>
                                         <td>
@@ -480,6 +607,17 @@
                 }
             });
         });
+
+        $('#apply-filter-subtask-button').on('click', function() {
+            var filterType = $('.filter-task-hub-type').val();            
+            //var url = `${base_url}accounting/customers/view/${customerId}?`;
+            var url = `${base_url}taskhub?`;
+            url += filterType !== 0 ? `status=${filterType}&` : '';
+            if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+                url = url.slice(0, -1); 
+            }
+            location.href = url;
+        });        
     });        
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

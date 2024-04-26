@@ -259,7 +259,7 @@ $('#reorder').on('click', function (e) {
     });
 
     $.ajax({
-        url: '/accounting/products-and-services/reorder-items',
+        url: `${base_url}accounting/products-and-services/reorder-items`,
         data: data,
         type: 'post',
         processData: false,
@@ -414,6 +414,7 @@ $('.export-items').on('click', function () {
     if ($('#export-form').length < 1) {
         $('body').append('<form action="/accounting/products-and-services/export-table" method="post" id="export-form"></form>');
     }
+
 
     var fields = $('.dropdown-menu.table-settings input[name="col_chk"]:checked');
     fields.each(function () {

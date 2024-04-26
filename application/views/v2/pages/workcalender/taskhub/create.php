@@ -195,6 +195,17 @@ if (isset($selected_participants)) {
                                         <input type="text" name="estimated_date_complete" class="nsm-field form-control datepicker" value="<?= $date ?>" required>
                                     </div>
 
+                                    <div class="col-12 col-md-4">
+                                        <?php
+                                        $date = date("m/d/Y");
+                                        if (isset($taskHub->date_started)) {                                            
+                                            $date_started = date("m/d/Y",strtotime($taskHub->date_started));
+                                        }
+                                        ?>
+                                        <label class="content-subtitle fw-bold d-block mb-2">Date Started</label>
+                                        <input type="text" name="date_started" class="nsm-field form-control datepicker" value="<?= $date_started ?>" required>
+                                    </div>
+
                                     <div class="col-12">
                                         <label class="content-subtitle fw-bold d-block mb-2">Description</label>
                                         <textarea name="description" class="nsm-field form-control ckeditor" placeholder="Enter Description" required>
