@@ -35,16 +35,30 @@ class Taskhub extends MY_Controller {
 		$cid = logged('company_id');
 		$selected_customer_id = 0;
 
-		if( $this->input->get('status') && $this->input->get('cus_id') ){
-			$selected_customer_id = $this->input->get('cus_id');
-			$this->page_data['tasks'] = $this->taskhub_model->getAllTasksByCustomerIdAndStatusId($this->input->get('cus_id'), $this->input->get('status'));
-		}else{
-			if($this->input->get('status') != 0) {
-				$this->page_data['tasks'] = $this->taskhub_model->getAllByCompanyIdAndStatus($cid, $this->input->get('status'));	
-			} else {
-				$this->page_data['tasks'] = $this->taskhub_model->getAllByCompanyId($cid);	
-			}
+		$keyword = '';
+        if(!empty(get('search'))) {
+			$keyword = get('search');
+            $this->page_data['search'] = $keyword;
+
+			$task_data = $this->taskhub_model->getCompanyTasksWithFilter($cid,$keyword, $this->input->get('status'), []);
+        } else {
+			if( $this->input->get('status') && $this->input->get('cus_id') ){
+				$selected_customer_id = $this->input->get('cus_id');
+				$task_data = $this->taskhub_model->getAllTasksByCustomerIdAndStatusId($this->input->get('cus_id'), $this->input->get('status'));
+			}else{
+				if($this->input->get('status') != 0) {
+					$task_data = $this->taskhub_model->getAllByCompanyIdAndStatus($cid, $this->input->get('status'));	
+				} else {
+					$task_data = $this->taskhub_model->getAllByCompanyId($cid);	
+				}
+			}			
 		}
+
+		//echo '<pre>';
+		//print_r($task_data);
+		//echo '</pre>';
+
+		$this->page_data['tasks'] = $task_data;
 
 		$this->page_data['status'] = $this->input->get('status');
 
@@ -340,10 +354,19 @@ class Taskhub extends MY_Controller {
 		$this->form_validation->set_rules('estimated_date_complete', 'Estimated Date of Competion', 'trim|required');
 
 		if($this->form_validation->run() == false){			
+
+			$assignedUserData = $this->users_model->getUser($task->assigned_user_id);
+
+			if($assignedUserData) {
+				$assignedUser['assigned_user_id'] = $assignedUserData->id;
+				$assignedUser['name'] = $assignedUserData->FName . " " . $assignedUserData->LName;
+			}
+
+			$this->page_data['assignedUser'] = $assignedUser;
+
 			$this->page_data['optionPriority'] = $this->taskhub_model->optionPriority();
 			$this->load->view('v2/pages/workcalender/taskhub/edit', $this->page_data);
 		} else {
-
 			if($this->input->post('description') == ''){
 				$this->page_data['optionPriority'] = $this->taskhub_model->optionPriority();
 				$this->page_data['error'] = 'Please specify task description';
@@ -661,7 +684,8 @@ class Taskhub extends MY_Controller {
 						'estimated_date_complete' => date("Y-m-d",strtotime($this->input->post('estimated_date_complete'))),
 						'date_started' => date("Y-m-d",strtotime($this->input->post('date_started'))),
 						'status_id' => $status,
-						'priority' => $this->input->post('priority')
+						'priority' => $this->input->post('priority'),
+						'assigned_user_id' => $this->input->post('assigned_to'),
 					);
 
 					$process_successful = $this->taskhub_model->trans_update($data, array('task_id' => trim($taskid)));
@@ -693,7 +717,8 @@ class Taskhub extends MY_Controller {
 						'date_started' => date("Y-m-d",strtotime($this->input->post('date_started'))),
 						'status_id' => $this->input->post('status'),
 						'company_id' => $company_id,
-						'priority' => $this->input->post('priority')
+						'priority' => $this->input->post('priority'),
+						'assigned_user_id' => $this->input->post('assigned_to'),
 					);
 
 					$last_id = $this->taskhub_model->saveTask($data);
