@@ -355,7 +355,7 @@ class Taskhub extends MY_Controller {
 
 		if($this->form_validation->run() == false){			
 
-			$assignedUserData = $this->users_model->getUser($task->assigned_user_id);
+			$assignedUserData = $this->users_model->getUser($task->assigned_employee_ids);
 
 			if($assignedUserData) {
 				$assignedUser['assigned_user_id'] = $assignedUserData->id;
@@ -895,7 +895,7 @@ class Taskhub extends MY_Controller {
 					'status_id' => $taskStatus->status_id,
 					'priority' => $post['priority'],
 					'company_id' => $company_id,
-					'assigned_user_id' => $assigned_to,
+					'assigned_employee_ids' => $assigned_to,
 				];					
 	
 				$process_successful = $this->taskhub_model->trans_update($data, array('task_id' => trim($taskid)));
@@ -957,6 +957,7 @@ class Taskhub extends MY_Controller {
                 'created_by' => $uid,
                 'date_created' => date('Y-m-d h:i:s'),
 				'date_started' => date("Y-m-d",strtotime($this->input->post('date_started'))),
+				'date_due'     => isset($post['date_due']) ? date("Y-m-d",strtotime($post['date_due'])) : null,
                 'estimated_date_complete' => date('Y-m-d', strtotime($post['estimated_date_complete'])),
 				'date_completed' => isset($post['date_completed']) ? $post['date_completed'] : null,
                 'actual_date_complete' => null,
@@ -966,7 +967,7 @@ class Taskhub extends MY_Controller {
                 'priority' => $post['priority'],
                 'company_id' => $cid,
                 'view_count' => 0,
-				'assigned_user_id' => $assigned_to,
+				'assigned_employee_ids' => $assigned_to,
             ];
 
             $taskId = $this->Taskhub_model->create($task_data);
