@@ -58,7 +58,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Listing of all 	commercials.
+                            Listing of all 	Commercial Customers.
                         </div>
                     </div>
                 </div>

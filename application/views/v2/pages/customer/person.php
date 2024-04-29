@@ -59,7 +59,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Listing of all Residentials.
+                            Listing of all Residential Customers.
                         </div>
                     </div>
                 </div>
