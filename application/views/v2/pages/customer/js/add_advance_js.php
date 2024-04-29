@@ -453,10 +453,10 @@
             var is_valid = 1;
             var err_msg = '';
 
-            if ($('#lead_source').val() == null) {
-                is_valid = 0;
-                err_msg = 'Please specify lead source';
-            }
+            // if ($('#lead_source').val() == null) {
+            //     is_valid = 0;
+            //     err_msg = 'Please specify lead source';
+            // }
 
             if (is_valid == 1) {
                 const formArray = form.serializeArray();

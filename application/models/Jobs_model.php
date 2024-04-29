@@ -1026,6 +1026,33 @@ class Jobs_model extends MY_Model
         return $status_number;
     }
 
+    public function getAllByCompanyIdAndStatus($cid, $status)
+    {
+        $this->db->select('*');        
+        $this->db->from($this->table);   
+        $this->db->where('company_id', $cid);
+        $this->db->where('status', $status);
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllPendingByCompanyId($cid)
+    {
+        $current_date = date("Y-m-d");
+
+        $this->db->select('*');        
+        $this->db->from($this->table);   
+        $this->db->where('company_id', $cid);
+        $this->db->where('status !=', 'Completed');
+        $this->db->where('status !=', 'Cancelled');
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
 }
 /* End of file Jobs_model.php */
 /* Location: ./application/models/Jobs_model.php */

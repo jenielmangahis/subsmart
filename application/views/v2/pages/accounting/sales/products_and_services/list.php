@@ -335,14 +335,6 @@
                             </div>
                         </div>
                     </div>
-                    <?php
-                    $total_items = 0;
-                    foreach ($items as $item) {
-                        if (isset($item['qty_on_hand'])) {
-                            $total_items += floatval(str_replace(',', '', $item['qty_on_hand']));
-                        }
-                    }
-                    ?>
                     <div class="col-md-3">
                         <div class="nsm-counter success h-100 mb-2 <?= $stock_status === 'all' ? 'selected' : '' ?>" id="all">
                             <div class="row h-100">
@@ -350,24 +342,12 @@
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <?php if ($total_items > 0) : ?>
-                                        <h2 id="totalItems"><?php echo number_format($total_items, 0) ?></h2>
-                                    <?php else : ?>
-                                        <h2 id="totalItems"><?php echo number_format($total_items, 0) ?></h2>
-                                    <?php endif; ?>
+                                    <h2 id="totalItems"><?php echo number_format($total_items, 0) ?></h2>
                                     <span>TOTAL ITEMS</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <?php
-                    $total_service = 0;
-                    foreach ($items as $item) {
-                        if (isset($item['id']) && !empty($item['id'])) {
-                            $total_service++;
-                        }
-                    }
-                    ?>
                     <div class="col-md-3">
                         <div class="nsm-counter secondary h-100 mb-2 <?= $stock_status === 'all' ? 'selected' : '' ?>" id="all">
                             <div class="row h-100">
@@ -375,11 +355,7 @@
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <?php if ($total_service > 0) : ?>
-                                        <h2 id="totalService"><?php echo number_format($total_service, 0) ?></h2>
-                                    <?php else : ?>
-                                        <h2 id="totalService"><?php echo number_format($total_service, 0) ?></h2>
-                                    <?php endif; ?>
+                                    <h2 id="totalService"><?php echo number_format($total_services, 0) ?></h2>
                                     <span>TOTAL SERVICES</span>
                                 </div>
                             </div>
@@ -458,7 +434,7 @@
                                             <option value="all">All</option>
                                             <option value="0">Uncategorized</option>
                                             <?php foreach ($this->items_model->getItemCategories() as $category) : ?>
-                                                <option value="<?= $category->item_categories_id ?>"><?= $category->name ?></option>
+                                                <option <?= in_array($category->item_categories_id, $selectedCategories) ? 'selected="selected"' : ''; ?> value="<?= $category->item_categories_id ?>"><?= $category->name ?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>

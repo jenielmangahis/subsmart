@@ -4,7 +4,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Feeds_model extends MY_Model {
 
 	public $table = 'feed';
-        private $bulletin = 'news';
+    private $bulletin = 'news';
 	
 	public function __construct()
 	{
@@ -44,7 +44,19 @@ class Feeds_model extends MY_Model {
         $this->db->select('*');
         $this->db->from($this->bulletin);        
         $this->db->where('company_id', $company_id);
+        $this->db->order_by('id', "DESC");
+        
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function getNewsById($id)
+    {
+        $this->db->from($this->bulletin);
+        $this->db->select('*');
+        $this->db->where("id", $id);
+        
+        $query = $this->db->get();
+        return $query->row();
     }
 }

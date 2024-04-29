@@ -131,6 +131,15 @@ class Job extends MY_Controller
 
         $this->page_data['user_type'] = $user_type;
         $this->page_data['employees'] = $employees;
+
+        $scheduledJobs  = $this->jobs_model->getAllByCompanyIdAndStatus($companyId, 'Scheduled');
+        $pendingJobs   = $this->jobs_model->getAllPendingByCompanyId($companyId);
+        $completedJobs = $this->jobs_model->getAllByCompanyIdAndStatus($companyId, 'Completed');
+        
+        $this->page_data['scheduledJobs'] = $scheduledJobs;
+        $this->page_data['pendingJobs'] = $pendingJobs;
+        $this->page_data['completedJobs'] = $completedJobs;
+        
         $this->load->view('v2/pages/job/list', $this->page_data);
     }
 
