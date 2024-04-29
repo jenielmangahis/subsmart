@@ -78,26 +78,137 @@ $('#new-category-button').on('click', function(e) {
 
 $('#categories-table .remove-category').on('click', function(e) {
     e.preventDefault();
-    var row = $(this).closest('tr');
-    
-    $.ajax({
-        url: `/accounting/product-categories/delete/${row.data().id}`,
+    var row = $(this).closest('tr');    
+
+    /*$.ajax({
+        url: base_url + `accounting/product-categories/delete/${row.data().id}`,
         type: 'DELETE',
         success: function(result) {
             location.reload();
         }
+    });*/
+
+    Swal.fire({
+        title: 'Delete Product Category',
+        text: "Are you sure you want to delete this category?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                type: 'DELETE',
+                url: base_url + `accounting/product-categories/delete/${row.data().id}`,
+                dataType: 'json',
+                success: function(result) {
+                    if (result.is_success == 1) {
+                        Swal.fire({
+                            title: 'Delete Successful!',
+                            text: result.msg,
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                                location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'An Error Occured',
+                            text: result.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            //location.reload();
+                        });
+                    }
+                },
+            });
+        }
     });
+    
 });
+
+$("#btn-delete-product-categories").on("click", function() {
+
+    Swal.fire({
+        title: 'Delete All',
+        text: "This will delete all selected product categories. Proceed with action?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                type: 'POST',
+                url: base_url + `accounting/product-categories/_delete_selected_product_categories`,
+                dataType: 'json',
+                data: $('#frm-prod-categories').serialize(),
+                success: function(result) {
+                    if (result.is_success == 1) {
+                        Swal.fire({
+                            title: 'Delete Successful!',
+                            text: "Product categories is successfully deleted!",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'An Error Occured',
+                            text: result.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                //location.reload();
+                            }
+                        });
+                    }
+                },
+            });
+        }
+    });
+});     
 
 $(document).on('click', '#update-category-form #remove-category', function() {
     var split = $('#update-category-form').attr('action').split('/');
     var id = split[split.length - 1];
 
     $.ajax({
-        url: `/accounting/product-categories/delete/${id}`,
+        url: base_url + `accounting/product-categories/delete/${id}`,
         type: 'DELETE',
         success: function(result) {
             location.reload();
         }
     });
 });
+
+
+$(".check-input-all-product-category").click(function() {
+    if (this.checked) {
+        $('.check-input-product-category').each(function() {
+            this.checked = true;
+        });
+        $(".dropdown-item-delete").removeClass("disabled");
+    } else {
+        $('.check-input-product-category').each(function() {
+            this.checked = false;
+        });
+        $('.dropdown-item-delete').addClass('disabled');
+    }
+});
+
+$(".check-input-product-category").click(function() {
+    var count_list_check = $('.check-input-product-category').filter(':checked').length;
+    if (count_list_check > 0) {
+        $(".dropdown-item-delete").removeClass("disabled");
+    } else {
+        $('.dropdown-item-delete').addClass('disabled');
+    }
+})

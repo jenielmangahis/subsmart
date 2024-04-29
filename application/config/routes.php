@@ -627,6 +627,7 @@ $route['accounting/product-categories/create']['post'] = 'accounting_controllers
 $route['accounting/product-categories/get/(:any)'] = 'accounting_controllers/product_categories/get_category_details/$1';
 $route['accounting/product-categories/update/(:any)']['post'] = 'accounting_controllers/product_categories/update/$1';
 $route['accounting/product-categories/delete/(:any)']['DELETE'] = 'accounting_controllers/product_categories/delete/$1';
+$route['accounting/product-categories/_delete_selected_product_categories'] = 'accounting_controllers/product_categories/ajax_delete_selected_product_categories';
 
 $route['accounting/payroll-overview'] = 'accounting/payrolloverview';
 $route['accounting/workers-comp'] = 'accounting/workerscomp';
