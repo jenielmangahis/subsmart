@@ -189,7 +189,7 @@ class Product_categories extends MY_Controller {
         redirect("accounting/product-categories");
     }
 
-    public function delete($id)
+    public function deleteOld($id) //April 29, 2024)
     {
         $name = $this->items_model->getCategory($id)->name;
         $delete = $this->items_model->deleteCategory($id);
@@ -201,6 +201,57 @@ class Product_categories extends MY_Controller {
         } else {
             $this->session->set_flashdata('error', "Please try again!");
         }
+    }    
+
+    public function delete($id)
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $name   = $this->items_model->getCategory($id)->name;
+        $delete = $this->items_model->deleteCategory($id);
+
+        $removeItemCategories = $this->items_model->remove_item_categories($id);
+
+        if($delete) {
+            $is_success = 1;
+            $msg = "Product category successfully deleted!";
+        } else {
+            $is_success = 0;
+            $msg = "Error deleting category";
+        }
+     
+		$json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);          
+    }
+
+    public function ajax_delete_selected_product_categories()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post_data = $this->input->post();	
+		if(!empty($post_data) && isset($post_data['catid'])) {
+
+            foreach($post_data['catid'] as $id) {
+
+                $name   = $this->items_model->getCategory($id)->name;
+                $delete = $this->items_model->deleteCategory($id);    
+                
+                if($delete) {
+                    $is_success = 1;
+                    $msg = "Delete tasks successful.";
+                }
+
+            }
+
+			$json_data = ['is_success' => $is_success, 'msg' => $msg];
+			echo json_encode($json_data);  			
+		} else {
+			$json_data = ['is_success' => 0, 'msg' => 'No selected task'];
+			echo json_encode($json_data);  			
+
+		}        
     }
 
     public function load_product_categories()
