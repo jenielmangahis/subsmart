@@ -895,7 +895,7 @@ class Taskhub extends MY_Controller {
 					'status_id' => $taskStatus->status_id,
 					'priority' => $post['priority'],
 					'company_id' => $company_id,
-					'assigned_employee_ids' => $assigned_to,
+					'assigned_employee_ids' => $assigned_to, 
 				];					
 	
 				$process_successful = $this->taskhub_model->trans_update($data, array('task_id' => trim($taskid)));
