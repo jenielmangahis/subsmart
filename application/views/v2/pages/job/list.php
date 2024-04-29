@@ -141,7 +141,49 @@ foreach ($jobs as $job) {
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-4">
+                        <div class="nsm-counter primary h-100 mb-2">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-calendar'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id=""><?= count($scheduledJobs); ?></h2>
+                                    <span>Total Scheduled Jobs</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="nsm-counter secondary h-100 mb-2">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-calendar-exclamation'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id=""><?= count($pendingJobs); ?></h2>
+                                    <span>Total Pending Jobs</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="nsm-counter success h-100 mb-2">
+                            <div class="row h-100">
+                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                    <i class='bx bx-calendar-check'></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id=""><?= count($completedJobs); ?></h2>
+                                    <span>Total Completed Jobs</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-5">
                     <div class="col-6 grid-mb">
                         <div class="nsm-field-group search form-group">
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="CUSTOM_JOB_SEARCHBAR" placeholder="Search Job...">
@@ -241,6 +283,7 @@ foreach ($jobs as $job) {
                             <td>
                                 <?php
                                     $employeeFields = [
+                                        'employee_id',
                                         'employee2_id',
                                         'employee3_id',
                                         'employee4_id',

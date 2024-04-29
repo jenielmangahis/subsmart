@@ -415,11 +415,14 @@ $('.export-items').on('click', function () {
         $('body').append('<form action="/accounting/products-and-services/export-table" method="post" id="export-form"></form>');
     }
 
-
     var fields = $('.dropdown-menu.table-settings input[name="col_chk"]:checked');
     fields.each(function () {
         $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('id').replace('_chk', '')}">`);
     });
+
+    // Add default values for empty rows
+    $('#export-form').append(`<input type="hidden" name="default_name" value="Default Name">`);
+    $('#export-form').append(`<input type="hidden" name="default_quantity" value="0">`);
 
     $('#export-form').append(`<input type="hidden" name="search" value="${$('#search_field').val()}">`);
     $('#export-form').append(`<input type="hidden" name="status" value="${$('#filter-status').val()}">`);
@@ -435,6 +438,7 @@ $('.export-items').on('click', function () {
 
     $('#export-form').submit();
 });
+
 
 $('#export-form').on('submit', function (e) {
     e.preventDefault();

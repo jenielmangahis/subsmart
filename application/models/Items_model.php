@@ -63,7 +63,7 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    
+
     public function getUserByID($id)
     {
         $this->db->select('*');
@@ -102,7 +102,7 @@ class Items_model extends MY_Model
         $insert = $this->db->insert($this->table_categories, $data);
         return $this->db->insert_id();
     }
-    
+
     public function getCategory($id)
     {
         return $this->db->where(['company_id' => getLoggedCompanyID(), 'item_categories_id' => $id])->get($this->table_categories)->row();
@@ -139,7 +139,7 @@ class Items_model extends MY_Model
         if ($company_id > 0) {
             $this->db->where('company_id', $company_id);
         }
-        
+
         $this->db->where('type', $type);
 
         if (!empty($filters)) {
@@ -154,17 +154,17 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-   public function getByCompanyId($company_id, $filters = [])
+    public function getByCompanyId($company_id, $filters = [])
     {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
-        if( $filters ){
+        if ($filters) {
             $count = 1;
-            foreach( $filters as $value ){
-                if( $count == 1 ){                    
+            foreach ($filters as $value) {
+                if ($count == 1) {
                     $this->db->where($value['field'], $value['value']);
-                }else{
+                } else {
                     $this->db->or_where($value['field'], $value['value']);
                 }
                 $count++;
@@ -182,18 +182,18 @@ class Items_model extends MY_Model
         $this->db->where('company_id', $company_id);
         $this->db->where('type', 'Service');
         $this->db->where('is_active', 1);
-        if( $filters ){
+        if ($filters) {
             $count = 1;
-            foreach( $filters as $value ){
-                if( $count == 1 ){                    
+            foreach ($filters as $value) {
+                if ($count == 1) {
                     $this->db->where($value['field'], $value['value']);
-                }else{
+                } else {
                     $this->db->or_where($value['field'], $value['value']);
                 }
                 $count++;
             }
         }
-        
+
         $this->db->order_by('id', 'DESC');
         $query = $this->db->get();
         return $query->result();
@@ -211,6 +211,17 @@ class Items_model extends MY_Model
         }
         $this->db->order_by($columnName, $order);
         $query = $this->db->get($this->table);
+        return $query->result();
+    }
+
+    public function getService()
+    {
+        $this->db->where('company_id', getLoggedCompanyID());
+        $this->db->where('is_active', 1);
+        $this->db->where('type', 'Service');
+
+        $query = $this->db->get($this->table);
+
         return $query->result();
     }
 
@@ -282,13 +293,13 @@ class Items_model extends MY_Model
     {
         $this->db->select('*');
         $this->db->from($this->table);
-        
+
         if (array_key_exists("where", $params)) {
             foreach ($params['where'] as $key => $val) {
                 $this->db->where($key, $val);
             }
         }
-        
+
         if (array_key_exists("returnType", $params) && $params['returnType'] == 'count') {
             $result = $this->db->count_all_results();
         } else {
@@ -303,12 +314,12 @@ class Items_model extends MY_Model
                 } elseif (!array_key_exists("start", $params) && array_key_exists("limit", $params)) {
                     $this->db->limit($params['limit']);
                 }
-                
+
                 $query = $this->db->get();
-                $result = ($query->num_rows() > 0)?$query->result_array():false;
+                $result = ($query->num_rows() > 0) ? $query->result_array() : false;
             }
         }
-        
+
         // Return fetched data
         return $result;
     }
@@ -317,7 +328,7 @@ class Items_model extends MY_Model
     {
         if (!empty($data)) {
             $insert = $this->db->insert($this->table, $data);
-            return $insert?$this->db->insert_id():false;
+            return $insert ? $this->db->insert_id() : false;
         }
         return false;
     }
@@ -329,12 +340,12 @@ class Items_model extends MY_Model
             if (!array_key_exists("modified", $data)) {
                 $data['modified'] = date("Y-m-d H:i:s");
             }
-            
+
             // Update member data
             $update = $this->db->update($this->table, $data, $condition);
-            
+
             // Return the status
-            return $update?true:false;
+            return $update ? true : false;
         }
         return false;
     }
@@ -385,7 +396,7 @@ class Items_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table_has_location);
         $this->db->where('item_id', $id);
-        if( $role_id !== 1 && $role_id !== 2 ){
+        if ($role_id !== 1 && $role_id !== 2) {
             $this->db->where('company_id', $COMPANY_ID);
         }
         $query = $this->db->get();
@@ -398,41 +409,41 @@ class Items_model extends MY_Model
         $role_id = intval(logged('role'));
         $this->db->select('*');
         $this->db->from($this->table_has_location);
-        if( $role_id !== 1 && $role_id !== 2 ){
+        if ($role_id !== 1 && $role_id !== 2) {
             $this->db->where('company_id', $COMPANY_ID);
         }
         $query = $this->db->get();
         return $query->result_array();
     }
-    public function _updateLocationQty($params){
+    public function _updateLocationQty($params)
+    {
         $is_valid = 0;
-        if(array_key_exists("set", $params)){
-            foreach($params['set'] as $key => $val){
+        if (array_key_exists("set", $params)) {
+            foreach ($params['set'] as $key => $val) {
                 if ($key === 'qty' && is_numeric($val)) {
-                    $this->db->set($key, $key.' - '.$val, false);
+                    $this->db->set($key, $key . ' - ' . $val, false);
                     $is_valid = 1;
                 }
             }
         }
 
-        if(array_key_exists("where", $params)){
-            foreach($params['where'] as $key => $val){
-                if( $val != '' ){
-                    $this->db->where($key, $val);    
-                }else{
-                    if( $val == 0 ){
-                        $this->db->where($key, $val);  
-                    }else{
-                        $this->db->where($key); 
+        if (array_key_exists("where", $params)) {
+            foreach ($params['where'] as $key => $val) {
+                if ($val != '') {
+                    $this->db->where($key, $val);
+                } else {
+                    if ($val == 0) {
+                        $this->db->where($key, $val);
+                    } else {
+                        $this->db->where($key);
                     }
                 }
-                
             }
         }
 
-        if( $is_valid == 1 ){
+        if ($is_valid == 1) {
             $this->db->update($this->table_has_location);
-        }        
+        }
     }
     public function getLocationById($id)
     {
@@ -463,12 +474,13 @@ class Items_model extends MY_Model
     {
         if (!empty($data)) {
             $insert = $this->db->insert($this->table_has_location, $data);
-            return $insert?$this->db->insert_id():false;
+            return $insert ? $this->db->insert_id() : false;
         }
         return false;
     }
 
-    public function checkAndSaveItemLocation($item_id, $loc_id, $qty,  $data = array()) {
+    public function checkAndSaveItemLocation($item_id, $loc_id, $qty,  $data = array())
+    {
         $this->db->select('items_has_storage_loc.loc_id, items_has_storage_loc.name, items_has_storage_loc.qty');
         $this->db->from('items_has_storage_loc');
         $this->db->where('items_has_storage_loc.item_id', $item_id);
@@ -479,14 +491,16 @@ class Items_model extends MY_Model
         // =====
         if (count($result) == 0) {
             $this->db->select('loc_id, location_name');
-            $this->db->from('storage_loc'); 
+            $this->db->from('storage_loc');
             $this->db->where('loc_id', $loc_id);
             $query = $this->db->get();
             $data['name'] = $query->result()[0]->location_name;
             $insertNewLocation = $this->db->insert($this->table_has_location, $data);
         } else {
-            $updateItem = $this->db->update('items_has_storage_loc', 
-                ['qty' => $query->result()[0]->qty + $qty], array(
+            $updateItem = $this->db->update(
+                'items_has_storage_loc',
+                ['qty' => $query->result()[0]->qty + $qty],
+                array(
                     'item_id' => $item_id,
                     'loc_id' => $loc_id,
                 )
@@ -558,13 +572,13 @@ class Items_model extends MY_Model
     {
         $items = $this->getLocationByItemId($item_id);
         $qty = 0;
-        for ($i=0;$i<count($items);$i++) {
+        for ($i = 0; $i < count($items); $i++) {
             $qty += intval($items[$i]['qty']);
         }
 
         return $qty;
     }
-    
+
     public function getoffercode($offer_code)
     {
         $this->db->select('*');
@@ -604,7 +618,7 @@ class Items_model extends MY_Model
         $where = array(
             'type' => 'Work Order',
             'type_id'   => $id
-          );
+        );
 
         $this->db->select('*');
         $this->db->from('item_details');
@@ -618,7 +632,7 @@ class Items_model extends MY_Model
         $where = array(
             // 'type' => 'Work Order Alarm',
             'work_orders_items.work_order_id'   => $id
-          );
+        );
 
         $this->db->select('*, work_orders_items.total AS iTotal, work_orders_items.cost AS iCost, work_orders_items.tax AS itax');
         $this->db->from('work_orders_items');
@@ -635,17 +649,17 @@ class Items_model extends MY_Model
         $query = $this->db->get($this->table_has_location);
         return $query->row();
     }
-    public function deleteLocation($id, $storage= FALSE)
+    public function deleteLocation($id, $storage = FALSE)
     {
-        if($storage){
+        if ($storage) {
             $this->db->where('loc_id', $id);
             $delete = $this->db->delete('storage_loc');
-        }else{
+        } else {
             $this->db->where('id', $id);
             $delete = $this->db->delete($this->table_has_location);
         }
         return $delete ? true : false;
-    }    
+    }
     public function updateLocationQty($locationId, $itemId, $newQty)
     {
         $this->db->where('item_id', $itemId);
@@ -718,8 +732,8 @@ class Items_model extends MY_Model
         $this->db->where('company_id', $companyId);
         $this->db->where('title', $itemName);
         $this->db->where('is_active', $status);
-        
-        if(!is_null($exceptId)) {
+
+        if (!is_null($exceptId)) {
             $this->db->where('id !=', $exceptId);
         }
 
@@ -733,7 +747,7 @@ class Items_model extends MY_Model
         $this->db->where('name', $packageName);
         $this->db->where('status', $status);
 
-        if(!is_null($exceptId)) {
+        if (!is_null($exceptId)) {
             $this->db->where('id !=', $exceptId);
         }
 
@@ -758,7 +772,7 @@ class Items_model extends MY_Model
     public function get_custom_field_by_id($id)
     {
         $this->db->where('id', $id);
-        $query = $this->db->get($this->table_custom_fields);        
+        $query = $this->db->get($this->table_custom_fields);
         return $query->row();
     }
 
@@ -799,7 +813,7 @@ class Items_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
-    
+
     public function getLocationStorage()
     {
         $company_id = logged('company_id');
@@ -810,14 +824,16 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllLocation() {
+    public function getAllLocation()
+    {
         $this->db->select('*');
         $this->db->from('storage_loc');
         $query = $this->db->get();
         return $query->result();
     }
 
-    public function recordItemTransaction($item_id, $quantity, $location_id, $transactionType, $name_transaction, $name_type) {
+    public function recordItemTransaction($item_id, $quantity, $location_id, $transactionType, $name_transaction, $name_type)
+    {
 
         if ($transactionType == "add") {
             // =====
@@ -848,7 +864,7 @@ class Items_model extends MY_Model
         }
         if ($transactionType == "deduct") {
             // =====
-            $this->db->select('items_has_storage_loc.name, items_has_storage_loc.qty, (SELECT SUM(qty) FROM items_has_storage_loc WHERE item_id = "'.$item_id.'") AS TOTAL_QUANTITY');
+            $this->db->select('items_has_storage_loc.name, items_has_storage_loc.qty, (SELECT SUM(qty) FROM items_has_storage_loc WHERE item_id = "' . $item_id . '") AS TOTAL_QUANTITY');
             $this->db->from('items_has_storage_loc');
             $this->db->where('items_has_storage_loc.item_id', $item_id);
             $this->db->where('items_has_storage_loc.loc_id', $location_id);
@@ -861,8 +877,10 @@ class Items_model extends MY_Model
             // if ($newQuantity <= 0) { $newQuantity = 0; }
             // =====
             if ($name_type == "USER") {
-                $updateItem = $this->db->update('items_has_storage_loc', 
-                    ['qty' => $newQuantity], array(
+                $updateItem = $this->db->update(
+                    'items_has_storage_loc',
+                    ['qty' => $newQuantity],
+                    array(
                         'item_id' => $item_id,
                         'loc_id' => $location_id,
                     )
@@ -877,7 +895,6 @@ class Items_model extends MY_Model
                     'name_transaction' => $name_transaction,
                     'name_type' => $name_type,
                 ];
-
             } else {
                 $transactionDetails = [
                     'search_id' => md5($item_id),
@@ -896,7 +913,8 @@ class Items_model extends MY_Model
         return "true";
     }
 
-    public function getItemTransactionHistory($TYPE) {
+    public function getItemTransactionHistory($TYPE)
+    {
         $this->db->select('*');
         $this->db->from('items_transaction_history');
         $this->db->where('name_type', $TYPE);
@@ -904,12 +922,14 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    public function clearDefaultLocation() {
-        $data = [ 'default' => "" ];
-       $this->db->update('storage_loc', $data); 
+    public function clearDefaultLocation()
+    {
+        $data = ['default' => ""];
+        $this->db->update('storage_loc', $data);
     }
 
-    public function getSelectedLocation($item_id) {
+    public function getSelectedLocation($item_id)
+    {
         $this->db->select('items_has_storage_loc.loc_id, storage_loc.location_name');
         $this->db->from('items_has_storage_loc');
         $this->db->join('storage_loc', 'storage_loc.loc_id = items_has_storage_loc.loc_id', 'left');
@@ -932,18 +952,18 @@ class Items_model extends MY_Model
         return $this->db->insert_id();
     }
 
-    public function getAllIsActiveByCompanyIdAndItemType($company_id,$item_type, $search=array())
+    public function getAllIsActiveByCompanyIdAndItemType($company_id, $item_type, $search = array())
     {
         $this->db->select('items.*,item_categories.name AS category_name');
         $this->db->from($this->table);
-        $this->db->join('item_categories', 'items.item_categories_id = item_categories.item_categories_id','left');
+        $this->db->join('item_categories', 'items.item_categories_id = item_categories.item_categories_id', 'left');
         $this->db->where('items.company_id', $company_id);
         $this->db->where('items.type', $item_type);
         $this->db->where('items.is_active', 1);
 
-        if( !empty($search) ){
+        if (!empty($search)) {
             $this->db->group_start();
-            foreach($search as $s){
+            foreach ($search as $s) {
                 $this->db->or_like($s['field'], $s['value'], 'both');
             }
             $this->db->group_end();
@@ -953,10 +973,11 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllItemStorageQuantityByItemId($item_id){
+    public function getAllItemStorageQuantityByItemId($item_id)
+    {
         $this->db->select('items_has_storage_loc.*,storage_loc.location_name AS storage_location');
         $this->db->from($this->table_has_location);
-        $this->db->join('storage_loc', 'items_has_storage_loc.loc_id = storage_loc.loc_id','left');
+        $this->db->join('storage_loc', 'items_has_storage_loc.loc_id = storage_loc.loc_id', 'left');
         $this->db->where('items_has_storage_loc.item_id', $item_id);
         $query = $this->db->get();
         return $query->result();

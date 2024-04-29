@@ -5,11 +5,11 @@
                 <span>Dashboard</span>
             </a>
         </li>
-        <li class="<?php if($page->tab == 'Products'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('more/addon/booking/products') ?>'">
+        <!-- <li class="<?php if($page->tab == 'Products'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('more/addon/booking/products') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
                 <span>My Service / Items</span>
             </a>
-        </li>
+        </li> -->
         <li class="<?php if($page->tab == 'Time Slots'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('more/addon/booking/time') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
                 <span>Time Slots</span>

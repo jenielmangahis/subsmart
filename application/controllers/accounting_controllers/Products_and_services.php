@@ -1,11 +1,12 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Products_and_services extends MY_Controller {
-	
-	public function __construct()
+class Products_and_services extends MY_Controller
+{
+
+    public function __construct()
     {
-		parent::__construct();
+        parent::__construct();
         $this->checkLogin();
         $this->load->model('accounting_attachments_model');
         $this->load->model('TaxRates_model');
@@ -55,7 +56,7 @@ class Products_and_services extends MY_Controller {
             "assets/js/accounting/sales/customer_includes/send_reminder_by_batch_modal.js"
         ));
 
-		$this->page_data['menu_name'] =
+        $this->page_data['menu_name'] =
             array(
                 // array("Dashboard",	array()),
                 // array("Banking", 	array('Link Bank','Rules','Receipts','Tags')),
@@ -115,12 +116,28 @@ class Products_and_services extends MY_Controller {
 
         $outOfStock = 0;
         $lowStock = 0;
-        foreach($products as $product) {
+        $totalItems = 0;
+
+        foreach ($products as $product) {
+            if ($product->type === 'Service') {
+                continue;
+            }
+
             $totalQty = $this->items_model->countQty($product->id);
             $reorderPoint = intval($product->re_order_points);
 
             $outOfStock += $totalQty === 0 ? 1 : 0;
             $lowStock += $totalQty <= $reorderPoint ? 1 : 0;
+
+            $totalItems += $totalQty;
+        }
+
+        $totalServices = 0;
+
+        $items = $this->items_model->getService();
+
+        foreach ($items as $item) {
+            $totalServices += $item;
         }
 
         $filters = [
@@ -130,17 +147,17 @@ class Products_and_services extends MY_Controller {
         ];
 
 
-        if(!empty(get('stock-status'))) {
+        if (!empty(get('stock-status'))) {
             $filters['stock_status'] = get('stock-status');
             $this->page_data['stock_status'] = get('stock-status');
         }
 
         $selectedCategories = [];
-        if(!is_null($this->input->get('category'))) {
+        if (!is_null($this->input->get('category'))) {
             $itemCategories = $this->items_model->getItemCategories();
             $selectedCategories = explode(',', $this->input->get('category'));
 
-            if(in_array('0', $selectedCategories)) {
+            if (in_array('0', $selectedCategories)) {
                 array_unshift($selectedCategories, '');
                 array_unshift($selectedCategories, null);
                 $filters['category'] = [
@@ -150,73 +167,72 @@ class Products_and_services extends MY_Controller {
                 ];
             }
 
-            foreach($itemCategories as $itemCat) {
-                if(in_array($itemCat->item_categories_id, $selectedCategories)) {
+            foreach ($itemCategories as $itemCat) {
+                if (in_array($itemCat->item_categories_id, $selectedCategories)) {
                     $filters['category'][] = $itemCat->item_categories_id;
                 }
             }
-            
         }
 
         $this->page_data['selectedCategories'] = $selectedCategories;
 
-        if(!empty(get('search'))) {
+        if (!empty(get('search'))) {
             $filters['search'] = get('search');
             $this->page_data['search'] = get('search');
         }
 
-        if(!empty(get('status'))) {
-            switch(get('status')) {
-                case 'inactive' :
+        if (!empty(get('status'))) {
+            switch (get('status')) {
+                case 'inactive':
                     $filters['status'] = [
                         0
                     ];
-                break;
-                case 'all' :
+                    break;
+                case 'all':
                     $filters['status'] = [
                         0,
                         1
                     ];
-                break;
+                    break;
             }
             $this->page_data['status'] = get('status');
         }
 
-        if(!empty(get('type'))) {
-            switch(get('type')) {
-                case 'inventory' :
+        if (!empty(get('type'))) {
+            switch (get('type')) {
+                case 'inventory':
                     $filters['type'] = [
                         'product',
                         'Product',
                         'inventory',
                         'Inventory'
                     ];
-                break;
-                case 'non-inventory' :
+                    break;
+                case 'non-inventory':
                     $filters['type'] = [
                         'material',
                         'Material',
                         'non-inventory',
                         'Non-inventory'
                     ];
-                break;
-                case 'service' :
+                    break;
+                case 'service':
                     $filters['type'] = [
                         'service',
                         'Service'
                     ];
-                break;
-                case 'bundle' :
+                    break;
+                case 'bundle':
                     $filters['type'] = [
                         'bundle',
                         'Bundle'
                     ];
-                break;
+                    break;
             }
             $this->page_data['type'] = get('type');
         }
 
-        if(!empty(get('group-by-category'))) {
+        if (!empty(get('group-by-category'))) {
             $filters['group_by_category'] = "1";
             $this->page_data['group_by_category'] = "1";
         }
@@ -224,6 +240,8 @@ class Products_and_services extends MY_Controller {
         $this->page_data['items'] = $this->get_items($filters);
         $this->page_data['low_stock_count'] = $lowStock;
         $this->page_data['out_of_stock'] = $outOfStock;
+        $this->page_data['total_items'] = $totalItems;
+        $this->page_data['total_services'] = $totalServices;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page_title'] = "Product and Services";
         $this->load->view('v2/pages/accounting/sales/products_and_services/list', $this->page_data);
@@ -232,24 +250,24 @@ class Products_and_services extends MY_Controller {
     private function get_items($filters)
     {
         $data = [];
-        if($filters['type'][0] !== 'bundle' || !isset($filters['type'])) {
+        if ($filters['type'][0] !== 'bundle' || !isset($filters['type'])) {
             $items = $this->items_model->getItemsWithFilter($filters);
 
-            foreach($items as $item) {
+            foreach ($items as $item) {
                 $qty = $this->items_model->countQty($item->id);
                 $accountingDetails = $this->items_model->getItemAccountingDetails($item->id);
-    
-                if($item->attached_image !== null && $item->attached_image !== "") {
+
+                if ($item->attached_image !== null && $item->attached_image !== "") {
                     $icon = "/uploads/$item->attached_image";
-                } else if($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
+                } else if ($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
                     $attachment = $this->accounting_attachments_model->getById($accountingDetails->attachment_id);
                     $icon = "/uploads/accounting/attachments/$attachment->stored_name";
                 } else {
                     $icon = "";
                 }
-    
-                if(isset($filters['search']) && $filters['search'] !== "") {
-                    if(stripos($item->title, $filters['search']) !== false) {
+
+                if (isset($filters['search']) && $filters['search'] !== "") {
+                    if (stripos($item->title, $filters['search']) !== false) {
                         $data[] = [
                             'id' => $item->id,
                             'name' => $item->title,
@@ -318,14 +336,16 @@ class Products_and_services extends MY_Controller {
             }
         }
 
-        if($filters['type'][0] === 'bundle' && !is_null($filters['category']) && in_array('0', $filters['category']) || !isset($filters['type']) && !is_null($filters['category']) && in_array('0', $filters['category']) ||
-            $filters['type'][0] === 'bundle' && is_null($filters['category']) || !isset($filters['type']) && is_null($filters['category'])) {
+        if (
+            $filters['type'][0] === 'bundle' && !is_null($filters['category']) && in_array('0', $filters['category']) || !isset($filters['type']) && !is_null($filters['category']) && in_array('0', $filters['category']) ||
+            $filters['type'][0] === 'bundle' && is_null($filters['category']) || !isset($filters['type']) && is_null($filters['category'])
+        ) {
             $packages = $this->items_model->get_company_packages(logged('company_id'), $filters);
-            foreach($packages as $package) {
+            foreach ($packages as $package) {
                 $packageItems = $this->items_model->get_package_items($package->id);
 
                 $bundleItems = [];
-                foreach($packageItems as $packageItem) {
+                foreach ($packageItems as $packageItem) {
                     $item = $this->items_model->getItemById($packageItem->item_id)[0];
 
                     $bundleItems[] = [
@@ -338,15 +358,15 @@ class Products_and_services extends MY_Controller {
 
                 $accountingDetails = $this->items_model->getPackageAccountingDetails($package->id);
 
-                if($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
+                if ($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
                     $attachment = $this->accounting_attachments_model->getById($accountingDetails->attachment_id);
                     $icon = "/uploads/accounting/attachments/$attachment->stored_name";
                 } else {
                     $icon = "";
                 }
 
-                if(isset($filters['search']) && $filters['search'] !== "") {
-                    if(stripos($package->name, $filters['search']) !== false) {
+                if (isset($filters['search']) && $filters['search'] !== "") {
+                    if (stripos($package->name, $filters['search']) !== false) {
                         $data[] = [
                             'id' => $package->id,
                             'name' => $package->name,
@@ -415,15 +435,15 @@ class Products_and_services extends MY_Controller {
             }
         }
 
-        if(isset($filters['stock_status']) && $filters['stock_status'] !== 'all') {
-            $data = array_filter($data, function($item) use ($filters) {
+        if (isset($filters['stock_status']) && $filters['stock_status'] !== 'all') {
+            $data = array_filter($data, function ($item) use ($filters) {
                 $invArray = [
                     'product',
                     'Product',
                     'inventory',
                     'Inventory'
                 ];
-                if($filters['stock_status'] === 'low-stock') {
+                if ($filters['stock_status'] === 'low-stock') {
                     return $item['qty_on_hand'] <= intval($item['reorder_point']) && in_array($item['type'], $invArray);
                 } else {
                     return $item['qty_on_hand'] === 0 && in_array($item['type'], $invArray);
@@ -431,24 +451,24 @@ class Products_and_services extends MY_Controller {
             });
         }
 
-        usort($data, function($a, $b) use ($order, $columnName) {
+        usort($data, function ($a, $b) use ($order, $columnName) {
             return strcasecmp($a['name'], $b['name']);
         });
 
-        if(isset($filters['group_by_category']) && $filters['group_by_category'] === "1" || isset($filters['group_by_category']) && $filters['group_by_category'] === 1) {
-            $uncategorized = array_filter($data, function($item) {
+        if (isset($filters['group_by_category']) && $filters['group_by_category'] === "1" || isset($filters['group_by_category']) && $filters['group_by_category'] === 1) {
+            $uncategorized = array_filter($data, function ($item) {
                 return in_array($item['category_id'], ['0', null, '']);
             });
 
             $categories = $this->items_model->getItemCategories();
 
             $categorized = [];
-            foreach($categories as $category) {
-                $catItems = array_filter($data, function($item) use ($category) {
+            foreach ($categories as $category) {
+                $catItems = array_filter($data, function ($item) use ($category) {
                     return $item['category_id'] === $category->item_categories_id;
                 });
 
-                if(!empty($catItems)) {
+                if (!empty($catItems)) {
                     $categorized[] = [
                         'is_category' => true,
                         'id' => '',
@@ -468,7 +488,7 @@ class Products_and_services extends MY_Controller {
                         'reorder_point' => '',
                         'item_categories_id' => ''
                     ];
-                    foreach($catItems as $value) {
+                    foreach ($catItems as $value) {
                         $categorized[] = $value;
                     }
                 }
@@ -476,7 +496,7 @@ class Products_and_services extends MY_Controller {
 
             $data = $uncategorized;
 
-            foreach($categorized as $itemWC) {
+            foreach ($categorized as $itemWC) {
                 $data[] = $itemWC;
             }
         }
@@ -486,7 +506,7 @@ class Products_and_services extends MY_Controller {
 
     public function inactive($type, $id)
     {
-        if($type === 'bundle') {
+        if ($type === 'bundle') {
             $package = $this->items_model->get_package_by_id($id);
         } else {
             $item = $this->items_model->getItemById($id)[0];
@@ -494,7 +514,7 @@ class Products_and_services extends MY_Controller {
 
         $attempt = 0;
         do {
-            if($type === 'bundle') {
+            if ($type === 'bundle') {
                 $name = $attempt > 0 ? "$package->name (deleted-$attempt)" : "$package->name (deleted)";
                 $checkName = $this->items_model->check_package_name(logged('company_id'), $name, 0);
             } else {
@@ -503,7 +523,7 @@ class Products_and_services extends MY_Controller {
             }
 
             $attempt++;
-        } while(!is_null($checkName));
+        } while (!is_null($checkName));
 
         $data = [
             'id' => $id,
@@ -511,13 +531,13 @@ class Products_and_services extends MY_Controller {
             'company_id' => logged('company_id')
         ];
 
-        if($type === 'bundle') {
+        if ($type === 'bundle') {
             $inactive = $this->items_model->inactivePackage($data);
         } else {
             $inactive = $this->items_model->inactiveItem($data);
         }
 
-        if($inactive) {
+        if ($inactive) {
             $this->session->set_flashdata('success', "Item is now inactive.");
         } else {
             $this->session->set_flashdata('error', "Please try again!");
@@ -526,7 +546,7 @@ class Products_and_services extends MY_Controller {
 
     public function active($type, $id)
     {
-        if($type === 'bundle') {
+        if ($type === 'bundle') {
             $package = $this->items_model->get_package_by_id($id);
             $explode = explode(' ', $package->name);
         } else {
@@ -538,7 +558,7 @@ class Products_and_services extends MY_Controller {
 
         $attempt = 0;
         do {
-            if($type === 'bundle') {
+            if ($type === 'bundle') {
                 $name = $attempt > 0 ? "$newName - $attempt" : $newName;
                 $checkName = $this->items_model->check_package_name(logged('company_id'), $name, 1);
             } else {
@@ -547,7 +567,7 @@ class Products_and_services extends MY_Controller {
             }
 
             $attempt++;
-        } while(!is_null($checkName));
+        } while (!is_null($checkName));
 
         $data = [
             'id' => $id,
@@ -555,13 +575,13 @@ class Products_and_services extends MY_Controller {
             'company_id' => logged('company_id')
         ];
 
-        if($type === 'bundle') {
+        if ($type === 'bundle') {
             $active = $this->items_model->activePackage($data);
         } else {
             $active = $this->items_model->activeItem($data);
         }
 
-        if($active) {
+        if ($active) {
             $this->session->set_flashdata('success', "Item is now active.");
         } else {
             $this->session->set_flashdata('error', "Please try again!");
@@ -573,7 +593,7 @@ class Products_and_services extends MY_Controller {
         $input = $this->input->post();
         $name = $input['name'];
 
-        if($_FILES['icon']['name'] !== "") {
+        if ($_FILES['icon']['name'] !== "") {
             $files = [
                 'name' => [
                     $_FILES['icon']['name']
@@ -597,7 +617,7 @@ class Products_and_services extends MY_Controller {
 
         $attempt = 0;
         do {
-            if($type === 'bundle') {
+            if ($type === 'bundle') {
                 $name = $attempt > 0 ? "$name - $attempt" : $name;
                 $checkName = $this->items_model->check_package_name(logged('company_id'), $name, 1);
             } else {
@@ -606,12 +626,12 @@ class Products_and_services extends MY_Controller {
             }
 
             $attempt++;
-        } while(!is_null($checkName));
+        } while (!is_null($checkName));
 
-        switch($type) {
-            case 'bundle' :
+        switch ($type) {
+            case 'bundle':
                 $amountSet = 0.00;
-                foreach($input['item'] as $key => $value) {
+                foreach ($input['item'] as $key => $value) {
                     $item = $this->items_model->getItemById($value)[0];
 
                     $subTotal = floatval($item->price) * floatval($input['quantity'][$key]);
@@ -630,8 +650,8 @@ class Products_and_services extends MY_Controller {
                 ];
 
                 $create = $this->workorder_model->addPackage($packageDetails);
-            break;
-            case 'product' :
+                break;
+            case 'product':
                 $data = [
                     'company_id' => logged('company_id'),
                     'title' => $name,
@@ -646,8 +666,8 @@ class Products_and_services extends MY_Controller {
                     'cost' => $input['cost'],
                     'is_active' => 1
                 ];
-            break;
-            default :
+                break;
+            default:
                 $data = [
                     'company_id' => logged('company_id'),
                     'title' => $name,
@@ -660,16 +680,16 @@ class Products_and_services extends MY_Controller {
                     'cost' => isset($input['purchasing']) ? $input['cost'] : null,
                     'is_active' => 1
                 ];
-            break;
+                break;
         }
 
-        if($type !== 'bundle') {
+        if ($type !== 'bundle') {
             $create = $this->items_model->create($data);
         }
 
-        if($create) {
-            switch($type) {
-                case 'bundle' :
+        if ($create) {
+            switch ($type) {
+                case 'bundle':
                     $accountingDetails = [
                         'package_id' => $create,
                         'attachment_id' => isset($attachmentId) ? $attachmentId : null,
@@ -678,7 +698,7 @@ class Products_and_services extends MY_Controller {
                     ];
                     $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
 
-                    foreach($input['item'] as $key => $value) {
+                    foreach ($input['item'] as $key => $value) {
                         $item = $this->items_model->getItemById($value)[0];
 
                         $packageItemData = [
@@ -688,11 +708,11 @@ class Products_and_services extends MY_Controller {
                             'price' => number_format(floatval($item->price), 2, '.', ','),
                             'quantity' => $input['quantity'][$key]
                         ];
-            
+
                         $addPackageItem = $this->workorder_model->addItemPackage($packageItemData);
                     }
-                break;
-                case 'product' :
+                    break;
+                case 'product':
                     $accountingDetails = [
                         'item_id' => $create,
                         'attachment_id' => isset($attachmentId) ? $attachmentId : null,
@@ -706,10 +726,10 @@ class Products_and_services extends MY_Controller {
                         'expense_account_id' => $input['item_expense_account'],
                     ];
                     $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
-    
+
                     $locations = [];
-                    foreach($input['location_id'] as $key => $loc_id) {
-                        if($loc_id !== "") {
+                    foreach ($input['location_id'] as $key => $loc_id) {
+                        if ($loc_id !== "") {
                             $locations[] = [
                                 'company_id' => logged('company_id'),
                                 'qty' => $input['quantity'][$key],
@@ -721,8 +741,8 @@ class Products_and_services extends MY_Controller {
                         }
                     }
                     $addItemLocs = $this->items_model->saveBatchItemLocation($locations);
-                break;
-                default :
+                    break;
+                default:
                     $accountingDetails = [
                         'item_id' => $create,
                         'attachment_id' => isset($attachmentId) ? $attachmentId : null,
@@ -733,7 +753,7 @@ class Products_and_services extends MY_Controller {
                         'expense_account_id' => isset($input['purchasing']) ? $input['item_expense_account'] : null,
                     ];
                     $itemAccDetails = $this->items_model->saveItemAccountingDetails($accountingDetails);
-                break;
+                    break;
             }
 
             $this->session->set_flashdata('success', "Item $name has been successfully added.");
@@ -748,17 +768,17 @@ class Products_and_services extends MY_Controller {
     {
         $this->load->helper('string');
         $data = [];
-        foreach($files['name'] as $key => $name) {
+        foreach ($files['name'] as $key => $name) {
             $extension = end(explode('.', $name));
 
             do {
                 $randomString = random_string('alnum');
-                $fileNameToStore = $randomString . '.' .$extension;
-                $exists = file_exists('./uploads/accounting/attachments/'.$fileNameToStore);
+                $fileNameToStore = $randomString . '.' . $extension;
+                $exists = file_exists('./uploads/accounting/attachments/' . $fileNameToStore);
             } while ($exists);
 
             $fileType = explode('/', $files['type'][$key]);
-            $uploadedName = str_replace('.'.$extension, '', $name);
+            $uploadedName = str_replace('.' . $extension, '', $name);
 
             $data[] = [
                 'company_id' => getLoggedCompanyID(),
@@ -773,7 +793,7 @@ class Products_and_services extends MY_Controller {
                 'updated_at' => date('Y-m-d h:i:s')
             ];
 
-            move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$fileNameToStore);
+            move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/' . $fileNameToStore);
         }
 
         $insert = $this->accounting_attachments_model->insertBatch($data);
@@ -788,7 +808,7 @@ class Products_and_services extends MY_Controller {
 
         $attempt = 0;
         do {
-            if($type === 'bundle') {
+            if ($type === 'bundle') {
                 $name = $attempt > 0 ? "$name - $attempt" : $name;
                 $checkName = $this->items_model->check_package_name(logged('company_id'), $name, 1, $id);
             } else {
@@ -797,12 +817,12 @@ class Products_and_services extends MY_Controller {
             }
 
             $attempt++;
-        } while(!is_null($checkName));
+        } while (!is_null($checkName));
 
-        switch($type) {
-            case 'bundle' :
+        switch ($type) {
+            case 'bundle':
                 $amountSet = 0.00;
-                foreach($input['item'] as $key => $value) {
+                foreach ($input['item'] as $key => $value) {
                     $item = $this->items_model->getItemById($value)[0];
 
                     $subTotal = floatval($item->price) * floatval($input['quantity'][$key]);
@@ -816,8 +836,8 @@ class Products_and_services extends MY_Controller {
                 ];
 
                 $update = $this->items_model->update_package($id, $packageDetails);
-            break;
-            case 'product' :
+                break;
+            case 'product':
                 $data = [
                     'title' => $name,
                     'type' => $type,
@@ -830,8 +850,8 @@ class Products_and_services extends MY_Controller {
                     'vendor_id' => $input['vendor'],
                     'cost' => $input['cost'],
                 ];
-            break;
-            default :
+                break;
+            default:
                 $data = [
                     'title' => $name,
                     'type' => $type,
@@ -843,10 +863,10 @@ class Products_and_services extends MY_Controller {
                     'cost' => isset($input['purchasing']) ? $input['cost'] : null,
                     're_order_points' => null
                 ];
-            break;
+                break;
         }
 
-        if($_FILES['icon']['name'] !== "") {
+        if ($_FILES['icon']['name'] !== "") {
             $files = [
                 'name' => [
                     $_FILES['icon']['name']
@@ -868,14 +888,14 @@ class Products_and_services extends MY_Controller {
             $attachmentId = $this->uploadFile($files);
         }
 
-        if($type !== 'bundle') {
+        if ($type !== 'bundle') {
             $condition = ['id' => $id, 'company_id' => getLoggedCompanyID()];
             $update = $this->items_model->update($data, $condition);
         }
 
-        if($update) {
-            switch($type) {
-                case 'bundle' :
+        if ($update) {
+            switch ($type) {
+                case 'bundle':
                     $accountingDetails = [
                         'attachment_id' => isset($attachmentId) ? $attachmentId : null,
                         'display_on_print' => isset($input['display_on_print']) ? $input['display_on_print'] : null,
@@ -884,7 +904,7 @@ class Products_and_services extends MY_Controller {
 
                     $this->items_model->deletePackageItems($id);
 
-                    foreach($input['item'] as $key => $value) {
+                    foreach ($input['item'] as $key => $value) {
                         $item = $this->items_model->getItemById($value)[0];
 
                         $packageItemData = [
@@ -897,8 +917,8 @@ class Products_and_services extends MY_Controller {
 
                         $addPackageItem = $this->workorder_model->addItemPackage($packageItemData);
                     }
-                break;
-                case 'product' :
+                    break;
+                case 'product':
                     $accountingDetails = [
                         'attachment_id' => isset($attachmentId) ? $attachmentId : null,
                         'sku' => $input['sku'],
@@ -908,8 +928,8 @@ class Products_and_services extends MY_Controller {
                         'purchase_description' => $input['purchase_description'],
                         'expense_account_id' => $input['item_expense_account'],
                     ];
-                break;
-                default :
+                    break;
+                default:
                     $accountingDetails = [
                         'attachment_id' => isset($attachmentId) ? $attachmentId : null,
                         'sku' => $input['sku'],
@@ -918,11 +938,11 @@ class Products_and_services extends MY_Controller {
                         'purchase_description' => isset($input['purchasing']) ? $input['purchase_description'] : null,
                         'expense_account_id' => isset($input['purchasing']) ? $input['item_expense_account'] : null,
                     ];
-                break;
+                    break;
             }
 
-            if($this->items_model->getItemAccountingDetails($id) === null) {
-                if($type === 'bundle') {
+            if ($this->items_model->getItemAccountingDetails($id) === null) {
+                if ($type === 'bundle') {
                     $accountingDetails['package_id'] = $id;
                 } else {
                     $accountingDetails['item_id'] = $id;
@@ -947,7 +967,7 @@ class Products_and_services extends MY_Controller {
         $items = $this->input->post('items');
         $data = [];
 
-        foreach($items as $item) {
+        foreach ($items as $item) {
             $data[] = [
                 'id' => $item,
                 'item_categories_id' => $categoryId
@@ -957,7 +977,7 @@ class Products_and_services extends MY_Controller {
         $assignCate = $this->items_model->updateMultipleItem($data);
 
         $categoryName = $categoryId !== "0" ? $this->items_model->getCategory($categoryId)->name : 'Uncategorized';
-        if($assignCate > 0) {
+        if ($assignCate > 0) {
             $this->session->set_flashdata('success', "Category $categoryName assigned.");
         } else {
             $this->session->set_flashdata('error', "Please try again!");
@@ -969,8 +989,8 @@ class Products_and_services extends MY_Controller {
         $items = json_decode($this->input->post('items'));
         $data = [];
 
-        foreach($items as $itemId) {
-            if($action === 'make-inactive') {
+        foreach ($items as $itemId) {
+            if ($action === 'make-inactive') {
                 $item = $this->items_model->getItemById($itemId)[0];
 
                 $attempt = 0;
@@ -979,7 +999,7 @@ class Products_and_services extends MY_Controller {
                     $checkName = $this->items_model->check_name(logged('company_id'), $name, 0);
 
                     $attempt++;
-                } while(!is_null($checkName));
+                } while (!is_null($checkName));
 
                 $data[] = [
                     'id' => $itemId,
@@ -996,8 +1016,8 @@ class Products_and_services extends MY_Controller {
 
         $updateAction = $this->items_model->updateMultipleItem($data);
 
-        if($updateAction > 0) {
-            if($action !== 'make-inactive') {
+        if ($updateAction > 0) {
+            if ($action !== 'make-inactive') {
                 $action = str_replace('make-', '', $action);
                 $previousType = $action === 'service' ? 'non-inventory' : 'service';
                 $this->session->set_flashdata('success', "You converted $updateAction $previousType to a $action item.");
@@ -1017,54 +1037,54 @@ class Products_and_services extends MY_Controller {
         $search = $post['search'];
         $category = explode(',', $post['category']);
 
-        if(in_array('0', $category)) {
+        if (in_array('0', $category)) {
             array_unshift($category, '');
             array_unshift($category, null);
         }
 
         $filters['category'] = $category;
 
-        switch($post['status']) {
-            case 'active' :
+        switch ($post['status']) {
+            case 'active':
                 $filters['status'] = [1];
-            break;
-            case 'inactive' :
+                break;
+            case 'inactive':
                 $filters['status'] = [0];
-            break;
-            default :
+                break;
+            default:
                 $filters['status'] = [0, 1];
-            break;
+                break;
         }
 
-        switch($post['type']) {
-            case 'inventory' :
+        switch ($post['type']) {
+            case 'inventory':
                 $filters['type'] = [
                     'product',
                     'Product',
                     'inventory',
                     'Inventory'
                 ];
-            break;
-            case 'non-inventory' :
+                break;
+            case 'non-inventory':
                 $filters['type'] = [
                     'material',
                     'Material',
                     'non-inventory',
                     'Non-inventory'
                 ];
-            break;
-            case 'service' :
+                break;
+            case 'service':
                 $filters['type'] = [
                     'service',
                     'Service'
                 ];
-            break;
-            case 'bundle' :
+                break;
+            case 'bundle':
                 $filters['type'] = [
                     'bundle',
                     'Bundle'
                 ];
-            break;
+                break;
         }
 
         $items = $this->items_model->getItemsWithFilter($filters);
@@ -1089,7 +1109,7 @@ class Products_and_services extends MY_Controller {
         $tableHtml .= "</tr>";
         $tableHtml .= "</thead>";
         $tableHtml .= "<tbody>";
-        foreach($items as $item) {
+        foreach ($items as $item) {
             $qty = $this->items_model->countQty($item->id);
             $accountingDetails = $this->items_model->getItemAccountingDetails($item->id);
             $type = ucfirst($item->type);
@@ -1101,8 +1121,8 @@ class Products_and_services extends MY_Controller {
             $taxable = !is_null($accountingDetails) && $accountingDetails->tax_rate_id ? "&#10003;" : "";
             $qtyOnPO = !is_null($accountingDetails) ? $accountingDetails->qty_po : '';
 
-            if($search !== "") {
-                if(stripos($item->title, $search) !== false) {
+            if ($search !== "") {
+                if (stripos($item->title, $search) !== false) {
                     $tableHtml .= "<tr>";
                     $tableHtml .= "<td style='border-bottom: 1px dotted #D5CDB5'>$item->title</td>";
                     $tableHtml .= $post['sku'] === '1' ? "<td style='border-bottom: 1px dotted #D5CDB5'>$sku</td>" : "";
@@ -1153,54 +1173,54 @@ class Products_and_services extends MY_Controller {
         $filters = [];
         $filters['search'] = $post['search'];
 
-        if(in_array('0', $post['category'])) {
+        if (in_array('0', $post['category'])) {
             array_unshift($post['category'], '');
             array_unshift($post['category'], null);
         }
 
         $filters['category'] = $post['category'];
 
-        switch($post['status']) {
-            case 'active' :
+        switch ($post['status']) {
+            case 'active':
                 $filters['status'] = [1];
-            break;
-            case 'inactive' :
+                break;
+            case 'inactive':
                 $filters['status'] = [0];
-            break;
-            default :
+                break;
+            default:
                 $filters['status'] = [0, 1];
-            break;
+                break;
         }
 
-        switch($post['type']) {
-            case 'inventory' :
+        switch ($post['type']) {
+            case 'inventory':
                 $filters['type'] = [
                     'product',
                     'Product',
                     'inventory',
                     'Inventory'
                 ];
-            break;
-            case 'non-inventory' :
+                break;
+            case 'non-inventory':
                 $filters['type'] = [
                     'material',
                     'Material',
                     'non-inventory',
                     'Non-inventory'
                 ];
-            break;
-            case 'service' :
+                break;
+            case 'service':
                 $filters['type'] = [
                     'service',
                     'Service'
                 ];
-            break;
-            case 'bundle' :
+                break;
+            case 'bundle':
                 $filters['type'] = [
                     'bundle',
                     'Bundle'
                 ];
-            break;
+                break;
         }
 
         $filters['stock_status'] = $post['stock_status'];
@@ -1216,7 +1236,7 @@ class Products_and_services extends MY_Controller {
         $this->load->helper('string');
 
         $randString = random_string('numeric');
-        $filename = 'ProductsServicesList__'.$randString.'_'.date('m').'_'.date('d').'_'.date('Y').'.xlsx';
+        $filename = 'ProductsServicesList__' . $randString . '_' . date('m') . '_' . date('d') . '_' . date('Y') . '.xlsx';
 
         $header = [
             "Product/Service Name",
@@ -1239,13 +1259,13 @@ class Products_and_services extends MY_Controller {
         $writer->writeSheetRow('Sheet1', $header, ['font-style' => 'bold', 'border' => 'bottom']);
 
         $qtyAsOfDate = date("m/d/Y");
-        foreach($items as $item) {
+        foreach ($items as $item) {
             $qty = $this->items_model->countQty($item->id);
             $accountingDetails = $this->items_model->getItemAccountingDetails($item->id);
 
             $taxable = "no";
 
-            if($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== "" && $item['tax_rate_id'] !== null) {
+            if ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== "" && $item['tax_rate_id'] !== null) {
                 $taxable = "yes";
             }
 
@@ -1273,7 +1293,7 @@ class Products_and_services extends MY_Controller {
         }
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="'.$filename.'"');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
         header('Cache-Control: max-age=0');
         $writer->writeToStdOut();
     }
@@ -1283,7 +1303,7 @@ class Products_and_services extends MY_Controller {
         $post = $this->input->post();
         $items = [];
 
-        foreach($post['items'] as $itemId) {
+        foreach ($post['items'] as $itemId) {
             $item = $this->items_model->getItemById($itemId)[0];
 
             $itemData = new stdClass();
@@ -1303,20 +1323,20 @@ class Products_and_services extends MY_Controller {
 
     public function get_item_details($type, $id)
     {
-        if($type !== 'bundle') {
+        if ($type !== 'bundle') {
             $item = $this->items_model->getItemById($id)[0];
             $qty = $this->items_model->countQty($item->id);
             $accountingDetails = $this->items_model->getItemAccountingDetails($item->id);
-    
-            if($item->attached_image !== null && $item->attached_image !== "") {
+
+            if ($item->attached_image !== null && $item->attached_image !== "") {
                 $icon = "/uploads/$item->attached_image";
-            } else if($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
+            } else if ($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
                 $attachment = $this->accounting_attachments_model->getById($accountingDetails->attachment_id);
                 $icon = "/uploads/accounting/attachments/$attachment->stored_name";
             } else {
                 $icon = "";
             }
-    
+
             $data = [
                 'id' => $item->id,
                 'name' => $item->title,
@@ -1355,7 +1375,7 @@ class Products_and_services extends MY_Controller {
             $packageItems = $this->items_model->get_package_items($package->id);
 
             $bundleItems = [];
-            foreach($packageItems as $packageItem) {
+            foreach ($packageItems as $packageItem) {
                 $item = $this->items_model->getItemById($packageItem->item_id)[0];
 
                 $bundleItems[] = [
@@ -1368,7 +1388,7 @@ class Products_and_services extends MY_Controller {
 
             $accountingDetails = $this->items_model->getPackageAccountingDetails($package->id);
 
-            if($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
+            if ($accountingDetails->attachment_id !== null && $accountingDetails->attachment_id !== "") {
                 $attachment = $this->accounting_attachments_model->getById($accountingDetails->attachment_id);
                 $icon = "/uploads/accounting/attachments/$attachment->stored_name";
             } else {
@@ -1408,7 +1428,7 @@ class Products_and_services extends MY_Controller {
                 'status' => $package->status
             ];
         }
-        
+
         echo json_encode($data);
     }
 
@@ -1417,8 +1437,7 @@ class Products_and_services extends MY_Controller {
         $selectedLocs = $this->items_model->getLocationByItemId($itemId);
 
         $locations = [];
-        foreach($selectedLocs as $loc)
-        {
+        foreach ($selectedLocs as $loc) {
             $location = $this->items_model->getLocationById($loc['loc_id']);
             $locations[] = [
                 'name' => $location->location_name,
@@ -1442,7 +1461,7 @@ class Products_and_services extends MY_Controller {
         self::addJSONResponseHeader();
         if (is_uploaded_file($_FILES['file']['tmp_name'])) {
 
-            $csv = array_map("str_getcsv", file($_FILES['file']['tmp_name'],FILE_SKIP_EMPTY_LINES));
+            $csv = array_map("str_getcsv", file($_FILES['file']['tmp_name'], FILE_SKIP_EMPTY_LINES));
             $csvHeader = array_shift($csv);
 
             $this->load->library('CSVReader');
@@ -1453,8 +1472,8 @@ class Products_and_services extends MY_Controller {
             if (!empty($csvData)) {
                 foreach ($csvData as $row) {
                     $customerElement = [];
-                    for($x=0; $x<count($csvHeader); $x++){
-                        $trimmedData = str_replace(")", "", str_replace("(", "", str_replace("Phone:","", str_replace("$","",$row[$csvHeader[$x]]))));
+                    for ($x = 0; $x < count($csvHeader); $x++) {
+                        $trimmedData = str_replace(")", "", str_replace("(", "", str_replace("Phone:", "", str_replace("$", "", $row[$csvHeader[$x]]))));
                         //$data = preg_replace('/\s+/', '', $trimmedData);
                         $customerElement[$csvHeader[$x]] = $trimmedData;
                         //echo $csvHeader[$x]. PHP_EOL;
@@ -1464,11 +1483,11 @@ class Products_and_services extends MY_Controller {
                     //echo 'fasdf' . PHP_EOL;
                     $customerArray[] = $customerElement;
                 }
-                $data_arr = array("success" => TRUE,"data" => $customerArray, "headers" => $csvHeader, "csvData" => $csvData);
-            }else{
-                $data_arr = array("success" => FALSE,"message" => 'Something is wrong with your CSV file.');
+                $data_arr = array("success" => TRUE, "data" => $customerArray, "headers" => $csvHeader, "csvData" => $csvData);
+            } else {
+                $data_arr = array("success" => FALSE, "message" => 'Something is wrong with your CSV file.');
             }
-        }else{
+        } else {
             //echo 'No upload' . PHP_EOL;
         }
         die(json_encode($data_arr));
@@ -1479,14 +1498,13 @@ class Products_and_services extends MY_Controller {
         self::addJSONResponseHeader();
         $input = $this->input->post();
 
-        if($input) {
+        if ($input) {
             $items = json_decode($input['items'], true); //data CSV
             $mappingSelected = json_decode($input['mapHeaders'], true); //selected Headers
             $csvHeaders = json_decode($input['csvHeaders'], true); //CSV Headers
 
             $inserted = 0;
-            foreach($items as $data)
-            {
+            foreach ($items as $data) {
                 $mapName = $data[$csvHeaders[$mappingSelected[0]]];
                 $mapSKU = $data[$csvHeaders[$mappingSelected[1]]];
                 $mapType = $data[$csvHeaders[$mappingSelected[2]]];
@@ -1513,7 +1531,7 @@ class Products_and_services extends MY_Controller {
 
                 $insertId = $this->items_model->create($itemData);
 
-                if($insertId) {
+                if ($insertId) {
                     $accountingDetails = [
                         'item_id' => $insertId,
                         'sku' => $mapSKU,
@@ -1533,15 +1551,15 @@ class Products_and_services extends MY_Controller {
                     ];
                     $addItemLocs = $this->items_model->saveBatchItemLocation($locations);
 
-                    if($itemAccDetails && $addItemLocs) {
+                    if ($itemAccDetails && $addItemLocs) {
                         $inserted++;
                     }
                 }
             }
 
-            $data_arr = array("success" => TRUE, "message" => "Successfully imported ".$inserted." items!", "Mapping" => $mappingSelected, "CSV"=> $csvHeaders, "items" => $items);
-        } else{
-            $data_arr = array("success" => FALSE,"message" => 'Something goes wrong.');
+            $data_arr = array("success" => TRUE, "message" => "Successfully imported " . $inserted . " items!", "Mapping" => $mappingSelected, "CSV" => $csvHeaders, "items" => $items);
+        } else {
+            $data_arr = array("success" => FALSE, "message" => 'Something goes wrong.');
         }
 
         die(json_encode($data_arr));

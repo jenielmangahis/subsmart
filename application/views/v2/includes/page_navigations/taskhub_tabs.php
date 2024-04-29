@@ -1,11 +1,11 @@
 <div class="nsm-page-nav">
     <ul>
-        <li class="<?php if($page->title == 'Schedule'): echo 'active'; endif; ?>">
+        <!-- <li class="<?php if($page->title == 'Schedule'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('workcalender') ?>">
                 <i class='bx bx-fw bx-calendar-event'></i>
                 <span>Schedule</span>
             </a>
-        </li>
+        </li> -->
         <li class="<?php if($page->title == 'Task Hub' || $page->title == 'Task'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('taskhub') ?>">
                 <i class='bx bx-fw bx-task'></i>
