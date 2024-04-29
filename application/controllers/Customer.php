@@ -58,6 +58,8 @@ class Customer extends MY_Controller
 
     public function index()
     {
+        $this->load->model('AcsProfile_model');
+
         $company_id = logged('company_id');
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
@@ -67,6 +69,23 @@ class Customer extends MY_Controller
         $this->load->library('wizardlib');
         $input = $this->input->post();
         $this->page_data['affiliates'] = $this->customer_ad_model->get_all(false, '', '', 'affiliates', 'id');
+
+        $customerGroups = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'));
+
+        $statusCounts = array();
+        foreach($customerGroups as $g){
+            $statusCounts[$g->name] = 0;
+        }
+
+        $customers = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        foreach ($customers as $c) {
+            $status = trim($c->status);
+            if (array_key_exists($status, $statusCounts)) {
+                $statusCounts[$status]++;
+            }
+        }
+
+        $this->page_data['statusCounts'] = $statusCounts;
 
         $get_company_settings = [
             'where' => [
