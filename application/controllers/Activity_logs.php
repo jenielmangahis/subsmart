@@ -27,40 +27,18 @@ class Activity_logs extends MY_Controller {
 		
 		$activity_logs = $this->activity_model->getActivityLogs($company_id, 20);
 
-		foreach($activity_logs as $activity_log):
-			$activity_log->first_name = $this->users_model->getUser($activity_log->user_id)->FName;
-			$activity_log->last_name = $this->users_model->getUser($activity_log->user_id)->LName;
-			$activity_log->email = $this->users_model->getUser($activity_log->user_id)->email;
-		endforeach;
 		$this->page_data['activity_logs'] = $activity_logs;
 		$this->load->view('v2/widgets/activity_details', $this->page_data);
 	}
 
 	public function index()
 	{
-		//ifPermissions('activity_log_list');
-		$company_id = logged('company_id');     
-		$ip = !empty(get('ip')) ? urldecode(get('ip')) : false;
-		$user = !empty(get('user')) ? urldecode(get('user')) : false;
-		$arg = [];
-
-		if($ip){
-			$arg[] = ['field' => 'ip_address', 'value' => $ip];
-		}
-
-		if($user){
-			$arg[] = ['field' => 'user', 'value' => $user];
-		}
-
-		$activityLogs = $this->activity_model->getAllByCompanyId($company_id, array(), $arg); 
-		/*$this->page_data['activity_logs'] = $this->activity_model->getByWhere($arg, [
-			'order' => [ 'id', 'desc' ]
-		]);*/
-		$this->page_data['activity_logs'] = $activityLogs;
-
-		$this->page_data['filter_ip'] = $ip;
-		$this->page_data['filter_user'] = $user;
-		$this->load->view('activity_logs/list', $this->page_data);
+		$cid = logged('company_id');   
+		$activityLogs = $this->activity_model->getActivityLogs($cid); 
+		
+		$this->page_data['activityLogs'] = $activityLogs;
+		$this->page_data['page']->title  = 'Activity Logs';
+		$this->load->view('v2/pages/activity_logs/list', $this->page_data);
 
 	}
 

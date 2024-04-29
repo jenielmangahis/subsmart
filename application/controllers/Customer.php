@@ -335,40 +335,19 @@ class Customer extends MY_Controller
     }
 
     public function PersonList(){
+        $company_id = logged('company_id');
         $get_customer_groups = [
             'where' => [
-                    'company_id' => logged('company_id'),
+                    'company_id' => $company_id,
             ],
             'table' => 'customer_groups',
             'select' => '*',
         ];
         $persons = $this->company->getAllCommercialCustomers('',logged('company_id'), 'Residential','');
-        $statusCounts = array(
-            "Acceptance Pending" => 0,
-            "Active" => 0,
-            "Active w/RAR" => 0,
-            "Active w/RMR" => 0,
-            "Active w/RQR" => 0,
-            "Active w/RYR" => 0,
-            "CAD/Permitting" => 0,
-            "Cancel Pending" => 0,
-            "Cancelled" => 0,
-            "Charge Back" => 0,
-            "Collection" => 0,
-            "Competition Lost" => 0,
-            "Contract Review" => 0,
-            "Design Team/Engineering Stamps" => 0,
-            "Funded" => 0,
-            "Inactive" => 0,
-            "Inactive w/RMM" => 0,
-            "Inspection" => 0,
-            "Installed" => 0,
-            "Interconnection" => 0,
-            "Lead" => 0,
-            "Loan Documents to be Executed" => 0,
-            "Proposal" => 0,
-            "Site Survey" => 0
-        );
+        $customerGroups = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id);
+        foreach($customerGroups as $g){
+            $statusCounts[$g->name] = 0;
+        }
         
         foreach ($persons as $person) {
             $status = trim($person->status);
