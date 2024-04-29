@@ -1437,6 +1437,7 @@ $route['mycrm/_delete_multi_account'] = 'Mycrm/ajax_delete_multi_account';
 $route['mycrm/_hdr_load_multi_account_list'] = 'Mycrm/ajax_hdr_load_multi_account_list';
 $route['mycrm/_login_multi_account'] = 'Mycrm/ajax_login_multi_account';
 $route['mycrm/_login_main_multi_account'] = 'Mycrm/ajax_login_main_multi_account';
+$route['mycrm/_check_max_link_account'] = 'Mycrm/ajax_check_company_max_link_account';
 
 // Addons
 $route['more/_load_addons_list'] = 'More/ajax_load_addons_list';
