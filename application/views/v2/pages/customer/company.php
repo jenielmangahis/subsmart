@@ -92,7 +92,7 @@
                     </div>
                     <?php $index++;}; ?>
                 </div>
-                <div class="row">
+                <div class="row mt-5">
                     <div class="col-12 col-md-4">
                         <form >
                             <div class="nsm-field-group search">
