@@ -106,6 +106,9 @@ $route['customer/getCompanyList'] = 'Customer/getCompanyList';
 $route['customer/getPersonList'] = 'Customer/getPersonList';
 $route['customer/save_person_profile'] = 'Customer/save_person_profile';
 $route['customer/delete/(:num)'] = 'customer/delete_company_or_person/$1';
+$route['customer/export_residential_list'] = 'Customer/export_residential_list';
+$route['customer/export_commercial_list'] = 'Customer/export_commercial_list';
+
 // Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
 $route['credit_bureau/add_new'] = 'Credit_Bureau/add_new';
