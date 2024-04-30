@@ -55,7 +55,7 @@ if (isset($selected_participants)) {
                         </div>
                     </div>
                 </div>
-                <?php echo form_open_multipart(null, ['class' => 'form-validate require-validation', 'id' => 'taskhub_entry']); ?>
+                <?php echo form_open_multipart(null, ['class' => 'form-validate require-validation taskhub_entry', 'id' => 'taskhub_entry']); ?>
                 <?php
                 if (isset($task)) {
                     $task_id = $taskHub->task_id;
@@ -214,10 +214,14 @@ if (isset($selected_participants)) {
 
                                     <div class="col-12">
                                         <label class="content-subtitle fw-bold d-block mb-2">Description</label>
-                                        <textarea name="description" class="nsm-field form-control ckeditor" placeholder="Enter Description" required>
+                                        <textarea name="description" class="nsm-field form-control ckeditortaskhub" id="ckeditortaskhub" placeholder="Enter Description" required>
                                         <?php
-                                        if ((set_value('description') == '') && (isset($task))) {
-                                            echo $taskHub->description;
+                                        if ((set_value('description') == '') && (isset($taskHub))) {
+                                            if(!empty($taskHub->notes)) {
+                                                echo $taskHub->notes;
+                                            } else {
+                                                echo $taskHub->description;
+                                            }
                                         } else {
                                             echo set_value('description');
                                         }
@@ -240,9 +244,11 @@ if (isset($selected_participants)) {
     </div>
 </div>
 
-<script type="text/javascript">
-
+<script type="text/javascript"> 
     $(function(){
+
+        CKEDITOR.replace( 'ckeditortaskhub', {});   
+
         var default_assigned_to = '<?php echo isset($assignedUser['assigned_user_id']) ? $assignedUser['assigned_user_id'] : $assigned_to; ?>';
         var default_assigned_to_text = '<?php echo isset($assignedUser['name']) ? $assignedUser['name'] : 'My Self'; ?>';
 
@@ -422,6 +428,10 @@ if (isset($selected_participants)) {
         $("#taskhub_entry").on("submit", function(e) {            
             e.preventDefault();
 
+            var ContentFromEditor = CKEDITOR.instances.ckeditortaskhub.getData();
+            var dataString = $("#taskhub_entry").serialize();
+                dataString += '&ContentFromEditor='+ContentFromEditor;              
+
             let _this = $(this);
             var url = "<?php echo base_url('taskhub/_update_taskhub_task'); ?>";
             _this.find("button[type=submit]").html("Saving");
@@ -430,7 +440,7 @@ if (isset($selected_participants)) {
             $.ajax({
                 type: 'POST',
                 url: url,
-                data: _this.serialize(),
+                data: dataString, //_this.serialize()
                 success: function(result) {
                     var res = JSON.parse(result);
                     if(res.is_success == 1) {
