@@ -1006,6 +1006,22 @@ class Products_and_services extends MY_Controller
                     'title' => $name,
                     'is_active' => 0
                 ];
+            } elseif ($action === 'make-active') {
+                $item = $this->items_model->getItemById($itemId)[0];
+
+                $isDeleted = strpos($item->title, '(deleted)') !== false;
+
+                if ($isDeleted) {
+                    $name = preg_replace('/ \(deleted(?: - \d+)?\)$/', '', $item->title);
+                } else {
+                    $name = $item->title;
+                }
+
+                $data[] = [
+                    'id' => $itemId,
+                    'title' => $name,
+                    'is_active' => 1
+                ];
             } else {
                 $data[] = [
                     'id' => $itemId,

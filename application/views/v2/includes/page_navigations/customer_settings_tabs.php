@@ -1,48 +1,5 @@
 <div class="nsm-page-nav">
-    <ul>
-        <li class="<?php if($page->title == 'Customers'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer') ?>">
-                <i class='bx bx-fw bx-user'></i>
-                <span>My Customers</span>
-            </a>
-        </li>
-        <!-- <li class="<?php if($page->title == 'Customer Dashboard'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer/module') ?>">
-                <i class='bx bx-fw bx-detail'></i>
-                <span>Customer Dashboard</span>
-            </a>
-        </li> -->
-        <!-- <li class="<?php if($page->title == 'Customer Subscriptions' || $page->title == 'Add Group'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer/subscriptions') ?>">
-                <i class='bx bx-fw bx-user-pin'></i>
-                <span>Customer Subscriptions</span>
-            </a>
-        </li> -->
-        <li class="<?php if($page->title == 'Customer Groups'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer/group') ?>">
-                <i class='bx bx-fw bx-group'></i>
-                <span>Customer Groups</span>
-            </a>
-        </li>
-        <!-- <li class="<?php if($page->title == 'Leads Manager List' || $page->title == 'New Lead Form'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer/leads') ?>">
-                <i class='bx bx-fw bx-notepad'></i>
-                <span>Leads</span>
-            </a>
-        </li> -->
-     
-        <li class="<?php if($page->title == 'Residential'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer/residential') ?>">
-            <i class='bx bxs-face'></i>
-                <span>Residential</span>
-            </a>
-        </li>
-        <li class="<?php if($page->title == 'Commercial'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer/commercial') ?>">
-            <i class='bx bx-building'></i>
-                <span>Commercial</span>
-            </a>
-        </li>
+    <ul>        
         <li class="<?php if($page->title == 'Sales Area' || $page->title == 'Lead Source' || $page->title == 'Lead Types' || $page->title == 'Rate Plans' || $page->title == 'Activation Fee' || $page->title == 'System Package Type' || $page->title == 'Headers'): echo 'active'; endif; ?>">
             <div class="dropdown" id="test_dropdown">
                 <a class="nsm-page-link dropdown-toggle" role="button" href="javascript:void(0);">

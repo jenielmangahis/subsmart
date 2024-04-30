@@ -159,6 +159,68 @@ $('#items-table thead .select-all').on('change', function () {
     $('#items-table tbody tr:visible .select-one').prop('checked', $(this).prop('checked')).trigger('change');
 });
 
+// $(document).on('change', '#items-table tbody tr:visible .select-one', function () {
+//     var checked = $('#items-table tbody tr:visible input.select-one:checked');
+//     var totalrows = $('#items-table tbody tr:visible input.select-one').length;
+
+//     $('#items-table thead .select-all').prop('checked', checked.length === totalrows);
+
+//     if (checked.length < 1) {
+//         $('.batch-actions li a.dropdown-item').addClass('disabled');
+//     } else {
+//         var inactiveChecked = $('#items-table tbody tr:visible[data-status="0"] input.select-one:checked').length;
+
+//         if (inactiveChecked < 1) {
+//             $('.batch-actions li a#assign-category').removeClass('disabled');
+//             $('.batch-actions li a#make-inactive').removeClass('disabled');
+
+//             var activeChecked = $('#items-table tbody tr:visible[data-status="1"] input.select-one:checked');
+
+//             var allNonInv = true;
+//             var allService = true;
+//             var allInv = true;
+//             activeChecked.each(function () {
+//                 var row = $(this).closest('tr');
+//                 var type = row.find('td:nth-child(4)').html().trim();
+
+//                 if (type !== 'Non-inventory') {
+//                     allNonInv = false;
+//                 }
+
+//                 if (type !== 'Service') {
+//                     allService = false;
+//                 }
+
+//                 if (type !== 'Product') {
+//                     allInv = false;
+//                 }
+//             });
+
+//             if (allNonInv) {
+//                 $('.batch-actions li a#make-service').removeClass('disabled');
+//             } else {
+//                 $('.batch-actions li a#make-service').addClass('disabled');
+//             }
+
+//             if (allService) {
+//                 $('.batch-actions li a#make-non-inventory').removeClass('disabled');
+//             } else {
+//                 $('.batch-actions li a#make-non-inventory').addClass('disabled');
+//             }
+
+//             if (allInv) {
+//                 $('.batch-actions li a#adjust-quantity').removeClass('disabled');
+//                 $('.batch-actions li a#reorder').removeClass('disabled');
+//             } else {
+//                 $('.batch-actions li a#adjust-quantity').addClass('disabled');
+//                 $('.batch-actions li a#reorder').addClass('disabled');
+//             }
+//         } else {
+//             $('.batch-actions li a.dropdown-item').addClass('disabled');
+//         }
+//     }
+// });
+
 $(document).on('change', '#items-table tbody tr:visible .select-one', function () {
     var checked = $('#items-table tbody tr:visible input.select-one:checked');
     var totalrows = $('#items-table tbody tr:visible input.select-one').length;
@@ -169,55 +231,37 @@ $(document).on('change', '#items-table tbody tr:visible .select-one', function (
         $('.batch-actions li a.dropdown-item').addClass('disabled');
     } else {
         var inactiveChecked = $('#items-table tbody tr:visible[data-status="0"] input.select-one:checked').length;
+        var activeChecked = $('#items-table tbody tr:visible[data-status="1"] input.select-one:checked');
 
-        if (inactiveChecked < 1) {
-            $('.batch-actions li a#assign-category').removeClass('disabled');
-            $('.batch-actions li a#make-inactive').removeClass('disabled');
+        $('.batch-actions li a#make-active').toggleClass('disabled', inactiveChecked < 1);
 
-            var activeChecked = $('#items-table tbody tr:visible[data-status="1"] input.select-one:checked');
+        $('.batch-actions li a#make-inactive').toggleClass('disabled', activeChecked.length < 1);
 
-            var allNonInv = true;
-            var allService = true;
-            var allInv = true;
-            activeChecked.each(function () {
-                var row = $(this).closest('tr');
-                var type = row.find('td:nth-child(4)').html().trim();
+        var allNonInv = true;
+        var allService = true;
+        var allInv = true;
 
-                if (type !== 'Non-inventory') {
-                    allNonInv = false;
-                }
+        activeChecked.each(function () {
+            var row = $(this).closest('tr');
+            var type = row.find('td:nth-child(4)').html().trim();
 
-                if (type !== 'Service') {
-                    allService = false;
-                }
-
-                if (type !== 'Product') {
-                    allInv = false;
-                }
-            });
-
-            if (allNonInv) {
-                $('.batch-actions li a#make-service').removeClass('disabled');
-            } else {
-                $('.batch-actions li a#make-service').addClass('disabled');
+            if (type !== 'Non-inventory') {
+                allNonInv = false;
             }
 
-            if (allService) {
-                $('.batch-actions li a#make-non-inventory').removeClass('disabled');
-            } else {
-                $('.batch-actions li a#make-non-inventory').addClass('disabled');
+            if (type !== 'Service') {
+                allService = false;
             }
 
-            if (allInv) {
-                $('.batch-actions li a#adjust-quantity').removeClass('disabled');
-                $('.batch-actions li a#reorder').removeClass('disabled');
-            } else {
-                $('.batch-actions li a#adjust-quantity').addClass('disabled');
-                $('.batch-actions li a#reorder').addClass('disabled');
+            if (type !== 'Product') {
+                allInv = false;
             }
-        } else {
-            $('.batch-actions li a.dropdown-item').addClass('disabled');
-        }
+        });
+
+        $('.batch-actions li a#make-service').toggleClass('disabled', !allNonInv);
+        $('.batch-actions li a#make-non-inventory').toggleClass('disabled', !allService);
+        $('.batch-actions li a#adjust-quantity').toggleClass('disabled', !allInv);
+        $('.batch-actions li a#reorder').toggleClass('disabled', !allInv);
     }
 });
 
@@ -355,7 +399,7 @@ $('#adjust-quantity').on('click', function (e) {
     });
 });
 
-$('#make-non-inventory, #make-service, #make-inactive').on('click', function (e) {
+$('#make-non-inventory, #make-service, #make-inactive, #make-active').on('click', function (e) {
     e.preventDefault();
 
     var action = $(this).attr('id');
@@ -371,6 +415,9 @@ $('#make-non-inventory, #make-service, #make-inactive').on('click', function (e)
         case 'make-inactive':
             actionText = 'make inactive';
             break;
+        case 'make-active':
+            actionText = 'make active';   
+            break; 
     }
 
     var checkedItems = $('#items-table tbody tr:visible .select-one:checked');
@@ -556,35 +603,35 @@ $('#items-table .make-active').on('click', function (e) {
     });
 });
 
-$('#items-table .make-inactive').on('click', function (e) {
-    e.preventDefault();
+// $('#items-table .make-inactive').on('click', function (e) {
+//     e.preventDefault();
 
-    var row = $(this).closest('tr');
-    var name = row.find('td:nth-child(2)').html().trim();
-    var type = row.find('td:nth-child(4)').html().trim();
+//     var row = $(this).closest('tr');
+//     var name = row.find('td:nth-child(2)').html().trim();
+//     var type = row.find('td:nth-child(4)').html().trim();
 
-    Swal.fire({
-        title: 'Are you sure?',
-        html: `You want to make <b>${name}</b> inactive?`,
-        icon: 'question',
-        showCloseButton: false,
-        confirmButtonColor: '#6a4a86',
-        confirmButtonText: 'Yes',
-        showCancelButton: true,
-        cancelButtonText: 'No',
-        cancelButtonColor: '#d33'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            $.ajax({
-                url: `${base_url}/accounting/products-and-services/inactive/${type.toLowerCase()}/${row.find('.select-one').val()}`,
-                type: 'DELETE',
-                success: function (result) {
-                    location.reload();
-                }
-            });
-        }
-    });
-});
+//     Swal.fire({
+//         title: 'Are you sure?',
+//         html: `You want to make <b>${name}</b> inactive?`,
+//         icon: 'question',
+//         showCloseButton: false,
+//         confirmButtonColor: '#6a4a86',
+//         confirmButtonText: 'Yes',
+//         showCancelButton: true,
+//         cancelButtonText: 'No',
+//         cancelButtonColor: '#d33'
+//     }).then((result) => {
+//         if (result.isConfirmed) {
+//             $.ajax({
+//                 url: `${base_url}/accounting/products-and-services/inactive/${type.toLowerCase()}/${row.find('.select-one').val()}`,
+//                 type: 'DELETE',
+//                 success: function (result) {
+//                     location.reload();
+//                 }
+//             });
+//         }
+//     });
+// });
 
 $('#items-table .duplicate').on('click', function (e) {
     e.preventDefault();

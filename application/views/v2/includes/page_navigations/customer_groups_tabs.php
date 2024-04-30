@@ -5,32 +5,13 @@
                 <i class='bx bx-fw bx-user'></i>
                 <span>My Customers</span>
             </a>
-        </li>
-        <!-- <li class="<?php if($page->title == 'Customer Dashboard'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer/module') ?>">
-                <i class='bx bx-fw bx-detail'></i>
-                <span>Customer Dashboard</span>
-            </a>
-        </li> -->
-        <!-- <li class="<?php if($page->title == 'Customer Subscriptions' || $page->title == 'Add Group'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer/subscriptions') ?>">
-                <i class='bx bx-fw bx-user-pin'></i>
-                <span>Customer Subscriptions</span>
-            </a>
-        </li> -->
+        </li>        
         <li class="<?php if($page->title == 'Customer Groups'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('customer/group') ?>">
                 <i class='bx bx-fw bx-group'></i>
                 <span>Customer Groups</span>
             </a>
         </li>
-        <!-- <li class="<?php if($page->title == 'Leads Manager List' || $page->title == 'New Lead Form'): echo 'active'; endif; ?>">
-            <a class="nsm-page-link" href="<?php echo base_url('customer/leads') ?>">
-                <i class='bx bx-fw bx-notepad'></i>
-                <span>Leads</span>
-            </a>
-        </li> -->
-     
         <li class="<?php if($page->title == 'Residential'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('customer/residential') ?>">
             <i class='bx bxs-face'></i>
