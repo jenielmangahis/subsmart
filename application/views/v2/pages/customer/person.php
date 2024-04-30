@@ -59,7 +59,7 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Listing of all Residentials.
+                            Listing of all Residential Customers.
                         </div>
                     </div>
                 </div>
@@ -93,7 +93,7 @@
                     </div>
                     <?php $index++;}; ?>
                 </div>
-                <div class="row">
+                <div class="row mt-5">
                     <div class="col-12 col-md-4">
                         <form action="<?php echo base_url('admin/companies') ?>" method="GET">
                             <div class="nsm-field-group search">

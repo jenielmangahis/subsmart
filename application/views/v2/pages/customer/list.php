@@ -190,7 +190,37 @@ table.dataTable thead th, table.dataTable thead td{
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row g-3 mb-3">
+                    <?php 
+                      $colorClasses = ['primary', 'success', 'error', 'secondary'];
+                      $index = 0;
+                    foreach($statusCounts as $status => $count){?>
+                    <div class="col-6 col-md-3 col-lg-2">
+                        <div class="nsm-counter <?php echo $colorClasses[$index % 4]; ?> h-100 mb-2 " id="estimates">
+                            <div class="row h-100 w-auto">
+                                
+                                <div class=" w-100 col-md-8 text-start d-flex align-items-center  justify-content-between">
+                                <span><i class="bx bx-receipt"></i> <?php 
+                                if($status == 'Design Team/Engineering Stamps')
+                                {
+                                  echo 'Design/Eng Stamps';
+                                }
+                                elseif($status == 'Loan Documents to be Executed')
+                                {
+                                    echo 'Loan Docs to be Executed';
+                                }else{
+                                   echo $status; 
+                                }
+                                ?></span>
+                                <h2 id="total_this_year"><?php echo $count ?></h2>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php $index++;}; ?>
+                </div>
+                <div class="row mt-5">
                      <div class="col-12 col-md-4 grid-mb">
                         <div class="nsm-field-group search">
                             <!-- <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search Item"> -->

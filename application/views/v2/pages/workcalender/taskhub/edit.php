@@ -147,7 +147,7 @@ if (isset($selected_participants)) {
                                                 ?>
                                             </select> -->                                                                                       
                                             <select name="assigned_to" id="taskhub-user-id" class="nsm-field mb-2 form-control" required="">      
-                                                <option value="" selected="selected">My Self</option>                                          
+                                                <option value="0" selected="selected">My Self</option>                                          
                                             </select>
                                         </div>
                                     <?php } ?>
@@ -243,7 +243,7 @@ if (isset($selected_participants)) {
 <script type="text/javascript">
 
     $(function(){
-        var default_assigned_to = '<?php echo isset($assignedUser['user_id']) ? $assignedUser['user_id'] : $assigned_to; ?>';
+        var default_assigned_to = '<?php echo isset($assignedUser['assigned_user_id']) ? $assignedUser['assigned_user_id'] : $assigned_to; ?>';
         var default_assigned_to_text = '<?php echo isset($assignedUser['name']) ? $assignedUser['name'] : 'My Self'; ?>';
 
         $('#status-select').select2();
@@ -423,7 +423,7 @@ if (isset($selected_participants)) {
             e.preventDefault();
 
             let _this = $(this);
-            var url = "<?php echo base_url('taskhub/entry'); ?>";
+            var url = "<?php echo base_url('taskhub/_update_taskhub_task'); ?>";
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -432,20 +432,24 @@ if (isset($selected_participants)) {
                 url: url,
                 data: _this.serialize(),
                 success: function(result) {
-                    Swal.fire({
-                        title: 'Save Successful!',
-                        text: "Task is saved successfully.",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    }).then((result) => {
-                        //if (result.value) {
-                            location.href = "<?php echo base_url('taskhub'); ?>";
-                            //location.reload();
-                        //}
-                    });
-
-                    //_this.trigger("reset");
+                    var res = JSON.parse(result);
+                    if(res.is_success == 1) {
+                        Swal.fire({
+                            title: 'Save Successful!',
+                            text: res.message,
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((o) => {
+                            location.href = "<?php echo base_url('taskhub'); ?>";   
+                        });                        
+                    } else {
+                        Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot Update Task',
+                        text: res.msg
+                        }); 
+                    }
 
                     _this.find("button[type=submit]").html("Save");
                     _this.find("button[type=submit]").prop("disabled", false);

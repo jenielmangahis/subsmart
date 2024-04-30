@@ -297,30 +297,13 @@ if ($this->session->userdata('usertimezone') == null) {
                             <a href="<?= base_url("workorder") ?>">
                                 <i class='bx bx-fw bx-task'></i> Work Orders
                             </a>
-                        </li>
-                        <li class="<?php if ($page->title == 'Invoices & Payments' || $page->title == 'Recurring Invoices' || $page->title == 'Tax Rates' || $page->title == 'Invoice Settings') : echo 'selected';
-                                    endif; ?>">
-                            <a href="<?= base_url("invoice") ?>">
-                                <i class='bx bx-fw bx-receipt'></i> Invoices
-                            </a>
-                        </li>
+                        </li>                        
                         <li class="<?php if ($page->title == 'Tickets') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("customer/ticketslist") ?>">
                                 <i class='bx bx-fw bx-note'></i> Tickets
                             </a>
-                        </li>
-                        <li>
-                            <a href="<?= base_url("accounting/credit-notes") ?>">
-                                <i class='bx bx-fw bx-file'></i> Credit Notes
-                            </a>
-                        </li>
-                        <li class="<?php if ($page->title == 'Leads Manager List') : echo 'selected';
-                                    endif; ?>">
-                            <a href="<?= base_url("customer/leads") ?>">
-                                <i class='bx bx-fw bx-notepad'></i> Leads
-                            </a>
-                        </li>
+                        </li>  
                         <li class="<?php if ($page->title == 'Workorder Type') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("workstatus") ?>">
@@ -382,11 +365,29 @@ if ($this->session->userdata('usertimezone') == null) {
                         </li>
                     </ul>
                 </li>
-                <li>
-                    <a href="<?= base_url("accounting/banking") ?>">
+                <li class="<?php if ($page->parent == 'Accounting') : echo 'active';
+                            endif; ?>">
+                    <a href="#">
                         <i class='bx bx-fw bx-calculator'></i> Accounting
+                        <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
-                    <ul>
+                    <ul class="mt-3">
+                        <li>
+                            <a href="<?= base_url("accounting/banking") ?>">
+                                <i class='<i class='bx bxs-bank'></i>'></i> Banking
+                            </a>
+                        </li>
+                        <li class="<?php if ($page->title == 'Invoices & Payments' || $page->title == 'Recurring Invoices' || $page->title == 'Tax Rates' || $page->title == 'Invoice Settings') : echo 'selected';
+                                    endif; ?>">
+                            <a href="<?= base_url("invoice") ?>">
+                                <i class='bx bx-fw bx-receipt'></i> Invoices
+                            </a>
+                        </li>
+                        <li>
+                            <a href="<?= base_url("accounting/credit-notes") ?>">
+                                <i class='bx bx-fw bx-file'></i> Credit Notes
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li>

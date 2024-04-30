@@ -58,6 +58,8 @@ class Customer extends MY_Controller
 
     public function index()
     {
+        $this->load->model('AcsProfile_model');
+
         $company_id = logged('company_id');
         $this->page_data['page']->title = 'Customers';
         $this->page_data['page']->parent = 'Customers';
@@ -67,6 +69,23 @@ class Customer extends MY_Controller
         $this->load->library('wizardlib');
         $input = $this->input->post();
         $this->page_data['affiliates'] = $this->customer_ad_model->get_all(false, '', '', 'affiliates', 'id');
+
+        $customerGroups = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'));
+
+        $statusCounts = array();
+        foreach($customerGroups as $g){
+            $statusCounts[$g->name] = 0;
+        }
+
+        $customers = $this->AcsProfile_model->getAllByCompanyId($company_id);
+        foreach ($customers as $c) {
+            $status = trim($c->status);
+            if (array_key_exists($status, $statusCounts)) {
+                $statusCounts[$status]++;
+            }
+        }
+
+        $this->page_data['statusCounts'] = $statusCounts;
 
         $get_company_settings = [
             'where' => [
@@ -113,40 +132,21 @@ class Customer extends MY_Controller
     }
 
     public function CompanyList(){
+        $company_id = logged('company_id');
         $get_customer_groups = [
             'where' => [
-                    'company_id' => logged('company_id'),
+                    'company_id' => $company_id,
             ],
             'table' => 'customer_groups',
             'select' => '*',
         ];
-        $commercials = $this->company->getAllCommercialCustomers('',logged('company_id'), 'Commercial','');
-        $statusCounts = array(
-            "Acceptance Pending" => 0,
-            "Active" => 0,
-            "Active w/RAR" => 0,
-            "Active w/RMR" => 0,
-            "Active w/RQR" => 0,
-            "Active w/RYR" => 0,
-            "CAD/Permitting" => 0,
-            "Cancel Pending" => 0,
-            "Cancelled" => 0,
-            "Charge Back" => 0,
-            "Collection" => 0,
-            "Competition Lost" => 0,
-            "Contract Review" => 0,
-            "Design Team/Engineering Stamps" => 0,
-            "Funded" => 0,
-            "Inactive" => 0,
-            "Inactive w/RMM" => 0,
-            "Inspection" => 0,
-            "Installed" => 0,
-            "Interconnection" => 0,
-            "Lead" => 0,
-            "Loan Documents to be Executed" => 0,
-            "Proposal" => 0,
-            "Site Survey" => 0
-        );
+        $commercials = $this->company->getAllCommercialCustomers('',$company_id, 'Commercial','');
+
+        $customerGroups = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id);
+        $statusCounts   = array();
+        foreach($customerGroups as $g){
+            $statusCounts[$g->name] = 0;
+        }
         
         foreach ($commercials as $commercial) {
             $status = trim($commercial->status);
@@ -335,40 +335,21 @@ class Customer extends MY_Controller
     }
 
     public function PersonList(){
+        $company_id = logged('company_id');
         $get_customer_groups = [
             'where' => [
-                    'company_id' => logged('company_id'),
+                    'company_id' => $company_id,
             ],
             'table' => 'customer_groups',
             'select' => '*',
         ];
-        $persons = $this->company->getAllCommercialCustomers('',logged('company_id'), 'Residential','');
-        $statusCounts = array(
-            "Acceptance Pending" => 0,
-            "Active" => 0,
-            "Active w/RAR" => 0,
-            "Active w/RMR" => 0,
-            "Active w/RQR" => 0,
-            "Active w/RYR" => 0,
-            "CAD/Permitting" => 0,
-            "Cancel Pending" => 0,
-            "Cancelled" => 0,
-            "Charge Back" => 0,
-            "Collection" => 0,
-            "Competition Lost" => 0,
-            "Contract Review" => 0,
-            "Design Team/Engineering Stamps" => 0,
-            "Funded" => 0,
-            "Inactive" => 0,
-            "Inactive w/RMM" => 0,
-            "Inspection" => 0,
-            "Installed" => 0,
-            "Interconnection" => 0,
-            "Lead" => 0,
-            "Loan Documents to be Executed" => 0,
-            "Proposal" => 0,
-            "Site Survey" => 0
-        );
+        $persons = $this->company->getAllCommercialCustomers('',$company_id, 'Residential','');
+        $customerGroups = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId($company_id);
+
+        $statusCounts = array();
+        foreach($customerGroups as $g){
+            $statusCounts[$g->name] = 0;
+        }
         
         foreach ($persons as $person) {
             $status = trim($person->status);

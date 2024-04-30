@@ -9,7 +9,7 @@
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/customer_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/customer_settings_tabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">
