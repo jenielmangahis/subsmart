@@ -432,8 +432,8 @@
 <script>
     document.getElementById("download-template").addEventListener("click", function() {
         var csvContent = "#,Name,SKU,Type,Sales Price,Category,Cost,Taxable,Qty on hand,Qty on PO,Reorder point,Locations,Manage\n";
-        csvContent += "1,Sample Product 1,SKU001,Product,10,Electronics,5.99,Yes,100,20,10,Warehouse 1,\n";
-        csvContent += "2,Sample Product 2,SKU002,Service,20,Services,0,No,50,10,20,Inventory,\n";
+        csvContent += "1,Sample Product 1,SKU001,Product,10,Product,5.99,Yes,100,20,10,Warehouse 1,\n";
+        csvContent += "2,Sample Product 2,SKU002,Service,20,Service,0,No,50,10,20,Inventory,\n";
 
         var blob = new Blob([csvContent], {
             type: "text/csv;charset=utf-8;"

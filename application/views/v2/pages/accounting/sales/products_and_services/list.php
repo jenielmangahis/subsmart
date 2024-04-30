@@ -380,6 +380,7 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="assign-category">Assign category</a></li>
+                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-active">Make active</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="make-inactive">Make inactive</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="adjust-quantity">Adjust quantity</a></li>
                                 <li><a class="dropdown-item disabled" href="javascript:void(0);" id="reorder">Reorder</a></li>

@@ -1,12 +1,12 @@
 <div class="nsm-page-nav">
     <ul>
-        <!-- <li class="<?php if($page->title == 'Events' || $page->title == 'Event Tags' || $page->title == 'Event Types' || $page->title == "Event Scheduler Tool"): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Events' || $page->title == 'Event Tags' || $page->title == 'Event Types' || $page->title == "Event Scheduler Tool"): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('events') ?>">
                 <i class='bx bx-fw bx-calendar-event'></i>
                 <span>Events</span>
             </a>
-        </li> -->
-        <li class="<?php if($page->title == 'Jobs' || $page->title == 'Job Types' || $page->title == 'Job Tags' || $page->title == 'Bird\'s Eye View' || $page->title == 'Checklist' || $page->title == 'Job Settings'): echo 'active'; endif; ?>">
+        </li>
+        <!-- <li class="<?php if($page->title == 'Jobs' || $page->title == 'Job Types' || $page->title == 'Job Tags' || $page->title == 'Bird\'s Eye View' || $page->title == 'Checklist' || $page->title == 'Job Settings'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('job') ?>">
                 <i class='bx bx-fw bx-message-square-error'></i>
                 <span>Jobs</span>
@@ -35,14 +35,14 @@
                 <i class='bx bx-fw bx-note'></i>
                 <span>Service Tickets</span>
             </a>
-        </li>
+        </li> -->
         <!-- <li class="<?php if($page->title == 'Marketing'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('credit_notes') ?>">
                 <i class='bx bx-fw bx-file'></i>
                 <span>Marketing</span>
             </a>
         </li> -->
-        <li class="<?php if($page->title == 'Leads Manager List'): echo 'active'; endif; ?>">
+        <!-- <li class="<?php if($page->title == 'Leads Manager List'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('customer/leads') ?>">
                 <i class='bx bx-fw bx-notepad'></i>
                 <span>Leads</span>
@@ -53,7 +53,7 @@
                 <i class='bx bx-fw bx-checkbox-square'></i>
                 <span>Status</span>
             </a>
-        </li>
+        </li> -->
         <!-- Do not remove the last li -->
         <li><label></label></li>
     </ul>
