@@ -13,7 +13,7 @@
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/service_tickets_tabs'); ?>
+        <<?php include viewPath('v2/includes/page_navigations/service_tickets_tabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">
@@ -34,7 +34,7 @@
                                     <i class='bx bx-dollar'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year">$<?= number_format($ticketTotalAmount->total_amount, 2, '.', ''); ?></h2>
+                                    <h2 id="">$<?= number_format($ticketTotalAmount->total_amount, 2, '.', ''); ?></h2>
                                     <span>Income</span>
                                 </div>
                             </div>
@@ -47,7 +47,7 @@
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="pending_total"><?= count($tickets); ?></h2>
+                                    <h2 id=""><?= count($tickets); ?></h2>
                                     <span>Total Service Tickets</span>
                                 </div>
                             </div>
@@ -60,7 +60,7 @@
                                     <i class='bx bx-receipt'></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="paid_total"><?= count($openTickets); ?></h2>
+                                    <h2 id=""><?= count($openTickets); ?></h2>
                                     <span>Total Open Service Tickets</span>
                                 </div>
                             </div>
