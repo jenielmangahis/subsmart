@@ -10,6 +10,9 @@ endif;
             <span>Open Invoices</span>
         </div>
         <div class="nsm-card-controls">
+            <a role="button" class="nsm-button btn-sm m-0 me-2" href="<?= base_url('invoices'); ?>">
+                See More
+            </a>
             <div class="dropdown">
                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
@@ -22,110 +25,55 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content d-flex justify-content-center align-items-center">
-        <?php
-        $partially_paid = 0;
-        $due = 0;
-        $approved = 0;
-        $status = "";
-        foreach ($upcomingInvoice as $UI) {            
-            $status = trim($UI->status);
-            if ($status == "Due") {
-                $due++;
-            } elseif ($status == 'Approved') {
-                $approved++;
-            } else {
-                $partially_paid++;
-            }
-        }
-        if ($partially_paid == 0 && $due == 0 && $approved == 0) {
-        ?>
-            <div class="nsm-empty">
-                <i class='bx bx-meh-blank'></i>
-                <span>Open Invoices is empty.</span>
-            </div>
-        <?php
-        } else {
-        ?>
-            <canvas id="invoice_chart" class="nsm-chart" data-chart-type="invoices"></canvas>
-        <?php
-        }
-        ?>
+        <canvas id="invoice_chart" class="nsm-chart" data-chart-type="invoices"></canvas>
     </div>
 </div>
-<?php
+<script type="text/javascript">
+$(document).ready(function() {
+    initializeInvoiceChart();
+});
 
-if ($upcomingInvoice) {
-    $partially_paid = 0;
-    $due = 0;
-    $Approved = 0;
-    $status = "";
-    foreach ($upcomingInvoice as $UI) {
-        if ($UI->status == "Due" || $UI->status == 'Approved' || $UI->status == 'Partially Paid') {
-            $status = $UI->status;
-            if ($status == "Due") {
-                $due++;
-            } else if ($status == 'Approved') {
-                $Approved++;
-            } else {
-                $partially_paid++;
-            }
-?>
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    initializeInvoiceChart();
-                });
+function initializeInvoiceChart() {
+    var invoices = $("#invoice_chart");
+    var totalDueInvoices = <?= count($dueInvoices); ?>;
+    var totalOverDueInvoices = <?= count($overdueInvoices); ?>;
 
-                function initializeInvoiceChart() {
-                    var invoices = $("#invoice_chart");
-
-                    new Chart(invoices, {
-                        type: 'bar',
-                        data: {
-                            labels: ['DUE', 'APPROVED', 'PARTIALLY PAID'],
-                            datasets: [{
-                                label: 'Open Invoices',
-                                data: [<?php echo $due ?>, <?php echo $Approved ?>, <?php echo $partially_paid ?>],
-                                backgroundColor: [
-                                    'rgba(255, 99, 132, 0.2)',
-                                    'rgba(54, 162, 235, 0.2)',
-                                    'rgba(255, 206, 86, 0.2)',
-                                    'rgba(75, 192, 192, 0.2)',
-                                    'rgba(153, 102, 255, 0.2)',
-                                    'rgba(255, 159, 64, 0.2)'
-                                ],
-                                borderColor: [
-                                    'rgba(255, 99, 132, 1)',
-                                    'rgba(54, 162, 235, 1)',
-                                    'rgba(255, 206, 86, 1)',
-                                    'rgba(75, 192, 192, 1)',
-                                    'rgba(153, 102, 255, 1)',
-                                    'rgba(255, 159, 64, 1)'
-                                ],
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            responsive: true,
-                            plugins: {
-                                legend: {
-                                    position: 'bottom',
-                                },
-                            },
-                            scales: {
-                                y: {
-                                    beginAtZero: true
-                                }
-                            },
-                            aspectRatio: 1.5
-                        }
-                    });
+    new Chart(invoices, {
+        type: 'bar',
+        data: {
+            labels: ['DUE', 'OVERDUE'],
+            datasets: [{
+                label: 'Open Invoices',
+                data: [totalDueInvoices, totalOverDueInvoices],
+                backgroundColor: [
+                    'rgba(255, 159, 64, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
+                ],
+                borderColor: [
+                    'rgb(255, 159, 64)',
+                    'rgb(255, 99, 132)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    display:false
+                },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
-            </script>
-<?php
+            },
+            aspectRatio: 1.5
         }
-    }
+    });
 }
-?>
+</script>
 
 
 <?php
