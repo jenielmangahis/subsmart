@@ -228,7 +228,7 @@
 
         $("#bill_start_date").datepicker({
             onselect: function(dateText) {
-                console.log('adsfsdf');
+                //console.log('adsfsdf');
                 //console.log("Selected date: " + dateText + "; input's current value: " + this.value);
             },
             dateFormat: 'dd/mm/yy'
@@ -608,18 +608,15 @@
                     success: function(data) {
 
                         if (data.message === 'Data updated successfully') {
-                            isCompany == true ? success_person_and_company("Company has been Update Successfully!","company") 
-                            : success_person_and_company("Customer has been Update Successfully!","person");
+                            isCompany == true ? success_person_and_company("Commercial list customer has been updated successfully","company") 
+                            : success_person_and_company("Residential list customer has been updated successfully","person");
                             
                         } else {
-                            isCompany == true ? success_person_and_company("New Company has been Added Successfully!","company") 
-                            : success_person_and_company("New Customer has been Added Successfully!","person");
+                            isCompany == true ? success_person_and_company("New commercial customer has been added successfully","company") 
+                            : success_person_and_company("New residential customer has been added successfully","person");
                              
                         }
-
-
-
-                        console.log(data);
+                        //console.log(data);
                     }
                 });
             } else {
