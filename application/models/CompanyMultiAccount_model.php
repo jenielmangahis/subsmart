@@ -6,6 +6,7 @@ class CompanyMultiAccount_model extends MY_Model
 
     public $table = 'company_multi_accounts';
 
+
     public function getAllByLinkCompanyId($company_id)
     {
         $this->db->select('*');
@@ -141,6 +142,11 @@ class CompanyMultiAccount_model extends MY_Model
     public function statusNotVerified()
     {
         return 'Not Verified';
+    }
+
+    public function maxLinkAccount()
+    {
+        return 6;
     }
 }
 

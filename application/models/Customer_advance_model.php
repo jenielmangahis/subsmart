@@ -292,9 +292,43 @@ class Customer_advance_model extends MY_Model {
         $this->db->select('*');
         $this->db->join('acs_billing as acs_b', 'acs_b.fk_prof_id = acs_profile.prof_id','left');
         $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id','left');
-        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');
-        $this->db->order_by('prof_id', "DESC");
+        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');        
         $this->db->where("acs_profile.company_id", $cid);
+        $this->db->group_by('acs_profile.prof_id'); 
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+
+    public function getResidentialExportData()
+    {
+        $cid = logged('company_id');
+        $this->db->from("acs_profile");
+        $this->db->select('*');
+        $this->db->join('acs_billing as acs_b', 'acs_b.fk_prof_id = acs_profile.prof_id','left');
+        $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id','left');
+        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');        
+        $this->db->where("acs_profile.company_id", $cid);
+        $this->db->where("acs_profile.customer_type", 'Residential');
+        $this->db->where("(acs_profile.first_name != '')");
+        $this->db->where("(acs_profile.last_name != '')");
+        $this->db->group_by('acs_profile.prof_id'); 
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getCommercialExportData()
+    {
+        $cid = logged('company_id');
+        $this->db->from("acs_profile");
+        $this->db->select('*');
+        $this->db->join('acs_billing as acs_b', 'acs_b.fk_prof_id = acs_profile.prof_id','left');
+        $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id','left');
+        $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id','left');        
+        $this->db->where("acs_profile.company_id", $cid);
+        $this->db->where("acs_profile.customer_type", 'Commercial');
+        $this->db->where("(acs_profile.first_name != '')");
+        $this->db->where("(acs_profile.last_name != '')");
         $this->db->group_by('acs_profile.prof_id'); 
         $query = $this->db->get();
         return $query->result();
