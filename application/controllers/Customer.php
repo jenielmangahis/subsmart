@@ -167,11 +167,11 @@ class Customer extends MY_Controller
     public function getCompanyList(){
 
         $request = $_REQUEST;
-    $draw = isset($request['draw']) ? intval($request['draw']) : 0;
-    $start = isset($request['start']) ? intval($request['start']) : 0;
-    $length = isset($request['length']) ? intval($request['length']) : 10;
-    $search = isset($request['search']['value']) ? $request['search']['value'] : '';
-    $filter_status = isset($request['filter_status']) ? $request['filter_status'] : '';
+        $draw = isset($request['draw']) ? intval($request['draw']) : 0;
+        $start = isset($request['start']) ? intval($request['start']) : 0;
+        $length = isset($request['length']) ? intval($request['length']) : 10;
+        $search = isset($request['search']['value']) ? $request['search']['value'] : '';
+        $filter_status = isset($request['filter_status']) ? $request['filter_status'] : '';
      
       
         $persons = $this->company->getAllCustomerByCustomerType($search,logged('company_id'), 'Commercial',$filter_status == 'All Status' ? '' :$filter_status);
@@ -481,29 +481,43 @@ class Customer extends MY_Controller
             $techician = !empty($customer->technician) ? get_employee_name($customer->technician)->FName : $customer->technician.'Not Assigned';
             $companyId = logged('company_id');
             $salesRep = get_sales_rep_name($customer->fk_sales_rep_office);
-            $labelName = $customer->customer_type === 'Business' ? $customer->business_name : $customer->first_name.' '.$customer->last_name;
+            //$labelName = $customer->customer_type === 'Business' ? $customer->business_name : $customer->first_name.' '.$customer->last_name;
+            $labelName   = $customer->first_name.' '.$customer->last_name;
             $data_arr = [];
             if (!empty($enabled_table_headers)) {
                 if (in_array('name', $enabled_table_headers)) {
-                    if ($customer->customer_type === 'Business') {
-                        $parts = explode(' ', strtoupper(trim($customer->business_name)));
-                        $n = count($parts) > 1 ? $parts[0][0].end($parts)[0] : $parts[0][0];
-                        $data_name = "<div class='nsm-profile'><span>".$n.'</span></div>';
-                        array_push($data_arr, $data_name);
-                    } else {
-                        $n = ucwords($customer->first_name[0]).ucwords($customer->last_name[0]);
-                        $data_name = "<div class='nsm-profile'><span>".$n.'</span></div>';
-                        array_push($data_arr, $data_name);
+                    // if ($customer->customer_type === 'Business') {
+                    //     $parts = explode(' ', strtoupper(trim($customer->business_name)));
+                    //     $n = count($parts) > 1 ? $parts[0][0].end($parts)[0] : $parts[0][0];
+                    //     $data_name = "<div class='nsm-profile'><span>".$n.'</span></div>';
+                    //     array_push($data_arr, $data_name);
+                    // } else {
+                    //     $n = ucwords($customer->first_name[0]).ucwords($customer->last_name[0]);
+                    //     $data_name = "<div class='nsm-profile'><span>".$n.'</span></div>';
+                    //     array_push($data_arr, $data_name);
+                    // }
+                    $n = ucwords($customer->first_name[0]).ucwords($customer->last_name[0]);
+                    $data_name = "<div class='nsm-profile'><span>".$n.'</span></div>';
+                    array_push($data_arr, $data_name);
+                    // $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label>
+                    //     <label class='nsm-link default content-subtitle fst-italic d-block'>".$customer->email.'</label>';
+
+                    $customer_email = 'Email Not Specified';
+                    if( $customer->email != '' ){
+                        $customer_email = $customer->email;
                     }
-                    $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label>
-                        <label class='nsm-link default content-subtitle fst-italic d-block'>".$customer->email.'</label>';
+                    $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><label class='nsm-link default content-subtitle fst-italic d-block'><i class='bx bx-envelope'></i> ".$customer_email.'</label>';
                     if ($customer->adt_sales_project_id > 0) {
                         $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
                     }
                     array_push($data_arr, $name);
                 }
                 if (in_array('email', $enabled_table_headers)) {
-                    array_push($data_arr, $customer->email);
+                    $email = 'Not Specified';
+                    if( $customer->email != '' ){
+                        $email = $customer->email;
+                    }
+                    array_push($data_arr, $email);
                 }
                 if (in_array('industry', $enabled_table_headers)) {
                     if ($customer->industry_type_id > 0) {
@@ -516,7 +530,11 @@ class Customer extends MY_Controller
                     array_push($data_arr, $customer->city);
                 }
                 if (in_array('state', $enabled_table_headers)) {
-                    array_push($data_arr, $customer->state);
+                    $state = 'Not Specified';
+                    if( $customer->state != '' ){
+                        $state = $customer->state;
+                    }
+                    array_push($data_arr, $state);
                 }
 
                 if (in_array('source', $enabled_table_headers)) {
@@ -529,6 +547,9 @@ class Customer extends MY_Controller
                 }
                 if (in_array('sales_rep', $enabled_table_headers)) {
                     $sales_rep = get_sales_rep_name($customer->fk_sales_rep_office);
+                    if( trim($sales_rep) == '' ){
+                        $sales_rep = '---';
+                    }
                     array_push($data_arr, $sales_rep);
                 }
                 if (in_array('tech', $enabled_table_headers)) {
@@ -536,7 +557,11 @@ class Customer extends MY_Controller
                     array_push($data_arr, $techician);
                 }
                 if (in_array('plan_type', $enabled_table_headers)) {
-                    array_push($data_arr, $customer->system_type);
+                    $plan_type= 'Not Specified';
+                    if( $customer->system_type != '' ){
+                        $plan_type= $customer->system_type;
+                    }
+                    array_push($data_arr, $plan_type);
                 }
                 if (in_array('rate_plan', $enabled_table_headers)) {
                     array_push($data_arr, ($customer->mmr) ? "$$customer->mmr" : '$0.00');
@@ -558,7 +583,11 @@ class Customer extends MY_Controller
                     array_push($data_arr, '$'.$job_amount);
                 }
                 if (in_array('phone', $enabled_table_headers)) {
-                    array_push($data_arr, formatPhoneNumber($customer->phone_m));
+                    $phone_m = 'Not Specified';
+                    if( $customer->phone_m != '' ){
+                        $phone_m = formatPhoneNumber($customer->phone_m);
+                    }
+                    array_push($data_arr, $phone_m);
                 }
                 if (in_array('status', $enabled_table_headers)) {
                     $stat = '<span class="nsm-badge <?= $badge ?>">'.$customer->status != null ? $customer->status : 'Pending</span>';
@@ -2557,9 +2586,9 @@ class Customer extends MY_Controller
     {
         try {
 
-        self::addJSONResponseHeader();
-        $this->load->model('Customer_model', 'company');
-        $input = $this->input->post();
+            self::addJSONResponseHeader();
+            $this->load->model('Customer_model', 'company');
+            $input = $this->input->post();
       
             $input_profile = [
                 'fk_user_id' => logged('id'),
