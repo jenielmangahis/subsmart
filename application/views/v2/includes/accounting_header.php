@@ -124,6 +124,29 @@ if ($this->session->userdata('usertimezone') == null) {
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/css/bootstrap-colorpicker.min.css" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-colorpicker/2.3.3/js/bootstrap-colorpicker.min.js"></script>
     <style>
+        #hdr-multi-account-list .nsm-loader{            
+            height: 62px !important;
+            min-height: 10px !important;
+        }
+        .hdr-multi-company-img{
+            background-image: url(../images/profile-placeholder.jpeg);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 40px;
+            width: 40px;
+            background-color: #6a4a86;
+            color: #fff;
+            border-radius: 100%;
+            display: inline-block;
+            border: 3px solid #fff;
+        }
+        .hdr-multi-company-name{
+            display: inline-block;
+            vertical-align: top;
+            line-height: 42px;
+            margin-left: 7px;
+        }
         .nsm-nav-items #clockOut i{
             color: "green";
         }
@@ -169,10 +192,25 @@ if ($this->session->userdata('usertimezone') == null) {
             </div>
 
             <ul class="nsm-sidebar-menu">
+                <?php                     
+                    $fields = ['id', 'business_name'];
+                    $cid    = logged('company_id');                    
+                    $hdrCompanyData     = getCompanyData($cid, $fields);
+                ?>
+                <?php if( $hdrCompanyData ){ ?>
+                    <li>
+                        <a href="javscript:void(0);" class="hdr-drpdown-multi-accounts">
+                            <div class="hdr-multi-company-img" style="background-image: url('<?= businessProfileImage($hdrCompanyData->id); ?>')"></div>
+                            <span class="hdr-multi-company-name"><?= $hdrCompanyData->business_name; ?></span>
+                            <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
+                        </a>
+                        <div id="hdr-multi-account-list"></div>
+                    </li>
+                <?php } ?>
                 <li>
-                    <button type="button" class="nsm-button primary w-100" style="margin: 0" data-bs-toggle="dropdown">
-                        <i class="bx bx-fw bx-plus"></i> New
-                    </button>
+                    <a href="javascript:void(0);" data-bs-toggle="dropdown">
+                        <i class="bx bx-fw bx-plus"></i> New 
+                    </a>
                     <div class="dropdown-menu p-3" id="new-popup">
                         <div class="row">
                             <div class="col-12 col-md-3">

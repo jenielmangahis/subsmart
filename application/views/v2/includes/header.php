@@ -111,6 +111,9 @@ if ($this->session->userdata('usertimezone') == null) {
             background-color: #7367f0 !important;
             color: #fff !important;
         }
+        #sidebar-persons-counter .badge-primary, #sidebar-company-counter .badge-primary{
+            background-color:#6a4a86 !important;
+        }
     </style>
     <script>
         var baseURL = '<?= base_url() ?>';
@@ -312,28 +315,28 @@ if ($this->session->userdata('usertimezone') == null) {
                         </li>
                     </ul>
                 </li>
-                <li class="<?php if ($page->title == 'Customers') : echo 'selected ';
+                <li class="<?php if ($page->title == 'Customers' || $page->title == 'Commercial' || $page->title == 'Residential') : echo 'selected ';
                             endif; ?> <?php if ($page->parent == 'Customers') : echo 'active';
                                                                                                 endif; ?>">
                     <a href="<?= base_url("customer") ?>">
                         <i class='bx bx-fw bx-group'></i>My Customers <i class='bx bx-chevron-down list-dropdown-icon general-transition'></i>
                     </a>
                     <ul class="mt-3">
-                    <li class="d-flex align-items-center <?php if ($page->title == 'Customer') : echo 'selected';
+                        <li class="d-flex align-items-center <?php if ($page->title == 'Residential') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("customer/residential") ?>">
                             <i class='bx bxs-face'></i>&nbsp;&nbsp;Residential
                             </a>
                             <div id="sidebar-persons-counter" ></div>   
                         </li>
-                        <li class="d-flex align-items-center <?php if ($page->title == 'Customer') : echo 'selected';
+                        <li class="d-flex align-items-center <?php if ($page->title == 'Commercial') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("customer/commercial") ?>">
                             <i class='bx bx-building'></i>&nbsp;&nbsp;Commercial
                             </a>
                             <div id="sidebar-company-counter" ></div>   
                         </li>
-                        <li class="<?php if ($page->title == 'Customer') : echo 'selected';
+                        <li class="<?php if ($page->title == 'Customers') : echo 'selected';
                                     endif; ?>">
                             <a href="<?= base_url("customer") ?>">
                                 <i class='bx bx-fw bx-group'></i> List of Customer
