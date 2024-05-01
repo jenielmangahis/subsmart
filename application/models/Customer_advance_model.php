@@ -350,6 +350,8 @@ class Customer_advance_model extends MY_Model {
             }
     
             $this->db->where("acs_profile.company_id", $cid);
+            $this->db->where("(acs_profile.first_name != '')");
+            $this->db->where("(acs_profile.last_name != '')");
             if( $param['search'] != '' ){
                 $this->db->group_start();
                     $this->db->or_like('acs_profile.last_name', $param['search'], 'both');    
@@ -393,6 +395,9 @@ class Customer_advance_model extends MY_Model {
         }
 
         $this->db->where("acs_profile.company_id", $cid);
+        $this->db->where("(acs_profile.first_name != '')");
+        $this->db->where("(acs_profile.last_name != '')");
+
         if( $param['search'] != '' ){
             $this->db->group_start();
                 $this->db->or_like('acs_profile.last_name', $param['search'], 'both');    
