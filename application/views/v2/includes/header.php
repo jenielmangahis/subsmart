@@ -374,7 +374,7 @@ if ($this->session->userdata('usertimezone') == null) {
                     <ul class="mt-3">
                         <li>
                             <a href="<?= base_url("accounting/banking") ?>">
-                                <i class='<i class='bx bxs-bank'></i>'></i> Banking
+                                <i class='bx bxs-bank'></i> Banking
                             </a>
                         </li>
                         <li class="<?php if ($page->title == 'Invoices & Payments' || $page->title == 'Recurring Invoices' || $page->title == 'Tax Rates' || $page->title == 'Invoice Settings') : echo 'selected';

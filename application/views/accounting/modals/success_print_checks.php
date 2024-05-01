@@ -15,7 +15,7 @@
                             <div class="row">
                                 <div class="col-md-7">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="print_check_status" id="print-ok" value="ok">
+                                        <input class="form-check-input" type="radio" name="print_check_status" id="print-ok" value="ok" checked>
                                         <label class="form-check-label" for="print-ok">Yes, they all printed correctly</label>
                                     </div>
                                 </div>
@@ -34,7 +34,7 @@
                                 </div>
                                 <div class="col-md-7">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="print_check_status" id="print-no" value="no" checked>
+                                        <input class="form-check-input" type="radio" name="print_check_status" id="print-no" value="no">
                                         <label class="form-check-label" for="print-no">No, keep all checks in the Print Checks list</label>
                                     </div>
                                 </div>

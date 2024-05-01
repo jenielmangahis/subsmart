@@ -12,6 +12,10 @@
     <script src="https://use.fontawesome.com/f61f458313.js"></script>
 
     <style>
+        .signing input, .signing select{    
+            font-family: Arial !important;
+        }
+        
         .signing__signatureInput {
             width: 100% !important;
         }
