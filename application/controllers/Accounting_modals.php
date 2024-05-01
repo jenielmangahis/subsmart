@@ -3908,7 +3908,7 @@ class Accounting_modals extends MY_Controller
                 'bank_account_id' => $data['bank_account'],
                 'mailing_address' => nl2br($data['mailing_address']),
                 'payment_date' => !isset($data['template_name']) ? date("Y-m-d", strtotime($data['payment_date'])) : null,
-                'check_no' => isset($data['print_later']) ? $lastCheckNo : ($data['check_no'] === '' ? $lastCheckNo : $data['check_no']),
+                'check_no' => isset($data['print_later']) ? null : ($data['check_no'] === '' ? null : $data['check_no']),
                 'to_print' => $data['print_later'],
                 'permit_no' => $data['permit_number'] === "" ? null : $data['permit_number'],
                 'memo' => $data['save_method'] !== 'save-and-void' ? $data['memo'] : 'Voided',
@@ -10677,7 +10677,8 @@ class Accounting_modals extends MY_Controller
                     'type' => 'Check',
                     'payee' => $payeeName,
                     'amount' => $amount,
-                    'order_created' => strtotime($check->created_at)
+                    'order_created' => strtotime($check->created_at),
+                    'check_no' => $check->check_no,
                 ];
             }
         }
@@ -10857,7 +10858,7 @@ class Accounting_modals extends MY_Controller
 
                 $checkData = [
                     'check_no' => $startingCheckNo,
-                    'to_print' => 1
+                    'to_print' => null
                 ];
 
                 $this->vendors_model->update_check($id, $checkData);
@@ -15279,6 +15280,15 @@ class Accounting_modals extends MY_Controller
             'message' => $update ? 'Update Successful!' : 'An unexpected error occured'
         ];
     }
+
+    // Get the option selected on the last check transaction
+    function getCheckNo() 
+    {
+        $company_id = logged('company_id');
+        $checkNo = $this->account_model->getLastCheckNo($company_id);
+        echo json_encode($checkNo);
+    }
+
 
     private function update_check($checkId, $data)
     {

@@ -1472,10 +1472,48 @@ class Products_and_services extends MY_Controller
         header("Content-Type: application/json");
     }
 
+    // public function get_import_data()
+    // {
+    //     self::addJSONResponseHeader();
+    //     if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+
+    //         $csv = array_map("str_getcsv", file($_FILES['file']['tmp_name'], FILE_SKIP_EMPTY_LINES));
+    //         $csvHeader = array_shift($csv);
+
+    //         $this->load->library('CSVReader');
+    //         $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
+
+    //         $customerArray = []; // initialize array for storing import data
+
+    //         if (!empty($csvData)) {
+    //             foreach ($csvData as $row) {
+    //                 $customerElement = [];
+    //                 for ($x = 0; $x < count($csvHeader); $x++) {
+    //                     $trimmedData = str_replace(")", "", str_replace("(", "", str_replace("Phone:", "", str_replace("$", "", $row[$csvHeader[$x]]))));
+    //                     //$data = preg_replace('/\s+/', '', $trimmedData);
+    //                     $customerElement[$csvHeader[$x]] = $trimmedData;
+    //                     //echo $csvHeader[$x]. PHP_EOL;
+    //                     //echo $row[$csvHeader[$x]]. PHP_EOL;
+    //                 }
+    //                 //print_r(json_encode($customerElement)) . PHP_EOL;
+    //                 //echo 'fasdf' . PHP_EOL;
+    //                 $customerArray[] = $customerElement;
+    //             }
+    //             $data_arr = array("success" => TRUE, "data" => $customerArray, "headers" => $csvHeader, "csvData" => $csvData);
+    //         } else {
+    //             $data_arr = array("success" => FALSE, "message" => 'Something is wrong with your CSV file.');
+    //         }
+    //     } else {
+    //         //echo 'No upload' . PHP_EOL;
+    //     }
+    //     die(json_encode($data_arr));
+    // }
+
     public function get_import_data()
     {
         self::addJSONResponseHeader();
-        if (is_uploaded_file($_FILES['file']['tmp_name'])) {
+
+        if (isset($_FILES['file']) && is_uploaded_file($_FILES['file']['tmp_name'])) {
 
             $csv = array_map("str_getcsv", file($_FILES['file']['tmp_name'], FILE_SKIP_EMPTY_LINES));
             $csvHeader = array_shift($csv);
@@ -1483,28 +1521,19 @@ class Products_and_services extends MY_Controller
             $this->load->library('CSVReader');
             $csvData = $this->csvreader->parse_csv($_FILES['file']['tmp_name']);
 
-            $customerArray = []; // initialize array for storing import data
+            $customerArray = [];
 
-            if (!empty($csvData)) {
-                foreach ($csvData as $row) {
-                    $customerElement = [];
-                    for ($x = 0; $x < count($csvHeader); $x++) {
-                        $trimmedData = str_replace(")", "", str_replace("(", "", str_replace("Phone:", "", str_replace("$", "", $row[$csvHeader[$x]]))));
-                        //$data = preg_replace('/\s+/', '', $trimmedData);
-                        $customerElement[$csvHeader[$x]] = $trimmedData;
-                        //echo $csvHeader[$x]. PHP_EOL;
-                        //echo $row[$csvHeader[$x]]. PHP_EOL;
-                    }
-                    //print_r(json_encode($customerElement)) . PHP_EOL;
-                    //echo 'fasdf' . PHP_EOL;
-                    $customerArray[] = $customerElement;
+            foreach ($csvData as $row) {
+                $customerElement = [];
+                for ($x = 0; $x < count($csvHeader); $x++) {
+                    $trimmedData = str_replace(")", "", str_replace("(", "", str_replace("Phone:", "", str_replace("$", "", $row[$csvHeader[$x]]))));
+                    $customerElement[$csvHeader[$x]] = $trimmedData;
                 }
-                $data_arr = array("success" => TRUE, "data" => $customerArray, "headers" => $csvHeader, "csvData" => $csvData);
-            } else {
-                $data_arr = array("success" => FALSE, "message" => 'Something is wrong with your CSV file.');
+                $customerArray[] = $customerElement;
             }
+            $data_arr = array("success" => TRUE, "data" => $customerArray, "headers" => $csvHeader, "csvData" => $csvData);
         } else {
-            //echo 'No upload' . PHP_EOL;
+            $data_arr = array("success" => FALSE, "message" => 'No file uploaded.');
         }
         die(json_encode($data_arr));
     }
@@ -1577,7 +1606,6 @@ class Products_and_services extends MY_Controller
         } else {
             $data_arr = array("success" => FALSE, "message" => 'Something goes wrong.');
         }
-
         die(json_encode($data_arr));
     }
 }

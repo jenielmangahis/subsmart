@@ -702,17 +702,6 @@ $(function(){
         }
     });
 
-    //  Override script, Get the last check no.
-    $.ajax({
-        type: "POST",
-        url: window.origin + "/accounting/getCheckNo",
-        dataType: "JSON",
-        success: function (response) {
-            const check_no = parseInt(response.check_no);
-            $('#check_no').val(check_no + 1);
-        }
-    });
-
     $('.btn-recent-checks-print').on('click', function(){
         $.get( base_url + 'accounting/get-other-modals/print_checks_modal', function(res) {
             if ($('div#modal-container').length > 0) {

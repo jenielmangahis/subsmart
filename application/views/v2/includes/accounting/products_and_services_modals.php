@@ -1,3 +1,10 @@
+<style>
+    .scrollable-container {
+        max-height: 300px;
+        overflow: auto;
+    }
+</style>
+
 <div class="modal fade nsm-modal" id="print_items_modal" tabindex="-1" aria-labelledby="print_items_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-xxl">
         <div class="modal-content">
@@ -235,7 +242,8 @@
                     <div class="col-12">
                         <div class="progress-wrapper" style="padding-bottom: 100px;">
                             <div id="progress-bar-container">
-                                <ul>
+
+                                <ul style="pointer-events: none;">
                                     <li class="step step1 active">
                                         <div class="step-inner">Step 1</div>
                                     </li>
@@ -252,6 +260,7 @@
                                 </div>
 
                                 <div id="progress-content-section">
+          
                                     <div class="section-content step1 active">
                                         <h2>Step 1</h2>
                                         <p>Select and CSV Upload</p>
@@ -268,120 +277,122 @@
                                     <div class="section-content step2">
                                         <h2>Step 2</h2>
                                         <p>Map Headings</p>
-                                        <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
-                                                <b>Product/Service Name</b> <span class='mapping-line'></span>
+                                        <div class="container scrollable-container">
+                                            <div class="row grid-mb">
+                                                <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                    <b>Product/Service Name</b> <span class='mapping-line'></span>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector0" onclick="test()">
+                                                        <option value="">Select Heading</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector0" onclick="test()">
-                                                    <option value="">Select Heading</option>
-                                                </select>
+                                            <div class="row grid-mb">
+                                                <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                    <b>SKU</b> <span class='mapping-line'></span>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector1" onclick="test()">
+                                                        <option value="">Select Heading</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
-                                                <b>SKU</b> <span class='mapping-line'></span>
+                                            <div class="row grid-mb">
+                                                <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                    <b>Type</b> <span class='mapping-line'></span>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector2" onclick="test()">
+                                                        <option value="">Select Heading</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector1" onclick="test()">
-                                                    <option value="">Select Heading</option>
-                                                </select>
+                                            <div class="row grid-mb">
+                                                <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                    <b>Sales Description</b> <span class='mapping-line'></span>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector3" onclick="test()">
+                                                        <option value="">Select Heading</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
-                                                <b>Type</b> <span class='mapping-line'></span>
+                                            <div class="row grid-mb">
+                                                <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                    <b>Sales Price/Rate</b> <span class='mapping-line'></span>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector4" onclick="test()">
+                                                        <option value="">Select Heading</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector2" onclick="test()">
-                                                    <option value="">Select Heading</option>
-                                                </select>
+                                            <div class="row grid-mb">
+                                                <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                    <b>Rebatable</b> <span class='mapping-line'></span>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector5" onclick="test()">
+                                                        <option value="">Select Heading</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
-                                                <b>Sales Description</b> <span class='mapping-line'></span>
+                                            <div class="row grid-mb">
+                                                <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                    <b>Purchase Description</b> <span class='mapping-line'></span>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector6" onclick="test()">
+                                                        <option value="">Select Heading</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector3" onclick="test()">
-                                                    <option value="">Select Heading</option>
-                                                </select>
+                                            <div class="row grid-mb">
+                                                <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                    <b>Purchase Cost</b> <span class='mapping-line'></span>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector7" onclick="test()">
+                                                        <option value="">Select Heading</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
-                                                <b>Sales Price/Rate</b> <span class='mapping-line'></span>
+                                            <div class="row grid-mb">
+                                                <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                    <b>Location</b> <span class='mapping-line'></span>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector8" onclick="test()">
+                                                        <option value="">Select Heading</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector4" onclick="test()">
-                                                    <option value="">Select Heading</option>
-                                                </select>
+                                            <div class="row grid-mb">
+                                                <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                    <b>Quantity On Hand</b> <span class='mapping-line'></span>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector9" onclick="test()">
+                                                        <option value="">Select Heading</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
-                                                <b>Rebatable</b> <span class='mapping-line'></span>
+                                            <div class="row grid-mb">
+                                                <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
+                                                    <b>Reorder Point</b> <span class='mapping-line'></span>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector10" onclick="test()">
+                                                        <option value="">Select Heading</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <div class="col-12 col-md-6">
-                                                <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector5" onclick="test()">
-                                                    <option value="">Select Heading</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
-                                                <b>Purchase Description</b> <span class='mapping-line'></span>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector6" onclick="test()">
-                                                    <option value="">Select Heading</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
-                                                <b>Purchase Cost</b> <span class='mapping-line'></span>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector7" onclick="test()">
-                                                    <option value="">Select Heading</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
-                                                <b>Location</b> <span class='mapping-line'></span>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector8" onclick="test()">
-                                                    <option value="">Select Heading</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
-                                                <b>Quantity On Hand</b> <span class='mapping-line'></span>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector9" onclick="test()">
-                                                    <option value="">Select Heading</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="row grid-mb">
-                                            <div class="col-12 col-md-6 d-flex align-items-center justify-content-start">
-                                                <b>Reorder Point</b> <span class='mapping-line'></span>
-                                            </div>
-                                            <div class="col-12 col-md-6">
-                                                <select name="headers[]" class="form-select nsm-field headersSelector" id="headersSelector10" onclick="test()">
-                                                    <option value="">Select Heading</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="result"></div>
-                                        <br>
-                                        <!-- <button type="button" class="btn btn-primary btn-sm step step01" ><span class="fa fa-arrow-left"></span> Back</button>
+                                            <div class="result"></div>
+                                            <br>
+                                            <!-- <button type="button" class="btn btn-primary btn-sm step step01" ><span class="fa fa-arrow-left"></span> Back</button>
                                         <button type="button" class="btn btn-primary btn-sm step step03" ><span class="fa fa-arrow-right"></span> Next</button> -->
+                                        </div>
                                     </div>
                                     <div class="section-content step3">
                                         <h2>Step 3</h2>
