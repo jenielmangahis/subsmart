@@ -118,7 +118,7 @@ class Customer_Form extends MY_Controller
         $profile = null;
         $message = null;
 
-        if (strtolower($customerType) === 'business') {
+        if (strtolower($customerType) === 'Commercial') {
             $this->db->where('company_id', logged('company_id'));
             $this->db->where('LOWER(first_name)', strtolower($payload['first_name']));
             $this->db->where('LOWER(last_name)', strtolower($payload['last_name']));

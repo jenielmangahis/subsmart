@@ -230,16 +230,16 @@ table.dataTable thead th, table.dataTable thead td{
                     <div class="col-md-8 grid-mb text-end">
                     <button type="button" class="nsm-button dupEntryButton d-none" data-bs-toggle="modal" data-bs-target=".duplicateRemoverModal"><i class='bx bxs-duplicate'></i> Duplicate Entries <small class="text-muted dupEntryCount"></small></button>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" onclick="location.href='<?= url('customer/import_customer') ?>'">
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?= url('customer/import_customer') ?>'">
                                 <i class='bx bx-fw bx-chart'></i> Import
                             </button>
-                            <button type="button" class="nsm-button" onclick="location.href='<?= url('customer/customer_export') ?>'">
-                                <i class='bx bx-fw bx-chart'></i> Export
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?= url('customer/customer_export') ?>'">
+                                <i class='bx bx-fw bx-file'></i> Export
                             </button>
-                            <button type="button" class="nsm-button" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
+                            <!-- <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
                                 <i class='bx bx-fw bx-chart'></i> Add Lead
-                            </button>
-                            <button type="button" class="nsm-button" onclick="location.href='<?php echo url('customer/add_advance') ?>'">
+                            </button> -->
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('customer/add_advance') ?>'">
                                 <i class='bx bx-fw bx-chart'></i> New Customer
                             </button>
                             <button type="button" class="nsm-button primary" id="print-customer-list" data-bs-toggle="modal" data-bs-target="#print_customer_list_modal">

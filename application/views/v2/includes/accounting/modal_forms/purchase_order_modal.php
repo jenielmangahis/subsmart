@@ -38,7 +38,7 @@
                                             <div class="row">
                                                 <div class="col-12 col-md-3">
                                                     <label for="vendor">Vendor</label>
-                                                    <select name="vendor" id="vendor" class="form-control nsm-field" required>
+                                                    <select name="vendor_id" id="vendor" class="form-control nsm-field" required>
                                                         <?php if (isset($purchaseOrder)) : ?>
                                                             <option value="<?= $purchaseOrder->vendor_id ?>"><?= $this->vendors_model->get_vendor_by_id($purchaseOrder->vendor_id)->display_name ?></option>
                                                         <?php endif; ?>

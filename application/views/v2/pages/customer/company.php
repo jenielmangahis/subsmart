@@ -115,11 +115,12 @@
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <a class="nsm-button primary btn-export-list" id="openModalBtn"  style="margin-left: 10px; cursor:pointer"><i class="bx bx-building"></i> Add 	Commercial</a>
+                            <a class="nsm-button primary" id="openModalBtn"  style="margin-left: 10px; cursor:pointer"><i class="bx bx-building"></i> New Customer</a>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <a class="nsm-button primary btn-export-list" id="export-csv-button"href="#" style="margin-left: 10px;"><i class="bx bx-fw bx-file"></i>Export List</a>
-                            
+                            <button type="button" class="nsm-button primary" id="btn-commercial-export-list">
+                                <i class='bx bx-fw bx-file'></i> Export
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -157,12 +158,12 @@
             <div class="nsm-card primary">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span><i class="bx bx-building"></i><span id="person_header"> Add Commercial</span></span>
+            <span><i class="bx bx-building"></i><span id="person_header"> Add Commercial Customer</span></span>
         </div>
         <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
     </div>
   
-    <div class="nsm-card-content">
+    <div class="nsm-card-content" style="max-height:700px;overflow-y:auto;overflow-x:hidden;padding:15px;">
         <hr>
         <div class="row form_line">
             <div class="col-md-4">
@@ -184,7 +185,7 @@
                 Customer Type
             </div>
             <div class="col-md-8">
-            <input data-type="customer_type" type="customer_type" class="form-control email-input-element" name="customer_type" id="person_type" value="Commercial" readonly/>
+            <input data-type="customer_type" type="text" class="form-control email-input-element" name="customer_type" id="person_type" value="Commercial" readonly/>
             </div>
         </div>
         <div class="row form_line">
@@ -552,12 +553,16 @@ function convertDataToCSV(data, headers) {
            
         });
 
-        $('#export-csv-button').on('click', function() {
-            var headers = ["Company Name", "Contact Name", "Email", "Phone",'Customer Type', "Status"];
-            var csvData = convertDataToCSV(csv_data, headers);
-            var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
-            saveAs(blob, "commercial.csv");
-    });
+        // $('#export-csv-button').on('click', function() {
+        //     var headers = ["Company Name", "Contact Name", "Email", "Phone",'Customer Type', "Status"];
+        //     var csvData = convertDataToCSV(csv_data, headers);
+        //     var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
+        //     saveAs(blob, "commercial.csv");
+        // });
+
+        $('#btn-commercial-export-list').on('click', function(){
+            location.href = base_url + 'customer/export_commercial_list';
+        });
 
         $("#COMMERCIAL_SEARCHBAR").keyup(function() {
             COMPANY_LIST_TABLE.search($(this).val()).draw();

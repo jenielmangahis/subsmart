@@ -1028,46 +1028,53 @@ class Mycrm extends MY_Controller {
     	$post = $this->input->post();
     	$company_id = logged('company_id');
 
-    	$login_data = ['username' => $post['multi_email'], 'password' => $post['multi_password']];
-    	$isValid = $this->Users_model->attempt($login_data);
-    	if( $isValid == 'valid' ){    		
-    		//Create data
-    		$user = $this->Users_model->getUserByEmail($post['multi_email']);    
-    		if( $user->company_id != $company_id ){
-    			//Check if company id already in the list. Can only accept 1 company user 
-	    		$isExists = $this->CompanyMultiAccount_model->getByParentCompanyIdAndLinkCompanyId($company_id, $user->company_id);
-	    		if( $isExists ){
-	    			$msg = 'An account under company <b>' . $isExists->company_name . '</b> already exists. Cannot accept more than 1 account under same company';
-	    		}else{
-	    			if( $user->status == 1 ){
-	    				$data_multi = [
-			    			'parent_company_id' => $company_id,
-			    			'link_company_id' => $user->company_id,
-			    			'link_user_id' => $user->id,
-			    			'status' => $this->CompanyMultiAccount_model->statusNotVerified(),
-			    			'created' => date("Y-m-d H:i:s")
-			    		];
+        $validate = $this->checkCompanyMaxLinkAccount();
+        if( $validate['is_limit'] == 1 ){
+            $msg = $validate['msg'];
+        }else{
+            $login_data = ['username' => $post['multi_email'], 'password' => $post['multi_password']];
+            $isValid = $this->Users_model->attempt($login_data);
+            if( $isValid == 'valid' ){    		
+                //Create data
+                $user = $this->Users_model->getUserByEmail($post['multi_email']);    
+                if( $user->company_id != $company_id ){
+                    //Check if company id already in the list. Can only accept 1 company user 
+                    $isExists = $this->CompanyMultiAccount_model->getByParentCompanyIdAndLinkCompanyId($company_id, $user->company_id);
+                    if( $isExists ){
+                        $msg = 'An account under company <b>' . $isExists->company_name . '</b> already exists. Cannot accept more than 1 account under same company';
+                    }else{
+                        if( $user->status == 1 ){
+                            $data_multi = [
+                                'parent_company_id' => $company_id,
+                                'link_company_id' => $user->company_id,
+                                'link_user_id' => $user->id,
+                                'status' => $this->CompanyMultiAccount_model->statusNotVerified(),
+                                'created' => date("Y-m-d H:i:s")
+                            ];
 
-			    		$lastId  = $this->CompanyMultiAccount_model->create($data_multi);
-			    		$hash_id = hashids_encrypt($lastId, '', 15);
-			    		$this->CompanyMultiAccount_model->update($lastId, ['hash_id' => $hash_id]);
+                            $lastId  = $this->CompanyMultiAccount_model->create($data_multi);
+                            $hash_id = hashids_encrypt($lastId, '', 15);
+                            $this->CompanyMultiAccount_model->update($lastId, ['hash_id' => $hash_id]);
 
-			    		//Send activation link
-			    		$is_sent = $this->sendMultiAccountActivationEmail($hash_id, $user->email);
+                            //Send activation link
+                            $is_sent = $this->sendMultiAccountActivationEmail($hash_id, $user->email);
 
-			    		$email = $user->email;
-			    		$is_success = 1;
-	    			}else{
-	    				$msg = 'Email <b>' . $post['multi_email'] . '</b> is currently inactive. Cannot login email.';
-	    			}	    			
-	    		}
-    		}else{
-    			$business = $this->Business_model->getByCompanyId($company_id);
-    			$msg = 'Email <b>' . $post['multi_email'] . '</b> belongs to current logged company <b>'.$business->business_name.'</b>. Cannot link company data.';
-    		}	
-    	}else{
-    		$msg = 'Invalid email / password';
-    	}
+                            $email = $user->email;
+                            $is_success = 1;
+                        }else{
+                            $msg = 'Email <b>' . $post['multi_email'] . '</b> is currently inactive. Cannot login email.';
+                        }	    			
+                    }
+                }else{
+                    $business = $this->Business_model->getByCompanyId($company_id);
+                    $msg = 'Email <b>' . $post['multi_email'] . '</b> belongs to current logged company <b>'.$business->business_name.'</b>. Cannot link company data.';
+                }	
+            }else{
+                $msg = 'Invalid email / password';
+            }
+        }
+
+    	
 
     	$json_data = ['is_success' => $is_success, 'email' => $email, 'msg' => $msg];
 
@@ -1355,6 +1362,32 @@ class Mycrm extends MY_Controller {
     	$json_data = ['is_valid' => $is_valid, 'msg' => $msg];
 
     	echo json_encode($json_data);
+    }
+
+    public function ajax_check_company_max_link_account()
+    {
+
+        $json_data = $this->checkCompanyMaxLinkAccount();
+        echo json_encode($json_data);
+    }
+
+    public function checkCompanyMaxLinkAccount()
+    {
+        $this->load->model('CompanyMultiAccount_model');
+
+        $is_limit   = 0;
+        $msg        = '';
+        $company_id = logged('company_id');
+        $max_link_account = $this->CompanyMultiAccount_model->maxLinkAccount();
+        $companyAccounts  = $this->CompanyMultiAccount_model->getByAllByCompanyParentId($company_id);
+        if( count($companyAccounts) >= $max_link_account ){
+            $is_limit = 1;
+            $msg = 'You have reached maximum link account ('.$max_link_account.'). Cannot link more account.';
+        }
+
+        $validate = ['is_limit' => $is_limit, 'msg' => $msg];
+
+    	return $validate;
     }
 }
 

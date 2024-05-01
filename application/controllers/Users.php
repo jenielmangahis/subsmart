@@ -305,6 +305,7 @@ class Users extends MY_Controller
 		$comp_id = logged('company_id');
 		$profiledata = $this->business_model->getByCompanyId($comp_id);
 
+		$this->page_data['company_id']  = $comp_id;
 		$this->page_data['profiledata'] = $profiledata;
 		// $this->load->view('business_profile/profile_settings', $this->page_data);
 		$this->load->view('v2/pages/business_profile/profile_settings', $this->page_data);
@@ -376,6 +377,8 @@ class Users extends MY_Controller
 		$action = $pdata['action'];
 		unset($pdata['action']);
 		unset($pdata['id']);
+
+		$profiledata = $this->business_model->getByCompanyId($cid);
 		
 		if ($action == 'availability') {
 			$schedules = array();
@@ -448,6 +451,13 @@ class Users extends MY_Controller
 			createActivityLog($activity_name);
 
 		} elseif ($action == 'credentials') {
+
+			$target_dir = "./uploads/users/business_profile/$profiledata->company_id/";
+
+			if (!file_exists($target_dir)) {
+				mkdir($target_dir, 0777, true);
+			}
+
 			$is_licensed = 0;
 			if (isset($pdata['is_licensed'])) {
 				$is_licensed = 1;
@@ -468,20 +478,28 @@ class Users extends MY_Controller
 				$is_bbb = 1;
 			}
 
-			$license_image_name = '';
+			$license_image_name = $profiledata->license_image;
 			if (isset($_FILES['license_image']) && $_FILES['license_image']['tmp_name'] != '') {
 				$tmp_name = $_FILES['license_image']['tmp_name'];
 				$extension = strtolower(end(explode('.', $_FILES['license_image']['name'])));
 				$license_image_name = "license_" . basename($_FILES["license_image"]["name"]);
-				move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$license_image_name");
+				move_uploaded_file($tmp_name, "./uploads/users/business_profile/$profiledata->company_id/$license_image_name");
 			}
 
-			$bond_image_name = '';
+			$insurance_image = $profiledata->insurance_image;
+			if (isset($_FILES['license_image']) && $_FILES['insurance_image']['tmp_name'] != '') {
+				$tmp_name = $_FILES['insurance_image']['tmp_name'];
+				$extension = strtolower(end(explode('.', $_FILES['insurance_image']['name'])));
+				$insurance_image = "insurance_" . basename($_FILES["insurance_image"]["name"]);
+				move_uploaded_file($tmp_name, "./uploads/users/business_profile/$profiledata->company_id/$insurance_image");
+			}
+
+			$bond_image_name = $profiledata->bond_image;
 			if (isset($_FILES['bond_image']) && $_FILES['bond_image']['tmp_name'] != '') {
 				$tmp_name = $_FILES['bond_image']['tmp_name'];
 				$extension = strtolower(end(explode('.', $_FILES['bond_image']['name'])));
 				$bond_image_name = "bond_" . basename($_FILES["bond_image"]["name"]);
-				move_uploaded_file($tmp_name, "./uploads/users/business_profile/$bid/$bond_image_name");
+				move_uploaded_file($tmp_name, "./uploads/users/business_profile/$profiledata->company_id/$bond_image_name");
 			}
 
 			$data_availability = [
@@ -490,16 +508,17 @@ class Users extends MY_Controller
 				'is_bbb_accredited' => $is_bbb,
 				'is_business_insured' => $is_insured,
 				'insured_amount' => $pdata['insured_amount'],
-				'insurance_expiry_date' => $pdata['insured_exp_date'],
+				'insurance_expiry_date' => date("Y-m-d",strtotime($pdata['insured_exp_date'])),
 				'bond_amount' => $pdata['bonded_amount'],
-				'bond_expiry_date' => $pdata['bonded_exp_date'],
+				'bond_expiry_date' => date("Y-m-d",strtotime($pdata['bonded_exp_date'])),
 				'license_class' => $pdata['license_class'],
 				'license_number' => $pdata['license_number'],
 				'license_state' => $pdata['license_state'],
-				'license_expiry_date' => $pdata['license_exp_date'],
+				'license_expiry_date' => date("Y-m-d",strtotime($pdata['license_exp_date'])),
 				'bbb_link' => $pdata['bbb_url'],
 				'license_image' => $license_image_name,
-				'bond_image' => $bond_image_name
+				'bond_image' => $bond_image_name,
+				'insurance_image'=> $insurance_image
 			];
 
 			$this->business_model->updateByCompanyId($cid, $data_availability);

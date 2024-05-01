@@ -1,6 +1,4 @@
 <?php include viewPath('v2/includes/header'); ?>
-<?php //include viewPath('v2/includes/customer/customer_modals'); ?>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" />
 <style>
     .select2-dropdown{
         z-index: 999999;
@@ -53,7 +51,6 @@
     </div>
     <div class="col-12">
         <div class="nsm-page">
-            
             <div class="nsm-page-content">
                 <div class="row">
                     <div class="col-12">
@@ -71,22 +68,9 @@
                     <div class="col-6 col-md-3 col-lg-2">
                         <div class="nsm-counter <?php echo $colorClasses[$index % 4]; ?> h-100 mb-2 " id="estimates">
                             <div class="row h-100 w-auto">
-                                
                                 <div class=" w-100 col-md-8 text-start d-flex align-items-center  justify-content-between">
-                                <span><i class="bx bx-receipt"></i> <?php 
-                                if($status == 'Design Team/Engineering Stamps')
-                                {
-                                  echo 'Design/Eng Stamps';
-                                }
-                                elseif($status == 'Loan Documents to be Executed')
-                                {
-                                    echo 'Loan Docs to be Executed';
-                                }else{
-                                   echo $status; 
-                                }
-                                ?></span>
-                                <h2 id="total_this_year"><?php echo $count ?></h2>
-                                   
+                                    <span><i class="bx bx-receipt"></i><?= $status; ?></span>
+                                    <h2 id="total_this_year"><?php echo $count ?></h2>
                                 </div>
                             </div>
                         </div>
@@ -99,7 +83,6 @@
                             <div class="nsm-field-group search">
                                 <input type="text" class="nsm-field nsm-search form-control mb-2" id="PERSON_SEARCHBAR" name="search" placeholder="Search Residential" value="<?php echo (!empty($search)) ? $search : '' ?>">                                
                             </div>
-
                         </form>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
@@ -116,12 +99,12 @@
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <a class="nsm-button primary btn-export-list" id="openModalBtn"  style="margin-left: 10px; cursor: pointer;"> <i class='bx bxs-face'></i> Add Residential</a>
+                            <a class="nsm-button primary" id="openModalBtn" style="margin-left: 10px; cursor: pointer;"> <i class='bx bx-building'></i> New Customer</a>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            
-                            <a class="nsm-button primary btn-export-list"   id="export-csv-button" style="margin-left: 10px; cursor: pointer;"><i class="bx bx-fw bx-file"></i> Export List</a>
-                            <!-- <a class="nsm-button primary btn-add-user" href="javascript:void(0);"><i class='bx bx-fw bx-user'></i> Create User</a> -->                            
+                            <button type="button" class="nsm-button primary" id="btn-residential-export-list">
+                                <i class='bx bx-fw bx-file'></i> Export
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -137,17 +120,11 @@
                             <th data-name="Customer Type" style="width:10%;">Customer Type</th>
                             <th data-name="Status" style="width:10%;">Status</th>
                             <td></td>
-                     
                         </tr>
                     </thead>
-                    <tbody>   
-                  
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div>
-        
-                   
-              
             </div>
         </div>
     </div>
@@ -160,13 +137,12 @@
             <div class="nsm-card primary">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span><i class='bx bxs-face'></i> <span id="person_header">Add Residential</span></span>
+            <span><i class='bx bxs-face'></i> <span id="person_header">Add Residential Customer</span></span>
         </div>
         <button type="button"  class="close-btn"  data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
-       
     </div>
   
-    <div class="nsm-card-content">
+    <div class="nsm-card-content" style="max-height:700px;overflow-y:auto;overflow-x:hidden;padding:15px;">
         <hr>
         <div class="row form_line">
             <div class="col-md-4">
@@ -443,81 +419,79 @@
 <?php include viewPath('v2/includes/footer'); ?>
 <script>
     function deleteItem(itemId) {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'You will not be able to recover this item!',
-    icon: 'question',
-    showCancelButton: true,
-    confirmButtonColor: '#3085d6',
-    cancelButtonColor: '#d33',
-    confirmButtonText: 'Yes, delete it!'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // Send an AJAX request to delete the item
-      $.ajax({
-        url: `${base_url}customer/delete/${itemId}`, // Replace with your server-side script to handle the deletion
-        type: 'POST',
-        data: { id: itemId },
-        success: function(response) {
-          Swal.fire(
-            '',
-            'The item has been deleted.',
-            'success'
-          ).then(() => {
-            location.reload();
-          });
-        },
-        error: function(xhr, status, error) {
-          Swal.fire(
-            'Error!',
-            'An error occurred while deleting the item.',
-            'error'
-          );
-        }
-      });
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to recover this item!',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+            // Send an AJAX request to delete the item
+            $.ajax({
+                url: `${base_url}customer/delete/${itemId}`, // Replace with your server-side script to handle the deletion
+                type: 'POST',
+                data: { id: itemId },
+                success: function(response) {
+                Swal.fire(
+                    '',
+                    'The item has been deleted.',
+                    'success'
+                ).then(() => {
+                    location.reload();
+                });
+                },
+                error: function(xhr, status, error) {
+                Swal.fire(
+                    'Error!',
+                    'An error occurred while deleting the item.',
+                    'error'
+                );
+                }
+            });
+            }
+        });
     }
-  });
-}
-function cleanPhoneNumber(phoneHtml) {
-    const regex = /(?:<p>Phone \(\w\) : )([\d\+\-\(\) ]+)(?:<\/p>)/g;
-    const matches = phoneHtml.matchAll(regex);
-    const phoneNumbers = Array.from(matches, match => match[1]);
-    return phoneNumbers.join(', '); // Concatenate multiple phone numbers with commas
-}
+    function cleanPhoneNumber(phoneHtml) {
+        const regex = /(?:<p>Phone \(\w\) : )([\d\+\-\(\) ]+)(?:<\/p>)/g;
+        const matches = phoneHtml.matchAll(regex);
+        const phoneNumbers = Array.from(matches, match => match[1]);
+        return phoneNumbers.join(', '); // Concatenate multiple phone numbers with commas
+    }
 
-// Function to convert data to CSV format using Papa Parse
-function convertDataToCSV(data, headers) {
-    // Prepare Papa Parse config for CSV conversion
-    var csvConfig = {
-        quotes: false, // Disable quotes for each field
-        delimiter: ",", // Set delimiter as comma
-        header: true, // Include headers in CSV output
-    };
-
-    // Map and transform each row of data
-    var csvData = data.map(row => {
-        // Exclude the last column (assuming it's the 5th column based on your provided data)
-        var rowSubset = row.slice(0, -1); // Exclude the last element in the row
-
-        return {
-            [headers[0]]: rowSubset[0], // Contact Name
-            [headers[1]]: rowSubset[1], // Email
-            [headers[2]]: cleanPhoneNumber(rowSubset[2]), // Phone (cleaned)
-            [headers[3]]: rowSubset[3], // Customer Type
-            [headers[4]]: rowSubset[4],//Status
+    // Function to convert data to CSV format using Papa Parse
+    function convertDataToCSV(data, headers) {
+        // Prepare Papa Parse config for CSV conversion
+        var csvConfig = {
+            quotes: false, // Disable quotes for each field
+            delimiter: ",", // Set delimiter as comma
+            header: true, // Include headers in CSV output
         };
-    });
 
-    // Convert data to CSV format using Papa Parse
-    var csv = Papa.unparse(csvData, csvConfig);
+        // Map and transform each row of data
+        var csvData = data.map(row => {
+            // Exclude the last column (assuming it's the 5th column based on your provided data)
+            var rowSubset = row.slice(0, -1); // Exclude the last element in the row
 
-    return csv; // Return the generated CSV string
-}
-       $(document).ready(function() {
+            return {
+                [headers[0]]: rowSubset[0], // Contact Name
+                [headers[1]]: rowSubset[1], // Email
+                [headers[2]]: cleanPhoneNumber(rowSubset[2]), // Phone (cleaned)
+                [headers[3]]: rowSubset[3], // Customer Type
+                [headers[4]]: rowSubset[4],//Status
+            };
+        });
+
+        // Convert data to CSV format using Papa Parse
+        var csv = Papa.unparse(csvData, csvConfig);
+
+        return csv; // Return the generated CSV string
+    }
+    $(document).ready(function() {
         var csv_data;
         var PERSON_LIST_TABLE = $('#person-list').DataTable({
-            
-       
             "ordering": false,
             "processing": true,
             "serverSide": true,
@@ -539,29 +513,21 @@ function convertDataToCSV(data, headers) {
             return json.data;
 
         }
-            },
-           
-           
+        },
         });
 
-
-        $('#export-csv-button').on('click', function() {
-            var headers = ["Contact Name", "Email", "Phone", "Customer Type", "Status"];
-            var csvData = convertDataToCSV(csv_data, headers);
-            var blob = new Blob([csvData], { type: "text/csv;charset=utf-8" });
-            saveAs(blob, "residential.csv");
-    });
+        $('#btn-residential-export-list').on('click', function(){
+            location.href = base_url + 'customer/export_residential_list';
+        });
         
         $("#PERSON_SEARCHBAR").keyup(function() {
             PERSON_LIST_TABLE.search($(this).val()).draw();
-
         });
 
 
 
     $('.select-filter .dropdown-item').on('click', function(e) {
             e.preventDefault();
-
             // Get data-value and text of the clicked item
             var filterValue = $(this).attr('data-value');
             var filterText = $(this).text();
@@ -570,20 +536,12 @@ function convertDataToCSV(data, headers) {
             $('#filter-selected').text(filterText);
 
             PERSON_LIST_TABLE.ajax.reload();
-
         });
-  
     });
-
-
 
     $("#openModalBtn").click(function(){
         // Show the modal
         $("#person_modal").modal('show');
     });
-
-
 </script>
-
-
  <?php include viewPath('v2/pages/customer/js/add_advance_js'); ?> 

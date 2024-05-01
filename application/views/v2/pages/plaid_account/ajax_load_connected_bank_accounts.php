@@ -21,7 +21,7 @@
 </style>
 <?php if($is_valid == 1){ ?>
     <?php foreach($plaidBankAccounts as $pa){ ?>
-    <div class="widget-item">
+    <div class="widget-item" id="plaid-grp-<?= $pa->id; ?>">
         <div class="nsm-list-icon">
             <i class='bx bx-building-house'></i>
         </div>
@@ -104,33 +104,36 @@ $(function(){
             cancelButtonText: "Cancel"
         }).then((result) => {
             if (result.value) {
-                // $.ajax({
-                //     type: 'POST',
-                //     url: url,
-                //     dataType: 'json',
-                //     data: {pid:pid},
-                //     success: function(o) {
-                //         if( o.is_success == 1 ){   
-                //             Swal.fire({
-                //                 title: 'Delete Successful!',
-                //                 text: "Bank Account was Deleted Successfully!",
-                //                 icon: 'success',
-                //                 showCancelButton: false,
-                //                 confirmButtonText: 'Okay'
-                //             }).then((result) => {
-                //                 //if (result.value) {
-                //                     location.reload();
-                //                 //}
-                //             });
-                //         }else{
-                //             Swal.fire({
-                //             icon: 'error',
-                //             title: 'Error!',
-                //             html: o.msg
-                //             });
-                //         }
-                //     },
-                // });
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    dataType: 'json',
+                    data: {pid:pid},
+                    success: function(o) {
+                        if( o.is_success == 1 ){   
+                            Swal.fire({
+                                title: 'Delete Successful!',
+                                text: "Bank Account was Deleted Successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    //location.reload();
+                                    $('#plaid-grp-'+pid).fadeOut('normal', function() {
+                                        $(this).remove();
+                                    });
+                                //}
+                            });
+                        }else{
+                            Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: o.msg
+                            });
+                        }
+                    },
+                });
             }
         });
     });

@@ -106,6 +106,9 @@ $route['customer/getCompanyList'] = 'Customer/getCompanyList';
 $route['customer/getPersonList'] = 'Customer/getPersonList';
 $route['customer/save_person_profile'] = 'Customer/save_person_profile';
 $route['customer/delete/(:num)'] = 'customer/delete_company_or_person/$1';
+$route['customer/export_residential_list'] = 'Customer/export_residential_list';
+$route['customer/export_commercial_list'] = 'Customer/export_commercial_list';
+
 // Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
 $route['credit_bureau/add_new'] = 'Credit_Bureau/add_new';
@@ -627,6 +630,7 @@ $route['accounting/product-categories/create']['post'] = 'accounting_controllers
 $route['accounting/product-categories/get/(:any)'] = 'accounting_controllers/product_categories/get_category_details/$1';
 $route['accounting/product-categories/update/(:any)']['post'] = 'accounting_controllers/product_categories/update/$1';
 $route['accounting/product-categories/delete/(:any)']['DELETE'] = 'accounting_controllers/product_categories/delete/$1';
+$route['accounting/product-categories/_delete_selected_product_categories'] = 'accounting_controllers/product_categories/ajax_delete_selected_product_categories';
 
 $route['accounting/payroll-overview'] = 'accounting/payrolloverview';
 $route['accounting/workers-comp'] = 'accounting/workerscomp';
@@ -1437,6 +1441,7 @@ $route['mycrm/_delete_multi_account'] = 'Mycrm/ajax_delete_multi_account';
 $route['mycrm/_hdr_load_multi_account_list'] = 'Mycrm/ajax_hdr_load_multi_account_list';
 $route['mycrm/_login_multi_account'] = 'Mycrm/ajax_login_multi_account';
 $route['mycrm/_login_main_multi_account'] = 'Mycrm/ajax_login_main_multi_account';
+$route['mycrm/_check_max_link_account'] = 'Mycrm/ajax_check_company_max_link_account';
 
 // Addons
 $route['more/_load_addons_list'] = 'More/ajax_load_addons_list';
@@ -1568,6 +1573,8 @@ $route['taskhub/_load_taskhub_list'] = 'Taskhub/ajax_load_company_list';
 $route['taskhub/_add_new_task'] = 'Taskhub/ajax_add_new_task';
 $route['taskhub/_save_task'] = 'Taskhub/ajax_save_task';
 $route['taskhub/_save_taskhub_task'] = 'Taskhub/ajax_save_taskhub_task';
+$route['taskhub/_update_taskhub_task'] = 'Taskhub/ajax_update_taskhub_task';
+
 $route['taskhub/_task_mark_completed'] = 'Taskhub/ajax_complete_task';
 $route['taskhub/_mark_all_completed'] = 'Taskhub/ajax_company_complete_all_tasks';
 $route['taskhub/_delete_task'] = 'Taskhub/ajax_delete_task';
