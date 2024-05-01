@@ -944,6 +944,7 @@ class Widgets extends MY_Controller
     public function ajax_load_sales_chart()
     {   
         $this->load->model('Invoice_model');
+        $this->load->model('Estimate_model');
 
         $cid  = logged('company_id');
         $year = date("Y");
@@ -955,10 +956,17 @@ class Widgets extends MY_Controller
             $start_date = $year . '-' . $start . '-' . 1;
             $start_date = date("Y-m-d", strtotime($start_date));
             $end_date   = date("Y-m-t", strtotime($start_date));
-            $date_range = ['total_sales' => $totalPaidInvoices->total_paid, 'from' => $start_date, 'to' => $end_date];  
-            $totalPaidInvoices = $this->Invoice_model->getCompanyTotalAmountPaidInvoices($cid, $date_range);
 
-            $sales_data[]   = number_format($totalPaidInvoices->total_paid, 2, '.', '');
+            //$date_range    = ['from' => $start_date, 'to' => $end_date];
+            //$totalPaidInvoices = $this->Invoice_model->getCompanyTotalAmountPaidInvoices($cid, $date_range);            
+            //$sales_data[]  = number_format($totalPaidInvoices->total_paid, 2, '.', '');
+
+            $date_range    = ['from' => $start_date, 'to' => $end_date];
+            $totalInvoices = $this->Invoice_model->getCompanyTotalAmountInvoices($cid, $date_range);
+            $totalEstimate = $this->Estimate_model->getCompanyTotalAmountEstimates($cid, $date_range);
+            $total_sales = $totalInvoices->total_amount + $totalEstimate->total_amount;
+            
+            $sales_data[]   = number_format($total_sales, 2, '.', '');
             $chart_month    = date('F', strtotime($start_date));
             $chart_end_day  = date("t", strtotime($start_date));
             //$chart_labels[] = $chart_month . ' 01-'.$chart_end_day;

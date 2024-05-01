@@ -400,6 +400,21 @@ class Estimate_model extends MY_Model
         return $query->result();
     }
 
+    public function getCompanyTotalAmountEstimates($cid, $date_range = array())
+    {
+        $this->db->select('id, COALESCE(SUM(grand_total),0) AS total_amount');    
+        $this->db->from($this->table);   
+        $this->db->where('company_id', $cid);
+
+        if( !empty($date_range) ){
+            $this->db->where('estimate_date >=', $date_range['from']);
+            $this->db->where('estimate_date <=', $date_range['to']);
+        }
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function add_estimate_items($data)
     {
         $vendor = $this->db->insert('estimates_items', $data);
