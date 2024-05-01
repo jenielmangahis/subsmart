@@ -37,7 +37,7 @@ $('#categories-table .edit-category').on('click', function(e) {
             $('#addNewCategory form #sub-category').prop('checked', false).trigger('change');
         }
 
-        $('#addNewCategory form').attr('action', `/accounting/product-categories/update/${category.item_categories_id}`);
+        $('#addNewCategory form').attr('action', base_url + `accounting/product-categories/update/${category.item_categories_id}`);
         $('#addNewCategory form').attr('id', `update-category-form`);
         $('#addNewCategory .modal-footer').prepend('<button type="button" id="remove-category" class="nsm-button">Remove</button>');
 
@@ -57,7 +57,7 @@ $('#sub-category').on('change', function(){
 
             $('#parent_account').select2({
                 ajax: {
-                    url: '/accounting/product-categories/get',
+                    url: base_url + 'accounting/product-categories/get',
                     dataType: 'json'
                 },
                 dropdownParent: $('#addNewCategory')

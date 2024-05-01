@@ -87,6 +87,25 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
+    public function categoriesWithoutParentWithFilter($keyword)
+    {
+        $companyId = logged('company_id');
+        $this->db->where('company_id', $companyId);
+
+        if ( $keyword != '' ) {
+            $this->db->like('item_categories.name', $keyword, 'both');
+        }        
+
+        $this->db->where('parent_id', null);
+        $this->db->or_where('parent_id', 0);
+        $this->db->where('company_id', $companyId);
+        $this->db->or_where('parent_id', '');
+        $this->db->where('company_id', $companyId);
+
+        $query = $this->db->get($this->table_categories);
+        return $query->result();
+    }  
+
     public function get_child_categories($categoryId)
     {
         $companyId = logged('company_id');
