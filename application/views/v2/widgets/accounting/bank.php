@@ -24,24 +24,7 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content">        
-        <div class="nsm-widget-table">
-            <?php foreach($accounts as $account) : ?>
-                <div class="widget-item">
-                    <div class="nsm-list-icon">
-                        <i class='bx bx-building-house'></i>
-                    </div>
-                    <div class="content ms-2">
-                        <div class="details">
-                            <span class="content-title mb-1"><?=$account->name; ?></span>
-                            <!-- <span class="content-subtitle d-block">Bank balance: $0.00</span> -->
-                            <span class="content-subtitle d-block">In nSmartrac: <?=str_replace("$-", "-$", '$'.number_format(floatval($account->balance), 2, '.', ','))?></span>
-                        </div>
-                        <div class="controls">
-                            <!-- <span class="nsm-badge">Updated 1 day ago</span> -->
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
+        <div class="nsm-widget-table">            
             <div class="plaid-accounts"></div>
             <!-- <div class="widget-item">
                 <div class="nsm-list-icon">
