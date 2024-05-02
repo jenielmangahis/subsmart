@@ -107,6 +107,24 @@
                                                                             </button>
                                                                         </td>
                                                                     </tr>
+                                                                    <?php $count = 1; ?>
+                                                                    <?php do { ?>
+                                                                        <tr>
+                                                                            <td><?= $count ?></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td>
+                                                                                <button type="button" class="nsm-button delete-row">
+                                                                                    <i class='bx bx-fw bx-trash'></i>
+                                                                                </button>
+                                                                            </td>
+                                                                        </tr>
+                                                                    <?php $count++;
+                                                                    } while ($count <= 2) ?>
                                                                 </tbody>
                                                                 <tfoot>
                                                                     <tr>

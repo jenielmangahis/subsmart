@@ -66,9 +66,14 @@ class General_model extends MY_Model {
                 
             }
         }
-
-        if(array_key_exists("join",$params) && $params['join'] != NULL ){
-            $this->db->join($params['join']['table'], $params['join']['statement'],$params['join']['join_as']);
+        if (array_key_exists("join", $params)) {
+            if (is_array($params['join'][0])) {
+                foreach ($params['join'] as $join) {
+                    $this->db->join($join['table'], $join['statement'], $join['join_as']);
+                }
+            } else {
+                $this->db->join($params['join']['table'], $params['join']['statement'], $params['join']['join_as']);
+            }
         }
 
         if(array_key_exists("order",$params)){
@@ -86,6 +91,11 @@ class General_model extends MY_Model {
         if(array_key_exists("limit", $params)){
             $this->db->limit($params['limit']);
         }
+        
+        if (array_key_exists("groupBy", $params)) {
+            $this->db->group_by($params['groupBy']);
+        }
+    
        // $this->db->where('prof_id', $params['where']['prof_id']);
         $query = $this->db->get();
         if($result){

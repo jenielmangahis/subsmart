@@ -331,6 +331,48 @@ class AcsProfile_model extends MY_Model
 
         return $query->result();
     }
+    public function getCurrentCompanyOpenInvoices($id){
+        $this->db->where('company_id', $id);
+        $this->db->where('is_recurring', 0);
+        $this->db->where('view_flag', 0);
+        $this->db->where('status !=', 'Draft');
+        $this->db->where('status !=', 'Paid');
+        $this->db->where('status !=', '');
+        $query = $this->db->get('invoices');
+        return $query->result();
+    }
+
+    public function getCurrentCompanyOverdue($id)
+    {
+        $this->db->from('invoices');
+        $this->db->select('
+            invoices.id,
+            invoices.invoice_number,
+            invoices.due_date,
+            invoices.status,
+            acs_profile.email AS customer_email,
+            acs_profile.first_name, 
+            acs_profile.last_name,
+            acs_profile.fk_user_id as user_id,
+            invoices.grand_total,
+            invoices.grand_total - COALESCE(SUM(accounting_receive_payment_invoices.payment_amount), 0) as balance
+        ');
+        $this->db->join('accounting_receive_payment_invoices', 'accounting_receive_payment_invoices.invoice_id = invoices.id', 'left');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        $this->db->where('invoices.company_id', $id);
+        $this->db->where('invoices.grand_total >', 0);
+        $this->db->where('invoices.status !=', 'Draft');
+        $this->db->where('invoices.status !=', 'Paid');
+        $this->db->where('invoices.due_date !=', null);
+        $current_date = date('Y-m-d');
+        $this->db->where('invoices.due_date <', $current_date);
+        $this->db->where('invoices.view_flag', 0);
+        $this->db->group_by('invoices.id');
+        $this->db->order_by("STR_TO_DATE(invoices.due_date, '%Y-%m-%d') ASC");
+        $query = $this->db->get();
+
+        return $results = $query->result();
+    }
 
     public function getSubscriptionFilter($id, $date_from, $date_to)
     {
@@ -556,6 +598,18 @@ class AcsProfile_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllCustomerByCompanyId($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('first_name !=', '');
+        $this->db->order_by('prof_id', 'DESC');
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
     public function getAllRecentCustomerByCompanyId2($company_id, $limit = 10)
     {
         $this->db->select('*');
@@ -576,76 +630,81 @@ class AcsProfile_model extends MY_Model
         $this->db->where('prof_id', $prof_id);
         $this->db->from($this->table);
         $cust = $this->db->update($this->table, ['status' => 'Inactive']);
-		return $cust;        
-    }     
-    
-    public function getCompanyTotalSubscriptions($cid, $date_range = array())
+
+        return $cust;
+    }
+
+    public function getCompanyTotalSubscriptions($cid, $date_range = [])
     {
         $this->db->select('acs_billing.bill_id, COALESCE(SUM(acs_billing.mmr),0) AS total_subscription');
         $this->db->from($this->table2);
         $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
-        $this->db->where('acs_profile.company_id', $cid);    
-        
-        if( !empty($date_range) ){
+        $this->db->where('acs_profile.company_id', $cid);
+
+        if (!empty($date_range)) {
             $this->db->where('acs_billing.bill_end_date >=', $date_range['from']);
             $this->db->where('acs_billing.bill_end_date <=', $date_range['to']);
         }
 
         $query = $this->db->get()->row();
+
         return $query;
     }
 
-    public function getCompanyTotalActiveSubscriptions($cid, $date_range = array())
+    public function getCompanyTotalActiveSubscriptions($cid, $date_range = [])
     {
         $this->db->select('COUNT(acs_billing.bill_id) AS total_active_subscriptions');
         $this->db->from($this->table2);
         $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
-        $this->db->where('acs_profile.company_id', $cid);    
-        
-        if( !empty($date_range) ){
+        $this->db->where('acs_profile.company_id', $cid);
+
+        if (!empty($date_range)) {
             $this->db->where('acs_billing.bill_end_date >=', $date_range['from']);
             $this->db->where('acs_billing.bill_end_date <=', $date_range['to']);
-        }else{
-            $date = date("m/d/Y");
+        } else {
+            $date = date('m/d/Y');
             $this->db->where('acs_billing.bill_end_date <=', $date);
         }
 
         $query = $this->db->get()->row();
+
         return $query;
     }
 
-    public function getCompanyTotalAmountActiveRecurringPayment($cid, $date_range = array())
+    public function getCompanyTotalAmountActiveRecurringPayment($cid, $date_range = [])
     {
         $this->db->select('COALESCE(SUM(acs_billing.mmr),0)AS total_amount');
         $this->db->from($this->table2);
         $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
-        $this->db->where('acs_profile.company_id', $cid);    
-        
-        if( !empty($date_range) ){
+        $this->db->where('acs_profile.company_id', $cid);
+
+        if (!empty($date_range)) {
             $this->db->where('acs_billing.bill_end_date >=', $date_range['from']);
             $this->db->where('acs_billing.bill_end_date <=', $date_range['to']);
-        }else{
-            $date = date("m/d/Y");
+        } else {
+            $date = date('m/d/Y');
             $this->db->where('acs_billing.bill_end_date <=', $date);
         }
 
         $query = $this->db->get()->row();
+
         return $query;
     }
 
     public function getCompanyActiveSubscriptionWillExpireIn30Days($cid)
     {
-        $today = date("m/d/Y");
-        $_30_days = date("m/d/Y",strtotime("+30 days"));
+        $today = date('m/d/Y');
+        $_30_days = date('m/d/Y', strtotime('+30 days'));
 
         $this->db->select('*');
         $this->db->from($this->table2);
         $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
-        $this->db->where('acs_profile.company_id', $cid);    
+        $this->db->where('acs_profile.company_id', $cid);
         $this->db->where('acs_billing.bill_end_date >=', $today);
         $this->db->where('acs_billing.bill_end_date <=', $_30_days);
-        
+
         $query = $this->db->get();
+
         return $query->result();
     }
 }

@@ -558,6 +558,18 @@ class Invoice_model extends MY_Model
         return $query->row();
     }
 
+    public function getTotalInvoiceAmountByCompanyIdSalesGraph($company_id)
+    {
+        $this->db->select('invoices.*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('invoices.view_flag', 0);
+        
+        $query = $this->db->get();
+        return $query->result();
+
+    }
+
     public function getAllData($company_id)
     {
         $this->db->select('invoices.*, users.FName, users.LName, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');

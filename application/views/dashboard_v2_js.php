@@ -129,7 +129,7 @@ $(document).ready(function() {
             companies,
             recentCustomers
         } = response;
-        $("#recent-customer-container-count").html(recentCustomers.length);
+        $("#").html(recentCustomers.length);
 
     }).catch((error) => {
         console.log('Error:', error);
@@ -787,63 +787,381 @@ $(document).ready(function() {
 
 
 fetch('<?php echo base_url('Dashboard/income_subscription'); ?>', {}).then(response => response.json()).then(
-response => {
-    var monthlyAmounts = new Array(12).fill(0);
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
 
-    var {
-        success,
-        mmr
-    } = response;
+        var {
+            success,
+            mmr
+        } = response;
 
-    console.log('mmr initial', mmr)
 
-    if (mmr) {
-        for (var x = 0; x < mmr.length; x++) {
-            var installDate = mmr[x].bill_end_date;
-            if (installDate) {
-                var ins = new Date(installDate);
-                var month = ins.getMonth();
+        if (mmr) {
+            for (var x = 0; x < mmr.length; x++) {
+                var installDate = mmr[x].bill_end_date;
+                if (installDate) {
+                    var ins = new Date(installDate);
+                    var month = ins.getMonth();
 
-                monthlyAmounts[month] += parseInt(mmr[x].mmr);
+                    monthlyAmounts[month] += parseInt(mmr[x].mmr);
+                }
             }
         }
-    }
 
-    var sales_data = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        datasets: [{
-            label: 'Subscription',
-            backgroundColor: 'rgb(106, 74, 134)',
-            borderColor: 'rgb(106, 74, 134)',
-            data: monthlyAmounts
-        }]
-    };
+        var sales_data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Subscription',
+                backgroundColor: 'rgb(220, 53, 69 ,0.79)',
+                borderColor: 'rgb(220, 53, 69 ,0.79)',
+                data: monthlyAmounts
+            }]
+        };
+        $('#IncomeSubscriptioneGraphLoader').hide()
 
-    const subscriptionChart = new Chart($('#income_subscription'), {
-        type: 'line',
-        data: sales_data,
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
+
+        const subscriptionChart = new Chart($('#income_subscription'), {
+            type: 'line',
+            data: sales_data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
                 },
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    suggestedMax: 10
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
                 },
+                aspectRatio: 1.2,
             },
-            aspectRatio: 1.2,
-        },
-    });
+        });
 
-    window.subscriptionChart = subscriptionChart;
-}).catch((error) => {
+        window.subscriptionChart = subscriptionChart;
+    }).catch((error) => {
     console.log(error);
 })
 
+fetch('<?php echo base_url('Dashboard/sales_graph'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
+
+        var {
+            success,
+            open_invoices
+        } = response;
+
+
+
+
+        if (open_invoices) {
+            for (var x = 0; x < open_invoices.length; x++) {
+                var dueDate = open_invoices[x].due_date;
+                if (dueDate) {
+                    var due = new Date(dueDate);
+                    var month = due.getMonth();
+
+                    monthlyAmounts[month] += parseFloat(open_invoices[x].grand_total);
+                }
+            }
+        }
+
+        var sales_graph_data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Sales',
+                backgroundColor: 'rgb(106, 74, 134)',
+                borderColor: 'rgb(106, 74, 134)',
+                data: monthlyAmounts
+            }]
+        };
+        $('#SalesGraphLoader').hide()
+
+        const SalesWidgetsGraph = new Chart($('#SalesWidgetsGraph'), {
+            type: 'line',
+            data: sales_graph_data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
+                },
+                aspectRatio: 1.2,
+            },
+        });
+
+        window.SalesWidgetsGraph = SalesWidgetsGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+
+fetch('<?php echo base_url('Dashboard/get_all_customer'); ?>', {}).then(response => response.json()).then(
+    response => {
+
+
+        var {
+            success,
+            customer
+        } = response;
+
+      
+
+        var customer_graph_data = {
+            labels: ['Total Customer'],
+            datasets: [{
+                label: 'Total Customer',
+                data: [customer],
+                backgroundColor: 'rgb(107, 167, 124, 0.93)',
+                borderColor: 'rgb(107, 167, 124,0.93)',
+                cutout: '80%',
+                circumference: 300,
+                rotation: 210
+            }]
+        };
+        $('#NewCustomerGraphLoader').hide()
+      
+
+        const NewCustomerWidgetsGraph = new Chart($('#NewCustomerWidgetsGraph'), {
+            type: 'doughnut',
+            data: customer_graph_data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
+                },
+                aspectRatio: 1.2,
+            },
+        });
+        $(".recent-customer-container-count").html(customer);
+
+
+        window.NewCustomerWidgetsGraph = NewCustomerWidgetsGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+
+
+fetch('<?php echo base_url('Dashboard/leads_graph'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
+
+        var {
+            success,
+            total_leads
+        } = response;
+
+
+
+
+        var new_leads_data = {
+            labels: ['Total leads'],
+            datasets: [{
+                label: 'Weekly Sales',
+                data: [total_leads],
+                backgroundColor: 'rgb(199, 149, 28, 0.4)',
+                borderColor: 'rgb(199, 149, 28,0.75)',
+                borderWidth: 1,
+                cutout: '80%',
+                circumference: 300,
+                rotation: 210
+            }]
+        };
+        $('#NewLeadsGraphLoader').hide()
+
+        const gaugeChartText2 = {
+            id: 'gaugeChartText2',
+            afterDatasetDraw(chart, args, pluginOptions) {
+                const {
+                    ctx,
+                    data,
+                    chartArea: {
+                        top,
+                        bottom,
+                        left,
+                        right,
+                        width,
+                        height
+                    },
+                    scales: {
+                        r
+                    }
+                } = chart;
+
+                ctx.save();
+                console.log(r);
+                const xCoor = chart.getDatasetMeta(0).data[0].x;
+                const yCoor = chart.getDatasetMeta(0).data[0].y;
+
+
+                ctx.font = '16px sans-serif';
+                ctx.fillStyle = "rgb(40, 40, 43)";
+                ctx.textBaseLine = 'top';
+                ctx.textAlign = 'center';
+                ctx.fillText('Total', left + 95+20, yCoor -5);
+                ctx.textAlign = 'center';
+                ctx.font = '18px sans-serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(total_leads, left + 95 +20, yCoor + 25 );
+
+            }
+        }
+
+        const NewLeadsWidgetsGraph = new Chart($('#NewLeadsWidgetsGraph'), {
+            type: 'doughnut',
+            data: new_leads_data,
+            options: {
+                aspectRatio: 1.5,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false
+                    }
+                }
+            },
+            plugins: [gaugeChartText2],
+        });
+
+        window.NewLeadsWidgetsGraph = NewLeadsWidgetsGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+
+fetch('<?php echo base_url('Dashboard/open_invoices_graph'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
+
+        var {
+            success,
+            open_invoices
+        } = response;
+
+
+
+        if (open_invoices) {
+            for (var x = 0; x < open_invoices.length; x++) {
+                var dueDate = open_invoices[x].due_date;
+                if (dueDate) {
+                    var due = new Date(dueDate);
+                    var month = due.getMonth();
+
+                    monthlyAmounts[month] += 1;
+                }
+            }
+        }
+
+        var openinvoices_data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Open Invoices Count',
+                backgroundColor: 'rgb(220, 53, 69 ,0.79)',
+                borderColor: 'rgb(220, 53, 69 ,0.79)',
+                data: monthlyAmounts
+            }]
+        };
+        $('#OpenInvoicesGraphLoader').hide()
+
+        const OpenInvoicesGraph = new Chart($('#OpenInvoicesGraph'), {
+            type: 'bar',
+            data: openinvoices_data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
+                },
+                aspectRatio: 1.2,
+            },
+        });
+
+        window.OpenInvoicesGraph = OpenInvoicesGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+
+fetch('<?php echo base_url('Dashboard/past_due_invoices'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
+
+        var {
+            success,
+            past_due
+        } = response;
+
+
+        if (past_due) {
+            for (var x = 0; x < past_due.length; x++) {
+                var dueDate = past_due[x].due_date;
+                if (dueDate) {
+                    var due = new Date(dueDate);
+                    var month = due.getMonth();
+
+                    monthlyAmounts[month] += parseFloat(past_due[x].balance);
+                }
+            }
+        }
+
+        var pastdue_data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Total Balance',
+                backgroundColor: 'rgb(220, 53, 69 ,0.79)',
+                borderColor: 'rgb(220, 53, 69 ,0.79)',
+                data: monthlyAmounts
+            }]
+        };
+        $('#PastDueGraphLoader').hide()
+
+        const pastDueGraph = new Chart($('#PastDueGraph'), {
+            type: 'bar',
+            data: pastdue_data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
+                },
+                aspectRatio: 1.2,
+            },
+        });
+
+        window.pastDueGraph = pastDueGraph;
+    }).catch((error) => {
+    console.log(error);
+})
 
 
 $('#quick_links_modal .shortcut-item.print-check').on('click', function() {

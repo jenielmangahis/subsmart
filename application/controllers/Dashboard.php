@@ -368,7 +368,7 @@ class Dashboard extends Widgets
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['estimates'] = $this->estimate_model->getAllOpenEstimatesByCompanyId($companyId);
         $this->page_data['expired_estimates'] = $this->estimate_model->getExpiredEstimatesByCompanyId($companyId);
-        $this->page_data['leads'] = count($this->customer_ad_model->get_leads_data_this_week());
+        $this->page_data['leads'] = count($this->customer_ad_model->get_leads_data());
         // $this->load->view('dashboard', $this->page_data);
         $this->load->view('dashboard_v2', $this->page_data);
     }
@@ -398,7 +398,7 @@ class Dashboard extends Widgets
                         'table' => 'acs_profile',
                         'statement' => 'estimates.customer_id = acs_profile.prof_id',
                         'join_as' => 'right',
-                       ]
+                       ],
                     ],
                     'select' => 'estimates.*',
                     'order' => ['order_by' => 'id', 'ordering' => 'DESC'],
@@ -420,16 +420,14 @@ class Dashboard extends Widgets
                     'select' => 'estimates.*',
                     'order' => ['order_by' => 'id', 'ordering' => 'DESC'],
                 ];
-                
-                
+
                 $expired = $this->general->get_data_with_param($expired_query);
 
                 $this->output->set_output(json_encode(['first' => count($total), 'second' => count($expired), 'w_list_view' => $widgets->w_list_view]));
                 break;
             case 'acs_billing':
                 $total_query = [
-                    'where' => ['acs_profile.company_id' => logged('company_id'), 'acs_profile.status' => 'Installed'
-                    , 'STR_TO_DATE(acs_billing.bill_start_date, "%m/%d/%Y") >=' => date('Y-m-d', strtotime($date_from)),'STR_TO_DATE(acs_billing.bill_end_date, "%m/%d/%Y") >=' =>date('Y-m-d', strtotime($date_to))],
+                    'where' => ['acs_profile.company_id' => logged('company_id'), 'acs_profile.status' => 'Installed', 'STR_TO_DATE(acs_billing.bill_start_date, "%m/%d/%Y") >=' => date('Y-m-d', strtotime($date_from)), 'STR_TO_DATE(acs_billing.bill_end_date, "%m/%d/%Y") >=' => date('Y-m-d', strtotime($date_to))],
                     'table' => 'acs_billing',
                     'join' => [
                         [
@@ -444,10 +442,143 @@ class Dashboard extends Widgets
                     'select' => 'SUM(acs_billing.mmr) AS TOTAL_MMR',
                 ];
                 $total = $this->general->get_data_with_param($total_query);
-                $mmr = $this->AcsProfile_model->getSubscriptionFilter(logged('company_id'),$date_from, $date_to);
-                $this->output->set_output(json_encode(['first' => number_format($total[0]->TOTAL_MMR, 2), 'second' => null ,  'mmr' => $mmr, ]));
+                $mmr = $this->AcsProfile_model->getSubscriptionFilter(logged('company_id'), $date_from, $date_to);
+                $this->output->set_output(json_encode(['first' => number_format($total[0]->TOTAL_MMR, 2), 'second' => null,  'mmr' => $mmr]));
 
                 break;
+
+            case 'invoices':
+                $total_query = [
+                    'where' => ['invoices.company_id' => logged('company_id'), 'invoices.grand_total >' => 0, 'invoices.due_date !=' => null,
+                    'invoices.status !=' => 'Draft', 'invoices.view_flag' => 0,
+                    'invoices.date_issued >=' => date('Y-m-d', strtotime($date_from)), 'invoices.due_date <' => date('Y-m-d', strtotime($date_to))],
+                    'table' => 'invoices',
+                    'join' => [
+                        [
+                            'table' => 'accounting_receive_payment_invoices',
+                            'statement' => 'accounting_receive_payment_invoices.invoice_id = invoices.id',
+                            'join_as' => 'left',
+                        ],
+                        [
+                            'table' => 'acs_profile',
+                            'statement' => 'acs_profile.prof_id = invoices.customer_id',
+                            'join_as' => 'left',
+                        ],
+                    ],
+                    'groupBy' => 'invoices.id',
+                    'select' => ' invoices.id,
+                    invoices.invoice_number,
+                    invoices.due_date,
+                    invoices.status,
+                    acs_profile.email AS customer_email,
+                    acs_profile.first_name, 
+                    acs_profile.last_name,
+                    acs_profile.fk_user_id as user_id,
+                    invoices.grand_total,
+                    invoices.grand_total - COALESCE(SUM(accounting_receive_payment_invoices.payment_amount), 0) as balance',
+                ];
+                $past_due = $this->general->get_data_with_param($total_query);
+
+                $invoices_total_due = 0;
+                foreach ($past_due as $total_due) {
+                    if ($total_due->status != 'paid') {
+                        $invoices_total_due += $total_due->balance;
+                    }
+                }
+
+                $mmr = $this->AcsProfile_model->getSubscriptionFilter(logged('company_id'), $date_from, $date_to);
+                $this->output->set_output(json_encode(['first' => count($past_due), 'second' => number_format($invoices_total_due),  'mmr' => $mmr, 'past_due' => $past_due]));
+
+                break;
+            case 'open_invoices':
+                $total_query = [
+                    'where' => ['company_id' => logged('company_id'),
+                    'is_recurring =' => 0, 'view_flag =' => 0,
+                    'status !=' => 'Draft', 'status !=' => 'Declined', 'status !=' => 'Paid', 'status !=' => '',
+                    'date_issued >=' => date('Y-m-d', strtotime($date_from)),
+                     'due_date <' => date('Y-m-d', strtotime($date_to))],
+                    'table' => 'invoices',
+                    'select' => '*',
+                ];
+                $invoices = $this->general->get_data_with_param($total_query);
+                $openInvoices = array_filter($invoices, function ($v, $k) {
+                    return !in_array($v->status, ['Draft', 'Declined', 'Paid']);
+                }, ARRAY_FILTER_USE_BOTH);
+
+                $this->output->set_output(json_encode(['first' => count($openInvoices), 'second' => null, 'open_invoices' => array_values($openInvoices)]));
+
+                break;
+            case 'sales':
+                $total_query = [
+                    'where' => ['company_id' => logged('company_id'),'view_flag'=> 0,  'date_issued >=' => date('Y-m-d', strtotime($date_from)),
+                    'due_date <' => date('Y-m-d', strtotime($date_to))],
+                    'table' => 'invoices',
+                    'select' => 'SUM(grand_total) AS total_invoice_amount',
+                ];
+                $resultInvoice = $this->general->get_data_with_param($total_query);
+
+                $total_invoice = 0;
+                if( $resultInvoice ){
+                    $total_invoice = $resultInvoice[0]->total_invoice_amount;
+                }
+                $result = number_format($total_invoice, 2, '.', ',');
+
+                $sales_query = [
+                    'where' => ['company_id' => logged('company_id'),'view_flag'=> 0,  'date_issued >=' => date('Y-m-d', strtotime($date_from)),
+                    'due_date <' => date('Y-m-d', strtotime($date_to))],
+                    'table' => 'invoices',
+                    'select' => '*',
+                ];
+
+                $sales = $this->general->get_data_with_param($sales_query);
+
+             
+
+                $this->output->set_output(json_encode(['first' => $result, 'second' => null,  'sales' => $sales]));
+
+                break;
+            case 'ac_leads':
+                $leads_query = [
+                    'where' => ['ac_leads.company_id' => logged('company_id'),
+                    'DATE(ac_leads.date_created)  >=' => date('Y-m-d', strtotime($date_from)),
+                    'DATE(ac_leads.date_created)  <' => date('Y-m-d', strtotime($date_to))
+                     ],
+                    'table' => 'ac_leads',
+                    'join' => [
+                        [
+                            'table' => 'users',
+                            'statement' => 'users.id = ac_leads.fk_sr_id',
+                            'join_as' => 'left',
+                        ],
+                        [
+                            'table' => 'ac_leadtypes',
+                            'statement' => 'ac_leadtypes.lead_id = ac_leads.fk_lead_type_id',
+                            'join_as' => 'left',
+                        ],
+                    ],
+                    'select' => 'ac_leads.*',
+                ];
+                $total_leads = $this->general->get_data_with_param($leads_query);
+
+                $this->output->set_output(json_encode(['first' => count($total_leads), 'second' => null, 'total_leads' => count($total_leads)]));
+
+            break;
+
+            case 'acs_profile':
+                $acs_profile_query = [
+                    'where' => ['company_id' => logged('company_id'),
+                    'DATE(created_at)  >=' => date('Y-m-d', strtotime($date_from)),
+                    'DATE(created_at)  <' => date('Y-m-d', strtotime($date_to))
+                     ],
+                    'table' => 'acs_profile',
+                    'select' => '*',
+                ];
+                $total_acs = $this->general->get_data_with_param($acs_profile_query);
+                $this->output->set_output(json_encode(['first' => count($total_acs), 'second' => null, 'total_acs' => count($total_acs)]));
+
+            break;
+
+            
         }
     }
 
@@ -714,6 +845,19 @@ class Dashboard extends Widgets
         exit(json_encode($data_arr));
     }
 
+    public function get_all_customer()
+    {
+        $this->load->model('AcsProfile_model');
+        $cid = logged('company_id');
+
+        $customer = $this->AcsProfile_model->getAllCustomerByCompanyId($cid);
+       
+
+        $data_arr = ['success' => $is_success, 'customer' => count($customer)];
+        exit(json_encode($data_arr));
+    }
+
+
     public function ajax_recent_customers_thubnails()
     {
         $this->load->model('AcsProfile_model');
@@ -925,6 +1069,43 @@ class Dashboard extends Widgets
         $data_arr = ['Success' => true, 'mmr' => $mmr];
         exit(json_encode($data_arr));
     }
+
+    public function past_due_invoices()
+    {
+        $past_due = $this->AcsProfile_model->getCurrentCompanyOverdue(logged('company_id'));
+
+        // $past_due = $this->AcsProfile_model->getSubscription(logged('company_id'));
+        $data_arr = ['Success' => true, 'past_due' => $past_due];
+        exit(json_encode($data_arr));
+    }
+
+    public function open_invoices_graph()
+    {
+        $open_invoices = $this->AcsProfile_model->getCurrentCompanyOpenInvoices(logged('company_id'));
+
+        $data_arr = ['Success' => true, 'open_invoices' => $open_invoices];
+        exit(json_encode($data_arr));
+    }
+
+    public function sales_graph()
+    {
+        $CI = &get_instance();
+        $CI->load->model('Invoice_model', 'invoice_model');
+        $CI->load->model('Payment_records_model');
+        $company_id = logged('company_id');
+
+        $resultInvoice  = $CI->invoice_model->getTotalInvoiceAmountByCompanyIdSalesGraph($company_id);
+        $data_arr = ['Success' => true, 'open_invoices' => $resultInvoice];
+        exit(json_encode($data_arr));
+    }
+
+    public function leads_graph()
+    {
+        $leads =  $this->customer_ad_model->get_leads_data();
+        $data_arr = ['Success' => true, 'total_leads' => count($leads)];
+        exit(json_encode($data_arr));
+    }
+
 
     public function jobs()
     {
