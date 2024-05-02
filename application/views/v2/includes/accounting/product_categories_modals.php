@@ -10,7 +10,7 @@
                     <div class="modal-body">
                         <div class="mb-2">
                             <label for="name">Name</label>
-                            <input type="text" name="name" class="form-control nsm-field">
+                            <input type="text" name="name" class="form-control nsm-field" required>
                         </div>
                         <div class="form-check mb-2">
                             <input type="checkbox" id="sub-category" value="1" class="form-check-input">

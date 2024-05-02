@@ -54,10 +54,6 @@ class Taskhub extends MY_Controller {
 			}			
 		}
 
-		//echo '<pre>';
-		//print_r($task_data);
-		//echo '</pre>';
-
 		$this->page_data['tasks'] = $task_data;
 
 		$this->page_data['status'] = $this->input->get('status');
