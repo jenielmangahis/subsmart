@@ -594,8 +594,7 @@
                         <div class="col-md-8">
                             <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_m" id="phone_m" value="<?php if(isset($profile_info->phone_h) || isset($profile_info->phone_m)){ echo $profile_info->phone_m != null ? $profile_info->phone_m : $phone_m; } ?>" required />
                         </div>
-                    </div>
-                
+                    </div>                
 
                 </div>
                 <div class="modal-footer">
@@ -629,7 +628,7 @@ $(document).ready(function() {
                 //console.log(json);
                 // Return the data portion of the response
                 csv_data = json.data;
-                console.log(csv_data);
+                //console.log(csv_data);
                 return json.data;
             }
         },
@@ -650,15 +649,15 @@ $(document).ready(function() {
     });
 
     $('.select-filter .dropdown-item').on('click', function(e) {
-            e.preventDefault();
-            // Get data-value and text of the clicked item
-            var filterValue = $(this).attr('data-value');
-            var filterText = $(this).text();
+        e.preventDefault();
+        // Get data-value and text of the clicked item
+        var filterValue = $(this).attr('data-value');
+        var filterText = $(this).text();
 
-            // Update the text inside #filter-selected span
-            $('#filter-selected').text(filterText);
+        // Update the text inside #filter-selected span
+        $('#filter-selected').text(filterText);
 
-            PERSON_LIST_TABLE.ajax.reload();
+        PERSON_LIST_TABLE.ajax.reload();
     });
 
     function deleteItem(itemId) {
