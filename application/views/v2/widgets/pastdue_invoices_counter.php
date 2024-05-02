@@ -10,8 +10,8 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <div class="nsm-card-header">
                 <div class="nsm-card-title summary-report-header">
                     <div class="summary-report-header-sub ">
-                        <div class="icon-summary-estimate">
-                            <i class="bx bx-bar-chart-square"></i>
+                    <div class="icon-summary-income">
+                        <i class="bx bx-box "></i>
                         </div>
                         <a role="button" class=" btn-sm m-0 me-2" href="invoice" style="color:#dc3545c9 !important ">
                             Past Due Invoices
@@ -72,11 +72,11 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                 <div class="text-start summary-report-body">
                     <div>
                         <label for="">Count</label>
-                        <h1><?php echo number_format($invoices_count); ?></h1>
+                        <h1 id="first_content_<?php echo $id; ?>"><?php echo number_format($invoices_count); ?></h1>
                     </div>
                     <div>
                         <label for="">Total Due</label>
-                        <h1><?php echo number_format($invoices_total_due); ?></h1>
+                        <h1 id="second_content_<?php echo $id; ?>"><?php echo number_format($invoices_total_due); ?></h1>
                     </div>
                 </div>
             </div>

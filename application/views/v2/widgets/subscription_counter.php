@@ -10,8 +10,8 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <div class="nsm-card-header">
                 <div class="nsm-card-title summary-report-header">
                     <div class="summary-report-header-sub ">
-                        <div class="icon-summary-estimate">
-                            <i class="bx bx-box"></i>
+                    <div class="icon-summary-income">
+                        <i class="bx bx-box "></i>
                         </div>
                         <a role="button" class=" btn-sm m-0 me-2" href="invoice" style="color:#dc3545c9 !important ">
                             Subscription
@@ -59,6 +59,8 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
     <div class="nsm-card-content"
         style="  height: calc(100% - 120px); display: <?php echo $isListView ? 'block' : 'none'; ?>"
         id="thumbnail_content_graph_<?php echo $id; ?>">
+        <h1 id='IncomeSubscriptioneGraphLoader'> <span class="bx bx-loader bx-spin"></span></h1>
+
         <canvas id="income_subscription" class="nsm-chart" data-chart-type="sales"></canvas>
     </div>
     <div class="nsm-card-content"

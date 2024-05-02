@@ -55,7 +55,7 @@ if (isset($selected_participants)) {
                         </div>
                     </div>
                 </div>
-                <?php echo form_open_multipart(null, ['class' => 'form-validate require-validation', 'id' => 'frm-taskhub-add']); ?>
+                <?php echo form_open_multipart(null, ['class' => 'form-validate frm-taskhub-add require-validation', 'id' => 'frm-taskhub-add']); ?>
                 <?php
                 if (isset($task)) {
                     $task_id = $taskHub->task_id;
@@ -208,7 +208,7 @@ if (isset($selected_participants)) {
 
                                     <div class="col-12">
                                         <label class="content-subtitle fw-bold d-block mb-2">Description</label>
-                                        <textarea name="description" class="nsm-field form-control ckeditor" placeholder="Enter Description" required>
+                                        <textarea name="description" class="nsm-field form-control ckeditortaskhub" id="ckeditortaskhub" placeholder="Enter Description" required>
                                         <?php
                                         if ((set_value('description') == '') && (isset($task))) {
                                             echo $taskHub->description;
@@ -236,6 +236,8 @@ if (isset($selected_participants)) {
 
 <script type="text/javascript">
     $(function(){
+        CKEDITOR.replace( 'ckeditortaskhub', {});   
+
         $('#status-select').select2();
         $('#priority-select').select2();
         
@@ -407,43 +409,9 @@ if (isset($selected_participants)) {
             e.preventDefault();
 
             let _this = $(this);
-            var url = "<?php //echo base_url('taskhub/entry'); ?>";
-            _this.find("button[type=submit]").html("Saving");
-            _this.find("button[type=submit]").prop("disabled", true);
-
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: _this.serialize(),
-                success: function(result) {
-                    Swal.fire({
-                        title: 'Save Successful!',
-                        text: "Task is saved successfully.",
-                        icon: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Okay'
-                    }).then((result) => {
-                        //if (result.value) {
-                            location.href = "<?php echo base_url('taskhub'); ?>";
-                            //location.reload();
-                        //}
-                    });
-
-                    //_this.trigger("reset");
-
-                    _this.find("button[type=submit]").html("Save");
-                    _this.find("button[type=submit]").prop("disabled", false);
-                },
-            });
-        });*/
-
-        $("#frm-taskhub-add").on("submit", function(e) {            
-            e.preventDefault();
-
-            let _this = $(this);
             var url   = base_url + 'taskhub/_save_taskhub_task';
             var formData = new FormData($("#frm-taskhub-add")[0]); 
-            
+                 
             _this.find("button[type=submit]").html('<span class="bx bx-loader bx-spin"></span>');
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -482,7 +450,49 @@ if (isset($selected_participants)) {
                     }
                 });
             }, 800); 
-        });             
+        });*/     
+        
+        $("#frm-taskhub-add").on("submit", function(e) {            
+            e.preventDefault();
+
+            var ContentFromEditor = CKEDITOR.instances.ckeditortaskhub.getData();
+            var dataString = $("#frm-taskhub-add").serialize();
+                dataString += '&ContentFromEditor='+ContentFromEditor;              
+
+            let _this = $(this);
+            var url = "<?php echo base_url('taskhub/_save_taskhub_task'); ?>";
+            _this.find("button[type=submit]").html("Saving");
+            _this.find("button[type=submit]").prop("disabled", true);
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: dataString,
+                success: function(result) {
+                    var res = JSON.parse(result);
+                    if(res.is_success == 1) {
+                        Swal.fire({
+                            title: 'Save Successful!',
+                            text: res.message,
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((o) => {
+                            location.href = "<?php echo base_url('taskhub'); ?>";   
+                        });                        
+                    } else {
+                        Swal.fire({
+                        icon: 'error',
+                        title: 'Cannot Add Task',
+                        text: res.msg
+                        }); 
+                    }
+
+                    _this.find("button[type=submit]").html("Save");
+                    _this.find("button[type=submit]").prop("disabled", false);
+                },
+            });
+        });        
     });
 
     function formatRepoCustomerSelection(repo) {

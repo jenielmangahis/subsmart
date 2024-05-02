@@ -1444,10 +1444,6 @@ table.dataTable thead th, table.dataTable thead td{
             }, 800);
         });
 
-        $('#delete-customer').on('click', function(){
-            
-        });
-
         $(document).on('click', '.delete-customer', function(){
             var cid = $(this).attr('data-id');
             Swal.fire({            

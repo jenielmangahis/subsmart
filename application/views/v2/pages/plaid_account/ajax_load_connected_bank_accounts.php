@@ -112,7 +112,7 @@ $(function(){
                     success: function(o) {
                         if( o.is_success == 1 ){   
                             Swal.fire({
-                                title: 'Delete Successful!',
+                                //title: 'Delete Successful!',
                                 text: "Bank Account was Deleted Successfully!",
                                 icon: 'success',
                                 showCancelButton: false,
