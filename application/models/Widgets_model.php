@@ -26,8 +26,6 @@ class Widgets_model extends MY_Model
         return $this->db->get('invoices')->result();
     }
 
-  
-
     public function getCurrentCompanyOverdueInvoices()
     {
         $company_id = logged('company_id');
@@ -81,11 +79,11 @@ class Widgets_model extends MY_Model
         $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
         $this->db->where('invoices.company_id', $company_id);
         $this->db->where('invoices.grand_total >', 0);
-        $this->db->where('invoices.status !=','Draft');
-        $this->db->where('invoices.status !=','Paid');
+        $this->db->where('invoices.status !=', 'Draft');
+        $this->db->where('invoices.status !=', 'Paid');
         $this->db->where('invoices.due_date !=', null);
-        $current_date = date("Y-m-d");
-        $this->db->where("invoices.due_date <=", $current_date);
+        $current_date = date('Y-m-d');
+        $this->db->where('invoices.due_date <', $current_date);
         $this->db->where('invoices.view_flag', 0);
         $this->db->group_by('invoices.id');
         $this->db->order_by("STR_TO_DATE(invoices.due_date, '%Y-%m-%d') ASC");
@@ -294,13 +292,12 @@ class Widgets_model extends MY_Model
         return $result;
     }
 
-    public  function updateListView($id , $val)
+    public function updateListView($id, $val)
     {
         $this->db->where('w_id', $id);
-        return   $this->db->update('widgets', array(
-            'w_list_view'  =>  $val,
-            
-        ));
-     
+
+        return $this->db->update('widgets', [
+            'w_list_view' => $val,
+        ]);
     }
 }

@@ -664,20 +664,111 @@ function loadDataFilter(from_date, to_date, table, id) {
                 window.gauge_estimate_Chart.destroy();
                 filterEstimateThumbnailGraph(data['first'], data['second'])
             }
+            if (table == 'invoices') {
+                filterPastDueThumbnailGraph(data['past_due'])
+            }
+            if (table == 'open_invoices') {
+                filterOpenInvoicesThumbnailGraph(data['open_invoices'])
+            }
+
+            if (table == 'sales') {
+                filterSalesThumbnailGraph(data['sales'])
+            }
+
+            if (table == 'ac_leads') {
+                filterLeadsThumbnailGraph(data['total_leads'])
+            }
+
+            if (table == 'acs_profile') {
+                filterCustomerThumbnailGraph(data['total_acs'])
+            }
+
         }
     });
 }
 
+function filterCustomerThumbnailGraph(total_acs) {
+
+if (total_acs > 0) {
+    NewCustomerWidgetsGraph.data.datasets[0].data = total_acs;
+    NewCustomerWidgetsGraph.update();
+}
+
+}
+
+function filterLeadsThumbnailGraph(sales) {
+
+    if (sales > 0) {
+        NewLeadsWidgetsGraph.data.datasets[0].data = sales;
+        NewLeadsWidgetsGraph.update();
+    }
+
+
+}
+
+function filterSalesThumbnailGraph(sales) {
+    var amountsByMonth = new Array(12).fill(0);
+
+    for (var x = 0; x < sales.length; x++) {
+        var dueDate = sales[x].due_date;
+        if (dueDate) {
+            var due = new Date(dueDate);
+            var month = due.getMonth();
+
+            amountsByMonth[month] += parseFloat(sales[x].grand_total);
+        }
+    }
+
+    SalesWidgetsGraph.data.datasets[0].data = amountsByMonth;
+    SalesWidgetsGraph.update();
+}
+
+function filterOpenInvoicesThumbnailGraph(open_invoices) {
+    var amountsByMonth = new Array(12).fill(0);
+
+    for (var x = 0; x < open_invoices.length; x++) {
+        var dueDate = open_invoices[x].due_date;
+        if (dueDate) {
+            var due = new Date(dueDate);
+            var month = due.getMonth();
+
+            amountsByMonth[month] += 1;
+        }
+    }
+
+    OpenInvoicesGraph.data.datasets[0].data = amountsByMonth;
+    OpenInvoicesGraph.update();
+}
+
+
+function filterPastDueThumbnailGraph(past_due) {
+    var amountsByMonth = new Array(12).fill(0);
+
+    for (var x = 0; x < past_due.length; x++) {
+        var dueDate = past_due[x].due_date;
+        if (dueDate) {
+            var due = new Date(dueDate);
+            var month = due.getMonth();
+
+            amountsByMonth[month] += parseFloat(past_due[x].balance);
+        }
+    }
+
+    pastDueGraph.data.datasets[0].data = amountsByMonth;
+    pastDueGraph.update();
+}
+
+
 function filterSubsciptionThumbnailGraph(mmr) {
-    console.log('mmr',mmr)
+    console.log('mmr', mmr)
     var amountsByMonth = new Array(12).fill(0);
 
     for (var x = 0; x < mmr.length; x++) {
         var installDate = new Date(mmr[x].bill_end_date);
-        var month = installDate.getMonth(); 
-        var amount = parseInt(mmr[x].mmr); 
+        var month = installDate.getMonth();
+        var amount = parseInt(mmr[x].mmr);
 
-     
+
         amountsByMonth[month] += amount;
     }
 
@@ -920,22 +1011,6 @@ function fetchJobs() {
     });
 }
 
-function fetchNewCustomer() {
-    fetch('<?php echo base_url('dashboard/_recent_customers'); ?>', {
-        method: 'GET',
-    }).then(response => response.json()).then(response => {
-        var {
-            success,
-            companies,
-            recentCustomers
-        } = response;
-        $("#recent-customer-container-count").html(recentCustomers.length);
-
-    }).catch((error) => {
-        console.log('Error:', error);
-    });
-
-}
 
 function addThumbnail(id) {
     var isGlobal = $('#widgetGlobal_' + id).is(":checked") ? '1' : 0;
