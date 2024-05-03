@@ -178,6 +178,7 @@ class Customer extends MY_Controller
         $this->page_data['salesAreaSelected']= $this->customer_ad_model->getAllSettingsSalesAreaByCompanyId(logged('company_id'));
         $this->load->view('v2/pages/customer/company', $this->page_data);
     }
+
     public function getCompanyList(){
 
         $request = $_REQUEST;
@@ -305,8 +306,13 @@ class Customer extends MY_Controller
                     }
                     array_push($data_arr, $phone_m);
                 }
+
                 if (in_array('status', $enabled_table_headers)) {
-                    $stat = '<span class="nsm-badge <?= $badge ?>">'.$customer->status != null ? $customer->status : 'Pending</span>';
+                    $status = 'Status not specified';
+                    if( trim($customer->status) != '' ){
+                        $status = $customer->status;
+                    }
+                    $stat = '<span class="nsm-badge">'.$status.'</span>';
                     array_push($data_arr, $stat);
                 }
             } else {
@@ -356,7 +362,12 @@ class Customer extends MY_Controller
                 array_push($data_arr, '$'.$job_amount);
                 $phone = trim($customer->phone_m) != '' ? $customer->phone_m : '---';
                 array_push($data_arr, formatPhoneNumber($phone));
-                $stat = '<span class="nsm-badge <?= $badge ?>">'.$customer->status != null ? $customer->status : 'Pending</span>';
+
+                $status = 'Status not specified';
+                if( trim($customer->status) != '' ){
+                    $status = $customer->status;
+                }
+                $stat = '<span class="nsm-badge">'.$status.'</span>';
                 array_push($data_arr, $stat);
             }
 
@@ -536,7 +547,11 @@ class Customer extends MY_Controller
                     array_push($data_arr, $phone_m);
                 }
                 if (in_array('status', $enabled_table_headers)) {
-                    $stat = '<span class="nsm-badge <?= $badge ?>">'.$customer->status != null ? $customer->status : 'Pending</span>';
+                    $status = 'Status not specified';
+                    if( trim($customer->status) != '' ){
+                        $status = $customer->status;
+                    }
+                    $stat = '<span class="nsm-badge">'.$status.'</span>';
                     array_push($data_arr, $stat);
                 }
             } else {
@@ -586,7 +601,12 @@ class Customer extends MY_Controller
                 array_push($data_arr, '$'.$job_amount);
                 $phone = trim($customer->phone_m) != '' ? $customer->phone_m : '---';
                 array_push($data_arr, formatPhoneNumber($phone));
-                $stat = '<span class="nsm-badge <?= $badge ?>">'.$customer->status != null ? $customer->status : 'Pending</span>';
+
+                $status = 'Status not specified';
+                if( trim($customer->status) != '' ){
+                    $status = $customer->status;
+                }
+                $stat = '<span class="nsm-badge">'.$status.'</span>';
                 array_push($data_arr, $stat);
             }
 
@@ -770,24 +790,6 @@ class Customer extends MY_Controller
         foreach ($customers as $customer) {
             // if( !in_array($customer->prof_id, $customer_ids) ){
             $customer_ids[] = $customer->prof_id;
-            switch (strtoupper($customer->status)) {
-                case 'INSTALLED':
-                    $badge = 'success';
-                    break;
-                case 'CANCELLED':
-                    $badge = 'error';
-                    break;
-                case 'COLLECTIONS':
-                    $badge = 'secondary';
-                    break;
-                case 'CHARGED BACK':
-                    $badge = 'primary';
-                    break;
-                default:
-                    $badge = '';
-                    break;
-            }
-
             $techician = !empty($customer->technician) ? get_employee_name($customer->technician)->FName : $customer->technician.'Not Assigned';
             $companyId = logged('company_id');
             $salesRep = get_sales_rep_name($customer->fk_sales_rep_office);
@@ -900,7 +902,11 @@ class Customer extends MY_Controller
                     array_push($data_arr, $phone_m);
                 }
                 if (in_array('status', $enabled_table_headers)) {
-                    $stat = '<span class="nsm-badge <?= $badge ?>">'.$customer->status != null ? $customer->status : 'Pending</span>';
+                    $status = 'Status not specified';
+                    if( trim($customer->status) != '' ){
+                        $status = $customer->status;
+                    }
+                    $stat = '<span class="nsm-badge">'.$status.'</span>';
                     array_push($data_arr, $stat);
                 }
             } else {
@@ -971,8 +977,13 @@ class Customer extends MY_Controller
                 // phone
                 $phone = trim($customer->phone_m) != '' ? $customer->phone_m : '---';
                 array_push($data_arr, formatPhoneNumber($phone));
+
+                $status = 'Status not specified';
+                if( trim($customer->status) != '' ){
+                    $status = $customer->status;
+                }
                 // status
-                $stat = '<span class="nsm-badge <?= $badge ?>">'.$customer->status != null ? $customer->status : 'Pending</span>';
+                $stat = '<span class="nsm-badge">'.$status.'</span>';
                 array_push($data_arr, $stat);
             }
 
@@ -2940,6 +2951,15 @@ class Customer extends MY_Controller
                 $response['success'] = $update_result;
                 $response['message'] = $update_result ? 'Data updated successfully' : 'Failed to update data';
             }
+
+            //Activity Logs
+            if( $input['customer_type'] == 'Residential' ){
+                $activity_name = 'Created New Residential Customer ' . $input['first_name'] . ' ' . $input['last_name']; 
+            }else{
+                $activity_name = 'Created New Commercial Customer ' . $input['first_name'] . ' ' . $input['last_name']; 
+            }
+            
+            createActivityLog($activity_name);
             
             // Return the response as JSON
             $this->output->set_content_type('application/json')->set_output(json_encode($response));
