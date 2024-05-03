@@ -1255,6 +1255,7 @@ class Products_and_services extends MY_Controller
         $filename = 'ProductsServicesList__' . $randString . '_' . date('m') . '_' . date('d') . '_' . date('Y') . '.xlsx';
 
         $header = [
+            "#",
             "Product/Service Name",
             "Sales Description",
             "SKU",
@@ -1275,6 +1276,7 @@ class Products_and_services extends MY_Controller
         $writer->writeSheetRow('Sheet1', $header, ['font-style' => 'bold', 'border' => 'bottom']);
 
         $qtyAsOfDate = date("m/d/Y");
+        $rowNumber = 1;
         foreach ($items as $item) {
             $qty = $this->items_model->countQty($item->id);
             $accountingDetails = $this->items_model->getItemAccountingDetails($item->id);
@@ -1288,24 +1290,39 @@ class Products_and_services extends MY_Controller
             $name = $item['name'];
             $name .= $item['status'] === '0' ? ' (deleted)' : '';
 
-            $data = [
-                $name,
-                $item['sales_desc'],
-                $item['sku'],
-                $item['type'],
-                $item['sales_price'],
-                $taxable,
-                $item['income_account'],
-                $item['purch_desc'],
-                $item['cost'],
-                $item['expense_account'],
-                $item['qty_on_hand'],
-                $item['reorder_point'],
-                $item['inventory_account'],
-                $qtyAsOfDate
-            ];
+            $salesDesc = !empty($item['sales_desc']) ? $item['sales_desc'] : "No Description";
+            $sku = !empty($item['sku']) ? $item['sku'] : "No SKU";
+            $type = !empty($item['type']) ? $item['type'] : "Unknown Type";
+            $salesPrice = !empty($item['sales_price']) ? $item['sales_price'] : 0;
+            $incomeAccount = !empty($item['income_account']) ? $item['income_account'] : "No Income Account";
+            $purchDesc = !empty($item['purch_desc']) ? $item['purch_desc'] : "No Description";
+            $cost = !empty($item['cost']) ? $item['cost'] : 0;
+            $expenseAccount = !empty($item['expense_account']) ? $item['expense_account'] : "No Expense Account";
+            $qtyOnHand = !empty($item['qty_on_hand']) ? $item['qty_on_hand'] : 0;
+            $reorderPoint = !empty($item['reorder_point']) ? $item['reorder_point'] : 0;
+            $inventoryAccount = !empty($item['inventory_account']) ? $item['inventory_account'] : "No Inventory Asset Account";
 
-            $writer->writeSheetRow('Sheet1', $data);
+            if (!empty($item['name'])) {
+                $data = [
+                    $rowNumber++,
+                    $name,
+                    $salesDesc,
+                    $sku, 
+                    $type, 
+                    $salesPrice, 
+                    $taxable, 
+                    $incomeAccount,
+                    $purchDesc, 
+                    $cost, 
+                    $expenseAccount, 
+                    $qtyOnHand, 
+                    $reorderPoint, 
+                    $inventoryAccount, 
+                    $qtyAsOfDate 
+                ];
+
+                $writer->writeSheetRow('Sheet1', $data);
+            }
         }
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

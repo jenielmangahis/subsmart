@@ -168,7 +168,7 @@ foreach ($jobs as $job) {
                             </ul> -->
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('job/add') ?>'">
+                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('job/new_job1') ?>'">
                                 <i class='bx bx-fw bx-briefcase'></i> New Job
                             </button>
                         </div>

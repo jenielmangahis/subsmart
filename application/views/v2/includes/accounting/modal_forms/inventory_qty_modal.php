@@ -94,7 +94,7 @@
                                                                         <td>
                                                                             <select name="product[]" class="form-control nsm-field" required></select>
                                                                         </td>
-                                                                        <td></td>
+                                                                        <td><input type="text" name="description[]" class="form-control nsm-field" required></td>
                                                                         <td>
                                                                             <select name="location[]" class="form-control nsm-field" required></select>
                                                                         </td>
