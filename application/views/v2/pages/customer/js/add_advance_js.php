@@ -362,9 +362,6 @@
             return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
         });
 
-
-
-
         //$('.date_picker').val(new Date().toLocaleDateString());
 
         //$('.time_picker').val(new Date().toLocaleTimeString());
@@ -557,9 +554,6 @@
             }
         });
 
-
-
-
         $("#person_and_company_form").submit(async function(e) {
             e.preventDefault(); // avoid to execute the actual submit of the form.
             var form = $(this);
@@ -605,7 +599,12 @@
                     url: base_url + "customer/save_person_profile",
                     dataType: 'json',
                     data: form.serialize(), // serializes the form's elements.
-                    success: function(data) {
+                    success: function(data) {                        
+                        if( isCompany ){
+                            $('#company_modal').modal('hide');
+                        }else{
+                            $('#person_modal').modal('hide');
+                        }
 
                         if (data.message === 'Data updated successfully') {
                             isCompany == true ? success_person_and_company("Commercial list customer has been updated successfully","company") 
@@ -627,8 +626,6 @@
                 });
             }
         });
-
-      
 
         function save_sucess(information) {
             Swal.fire(
@@ -680,14 +677,15 @@
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Ok'
             }).then((result) => {
-                if (result.value) {
+                //if (result.value) {
                     if(type === "person"){
-                        window.location.href = "<?= base_url(); ?>customer/residential";
+                        //window.location.href = "<?= base_url(); ?>customer/residential";
+                        PERSON_LIST_TABLE.ajax.reload();  
                     }else{
-                        window.location.href = "<?= base_url(); ?>customer/commercial";
+                        //window.location.href = "<?= base_url(); ?>customer/commercial";
+                        COMPANY_LIST_TABLE.ajax.reload();  
                     }
-                   
-                }
+                //}
             });
         }
 

@@ -416,8 +416,8 @@ $('#make-non-inventory, #make-service, #make-inactive, #make-active').on('click'
             actionText = 'make inactive';
             break;
         case 'make-active':
-            actionText = 'make active';   
-            break; 
+            actionText = 'make active';
+            break;
     }
 
     var checkedItems = $('#items-table tbody tr:visible .select-one:checked');
@@ -485,7 +485,6 @@ $('.export-items').on('click', function () {
 
     $('#export-form').submit();
 });
-
 
 $('#export-form').on('submit', function (e) {
     e.preventDefault();
@@ -1044,23 +1043,32 @@ $(document).on('click', "#import-items-modal .step", function () {
 $(document).on('click', "#import-items-modal .step01", function () {
     $("#import-items-modal #line-progress").css("width", "8%");
     $("#import-items-modal .step1").addClass("active").siblings().removeClass("active");
+
+    $('#import-items-modal .modal-footer').html(`
+        <button type="button" class="nsm-button primary step02">Next</button>
+    `);
 });
 
 $(document).on('click', "#import-items-modal .step02", function () {
     $("#import-items-modal #line-progress").css("width", "50%");
     $("#import-items-modal .step2").addClass("active").siblings().removeClass("active");
 
-    $('#import-items-modal .modal-footer').html(`<button type="button" class="nsm-button step01">Back</button>
-    <button type="button" class="nsm-button primary step03">Next</button>`);
+    $('#import-items-modal .modal-footer').html(`
+        <button type="button" class="nsm-button step01">Back</button>
+        <button type="button" class="nsm-button primary step03">Next</button>
+    `);
 });
 
 $(document).on('click', "#import-items-modal .step03", function () {
     $("#import-items-modal #line-progress").css("width", "100%");
     $("#import-items-modal .step3").addClass("active").siblings().removeClass("active");
 
-    $('#import-items-modal .modal-footer').html(`<button type="button" class="nsm-button step02">Back</button>
-    <button type="button" class="nsm-button primary" id="importItem">Import</button>`);
+    $('#import-items-modal .modal-footer').html(`
+        <button type="button" class="nsm-button step02">Back</button>
+        <button type="button" class="nsm-button primary" id="importItem">Import</button>
+    `);
 });
+
 
 $(document).on('click', "#import-items-modal #importItem", function (e) {
     // prepare form data to be posted

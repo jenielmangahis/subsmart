@@ -155,15 +155,30 @@ class Customer extends MY_Controller
             }
         }
 
+        $get_company_settings = [
+            'where' => [
+                'company_id' => logged('company_id'),
+            ],
+            'table' => 'customer_settings_headers',
+            'select' => '*',
+        ];
+        $customer_settings = $this->general->get_data_with_param($get_company_settings);
+        $enabled_table_headers = [];
+        if (isset($customer_settings[0])) {
+            $enabled_table_headers = unserialize($customer_settings[0]->headers);
+        }
+
         $default_status_ids = defaultCompanyCustomerStatusIds();
         $this->page_data['statusCounts']= $statusCounts;
         $this->page_data['customer_status'] = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'), $default_status_ids);
         $this->page_data['customerGroups'] = $this->general->get_data_with_param($get_customer_groups);
+        $this->page_data['enabled_table_headers'] = $enabled_table_headers;
         $this->page_data['page']->title = 'Commercial';
         $this->page_data['page']->parent = 'Customers';
         $this->page_data['salesAreaSelected']= $this->customer_ad_model->getAllSettingsSalesAreaByCompanyId(logged('company_id'));
         $this->load->view('v2/pages/customer/company', $this->page_data);
     }
+
     public function getCompanyList(){
 
         $request = $_REQUEST;
@@ -177,70 +192,224 @@ class Customer extends MY_Controller
         $persons = $this->company->getAllCustomerByCustomerType($search,logged('company_id'), 'Commercial',$filter_status == 'All Status' ? '' :$filter_status);
        
         $filteredPersons = array_slice($persons, $start, $length);
+
+        $get_company_settings = [
+            'where' => [
+                'company_id' => logged('company_id'),
+            ],
+            'table' => 'customer_settings_headers',
+            'select' => '*',
+        ];
+        $customer_settings = $this->general->get_data_with_param($get_company_settings);
+        $enabled_table_headers = [];
+        if (isset($customer_settings[0])) {
+            $enabled_table_headers = unserialize($customer_settings[0]->headers);
+        }
     
         $totalRecords = count($persons);
         $filteredRecords = count($persons);
-    
-        $data = array();
 
-        foreach ($filteredPersons as $person) {
-            $contactName = $person->first_name . ' ' . $person->last_name;
-  
-            $row = array();            
-            
-            $business_name = $person->business_name;
-            if( $business_name == '' ){
-                $business_name = 'Not Specified';
+        $data = [];
+        foreach ($filteredPersons as $customer) {
+           
+            $data_arr  = [];
+            $labelName = $customer->first_name.' '.$customer->last_name;
+            if (!empty($enabled_table_headers)) {
+                if (in_array('name', $enabled_table_headers)) {                    
+                    $n = ucwords($customer->first_name[0]).ucwords($customer->last_name[0]);
+                    $data_name = "<div class='nsm-profile'><span>".$n.'</span></div>';
+                    array_push($data_arr, $data_name);
+
+                    $customer_email = 'Email Not Specified';
+                    if( $customer->email != '' ){
+                        $customer_email = $customer->email;
+                    }
+                    $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/module/'.$customer->prof_id.'')."\"'>".$labelName."</label><label class='nsm-link default content-subtitle fst-italic d-block'><i class='bx bx-envelope'></i> ".$customer_email.'</label>';
+                    if ($customer->adt_sales_project_id > 0) {
+                        $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
+                    }
+                    array_push($data_arr, $name);
+                }
+                if (in_array('email', $enabled_table_headers)) {
+                    $email = 'Not Specified';
+                    if( $customer->email != '' ){
+                        $email = $customer->email;
+                    }
+                    array_push($data_arr, $email);
+                }
+                if (in_array('industry', $enabled_table_headers)) {
+                    if ($customer->industry_type_id > 0 && $customer->industry_type != '') {
+                        array_push($data_arr, $customer->industry_type);
+                    } else {
+                        array_push($data_arr, 'Not Specified');
+                    }
+                }
+                if (in_array('city', $enabled_table_headers)) {
+                    array_push($data_arr, $customer->city);
+                }
+                if (in_array('state', $enabled_table_headers)) {
+                    $state = 'Not Specified';
+                    if( $customer->state != '' ){
+                        $state = $customer->state;
+                    }
+                    array_push($data_arr, $state);
+                }
+
+                if (in_array('source', $enabled_table_headers)) {
+                    $lead = 'Door';
+                    array_push($data_arr, $lead);
+                }
+                if (in_array('added', $enabled_table_headers)) {
+                    array_push($data_arr, $customer->entered_by2);
+                }
+                if (in_array('sales_rep', $enabled_table_headers)) {
+                    $sales_rep = get_sales_rep_name($customer->fk_sales_rep_office);
+                    if( trim($sales_rep) == '' ){
+                        $sales_rep = '---';
+                    }
+                    array_push($data_arr, $sales_rep);
+                }
+                if (in_array('tech', $enabled_table_headers)) {
+                    $techician = !empty($customer->technician) ? get_employee_name($customer->technician) : 'Not Assigned';
+                    array_push($data_arr, $techician);
+                }
+                if (in_array('plan_type', $enabled_table_headers)) {
+                    $plan_type= 'Not Specified';
+                    if( $customer->system_type != '' ){
+                        $plan_type= $customer->system_type;
+                    }
+                    array_push($data_arr, $plan_type);
+                }
+                if (in_array('rate_plan', $enabled_table_headers)) {
+                    array_push($data_arr, ($customer->mmr) ? "$$customer->mmr" : '$0.00');
+                }
+                if (in_array('subscription_amount', $enabled_table_headers)) {
+                    $subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
+                    array_push($data_arr, '$'.$subs_amt);
+                }
+                if (in_array('job_amount', $enabled_table_headers)) {
+                    $this->db->select('SUM(job_items.qty * job_items.cost) AS total_amount');
+                    $this->db->from('job_items');
+                    $this->db->join('jobs', 'job_items.job_id = jobs.id', 'left');
+                    $this->db->where('jobs.customer_id', $customer->prof_id);
+                    $totalJobItems = $this->db->get()->row();
+                    $job_amount = 0;
+                    if ($totalJobItems->total_amount > 0) {
+                        $job_amount = number_format(floatval($totalJobItems->total_amount), 2, '.', ',');
+                    }
+                    array_push($data_arr, '$'.$job_amount);
+                }
+                if (in_array('phone', $enabled_table_headers)) {
+                    $phone_m = 'Not Specified';
+                    if( $customer->phone_m != '' ){
+                        $phone_m = formatPhoneNumber($customer->phone_m);
+                    }
+                    array_push($data_arr, $phone_m);
+                }
+
+                if (in_array('status', $enabled_table_headers)) {
+                    $status = 'Status not specified';
+                    if( trim($customer->status) != '' ){
+                        $status = $customer->status;
+                    }
+                    $stat = '<span class="nsm-badge">'.$status.'</span>';
+                    array_push($data_arr, $stat);
+                }
+            } else {
+                $n = ucwords($customer->first_name[0]).ucwords($customer->last_name[0]);
+                $data_name = "<div class='nsm-profile'><span>".$n.'</span></div>';
+                array_push($data_arr, $data_name);
+                
+                $name = "<label class='nsm-link default d-block fw-bold' onclick='location.href=\"".base_url('customer/preview_/'.$customer->prof_id.'')."\"'>".$labelName."</label>
+                    <label class='nsm-link default content-subtitle fst-italic d-block'>".$customer->email.'</label>';
+                if ($customer->adt_sales_project_id > 0) {
+                    $name .= '<span class="badge badge-primary">ADT SALES PORTAL DATA</label>';
+                }
+                array_push($data_arr, $name);
+                if (logged('company_id') == 1) {
+                    if ($customer->industry_type_id > 0) {
+                        array_push($data_arr, $customer->industry_type);
+                    } else {
+                        array_push($data_arr, 'Not Specified');
+                    }
+                }
+                array_push($data_arr, $customer->city);
+                array_push($data_arr, $customer->state);
+                $lead = $customer->lead_source != '' ? $customer->lead_source : 'Door';
+                array_push($data_arr, $lead);
+                $added_by = trim($customer->entered_by2) != '' ? $customer->entered_by2 : '---';
+                array_push($data_arr, $added_by);
+                $sales_rep = trim(get_sales_rep_name($customer->fk_sales_rep_office));
+                if ($sales_rep == '') {
+                    $sales_rep = '---';
+                }
+                array_push($data_arr, $sales_rep);
+                $techician = !empty($customer->technician) ? get_employee_name($customer->technician) : 'Not Assigned';
+                array_push($data_arr, $techician);
+                $plan_type = trim($customer->system_type) != '' ? $customer->system_type : '---';
+                array_push($data_arr, $plan_type);
+                $subs_amt = $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',');
+                array_push($data_arr, '$'.$subs_amt);
+                $this->db->select('SUM(job_items.qty * job_items.cost) AS total_amount');
+                $this->db->from('job_items');
+                $this->db->join('jobs', 'job_items.job_id = jobs.id', 'left');
+                $this->db->where('jobs.customer_id', $customer->prof_id);
+                $totalJobItems = $this->db->get()->row();
+                $job_amount = 0;
+                if ($totalJobItems->total_amount > 0) {
+                    $job_amount = number_format(floatval($totalJobItems->total_amount), 2, '.', ',');
+                }
+                array_push($data_arr, '$'.$job_amount);
+                $phone = trim($customer->phone_m) != '' ? $customer->phone_m : '---';
+                array_push($data_arr, formatPhoneNumber($phone));
+
+                $status = 'Status not specified';
+                if( trim($customer->status) != '' ){
+                    $status = $customer->status;
+                }
+                $stat = '<span class="nsm-badge">'.$status.'</span>';
+                array_push($data_arr, $stat);
             }
 
-            $row[] = $business_name;
-            $row[] = $contactName;
-        
-            // Email
-            $email = $person->email;
-            if( $email == '' ){
-                $mail = 'Not Specified';
-            }
-            
-            $row[] = $mail;
-        
-            // Phone
-            $phone = '';
-        
-            if (!empty($person->phone_h)) {
-                $phone .= '<p>Phone (M) : '. formatPhoneNumber($person->phone_h) .'</p>';
-            }
-            if (!empty($person->phone_m)) {
-                $phone .= (!empty($phone) ? ' ' : '') . '<p>Phone (H) : '.formatPhoneNumber($person->phone_m).'</p>';
-            }
-            $row[] = $phone;
-            $row[] = $person->customer_type;
-            $row[] = empty($person->status) ? 'No status selected' : $person->status;
-            $actionColumn = '<div class="dropdown table-management">
-            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                <i class="bx bx-fw bx-dots-vertical-rounded"></i>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-                <li>
-                    <a class="dropdown-item btn-manage-company-modules edit_person" href="'.base_url('customer/preview_/' . $person->prof_id). '"
-                    > <i class="bx bx-fw bx-show-alt"></i>Preview
-                    </a>
-                    <a class="dropdown-item btn-manage-company-modules edit_person" href="'.base_url('customer/add_advance/' .$person->prof_id).'"
-                    > <i class="bx bx-fw bx-edit"></i>Edit
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item delete-company" href="javascript:void(0);" onclick="deleteItem(' . $person->prof_id . ')">
-                        <i class="bx bx-fw bx-trash"></i> Delete
-                    </a>
-                </li>
-            </ul>
-        </div>';
-    
-        $row[] = $actionColumn;
-            $data[] = $row;
+            $actionColumn = "<div class='dropdown table-management'>
+                <a href='javascript:void(0);' class='dropdown-toggle' data-bs-toggle='dropdown'>
+                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                </a>
+                <ul class='dropdown-menu dropdown-menu-end'>
+                    <li>
+                        <a class='dropdown-item' href='".base_url('customer/preview_/'.$customer->prof_id)."'>Preview</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item' href='".base_url('customer/add_advance/'.$customer->prof_id)."'>Edit</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item send-email' data-id='".$customer->prof_id."' data-email='".$customer->email."' href='javascript:void(0);'>Email</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item call-item' href='javascript:void(0);' data-id='".$customer->phone_m."'>Call</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item' href='".base_url('invoice/add?cus_id='.$customer->prof_id)."'>Invoice</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item' href='".base_url('customer/module/'.$customer->prof_id)."'>Dashboard</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item' href='".base_url('job/new_job1?cus_id='.$customer->prof_id)."'>Schedule</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item sms-messages' data-id='".$customer->prof_id."' href='javascript:void(0);'>Message</a>
+                    </li>
+                    <li>
+                        <a class='dropdown-item delete-customer' data-id='".$customer->prof_id."' href='javascript:void(0);'>Delete</a>
+                    </li>
+                </ul>
+            </div>";
+
+            array_push($data_arr, $actionColumn);
+            $data[] = $data_arr;
      
-    }
+        }
     
         $response = array(
             'draw' => $draw,
@@ -250,8 +419,6 @@ class Customer extends MY_Controller
             'filter_status' => $filter_status
         );
 
-       
-    
         echo json_encode($response);
     }
 
@@ -380,7 +547,11 @@ class Customer extends MY_Controller
                     array_push($data_arr, $phone_m);
                 }
                 if (in_array('status', $enabled_table_headers)) {
-                    $stat = '<span class="nsm-badge <?= $badge ?>">'.$customer->status != null ? $customer->status : 'Pending</span>';
+                    $status = 'Status not specified';
+                    if( trim($customer->status) != '' ){
+                        $status = $customer->status;
+                    }
+                    $stat = '<span class="nsm-badge">'.$status.'</span>';
                     array_push($data_arr, $stat);
                 }
             } else {
@@ -430,7 +601,12 @@ class Customer extends MY_Controller
                 array_push($data_arr, '$'.$job_amount);
                 $phone = trim($customer->phone_m) != '' ? $customer->phone_m : '---';
                 array_push($data_arr, formatPhoneNumber($phone));
-                $stat = '<span class="nsm-badge <?= $badge ?>">'.$customer->status != null ? $customer->status : 'Pending</span>';
+
+                $status = 'Status not specified';
+                if( trim($customer->status) != '' ){
+                    $status = $customer->status;
+                }
+                $stat = '<span class="nsm-badge">'.$status.'</span>';
                 array_push($data_arr, $stat);
             }
 
@@ -614,24 +790,6 @@ class Customer extends MY_Controller
         foreach ($customers as $customer) {
             // if( !in_array($customer->prof_id, $customer_ids) ){
             $customer_ids[] = $customer->prof_id;
-            switch (strtoupper($customer->status)) {
-                case 'INSTALLED':
-                    $badge = 'success';
-                    break;
-                case 'CANCELLED':
-                    $badge = 'error';
-                    break;
-                case 'COLLECTIONS':
-                    $badge = 'secondary';
-                    break;
-                case 'CHARGED BACK':
-                    $badge = 'primary';
-                    break;
-                default:
-                    $badge = '';
-                    break;
-            }
-
             $techician = !empty($customer->technician) ? get_employee_name($customer->technician)->FName : $customer->technician.'Not Assigned';
             $companyId = logged('company_id');
             $salesRep = get_sales_rep_name($customer->fk_sales_rep_office);
@@ -744,7 +902,11 @@ class Customer extends MY_Controller
                     array_push($data_arr, $phone_m);
                 }
                 if (in_array('status', $enabled_table_headers)) {
-                    $stat = '<span class="nsm-badge <?= $badge ?>">'.$customer->status != null ? $customer->status : 'Pending</span>';
+                    $status = 'Status not specified';
+                    if( trim($customer->status) != '' ){
+                        $status = $customer->status;
+                    }
+                    $stat = '<span class="nsm-badge">'.$status.'</span>';
                     array_push($data_arr, $stat);
                 }
             } else {
@@ -815,8 +977,13 @@ class Customer extends MY_Controller
                 // phone
                 $phone = trim($customer->phone_m) != '' ? $customer->phone_m : '---';
                 array_push($data_arr, formatPhoneNumber($phone));
+
+                $status = 'Status not specified';
+                if( trim($customer->status) != '' ){
+                    $status = $customer->status;
+                }
                 // status
-                $stat = '<span class="nsm-badge <?= $badge ?>">'.$customer->status != null ? $customer->status : 'Pending</span>';
+                $stat = '<span class="nsm-badge">'.$status.'</span>';
                 array_push($data_arr, $stat);
             }
 
@@ -2784,6 +2951,15 @@ class Customer extends MY_Controller
                 $response['success'] = $update_result;
                 $response['message'] = $update_result ? 'Data updated successfully' : 'Failed to update data';
             }
+
+            //Activity Logs
+            if( $input['customer_type'] == 'Residential' ){
+                $activity_name = 'Created New Residential Customer ' . $input['first_name'] . ' ' . $input['last_name']; 
+            }else{
+                $activity_name = 'Created New Commercial Customer ' . $input['first_name'] . ' ' . $input['last_name']; 
+            }
+            
+            createActivityLog($activity_name);
             
             // Return the response as JSON
             $this->output->set_content_type('application/json')->set_output(json_encode($response));

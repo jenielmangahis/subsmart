@@ -20,46 +20,46 @@
     border-radius: 0.25rem;
     margin-top: 9px;
 }
-    .cont{
-        overflow-x: auto;
-    }
-    .customerTbl>thead {
-	color: #888888;
-	font-weight: bold;
-	font-size: 14px;
-    }
-
-    .customerTbl td {
-        padding: 0.8rem 0.5rem;
-    }
-
-    .customerTbl>tbody td {
-        border-bottom: 1px solid #e8e8e8;
-    }
-
-    .customerTbl td .bx {
-        color: #888888;
-    }
-    .customerTbl>tbody>tr:hover {
-        background-color: #f7f7f7;
-    }
-    .customerTbl{
-        width: 100%;
-        font-size: 15px;
-    }
-    .customerTbl>tfoot td {
-        padding: 0.8rem 0 0 0;
-    }
-    .customerTbl .table-icon {
-	width: 1%;
+.cont{
+    overflow-x: auto;
 }
-    table {
-        width: 100% !important;
-    }
-    .dataTables_filter, .dataTables_length{
-        display: none;
-    }
-    table.dataTable thead th, table.dataTable thead td {
+.customerTbl>thead {
+    color: #888888;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.customerTbl td {
+    padding: 0.8rem 0.5rem;
+}
+
+.customerTbl>tbody td {
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.customerTbl td .bx {
+    color: #888888;
+}
+.customerTbl>tbody>tr:hover {
+    background-color: #f7f7f7;
+}
+.customerTbl{
+    width: 100%;
+    font-size: 15px;
+}
+.customerTbl>tfoot td {
+    padding: 0.8rem 0 0 0;
+}
+.customerTbl .table-icon {
+    width: 1%;
+}
+table {
+    width: 100% !important;
+}
+.dataTables_filter, .dataTables_length{
+    display: none;
+}
+table.dataTable thead th, table.dataTable thead td {
     padding: 10px !important;
     border-bottom: 1px solid lightgray;
 }
@@ -161,6 +161,9 @@ table.dataTable thead th, table.dataTable thead td{
 .removeDuplicatedEntry2:focus, .removeDuplicatedEntry2:active:focus, .removeDuplicatedEntry2.active:focus{
     outline:none;
     box-shadow:none;
+}
+#customer-list .nsm-badge{
+    font-size:14px;
 }
 
 </style>

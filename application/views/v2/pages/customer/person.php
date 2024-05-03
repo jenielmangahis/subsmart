@@ -1,48 +1,57 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/customer/customer_modals'); ?>
 <style>
-    .select2-dropdown{
-        z-index: 999999;
-    }
-    .nsm-card {
-        padding: 1.5em;
-        border-radius: 0;
-    }
-    .close-btn{
-        border: none;
-        background-color: transparent;
-    }
+.select2-dropdown{
+    z-index: 999999;
+}
+.nsm-card {
+    padding: 1.5em;
+    border-radius: 0;
+}
+.close-btn{
+    border: none;
+    background-color: transparent;
+}
 
-    #person-list_filter{
-        display: none;
-    }
-    #person-list_length{
-        display: none;
-    }
-    .form_line{
-        margin-bottom: 10px;
-    }
-    .nsm-counter .bx{
-        font-size: 1em;
-        padding: 2px;
-        display: none;
+#person-list_filter{
+    display: none;
+}
+#person-list_length{
+    display: none;
+}
+.form_line{
+    margin-bottom: 10px;
+}
+.nsm-counter .bx{
+    font-size: 1em;
+    padding: 2px;
+    display: none;
 
-    }
-    .nsm-counter h2{
-        font-size: 16px;
-    }
-    .nsm-counter {
-    padding: 0.8rem 1rem;
-    }
-    #person-list .table-icon {
-	    width: 1% !important;
-    }   
-    .dropdown-toggle a{
-        text-decoration:none;
-    }
-    #person-list td .bx {
-        color: #888888;
-    }
+}
+.nsm-counter h2{
+    font-size: 16px;
+}
+.nsm-counter {
+padding: 0.8rem 1rem;
+}
+#person-list .table-icon {
+    width: 1% !important;
+}   
+.dropdown-toggle a{
+    text-decoration:none;
+}
+#person-list td .bx {
+    color: #888888;
+}
+#person-list .nsm-badge{
+    font-size:14px;
+}
+.form-header{
+    background-color: #6a4a86;
+    color: #ffffff;
+    font-size: 15px;
+    padding: 10px;
+}
 </style>
 
 <div class="nsm-fab-container">
@@ -327,7 +336,7 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="person_modal" tabindex="-1" aria-labelledby="person_modal_label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <form id="person_and_company_form">
             <div class="modal-content">
                 <div class="modal-header">
@@ -335,268 +344,177 @@
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body" style="overflow-y:auto;overflow-x:hidden;max-height:700px;">
-
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Status
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row form_line">
+                                <div class="col-md-4">Status</div>
+                                <input type="hidden" name="prof_id" id="prof_id">
+                                <div class="col-md-8">
+                                    <select data-type="customer_status" id="status" name="status" data-customer-source="dropdown" class="input_select" >
+                                        <option  value=""></option>
+                                        <?php foreach ($customer_status as $status): ?>
+                                            <option value="<?= $status->name ?>"><?= $status->name ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">Customer Type</div>
+                                <div class="col-md-8">
+                                    <input data-type="customer_type" type="customer_type" class="form-control email-input-element" name="customer_type" id="person_type" value="Residential" readonly/>
+                                </div>
+                            </div>
                         </div>
-                        <input type="hidden" name="prof_id" id="prof_id">
-                        <div class="col-md-8">
-                            <select data-type="customer_status" id="status" name="status" data-customer-source="dropdown" class="input_select" >
-                                <option  value=""></option>
-                                <?php foreach ($customer_status as $status): ?>
-                                    <option <?= isset($profile_info) ? ($profile_info->status == $status->name ? 'selected' : '') : '' ?> value="<?= $status->name ?>"><?= $status->name ?></option>
-                                <?php endforeach; ?>
-                            </select>
-
-                        </div>
-                    </div>
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Customer Type
-                        </div>
-                        <div class="col-md-8">
-                        <input data-type="customer_type" type="customer_type" class="form-control email-input-element" name="customer_type" id="person_type" value="Residential" readonly/>
-                        </div>
-                    </div>
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Customer Group
-                        </div>
-                        <div class="col-md-8">
-                            <select id="customer_group" name="customer_group" data-customer-source="dropdown" class="form-controls input_select">
-                                <?php foreach($customerGroups as $cg){ ?>
-                                    <option value="<?= $cg->id; ?>"><?= $cg->title; ?></option>
-                                <?php } ?>
-                            </select>
-
-                        </div>
-                    </div>
-                    <?php if($company_id == 1): ?>
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Industry Type
-                        </div>
-                        <div class="col-md-8">
-                            <select 
-                                id="industry_type" 
-                                name="industry_type" 
-                                data-customer-source="dropdown" 
-                                class="form-controls input_select"
-                            >
-                                <option>Select your Industry</option>
-                                <?php $businessTypeName  = "";
-                                    foreach($industryTypes  as $industryType ){ ?>
-                                    <?php if ($businessTypeName!== $industryType->business_type_name ) { ?> 
-                                                <optgroup label="<?php echo $industryType->business_type_name; ?>">
-                                    <?php  $businessTypeName =  $industryType->business_type_name; }      ?>  
-                                    <?php 
-                                        $selected_industry_type = 0;
-                                        if( isset($profile_info) ){
-                                            $selected_industry_type = $profile_info->industry_type_id;
-                                        }
-                                    ?>
-                                        <option <?= $selected_industry_type == $industryType->id ? 'selected="selected"' : ''; ?> value="<?php echo $industryType->id; ?>"><?php echo $industryType->name; ?></option>
-                                    <?php  }   ?>
-                            </select>
+                        <div class="col-md-6">
+                            <div class="row form_line">
+                                <div class="col-md-4">Customer Group</div>
+                                <div class="col-md-8">
+                                    <select id="customer_group" name="customer_group" data-customer-source="dropdown" class="form-controls input_select">
+                                        <?php foreach($customerGroups as $cg){ ?>
+                                            <option value="<?= $cg->id; ?>"><?= $cg->title; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">Sales Area</div>
+                                <div class="col-md-8">
+                                    <select name="fk_sa_id" id="fk_sa_id" data-type="customer_sales_area" class="form-control">
+                                        <?php foreach( $salesAreaSelected as $salesArea){?>
+                                            <option value="<?= $salesArea->sa_id; ?>"><?=  $salesArea->sa_name; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <?php endif; ?>
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Sales Area
-                        </div>
-                        <div class="col-md-8">
-                            <select name="fk_sa_id" id="fk_sa_id" data-type="customer_sales_area" class="form-control">
-                                <?php foreach( $salesAreaSelected as $salesArea){
-
-                                    ?>
-                                    <option value="<?= $salesArea->sa_id; ?>"><?=  $salesArea->sa_name; ?></option>
-                                <?php } ?>
-                            </select>
+                    <div class="row">
+                        <h3 class="form-header">CUSTOMER INFORMATION</h3>
+                        <div class="col-md-6">
+                            <div class="row form_line">
+                                <div class="col-md-4">First Name <span class="required"> *</span></div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="first_name" id="first_name" value="" required/>
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">Middle Initial</div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" maxlength="1" name="middle_name" id="middle_name" value="" />
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">Last Name <span class="required"> *</span></div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control" name="last_name" id="last_name" value="" required/>
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">Name Prefix</div>
+                                <div class="col-md-8">
+                                    <select id="prefix" name="prefix" data-customer-source="dropdown" class="form-controls input_select searchable-dropdown">
+                                        <?php for ($prefix=0;$prefix<28;$prefix++){ ?>
+                                            <option value="<?= prefix_name($prefix); ?>"><?= prefix_name($prefix); ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">Suffix</div>
+                                <div class="col-md-8">
+                                    <select id="suffix" name="suffix" data-customer-source="dropdown" class="input_select searchable-dropdown" >
+                                        <?php for ($suffix=0;$suffix<14;$suffix++){ ?>
+                                            <option value="<?= suffix_name($suffix); ?>"><?= suffix_name($suffix); ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
                             
-                        </div>
-                    </div>
-            
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            First Name <span class="required"> *</span>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" name="first_name" id="first_name" value="<?php if(isset($profile_info->first_name)){ echo $profile_info->first_name; } ?>" required/>
-                        </div>
-                    </div>
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Middle Initial
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" maxlength="1" name="middle_name" id="middle_name" value="<?php if(isset($profile_info)){ echo $profile_info->middle_name; } ?>" />
-                        </div>
-                    </div>
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Last Name <span class="required"> *</span>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control" name="last_name" id="last_name" value="<?php if(isset($profile_info)){ echo $profile_info->last_name; } ?>" required/>
-                        </div>
-                    </div>
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Name Prefix
-                        </div>
-                        <div class="col-md-8">
-                            <select id="prefix" name="prefix" data-customer-source="dropdown" class="form-controls input_select searchable-dropdown">
-                                <?php
-                                for ($prefix=0;$prefix<28;$prefix++){
-                                    ?>
-                                    <option <?php if(isset($profile_info)){ if($profile_info->prefix == prefix_name($prefix)){ echo 'selected'; } } ?> value="<?= prefix_name($prefix); ?>">
-                                        <?= prefix_name($prefix); ?>
-                                    </option>
-                                    <?php
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Suffix
-                        </div>
-                        <div class="col-md-8">
-                            <select id="suffix" name="suffix" data-customer-source="dropdown" class="input_select searchable-dropdown" >
-                                <?php
-                                for ($suffix=0;$suffix<14;$suffix++){
-                                    ?>
-                                    <option <?php if(isset($profile_info)){ if($profile_info->suffix == suffix_name($suffix)){ echo 'selected'; } } ?> value="<?= suffix_name($suffix); ?>"><?= suffix_name($suffix); ?></option>
-                                    <?php
-                                }
-                                ?>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Country
-                        </div>
-                        <div class="col-md-8">
-                            <input data-type="customer_address_country" type="text" class="form-control" name="country" id="country" value="<?php if(isset($profile_info->country)){ echo $profile_info->country; } ?> " />
-                        </div>
-                    </div>
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Address <span class="required"> *</span>
-                        </div>
-                        <div class="col-md-8">
-                            <input data-type="customer_address" type="text" class="form-control" name="mail_add" id="mail_address" value="<?php if(isset($profile_info->mail_add)){ echo $profile_info->mail_add; } ?>" required/>
-                        </div>
-                    </div>
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            City <span class="required"> *</span>
-                        </div>
-                        <div class="col-md-8">
-                            <input data-type="customer_address_city" type="text" class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" required/>
-                        </div>
-                    </div>
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            County <span class="required"> *</span>
-                        </div>
-                        <div class="col-md-8">
-                            <input data-type="customer_address_county" type="text" class="form-control" name="county" id="county" value="<?php if(isset($profile_info->county)){ echo $profile_info->county; } ?>" required/>
-                        </div>
-                    </div>
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            State <span class="required"> *</span>
-                        </div>
-                        <div class="col-md-8">
-                            <input data-type="customer_address_state" type="text" class="form-control" name="state" id="state" value="<?php if(isset($profile_info->state)){ echo $profile_info->state; } ?>" required/>
-                        </div>
-                    </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">Social Security No.</div>
+                                <div class="col-md-8">
+                                    <input type="text" placeholder="xxx-xx-xxxx" maxlength="11" class="form-control" name="ssn" id="ssn" value="" />
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">Date Of Birth</div>
+                                <div class="col-md-8">
+                                    <input type="text" placeholder="" class="form-control" name="date_of_birth" id="date_of_birth" value="" />
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row form_line">
+                                <div class="col-md-4">Email</div>
+                                <div class="col-md-8">
+                                    <input data-type="customer_email" type="email" class="form-control email-input-element" name="email" id="email" value="" />
+                                </div>
+                            </div>
 
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Zip Code <span class="required"> *</span>
+                            <div class="row form_line">
+                                <div class="col-md-4">Phone (H)</div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_h" id="phone_h" value="" />
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">Phone (M) <span class="required"> *</span></div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_m" id="phone_m" value="" required />
+                                </div>
+                            </div>                               
                         </div>
-                        <div class="col-md-8">
-                            <input required data-type="customer_address_zip" type="text" class="form-control" name="zip_code" id="zip_code" value="<?php if(isset($profile_info->zip_code)){ echo $profile_info->zip_code; } ?>"/>
-                        </div>
-                    </div>
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Cross Street
-                        </div>
-                        <div class="col-md-8">
-                            <input data-type="customer_address_street" type="text" class="form-control" name="cross_street" id="cross_street" value="<?php if(isset($profile_info->cross_street)){ echo $profile_info->cross_street; } ?>"/>
-                        </div>
-                    </div>                
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Subdivision
-                        </div>
-                        <div class="col-md-8">
-                            <input data-type="customer_address_subdivision" type="text" class="form-control" name="subdivision" id="subdivision" value="<?php if(isset($profile_info->subdivision)){ echo $profile_info->subdivision; } ?>" />
-                        </div>
-                    </div>
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Social Security No.
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" placeholder="xxx-xx-xxxx" maxlength="11" class="form-control" name="ssn" id="ssn" value="<?php if(isset($profile_info)){ echo $profile_info->ssn; } ?>" />
-                        </div>
-                    </div>
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Date Of Birth 
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" placeholder="" class="form-control" name="date_of_birth" id="date_of_birth" value="<?php if(isset($profile_info)){ echo date("m/d/Y", strtotime($profile_info->date_of_birth)); } ?>" />
-                        </div>
-                    </div>
+                        <div class="col-md-6">
+                        <div class="row form_line">
+                                <div class="col-md-4">Country</div>
+                                <div class="col-md-8">
+                                    <input data-type="customer_address_country" type="text" class="form-control" name="country" id="country" value="" />
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">Address <span class="required"> *</span></div>
+                                <div class="col-md-8">
+                                    <input data-type="customer_address" type="text" class="form-control" name="mail_add" id="mail_address" value="" required/>
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">City <span class="required"> *</span></div>
+                                <div class="col-md-8">
+                                    <input data-type="customer_address_city" type="text" class="form-control" name="city" id="city" value="" required/>
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">County <span class="required"> *</span></div>
+                                <div class="col-md-8">
+                                    <input data-type="customer_address_county" type="text" class="form-control" name="county" id="county" value="" required/>
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">State <span class="required"> *</span></div>
+                                <div class="col-md-8">
+                                    <input data-type="customer_address_state" type="text" class="form-control" name="state" id="state" value="" required/>
+                                </div>
+                            </div>
 
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Email 
-                        </div>
-                        <div class="col-md-8">
-                            <input data-type="customer_email" type="email" class="form-control email-input-element" name="email" id="email" value="<?php if(isset($profile_info)){ echo $profile_info->email; } ?>" />
-                        </div>
-                    </div>
-
-                    <div class="row form_line">
-                        <?php 
-                        $phone_h;
-                        $phone_m;
-
-                        if(strpos($profile_info->phone_h, "Mobile:") !== false){
-                            $str = $profile_info->phone_h;
-                            $exp = explode("Mobile:",$str);
-                            $phone_h = preg_replace('/\s+/', '-', ltrim($exp[0]));
-                            $phone_m = preg_replace('/\s+/', '-', ltrim($exp[1]));
-                        }else{
-                            $phone = preg_replace('/\s+/', '-', ltrim($profile_info->phone_h));
-                        } ?>
-                        <div class="col-md-4">
-                            Phone (H)
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_h" id="phone_h" value="<?php if(isset($profile_info)){ echo $phone_h == null ? $phone : $phone_h; } ?>" />
+                            <div class="row form_line">
+                                <div class="col-md-4">Zip Code <span class="required"> *</span></div>
+                                <div class="col-md-8">
+                                    <input required data-type="customer_address_zip" type="text" class="form-control" name="zip_code" id="zip_code" value=""/>
+                                </div>
+                            </div>
+                            <div class="row form_line">
+                                <div class="col-md-4">Cross Street</div>
+                                <div class="col-md-8">
+                                    <textarea style="height:80px;" data-type="customer_address_street" class="form-control" name="cross_street" id="cross_street"></textarea>
+                                </div>
+                            </div>                
+                            <div class="row form_line">
+                                <div class="col-md-4">Subdivision</div>
+                                <div class="col-md-8">
+                                    <textarea style="height:80px;" data-type="customer_address_subdivision" class="form-control" name="subdivision" id="subdivision"></textarea>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="row form_line">
-                        <div class="col-md-4">
-                            Phone (M) <span class="required"> *</span>
-                        </div>
-                        <div class="col-md-8">
-                            <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone_m" id="phone_m" value="<?php if(isset($profile_info->phone_h) || isset($profile_info->phone_m)){ echo $profile_info->phone_m != null ? $profile_info->phone_m : $phone_m; } ?>" required />
-                        </div>
-                    </div>
-                
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
@@ -609,38 +527,38 @@
 
 <?php include viewPath('v2/includes/footer'); ?>
 <script>    
+var PERSON_LIST_TABLE = $('#person-list').DataTable({
+    "ordering": false,
+    "processing": true,
+    "serverSide": true,
+    //"lengthMenu": [10, 25, 50, 75, 100], // Display options for the length menu
+    "pageLength": 10,
+    "ajax": {
+        "url": "<?= base_url('customer/getPersonList'); ?>",
+        "type": "POST",
+        "data": function (d) {
+        // Include custom parameters for filtering
+        d.filter_status = $('#filter-selected').text().trim(); // Get filter value from UI element
+        },
+        "dataSrc": function (json) {
+            // Handle the response here
+            //console.log(json);
+            // Return the data portion of the response
+            csv_data = json.data;
+            //console.log(csv_data);
+            return json.data;
+        }
+    },
+    "columnDefs": [
+        { 
+            "targets": [0],
+            "orderable": false,
+        },
+    ]
+});
+
 $(document).ready(function() {
     var csv_data;
-    var PERSON_LIST_TABLE = $('#person-list').DataTable({
-        "ordering": false,
-        "processing": true,
-        "serverSide": true,
-        //"lengthMenu": [10, 25, 50, 75, 100], // Display options for the length menu
-        "pageLength": 10,
-        "ajax": {
-            "url": "<?= base_url('customer/getPersonList'); ?>",
-            "type": "POST",
-            "data": function (d) {
-            // Include custom parameters for filtering
-            d.filter_status = $('#filter-selected').text().trim(); // Get filter value from UI element
-            },
-            "dataSrc": function (json) {
-                // Handle the response here
-                //console.log(json);
-                // Return the data portion of the response
-                csv_data = json.data;
-                console.log(csv_data);
-                return json.data;
-            }
-        },
-        "columnDefs": [
-            { 
-                "targets": [0],
-                "orderable": false,
-            },
-        ]
-    });
-
     $('#btn-residential-export-list').on('click', function(){
         location.href = base_url + 'customer/export_residential_list';
     });
@@ -650,15 +568,15 @@ $(document).ready(function() {
     });
 
     $('.select-filter .dropdown-item').on('click', function(e) {
-            e.preventDefault();
-            // Get data-value and text of the clicked item
-            var filterValue = $(this).attr('data-value');
-            var filterText = $(this).text();
+        e.preventDefault();
+        // Get data-value and text of the clicked item
+        var filterValue = $(this).attr('data-value');
+        var filterText = $(this).text();
 
-            // Update the text inside #filter-selected span
-            $('#filter-selected').text(filterText);
+        // Update the text inside #filter-selected span
+        $('#filter-selected').text(filterText);
 
-            PERSON_LIST_TABLE.ajax.reload();
+        PERSON_LIST_TABLE.ajax.reload();
     });
 
     function deleteItem(itemId) {
