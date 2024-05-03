@@ -211,4 +211,8 @@ $(".check-input-product-category").click(function() {
     } else {
         $('.dropdown-item-delete').addClass('disabled');
     }
+    $('.check-input-all-product-category').each(function() {
+        this.checked = false;
+    });    
+      
 })

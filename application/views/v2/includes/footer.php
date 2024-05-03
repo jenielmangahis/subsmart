@@ -239,6 +239,10 @@ $(document).ready(function() {
             $('.dropdown-item-delete').addClass('disabled');
             $('.dropdown-item-mark-ongoing').addClass('disabled');
         }
+
+        $('.check-input-all-tasks').each(function() {
+            this.checked = false;
+        });        
     })
 
 
