@@ -261,6 +261,34 @@
                         </form>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
+                        
+                        <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                            <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
+                        </button>           
+                        <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
+                            <div class="row">
+                                <div class="col">
+                                    <label for="filter-type">Type</label>
+                                    <select class="nsm-field form-select filter-coa-type" name="filter_type" id="filter-coa-type">            
+                                        <option value="0" <?=$status == 0 ? 'selected' : ''?>>All</option>
+                                        <option value="0" <?=$status == 0 ? 'selected' : ''?>>Expenses</option>>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-6">
+                                    <button type="button" class="nsm-button" id="reset-button">
+                                        Reset
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button" class="nsm-button primary float-end" id="apply-filter-coa-button">
+                                        Apply
+                                    </button>
+                                </div>
+                            </div>
+                        </ul> 
+
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>

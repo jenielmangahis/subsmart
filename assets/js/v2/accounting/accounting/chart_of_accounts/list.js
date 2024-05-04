@@ -118,7 +118,7 @@ $("#btn_print_accounts").on("click", function() {
 $(document).on('click', '#add-account-button', function(e) {
     e.preventDefault();
 
-    $.get('/accounting/get-dropdown-modal/account_modal', function(result) {
+    $.get( base_url + 'accounting/get-dropdown-modal/account_modal', function(result) {
         if ($('#modal-container').length > 0) {
             $('div#modal-container').html(`${result}`);
         } else {
@@ -135,7 +135,7 @@ $(document).on('click', '#add-account-button', function(e) {
 
 $("#accounts-table tbody .edit-account").on("click", function() {
     var id = $(this).closest('tr').find('.select-one').val();
-    $.get('/accounting/chart-of-accounts/edit/'+id, function(html) {
+    $.get(base_url + 'accounting/chart-of-accounts/edit/'+id, function(html) {
         if ($('#modal-container').length > 0) {
             $('div#modal-container').html(`${html}`);
         } else {
@@ -297,3 +297,13 @@ function test(){
         }
     }
 }
+
+$('#apply-filter-coa-button').on('click', function() {
+    var filterType = $('.filter-coa-type').val();            
+    var url = `${base_url}accounting/chart-of-accounts?`;
+    url += filterType !== 0 ? `type=${filterType}&` : '';
+    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+        url = url.slice(0, -1); 
+    }
+    location.href = url;
+});

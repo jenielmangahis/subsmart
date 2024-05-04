@@ -401,6 +401,7 @@ class Chart_of_accounts extends MY_Controller {
     public function add()
     {
         $post = $this->input->post();
+
         switch($post['choose_time']) {
             case 'beginning-of-year' :
                 $date = date("01-01-Y");
@@ -416,26 +417,22 @@ class Chart_of_accounts extends MY_Controller {
             break;
         }
 
-        $name = $post['name'];
-
-        do {
-            $nameExists = $this->chart_of_accounts_model->get_by_name($name);
-
-            if(!empty($nameExists)) {
-                $name = $post['name'].'-'.count($nameExists);
-            }
-        } while(!empty($nameExists));
+        $name       = $post['name'];
+        $nameExists = $this->chart_of_accounts_model->get_by_name($name);
+        if(!empty($nameExists)) {
+            $name = $post['name'].'-'.count($nameExists);
+        }
 
         $data = [
             'company_id' => logged('company_id'),
             'account_id' => $post['account_type'],
             'acc_detail_id' => $post['detail_type'],
-            'name' => $name,
-            'description' => $post['description'],
+            'name'          => $name,
+            'description'   => $post['description'],
             'parent_acc_id' => $post['sub_account_type'],
-            'time' => $post['choose_time'],
-            'balance' => $post['balance'],
-            'time_date' => $date
+            'time'          => isset($post['choose_time']) ? $post['choose_time'] : '',
+            'balance'       => $post['balance'],
+            'time_date'     => $date
         ];
 
         $account = $this->chart_of_accounts_model->saverecords($data);
@@ -447,7 +444,7 @@ class Chart_of_accounts extends MY_Controller {
         }
 
         redirect("accounting/chart-of-accounts");
-    }
+    }    
 
     public function edit($id)
     {
