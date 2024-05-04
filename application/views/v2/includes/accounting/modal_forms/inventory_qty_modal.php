@@ -91,7 +91,7 @@
                                                                 <tbody>
                                                                     <tr>
                                                                         <td>1</td>
-                                                                        <td>
+                                                                        <td style="width: 250px;">
                                                                             <select name="product[]" class="form-control nsm-field" required></select>
                                                                         </td>
                                                                         <td><input type="text" name="description[]" class="form-control nsm-field" required></td>

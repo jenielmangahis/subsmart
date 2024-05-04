@@ -29,7 +29,7 @@
                                     </div>
                                     <div class="col-12 col-md-4">
                                         <label for="account">Account</label>
-                                        <select class="nsm-field form-select" name="account" id="account">
+                                        <select class="nsm-field form-select account-reconcile" name="account" id="account">
                                             <?php foreach($this->chart_of_accounts_model->select() as $row) : ?>
                                                 <option <?=$this->reconcile_model->checkexist($row->id) != $row->id ? "disabled" : ''?> value="<?=$row->id?>"><?=$row->name?></option>
                                             <?php endforeach; ?>
@@ -82,6 +82,7 @@
 
 <?php include viewPath('v2/includes/footer'); ?>
 <script type="text/javascript">
+    $('.account-reconcile').select2();
     $('.datepicker').datepicker({
         format: 'mm/dd/yyyy',
         orientation: 'bottom',

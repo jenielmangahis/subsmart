@@ -12,7 +12,16 @@
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <div class="row">
-                    <div class="col-12 col-md-4"></div>
+                    <!-- <div class="col-12 col-md-4"></div> -->
+
+                    <div class="col-12 col-md-4 grid-mb">
+                        <form action="<?php echo base_url('accounting/product-categories') ?>" method="get">
+                            <div class="nsm-field-group search">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" name="search" placeholder="Find product categories" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                            </div>
+                        </form>
+                    </div>                     
+
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
 
@@ -39,14 +48,15 @@
                                 <div class="dropdown d-inline-block">
                                     <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                         <span>
-                                            150
+                                            10
                                         </span> <i class='bx bx-fw bx-chevron-down'></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
+                                        <li><a class="dropdown-item active" href="javascript:void(0);">10</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">50</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
-                                        <li><a class="dropdown-item active" href="javascript:void(0);">150</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">150</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">300</a></li>
                                     </ul>
                                 </div>
@@ -74,7 +84,7 @@
                                         <input class="form-check-input select-one table-select check-input-product-category" id="check-input-product-category" name="catid[]" type="checkbox" value="<?=$category->item_categories_id?>">
                                     </div>
                                 </td>                        
-                                <td class="fw-bold nsm-text-primary nsm-link default"><?=$category->name?></td>
+                                <td class="fw-bold nsm-text-primary nsm-link default" style="cursor: context-menu !important;"><?=$category->name?></td>
                                 <td>
                                     <div class="dropdown table-management">
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -94,7 +104,15 @@
 
                             <?php foreach($category->child_categories as $childCategory) : ?>
                                 <tr data-id="<?=$childCategory->item_categories_id?>">
-                                    <td class="fw-bold nsm-text-primary nsm-link default">&emsp;<?=$childCategory->name?></td>
+                                    <td>
+                                        <div class="table-row-icon table-checkbox">
+                                            <input class="form-check-input select-one table-select check-input-product-category" id="check-input-product-category" name="catid[]" type="checkbox" value="<?=$childCategory->item_categories_id?>">
+                                        </div>
+                                    </td>                                
+                                    <td class="fw-bold nsm-text-primary nsm-link default" style="cursor: context-menu !important;">
+                                        &nbsp;&nbsp;
+                                        <span class="badge badge-primary badge-pill">Subcategory</span> 
+                                        <?=$childCategory->name?></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -129,5 +147,12 @@
         </div>
     </div>
 </div>
-
+<script>
+$(document).ready(function() {
+    $("#search_field").on("input", debounce(function() {
+        let _form = $(this).closest("form");
+        _form.submit();
+    }, 1000));  
+});    
+</script>
 <?php include viewPath('v2/includes/footer'); ?>

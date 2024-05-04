@@ -109,11 +109,22 @@ class Product_categories extends MY_Controller {
             "assets/js/v2/accounting/sales/product_categories/list.js"
         ));
 
-        $categories = $this->items_model->categoriesWithoutParent();
-
-        foreach($categories as $key => $category) {
-            $categories[$key]->child_categories = $this->items_model->get_child_categories($category->item_categories_id);
-        }
+		$keyword = '';
+        if(!empty(get('search'))) {
+			$keyword                   = get('search');
+            $this->page_data['search'] = $keyword;
+            $categories = $this->items_model->categoriesWithoutParentWithFilter($keyword);
+            
+            foreach($categories as $key => $category) {
+                $categories[$key]->child_categories = $this->items_model->get_child_categories($category->item_categories_id);
+            }
+			
+        } else {
+            $categories = $this->items_model->categoriesWithoutParent();
+            foreach($categories as $key => $category) {
+                $categories[$key]->child_categories = $this->items_model->get_child_categories($category->item_categories_id);
+            }				
+		}        
 
         $this->page_data['categories'] = $categories;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
@@ -139,8 +150,12 @@ class Product_categories extends MY_Controller {
 
     public function create()
     {
-        $post = $this->input->post();
+		$this->form_validation->set_rules('name', 'Name', 'trim|required');
+		if($this->form_validation->run() == false){
+            redirect("accounting/product-categories");
+        }
 
+        $post = $this->input->post();
         $data = [
             'company_id' => getLoggedCompanyID(),
             'name' => $post['name'],
@@ -170,6 +185,11 @@ class Product_categories extends MY_Controller {
 
     public function update($id)
     {
+		$this->form_validation->set_rules('name', 'Name', 'trim|required');
+		if($this->form_validation->run() == false){
+            redirect("accounting/product-categories");
+        }
+
         $post = $this->input->post();
 
         $data = [
