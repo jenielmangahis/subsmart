@@ -8252,7 +8252,8 @@ $(function () {
                 var jobLoc = '';
                 jobLoc += customer.mail_add !== "" ? customer.mail_add + ' ' : "";
                 jobLoc += customer.city !== "" ? customer.city + ', ' : "";
-                jobLoc += customer.state !== "" ? customer.state : "";
+                jobLoc += customer.state !== "" ? customer.state : " ";
+                jobLoc += customer.zip_code !== "" ? customer.zip_code : "";
                 $('#invoiceModal #job-location').val(jobLoc.trim());
 
                 $('#invoiceModal #customer-email').val(customer.email);
@@ -9535,7 +9536,8 @@ $(function () {
             var jobLoc = '';
             jobLoc += customer.mail_add !== "" ? customer.mail_add + ' ' : "";
             jobLoc += customer.city !== "" ? customer.city + ', ' : "";
-            jobLoc += customer.state !== "" ? customer.state : "";
+            jobLoc += customer.state !== "" ? customer.state + ' ' : " ";
+            jobLoc += customer.zip_code !== "" ? customer.zip_code : "";
             $('#modal-form .modal #job-location').val(jobLoc.trim());
 
             $('#modal-form .modal #customer-email').val(customer.email);
