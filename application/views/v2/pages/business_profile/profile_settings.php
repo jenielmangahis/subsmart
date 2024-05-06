@@ -77,15 +77,9 @@
                                 </div>
                             </div>
                             <div class="nsm-card-content">
-                                <?php
-                                $company_id = 0;
-                                if ($profiledata) {
-                                    $company_id = $profiledata->company_id;
-                                }
-                                ?>
                                 <div class="row g-3">
                                     <div class="col-12">
-                                        <div class="nsm-img-upload" style="background-image: url('<?= getCompanyCoverPhoto($company_id); ?>')">
+                                        <div class="nsm-img-upload" style="background-image: url('<?= getCompanyCoverPhoto($company_id); ?>')">                                            
                                             <span class="nsm-upload-label disable-select">Drop or click image to upload</span>
                                             <input type="file" name="cover_photo" class="nsm-upload" accept="image/*">
                                         </div>
@@ -114,11 +108,16 @@
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
+            let formData = new FormData(_this[0]);   
+
             $.ajax({
                 type: 'POST',
                 url: url,
-                data: _this.serialize(),
+                data: formData,
                 dataType:'json',
+                contentType: false,
+                cache: false,
+                processData:false,
                 success: function(result) {
                     if( result.is_success == 1 ){
                         Swal.fire({
