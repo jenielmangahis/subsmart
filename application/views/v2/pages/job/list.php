@@ -200,17 +200,6 @@ foreach ($jobs as $job) {
                                     <option value="Invoiced">Invoiced</option>
                                     <option value="Completed">Completed</option>
                                 </select>
-                            <!-- <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Filter by All</span> <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a class="dropdown-item" data-id="filter_all" href="javascript:void(0);">All</a></li>
-                                <li><a class="dropdown-item" data-id="filter_scheduled" href="javascript:void(0);">Scheduled</a></li>
-                                <li><a class="dropdown-item" data-id="filter_started" href="javascript:void(0);">Started</a></li>
-                                <li><a class="dropdown-item" data-id="filter_approved" href="javascript:void(0);">Approved</a></li>
-                                <li><a class="dropdown-item" data-id="filter_invoiced" href="javascript:void(0);">Invoiced</a></li>
-                                <li><a class="dropdown-item" data-id="filter_completed" href="javascript:void(0);">Completed</a></li>
-                            </ul> -->
                         </div>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('job/new_job1') ?>'">

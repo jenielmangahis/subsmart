@@ -6,7 +6,7 @@
                 <span class="modal-title content-title" id="account-modal-label">Accounts</span>
                 <button type="button" class="close-account-modal" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-            <?php $action = isset($account) ? '/accounting/chart-of-accounts/update/'.$account->id : '/accounting/chart-of-accounts/add'; ?>
+            <?php $action = isset($account) ? base_url() . 'accounting/chart-of-accounts/update/'.$account->id : base_url() . 'accounting/chart-of-accounts/add'; ?>
             <form action="<?=$action?>" method="post" class="form-validate">
             <div class="modal-body">
                 <div class="row">
@@ -18,7 +18,7 @@
                     </div>
                     <div class="col-12 col-md-6 mt-3">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control nsm-field mb-2" name="name" id="name" required placeholder="Enter Name" value="<?=isset($account) ? $account->name : $detailType->acc_detail_name?>"/>
+                        <input type="text" class="form-control nsm-field mb-2" name="name" id="name" required placeholder="Enter Name" value="<?=isset($account) ? $account->name : ""; ?>"/>
                     </div>
                 </div>
                 <div class="row">
@@ -52,8 +52,8 @@
                         <?php if(!isset($account)) : ?>
                         <div class="mt-3">
                             <label for="choose_time">When do you want to start tracking your finances from this account in nSmarTrac?</label>
-                            <select name="choose_time" id="choose_time" class="nsm-field mb-2 form-control">
-                                <option selected="selected" disabled>Choose one</option>
+                            <select name="choose_time" id="choose_time" class="nsm-field mb-2 form-control" required>
+                                <option value="" selected="selected">Choose one</option>
                                 <option value="beginning-of-year">Beginning of this year</option>
                                 <option value="beginning-of-month">Beginning of this month</option>
                                 <option value="today">Today</option>
@@ -83,10 +83,9 @@
             </div>
             <div class="modal-footer">
                 <div class="row w-100">
-                    <div class="col-md-6">
-                        <button type="button" class="nsm-button primary close-account-modal" data-bs-dismiss="modal">Close</button>
-                    </div>
+                    <div class="col-md-6"></div>
                     <div class="col-md-6 text-end">
+                        <button type="button" class="nsm-button close-account-modal" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="nsm-button success">Save</button>
                     </div>
                 </div>

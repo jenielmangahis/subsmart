@@ -878,6 +878,7 @@ $(function () {
         }
     });
 
+    // Search
     $(document).on('click', `div#modal-container form .modal table.clickable:not(#category-details-table,#item-details-table,#previous-adjustments-table) tbody tr td:not(:last-child)`, function () {
         var row = $(this).parent();
         if (row.find('input').length < 1) {
@@ -904,6 +905,7 @@ $(function () {
                                     search: params.term,
                                     type: 'public',
                                     field: type,
+                                    // field: 'item-locations',
                                     modal: $('#modal-container form .modal').attr('id')
                                 }
 
@@ -2100,6 +2102,7 @@ $(function () {
         $('#inventoryModal .modal-title span').html($(this).val() !== '' ? '#' + $(this).val() : '');
     });
 
+    // Search
     $(document).on('change', '#inventory-adjustments-table select[name="product[]"]', function () {
         var input = $(this);
         var row = input.closest('tr');
@@ -2108,7 +2111,7 @@ $(function () {
             $.get(base_url + `accounting/get-item-details/${input.val()}`, function (res) {
                 var result = JSON.parse(res);
 
-                row.children(':nth-child(3)').html(result.item.description);
+                row.children(':nth-child(3)').html('<input type="text" class="form-control" value="' + result.item.description + '">');
 
                 var selectElement = row.children(':nth-child(4)').children('select');
                 selectElement.empty();
@@ -10351,48 +10354,12 @@ const addTableLines = (e) => {
         $(`table${table} tbody`).append(newRowHtml);
         $(`table${table} tbody tr:last-child() td:first-child()`).html(lastRowCount);
 
-        // populateDropdowns($(`table${table} tbody tr:last-child()`), table);
-
         $(`table${table} tbody tr:last-child() .delete-row-btn`).on('click', function () {
             $(this).closest('tr').remove();
             updateRowCount(table);
         });
     }
 }
-
-// function populateDropdowns(row, table) {
-//     var productOptions = [];
-//     var locationOptions = [];
-
-//     $(`${table} tbody tr`).each(function () {
-//         var productId = $(this).find('select[name="product[]"]').val();
-//         var productName = $(this).find('select[name="product[]"] option:selected').text();
-//         var locationId = $(this).find('select[name="location[]"]').val();
-//         var locationName = $(this).find('select[name="location[]"] option:selected').text();
-
-//         if (productId && !productOptions.some(option => option.value === productId)) {
-//             productOptions.push({ value: productId, text: productName });
-//         }
-
-//         if (locationId && !locationOptions.some(option => option.value === locationId)) {
-//             locationOptions.push({ value: locationId, text: locationName });
-//         }
-//     });
-
-//     var productSelect = row.find('select[name="product[]"]');
-//     productSelect.empty();
-//     productSelect.append('<option value="" selected disabled>Select Product</option>');
-//     productOptions.forEach(function (option) {
-//         productSelect.append(`<option value="${option.value}">${option.text}</option>`);
-//     });
-
-//     var locationSelect = row.find('select[name="location[]"]');
-//     locationSelect.empty();
-//     locationSelect.append('<option value="" selected disabled>Select Location</option>');
-//     locationOptions.forEach(function (option) {
-//         locationSelect.append(`<option value="${option.value}">${option.text}</option>`);
-//     });
-// }
 
 const clearTableLines = (e) => {
     e.preventDefault();
