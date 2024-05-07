@@ -523,7 +523,26 @@
         $('#add-multi-account').on('click', function(){
             $('#multi-email').val('');
             $('#multi-password').val('');
-            $('#modal-add-multi-account').modal('show');
+
+            var url = "<?php echo base_url('mycrm/_check_max_link_account'); ?>";
+            $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: 'json',
+                success: function(result) {
+                    if( result.is_limit == 1 ){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: result.msg
+                        });
+                    }else{
+                        $('#modal-add-multi-account').modal('show');
+                    }
+                }
+            });
+
+            
         });
 
         function load_multi_accounts_list(){

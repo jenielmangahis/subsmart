@@ -590,7 +590,6 @@ $(document).ready(function() {
 
         }
         var jobs = $("#jobs_chart");
-        $('#jobs_count_thumbnail').html(previousJob + prevJob + curJob);
         new Chart(jobs, {
             type: 'line',
             data: {
@@ -845,6 +844,63 @@ fetch('<?php echo base_url('Dashboard/income_subscription'); ?>', {}).then(respo
     console.log(error);
 })
 
+fetch('<?php echo base_url('Dashboard/unpaid_invoices_graph'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
+
+        var {
+            success,
+            unpaid_invoices
+        } = response;
+
+        if (unpaid_invoices) {
+            for (var x = 0; x < unpaid_invoices.length; x++) {
+                var dueDate = unpaid_invoices[x].date_created;
+                var total_amount_paid = unpaid_invoices[x].total_amount_paid ? unpaid_invoices[x].total_amount_paid : 0
+                if (dueDate) {
+                    var due = new Date(dueDate);
+                    var month = due.getMonth();
+                    monthlyAmounts[month] += parseFloat(unpaid_invoices[x].grand_total - total_amount_paid );
+                }
+            }
+        }
+
+        var unpaid_graph_data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Sales',
+                backgroundColor: 'rgb(106, 74, 134)',
+                borderColor: 'rgb(106, 74, 134)',
+                data: monthlyAmounts
+            }]
+        };
+        $('#UnpaidInvoicesGraphLoader').hide()
+
+        const UnpaidInvoicesWidgetsGraph = new Chart($('#UnpaidInvoicesWidgetsGraph'), {
+            type: 'line',
+            data: unpaid_graph_data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
+                },
+                aspectRatio: 1.2,
+            },
+        });
+
+        window.UnpaidInvoicesWidgetsGraph = UnpaidInvoicesWidgetsGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+
 fetch('<?php echo base_url('Dashboard/sales_graph'); ?>', {}).then(response => response.json()).then(
     response => {
         var monthlyAmounts = new Array(12).fill(0);
@@ -914,7 +970,7 @@ fetch('<?php echo base_url('Dashboard/get_all_customer'); ?>', {}).then(response
             customer
         } = response;
 
-      
+
 
         var customer_graph_data = {
             labels: ['Total Customer'],
@@ -929,7 +985,7 @@ fetch('<?php echo base_url('Dashboard/get_all_customer'); ?>', {}).then(response
             }]
         };
         $('#NewCustomerGraphLoader').hide()
-      
+
 
         const NewCustomerWidgetsGraph = new Chart($('#NewCustomerWidgetsGraph'), {
             type: 'doughnut',
@@ -1015,11 +1071,11 @@ fetch('<?php echo base_url('Dashboard/leads_graph'); ?>', {}).then(response => r
                 ctx.fillStyle = "rgb(40, 40, 43)";
                 ctx.textBaseLine = 'top';
                 ctx.textAlign = 'center';
-                ctx.fillText('Total', left + 95+20, yCoor -5);
+                ctx.fillText('Total', left + 95 + 20, yCoor - 5);
                 ctx.textAlign = 'center';
                 ctx.font = '18px sans-serif';
                 ctx.textAlign = 'left';
-                ctx.fillText(total_leads, left + 95 +20, yCoor + 25 );
+                ctx.fillText(total_leads, left + 95 + 20, yCoor + 25);
 
             }
         }
@@ -1042,6 +1098,67 @@ fetch('<?php echo base_url('Dashboard/leads_graph'); ?>', {}).then(response => r
         });
 
         window.NewLeadsWidgetsGraph = NewLeadsWidgetsGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+
+fetch('<?php echo base_url('Dashboard/jobs_thumbnail_graph'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
+
+        var {
+            success,
+            jobs,
+            total_jobs
+        } = response;
+
+
+        if (jobs) {
+            $('.jobs_count_thumbnail').html(total_jobs);
+
+            for (var x = 0; x < jobs.length; x++) {
+                var date_created = jobs[x].date_created;
+                if (date_created) {
+                    var due = new Date(date_created);
+                    var month = due.getMonth();
+
+                    monthlyAmounts[month] += 1;
+                }
+            }
+        }
+
+        var jobs_data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'jobs',
+                backgroundColor: 'rgb(220, 53, 69 ,0.79)',
+                borderColor: 'rgb(220, 53, 69 ,0.79)',
+                data: monthlyAmounts
+            }]
+        };
+        $('#JobsGraphLoader').hide()
+
+        const JobsThumbnailGraph = new Chart($('#JobsThumbnailGraph'), {
+            type: 'bar',
+            data: jobs_data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
+                },
+                aspectRatio: 1.2,
+            },
+        });
+
+        window.JobsThumbnailGraph = JobsThumbnailGraph;
     }).catch((error) => {
     console.log(error);
 })

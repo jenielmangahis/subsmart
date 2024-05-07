@@ -56,14 +56,20 @@
                             </div>
                             <div class="col-12 col-md-3">
                                 <label class="content-subtitle fw-bold d-block mb-2">License Expiration Date</label>
-                                <input type="text" name="license_exp_date" class="nsm-field form-control datepicker" required value="<?= $profiledata->license_expiry_date != '0000-00-00' ? date("Y-m-d", strtotime($profiledata->license_expiry_date)) : ''; ?>" />
+                                <input type="text" name="license_exp_date" class="nsm-field form-control datepicker" required value="<?= $profiledata->license_expiry_date != '0000-00-00' ? date("m/d/Y", strtotime($profiledata->license_expiry_date)) : ''; ?>" />
                             </div>
                         </div>
                         <div class="row g-3 mt-1">
                             <div class="col-12 col-md-6">
                                 <label class="content-subtitle fw-bold d-block mb-1">Upload License</label>
                                 <label class="content-subtitle d-block mb-3 text-muted">Optional. Upload a scanned copy of your license. Only image file types (JPG, PNG, GIF) are allowed.</label>
-                                <div class="nsm-img-upload m-auto">
+                                <?php 
+                                    $license_image = '';
+                                    if( $profiledata->license_image != '' ){
+                                        $license_image = urlUpload('users/business_profile/'.$profiledata->company_id.'/'.$profiledata->license_image);
+                                    }
+                                ?>
+                                <div class="nsm-img-upload m-auto" style="<?= $license_image != '' ? 'background-image: url('.$license_image.');' : ''; ?>">
                                     <span class="nsm-upload-label disable-select">Drop or click image to upload</span>
                                     <input type="file" name="license_image" class="nsm-upload" accept="image/*">
                                 </div>
@@ -97,14 +103,20 @@
                             </div>
                             <div class="col-12 col-md-3">
                                 <label class="content-subtitle fw-bold d-block mb-2">Bond Expiration Date</label>
-                                <input type="text" name="bonded_exp_date" class="nsm-field form-control datepicker" required value="<?= $profiledata->bond_expiry_date != '0000-00-00' ? date("Y-m-d", strtotime($profiledata->bond_expiry_date)) : ''; ?>" />
+                                <input type="text" name="bonded_exp_date" class="nsm-field form-control datepicker" required value="<?= $profiledata->bond_expiry_date != '0000-00-00' ? date("m/d/Y", strtotime($profiledata->bond_expiry_date)) : ''; ?>" />
                             </div>
                         </div>
                         <div class="row g-3 mt-1">
                             <div class="col-12 col-md-6">
                                 <label class="content-subtitle fw-bold d-block mb-1">Upload Bond</label>
                                 <label class="content-subtitle d-block mb-3 text-muted">Optional. Upload a scanned copy of your bond. Only image file types (JPG, PNG, GIF) are allowed.</label>
-                                <div class="nsm-img-upload m-auto">
+                                <?php 
+                                    $bond_image = '';
+                                    if( $profiledata->bond_image != '' ){
+                                        $bond_image = urlUpload('users/business_profile/'.$profiledata->company_id.'/'.$profiledata->bond_image);
+                                    }
+                                ?>
+                                <div class="nsm-img-upload m-auto" style="<?= $bond_image != '' ? 'background-image: url('.$bond_image.');' : ''; ?>">
                                     <span class="nsm-upload-label disable-select">Drop or click image to upload</span>
                                     <input type="file" name="bond_image" class="nsm-upload" accept="image/*">
                                 </div>
@@ -138,16 +150,22 @@
                             </div>
                             <div class="col-12 col-md-3">
                                 <label class="content-subtitle fw-bold d-block mb-2">Insurance Expiration Date</label>
-                                <input type="text" name="insured_exp_date" class="nsm-field form-control datepicker" required value="<?= $profiledata->insurance_expiry_date != '0000-00-00' ? date("Y-m-d", strtotime($profiledata->insurance_expiry_date)) : ''; ?>" />
+                                <input type="text" name="insured_exp_date" class="nsm-field form-control datepicker" required value="<?= $profiledata->insurance_expiry_date != '0000-00-00' ? date("m/d/Y", strtotime($profiledata->insurance_expiry_date)) : ''; ?>" />
                             </div>
                         </div>
                         <div class="row g-3 mt-1">
                             <div class="col-12 col-md-6">
                                 <label class="content-subtitle fw-bold d-block mb-1">Upload Insurance</label>
                                 <label class="content-subtitle d-block mb-3 text-muted">Optional. Upload a scanned copy of your bond. Only image file types (JPG, PNG, GIF) are allowed.</label>
-                                <div class="nsm-img-upload m-auto">
+                                <?php 
+                                    $insurance_image = '';
+                                    if( $profiledata->insurance_image != '' ){
+                                        $insurance_image = urlUpload('users/business_profile/'.$profiledata->company_id.'/'.$profiledata->insurance_image);
+                                    }
+                                ?>
+                                <div class="nsm-img-upload m-auto" style="<?= $insurance_image != '' ? 'background-image: url('.$insurance_image.');' : ''; ?>">
                                     <span class="nsm-upload-label disable-select">Drop or click image to upload</span>
-                                    <input type="file" name="fileimage3" class="nsm-upload" accept="image/*">
+                                    <input type="file" name="insurance_image" class="nsm-upload" accept="image/*">
                                 </div>
                             </div>
                         </div>
@@ -248,11 +266,16 @@
             _this.find("button[type=submit]").html("Saving");
             _this.find("button[type=submit]").prop("disabled", true);
 
+            let formData = new FormData(_this[0]);   
+
             $.ajax({
                 type: 'POST',
                 url: url,
-                data: _this.serialize(),
+                data: formData,
                 dataType: 'json',
+                contentType: false,
+                cache: false,
+                processData:false,
                 success: function(result) {
                     if( result.is_success == 1 ){
                         Swal.fire({

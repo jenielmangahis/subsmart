@@ -542,6 +542,18 @@ class Invoice_model extends MY_Model
         return $query->row();
     }
 
+    public function getUnpaidInvoicesByCompanyId($company_id)
+    {
+        $this->db->select('invoices.*','payment_records.invoice_amount AS total_amount_paid');
+        $this->db->from($this->table);
+        $this->db->join('payment_records', 'payment_records.invoice_id = invoices.id','left');
+        $this->db->where('invoices.company_id', $company_id);
+        $this->db->where('invoices.view_flag', 0);
+        
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getTotalInvoiceAmountByCompanyIdSalesGraph($company_id)
     {
         $this->db->select('invoices.*');
