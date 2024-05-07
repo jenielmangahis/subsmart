@@ -28,11 +28,11 @@ endif;
     <div class="nsm-card-content">
         <div class="nsm-widget-table">
             <table class="nsm-table" id="dashboard_unpaid_invoices">
-                <thead>
+                <thead style="display:none;">
                     <tr>
-                        <td data-name="UnpaidInvoicesProfile" style="width:50%;"></td>
-                        <td data-name="UnpaidInvoicesDueDate">Due Date</td>
+                        <td data-name="UnpaidInvoicesProfile" style="width:59%;"></td>                        
                         <td data-name="UnpaidInvoicesBalance">Balance</td>
+                        <td data-name="UnpaidInvoicesDueDate" style="text-align:right;">Due Date</td>
                     </tr>
                 </thead>
                 <tbody>
@@ -71,30 +71,39 @@ endif;
                                     $statusBadgeColor = "";
                                     break;
                             }
+
+                            $datetime1 = new DateTime(date("Y-m-d",strtotime($invoice->date_updated)));
+                            $datetime2 = new DateTime(date("Y-m-d"));
+                            $difference = $datetime1->diff($datetime2);
+
+                            $show_no_movement_notice = 0;
+                            if( $difference->days >= 14 && ($invoice->status != 'Paid') ){
+                                $show_no_movement_notice = 1;
+                            }
                         ?>
                     <tr>
                         <td>
-                            <div class="widget-item widget-tile-unpaid-invoice-row" data-id="<?= $invoice->id; ?>">
-                                <?php if (is_null($invoiceAvatar)): ?>
-                                    <div class="nsm-profile"><span><?= $invoiceInitial; ?></span></div>
-                                <?php else: ?>
-                                    <div class="nsm-profile" style="background-image: url('<?= $invoiceAvatar; ?>');"></div>
-                                <?php endif; ?>
+                            <div class="widget-item widget-tile-unpaid-invoice-row" data-id="<?= $invoice->id; ?>">                                
                                 <div class="content">
                                     <div class="details" style="width:98% !important;">
                                         <span class="content-title"><?= $invoice->invoice_number ?></span>  
-                                        <span class="content-subtitle d-block" style="margin-top:7px;">Customer : <?= $invoice->first_name . ' ' . $invoice->last_name; ?></span>      
-                                        <span class="content-subtitle d-block" style="margin-top:7px;">
-                                            Status : <span class="nsm-badge <?= $statusBadgeColor; ?>"><?= $invoice->status; ?></span>
-                                        </span>                                        
+                                        <span class="content-subtitle d-block" style="margin-top:7px;"><i class='bx bxs-user-circle' style="font-size: 14px;position: relative;top: 2px;"></i> <?= $invoice->first_name . ' ' . $invoice->last_name; ?></span> 
+                                        <?php if( $show_no_movement_notice == 1 ){  ?>
+                                            <a style="text-decoration:none;margin-top:5px;" href="<?= base_url('invoice/invoice_edit/'.$invoice->id) ?>"><span class="nsm-badge badge-error">Last update was <b><?= $difference->d . ' days ago' ?></b> - Needs update</span></a>
+                                        <?php } ?>                                     
                                     </div>                            
                                 </div>
                             </div>
+                        </td>                        
+                        <td>
+                            <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$<?= number_format($invoice->grand_total, 2); ?></span>
+                            <span class="content-subtitle d-block">Total Due</span>
                         </td>
-                        <td>
-                            <span class="content-subtitle d-block mt-2"><?= $invoice->due_date ? get_format_date($invoice->due_date) : '---' ; ?></span></td>
-                        <td>
-                            <span class="content-subtitle nsm-text-success fw-bold" style="font-size:12px;">$<?= number_format($invoice->balance, 2); ?></span>
+                        <td style="text-align:right;">
+                            <span class="nsm-badge <?= $statusBadgeColor; ?>"><?= $invoice->status; ?></span>
+                            <span class="content-subtitle d-block mt-2">
+                                <?= $invoice->due_date ? get_format_date($invoice->due_date) : '---' ; ?>
+                            </span>
                         </td>
                     </tr>
                     <?php } ?>
