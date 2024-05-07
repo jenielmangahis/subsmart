@@ -97,7 +97,7 @@ function formatEstimateNumber($number) {
                                 $difference = $datetime1->diff($datetime2);
 
                                 $show_no_movement_notice = 0;
-                                if( $difference->days >= 14 && ($estimate->status == 'Draft' || $estimate->status == 'Submitted' || $estimate->status == 'Accepted') ){
+                                if( $difference->d >= 14 && ($estimate->status == 'Draft' || $estimate->status == 'Submitted' || $estimate->status == 'Accepted') ){
                                     $show_no_movement_notice = 1;
                                 }
                             ?>

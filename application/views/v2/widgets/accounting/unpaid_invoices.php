@@ -77,7 +77,7 @@ endif;
                             $difference = $datetime1->diff($datetime2);
 
                             $show_no_movement_notice = 0;
-                            if( $difference->days >= 14 && ($invoice->status != 'Paid') ){
+                            if( $difference->d >= 14 && ($invoice->status != 'Paid') ){
                                 $show_no_movement_notice = 1;
                             }
                         ?>
