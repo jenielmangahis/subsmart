@@ -156,7 +156,7 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['items'] = $this->items_model->getItemlist();
 
         $status = [
-            1
+            0, 1
         ];
 
         if(get('status') === 'all') {
@@ -226,6 +226,7 @@ class Chart_of_accounts extends MY_Controller {
         if(!empty(get('status'))) {
             $this->page_data['status'] = get('status');
         }
+
         $this->page_data['accounts'] = $data;
         $this->page_data['accountsDropdown'] = $accountsDropdown;
         $this->page_data['alert'] = 'accounting/alert_promt';
@@ -5354,6 +5355,16 @@ class Chart_of_accounts extends MY_Controller {
 
         foreach($ids as $id) {
             $this->chart_of_accounts_model->inactive($id);
+        }
+    }
+
+    public function make_active_inactive()
+    {
+        $post = $this->input->post();
+        if($post['status'] == 'make-inactive') {
+            $this->chart_of_accounts_model->inactive($post['id']);
+        } else {
+            $this->chart_of_accounts_model->makeActive($post['id']);
         }
     }
 

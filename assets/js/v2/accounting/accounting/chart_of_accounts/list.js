@@ -82,34 +82,82 @@ $('#accounts-table tbody tr input[type="checkbox"]').on('change', function() {
 
 $('#make-inactive').on('click', function(e) {
     e.preventDefault();
-    if($(this).hasClass('disabled') === false) {
-        var data = new FormData();
 
-        $('#accounts-table tbody tr:visible input.select-one:checked').each(function() {
-            data.append('ids[]', $(this).val());
-        });
+    Swal.fire({
+        title: 'Are you sure?',
+        html: `You want to make selected chart of account inactive?`,
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
 
-        $.ajax({
-            url:"/accounting/chart-of-accounts/inactive-batch",
-            method:"post",
-            data: data,
-            contentType:false,
-            cache:false,
-            processData:false,
-            success:function(data){
+            if($(this).hasClass('disabled') === false) {
+                var data = new FormData();
+        
                 $('#accounts-table tbody tr:visible input.select-one:checked').each(function() {
-                    if($('#inc_inactive').prop('checked')) {
-                        $(this).closest('tr').find('td:nth-child(2)').html($(this).closest('tr').find('td:nth-child(2)').text() + ' (deleted)');
-                    } else {
-                        $(this).closest('tr').remove();
+                    data.append('ids[]', $(this).val());
+                });
+        
+                $.ajax({
+                    url: base_url + "accounting/chart-of-accounts/inactive-batch",
+                    method:"post",
+                    data: data,
+                    contentType:false,
+                    cache:false,
+                    processData:false,
+                    success:function(data){
+                        $('#accounts-table tbody tr:visible input.select-one:checked').each(function() {
+                            if($('#inc_inactive').prop('checked')) {
+                                $(this).closest('tr').find('td:nth-child(2)').html($(this).closest('tr').find('td:nth-child(2)').text() + ' (deleted)');
+                            } else {
+                                $(this).closest('tr').remove();
+                            }
+                        });
                     }
                 });
-            }
-        });
+        
+                $('#accounts-table thead .select-all').prop('checked', false);
+            }            
 
-        $('#accounts-table thead .select-all').prop('checked', false);
-    }
+        }
+    });    
 });
+
+function makeActiveInactive(status, id) {
+
+    var html_label = "Are you sure you want to set it to active?";
+    if(status = 'make-inactive') {
+        var html_label = "Are you sure you want to set it to inactive?";
+    }
+
+    Swal.fire({
+        title: 'Set to Inactive?',
+        html: html_label,
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {        
+            $.ajax({
+                url: base_url + "accounting/chart-of-accounts/make-active-inactive",
+                method:"post",
+                data: {status: status, id: id},
+                success:function(data){
+                    window.location.reload();
+                }
+            });
+        }
+    }); 
+}
 
 $("#btn_print_accounts").on("click", function() {
     $("#accounts_table_print").printThis();

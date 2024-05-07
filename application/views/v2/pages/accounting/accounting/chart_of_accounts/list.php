@@ -366,6 +366,7 @@
                             <td data-name="Detail Type">DETAIL TYPE</td>
                             <td data-name="nSmarTrac Balance">NSMARTRAC BALANCE</td>
                             <td data-name="Bank Balance">BANK BALANCE</td>
+                            <td data-name="Status">STATUS</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -383,6 +384,7 @@
                             <td><?=$account['detail_type']?></td>
                             <td><?=$account['nsmartrac_balance']?></td>
                             <td><?=$account['bank_balance']?></td>
+                            <td><?=$account['status'] == 1 ? 'Active' : 'Inactive'; ?></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -405,7 +407,8 @@
                                         </li>
                                         <?php endif;?>
                                         <li>
-                                            <a class="dropdown-item <?=$account['status'] === '0' ? 'make-active' : 'make-inactive'?>" href="#"><?=$account['status'] === '0' ? 'Make active' : 'Make inactive (reduces usage)'?></a>
+                                            <?php $is_status = $account['status'] === '0' ? 'make-active' : 'make-inactive'; ?>
+                                            <a class="dropdown-item <?=$account['status'] === '0' ? 'make-active' : 'make-inactive'?>" onClick="javascript:makeActiveInactive('<?php echo $is_status; ?>','<?php echo $account['id']; ?>'); " href="#"><?=$account['status'] === '0' ? 'Make active' : 'Make inactive (reduces usage)'?></a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" href="#">Run report</a>
