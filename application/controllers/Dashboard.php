@@ -510,7 +510,7 @@ class Dashboard extends Widgets
                 break;
             case 'sales':
                 $total_query = [
-                    'where' => ['company_id' => logged('company_id'),'view_flag'=> 0,  'date_issued >=' => date('Y-m-d', strtotime($date_from)),
+                    'where' => ['company_id' => logged('company_id'), 'view_flag' => 0,  'date_issued >=' => date('Y-m-d', strtotime($date_from)),
                     'due_date <' => date('Y-m-d', strtotime($date_to))],
                     'table' => 'invoices',
                     'select' => 'SUM(grand_total) AS total_invoice_amount',
@@ -518,21 +518,19 @@ class Dashboard extends Widgets
                 $resultInvoice = $this->general->get_data_with_param($total_query);
 
                 $total_invoice = 0;
-                if( $resultInvoice ){
+                if ($resultInvoice) {
                     $total_invoice = $resultInvoice[0]->total_invoice_amount;
                 }
                 $result = number_format($total_invoice, 2, '.', ',');
 
                 $sales_query = [
-                    'where' => ['company_id' => logged('company_id'),'view_flag'=> 0,  'date_issued >=' => date('Y-m-d', strtotime($date_from)),
+                    'where' => ['company_id' => logged('company_id'), 'view_flag' => 0,  'date_issued >=' => date('Y-m-d', strtotime($date_from)),
                     'due_date <' => date('Y-m-d', strtotime($date_to))],
                     'table' => 'invoices',
                     'select' => '*',
                 ];
 
                 $sales = $this->general->get_data_with_param($sales_query);
-
-             
 
                 $this->output->set_output(json_encode(['first' => $result, 'second' => null,  'sales' => $sales]));
 
@@ -541,7 +539,7 @@ class Dashboard extends Widgets
                 $leads_query = [
                     'where' => ['ac_leads.company_id' => logged('company_id'),
                     'DATE(ac_leads.date_created)  >=' => date('Y-m-d', strtotime($date_from)),
-                    'DATE(ac_leads.date_created)  <' => date('Y-m-d', strtotime($date_to))
+                    'DATE(ac_leads.date_created)  <' => date('Y-m-d', strtotime($date_to)),
                      ],
                     'table' => 'ac_leads',
                     'join' => [
@@ -562,13 +560,13 @@ class Dashboard extends Widgets
 
                 $this->output->set_output(json_encode(['first' => count($total_leads), 'second' => null, 'total_leads' => count($total_leads)]));
 
-            break;
+                break;
 
             case 'acs_profile':
                 $acs_profile_query = [
                     'where' => ['company_id' => logged('company_id'),
                     'DATE(created_at)  >=' => date('Y-m-d', strtotime($date_from)),
-                    'DATE(created_at)  <' => date('Y-m-d', strtotime($date_to))
+                    'DATE(created_at)  <' => date('Y-m-d', strtotime($date_to)),
                      ],
                     'table' => 'acs_profile',
                     'select' => '*',
@@ -576,9 +574,45 @@ class Dashboard extends Widgets
                 $total_acs = $this->general->get_data_with_param($acs_profile_query);
                 $this->output->set_output(json_encode(['first' => count($total_acs), 'second' => null, 'total_acs' => count($total_acs)]));
 
-            break;
+                break;
+            case 'jobs':
+                $jobs_query = [
+                    'where' => ['jobs.company_id' => logged('company_id'),
+                    'DATE(jobs.date_created)  >=' => date('Y-m-d', strtotime($date_from)),
+                    'DATE(jobs.date_created)  <' => date('Y-m-d', strtotime($date_to)),
+                     ],
+                    'table' => 'jobs',
+                    'join' => [
+                        [
+                            'table' => 'job_payments',
+                            'statement' => 'jobs.id = job_payments.job_id',
+                        ],
+                    ],
+                    'select' => 'jobs.*, job_payments.amount',
+                ];
+                $total_jobs = $this->general->get_data_with_param($jobs_query);
+                $this->output->set_output(json_encode(['first' => count($total_jobs), 'second' => null, 'jobs' => $total_jobs]));
 
-            
+                break;
+            case 'unpaid_invoices':
+                $unpaid_query = [
+                    'where' => ['invoices.company_id' => logged('company_id'),  'date_created >=' => date('Y-m-d', strtotime($date_from)),
+                    'date_created <=' => date('Y-m-d', strtotime($date_to))],
+                    'table' => 'invoices',
+                    'join' => [
+                        [
+                            'table' => 'payment_records',
+                            'statement' => 'payment_records.invoice_id = invoices.id',
+                            'join_as' => 'left',
+                        ],
+                    ],
+                    'select' => 'invoices.*','payment_records.invoice_amount AS total_amount_paid',
+                ];
+                $resultInvoice = $this->general->get_data_with_param($unpaid_query);
+
+                $this->output->set_output(json_encode(['first' => null, 'second' => null, 'unpaid' => $resultInvoice]));
+
+                break;
         }
     }
 
@@ -851,12 +885,10 @@ class Dashboard extends Widgets
         $cid = logged('company_id');
 
         $customer = $this->AcsProfile_model->getAllCustomerByCompanyId($cid);
-       
 
         $data_arr = ['success' => $is_success, 'customer' => count($customer)];
         exit(json_encode($data_arr));
     }
-
 
     public function ajax_recent_customers_thubnails()
     {
@@ -1087,6 +1119,26 @@ class Dashboard extends Widgets
         exit(json_encode($data_arr));
     }
 
+    public function jobs_thumbnail_graph()
+    {
+        $jobs = $this->event_model->getAllJobs();
+        $data_arr = ['Success' => true, 'jobs' => $jobs , 'total_jobs'=>count($jobs)];
+        exit(json_encode($data_arr));
+    }
+    
+    public function unpaid_invoices_graph()
+    {
+        $CI = &get_instance();
+        $CI->load->model('Invoice_model', 'invoice_model');
+        $CI->load->model('Payment_records_model');
+        $company_id = logged('company_id');
+        // $unpaid = $CI->Payment_records_model->getTotalInvoiceAmountByCompanyId($company_id);
+
+        $unpaid = $CI->invoice_model->getUnpaidInvoicesByCompanyId($company_id);
+        $data_arr = ['Success' => true, 'unpaid_invoices' => $unpaid];
+        exit(json_encode($data_arr));
+    }
+
     public function sales_graph()
     {
         $CI = &get_instance();
@@ -1094,18 +1146,17 @@ class Dashboard extends Widgets
         $CI->load->model('Payment_records_model');
         $company_id = logged('company_id');
 
-        $resultInvoice  = $CI->invoice_model->getTotalInvoiceAmountByCompanyIdSalesGraph($company_id);
+        $resultInvoice = $CI->invoice_model->getTotalInvoiceAmountByCompanyIdSalesGraph($company_id);
         $data_arr = ['Success' => true, 'open_invoices' => $resultInvoice];
         exit(json_encode($data_arr));
     }
 
     public function leads_graph()
     {
-        $leads =  $this->customer_ad_model->get_leads_data();
+        $leads = $this->customer_ad_model->get_leads_data();
         $data_arr = ['Success' => true, 'total_leads' => count($leads)];
         exit(json_encode($data_arr));
     }
-
 
     public function jobs()
     {

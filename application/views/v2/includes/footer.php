@@ -687,16 +687,73 @@ function loadDataFilter(from_date, to_date, table, id) {
                 filterCustomerThumbnailGraph(data['total_acs'])
             }
 
+            if (table == 'jobs') {
+                filterJobsThumbnailGraph(data['jobs'])
+            }
+            if (table == 'unpaid_invoices') {
+                var unpaid_invoices = data['unpaid'];
+                var totalUnpaid = 0;
+                for (var x = 0; x < unpaid_invoices.length; x++) {
+                    var total_amount_paid = unpaid_invoices[x].total_amount_paid ? unpaid_invoices[x]
+                        .total_amount_paid : 0
+
+                    totalUnpaid += parseFloat(unpaid_invoices[x].grand_total -
+                        total_amount_paid);
+                }
+
+                $(`#first_content_${id}`).html(totalUnpaid.toFixed(2));
+
+                filterUnpaidInvoicesThumbnailGraph(data['unpaid'])
+            }
+
+
+
         }
     });
 }
 
+function filterUnpaidInvoicesThumbnailGraph(sales) {
+    var amountsByMonth = new Array(12).fill(0);
+
+    for (var x = 0; x < sales.length; x++) {
+        var dueDate = sales[x].due_date;
+        if (dueDate) {
+            var due = new Date(dueDate);
+            var month = due.getMonth();
+
+            amountsByMonth[month] += parseFloat(sales[x].grand_total);
+        }
+    }
+
+    UnpaidInvoicesWidgetsGraph.data.datasets[0].data = amountsByMonth;
+    UnpaidInvoicesWidgetsGraph.update();
+}
+
+function filterJobsThumbnailGraph(jobs) {
+
+    var amountsByMonth = new Array(12).fill(0);
+
+    for (var x = 0; x < jobs.length; x++) {
+        var date_created = jobs[x].date_created;
+        if (date_created) {
+            var due = new Date(date_created);
+            var month = due.getMonth();
+
+            amountsByMonth[month] += 1;
+        }
+    }
+
+    JobsThumbnailGraph.data.datasets[0].data = amountsByMonth;
+    JobsThumbnailGraph.update();
+
+}
+
 function filterCustomerThumbnailGraph(total_acs) {
 
-if (total_acs > 0) {
-    NewCustomerWidgetsGraph.data.datasets[0].data = total_acs;
-    NewCustomerWidgetsGraph.update();
-}
+    if (total_acs > 0) {
+        NewCustomerWidgetsGraph.data.datasets[0].data = total_acs;
+        NewCustomerWidgetsGraph.update();
+    }
 
 }
 
