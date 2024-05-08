@@ -57,53 +57,20 @@ window.document.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
-$('#customer_form').on("change", function () {
-    let customerData = $("#customer_form").serialize();
-    const URL_ORIGIN = window.origin;
+// $('#customer_form').on("change", function () {
+//     let customerData = $("#customer_form").serialize();
+//     const URL_ORIGIN = window.origin;
 
-    // Autosave script
-    // $.ajax({
-    //   type: "POST",
-    //   url: URL_ORIGIN + "/Customer/save_customer_profile",
-    //   data: customerData,
-    //   success: function (response) {
-    //     // alert('save successfully!');
-    //   }
-    // });
-
-    // [Disable Temporarily] Check if the Customer already exist in database
-    // $.ajax({
-    //   type: "POST",
-    //   url: URL_ORIGIN + "/Customer/checkCustomerDuplicate",
-    //   data: customerData,
-    //   success: function (response) {
-    //     $('.duplicateEntryTable').html(response);
-    //     const tbodyLength = $('.duplicateEntryTable > table > tbody > tr').length;
-    //     if (tbodyLength > 1) {
-    //       let customer_type = $('#customer_type').val();
-    //       let customer_name = $("#customer_form").find('#first_name').val() + " " + $("#customer_form").find('#last_name').val();
-    //       let business_name = $("#customer_form").find('#business_name').val()
-    //       if (customer_type == "Residential") {
-    //         $('.customerNameType').text('Customer');
-    //         $('.duplicateCustomer').text(customer_name);
-    //       } else if (customer_type == "Commercial" || customer_type == "Business") {
-    //         $('.customerNameType').text('Business');
-    //         $('.duplicateCustomer').text(business_name);
-    //       }
-    //       $('.duplicateWarningModal').modal('show');
-    //     } else {
-    //       $.ajax({
-    //           type: "POST",
-    //           url: URL_ORIGIN + "/Customer/save_customer_profile",
-    //           data: customerData,
-    //           success: function (response) {
-    //             // alert('save successfully!');
-    //           }
-    //         });
-    //     }
-    //   }
-    // });
-});
+//     // Autosave script
+//     $.ajax({
+//       type: "POST",
+//       url: URL_ORIGIN + "/Customer/save_customer_profile",
+//       data: customerData,
+//       success: function (response) {
+//         // alert('save successfully!');
+//       }
+//     });
+// });
 
 function removeCustomer(customerID) {
   const URL_ORIGIN = window.origin;
