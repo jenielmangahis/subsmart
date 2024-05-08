@@ -307,12 +307,6 @@ if ($this->session->userdata('usertimezone') == null) {
                                 <i class='bx bx-fw bx-note'></i> Tickets
                             </a>
                         </li>  
-                        <li class="<?php if ($page->title == 'Workorder Type') : echo 'selected';
-                                    endif; ?>">
-                            <a href="<?= base_url("workstatus") ?>">
-                                <i class='bx bx-fw bx-checkbox-square'></i> Status
-                            </a>
-                        </li>
                     </ul>
                 </li>
                 <li class="<?php if ($page->title == 'Customers' || $page->title == 'Commercial' || $page->title == 'Residential') : echo 'selected ';
