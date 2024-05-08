@@ -91,16 +91,16 @@
                                                                 <tbody>
                                                                     <tr>
                                                                         <td>1</td>
-                                                                        <td style="width: 250px;">
+                                                                        <td style="width: 25%;">
                                                                             <select name="product[]" class="form-control nsm-field" required></select>
                                                                         </td>
-                                                                        <td><input type="text" name="description[]" class="form-control nsm-field" required></td>
-                                                                        <td>
+                                                                        <td style="width: 30%;"><input type="text" name="description[]" class="form-control nsm-field" required></td>
+                                                                        <td style="width: 15%;">
                                                                             <select name="location[]" class="form-control nsm-field" required></select>
                                                                         </td>
-                                                                        <td></td>
-                                                                        <td><input type="number" name="new_qty[]" class="form-control nsm-field text-end" required></td>
-                                                                        <td><input type="number" name="change_in_qty[]" class="form-control nsm-field text-end" required></td>
+                                                                        <td style="width:9rem;"></td>
+                                                                        <td style="width:9rem;"><input type="number" name="new_qty[]" class="form-control nsm-field text-end" required></td>
+                                                                        <td style="width:9rem;"><input type="number" name="change_in_qty[]" class="form-control nsm-field text-end" required></td>
                                                                         <td>
                                                                             <button type="button" class="nsm-button delete-row">
                                                                                 <i class='bx bx-fw bx-trash'></i>

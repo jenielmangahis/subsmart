@@ -155,6 +155,9 @@ a.btn-primary.btn-md {
     bottom: 0px;
   }
 }
+#new_customer .row{
+    margin-top:0px !important;
+}
 </style>
 
    <style>
@@ -179,7 +182,7 @@ a.btn-primary.btn-md {
 <input type="hidden" id="siteurl" value="<?=base_url();?>">
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/service_tickets_tabs'); ?>
     </div>
     
     <?php echo form_open_multipart('tickets/savenewTicket', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
@@ -202,13 +205,21 @@ a.btn-primary.btn-md {
                 <input type="hidden" id="redirect-calendar" name="redirect_calendar" value="<?= $redirect_calendar; ?>">
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="customers" class="required"><b>Customer</b></label>
-                        <a class="link-modal-open" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="color:#02A32C;float:right;"><span class="bx bx-plus" style="color:#02A32C;"></span>New Customer</a>
-                        <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required class="form-control searchable-dropdown" placeholder="Select">
-                                <?php if( $default_customer_id > 0 ){ ?>
-                                    <option <?= $default_customer_id == $c->prof_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                                <?php } ?>
-                        </select>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Customer</label>
+                            </div>                                                            
+                            <div class="col-8">
+                                <select class="nsm-field form-select select2" name="customer_id" id="sel-customer_t">
+                                    <?php if( $default_customer_id > 0 ){ ?>
+                                        <option <?= $default_customer_id == $c->prof_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="col-3">
+                                <button type="button" id="" data-bs-toggle="modal" data-bs-target="#new_customer" class="nsm-button small text-end" ><strong>Add New Customer</strong></button>                                                    
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -1117,7 +1128,7 @@ a.btn-primary.btn-md {
         </div>
 
 <?php //echo $file_selection; ?>
-
+<?php include viewPath('v2/pages/job/modals/new_customer'); ?>
 <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
 
 <?php include viewPath('v2/includes/footer'); ?>
@@ -1542,6 +1553,40 @@ $(document).ready(function(){
     $('#sel-customer_t').change(function(){
         var customer_selected = $(this).val();
         load_customer_data(customer_selected);
+    });
+
+    $("#new_customer_form").submit(function(e) {    
+        e.preventDefault(); 
+        var form = $(this);        
+        $.ajax({
+            type: "POST",
+            url: base_url + "/customer/add_new_customer_from_jobs",
+            data: form.serialize(), 
+            success: function(data)
+            {
+                $('#new_customer').modal('hide');
+                if(data === "Success"){
+                    Swal.fire({                        
+                        text: "Customer added successfully.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            
+                        //}
+                    });                     
+                }else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Cannot add data.',
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    });
+                }
+            }
+        });
     });
 
     function load_customer_data(customer_id){

@@ -156,7 +156,7 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['items'] = $this->items_model->getItemlist();
 
         $status = [
-            1
+            0, 1
         ];
 
         if(get('status') === 'all') {
@@ -226,6 +226,7 @@ class Chart_of_accounts extends MY_Controller {
         if(!empty(get('status'))) {
             $this->page_data['status'] = get('status');
         }
+
         $this->page_data['accounts'] = $data;
         $this->page_data['accountsDropdown'] = $accountsDropdown;
         $this->page_data['alert'] = 'accounting/alert_promt';
@@ -401,6 +402,7 @@ class Chart_of_accounts extends MY_Controller {
     public function add()
     {
         $post = $this->input->post();
+
         switch($post['choose_time']) {
             case 'beginning-of-year' :
                 $date = date("01-01-Y");
@@ -416,26 +418,22 @@ class Chart_of_accounts extends MY_Controller {
             break;
         }
 
-        $name = $post['name'];
-
-        do {
-            $nameExists = $this->chart_of_accounts_model->get_by_name($name);
-
-            if(!empty($nameExists)) {
-                $name = $post['name'].'-'.count($nameExists);
-            }
-        } while(!empty($nameExists));
+        $name       = $post['name'];
+        $nameExists = $this->chart_of_accounts_model->get_by_name($name);
+        if(!empty($nameExists)) {
+            $name = $post['name'].'-'.count($nameExists);
+        }
 
         $data = [
             'company_id' => logged('company_id'),
             'account_id' => $post['account_type'],
             'acc_detail_id' => $post['detail_type'],
-            'name' => $name,
-            'description' => $post['description'],
+            'name'          => $name,
+            'description'   => $post['description'],
             'parent_acc_id' => $post['sub_account_type'],
-            'time' => $post['choose_time'],
-            'balance' => $post['balance'],
-            'time_date' => $date
+            'time'          => isset($post['choose_time']) ? $post['choose_time'] : '',
+            'balance'       => $post['balance'],
+            'time_date'     => $date
         ];
 
         $account = $this->chart_of_accounts_model->saverecords($data);
@@ -447,7 +445,7 @@ class Chart_of_accounts extends MY_Controller {
         }
 
         redirect("accounting/chart-of-accounts");
-    }
+    }    
 
     public function edit($id)
     {
@@ -5357,6 +5355,16 @@ class Chart_of_accounts extends MY_Controller {
 
         foreach($ids as $id) {
             $this->chart_of_accounts_model->inactive($id);
+        }
+    }
+
+    public function make_active_inactive()
+    {
+        $post = $this->input->post();
+        if($post['status'] == 'make-inactive') {
+            $this->chart_of_accounts_model->inactive($post['id']);
+        } else {
+            $this->chart_of_accounts_model->makeActive($post['id']);
         }
     }
 

@@ -659,6 +659,7 @@ $route['accounting/chart-of-accounts/add-attachment']['post'] = 'accounting_cont
 $route['accounting/chart-of-accounts/inactive-batch']['post'] = 'accounting_controllers/chart_of_accounts/inactive_batch';
 $route['accounting/chart-of-accounts/get-import-data']['post'] = 'accounting_controllers/chart_of_accounts/get_import_data';
 $route['accounting/chart-of-accounts/import-accounts-data']['post'] = 'accounting_controllers/chart_of_accounts/import_accounts_data';
+$route['accounting/chart-of-accounts/make-active-inactive']['post'] = 'accounting_controllers/chart_of_accounts/make_active_inactive';
 
 $route['accounting/reconcile'] = 'accounting_controllers/reconcile/indexmain';
 $route['accounting/reconcile/create'] = 'accounting_controllers/reconcile/add';

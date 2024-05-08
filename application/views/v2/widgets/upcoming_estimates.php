@@ -97,16 +97,16 @@ function formatEstimateNumber($number) {
                                 $difference = $datetime1->diff($datetime2);
 
                                 $show_no_movement_notice = 0;
-                                if( $difference->days >= 14 && ($estimate->status == 'Draft' || $estimate->status == 'Submitted' || $estimate->status == 'Accepted') ){
+                                if( $difference->d >= 14 && ($estimate->status == 'Draft' || $estimate->status == 'Submitted' || $estimate->status == 'Accepted') ){
                                     $show_no_movement_notice = 1;
                                 }
                             ?>
                             <tr>                    
                                 <td>
                                     <span class="content-title"><?= $estimate->estimate_number; ?></span>
-                                    <span class="content-subtitle d-block"><?= $estimate->first_name . ' ' . $estimate->last_name; ?></span>
+                                    <span class="content-subtitle d-block"><i class='bx bxs-user-circle' style="font-size: 14px;position: relative;top: 2px;"></i> <?= $estimate->first_name . ' ' . $estimate->last_name; ?></span>
                                     <?php if( $show_no_movement_notice == 1 ){  ?>
-                                        <span class="nsm-badge badge-error">Last update was <b><?= $difference->d . ' days ago' ?></b> - Needs update</span>
+                                        <a style="text-decoration:none;" style="margin-top:7px;" href="<?= base_url('estimate/edit/'.$estimate->id) ?>"><span class="nsm-badge badge-error">Last update was <b><?= $difference->d . ' days ago' ?></b> - Needs update</span></a>
                                     <?php } ?>
                                 </td>                                    
                                 <td>

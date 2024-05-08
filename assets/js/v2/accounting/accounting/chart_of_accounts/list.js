@@ -82,34 +82,82 @@ $('#accounts-table tbody tr input[type="checkbox"]').on('change', function() {
 
 $('#make-inactive').on('click', function(e) {
     e.preventDefault();
-    if($(this).hasClass('disabled') === false) {
-        var data = new FormData();
 
-        $('#accounts-table tbody tr:visible input.select-one:checked').each(function() {
-            data.append('ids[]', $(this).val());
-        });
+    Swal.fire({
+        title: 'Are you sure?',
+        html: `You want to make selected chart of account inactive?`,
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {
 
-        $.ajax({
-            url:"/accounting/chart-of-accounts/inactive-batch",
-            method:"post",
-            data: data,
-            contentType:false,
-            cache:false,
-            processData:false,
-            success:function(data){
+            if($(this).hasClass('disabled') === false) {
+                var data = new FormData();
+        
                 $('#accounts-table tbody tr:visible input.select-one:checked').each(function() {
-                    if($('#inc_inactive').prop('checked')) {
-                        $(this).closest('tr').find('td:nth-child(2)').html($(this).closest('tr').find('td:nth-child(2)').text() + ' (deleted)');
-                    } else {
-                        $(this).closest('tr').remove();
+                    data.append('ids[]', $(this).val());
+                });
+        
+                $.ajax({
+                    url: base_url + "accounting/chart-of-accounts/inactive-batch",
+                    method:"post",
+                    data: data,
+                    contentType:false,
+                    cache:false,
+                    processData:false,
+                    success:function(data){
+                        $('#accounts-table tbody tr:visible input.select-one:checked').each(function() {
+                            if($('#inc_inactive').prop('checked')) {
+                                $(this).closest('tr').find('td:nth-child(2)').html($(this).closest('tr').find('td:nth-child(2)').text() + ' (deleted)');
+                            } else {
+                                $(this).closest('tr').remove();
+                            }
+                        });
                     }
                 });
-            }
-        });
+        
+                $('#accounts-table thead .select-all').prop('checked', false);
+            }            
 
-        $('#accounts-table thead .select-all').prop('checked', false);
-    }
+        }
+    });    
 });
+
+function makeActiveInactive(status, id) {
+
+    var html_label = "Are you sure you want to set it to active?";
+    if(status = 'make-inactive') {
+        var html_label = "Are you sure you want to set it to inactive?";
+    }
+
+    Swal.fire({
+        title: 'Set to Inactive?',
+        html: html_label,
+        icon: 'warning',
+        showCloseButton: false,
+        confirmButtonColor: '#2ca01c',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonText: 'No',
+        cancelButtonColor: '#d33'
+    }).then((result) => {
+        if(result.isConfirmed) {        
+            $.ajax({
+                url: base_url + "accounting/chart-of-accounts/make-active-inactive",
+                method:"post",
+                data: {status: status, id: id},
+                success:function(data){
+                    window.location.reload();
+                }
+            });
+        }
+    }); 
+}
 
 $("#btn_print_accounts").on("click", function() {
     $("#accounts_table_print").printThis();
@@ -118,7 +166,7 @@ $("#btn_print_accounts").on("click", function() {
 $(document).on('click', '#add-account-button', function(e) {
     e.preventDefault();
 
-    $.get('/accounting/get-dropdown-modal/account_modal', function(result) {
+    $.get( base_url + 'accounting/get-dropdown-modal/account_modal', function(result) {
         if ($('#modal-container').length > 0) {
             $('div#modal-container').html(`${result}`);
         } else {
@@ -135,7 +183,7 @@ $(document).on('click', '#add-account-button', function(e) {
 
 $("#accounts-table tbody .edit-account").on("click", function() {
     var id = $(this).closest('tr').find('.select-one').val();
-    $.get('/accounting/chart-of-accounts/edit/'+id, function(html) {
+    $.get(base_url + 'accounting/chart-of-accounts/edit/'+id, function(html) {
         if ($('#modal-container').length > 0) {
             $('div#modal-container').html(`${html}`);
         } else {
@@ -297,3 +345,13 @@ function test(){
         }
     }
 }
+
+$('#apply-filter-coa-button').on('click', function() {
+    var filterType = $('.filter-coa-type').val();            
+    var url = `${base_url}accounting/chart-of-accounts?`;
+    url += filterType !== 0 ? `type=${filterType}&` : '';
+    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+        url = url.slice(0, -1); 
+    }
+    location.href = url;
+});

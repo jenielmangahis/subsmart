@@ -542,10 +542,6 @@
                                     </ul>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" id="compact" class="form-check-input">
-                                    <label for="compact" class="form-check-label">Compact</label>
-                                </div>
-                                <div class="form-check">
                                     <input type="checkbox" id="group-by-category" class="form-check-input" <?= !empty($group_by_category) ? 'checked' : '' ?>>
                                     <label for="group-by-category" class="form-check-label">Group by category</label>
                                 </div>
@@ -578,7 +574,7 @@
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
-                    <!-- <tbody>
+                    <tbody>
                         <?php if (count($items) > 0) : ?>
                             <?php foreach ($items as $item) : ?>
                                 <?php if ($item['is_category']) : ?>
@@ -663,167 +659,6 @@
                                 </td>
                             </tr>
                         <?php endif; ?>
-                    </tbody> -->
-                    <tbody>
-                        <?php
-                        $low_stock_items = [];
-                        $normal_stock_items = [];
-
-                        foreach ($items as $item) {
-                            if ($item['qty_on_hand'] < $item['reorder_point'] && $item['qty_on_hand'] > 0) {
-                                $low_stock_items[] = $item;
-                            } else {
-                                $normal_stock_items[] = $item;
-                            }
-                        }
-
-                        foreach ($low_stock_items as $item) {
-                        ?>
-                            <?php if ($item['is_category']) : ?>
-                                <tr>
-                                    <td></td>
-                                    <td class="fw-bold nsm-text-primary default" colspan="15"><?= $item['name'] ?></td>
-                                </tr>
-                            <?php else : ?>
-                                <tr data-status="<?= $item['status'] ?>" data-id="<?= $item['id'] ?>" data-category="<?= $item['category'] ?>">
-                                    <td>
-                                        <div class="table-row-icon table-checkbox">
-                                            <input class="form-check-input select-one table-select" type="checkbox" value="<?= $item['id'] ?>">
-                                        </div>
-                                    </td>
-                                    <td class="nsm-text-primary nsm-link default"><?= $item['name'] ?: 'No name provided' ?></td>
-                                    <td><?= $item['sku'] ?: 'No SKU available' ?></td>
-                                    <td><?= $item['type'] ?: 'No type provided' ?></td>
-                                    <td><?= $item['sales_price'] ?: 'No sales price' ?></td>
-                                    <td><?= $item['category'] ?: 'No category available' ?></td>
-                                    <td><?= $item['cost'] ?: '0' ?></td>
-                                    <td>
-                                        <?php if ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "") : ?>
-                                            <div class="table-row-icon table-checkbox">
-                                                <input class="form-check-input select-one table-select" type="checkbox" disabled checked>
-                                            </div>
-                                        <?php else : ?>
-                                            No tax available
-                                        <?php endif; ?>
-                                    </td>
-                                    <td><?= $item['qty_on_hand'] ?: '0' ?></td>
-                                    <td><?= $item['qty_po'] ?: '0' ?></td>
-                                    <td><?= $item['reorder_point'] ?: '0' ?></td>
-                                    <td>
-                                        <?php if ($item['type'] === 'Product') : ?>
-                                            <button class="nsm-button btn-sm see-item-locations">See Locations</button>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <div class="dropdown float-end">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <?php if ($item['status'] !== "0") : ?>
-                                                    <li>
-                                                        <a class="dropdown-item edit-item" href="#">Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item make-inactive" href="#">Make inactive</a>
-                                                    </li>
-                                                    <?php if ($item['type'] !== 'Bundle') : ?>
-                                                        <li>
-                                                            <a class="dropdown-item" href="#">Run report</a>
-                                                        </li>
-                                                    <?php endif; ?>
-                                                    <li>
-                                                        <a class="dropdown-item duplicate" href="#">Duplicate</a>
-                                                    </li>
-                                                <?php else : ?>
-                                                    <li>
-                                                        <a class="dropdown-item make-active" href="#">Make active</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="#">Run report</a>
-                                                    </li>
-                                                <?php endif; ?>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php endif; ?>
-                        <?php
-                        }
-                        foreach ($normal_stock_items as $item) {
-                        ?>
-                            <?php if ($item['is_category']) : ?>
-                                <tr>
-                                    <td></td>
-                                    <td class="fw-bold nsm-text-primary default" colspan="15"><?= $item['name'] ?></td>
-                                </tr>
-                            <?php else : ?>
-                                <tr data-status="<?= $item['status'] ?>" data-id="<?= $item['id'] ?>" data-category="<?= $item['category'] ?>">
-                                    <td>
-                                        <div class="table-row-icon table-checkbox">
-                                            <input class="form-check-input select-one table-select" type="checkbox" value="<?= $item['id'] ?>">
-                                        </div>
-                                    </td>
-                                    <td class="nsm-text-primary nsm-link default"><?= $item['name'] ?: 'No name provided' ?></td>
-                                    <td><?= $item['sku'] ?: 'No SKU available' ?></td>
-                                    <td><?= $item['type'] ?: 'No type provided' ?></td>
-                                    <td><?= $item['sales_price'] ?: 'No sales price' ?></td>
-                                    <td><?= $item['category'] ?: 'No category available' ?></td>
-                                    <td><?= $item['cost'] ?: '0' ?></td>
-                                    <td>
-                                        <?php if ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "") : ?>
-                                            <div class="table-row-icon table-checkbox">
-                                                <input class="form-check-input select-one table-select" type="checkbox" disabled checked>
-                                            </div>
-                                        <?php else : ?>
-                                            No tax available
-                                        <?php endif; ?>
-                                    </td>
-                                    <td><?= $item['qty_on_hand'] ?: '0' ?></td>
-                                    <td><?= $item['qty_po'] ?: '0' ?></td>
-                                    <td><?= $item['reorder_point'] ?: '0' ?></td>
-                                    <td>
-                                        <?php if ($item['type'] === 'Product') : ?>
-                                            <button class="nsm-button btn-sm see-item-locations">See Locations</button>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <div class="dropdown float-end">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <?php if ($item['status'] !== "0") : ?>
-                                                    <li>
-                                                        <a class="dropdown-item edit-item" href="#">Edit</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item make-inactive" href="#">Make inactive</a>
-                                                    </li>
-                                                    <?php if ($item['type'] !== 'Bundle') : ?>
-                                                        <li>
-                                                            <a class="dropdown-item" href="#">Run report</a>
-                                                        </li>
-                                                    <?php endif; ?>
-                                                    <li>
-                                                        <a class="dropdown-item duplicate" href="#">Duplicate</a>
-                                                    </li>
-                                                <?php else : ?>
-                                                    <li>
-                                                        <a class="dropdown-item make-active" href="#">Make active</a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item" href="#">Run report</a>
-                                                    </li>
-                                                <?php endif; ?>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php endif; ?>
-                        <?php
-                        }
-                        ?>
                     </tbody>
                 </table>
             </div>
@@ -941,19 +776,5 @@
                 });
             }
         }
-    });
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const compactCheckbox = document.getElementById('compact');
-        const table = document.getElementById('items-table');
-
-        compactCheckbox.addEventListener('change', function() {
-            if (compactCheckbox.checked) {
-                table.classList.add('compact');
-            } else {
-                table.classList.remove('compact');
-            }
-        });
     });
 </script>

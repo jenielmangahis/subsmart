@@ -31,7 +31,8 @@
                                         <label for="account">Account</label>
                                         <select class="nsm-field form-select account-reconcile" name="account" id="account">
                                             <?php foreach($this->chart_of_accounts_model->select() as $row) : ?>
-                                                <option <?=$this->reconcile_model->checkexist($row->id) != $row->id ? "disabled" : ''?> value="<?=$row->id?>"><?=$row->name?></option>
+                                                <!-- <option <?=$this->reconcile_model->checkexist($row->id) != $row->id ? "disabled" : ''?> value="<?=$row->id?>"><?=$row->name?></option> --> <!-- note: this code have a disable function on other option -->
+                                                <option <?=$this->reconcile_model->checkexist($row->id) != $row->id ? "" : ''?> value="<?=$row->id?>"><?=$row->name?></option>
                                             <?php endforeach; ?>
                                         </select>
                                     </div>
@@ -45,7 +46,7 @@
                                     <div class="col-12">
                                         <h3>Add the following information</h3>
                                     </div>
-                                    <div class="col-12 col-md-6">
+                                    <div class="col-12 col-md-8">
                                         <div class="row">
                                             <div class="col-12 col-md-4">
                                                 <label for="beginning-balance">Beginning balance</label>
@@ -58,7 +59,7 @@
                                             <div class="col-12 col-md-4">
                                                 <label for="ending-date">Ending date *</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" name="ending_date" id="ending-date" class="nsm-field form-control datepicker" required>
+                                                    <input type="text" name="ending_date" id="ending-date" class="nsm-field form-control datepicker-end-date" required>
                                                 </div>
                                             </div>
                                         </div>
@@ -83,7 +84,7 @@
 <?php include viewPath('v2/includes/footer'); ?>
 <script type="text/javascript">
     $('.account-reconcile').select2();
-    $('.datepicker').datepicker({
+    $('.datepicker-end-date').datepicker({
         format: 'mm/dd/yyyy',
         orientation: 'bottom',
         autoclose: true

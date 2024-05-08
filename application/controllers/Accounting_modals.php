@@ -5575,6 +5575,11 @@ class Accounting_modals extends MY_Controller
     {
         $this->form_validation->set_rules('vendor_id', 'Vendor', 'required');
         $this->form_validation->set_rules('email', 'Email', 'required');
+        $this->form_validation->set_rules('mailing_address', 'Mailing Address', 'required');
+        $this->form_validation->set_rules('customer', 'Shipping', 'required');
+        $this->form_validation->set_rules('ship_via', 'Ship via', 'required');
+        $this->form_validation->set_rules('permit_number', 'Permit Number', 'required');
+        $this->form_validation->set_rules('tags[]', 'Tags', 'required');
 
         if (isset($data['expense_account'])) {
             $this->form_validation->set_rules('expense_account[]', 'Expense name', 'required');
