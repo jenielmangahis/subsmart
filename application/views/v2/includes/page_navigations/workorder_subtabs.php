@@ -20,5 +20,10 @@
                 <span>Settings</span>
             </a>
         </li>
+        <li class="<?php if($page->title == 'Workorder Status'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('workstatus') ?>'">
+            <a class="nsm-page-link" href="javascript:void(0);">
+                <span>Status</span>
+            </a>
+        </li>
     </ul>
 </div>
