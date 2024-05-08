@@ -1,11 +1,17 @@
 <div class="nsm-page-nav">
     <ul>
-        <li class="<?php if($page->title == 'Events' || $page->title == 'Event Tags' || $page->title == 'Event Types' || $page->title == "Event Scheduler Tool"): echo 'active'; endif; ?>">
+    <li class="active">
             <a class="nsm-page-link" href="<?= base_url('events') ?>">
                 <i class='bx bx-fw bx-calendar-event'></i>
                 <span>Events</span>
             </a>
         </li>
+        <!-- <li class="<?php if($page->title == 'Events' || $page->title == 'Event Tags' || $page->title == 'Event Types' || $page->title == "Event Scheduler Tool"): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?= base_url('events') ?>">
+                <i class='bx bx-fw bx-calendar-event'></i>
+                <span>Events</span>
+            </a>
+        </li> -->
         <!-- <li class="<?php if($page->title == 'Jobs' || $page->title == 'Job Types' || $page->title == 'Job Tags' || $page->title == 'Bird\'s Eye View' || $page->title == 'Checklist' || $page->title == 'Job Settings'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?= base_url('job') ?>">
                 <i class='bx bx-fw bx-message-square-error'></i>
