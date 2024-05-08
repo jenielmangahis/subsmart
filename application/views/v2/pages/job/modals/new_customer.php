@@ -60,13 +60,13 @@
                         <div class="col-md-6 mb-2">
                             <div class="form-group">
                                 <label>Mobile</label>
-                                <input type="text" name="phone_m" class="form-control" required>
+                                <input type="text" name="phone_m" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" required>
                             </div>
                         </div>
                         <div class="col-md-6 mb-2">
                             <div class="form-group">
                                 <label>Phone</label>
-                                <input type="text" name="phone_h" class="form-control" required>
+                                <input type="text" name="phone_h" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" required>
                             </div>
                         </div>
                         <div class="col-md-12 mb-2">
@@ -202,6 +202,24 @@ $(function(){
         }else{
             $('.grp-customer-business').hide();
         }
+    });
+
+    $('#new_customer').on('shown.bs.modal', function (e) {
+        $('#new_customer_form')[0].reset();
+    });
+
+    $('.phone_number').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
     });
 });
 </script>
