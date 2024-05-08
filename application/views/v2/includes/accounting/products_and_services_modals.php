@@ -13,6 +13,9 @@
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
+                <?php
+                $printedNames = []; 
+                ?>
                 <table class="nsm-table" id="print-items-list">
                     <thead>
                         <tr>
@@ -35,39 +38,44 @@
                     <tbody>
                         <?php if (count($items) > 0) : ?>
                             <?php foreach ($items as $item) : ?>
-                                <tr>
-                                    <td class="fw-bold nsm-text-primary nsm-link default">
-                                        <?= $item['name'] . ($item['status'] === '0' ? ' (deleted)' : 'No name provided') ?>
-                                    </td>
-                                    <td><?= $item['sku'] ?: 'SKU unavailable' ?></td>
-                                    <td><?= $item['type'] ?: 'No type provided' ?></td>
-                                    <td><?= $item['sales_desc'] ?: 'No sales description' ?></td>
-                                    <td data-incomeaccountid="<?= $item['income_account_id'] ?>">
-                                        <?= $item['income_account'] ?: 'Income account unavailable' ?>
-                                    </td>
-                                    <td data-expenseaccountid="<?= $item['expense_account_id'] ?>">
-                                        <?= $item['expense_account'] ?: 'Expense account unavailable' ?>
-                                    </td>
-                                    <td data-inventoryaccountid="<?= $item['inventory_account_id'] ?>">
-                                        <?= $item['inventory_account'] ?: 'Inventory account unavailable' ?>
-                                    </td>
-                                    <td><?= $item['purch_desc'] ?: 'No purchase description' ?></td>
-                                    <td><?= $item['sales_price'] ?: 'Sales price unavailable' ?></td>
-                                    <td><?= $item['cost'] ?: '0' ?></td>
-                                    <td>
-                                        <?= ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "No tax provided") ? '<div class="table-row-icon table-checkbox"><input class="form-check-input select-one table-select" type="checkbox" disabled checked></div>' : 'No tax provided' ?>
-                                    </td>
-                                    <!-- <td>
-                                        <?php if ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "No tax provided") : ?>
-                                            <div class="table-row-icon table-checkbox">
-                                                <input class="form-check-input select-one table-select" type="checkbox" disabled checked>
-                                            </div>
-                                        <?php endif; ?> -->
-                                    </td>
-                                    <td><?= $item['qty_on_hand'] ?: '0' ?></td>
-                                    <td><?= $item['qty_po'] ?: '0' ?></td>
-                                    <td><?= $item['reorder_point'] ?: '0' ?></td>
-                                </tr>
+                                <?php
+                                if (!empty($item['name']) && !in_array($item['name'], $printedNames)) :
+                                    $printedNames[] = $item['name']; 
+                                ?>
+                                    <tr>
+                                        <td class="fw-bold nsm-text-primary nsm-link default">
+                                            <?= $item['name'] . ($item['status'] === '0' ? ' (deleted)' : '') ?>
+                                        </td>
+                                        <td><?= $item['sku'] ?: 'SKU unavailable' ?></td>
+                                        <td><?= $item['type'] ?: 'No type provided' ?></td>
+                                        <td><?= $item['sales_desc'] ?: 'No sales description' ?></td>
+                                        <td data-incomeaccountid="<?= $item['income_account_id'] ?>">
+                                            <?= $item['income_account'] ?: 'Income account unavailable' ?>
+                                        </td>
+                                        <td data-expenseaccountid="<?= $item['expense_account_id'] ?>">
+                                            <?= $item['expense_account'] ?: 'Expense account unavailable' ?>
+                                        </td>
+                                        <td data-inventoryaccountid="<?= $item['inventory_account_id'] ?>">
+                                            <?= $item['inventory_account'] ?: 'Inventory account unavailable' ?>
+                                        </td>
+                                        <td><?= $item['purch_desc'] ?: 'No purchase description' ?></td>
+                                        <td><?= $item['sales_price'] ?: 'Sales price unavailable' ?></td>
+                                        <td><?= $item['cost'] ?: '0' ?></td>
+                                        <td>
+                                            <?= ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "No tax provided") ? '<div class="table-row-icon table-checkbox"><input class="form-check-input select-one table-select" type="checkbox" disabled checked></div>' : 'No tax provided' ?>
+                                        </td>
+                                        <!-- <td>
+                                            <?php if ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "No tax provided") : ?>
+                                                <div class="table-row-icon table-checkbox">
+                                                    <input class="form-check-input select-one table-select" type="checkbox" disabled checked>
+                                                </div>
+                                            <?php endif; ?>
+                                        </td> -->
+                                        <td><?= $item['qty_on_hand'] ?: '0' ?></td>
+                                        <td><?= $item['qty_po'] ?: '0' ?></td>
+                                        <td><?= $item['reorder_point'] ?: '0' ?></td>
+                                    </tr>
+                                <?php endif; ?>
                             <?php endforeach; ?>
                         <?php else : ?>
                             <tr>
@@ -260,7 +268,7 @@
                                 </div>
 
                                 <div id="progress-content-section">
-          
+
                                     <div class="section-content step1 active">
                                         <h2>Step 1</h2>
                                         <p>Select and CSV Upload</p>

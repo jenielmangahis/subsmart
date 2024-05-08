@@ -57,6 +57,10 @@ $("#accounts-table").nsmPagination({
     itemsPerPage: parseInt($('#table-rows li a.active').html().trim())
 });
 
+$("#accounts-table-modal").nsmPagination({
+    itemsPerPage: parseInt($('#table-rows li a.active').html().trim())
+});
+
 $("#search_field").on("input", debounce(function() {
     let _form = $(this).closest("form");
 
