@@ -62,14 +62,14 @@ $('#customer_form').on("change", function () {
     const URL_ORIGIN = window.origin;
 
     // Autosave script
-    $.ajax({
-      type: "POST",
-      url: URL_ORIGIN + "/Customer/save_customer_profile",
-      data: customerData,
-      success: function (response) {
-        // alert('save successfully!');
-      }
-    });
+    // $.ajax({
+    //   type: "POST",
+    //   url: URL_ORIGIN + "/Customer/save_customer_profile",
+    //   data: customerData,
+    //   success: function (response) {
+    //     // alert('save successfully!');
+    //   }
+    // });
 
     // [Disable Temporarily] Check if the Customer already exist in database
     // $.ajax({
