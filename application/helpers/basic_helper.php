@@ -4540,7 +4540,7 @@ if (!function_exists('is_admin_logged')) {
             'city' => 'City',
             'state' => 'State',
             'source' => 'Source',
-            'email' => 'Email',
+            //'email' => 'Email',
             'added' => 'Added',
             'sales_rep' => 'Sales Rep',
             'tech' => 'Tech',
@@ -5276,4 +5276,39 @@ function getAcsProfileCustomerName($prof_id)
     }
 
     return $customer_name;
+}
+
+function getUserPublicIP()
+{
+    $return = [];
+
+    $api64 = json_decode(file_get_contents('https://api64.ipify.org?format=json'));
+    if( $api64->ip ){
+        $ipLocation = json_decode(file_get_contents('http://ip-api.com/json/'.$api64->ip));
+
+        $location = '';
+        $country  = '';
+        $lat      = 0;
+        $lon      = 0;
+        $user_agent = '';
+
+        if( $ipLocation ){
+            $country  = $ipLocation->countryCode;
+            $location = $ipLocation->regionName . ' ' . $ipLocation->city . ' ' . $ipLocation->zip;
+            $lat = $ipLocation->lat;
+            $lon = $ipLocation->lon;
+            $user_agent = $_SERVER['HTTP_USER_AGENT'];
+        }
+
+        $return = [
+            'ip' => $api64->ip,
+            'country' => $country,
+            'location' => $location,
+            'lat' => $lat,
+            'lon' => $lon,
+            'user_agent' => $user_agent
+        ];
+    }
+
+    return $return;
 }
