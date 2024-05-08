@@ -177,7 +177,7 @@ class Chart_of_accounts extends MY_Controller {
                         'type' => $this->account_model->getName($account->account_id),
                         'detail_type' => $this->account_detail_model->getName($account->acc_detail_id),
                         'nsmartrac_balance' => str_replace('$-', '-$', '$'.number_format(floatval($account->balance), 2, '.', ',')),
-                        'bank_balance' => '$0.00',
+                        'bank_balance' => str_replace('$-', '-$', '$'.number_format(floatval($account->balance), 2, '.', ',')),
                         'status' => $account->active
                     ];
                 }
@@ -188,7 +188,7 @@ class Chart_of_accounts extends MY_Controller {
                     'type' => $this->account_model->getName($account->account_id),
                     'detail_type' => $this->account_detail_model->getName($account->acc_detail_id),
                     'nsmartrac_balance' => str_replace('$-', '-$', '$'.number_format(floatval($account->balance), 2, '.', ',')),
-                    'bank_balance' => '$0.00',
+                    'bank_balance' => str_replace('$-', '-$', '$'.number_format(floatval($account->balance), 2, '.', ',')),
                     'status' => $account->active
                 ];
             }
@@ -202,7 +202,7 @@ class Chart_of_accounts extends MY_Controller {
                             'type' => $this->account_model->getName($childAcc->account_id),
                             'detail_type' => $this->account_detail_model->getName($childAcc->acc_detail_id),
                             'nsmartrac_balance' => str_replace('$-', '-$', '$'.number_format(floatval($childAcc->balance), 2, '.', ',')),
-                            'bank_balance' => '$0.00',
+                            'bank_balance' => str_replace('$-', '-$', '$'.number_format(floatval($childAcc->balance), 2, '.', ',')),
                             'status' => $childAcc->active
                         ];
                     }
@@ -213,7 +213,7 @@ class Chart_of_accounts extends MY_Controller {
                         'type' => $this->account_model->getName($childAcc->account_id),
                         'detail_type' => $this->account_detail_model->getName($childAcc->acc_detail_id),
                         'nsmartrac_balance' => str_replace('$-', '-$', '$'.number_format(floatval($childAcc->balance), 2, '.', ',')),
-                        'bank_balance' => '$0.00',
+                        'bank_balance' => str_replace('$-', '-$', '$'.number_format(floatval($childAcc->balance), 2, '.', ',')),
                         'status' => $childAcc->active
                     ];
                 }

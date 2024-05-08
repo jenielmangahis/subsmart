@@ -339,12 +339,12 @@
                                 <div class="dropdown d-inline-block">
                                     <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                         <span>
-                                            50
+                                            10
                                         </span> <i class='bx bx-fw bx-chevron-down'></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end" id="table-rows">
-                                        <li><a class="dropdown-item" href="javascript:void(0);">10</a></li>
-                                        <li><a class="dropdown-item active" href="javascript:void(0);">50</a></li>
+                                        <li><a class="dropdown-item active" href="javascript:void(0);">10</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);">50</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">75</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">100</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);">150</a></li>
