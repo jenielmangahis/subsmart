@@ -2,7 +2,7 @@
     <ul>
         <li class="<?php if($page->title == 'Jobs' || $page->title == 'Job New'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('job') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
-                <span>Jobs</span>
+                <span>List</span>
             </a>
         </li>
         <li class="<?php if($page->title == 'Job Types'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('job/job_types') ?>'">

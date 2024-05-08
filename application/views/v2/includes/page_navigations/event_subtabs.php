@@ -2,7 +2,7 @@
     <ul>
         <li class="<?php if($page->tab == 'Events'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('events') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
-                <span>Events</span>
+                <span>Lists</span>
             </a>
         </li>
         <li class="<?php if($page->tab == 'Event Types'): echo 'active'; endif; ?>"  onclick="location.href='<?= base_url('events/event_types') ?>'">

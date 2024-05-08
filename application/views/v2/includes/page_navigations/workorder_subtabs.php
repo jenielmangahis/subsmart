@@ -2,7 +2,7 @@
     <ul>
         <li class="<?php if($page->title == 'Workorder' || $page->title == 'New Workorder' || $page->title == 'Solar Stimulus Data Control / 2022 - 2024' || $page->title == 'Alarm System Work Order Agreement'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('workorder') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
-                <span>Work Orders</span>
+                <span>Lists</span>
             </a>
         </li>        
         <li class="<?php if($page->title == 'Workorder Checklist'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('workorder/checklists') ?>'">
