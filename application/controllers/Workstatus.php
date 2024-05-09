@@ -18,7 +18,7 @@ class Workstatus extends MY_Controller {
 
 	public function index()
 	{
-		$this->page_data['page']->title = 'Workorder Type';
+		$this->page_data['page']->title = 'Workorder Status';
         $this->page_data['page']->parent = 'Sales';
 
 		// ifPermissions('plan_list');

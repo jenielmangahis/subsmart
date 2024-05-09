@@ -1,7 +1,7 @@
 <?php
 
 defined('BASEPATH') OR exit('No direct script access allowed');
-class Debug extends MY_Controller {
+class Debug extends MYF_Controller {
     public function __construct()
     {
 
@@ -2544,6 +2544,34 @@ class Debug extends MY_Controller {
             $hash = encrypt($message, $esign_password);
             $url = base_url('eSign/signing?hash='.$hash);
             echo $url;exit;
+        }
+    }
+
+    public function getPublicIP()
+    {
+        $this->load->helper(array('hashids_helper'));
+
+        $this->load->model('Users_model');
+        $user = $this->Users_model->getUser(81);
+        $ip   = getUserPublicIP();
+        $encrypted_user_id = hashids_encrypt($user->id, '', 15);
+        $this->page_data['user'] = $user;
+        $this->page_data['encrypted_user_id'] = $encrypted_user_id;
+        $this->page_data['ip_data'] = $ip;
+        $body = $this->load->view('v2/pages/users/email_unrecognize_login', $this->page_data, true);
+
+        $mail = email__getInstance();
+        $mail->FromName = 'nSmarTrac';
+        $recipient_name = $user->FName . ' ' . $user->LName;
+        $mail->addAddress($user->email, $recipient_name);
+        $mail->isHTML(true);
+        $mail->Subject = "nSmartrac: Unrecognize Login";
+        $mail->Body = $body;
+        
+        if ($mail->Send()) {
+            echo 'Email Sent';                   
+        }else{
+            echo 'Cannot send email';
         }
     }
     

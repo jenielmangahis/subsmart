@@ -1,6 +1,6 @@
 <div class="nsm-page-nav">
     <ul>
-        <li class="<?php if($page->title == 'Tickets'): echo 'active'; endif; ?>">
+        <li class="active">
             <a class="nsm-page-link" href="<?= base_url('customer/ticketslist') ?>">
                 <i class='bx bx-fw bx-note'></i>
                 <span>Service Tickets</span>

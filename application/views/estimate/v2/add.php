@@ -3,390 +3,388 @@ defined('BASEPATH') or exit('No direct script access allowed');
 include viewPath('v2/includes/header');
 echo put_header_assets();
 ?>
-
 <!-- Script for autosaving form -->
 <script src="<?php echo base_url('assets/js/estimate/autosave-standard.js'); ?>"></script>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+<style>
+.remove {
+    display: block;
+    width: 38px;
+    float: right;
+}
 
-<div class="wrapper" role="wrapper">
+label>input {
+    visibility: initial !important;
+    position: initial !important;
+}
 
-    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+.but:hover {
+    font-weight: 900;
+    color: black;
+}
 
-    <style>
-    .remove {
-        display: block;
-        width: 38px;
-        float: right;
-    }
+.but-red:hover {
+    font-weight: 900;
+    color: red;
+}
 
-    label>input {
-        visibility: initial !important;
-        position: initial !important;
-    }
+.required:after {
+    content: " *";
+    color: red;
+}
 
-    .but:hover {
-        font-weight: 900;
-        color: black;
-    }
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
 
-    .but-red:hover {
-        font-weight: 900;
-        color: red;
-    }
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
 
-    .required:after {
-        content: " *";
-        color: red;
-    }
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
 
-    .switch {
-        position: relative;
-        display: inline-block;
-        width: 60px;
-        height: 34px;
-    }
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
 
-    .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
-    }
+.MAP_LOADER_CONTAINER {
+    min-height: 350px;
+}
 
-    .slider {
+input:checked+.slider {
+    background-color: #10ab06;
+}
+
+input:focus+.slider {
+    box-shadow: 0 0 1px #10ab06;
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+.signature_mobile {
+    display: none;
+}
+
+.show_mobile_view {
+    display: none;
+}
+
+@media only screen and (max-device-width: 600px) {
+    .label-element {
         position: absolute;
-        cursor: pointer;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: #ccc;
-        -webkit-transition: .4s;
-        transition: .4s;
+        top: -8px;
+        left: 25px;
+        font-size: 12px;
+        color: #666;
     }
 
-    .slider:before {
-        position: absolute;
-        content: "";
-        height: 26px;
-        width: 26px;
-        left: 4px;
-        bottom: 4px;
-        background-color: white;
-        -webkit-transition: .4s;
-        transition: .4s;
+    .input-element {
+        padding: 30px 5px 10px 8px;
+        width: 100%;
+        height: 55px;
+        /* border:1px solid #CCC; */
+        font-weight: bold;
+        margin-top: -15px;
     }
 
-    .MAP_LOADER_CONTAINER {
-        min-height: 350px;
+    .mobile_qty {
+        background: transparent !important;
+        border: none !important;
+        outline: none !important;
+        padding: 0px 0px 0px 0px !important;
+        text-align: center;
     }
 
-    input:checked+.slider {
-        background-color: #10ab06;
+    .select-wrap {
+        border: 2px solid #e0e0e0;
+        margin-top: -10px;
+        padding: 0 5px 5px;
+        width: 100%;
     }
 
-    input:focus+.slider {
-        box-shadow: 0 0 1px #10ab06;
+    .select-wrap label {
+        font-size: 10px;
+        text-transform: uppercase;
+        color: #777;
+        padding: 2px 8px 0;
     }
 
-    input:checked+.slider:before {
-        -webkit-transform: translateX(26px);
-        -ms-transform: translateX(26px);
-        transform: translateX(26px);
+    .m_select {
+        border-color: white !important;
+        border: 0px !important;
+        outline: 0px !important;
     }
 
-    /* Rounded sliders */
-    .slider.round {
-        border-radius: 34px;
+    .select2 .select2-container .select2-container--default {
+        border-color: white !important;
+        border: 0px !important;
+        outline: 0px !important;
     }
 
-    .slider.round:before {
-        border-radius: 50%;
+    .select2-container--default .select2-selection--single {
+        background-color: #fff;
+        border: 1px solid #fff !important;
+        border-radius: 4px;
+    }
+
+    .sub_label {
+        font-size: 12px !important;
+    }
+
+    .signature_web {
+        display: none;
     }
 
     .signature_mobile {
+        display: block;
+    }
+
+    .hidden_mobile_view {
         display: none;
     }
 
     .show_mobile_view {
-        display: none;
+        display: block;
     }
 
-    @media only screen and (max-device-width: 600px) {
-        .label-element {
-            position: absolute;
-            top: -8px;
-            left: 25px;
-            font-size: 12px;
-            color: #666;
-        }
-
-        .input-element {
-            padding: 30px 5px 10px 8px;
-            width: 100%;
-            height: 55px;
-            /* border:1px solid #CCC; */
-            font-weight: bold;
-            margin-top: -15px;
-        }
-
-        .mobile_qty {
-            background: transparent !important;
-            border: none !important;
-            outline: none !important;
-            padding: 0px 0px 0px 0px !important;
-            text-align: center;
-        }
-
-        .select-wrap {
-            border: 2px solid #e0e0e0;
-            margin-top: -10px;
-            padding: 0 5px 5px;
-            width: 100%;
-        }
-
-        .select-wrap label {
-            font-size: 10px;
-            text-transform: uppercase;
-            color: #777;
-            padding: 2px 8px 0;
-        }
-
-        .m_select {
-            border-color: white !important;
-            border: 0px !important;
-            outline: 0px !important;
-        }
-
-        .select2 .select2-container .select2-container--default {
-            border-color: white !important;
-            border: 0px !important;
-            outline: 0px !important;
-        }
-
-        .select2-container--default .select2-selection--single {
-            background-color: #fff;
-            border: 1px solid #fff !important;
-            border-radius: 4px;
-        }
-
-        .sub_label {
-            font-size: 12px !important;
-        }
-
-        .signature_web {
-            display: none;
-        }
-
-        .signature_mobile {
-            display: block;
-        }
-
-        .hidden_mobile_view {
-            display: none;
-        }
-
-        .show_mobile_view {
-            display: block;
-        }
-
-        .table_mobile {
-            font-size: 14px;
-        }
-
-        div.dropdown-wrapper select {
-            width: 115%
-                /* This hides the arrow icon */
-            ;
-            background-color: transparent
-                /* This hides the background */
-            ;
-            background-image: none;
-            -webkit-appearance: none
-                /* Webkit Fix */
-            ;
-            border: none;
-            box-shadow: none;
-            padding: 0.3em 0.5em;
-            font-size: 13px;
-        }
-
-        .signature-pad-canvas-wrapper {
-            margin: 15px 0 0;
-            border: 1px solid #cbcbcb;
-            border-radius: 3px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .signature-pad-canvas-wrapper::after {
-            content: 'Name';
-            border-top: 1px solid #cbcbcb;
-            color: #cbcbcb;
-            width: 100%;
-            margin: 0 15px;
-            display: inline-flex;
-            position: absolute;
-            bottom: 10px;
-            font-size: 13px;
-            z-index: -1;
-        }
-
-        .tabs {
-            list-style: none;
-        }
-
-        .tabs li {
-            display: inline;
-        }
-
-        .tabs li a {
-            color: black;
-            float: left;
-            display: block;
-            /* padding: 4px 10px;  */
-            /* margin-left: -1px;  */
-            position: relative;
-            /* left: 1px;  */
-            background: #a2a5a3;
-            text-decoration: none;
-        }
-
-        .tabs li a:hover {
-            background: #ccc;
-        }
-
-        .group:after {
-            visibility: hidden;
-            display: block;
-            font-size: 0;
-            content: " ";
-            clear: both;
-            height: 0;
-        }
-
-        .box-wrap {
-            position: relative;
-            min-height: 250px;
-        }
-
-        .tabbed-area div div {
-            background: white;
-            padding: 20px;
-            min-height: 250px;
-            position: absolute;
-            top: -1px;
-            left: 0;
-            width: 100%;
-        }
-
-        .tabbed-area div div,
-        .tabs li a {
-            border: 1px solid #ccc;
-        }
-
-        #box-one:target,
-        #box-two:target,
-        #box-three:target {
-            z-index: 1;
-        }
-
-        .group li.active a,
-        .group li a:hover,
-        .group li.active a:focus,
-        .group li.active a:hover {
-            background-color: #52cc6e;
-            color: black;
-        }
+    .table_mobile {
+        font-size: 14px;
     }
 
-    .is-invalid+.select2-container {
-        border: 1px solid #dc3545;
-        border-radius: 4px;
-    }
-
-    .dataTables_filter,
-    .dataTables_length {
-        display: none;
-    }
-
-    table.dataTable thead th,
-    table.dataTable thead td {
-        padding: 10px 18px;
-        border-bottom: 1px solid lightgray;
-    }
-
-    table.dataTable.no-footer {
-        border-bottom: 0px !important;
-        margin-bottom: 10px !important;
-    }
-
-    tbody,
-    td,
-    tfoot,
-    th,
-    thead,
-    tr {
-        border-color: inherit;
-        border-style: solid;
-        border-color: lightgray;
-        border-width: 0;
-    }
-
-    .help-block {
+    div.dropdown-wrapper select {
+        width: 115%
+            /* This hides the arrow icon */
+        ;
+        background-color: transparent
+            /* This hides the background */
+        ;
+        background-image: none;
+        -webkit-appearance: none
+            /* Webkit Fix */
+        ;
+        border: none;
+        box-shadow: none;
+        padding: 0.3em 0.5em;
         font-size: 13px;
-        display: inline-block;
-        margin-left: 3px;
-        font-style: italic;
     }
 
-    label.bold {
-        font-weight: bold;
+    .signature-pad-canvas-wrapper {
+        margin: 15px 0 0;
+        border: 1px solid #cbcbcb;
+        border-radius: 3px;
+        overflow: hidden;
+        position: relative;
     }
-    .add-item-container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+
+    .signature-pad-canvas-wrapper::after {
+        content: 'Name';
+        border-top: 1px solid #cbcbcb;
+        color: #cbcbcb;
+        width: 100%;
+        margin: 0 15px;
+        display: inline-flex;
+        position: absolute;
+        bottom: 10px;
+        font-size: 13px;
+        z-index: -1;
     }
 
-    </style>
+    .tabs {
+        list-style: none;
+    }
 
-    <!-- page wrapper start -->
-    <div wrapper__sectio class="nsm-content">
-        <div class="page-content" style="background-color:white;">
-            <?php include viewPath('estimate/v2/header'); ?>
+    .tabs li {
+        display: inline;
+    }
 
-            <div class="page-title-box">
-                <!-- <div class="row align-items-center">
-                    <div class="col-sm-6">
-                        <h4 style="font-family: Sarabun, sans-serif">Submit Standard Estimate</h4>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item active">Submit your estimate. Include a breakdown of all costs
-                                for this job.
-                            </li>
-                        </ol>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="float-right d-none d-md-block">
-                            <div class="dropdown d-flex justify-content-end">
-                                <a href="<?php echo base_url('estimate'); ?>" class="nsm-button primary" aria-expanded="false">
-                                    <i class="mdi mdi-settings mr-2"></i> Go Back to Estimate
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    .tabs li a {
+        color: black;
+        float: left;
+        display: block;
+        /* padding: 4px 10px;  */
+        /* margin-left: -1px;  */
+        position: relative;
+        /* left: 1px;  */
+        background: #a2a5a3;
+        text-decoration: none;
+    }
 
-                <div style="background-color:white; width:100%;padding:.5%;">
-                    Submit your estimate. Include a breakdown of all costs for this job.
-                </div> -->
-                <div class="nsm-callout primary">
-                    <button><i class="bx bx-x"></i></button>
-                    Our standard estimate form is carefully design with quantity takeoff of each items. With a clear
-                    break down of the items to be included in each project, this will insure a higher acceptance rate.
-                    Try our options form layout if you wish to give your customers a choice of multiple projects.
-                </div>
+    .tabs li a:hover {
+        background: #ccc;
+    }
 
+    .group:after {
+        visibility: hidden;
+        display: block;
+        font-size: 0;
+        content: " ";
+        clear: both;
+        height: 0;
+    }
+
+    .box-wrap {
+        position: relative;
+        min-height: 250px;
+    }
+
+    .tabbed-area div div {
+        background: white;
+        padding: 20px;
+        min-height: 250px;
+        position: absolute;
+        top: -1px;
+        left: 0;
+        width: 100%;
+    }
+
+    .tabbed-area div div,
+    .tabs li a {
+        border: 1px solid #ccc;
+    }
+
+    #box-one:target,
+    #box-two:target,
+    #box-three:target {
+        z-index: 1;
+    }
+
+    .group li.active a,
+    .group li a:hover,
+    .group li.active a:focus,
+    .group li.active a:hover {
+        background-color: #52cc6e;
+        color: black;
+    }
+}
+
+.is-invalid+.select2-container {
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+}
+
+.dataTables_filter,
+.dataTables_length {
+    display: none;
+}
+
+table.dataTable thead th,
+table.dataTable thead td {
+    padding: 10px 18px;
+    border-bottom: 1px solid lightgray;
+}
+
+table.dataTable.no-footer {
+    border-bottom: 0px !important;
+    margin-bottom: 10px !important;
+}
+
+tbody,
+td,
+tfoot,
+th,
+thead,
+tr {
+    border-color: inherit;
+    border-style: solid;
+    border-color: lightgray;
+    border-width: 0;
+}
+
+.help-block {
+    font-size: 13px;
+    display: inline-block;
+    margin-left: 3px;
+    font-style: italic;
+}
+
+label.bold {
+    font-weight: bold;
+}
+.add-item-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+</style>
+<div class="nsm-fab-container">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
+        <i class="bx bx-plus"></i>
+    </div>
+    <ul class="nsm-fab-options">
+        <li data-bs-toggle="modal" data-bs-target="#new_estimate_modal">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-chart"></i>
             </div>
+            <span class="nsm-fab-label">Edit Estimate</span>
+        </li>
+        <?php if (isset($estimates) && count($estimates) > 0) { ?>
+        <li onclick="location.href='<?php echo base_url('estimate/print'); ?>'">
+            <div class="nsm-fab-icon">
+                <i class="bx bx-printer"></i>
+            </div>
+            <span class="nsm-fab-label">Print</span>
+        </li>
+        <?php } ?>
+    </ul>
+</div>
+<div class="row page-content g-0">
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/estimate__tabs_v2'); ?>
+    </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/estimate_subtabs'); ?>
+    </div>
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="row">
+                <div class="col-12">
+                    <div class="nsm-callout primary">
+                        <button><i class='bx bx-x'></i></button>
+                        Our standard estimate form is carefully design with quantity takeoff of each items. With a clear
+                        break down of the items to be included in each project, this will insure a higher acceptance rate.
+                        Try our options form layout if you wish to give your customers a choice of multiple projects.
+                    </div>
+                </div>
+            </div>        
+            <div class="nsm-page-content">
             <!-- end row -->
             <?php echo form_open_multipart('estimate/savenewestimate', ['class' => 'form-validate require-validation', 'id' => 'estimate_form', 'autocomplete' => 'off']); ?>
             <div class="row custom__border">

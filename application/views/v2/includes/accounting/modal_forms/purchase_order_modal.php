@@ -297,26 +297,6 @@
                                                                         </tr>
                                                                     <?php $count++;
                                                                     } while ($count <= 2) ?>
-                                                                    <!-- <tr>
-                                                                <td>2</td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <?php if (isset($purchaseOrder) && !$is_copy) : ?>
-                                                                <td></td>
-                                                                <td></td>
-                                                                <?php endif; ?>
-                                                                <td>
-                                                                    <button type="button" class="nsm-button delete-row">
-                                                                        <i class='bx bx-fw bx-trash'></i>
-                                                                    </button>
-                                                                </td>
-                                                            </tr> -->
                                                                 </tbody>
                                                                 <tfoot>
                                                                     <tr>

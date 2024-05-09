@@ -59,12 +59,12 @@ add_css(array(
 </div>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/events_tabs'); ?>
     </div>
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/job_subtabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/event_subtabs'); ?>
     </div>
-<hr>
+    <hr />
     <div class="col-12 mt-4">
         <div class="nsm-page">
             <div class="nsm-page-content">
