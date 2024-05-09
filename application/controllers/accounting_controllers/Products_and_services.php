@@ -1290,35 +1290,23 @@ class Products_and_services extends MY_Controller
             $name = $item['name'];
             $name .= $item['status'] === '0' ? ' (deleted)' : '';
 
-            $salesDesc = !empty($item['sales_desc']) ? $item['sales_desc'] : "No Description";
-            $sku = !empty($item['sku']) ? $item['sku'] : "No SKU";
-            $type = !empty($item['type']) ? $item['type'] : "Unknown Type";
-            $salesPrice = !empty($item['sales_price']) ? $item['sales_price'] : 0;
-            $incomeAccount = !empty($item['income_account']) ? $item['income_account'] : "No Income Account";
-            $purchDesc = !empty($item['purch_desc']) ? $item['purch_desc'] : "No Description";
-            $cost = !empty($item['cost']) ? $item['cost'] : 0;
-            $expenseAccount = !empty($item['expense_account']) ? $item['expense_account'] : "No Expense Account";
-            $qtyOnHand = !empty($item['qty_on_hand']) ? $item['qty_on_hand'] : 0;
-            $reorderPoint = !empty($item['reorder_point']) ? $item['reorder_point'] : 0;
-            $inventoryAccount = !empty($item['inventory_account']) ? $item['inventory_account'] : "No Inventory Asset Account";
-
             if (!empty($item['name'])) {
                 $data = [
                     $rowNumber++,
                     $name,
-                    $salesDesc,
-                    $sku, 
-                    $type, 
-                    $salesPrice, 
-                    $taxable, 
-                    $incomeAccount,
-                    $purchDesc, 
-                    $cost, 
-                    $expenseAccount, 
-                    $qtyOnHand, 
-                    $reorderPoint, 
-                    $inventoryAccount, 
-                    $qtyAsOfDate 
+                    !empty($item['sales_desc']) ? $item['sales_desc'] : 'No Sales Description',
+                    !empty($item['sku']) ? $item['sku'] : 'No SKU Provided',
+                    !empty($item['type']) ? $item['type'] : 'No  Type Provided',
+                    !empty($item['sales_price']) ? $item['sales_price'] : '0',
+                    !empty($taxable) ? $taxable : 'No Tax Provided',
+                    !empty($item['income_account']) ? $item['income_account'] : 'No Income Account',
+                    !empty($item['purch_desc']) ? $item['purch_desc'] : 'No Purchase Description',
+                    !empty($item['cost']) ? $item['cost'] : '0',
+                    !empty($item['expense_account']) ? $item['expense_account'] : 'No Expense Account',
+                    !empty($item['qty_on_hand']) ? $item['qty_on_hand'] : '0',
+                    !empty($item['reorder_point']) ? $item['reorder_point'] : '0',
+                    !empty($item['inventory_account']) ? $item['inventory_account'] : 'No Inventory Account',
+                    !empty($qtyAsOfDate) ? $qtyAsOfDate : 'No Date Provided'
                 ];
 
                 $writer->writeSheetRow('Sheet1', $data);

@@ -234,16 +234,17 @@ $(document).on('change', '#items-table tbody tr:visible .select-one', function (
         var activeChecked = $('#items-table tbody tr:visible[data-status="1"] input.select-one:checked');
 
         $('.batch-actions li a#make-active').toggleClass('disabled', inactiveChecked < 1);
-
         $('.batch-actions li a#make-inactive').toggleClass('disabled', activeChecked.length < 1);
 
         var allNonInv = true;
         var allService = true;
         var allInv = true;
+        var allNameProvided = true; 
 
         activeChecked.each(function () {
             var row = $(this).closest('tr');
             var type = row.find('td:nth-child(4)').html().trim();
+            var name = row.find('td:nth-child(2)').html().trim(); 
 
             if (type !== 'Non-inventory') {
                 allNonInv = false;
@@ -256,12 +257,16 @@ $(document).on('change', '#items-table tbody tr:visible .select-one', function (
             if (type !== 'Product') {
                 allInv = false;
             }
+
+            if (!name || name === 'No name provided') {
+                allNameProvided = false;
+            }
         });
 
         $('.batch-actions li a#make-service').toggleClass('disabled', !allNonInv);
         $('.batch-actions li a#make-non-inventory').toggleClass('disabled', !allService);
         $('.batch-actions li a#adjust-quantity').toggleClass('disabled', !allInv);
-        $('.batch-actions li a#reorder').toggleClass('disabled', !allInv);
+        $('.batch-actions li a#reorder').toggleClass('disabled', !allInv || !allNameProvided);
     }
 });
 

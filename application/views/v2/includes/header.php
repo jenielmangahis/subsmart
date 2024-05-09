@@ -740,6 +740,11 @@ if ($this->session->userdata('usertimezone') == null) {
                                 </li>
                             </ul>
                         </li>
+                        <li class="li-third-sub-menu">
+                            <a href="<?= base_url("chatbot/settings") ?>">
+                                <i class='bx bx-bot'></i> Chatbot Settings
+                            </a>
+                        </li>
                     </ul>
                 </li>
                 <li>
@@ -1170,3 +1175,280 @@ if ($this->session->userdata('usertimezone') == null) {
             </div>
             <div class="nsm-content-container">
                 <div class="nsm-content">
+
+<style>
+    #chatbox {
+        border-radius: 15px;
+    }
+
+    .chatbox_header {
+        border-top-left-radius: 15px !important;
+        border-top-right-radius: 15px !important;
+        background: #6a4a86;
+    }
+
+    .chatbot_image {
+        height: 50px;
+        width: 50px;
+    }
+
+    .chatbot_name_section {
+        margin-left: 10px;
+    }
+
+    .chatbot_name {
+        font-weight: bold;
+    }
+
+    .chatbot_minimize {
+        position: absolute;
+        font-size: 25px;
+        right: 25px;
+        cursor: pointer;
+    }
+
+    .chatbot_body {
+        background: #f3f3f3;
+        border-bottom-right-radius: 15px;
+        border-bottom-left-radius: 15px;
+        padding: unset;
+    }
+
+    .chat_content {
+        max-height: 500px;
+        height: 500px;
+    }
+
+    .send_chat {
+        padding-right: 10px;
+        padding-top: 20px;
+    }
+
+    .send_chat_container {
+        border-radius: 15px;
+        /* background-color: #6a4a8621;  */
+        max-width: 350px;
+    }
+
+    .receive_chat {
+        padding-left: 10px;
+        padding-top: 20px;
+    }
+
+    .receive_chat_container {
+        border-radius: 15px;
+        background-color: #f7f7f7;
+        max-width: 350px;
+    }
+
+    .message_form_container {
+        padding: 15px;
+        border-top: 1px solid #00000020;
+    }
+
+    .message_form_button {
+        background: #6a4a86;
+        color: white;
+    }
+
+    .message_form_button_icon {
+        font-size: 19px;
+        vertical-align: sub;
+    }
+
+    .spacer {
+        margin: 20px;
+    }
+
+    .sender_name {
+        font-weight: bold;
+        right: 20px;
+    }
+
+    .receiver_name {
+        font-weight: bold;
+        left: 20px;
+    }
+
+    .chatbox_container {
+        position: fixed;
+        bottom: 20px;
+        right: 15px;
+        width: 450px;
+        display: none;
+        z-index: 999 !important;
+    }
+
+    .chaticon {
+        height: auto;
+        width: 70px;
+        position: fixed;
+        bottom: 20px;
+        right: 15px;
+        z-index: 999 !important;
+    }
+
+    .chaticon:hover {
+        height: auto;
+        width: 75px;
+        cursor: pointer;
+    }
+
+    .typing_status {
+        position: absolute;
+        left: 15px;
+        bottom: 70px;
+    }
+
+    /* Bouncing animation with proper keyframes */
+    @keyframes bounce {
+
+        0%,
+        100% {
+            transform: translateY(0);
+            /* Start and end at the same level */
+        }
+
+        50% {
+            transform: translateY(-5px);
+            /* Bounce up */
+        }
+    }
+
+    /* Apply the animation to the typing status text */
+    .typing_status {
+        animation: bounce 0.5s infinite;
+        /* Infinite bouncing animation */
+    }
+
+    .send_container,
+    .receive_container {
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
+
+    .chaticon,
+    .typing_status {
+        display: none;
+    }
+</style>
+
+<div class="row d-flex position-relative">
+    <img class="chaticon" src="https://static.vecteezy.com/system/resources/previews/014/441/089/original/chat-message-icon-design-in-blue-circle-png.png">
+    <div class="col-md-8 col-lg-6 col-xl-4 chatbox_container">
+        <div id="chatbox" class="card">
+            <div class="card-header chatbox_header d-flex align-items-center p-3 text-white border-bottom-0">
+                <img class="chatbot_image" src="https://cdn-icons-png.flaticon.com/512/8943/8943377.png">
+                <p class="mb-0 chatbot_name_section"><span class="chatbot_name">Chatbot</span><br><small>nSmarTrac Chatbot</small></p>
+                <i class="fas fa-times chatbot_minimize"></i>
+            </div>
+            <div class="card-body chatbot_body">
+                <div class="table-responsive chat_content">
+                    <div class="receive_container position-relative">
+                        <small class="receiver_name position-absolute">🤖 <span class="chatbot_name">Chatbot</span></small>
+                        <div class="receive_chat d-flex flex-row justify-content-start">
+                            <div class="p-3 me-3 border receive_chat_container">
+                                <p class="mb-0">Hi, I'm <u class="chatbot_name fw-normal">Chatbot</u>, a chatbot from nSmarTrac, who can help you with your queries.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="receive_container position-relative">
+                        <small class="receiver_name position-absolute">🤖 <span class="chatbot_name">Chatbot</span></small>
+                        <div class="receive_chat d-flex flex-row justify-content-start">
+                            <div class="p-3 me-3 border receive_chat_container">
+                                <p class="mb-0">How can I help you today?</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="typing_status"><small class="text-muted"><span class="chatbot_name fw-normal">Chatbot</span> is typing...</small></div>
+                <form id="sendchat_form">
+                    <div class="input-group message_form_container">
+                        <input name="request" class="form-control" type="text" placeholder="Type your message here..." required>
+                        <button type="submit" class="btn message_form_button">
+                            <strong><i class='bx bxs-send message_form_button_icon'></i></strong>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var BASE_URL = window.origin;
+    // Custom Function ===============
+    function formDisabler(selector, state) {
+        const element = $(selector);
+        const submitButton = element.find('button[type="submit"]');
+        element.find("input, button, textarea, select").prop('disabled', state);
+
+        if (state) {
+            element.find('a').hide();
+            if (!submitButton.data('original-content')) {
+                submitButton.data('original-content', submitButton.html());
+            }
+            submitButton.prop('disabled', true);
+        } else {
+            element.find('a').show();
+            const originalContent = submitButton.data('original-content');
+            if (originalContent) {
+                submitButton.prop('disabled', false).html(originalContent);
+            }
+        }
+    }
+
+    $(document).ready(function() {
+        $.ajax({
+            type: "POST",
+            url: BASE_URL + "/chatbot/preference",
+            dataType: "JSON",
+            success: function(response) {
+                $('.chatbot_name').text(response[0]['chatbot_name']);
+                $('.chatbox_header, .message_form_button').css('background', response[0]['color']);
+                $('.chatbox_header').attr('data-bgcolor', response[0]['color']);
+                $('.chaticon').show();
+            }
+        });
+
+        $(document).on('submit', '#sendchat_form', function(e) {
+            e.preventDefault();
+            let sendchatData = $(this);
+            let chatMessage = sendchatData.find('input[name="request"]').val();
+            let chatbot_name = $('.chatbot_name').eq(0).text();
+            let bgcolor = $('.chatbox_header').attr('data-bgcolor');
+
+            $.ajax({
+                type: "POST",
+                url: BASE_URL + "/chatbot/request",
+                data: sendchatData.serialize(),
+                dataType: "JSON",
+                beforeSend: function() {
+                    formDisabler(sendchatData, true);
+                    $('.chat_content').append('<div class="send_container position-relative"> <small class="sender_name position-absolute">You</small> <div class="send_chat d-flex flex-row justify-content-end"> <div class="p-3 send_chat_container" style="background-color: ' + bgcolor + '21;"> <p class="mb-0 send_chat_message">' + chatMessage + '</p> </div> </div> </div>').scrollTop($('.chat_content')[0].scrollHeight);
+                    setTimeout(() => {
+                        $('.typing_status').fadeIn('fast');
+                    }, 500);
+                },
+                success: function(response) {
+                    setTimeout(() => {
+                        $('.chat_content').append('<div class="receive_container position-relative"> <small class="receiver_name position-absolute">🤖 ' + chatbot_name + '</small> <div class="receive_chat d-flex flex-row justify-content-start"> <div class="p-3 me-3 border receive_chat_container"> <p class="mb-0">' + response + '</p> </div> </div> </div>').scrollTop($('.chat_content')[0].scrollHeight);
+                        $('.typing_status').hide();
+                        sendchatData.find('input').val(null);
+                        formDisabler(sendchatData, false);
+                    }, 1000);
+                }
+            });
+        });
+
+        $('.chaticon').click(function(e) {
+            $('.chatbox_container').slideDown();
+            $('.chaticon').fadeOut();
+        });
+
+        $('.chatbot_minimize').click(function(e) {
+            $('.chatbox_container').slideUp();
+            $('.chaticon').fadeIn();
+        });
+    });
+</script>
