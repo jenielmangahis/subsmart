@@ -8,7 +8,7 @@ class Estimate extends MY_Controller
     {
         parent::__construct();
         $this->hasAccessModule(19);
-        $this->page_data['page']->title = 'My Estimates';
+        $this->page_data['page']->title = 'Estimates';
         $this->page_data['page']->menu = 'estimates';
         $this->load->model('Estimate_model', 'estimate_model');
         $this->load->model('Jobs_model', 'jobs_model');
@@ -403,7 +403,7 @@ class Estimate extends MY_Controller
     }
 
     public function add()
-    {
+    {        
         $this->load->model('AcsProfile_model');
         $this->load->model('EstimateSettings_model');
 

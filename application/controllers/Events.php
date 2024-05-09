@@ -47,7 +47,7 @@ class Events extends MY_Controller
         $this->load->view('v2/pages/events/list', $this->page_data);
     }
 
-    public function event_types() {
+    public function event_types() {        
         $get_job_types = array(
             'where' => array(
                 'company_id' => logged('company_id'),
