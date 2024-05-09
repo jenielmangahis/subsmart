@@ -342,7 +342,12 @@ label.bold {
     align-items: center;
     justify-content: space-between;
 }
-
+.select2-container--default .select2-results__option .select2-results__option {
+    padding-left:0px !important;
+}
+.select2-results__group{
+    margin-left: 0px !important;
+}
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
@@ -523,9 +528,18 @@ label.bold {
                                         <option value="Lost">Lost</option>
                                     </select>
                                 </div>
+
+                                <!-- <div class="col-md-6 mt-4">
+                                    <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="reminder_14d" value="1" id="reminder14d">
+                                    <label class="form-check-label" for="reminder14d">
+                                        <b>Remind me in 14 days</b>
+                                    </label>
+                                    </div>
+                                </div> -->
                             </div>
 
-                            <div class="row mb-3" style="background-color:white;font-size:16px;">
+                            <div class="row mb-3 mt-5" style="background-color:white;font-size:16px;">
                                 <input type="hidden" id="data_item_selected_id">
 
                                 <div class="col-md-3">
@@ -618,6 +632,17 @@ label.bold {
                                             <!-- <td></td> -->
                                             <td colspan="2" align="right">$<span id="total_tax_">0.00</span><input
                                                     type="hidden" name="taxes" id="total_tax_input"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" name="no_tax" type="checkbox" value="1" id="noTax">
+                                                    <label class="form-check-label" for="noTax" style="font-size:15px;">
+                                                        No Tax
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td colspan="2"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1072,6 +1097,14 @@ var base_url = "<?php echo base_url(); ?>";
 //     })
 //   })
 $(document).ready(function() {
+
+    $('#noTax').on('change', function(){
+        if ($(this).is(':checked')) {
+        
+        }else{
+
+        }
+    });
 
     $('#customer_id').select2({
         ajax: {
