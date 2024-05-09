@@ -5589,7 +5589,7 @@ class Accounting_modals extends MY_Controller
         if (isset($data['item'])) {
             $this->form_validation->set_rules('item[]', 'Item', 'required');
             $this->form_validation->set_rules('quantity[]', 'Item quantity', 'required');
-            $this->form_validation->set_rules('item_amount[]', 'Item quantity', 'required');
+            $this->form_validation->set_rules('item_amount[]', 'Item amount', 'required');
         }
 
         if(isset($data['template_name'])) {

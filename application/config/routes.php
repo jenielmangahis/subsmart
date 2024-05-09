@@ -941,6 +941,7 @@ $route['settings/_edit_sms_template'] = 'Settings/ajax_edit_sms_template';
 $route['settings/_add_tax_rate'] = 'Settings/ajax_add_tax_rate';
 $route['settings/_update_tax_rate'] = 'Settings/ajax_update_tax_rate';
 $route['settings/_delete_tax_rate'] = 'Settings/ajax_delete_tax_rate';
+$route['chatbot/settings'] = 'ChatbotSettings/settings';
 
 // leads
 $route['online_leads'] = 'Inquiries/online_lead';

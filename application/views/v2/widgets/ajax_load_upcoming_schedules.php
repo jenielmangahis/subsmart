@@ -55,6 +55,12 @@
     margin-top: 10px;
   }
 }
+.event-schedule-number{
+    display:block;
+}
+.event-schedule-tags-type{
+    font-size:13px;
+}
 </style>
 <?php if (!empty($upcomingSchedules)) { ?>
     <table class="nsm-table" id="dashboard_upcoming_schedules_table">
@@ -258,7 +264,7 @@
                 ?>
                 <?php if( $is_valid == 1 ){ ?>
                     <tr class="schedule-job quick-view-upcoming-schedule" data-id="<?= $schedule['data']->id; ?>" data-type="<?= $schedule['type']; ?>" style="cursor: pointer; text-decoration: none;color:inherit;">                  
-                        <td>
+                        <td style="vertical-align:top;">
                             <?php 
                                 $event_month = date("F", strtotime($schedule_date));
                                 $event_day   = date("d", strtotime($schedule_date));
@@ -287,23 +293,22 @@
                             </div>         
                         </td>
                         <td style="vertical-align: text-top;padding-top: 16px;">
-                            <label class="content-title" style="cursor: pointer;margin-bottom: 11px;font-size: 17px;">
+                            <label class="content-title" style="cursor: pointer;margin-bottom: 15px;font-size: 17px;">
                                 <?php if( trim($schedule_tags) != '' ){ ?>
-                                    <?php 
-                                        if( trim($schedule_type != '')  ){
-                                            echo $schedule_number . ' : ' . trim($schedule_type) . ', ' . trim($schedule_tags);
-                                        }else{
-                                            echo $schedule_number . ' : ' . trim($schedule_tags);
-                                        }
-                                    ?>
+                                    <?php  if( trim($schedule_type != '')  ){ ?>
+                                        <span class="event-schedule-number"><?= $schedule_number; ?></span>
+                                        <span class="event-schedule-tags-type text-muted"><i class='bx bxs-purchase-tag' ></i> <?= trim($schedule_type) . ', ' . trim($schedule_tags); ?></span>
+                                    <?php }else{ ?>
+                                        <span class="event-schedule-number"><?= $schedule_number; ?></span>
+                                        <span class="event-schedule-tags-type text-muted"><i class='bx bxs-purchase-tag' ></i> <?= trim($schedule_tags); ?></span>
+                                    <?php } ?>                                    
                                 <?php }else{ ?>
-                                    <?php 
-                                        if( trim($schedule_type != '')  ){
-                                            echo $schedule_number . ' : ' . trim($schedule_type);
-                                        }else{
-                                            echo $schedule_number;
-                                        }
-                                    ?>                                    
+                                    <?php  if( trim($schedule_type != '')  ){ ?>
+                                        <span class="event-schedule-number"><?= $schedule_number; ?></span>
+                                        <span class="event-schedule-tags-type text-muted"><i class='bx bxs-purchase-tag' ></i> <?= trim($schedule_type); ?></span>
+                                    <?php }else{ ?>
+                                        <span class="event-schedule-number"><?= $schedule_number; ?></span>
+                                    <?php } ?>                         
                                 <?php } ?>                                    
                             </label>
                             <?php if( $is_appointment_event == 0 ){ ?>
@@ -320,7 +325,7 @@
                                 <label class="content-title" style="cursor: pointer">
                                     <ul class="location-list">
                                         <li><i class='bx bxs-map-pin'></i></li>
-                                        <li style="max-width:175px;"><?= $schedule_location; ?><?= $schedule_location_b != '' ? "<br />" . $schedule_location_b : ''; ?></li>
+                                        <li style="max-width:90%;"><?= $schedule_location; ?><?= $schedule_location_b != '' ? "<br />" . $schedule_location_b : ''; ?></li>
                                     </ul>                                    
                                 </label>
                             <?php }else{ ?>
@@ -350,7 +355,7 @@
                                 </label>
                             <?php } ?>
                         </td>
-                        <td class="text-end">
+                        <td class="text-end" style="width:170px;">
                             <?php foreach($assigned_employees as $eid){ ?>
                                 <div class="nsm-list-icon primary" style="background-color:#ffffff; justify-content:right;">
                                     <div class="nsm-profile" style="background-image: url('<?= userProfileImage($eid); ?>');" data-img="<?= userProfileImage($eid); ?>"></div>                            
