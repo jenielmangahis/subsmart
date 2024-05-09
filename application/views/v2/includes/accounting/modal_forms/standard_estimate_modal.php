@@ -104,7 +104,7 @@
                                 <div class="row">
                                     <div class="col-12 col-md-2">
                                         <label for="estimate-no">Estimate # <span class="text-danger">*</span></label>
-                                        <input type="text" name="estimate_no" id="estimate-no" disabled="" class="form-control nsm-field mb-2" value="<?=isset($estimate) ? $estimate->estimate_number : $est_number?>" />
+                                        <input type="text" name="estimate_no" id="estimate-no" readonly="" class="form-control nsm-field mb-2" value="<?=isset($estimate) ? $estimate->estimate_number : $est_number?>" />
                                     </div>
                                     <div class="col-12 col-md-2">
                                         <label for="estimate-date">Estimate Date <span class="text-danger">*</span></label>
