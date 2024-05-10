@@ -636,7 +636,7 @@ label.bold {
                                         <tr>
                                             <td>
                                                 <div class="form-check">
-                                                    <input class="form-check-input" name="no_tax" type="checkbox" value="1" id="noTax">
+                                                    <input class="form-check-input" name="no_tax" type="checkbox" value="1" id="no-tax">
                                                     <label class="form-check-label" for="noTax" style="font-size:15px;">
                                                         No Tax
                                                     </label>
@@ -1097,15 +1097,6 @@ var base_url = "<?php echo base_url(); ?>";
 //     })
 //   })
 $(document).ready(function() {
-
-    $('#noTax').on('change', function(){
-        if ($(this).is(':checked')) {
-        
-        }else{
-
-        }
-    });
-
     $('#customer_id').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_customer_lead',
@@ -1564,11 +1555,43 @@ $(function() {
 
     $('#grand_total_input').change(function() {
         computeDepositAmount();
+        no_tax();
     });
 
+    $('#no-tax').on('change', function(){
+        computeDepositAmount();
+        no_tax();
+    });
+
+    function no_tax(){
+        if($('#no-tax').is(':checked')) {
+            var grand_total = $('#grand_total_input').val();
+            var total_tax   = $('#total_tax_input').val();
+            var new_grand_total = parseFloat(grand_total) - parseFloat(total_tax);
+        }else{            
+            var grand_total = $('#grand_total_input').val();
+            var new_grand_total = parseFloat(grand_total);
+        }
+
+        if( isNaN(new_grand_total) ){
+            new_grand_total = 0;
+        }
+
+        $('#grand_total').text(new_grand_total.toFixed(2));
+    }
+
     function computeDepositAmount() {
+        if($('#no-tax').is(':checked')) {
+            var grand_total = $('#grand_total_input').val();
+            var total_tax   = $('#total_tax_input').val();
+            var new_grand_total = parseFloat(grand_total) - parseFloat(total_tax);
+        }else{            
+            var grand_total = $('#grand_total_input').val();
+            var new_grand_total = parseFloat(grand_total);
+        }
+
         var deposit_amount = $('#deposit-percentage').val() / 100;
-        var total_amount = $('#grand_total_input').val();
+        var total_amount   = new_grand_total;
 
         if (total_amount > 0) {
             total_amount = total_amount * deposit_amount;
