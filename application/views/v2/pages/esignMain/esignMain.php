@@ -16,6 +16,18 @@
 .modal-gray{
     background-color: #cccccc;
 }
+.esign-modal-btn{
+    display: block;
+    font-size: 20px;
+}
+.esign-modal-btn i{
+    font-size:23px;
+    position: relative;
+    top: 3px;
+}
+#modal-select-action .modal-dialog{
+    width:344px;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12">
@@ -224,6 +236,30 @@
             </div>
         </div>
     </div>
+
+    
+    <div class="modal fade nsm-modal fade" id="modal-select-action" tabindex="-1" aria-labelledby="modal-select-action_label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title content-title"><i class='bx bxs-pen' ></i> eSign</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <a class="nsm nsm-button primary esign-modal-btn" href="<?= base_url('eSign_v2/templateCreate'); ?>"><i class='bx bxs-edit'></i> Create New Template</a>
+                        <a class="nsm nsm-button primary esign-modal-btn" href="<?= base_url('vault_v2/mylibrary'); ?>"><i class='bx bx-file'></i> Use Existing Template</a>
+                        <a class="nsm nsm-button primary esign-modal-btn btn-close-modal-select-action" href="javascript:void(0);"><i class='bx bx-question-mark'></i> Something else?</a>
+                    </div>
+                    <div class="modal-footer">
+                        
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+
 </div>
 
 <div class="modal fade nsm-modal" id="searchesignmodal" tabindex="-1" aria-labelledby="searchesignmodal_label" aria-modal="true" role="dialog">
@@ -356,6 +392,11 @@
 
 <script src="<?= base_url("assets/js/esign/docusign/v2/search.js") ?>" type="module"></script>
 <script type="text/javascript">
-    $(document).ready(function() {});
+    $(document).ready(function() {
+        $('#modal-select-action').modal('show');
+        $('.btn-close-modal-select-action').on('click', function(){
+            $('#modal-select-action').modal('hide');
+        });
+    });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
