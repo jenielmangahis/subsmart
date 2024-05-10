@@ -194,9 +194,8 @@ $(document).on("focusout", ".adjustment_input", function () {
   var new_grand = parseFloat(grand) + parseFloat(adjustment);
 
   // alert(adjustment);
-
-  $("#grand_total_input").val(new_grand.toFixed(2)).trigger("change");
   $("#grand_total").text(new_grand.toFixed(2));
+  $("#grand_total_input").val(new_grand.toFixed(2)).trigger("change");
   $("#adjustmentText").text(adjustment);
   $("#payment_amount").val(new_grand.toFixed(2));
 });
