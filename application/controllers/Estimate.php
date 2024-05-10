@@ -169,7 +169,7 @@ class Estimate extends MY_Controller
             $prefix = 'EST-';
         }
 
-        $estimate_number = str_pad($next_num, 9, '0', STR_PAD_LEFT);
+        $estimate_number = str_pad($next_num, 5, '0', STR_PAD_LEFT);
         $estimate_number = $prefix.$estimate_number;
 
         $customer_lead = explode('/', $this->input->post('customer_id'));
@@ -183,6 +183,16 @@ class Estimate extends MY_Controller
         if ($customer_lead[1] == 'Lead') {
             $lead_id = $customer_lead[0];
         }
+
+        $next_remind_date = '';
+        if( $this->input->post('reminder_14d') ){
+            $next_remind_date = date("Y-m-d", strtotime("+14 days"));
+        }   
+        
+        $no_tax = 0;
+        if( $this->input->post('no_tax') ){
+            $no_tax = 1;
+        }   
 
         $new_data = [
             'customer_id' => $customer_id,
@@ -227,10 +237,10 @@ class Estimate extends MY_Controller
 
             'adjustment_name' => $this->input->post('adjustment_name'),
             'adjustment_value' => $this->input->post('adjustment_value'),
-
+            'no_tax' => $no_tax,
             'markup_type' => '$',
             'markup_amount' => $this->input->post('markup_input_form'),
-
+            'next_remind_date' => $next_remind_date,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ];
@@ -2468,6 +2478,19 @@ class Estimate extends MY_Controller
 
             $deposit_amount = $estimate->grand_total * ($estimate->deposit_amount / 100);
 
+            $no_tax = '';
+            $grand_total = $estimate->grand_total;
+            if( $estimate->no_tax == 1 ){
+                $no_tax = '
+                <tr>
+                    <td  colspan="2"  style="line-height: 20px; black;text-align: start;">No Tax</td>
+                    <td  style="line-height: 20px; black;text-align: center;"><b>Yes</b></td>
+                </tr>
+                ';
+
+                $grand_total = $grand_total - $estimate->tax1_total;
+            }
+
             $html .= '<br><br>
             <tr>
                 <td colspan="3" >
@@ -2478,25 +2501,26 @@ class Estimate extends MY_Controller
                 <td colspan="3">
                     <table>
                         <tr>
-                        <td  colspan="2" style="line-height: 20px; black;text-align: start;"><b>Subtotal</b></td>
-                        <td  style="line-height: 20px; black;text-align: center;"><b>$'.number_format($estimate->sub_total, 2).'</b></td>
+                            <td  colspan="2" style="line-height: 20px; black;text-align: start;"><b>Subtotal</b></td>
+                            <td  style="line-height: 20px; black;text-align: center;"><b>$'.number_format($estimate->sub_total, 2).'</b></td>
                         </tr>
                         <tr>
-                        <td  colspan="2"  style="line-height: 20px; black;text-align: start;">Taxes</td>
-                        <td  style="line-height: 20px; black;text-align: center;">$'.number_format($estimate->tax1_total, 2).'</td>
-                      </tr>
-                      <tr>
-                      <td   colspan="2" style="line-height: 20px; black;text-align: start;">Discount</td>
-                      <td  style="line-height: 20px; black;text-align: center;">$'.number_format($estimate->adjustment_value, 2).'</td>
-                    </tr>
-                    <tr>
-                    <td  colspan="2" style="background-color: #dad1e0; line-height: 20px; black;text-align: start;"><b>Grand Total</b></td>
-                    <td   style="background-color: #dad1e0; line-height: 20px; black;text-align: center;"><b>$'.number_format($estimate->grand_total, 2).'</b></td>
-                    </tr>
-                    <tr>
-                    <td  colspan="2"  style="line-height: 20px; black;text-align: start;">Deposit Amount Requested</td>
-                    <td   style="line-height: 20px; black;text-align: center;">$'.number_format($deposit_amount, 2).'</td>
-                  </tr>
+                            <td  colspan="2"  style="line-height: 20px; black;text-align: start;">Taxes</td>
+                            <td  style="line-height: 20px; black;text-align: center;">$'.number_format($estimate->tax1_total, 2).'</td>
+                        </tr>
+                        '.$no_tax.'
+                        <tr>
+                            <td   colspan="2" style="line-height: 20px; black;text-align: start;">Discount</td>
+                            <td  style="line-height: 20px; black;text-align: center;">$'.number_format($estimate->adjustment_value, 2).'</td>
+                        </tr>
+                        <tr>
+                            <td  colspan="2" style="background-color: #dad1e0; line-height: 20px; black;text-align: start;"><b>Grand Total</b></td>
+                            <td   style="background-color: #dad1e0; line-height: 20px; black;text-align: center;"><b>$'.number_format($grand_total, 2).'</b></td>
+                        </tr>
+                        <tr>
+                            <td  colspan="2"  style="line-height: 20px; black;text-align: start;">Deposit Amount Requested</td>
+                            <td   style="line-height: 20px; black;text-align: center;">$'.number_format($deposit_amount, 2).'</td>
+                        </tr>
                   <br><br>
                     <tr style="text-align:center">
                             <p style="text-align:center">Powered By:</p>
