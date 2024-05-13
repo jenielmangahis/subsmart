@@ -13,9 +13,6 @@
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
-                <?php
-                $printedNames = []; 
-                ?>
                 <table class="nsm-table" id="print-items-list">
                     <thead>
                         <tr>
@@ -38,10 +35,7 @@
                     <tbody>
                         <?php if (count($items) > 0) : ?>
                             <?php foreach ($items as $item) : ?>
-                                <?php
-                                if (!empty($item['name']) && !in_array($item['name'], $printedNames)) :
-                                    $printedNames[] = $item['name']; 
-                                ?>
+                                <?php if (!empty($item['name'])) : ?>
                                     <tr>
                                         <td class="fw-bold nsm-text-primary nsm-link default">
                                             <?= $item['name'] . ($item['status'] === '0' ? ' (deleted)' : '') ?>
@@ -64,13 +58,6 @@
                                         <td>
                                             <?= ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "No tax provided") ? '<div class="table-row-icon table-checkbox"><input class="form-check-input select-one table-select" type="checkbox" disabled checked></div>' : 'No tax provided' ?>
                                         </td>
-                                        <!-- <td>
-                                            <?php if ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== null && $item['tax_rate_id'] !== "No tax provided") : ?>
-                                                <div class="table-row-icon table-checkbox">
-                                                    <input class="form-check-input select-one table-select" type="checkbox" disabled checked>
-                                                </div>
-                                            <?php endif; ?>
-                                        </td> -->
                                         <td><?= $item['qty_on_hand'] ?: '0' ?></td>
                                         <td><?= $item['qty_po'] ?: '0' ?></td>
                                         <td><?= $item['reorder_point'] ?: '0' ?></td>
@@ -223,7 +210,9 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <!-- <button type="button" class="nsm-button" id="addLocationLine">Add Location</button> -->
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="nsm-button primary update-quantity" data-bs-dismiss="modal">Save</button>
             </div>
         </div>
     </div>

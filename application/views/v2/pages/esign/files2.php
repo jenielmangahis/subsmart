@@ -370,6 +370,13 @@ echo put_header_assets();
 
                                             <li class="menu_listItem">
                                                 <div class="fields menu_item">
+                                                    <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-name"></i></span>
+                                                    <span class="u-ellipsis ng-binding">Name Second Signatory</span>
+                                                </div>
+                                            </li>
+
+                                            <li class="menu_listItem">
+                                                <div class="fields menu_item">
                                                     <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-email"></i></span>
                                                     <span class="u-ellipsis ng-binding">Email</span>
                                                 </div>

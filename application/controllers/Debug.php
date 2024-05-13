@@ -2553,7 +2553,8 @@ class Debug extends MYF_Controller {
 
         $this->load->model('Users_model');
         $user = $this->Users_model->getUser(81);
-        $ip   = getUserPublicIP();
+
+        $ip = getUserPublicIP();
         $encrypted_user_id = hashids_encrypt($user->id, '', 15);
         $this->page_data['user'] = $user;
         $this->page_data['encrypted_user_id'] = $encrypted_user_id;

@@ -239,12 +239,12 @@ $(document).on('change', '#items-table tbody tr:visible .select-one', function (
         var allNonInv = true;
         var allService = true;
         var allInv = true;
-        var allNameProvided = true; 
+        var allNameProvided = true;
 
         activeChecked.each(function () {
             var row = $(this).closest('tr');
             var type = row.find('td:nth-child(4)').html().trim();
-            var name = row.find('td:nth-child(2)').html().trim(); 
+            var name = row.find('td:nth-child(2)').html().trim();
 
             if (type !== 'Non-inventory') {
                 allNonInv = false;
@@ -462,32 +462,56 @@ $('#make-non-inventory, #make-service, #make-inactive, #make-active').on('click'
     });
 });
 
+// $('.export-items').on('click', function () {
+//     if ($('#export-form').length < 1) {
+//         $('body').append('<form action="/accounting/products-and-services/export-table" method="post" id="export-form"></form>');
+//     }
+
+//     var fields = $('.dropdown-menu.table-settings input[name="col_chk"]:checked');
+//     fields.each(function () {
+//         $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('id').replace('_chk', '')}">`);
+//     });
+
+//     // Add default values for empty rows
+//     $('#export-form').append(`<input type="hidden" name="default_name" value="Default Name">`);
+//     $('#export-form').append(`<input type="hidden" name="default_quantity" value="0">`);
+
+//     $('#export-form').append(`<input type="hidden" name="search" value="${$('#search_field').val()}">`);
+//     $('#export-form').append(`<input type="hidden" name="status" value="${$('#filter-status').val()}">`);
+//     $('#export-form').append(`<input type="hidden" name="type" value="${$('#filter-type').val()}">`);
+//     $('#export-form').append(`<input type="hidden" name="stock_status" value="${$('#filter-stock-status').val()}">`);
+
+//     $.each($('#filter-category').val(), function (key, value) {
+//         $('#export-form').append(`<input type="hidden" name="category[]" value="${value}">`);
+//     });
+
+//     $('#export-form').append(`<input type="hidden" name="column" value="name">`);
+//     $('#export-form').append(`<input type="hidden" name="order" value="asc">`);
+
+//     $('#export-form').submit();
+// });
+
 $('.export-items').on('click', function () {
     if ($('#export-form').length < 1) {
         $('body').append('<form action="/accounting/products-and-services/export-table" method="post" id="export-form"></form>');
     }
 
-    var fields = $('.dropdown-menu.table-settings input[name="col_chk"]:checked');
-    fields.each(function () {
-        $('#export-form').append(`<input type="hidden" name="fields[]" value="${$(this).attr('id').replace('_chk', '')}">`);
+    var fields = [];
+
+    $('.dropdown-menu.table-settings input[name="col_chk"]:checked').each(function () {
+        fields.push($(this).attr('id').replace('_chk', ''));
     });
 
-    // Add default values for empty rows
-    $('#export-form').append(`<input type="hidden" name="default_name" value="Default Name">`);
-    $('#export-form').append(`<input type="hidden" name="default_quantity" value="0">`);
-
-    $('#export-form').append(`<input type="hidden" name="search" value="${$('#search_field').val()}">`);
-    $('#export-form').append(`<input type="hidden" name="status" value="${$('#filter-status').val()}">`);
-    $('#export-form').append(`<input type="hidden" name="type" value="${$('#filter-type').val()}">`);
-    $('#export-form').append(`<input type="hidden" name="stock_status" value="${$('#filter-stock-status').val()}">`);
-
+    var csv = fields.join(',') + '\n';
+    csv += 'Default Name,0\n';
+    csv += $('#search_field').val() + ',' + $('#filter-status').val() + ',' + $('#filter-type').val() + ',' + $('#filter-stock-status').val() + '\n';
     $.each($('#filter-category').val(), function (key, value) {
-        $('#export-form').append(`<input type="hidden" name="category[]" value="${value}">`);
+        csv += value + ',';
     });
+    csv += '\n';
+    csv += 'name,asc\n';
 
-    $('#export-form').append(`<input type="hidden" name="column" value="name">`);
-    $('#export-form').append(`<input type="hidden" name="order" value="asc">`);
-
+    $('#export-form').html('<input type="hidden" name="csv_data" value="' + csv.replace(/"/g, '&quot;') + '">');
     $('#export-form').submit();
 });
 
@@ -948,6 +972,45 @@ function occupyFields(id, type, action = 'edit') {
     });
 }
 
+// $('#items-table .see-item-locations').on('click', function (e) {
+//     e.preventDefault();
+
+//     var itemId = $(this).closest('tr').find('.select-one').val();
+
+//     $.get(`${base_url}accounting/products-and-services/get-item-locations/${itemId}`, function (result) {
+//         var locations = JSON.parse(result);
+
+//         $('#item-locations-modal #item-locations-table tbody').empty();
+
+//         if (locations.length > 0) {
+//             for (var i = 0; i < locations.length; i++) {
+//                 var location = locations[i];
+
+//                 $('#item-locations-modal #item-locations-table tbody').append(`
+//                     <tr>
+//                         <td class="d-none"><input type="hidden" class="nsm-field form-control" value="${itemId}"></td>
+//                         <td><input type="text" class="nsm-field form-control" value="${location.name}"></td>
+//                         <td><input type="number" class="nsm-field form-control" value="${location.qty}"></td>
+//                         </tr>
+//                 `);
+
+//             }
+//         } else {
+//             $('#item-locations-modal #item-locations-table tbody').append(`
+//                 <tr>
+//                     <td colspan="3">
+//                         <div class="nsm-empty">
+//                             <span>No results found.</span>
+//                         </div>
+//                     </td>
+//                 </tr>
+//             `);
+//         }
+
+//         $('#item-locations-modal').modal('show');
+//     });
+// });
+
 $('#items-table .see-item-locations').on('click', function (e) {
     e.preventDefault();
 
@@ -964,11 +1027,12 @@ $('#items-table .see-item-locations').on('click', function (e) {
 
                 $('#item-locations-modal #item-locations-table tbody').append(`
                     <tr>
-                        <td class="d-none">${itemId}</td>
-                        <td>${location.name}</td>
-                        <td>${location.qty}</td>
+                        <td class="d-none"><input type="hidden" class="nsm-field form-control" value="${itemId}"></td>
+                        <td><input type="text" class="nsm-field form-control" value="${location.name}" readonly></td>
+                        <td><input type="number" class="nsm-field form-control location-qty" value="${location.qty}"></td>
                     </tr>
                 `);
+
             }
         } else {
             $('#item-locations-modal #item-locations-table tbody').append(`
@@ -983,6 +1047,40 @@ $('#items-table .see-item-locations').on('click', function (e) {
         }
 
         $('#item-locations-modal').modal('show');
+    });
+});
+
+$('.update-quantity').on('click', function (e) {
+    e.preventDefault();
+
+    var itemId = $('#item-locations-modal #item-locations-table tbody tr:first-child').find('td input[type="hidden"]').val();
+    console.log('itemId:', itemId);
+
+    var updatedQuantities = [];
+    $('#item-locations-modal #item-locations-table tbody tr').each(function () {
+        var locationName = $(this).find('td input[type="text"]').val();
+        var quantity = $(this).find('td input[type="number"]').val();
+        console.log('Location:', locationName, 'Quantity:', quantity);
+
+        updatedQuantities.push({
+            itemId: itemId,
+            locationName: locationName,
+            quantity: quantity
+        });
+    });
+    console.log('Updated Quantities:', updatedQuantities);
+
+    $.ajax({
+        url: `${base_url}accounting_controllers/products_and_services/update_item_locations/${itemId}`,
+        method: 'POST',
+        data: { quantities: updatedQuantities },
+        success: function (response) {
+            location.reload();
+            console.log('Quantities updated successfully!');
+        },
+        error: function (xhr, status, error) {
+            console.error('Error updating quantities:', error);
+        }
     });
 });
 

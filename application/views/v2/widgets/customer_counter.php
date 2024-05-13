@@ -14,7 +14,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                             <i class="bx bx-user-circle"></i>
                         </div>
                         <a role="button" class=" btn-sm m-0 me-2" href="customer" style="color:#6ba77ced !important ">
-                             Customer
+                            Customer Groups
                         </a>
                     </div>
                 </div>
@@ -58,11 +58,17 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <option value="two-month">last 60 days </option>
         </select>
     </div>
-    <div class="nsm-card-content"
-        style="  height: calc(100% - 120px); display: <?php echo $isListView ? 'block' : 'none'; ?>"
+    <div class="nsm-card-content" style=" position:'relative'; display: <?php echo $isListView ? 'block' : 'none'; ?>"
         id="thumbnail_content_graph_<?php echo $id; ?>">
         <h1 id='NewCustomerGraphLoader'> <span class="bx bx-loader bx-spin"></span></h1>
         <canvas id="NewCustomerWidgetsGraph" class="nsm-chart" data-chart-type="sales"></canvas>
+        <h5 style="text-align: right;
+    margin-top: -32px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 15px;">Total : <span style="font-size: 16px;
+    color: #6ba77ced !important;
+    letter-spacing: 1.5px;" id="total_customer_graph"></span></h5>
     </div>
 
     <div class="nsm-card-content"
@@ -72,7 +78,8 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
                     <label for="">Total Customer</label>
-                    <h1 id="first_content_<?php echo $id; ?>" class='recent-customer-container-count'> <span class="bx bx-loader bx-spin"></span></h1>
+                    <h1 id="first_content_<?php echo $id; ?>" class='recent-customer-container-count'> <span
+                            class="bx bx-loader bx-spin"></span></h1>
                 </div>
             </div>
         </div>
