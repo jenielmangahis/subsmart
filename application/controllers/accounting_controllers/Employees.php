@@ -209,7 +209,7 @@ class Employees extends MY_Controller {
                     $payMethod = 'Missing';
                 }
 
-                $payRate = 'Missing';
+                $payRate = '$0.00/hour'; //'Missing';
                 $payscale = $this->users_model->get_payscale_by_id($employee->payscale_id);
 
                 if($payscale->pay_type === 'Hourly') {

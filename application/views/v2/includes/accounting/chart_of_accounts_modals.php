@@ -137,13 +137,13 @@
                         <div class="progress-wrapper" style="padding-bottom: 100px;">
                             <div id="progress-bar-container">
                                 <ul>
-                                    <li class="step step1 active">
+                                    <li class="step step1 active" style="pointer-events: none !important;">
                                         <div class="step-inner">Step 1</div>
                                     </li>
-                                    <li class="step step2">
+                                    <li class="step step2" style="pointer-events: none !important;">
                                         <div class="step-inner">Step 2</div>
                                     </li>
-                                    <li class="step step3">
+                                    <li class="step step3" style="pointer-events: none !important;">
                                         <div class="step-inner">Step 3</div>
                                     </li>
                                 </ul>

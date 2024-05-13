@@ -242,7 +242,7 @@ $(document).ready(function() {
 
         $('.check-input-all-tasks').each(function() {
             this.checked = false;
-        });        
+        });
     })
 
 
@@ -684,7 +684,7 @@ function loadDataFilter(from_date, to_date, table, id) {
             }
 
             if (table == 'acs_profile') {
-                filterCustomerThumbnailGraph(data['total_acs'])
+                filterCustomerThumbnailGraph(data['customer'])
             }
 
             if (table == 'jobs') {
@@ -748,22 +748,54 @@ function filterJobsThumbnailGraph(jobs) {
 
 }
 
-function filterCustomerThumbnailGraph(total_acs) {
+function filterCustomerThumbnailGraph(customer) {
+    let totalCustomer = 0;
+    if (customer.length > 0) {
+        let dataTemp = [];
+        let labelsTemp = [];
 
-    if (total_acs > 0) {
-        NewCustomerWidgetsGraph.data.datasets[0].data = total_acs;
+        if (customer) {
+            for (var x = 0; x < customer.length; x++) {
+                labelsTemp.push(customer[x].title)
+                dataTemp.push(customer[x].total_customer)
+                totalCustomer += parseInt(customer[x].total_customer)
+            }
+        }
+        $(".recent-customer-container-count").html(totalCustomer);
+        $("#total_customer_graph").html(totalCustomer);
+        NewCustomerWidgetsGraph.data.labels = labelsTemp;
+        NewCustomerWidgetsGraph.data.datasets[0].data = dataTemp;
+        NewCustomerWidgetsGraph.update();
+    } else {
+        $(".recent-customer-container-count").html(totalCustomer);
+        $("#total_customer_graph").html(totalCustomer);
+        NewCustomerWidgetsGraph.data.datasets[0].data = null;
         NewCustomerWidgetsGraph.update();
     }
 
 }
 
-function filterLeadsThumbnailGraph(sales) {
+function filterLeadsThumbnailGraph(leads) {
+    let labelsTemp = [];
+    let dataTemp = [];
+    let totalLeads = 0;
 
-    if (sales > 0) {
-        NewLeadsWidgetsGraph.data.datasets[0].data = sales;
+    if (leads.length > 0) {
+        for (var x = 0; x < leads.length; x++) {
+            labelsTemp.push(leads[x].lead_name)
+            dataTemp.push(leads[x].total_leads)
+            totalLeads += parseInt(leads[x].total_leads)
+        }
+        NewLeadsWidgetsGraph.data.labels = labelsTemp;
+        NewLeadsWidgetsGraph.data.datasets[0].data = dataTemp;
+        NewLeadsWidgetsGraph.update();
+    } else {
+        NewLeadsWidgetsGraph.data.datasets[0].data = null;
         NewLeadsWidgetsGraph.update();
     }
 
+    $(".total_leads_graph_total").html(totalLeads);
+    $("#total_leads_graph").html(totalLeads);
 
 }
 

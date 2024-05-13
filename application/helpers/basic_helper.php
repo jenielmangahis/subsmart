@@ -5282,9 +5282,22 @@ function getUserPublicIP()
 {
     $return = [];
 
-    $api64 = json_decode(file_get_contents('https://api64.ipify.org?format=json'));
-    if( $api64->ip ){
-        $ipLocation = json_decode(file_get_contents('http://ip-api.com/json/'.$api64->ip));
+    //$api64 = json_decode(file_get_contents('https://api64.ipify.org?format=json'));
+    $ip = '';
+    if(!empty($_SERVER['HTTP_CLIENT_IP'])){
+        //ip from share internet
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    }elseif(!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+        //ip pass from proxy
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    }else{
+        $ip = $_SERVER['REMOTE_ADDR'];
+    }
+
+    //$public_ip = $api64->ip;
+    $public_ip = $ip;
+    if( $public_ip ){
+        $ipLocation = json_decode(file_get_contents('http://ip-api.com/json/'.$public_ip));
 
         $location = '';
         $country  = '';
@@ -5301,12 +5314,17 @@ function getUserPublicIP()
         }
 
         $return = [
-            'ip' => $api64->ip,
+            'ip' => $public_ip,
             'country' => $country,
             'location' => $location,
             'lat' => $lat,
             'lon' => $lon,
             'user_agent' => $user_agent
+        ];
+    }else{
+        $return = [
+            'ip' => '',
+            'err' => 'IP not found'
         ];
     }
 
