@@ -575,7 +575,7 @@
                                                             </tr> -->
                                                         </tbody>
                                                     </table>
-                                                    <div class="attachments-container w-75">
+                                                    <!-- <div class="attachments-container w-75">
                                                         <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
                                                         <span>Maximum size: 20MB</span>
                                                         <div id="previewVendorAttachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
@@ -587,7 +587,7 @@
                                                         <div class="d-flex justify-content-center align-items-center">
                                                             <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
                                                 </div>
                                                 <div class="col-12 col-md-4">
                                                     <table class="nsm-table">
