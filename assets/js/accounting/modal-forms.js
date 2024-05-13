@@ -927,6 +927,7 @@ $(function () {
         }
     });
 
+    // Category details Customer row function
     $(document).on('click', 'div#modal-container .modal-body table#category-details-table tbody tr td:not(:last-child)', function () {
         var row = $(this).parent();
         if (row.find('input').length < 1) {
@@ -948,7 +949,6 @@ $(function () {
                 } else {
                     type = type.replaceAll('_', '-');
                 }
-
 
                 if (dropdownFields.includes(type)) {
                     $(this).select2({
@@ -10355,6 +10355,8 @@ const addTableLines = (e) => {
 
         $(`table${table} tbody`).append(newRowHtml);
         $(`table${table} tbody tr:last-child() td:first-child()`).html(lastRowCount);
+
+        $(`table${table} tbody tr:last-child() td:first-child()`).trigger('click');
 
         $(`table${table} tbody tr:last-child() .delete-row-btn`).on('click', function () {
             $(this).closest('tr').remove();

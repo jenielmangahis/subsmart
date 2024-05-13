@@ -68,6 +68,13 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         id="thumbnail_content_graph_<?php echo $id; ?>">
         <h1 id='NewLeadsGraphLoader'> <span class="bx bx-loader bx-spin"></span></h1>
         <canvas id="NewLeadsWidgetsGraph" class="nsm-chart" data-chart-type="sales"></canvas>
+        <h5 style="text-align: right;
+    margin-top: -32px;
+    font-size: 14px;
+    font-weight: bold;
+    margin-right: 15px;">Total : <span style="font-size: 16px;
+    color: #c7951c  !important;
+    letter-spacing: 1.5px;" id="total_leads_graph"></span></h5>
     </div>
     <div class="nsm-card-content"
         style="  height: calc(100% - 120px);  display: <?php echo $isListView ? 'none' : 'block'; ?>"
@@ -76,8 +83,8 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
                     <label for="">Total Leads</label>
-                    <h1 id="first_content_<?php echo $id; ?>">
-                    <?php echo $leads; ?></h1>
+                    <h1 class="total_leads_graph_total" id="first_content_<?php echo $id; ?>">
+                    </h1>
                 </div>
             </div>
         </div>

@@ -2,7 +2,7 @@
     <ul>
         <li class="<?php if($page->title == 'Jobs' || $page->title == 'Job New'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('job') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
-                <span>Jobs</span>
+                <span>List</span>
             </a>
         </li>
         <li class="<?php if($page->title == 'Job Types'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('job/job_types') ?>'">
@@ -20,7 +20,7 @@
                 <span>Bird's Eye View</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Checklist' || $page->title == 'Add New Job Checklist'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('job_checklists/list') ?>'">
+        <li class="<?php if($page->title == 'Checklist' || $page->title == 'Add New Job Checklist' || $page->title == 'Edit Job Checklist'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('job_checklists/list') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
                 <span>Checklist</span>
             </a>

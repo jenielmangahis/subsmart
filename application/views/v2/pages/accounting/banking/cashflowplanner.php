@@ -398,7 +398,10 @@ include viewPath('v2/includes/accounting_header');
         </div>
     </div>
 </div>
-<?php include viewPath('v2/includes/footer'); ?>
+
+<!-- Footer Disabled Temporarily Due to some parts didn't work (css, dropdown button, export button didn't show) -->
+<?php // include viewPath('v2/includes/footer'); ?>
+
 <script>
     var BASE_URL = window.location.origin;
 

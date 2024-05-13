@@ -192,6 +192,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
                               <td colspan="2" style="text-align: ;">Taxes</td>
                               <td colspan="1" style="text-align: right;">$<?= number_format((float)$estimate->tax1_total, 2); ?></td>
                             </tr>
+                            <?php if( $estimate->no_tax == 1 ){ ?>
+                              <tr>
+                                <td colspan="4" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
+                                <td colspan="2" style="text-align: ;">No Tax</td>
+                                <td colspan="1" style="text-align: right;"><span class="nsm-badge success">Yes</span></td>
+                              </tr>
+                            <?php } ?>
                             <tr>
                               <td colspan="4" style="border-left: 1px solid Transparent!important;border-bottom: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
                               <td colspan="2" style="text-align: ;"><b>TOTAL AMOUNT</b></td>
@@ -231,7 +238,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </tr>
                             <tr>
                               <td colspan="4" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
-                              <td colspan="2" style="text-align: ;"><p>Taxes</p></td>
+                              <td colspan="2" style="text-align: ;">Taxes</td>
                               <td colspan="1" style="text-align: right;"><p>$<?= number_format((float)$estimate->tax2_total, 2); ?></p></td>
                             </tr>
                             <tr>
@@ -273,7 +280,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </tr>
                             <tr>
                               <td colspan="4" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
-                              <td colspan="2" style="text-align: ;"><p>Taxes</p></td>
+                              <td colspan="2">Taxes</td>
                               <td colspan="1" style="text-align: right;"><p>$<?= number_format($estimate->tax1_total, 2); ?></p></td>
                             </tr>
                             <tr>
@@ -314,7 +321,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </tr>
                             <tr>
                               <td colspan="4" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
-                              <td colspan="2" style="text-align: ;"><p>Taxes</p></td>
+                              <td colspan="2">Taxes</td>
                               <td colspan="1" style="text-align: right;"><p>$<?= number_format($estimate->tax2_total, 2); ?></p></td>
                             </tr>
                             <tr>
@@ -348,10 +355,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </tr>                            
                             <tr>
                               <td colspan="4" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
-                              <td colspan="2" style="text-align: ;"><p>Taxes</p></td>
+                              <td colspan="2">Taxes</td>
                               <td colspan="1" style="text-align: right;">
                                 <p>$<?= number_format((float)$estimate->tax1_total, 2); ?></p></td>
-                            </tr>  
+                            </tr> 
+                            <?php if( $estimate->no_tax == 1 ){ ?>
+                              <tr>
+                                <td colspan="4" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
+                                <td colspan="2" style="text-align: ;">No Tax</td>
+                                <td colspan="1" style="text-align: right;"><span class="nsm-badge success" style="font-size:13px;">Yes</span></td>
+                              </tr>
+                            <?php } ?> 
                             <?php if( $estimate->adjustment_name != '' && $estimate->adjustment_value > 0 ){ ?>
                             <tr>
                               <td colspan="4" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
@@ -365,6 +379,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                               <td colspan="2" style="text-align: ;"><b>TOTAL AMOUNT</b></td>
                               <?php 
                                 $grand_total = $estimate->grand_total;
+                                if( $estimate->no_tax == 1 ){
+                                  $grand_total = $grand_total - $estimate->tax1_total;
+                                }
                                 // if( $deposit_amount > 0 ){
                                 //   $grand_total = $grand_total - $deposit_amount;
                                 // }

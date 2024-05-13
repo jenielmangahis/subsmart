@@ -941,6 +941,7 @@ $route['settings/_edit_sms_template'] = 'Settings/ajax_edit_sms_template';
 $route['settings/_add_tax_rate'] = 'Settings/ajax_add_tax_rate';
 $route['settings/_update_tax_rate'] = 'Settings/ajax_update_tax_rate';
 $route['settings/_delete_tax_rate'] = 'Settings/ajax_delete_tax_rate';
+$route['chatbot/settings'] = 'ChatbotSettings/settings';
 
 // leads
 $route['online_leads'] = 'Inquiries/online_lead';
@@ -1241,6 +1242,9 @@ $route['job/update_job_tag'] = 'Job/update_job_tag';
 // Forgot Password
 $route['login/_check_user_id_exists'] = 'Login/ajax_check_user_id_exists';
 $route['login/_update_user_password'] = 'Login/ajax_update_user_password';
+
+//Unauthorize access
+$route['login/unauthorize_access/(:any)'] = 'Login/unAuthorizeLogin/$1';
 
 // Customer Login
 $route['login/customer'] = 'Login/customer';

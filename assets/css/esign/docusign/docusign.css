@@ -294,4 +294,7 @@ select.docusignField__dropdown--isRequired {
   border:0px;
   /* text-align:left; */
 }
+.input-group-name, .input-group-name-second-signatory{
+  text-transform: capitalize !important;
+}
 /*# sourceMappingURL=docusign.css.map */

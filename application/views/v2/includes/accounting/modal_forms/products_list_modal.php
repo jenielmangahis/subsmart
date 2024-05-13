@@ -1,4 +1,10 @@
 <!-- Modal -->
+<style>
+    .disabled-button {
+        background-color: #ccc;
+        cursor: not-allowed;
+    }
+</style>
 <div class="modal fade nsm-modal" id="products_list" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -19,18 +25,18 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            <?php foreach($items as $item) : ?>
-                                <tr>
-                                    <td><?=$item->title?></td>
-                                    <td><?=$this->items_model->countQty($item->id)?></td>
-                                    <td><?=$item->price?></td>
-                                    <td>
-                                        <button data-id="<?=$item->id?>" type="button" data-bs-dismiss="modal" class="nsm-button select_item">
-                                            <i class="bx bx-fw bx-plus"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
+                                <?php foreach ($items as $item) : ?>
+                                    <tr>
+                                        <td><?= $item->title !== '' ? $item->title : 'No name provided' ?></td>
+                                        <td><?= $this->items_model->countQty($item->id) ?></td>
+                                        <td><?= $item->price ?></td>
+                                        <td>
+                                            <button data-id="<?= $item->id ?>" type="button" data-bs-dismiss="modal" class="nsm-button select_item <?= $item->title === '' ? 'disabled-button' : '' ?>" <?= $item->title === '' ? 'disabled' : '' ?>>
+                                                <i class="bx bx-fw bx-plus"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>

@@ -1181,78 +1181,176 @@ class Products_and_services extends MY_Controller
         echo $tableHtml;
     }
 
+    // public function export_table()
+    // {
+    //     $this->load->library('PHPXLSXWriter');
+    //     $post = $this->input->post();
+
+    //     $filters = [];
+    //     $filters['search'] = $post['search'];
+
+    //     if (in_array('0', $post['category'])) {
+    //         array_unshift($post['category'], '');
+    //         array_unshift($post['category'], null);
+    //     }
+
+    //     $filters['category'] = $post['category'];
+
+    //     switch ($post['status']) {
+    //         case 'active':
+    //             $filters['status'] = [1];
+    //             break;
+    //         case 'inactive':
+    //             $filters['status'] = [0];
+    //             break;
+    //         default:
+    //             $filters['status'] = [0, 1];
+    //             break;
+    //     }
+
+    //     switch ($post['type']) {
+    //         case 'inventory':
+    //             $filters['type'] = [
+    //                 'product',
+    //                 'Product',
+    //                 'inventory',
+    //                 'Inventory'
+    //             ];
+    //             break;
+    //         case 'non-inventory':
+    //             $filters['type'] = [
+    //                 'material',
+    //                 'Material',
+    //                 'non-inventory',
+    //                 'Non-inventory'
+    //             ];
+    //             break;
+    //         case 'service':
+    //             $filters['type'] = [
+    //                 'service',
+    //                 'Service'
+    //             ];
+    //             break;
+    //         case 'bundle':
+    //             $filters['type'] = [
+    //                 'bundle',
+    //                 'Bundle'
+    //             ];
+    //             break;
+    //     }
+
+    //     $filters['stock_status'] = $post['stock_status'];
+
+    //     $items = $this->get_items($filters);
+
+    //     // if($search !== "") {
+    //     //     $items = array_filter($items, function($item, $key) use ($search) {
+    //     //         return stripos($item->title, $search) !== false;
+    //     //     }, ARRAY_FILTER_USE_BOTH);
+    //     // }
+
+    //     $this->load->helper('string');
+
+    //     $randString = random_string('numeric');
+    //     $filename = 'ProductsServicesList__' . $randString . '_' . date('m') . '_' . date('d') . '_' . date('Y') . '.xlsx';
+
+    //     $header = [
+    //         "#",
+    //         "Product/Service Name",
+    //         "Sales Description",
+    //         "SKU",
+    //         "Type",
+    //         "Sales Price",
+    //         "Taxable",
+    //         "Income Account",
+    //         "Purchase Description",
+    //         "Purchase Cost",
+    //         "Expense Account",
+    //         "Quantity On Hand",
+    //         "Reorder Point",
+    //         "Inventory Asset Account",
+    //         "Quantity as-of Date"
+    //     ];
+
+    //     $writer = new XLSXWriter();
+    //     $writer->writeSheetRow('Sheet1', $header, ['font-style' => 'bold', 'border' => 'bottom']);
+
+    //     $qtyAsOfDate = date("m/d/Y");
+    //     $rowNumber = 1;
+    //     foreach ($items as $item) {
+    //         $qty = $this->items_model->countQty($item->id);
+    //         $accountingDetails = $this->items_model->getItemAccountingDetails($item->id);
+
+    //         $taxable = "no";
+
+    //         if ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== "" && $item['tax_rate_id'] !== null) {
+    //             $taxable = "yes";
+    //         }
+
+    //         $name = $item['name'];
+    //         $name .= $item['status'] === '0' ? ' (deleted)' : '';
+
+    //         if (!empty($item['name'])) {
+    //             $data = [
+    //                 $rowNumber++,
+    //                 $name,
+    //                 !empty($item['sales_desc']) ? $item['sales_desc'] : 'No Sales Description',
+    //                 !empty($item['sku']) ? $item['sku'] : 'No SKU Provided',
+    //                 !empty($item['type']) ? $item['type'] : 'No  Type Provided',
+    //                 !empty($item['sales_price']) ? $item['sales_price'] : '0',
+    //                 !empty($taxable) ? $taxable : 'No Tax Provided',
+    //                 !empty($item['income_account']) ? $item['income_account'] : 'No Income Account',
+    //                 !empty($item['purch_desc']) ? $item['purch_desc'] : 'No Purchase Description',
+    //                 !empty($item['cost']) ? $item['cost'] : '0',
+    //                 !empty($item['expense_account']) ? $item['expense_account'] : 'No Expense Account',
+    //                 !empty($item['qty_on_hand']) ? $item['qty_on_hand'] : '0',
+    //                 !empty($item['reorder_point']) ? $item['reorder_point'] : '0',
+    //                 !empty($item['inventory_account']) ? $item['inventory_account'] : 'No Inventory Account',
+    //                 !empty($qtyAsOfDate) ? $qtyAsOfDate : 'No Date Provided'
+    //             ];
+
+    //             $writer->writeSheetRow('Sheet1', $data);
+    //         }
+    //     }
+
+    //     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    //     header('Content-Disposition: attachment;filename="' . $filename . '"');
+    //     header('Cache-Control: max-age=0');
+    //     $writer->writeToStdOut();
+    // }
+
     public function export_table()
     {
-        $this->load->library('PHPXLSXWriter');
         $post = $this->input->post();
 
-        $filters = [];
-        $filters['search'] = $post['search'];
-
-        if (in_array('0', $post['category'])) {
-            array_unshift($post['category'], '');
-            array_unshift($post['category'], null);
-        }
-
-        $filters['category'] = $post['category'];
-
-        switch ($post['status']) {
-            case 'active':
-                $filters['status'] = [1];
-                break;
-            case 'inactive':
-                $filters['status'] = [0];
-                break;
-            default:
-                $filters['status'] = [0, 1];
-                break;
-        }
+        $filters = [
+            'search' => $post['search'],
+            'category' => $post['category'],
+            'status' => ($post['status'] === 'active') ? [1] : (($post['status'] === 'inactive') ? [0] : [0, 1]),
+            'stock_status' => $post['stock_status']
+        ];
 
         switch ($post['type']) {
             case 'inventory':
-                $filters['type'] = [
-                    'product',
-                    'Product',
-                    'inventory',
-                    'Inventory'
-                ];
+                $filters['type'] = ['product', 'Product', 'inventory', 'Inventory'];
                 break;
             case 'non-inventory':
-                $filters['type'] = [
-                    'material',
-                    'Material',
-                    'non-inventory',
-                    'Non-inventory'
-                ];
+                $filters['type'] = ['material', 'Material', 'non-inventory', 'Non-inventory'];
                 break;
             case 'service':
-                $filters['type'] = [
-                    'service',
-                    'Service'
-                ];
+                $filters['type'] = ['service', 'Service'];
                 break;
             case 'bundle':
-                $filters['type'] = [
-                    'bundle',
-                    'Bundle'
-                ];
+                $filters['type'] = ['bundle', 'Bundle'];
                 break;
         }
 
-        $filters['stock_status'] = $post['stock_status'];
-
         $items = $this->get_items($filters);
-
-        // if($search !== "") {
-        //     $items = array_filter($items, function($item, $key) use ($search) {
-        //         return stripos($item->title, $search) !== false;
-        //     }, ARRAY_FILTER_USE_BOTH);
-        // }
 
         $this->load->helper('string');
 
         $randString = random_string('numeric');
-        $filename = 'ProductsServicesList__' . $randString . '_' . date('m') . '_' . date('d') . '_' . date('Y') . '.xlsx';
+        $filename = 'ProductsServicesList__' . $randString . '_' . date('m') . '_' . date('d') . '_' . date('Y') . '.csv';
 
         $header = [
             "#",
@@ -1272,63 +1370,64 @@ class Products_and_services extends MY_Controller
             "Quantity as-of Date"
         ];
 
-        $writer = new XLSXWriter();
-        $writer->writeSheetRow('Sheet1', $header, ['font-style' => 'bold', 'border' => 'bottom']);
+        $csvData[] = $header;
 
         $qtyAsOfDate = date("m/d/Y");
         $rowNumber = 1;
         foreach ($items as $item) {
+            if ($item['status'] === '0') {
+                continue;
+            }
+
             $qty = $this->items_model->countQty($item->id);
             $accountingDetails = $this->items_model->getItemAccountingDetails($item->id);
 
-            $taxable = "no";
-
-            if ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== "" && $item['tax_rate_id'] !== null) {
-                $taxable = "yes";
-            }
+            $taxable = ($item['tax_rate_id'] !== "0" && $item['tax_rate_id'] !== "" && $item['tax_rate_id'] !== null) ? "yes" : "no";
 
             $name = $item['name'];
-            $name .= $item['status'] === '0' ? ' (deleted)' : '';
-
-            $salesDesc = !empty($item['sales_desc']) ? $item['sales_desc'] : "No Description";
-            $sku = !empty($item['sku']) ? $item['sku'] : "No SKU";
-            $type = !empty($item['type']) ? $item['type'] : "Unknown Type";
-            $salesPrice = !empty($item['sales_price']) ? $item['sales_price'] : 0;
-            $incomeAccount = !empty($item['income_account']) ? $item['income_account'] : "No Income Account";
-            $purchDesc = !empty($item['purch_desc']) ? $item['purch_desc'] : "No Description";
-            $cost = !empty($item['cost']) ? $item['cost'] : 0;
-            $expenseAccount = !empty($item['expense_account']) ? $item['expense_account'] : "No Expense Account";
-            $qtyOnHand = !empty($item['qty_on_hand']) ? $item['qty_on_hand'] : 0;
-            $reorderPoint = !empty($item['reorder_point']) ? $item['reorder_point'] : 0;
-            $inventoryAccount = !empty($item['inventory_account']) ? $item['inventory_account'] : "No Inventory Asset Account";
+            // $name .= $item['status'] === '0' ? ' (deleted)' : '';
 
             if (!empty($item['name'])) {
                 $data = [
                     $rowNumber++,
                     $name,
-                    $salesDesc,
-                    $sku, 
-                    $type, 
-                    $salesPrice, 
-                    $taxable, 
-                    $incomeAccount,
-                    $purchDesc, 
-                    $cost, 
-                    $expenseAccount, 
-                    $qtyOnHand, 
-                    $reorderPoint, 
-                    $inventoryAccount, 
-                    $qtyAsOfDate 
+                    !empty($item['sales_desc']) ? $item['sales_desc'] : 'No Sales Description',
+                    !empty($item['sku']) ? $item['sku'] : 'No SKU Provided',
+                    !empty($item['type']) ? $item['type'] : 'No  Type Provided',
+                    !empty($item['sales_price']) ? $item['sales_price'] : '0',
+                    !empty($taxable) ? $taxable : 'No Tax Provided',
+                    !empty($item['income_account']) ? $item['income_account'] : 'No Income Account',
+                    !empty($item['purch_desc']) ? $item['purch_desc'] : 'No Purchase Description',
+                    !empty($item['cost']) ? $item['cost'] : '0',
+                    !empty($item['expense_account']) ? $item['expense_account'] : 'No Expense Account',
+                    !empty($item['qty_on_hand']) ? $item['qty_on_hand'] : '0',
+                    !empty($item['reorder_point']) ? $item['reorder_point'] : '0',
+                    !empty($item['inventory_account']) ? $item['inventory_account'] : 'No Inventory Account',
+                    !empty($qtyAsOfDate) ? $qtyAsOfDate : 'No Date Provided'
                 ];
 
-                $writer->writeSheetRow('Sheet1', $data);
+                $csvData[] = $data;
             }
         }
 
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $filename . '"');
-        header('Cache-Control: max-age=0');
-        $writer->writeToStdOut();
+        $this->load->helper('download');
+        $this->array_to_csv($csvData, $filename);
+    }
+
+    public function array_to_csv($array, $filename = "export.csv", $delimiter = ",")
+    {
+        $f = fopen('php://memory', 'w');
+
+        foreach ($array as $line) {
+            fputcsv($f, $line, $delimiter);
+        }
+
+        fseek($f, 0);
+
+        header('Content-Type: application/csv');
+        header('Content-Disposition: attachment; filename="' . $filename . '";');
+
+        fpassthru($f);
     }
 
     public function reorder_items()
@@ -1474,11 +1573,22 @@ class Products_and_services extends MY_Controller
             $location = $this->items_model->getLocationById($loc['loc_id']);
             $locations[] = [
                 'name' => $location->location_name,
-                'qty' => $loc['qty']
+                'qty' => $loc['qty'],
             ];
         }
 
         echo json_encode($locations);
+    }
+
+    // See Location Quantity Update
+    public function update_item_locations($itemId)
+    {
+        $updatedQuantities = $_POST['quantities'];
+
+        $quantity = $updatedQuantities[0]['quantity'];
+        $this->items_model->updateItemQuantity($itemId, $quantity);
+
+        echo json_encode(['success' => true, $quantity]);
     }
 
     public function addJSONResponseHeader()
