@@ -136,25 +136,61 @@ class Chart_of_accounts_model extends MY_Model {
 		return $query->result();
 	}
 
-	public function getFilteredAccounts($status, $order = 'asc', $orderColumn = 'name')
+	public function getFilteredAccounts($status = null, $type = null, $order = 'asc', $orderColumn = 'name')
 	{
+		
 		$company_id = logged('company_id');
 		$this->db->where('accounting_chart_of_accounts.company_id', $company_id);
-		$this->db->where_in('accounting_chart_of_accounts.active', $status);
+		if($status != null) {
+			//$this->db->where_in('accounting_chart_of_accounts.active', $status);
+			if($status != 'all') {
+				$status = $status == 'active' ? 1 : 0;
+				$this->db->where('accounting_chart_of_accounts.active', $status);
+			}
+		}
+		
+		if($type != null) {
+			if($type != 'all') {
+				$this->db->where('accounting_chart_of_accounts.account_id', $type);
+			}
+		}
 
 		if($orderColumn !== 'nsmartrac_balance') {
 			$this->db->where('accounting_chart_of_accounts.parent_acc_id', null);
 		}
 
 		$this->db->or_where('accounting_chart_of_accounts.company_id', $company_id);
-		$this->db->where_in('accounting_chart_of_accounts.active', $status);
+		if($status != null) {
+			//$this->db->where_in('accounting_chart_of_accounts.active', $status);
+			if($status != 'all') {
+				$status = $status == 'active' ? 1 : 0;
+				$this->db->where('accounting_chart_of_accounts.active', $status);
+			}
+		}
+		
+		if($type != null) {
+			if($type != 'all') {
+				$this->db->where('accounting_chart_of_accounts.account_id', $type);
+			}
+		}
 
 		if($orderColumn !== 'nsmartrac_balance') {
 			$this->db->where('accounting_chart_of_accounts.parent_acc_id', 0);
 		}
 
 		$this->db->or_where('accounting_chart_of_accounts.company_id', $company_id);
-		$this->db->where_in('accounting_chart_of_accounts.active', $status);
+		if($status != null) {
+			//$this->db->where_in('accounting_chart_of_accounts.active', $status);
+			if($status != 'all') {
+				$status = $status == 'active' ? 1 : 0;
+				$this->db->where('accounting_chart_of_accounts.active', $status);
+			}
+		}
+		if($type != null) {
+			if($type != 'all') {
+				$this->db->where('accounting_chart_of_accounts.account_id', $type);
+			}
+		}
 
 		if($orderColumn !== 'nsmartrac_balance') {
 			$this->db->where('accounting_chart_of_accounts.parent_acc_id', '');
