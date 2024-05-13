@@ -240,21 +240,21 @@ add_css(array(
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (count([]) > 0) : ?>
-                            <?php foreach ([] as $rule) : ?>
+                        <?php if (count($rules) > 0) : ?>
+                            <?php foreach ($rules as $rule) : ?>
                                 <tr>
                                     <td>
                                         <div class="table-row-icon table-checkbox">
                                             <input class="form-check-input select-one table-select" type="checkbox">
                                         </div>
                                     </td>
+                                    <td><?php echo $rule->priority == 1 ? 'Yes': 'No'; ?></td>
+                                    <td><?php echo $rule->rules_name ?></td>
+                                    <td><?php echo $rule->apply_type ?></td>
                                     <td></td>
                                     <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td><?php echo $rule->auto == 1 ? 'Yes' : 'No'; ?></td>
+                                    <td><?php echo $rule->is_active == 1 ? 'Active' : 'Inactive'; ?></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
