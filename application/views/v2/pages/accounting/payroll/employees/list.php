@@ -119,7 +119,24 @@
                             <td><?=$employee['pay_method']?></td>
                             <td><?=$employee['status']?></td>
                             <td><?=$employee['email_address']?></td>
-                            <td><?=$employee['phone_number']?></td>
+                            <td>
+                                <?php 
+                                    if(!empty($employee['phone_number'])) {
+                                        if($employee['phone_number'] != "") {
+                                            if (ctype_space($employee['phone_number'])) {
+                                                echo 'Not Specified'; 
+                                            } else {
+                                                echo formatPhoneNumber($employee['phone_number']);
+                                            }
+                                        } else {
+                                            echo 'Not Specified'; 
+                                        }
+                                    } else {
+                                        echo 'Not Specified'; 
+                                    }
+                                ?>
+                                <?php //echo $employee['phone_number']; ?>
+                            </td>
                         </tr>
                         <?php endforeach; ?>
 						<?php else : ?>

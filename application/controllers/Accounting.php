@@ -498,6 +498,8 @@ class Accounting extends MY_Controller
         );
         $this->page_data['accounts'] = $this->general_model->get_data_with_param($get_company_account, false);
 
+        $this->page_data['rules'] = $rules = $this->rules_model->getRules();
+
         $get_company_banking_payment = array(
             'table' => 'banking_payments',
             'where' => array('company_id' => $comp_id,),
