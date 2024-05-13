@@ -267,31 +267,34 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item" href="<?php echo base_url('accounting/genview/' . $invoice->id) ?>">View</a>
+                                            <a class="dropdown-item" href="<?php echo base_url('invoice/genview/' . $invoice->id) ?>">View Invoice</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="<?php echo base_url('accounting/invoice_edit/' . $invoice->id) ?>">Edit</a>
+                                            <a class="dropdown-item" href="<?php echo base_url('invoice/send/' . $invoice->id) ?>">Send Invoice</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Duplicate</a>
+                                            <a class="dropdown-item" href="<?php echo base_url('invoice/invoice_edit/' . $invoice->id) ?>">Edit</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Send</a>
+                                            <a class="dropdown-item recordPaymentBtn" href="javascript:void(0);" data-id="<?php echo $invoice->id ?>">Record Payment</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Share invoice link</a>
+                                            <a class="dropdown-item" href="<?php echo base_url('workorder/invoice_workorder/' . $invoice->id) ?>">Convert to Workorder</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Print</a>
+                                            <a class="dropdown-item clone-item" href="javascript:void(0);" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>" data-bs-toggle="modal">Clone Invoice</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Print packing slip</a>
+                                            <a class="dropdown-item" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=pdf') ?>" target="_blank">Invoice PDF</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Void</a>
+                                            <a class="dropdown-item" href="<?php echo base_url('invoice/preview/'. $invoice->id . '?format=print') ?>" target="_blank">Print Invoice</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="#">Delete</a>
+                                            <a class="dropdown-item" href="<?= base_url('job/invoice_job/'. $invoice->id); ?>">Convert to Job</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-invoice-number="<?php echo $invoice->invoice_number ?>" data-id="<?php echo $invoice->id ?>">Delete</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -326,6 +329,98 @@ $(function(){
         } else {
             $(".invoice-delete").addClass("disabled");
         }           
+    });
+
+    $(document).on("click", ".delete-item", function(){
+        let id = $(this).attr('data-id');
+
+        Swal.fire({
+            title: 'Delete Invoice',
+            text: "Are you sure you want to delete this Invoice?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: "<?php echo base_url(); ?>invoice/deleteInvoiceBtnNew",
+                    data: {
+                        id: id
+                    },
+                    success: function(result) {
+                        Swal.fire({
+                            title: 'Good job!',
+                            text: "Data Deleted Successfully!",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        });
+                    },
+                });
+            }
+        });
+    });
+
+    $(document).on('click touchstart', '.clone-item', function(){
+        var invoice_id = $(this).attr('data-id');
+        var invoice_number = $(this).attr('data-invoice-number');
+
+        Swal.fire({
+            html: "You are going create a new invoice based on invoice number <b>"+ invoice_number +"</b>.<br/><br /><small style='font-size:13px;'>The new invoice will contain the same items (e.g. materials, labour).Cloned invoice will have status as <b>draft</b>. You will be able to edit and remove the invoice items as you need.</small><br /><br />Do you wish to proceed with selected action?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "invoice/_clone_invoice",
+                    data: {
+                        invoice_id: invoice_id
+                    },
+                    dataType:'json',
+                    beforeSend: function(data) {
+                        
+                    },
+                    success: function(result) {
+                        if( result.is_success == 1 ){
+                            var edit_invoice_url = base_url + 'invoice/invoice_edit/' + result.invoice_id;                        
+                            Swal.fire({
+                                html: 'Invoice was Invoice was successfully cloned.',
+                                icon: 'success',
+                                showCancelButton: false,
+                                showDenyButton: true,
+                                confirmButtonText: 'Okay',
+                                denyButtonText: `Edit Invoice`,
+                                denyButtonColor: '#7367f0'
+                            }).then((result) => {
+                                if (result.isDenied) {
+                                    location.href = edit_invoice_url;
+                                }else{
+                                    location.reload();
+                                }                            
+                            });
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: result.msg
+                            });
+                        }
+                    },
+                    complete : function(){
+                        
+                    },
+                });
+            }
+        });
     });
 
     $(".select-one").click(function(){
