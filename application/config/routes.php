@@ -1243,6 +1243,9 @@ $route['job/update_job_tag'] = 'Job/update_job_tag';
 $route['login/_check_user_id_exists'] = 'Login/ajax_check_user_id_exists';
 $route['login/_update_user_password'] = 'Login/ajax_update_user_password';
 
+//Unauthorize access
+$route['login/unauthorize_access/(:any)'] = 'Login/unAuthorizeLogin/$1';
+
 // Customer Login
 $route['login/customer'] = 'Login/customer';
 

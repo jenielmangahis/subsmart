@@ -961,7 +961,7 @@ fetch('<?php echo base_url('Dashboard/sales_graph'); ?>', {}).then(response => r
     console.log(error);
 })
 
-fetch('<?php echo base_url('Dashboard/get_all_customer'); ?>', {}).then(response => response.json()).then(
+fetch('<?php echo base_url('Dashboard/get_all_customer_group'); ?>', {}).then(response => response.json()).then(
     response => {
 
 
@@ -970,43 +970,59 @@ fetch('<?php echo base_url('Dashboard/get_all_customer'); ?>', {}).then(response
             customer
         } = response;
 
+        let labelsTemp =[];
+        let dataTemp =[];
+        let totalCustomer = 0;
 
+       if(customer){
+        for(var x =0 ; x <customer.length ; x++){
+            labelsTemp.push(customer[x].title)
+            dataTemp.push(customer[x].total_customer)
+            totalCustomer += parseInt(customer[x].total_customer)
+        }
+       }
 
         var customer_graph_data = {
-            labels: ['Total Customer'],
+            labels: labelsTemp,
             datasets: [{
-                label: 'Total Customer',
-                data: [customer],
-                backgroundColor: 'rgb(107, 167, 124, 0.93)',
-                borderColor: 'rgb(107, 167, 124,0.93)',
-                cutout: '80%',
-                circumference: 300,
-                rotation: 210
+                label: 'Total Customer Groups',
+                data: dataTemp,
+                backgroundColor: [
+                'rgb(106 74 134)',
+                'rgb(64 136 84)',
+                'rgb(220 53 69)',
+                'rgb(206, 128, 255)'
+              ],
             }]
         };
         $('#NewCustomerGraphLoader').hide()
 
 
         const NewCustomerWidgetsGraph = new Chart($('#NewCustomerWidgetsGraph'), {
-            type: 'doughnut',
+            type: 'pie',
             data: customer_graph_data,
             options: {
                 responsive: true,
                 plugins: {
                     legend: {
-                        position: 'bottom',
+                        position: 'right',
+                        labels: {
+                            boxWidth: 10,
+                        }
                     },
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        suggestedMax: 10
-                    },
+                layout: {
+                    padding: {
+                        left: 5,
+                        right: 5,
+                        top: 0, 
+                    }
                 },
                 aspectRatio: 1.2,
             },
         });
-        $(".recent-customer-container-count").html(customer);
+        $(".recent-customer-container-count").html(totalCustomer);
+        $("#total_customer_graph").html(totalCustomer);
 
 
         window.NewCustomerWidgetsGraph = NewCustomerWidgetsGraph;
@@ -1017,85 +1033,73 @@ fetch('<?php echo base_url('Dashboard/get_all_customer'); ?>', {}).then(response
 
 fetch('<?php echo base_url('Dashboard/leads_graph'); ?>', {}).then(response => response.json()).then(
     response => {
-        var monthlyAmounts = new Array(12).fill(0);
 
         var {
             success,
-            total_leads
+            leads
         } = response;
 
+        let labelsTemp =[];
+        let dataTemp =[];
+        let totalLeads = 0;
 
 
+        if(leads){
+        for(var x =0 ; x <leads.length ; x++){
+            labelsTemp.push(leads[x].lead_name)
+            dataTemp.push(leads[x].total_leads)
+            totalLeads += parseInt(leads[x].total_leads)
+        }
+       }
 
-        var new_leads_data = {
-            labels: ['Total leads'],
+
+       var new_leads_data = {
+            labels: labelsTemp,
             datasets: [{
-                label: 'Weekly Sales',
-                data: [total_leads],
-                backgroundColor: 'rgb(199, 149, 28, 0.4)',
-                borderColor: 'rgb(199, 149, 28,0.75)',
-                borderWidth: 1,
-                cutout: '80%',
-                circumference: 300,
-                rotation: 210
+                label: 'Total leads',
+                data: dataTemp,
+                backgroundColor: [
+                'rgb(106 74 134)',
+                'rgb(199 149 28)',
+                'rgb(64 136 84)',
+                'rgb(220 53 69)',
+                'rgb(206, 128, 255)'
+              ],
             }]
         };
+
         $('#NewLeadsGraphLoader').hide()
 
-        const gaugeChartText2 = {
-            id: 'gaugeChartText2',
-            afterDatasetDraw(chart, args, pluginOptions) {
-                const {
-                    ctx,
-                    data,
-                    chartArea: {
-                        top,
-                        bottom,
-                        left,
-                        right,
-                        width,
-                        height
-                    },
-                    scales: {
-                        r
-                    }
-                } = chart;
-
-                ctx.save();
-                console.log(r);
-                const xCoor = chart.getDatasetMeta(0).data[0].x;
-                const yCoor = chart.getDatasetMeta(0).data[0].y;
-
-
-                ctx.font = '16px sans-serif';
-                ctx.fillStyle = "rgb(40, 40, 43)";
-                ctx.textBaseLine = 'top';
-                ctx.textAlign = 'center';
-                ctx.fillText('Total', left + 95 + 20, yCoor - 5);
-                ctx.textAlign = 'center';
-                ctx.font = '18px sans-serif';
-                ctx.textAlign = 'left';
-                ctx.fillText(total_leads, left + 95 + 20, yCoor + 25);
-
-            }
-        }
 
         const NewLeadsWidgetsGraph = new Chart($('#NewLeadsWidgetsGraph'), {
             type: 'doughnut',
             data: new_leads_data,
             options: {
-                aspectRatio: 1.5,
+                responsive: true,
                 plugins: {
                     legend: {
-                        display: false
+                        position: 'right',
+                        labels: {
+                            boxWidth: 10,
+                        }
                     },
-                    tooltip: {
-                        enabled: false
+                },
+                layout: {
+                    padding: {
+                        left: 5,
+                        right: 5,
+                        top: 0, 
                     }
-                }
+                },
+                aspectRatio: 1.2,
             },
-            plugins: [gaugeChartText2],
         });
+
+        $(".total_leads_graph_total").html(totalLeads);
+        $("#total_leads_graph").html(totalLeads);
+
+        
+        
 
         window.NewLeadsWidgetsGraph = NewLeadsWidgetsGraph;
     }).catch((error) => {

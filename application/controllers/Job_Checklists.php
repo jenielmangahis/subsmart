@@ -75,9 +75,14 @@ class Job_Checklists extends MY_Controller
 
         if( $checklist ){
             $checklistItems = $this->JobChecklistItem_model->getAllByJobChecklistId($checklist->id);
+
+
             $this->page_data['checklist'] = $checklist;
             $this->page_data['checklistAttachType'] = $checklistAttachType;
             $this->page_data['checklistItems'] = $checklistItems;
+            $this->page_data['title '] = 'Checklist';
+                $this->page_data['page']->title = 'Edit Job Checklist';
+                $this->page_data['page']->menu = 'job_checklists';
             $this->load->view('v2/pages/job_checklists/edit_checklist', $this->page_data);
 
         }else{

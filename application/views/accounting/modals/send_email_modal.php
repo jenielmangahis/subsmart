@@ -6,7 +6,7 @@
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
                     <h4 class="modal-title">Send email</h4>
-                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                    <!-- <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button> -->
                 </div>
                 <div class="modal-body">
                     <div class="row" style="min-height: 100%">
@@ -27,12 +27,12 @@
                                                 <div class="form-group">
                                                     <label for="email-body">Body</label>
                                                     <textarea id="email-body" name="body" class="form-control" style="height: 20%">
-Dear <?=$vendorName?>,
+                                                    Dear <?=$vendorName?>,
 
-Please find our purchase order attached to this email.
+                                                    Please find our purchase order attached to this email.
 
-Thank You
-<?=$company->business_name?></textarea>
+                                                    Thank You
+                                                    <?=$company->business_name?></textarea>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -49,7 +49,7 @@ Thank You
                 <div class="modal-footer">
                     <div class="row w-100">
                         <div class="col-md-4">
-                            <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal" onclick="closeModal()">Cancel</button>
                         </div>
                         <div class="col-md-4 d-flex"></div>
                         <div class="col-md-4">
@@ -76,3 +76,8 @@ Thank You
     </div>
     <!--end of modal-->
 </div>
+<script>
+    function closeModal() {
+        $('#sendEmailModal').modal('hide'); 
+    }
+</script>

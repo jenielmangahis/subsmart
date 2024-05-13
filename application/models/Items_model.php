@@ -92,9 +92,9 @@ class Items_model extends MY_Model
         $companyId = logged('company_id');
         $this->db->where('company_id', $companyId);
 
-        if ( $keyword != '' ) {
+        if ($keyword != '') {
             $this->db->like('item_categories.name', $keyword, 'both');
-        }        
+        }
 
         $this->db->where('parent_id', null);
         $this->db->or_where('parent_id', 0);
@@ -104,7 +104,7 @@ class Items_model extends MY_Model
 
         $query = $this->db->get($this->table_categories);
         return $query->result();
-    }  
+    }
 
     public function get_child_categories($categoryId)
     {
@@ -420,6 +420,13 @@ class Items_model extends MY_Model
         }
         $query = $this->db->get();
         return $query->result_array();
+    }
+
+    public function updateItemQuantity($itemId, $quantity)
+    {
+        $this->db->set('qty', $quantity)
+            ->where('item_id', $itemId)
+            ->update('items_has_storage_loc');
     }
 
     public function getLocationByCompanyId()

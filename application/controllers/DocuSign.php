@@ -36,6 +36,18 @@ class DocuSign extends MYF_Controller
         $this->db->where('docfile_id', $documentId);
         $recipient = $this->db->get('user_docfile_recipients')->row();
 
+        $this->db->where('docfile_id', $documentId);
+        $this->db->order_by('id', 'ASC');
+        $firstRecipient = $this->db->get('user_docfile_recipients')->row();
+
+        $secondRecipient = [];
+        if( $firstRecipient ){
+            $this->db->where('id !=', $firstRecipient->id);
+            $this->db->where('docfile_id', $documentId);
+            $this->db->order_by('id', 'ASC');
+            $secondRecipient = $this->db->get('user_docfile_recipients')->row();
+        }
+
         $this->db->where('id', $documentId);
         $document = $this->db->get('user_docfile')->row();
 
@@ -70,7 +82,7 @@ class DocuSign extends MYF_Controller
             }
 
             if( $f->field_name == 'City' ){
-                $f->specs = '{"is_required":true,"is_read_only":false,"value":"test","placeholder":"City","auto_populate_with":"","width":191}';
+                $f->specs = '{"is_required":true,"is_read_only":false,"value":"","placeholder":"City","auto_populate_with":"","width":191}';
             }
 
             if( $f->field_name == 'State' ){
@@ -452,6 +464,21 @@ class DocuSign extends MYF_Controller
         }
         
         $autoPopulateData['acs_alarm'] = $filteredAcs_alarm;
+
+        //Autopopulate second recipient
+        if( $secondRecipient ){
+            $second_recipient = [
+                'second_recipient_name' => $secondRecipient->name,
+                'second_recipient_email'=> $secondRecipient->email
+            ];
+        }else{
+            $second_recipient = [
+                'second_recipient_name' => '', 
+                'second_recipient_email' => ''
+            ];
+        }
+
+        $autoPopulateData['second_recipient'] = $second_recipient;
 
         #acs solar
         $this->db->where('fk_prof_id', $customer_id);
@@ -1966,6 +1993,10 @@ SQL;
             $name = str_replace(" ", "_", $name);
             $specs = '{"is_required":true, "name":"'.$name.'"}';
         }*/
+
+        // if( $payload['specs']['name'] == 'one_time_activation' ){
+        //     $field = 'one_time_activation';
+        // }
         
         $widget_type = 'default-widget';
         $widget_autopopulate_field_name = $field;

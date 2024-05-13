@@ -342,7 +342,12 @@ label.bold {
     align-items: center;
     justify-content: space-between;
 }
-
+.select2-container--default .select2-results__option .select2-results__option {
+    padding-left:0px !important;
+}
+.select2-results__group{
+    margin-left: 0px !important;
+}
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow">
@@ -523,9 +528,18 @@ label.bold {
                                         <option value="Lost">Lost</option>
                                     </select>
                                 </div>
+
+                                <!-- <div class="col-md-6 mt-4">
+                                    <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="reminder_14d" value="1" id="reminder14d">
+                                    <label class="form-check-label" for="reminder14d">
+                                        <b>Remind me in 14 days</b>
+                                    </label>
+                                    </div>
+                                </div> -->
                             </div>
 
-                            <div class="row mb-3" style="background-color:white;font-size:16px;">
+                            <div class="row mb-3 mt-5" style="background-color:white;font-size:16px;">
                                 <input type="hidden" id="data_item_selected_id">
 
                                 <div class="col-md-3">
@@ -618,6 +632,17 @@ label.bold {
                                             <!-- <td></td> -->
                                             <td colspan="2" align="right">$<span id="total_tax_">0.00</span><input
                                                     type="hidden" name="taxes" id="total_tax_input"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" name="no_tax" type="checkbox" value="1" id="no-tax">
+                                                    <label class="form-check-label" for="noTax" style="font-size:15px;">
+                                                        No Tax
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td colspan="2"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1072,7 +1097,6 @@ var base_url = "<?php echo base_url(); ?>";
 //     })
 //   })
 $(document).ready(function() {
-
     $('#customer_id').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_customer_lead',
@@ -1531,11 +1555,43 @@ $(function() {
 
     $('#grand_total_input').change(function() {
         computeDepositAmount();
+        no_tax();
     });
 
+    $('#no-tax').on('change', function(){
+        computeDepositAmount();
+        no_tax();
+    });
+
+    function no_tax(){
+        if($('#no-tax').is(':checked')) {
+            var grand_total = $('#grand_total_input').val();
+            var total_tax   = $('#total_tax_input').val();
+            var new_grand_total = parseFloat(grand_total) - parseFloat(total_tax);
+        }else{            
+            var grand_total = $('#grand_total_input').val();
+            var new_grand_total = parseFloat(grand_total);
+        }
+
+        if( isNaN(new_grand_total) ){
+            new_grand_total = 0;
+        }
+
+        $('#grand_total').text(new_grand_total.toFixed(2));
+    }
+
     function computeDepositAmount() {
+        if($('#no-tax').is(':checked')) {
+            var grand_total = $('#grand_total_input').val();
+            var total_tax   = $('#total_tax_input').val();
+            var new_grand_total = parseFloat(grand_total) - parseFloat(total_tax);
+        }else{            
+            var grand_total = $('#grand_total_input').val();
+            var new_grand_total = parseFloat(grand_total);
+        }
+
         var deposit_amount = $('#deposit-percentage').val() / 100;
-        var total_amount = $('#grand_total_input').val();
+        var total_amount   = new_grand_total;
 
         if (total_amount > 0) {
             total_amount = total_amount * deposit_amount;

@@ -101,6 +101,8 @@ function Signing(hash) {
 
     const {  job_account_number, job_number, job_name, job_type } = window.__esigndata.auto_populate_data.jobs;
 
+    const {  second_recipient_name, second_recipient_email } = window.__esigndata.auto_populate_data.second_recipient;
+
     
     let text = recipient[field_name.toLowerCase()];
     let { pageTop: top, left } = JSON.parse(coordinates);
@@ -216,6 +218,18 @@ function Signing(hash) {
         }
       }else{
         return county_name;
+      }     
+    }
+
+    if( field_name == "Name Second Signatory" ) {
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return second_recipient_name;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return second_recipient_name;
       }     
     }
 
@@ -546,13 +560,41 @@ function Signing(hash) {
     if( field_name == "Equipment Cost" ){
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
-          return inv_equipment_cost > 0 ? inv_equipment_cost : 0;
+          if( inv_equipment_cost > 0 ){
+            return inv_equipment_cost;
+          }else{
+            if( jp_equipment_cost > 0 ){
+              return jp_equipment_cost;
+            }else{
+              return 0;
+            }
+          }          
         }else{
           return fieldValue['value'];
         }
       }else{
-        return inv_equipment_cost > 0 ? inv_equipment_cost : 0;
+        if( inv_equipment_cost > 0 ){
+          return inv_equipment_cost;
+        }else{
+          if( jp_equipment_cost > 0 ){
+            return jp_equipment_cost;
+          }else{
+            return 0;
+          }
+        }
       }
+    }
+
+    if( field_name === "one_time_activation" ) {
+      if( inv_program_setup > 0 ){
+        return inv_program_setup;
+      }else{
+        if( jp_program_setup > 0 ){
+          return jp_program_setup;
+        }else{
+          return '0.00';
+        }
+      }   
     }
 
     if( field_name == "One Time Activation (OTP)" ){
@@ -570,25 +612,56 @@ function Signing(hash) {
     if( field_name == "Monthly Monitoring Rate" ){
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
-          return inv_monthly_monitoring > 0 ? inv_monthly_monitoring : 0;
+          if( inv_monthly_monitoring > 0 ){
+            return inv_monthly_monitoring;
+          }else{
+            if( jp_monthly_monitoring > 0 ){
+              return jp_monthly_monitoring;
+            }else{
+              return 0;
+            }
+          }
         }else{
           return fieldValue['value'];
         }
       }else{
-        return inv_monthly_monitoring > 0 ? inv_monthly_monitoring : 0;
-      }      
-      
+        if( inv_monthly_monitoring > 0 ){
+          return inv_monthly_monitoring;
+        }else{
+          if( jp_monthly_monitoring > 0 ){
+            return jp_monthly_monitoring;
+          }else{
+            return 0;
+          }
+        }
+      }  
     }
 
     if( field_name == "Installation Cost" ){
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
-          return inv_installation_cost > 0 ? inv_installation_cost : 0;
+          if( inv_installation_cost > 0 ){
+            return inv_installation_cost;
+          }else{
+            if( jp_intallation_cost > 0 ){
+              return jp_intallation_cost;
+            }else{
+              return 0;
+            }
+          }          
         }else{
           return fieldValue['value'];
         }
       }else{
-        return inv_installation_cost > 0 ? inv_installation_cost : 0;
+        if( inv_installation_cost > 0 ){
+          return inv_installation_cost;
+        }else{
+          if( jp_intallation_cost > 0 ){
+            return jp_intallation_cost;
+          }else{
+            return 0;
+          }
+        }
       }      
       
     }
@@ -712,19 +785,51 @@ function Signing(hash) {
 
       //Invoice
       if( widget_autopopulate_field_name == 'Invoice Equipment Cost' ){
-        return inv_equipment_cost > 0 ? inv_equipment_cost : '0.00';
+        if( inv_equipment_cost > 0 ){
+          return inv_equipment_cost;
+        }else{
+          if( jp_equipment_cost > 0 ){
+            return jp_equipment_cost;
+          }else{
+            return '0.00';
+          }
+        }  
       }
 
       if( widget_autopopulate_field_name == 'Invoice Monthly Monitoring Rate' ){
-        return inv_monthly_monitoring > 0 ? inv_monthly_monitoring : '0.00';
+        if( inv_monthly_monitoring > 0 ){
+          return inv_monthly_monitoring;
+        }else{
+          if( jp_monthly_monitoring > 0 ){
+            return jp_monthly_monitoring;
+          }else{
+            return '0.00';
+          }
+        }
       }
 
       if( widget_autopopulate_field_name == 'Invoice One Time Activation' ){
-        return inv_program_setup > 0 ? inv_program_setup : '0.00';   
+        if( inv_program_setup > 0 ){
+          return inv_program_setup;
+        }else{
+          if( jp_program_setup > 0 ){
+            return jp_program_setup;
+          }else{
+            return '0.00';
+          }
+        }
       }
 
       if( widget_autopopulate_field_name == 'Invoice Installation Cost' ){
-        return inv_installation_cost > 0 ? inv_installation_cost : '0.00';  
+        if( inv_installation_cost > 0 ){
+          return inv_installation_cost;
+        }else{
+          if( jp_intallation_cost > 0 ){
+            return jp_intallation_cost;
+          }else{
+            return '0.00';
+          }
+        }
       }
 
       if( widget_autopopulate_field_name == 'Invoice Total Due' ){
@@ -813,9 +918,15 @@ function Signing(hash) {
       }
 
       if( specs_field_name.name === "equipment_cost" ) {
-        //return jp_tax_equipment_cost;
-        //return equipment_cost;
-        return inv_equipment_cost > 0 ? inv_equipment_cost : '0.00';
+        if( inv_equipment_cost > 0 ){
+          return inv_equipment_cost;
+        }else{
+          if( jp_equipment_cost > 0 ){
+            return jp_equipment_cost;
+          }else{
+            return '0.00';
+          }
+        }
       }
 
       if( specs_field_name.name === "date_not_later_a" ) {
@@ -831,13 +942,27 @@ function Signing(hash) {
       }
 
       if( specs_field_name.name === "installation_cost" ) {
-        return inv_installation_cost > 0 ? inv_installation_cost : '0.00';
+        if( inv_installation_cost > 0 ){
+          return inv_installation_cost;
+        }else{
+          if( jp_intallation_cost > 0 ){
+            return jp_intallation_cost;
+          }else{
+            return '0.00';
+          }
+        }
       }
 
       if( specs_field_name.name === "one_time_activation" ) {
-        //return otps;
-        //return jp_program_setup;
-        return inv_program_setup > 0 ? inv_program_setup : '0.00';        
+        if( inv_program_setup > 0 ){
+          return inv_program_setup;
+        }else{
+          if( jp_program_setup > 0 ){
+            return jp_program_setup;
+          }else{
+            return '0.00';
+          }
+        }   
       }
 
       if( specs_field_name.name === "total_due" ) {
@@ -845,9 +970,15 @@ function Signing(hash) {
       }
 
       if( specs_field_name.name === "first_month_monitoring" ) {
-        //return monthly_monitoring;
-        //return jp_monthly_monitoring
-        return inv_monthly_monitoring > 0 ? inv_monthly_monitoring : '0.00';
+        if( inv_monthly_monitoring > 0 ){
+          return inv_monthly_monitoring;
+        }else{
+          if( jp_monthly_monitoring > 0 ){
+            return jp_monthly_monitoring;
+          }else{
+            return '0.00';
+          }
+        }
       }
 
       if( specs_field_name.name === "card_security_code" ) {
@@ -997,11 +1128,13 @@ function Signing(hash) {
         $signatureModal.attr("data-field-id", fieldId);
         const fid = 0;
 
-        if( window.__ismobile ){
-          alert('Sign in mobile:'+fid+':'+fieldId+':'+recipient.id+':'+recipient.docfile_id);
-        }else{
-          $signatureModal.modal("show");
-        }           
+        $signatureModal.modal("show");
+
+        // if( window.__ismobile ){
+        //   alert('Sign in mobile:'+fid+':'+fieldId+':'+recipient.id+':'+recipient.docfile_id);
+        // }else{
+        //   $signatureModal.modal("show");
+        // }           
       });
       return $element;
     }
@@ -1915,12 +2048,20 @@ function Signing(hash) {
     const $groupInput   = $('.input-group');
     
     $groupInput.on('change', function(){
-      let class_name  = $(this).attr('data-name');
-      if( class_name != 'input-group-text' && class_name != 'input-group-autopopulatetext' ){
+      let data_name  = $(this).attr('data-name');
+      if( data_name != 'input-group-text' && data_name != 'input-group-autopopulatetext' ){
         let input_value = $(this).val();
         //console.log('not same');
-        $('.'+class_name).val(input_value);
-      }      
+        $('.'+data_name).val(input_value);
+
+        //Check other fields
+        $('.input-group-text').each(function(i, obj) {
+          let obj_data_name = $(obj).data('name');
+          if( obj_data_name == data_name ){
+            obj.value = input_value;
+          }
+        });
+      }
     });
 
     $fontItems.on("click", (event) => {
