@@ -358,6 +358,11 @@ $(document).ready(function() {
         cluster: 'ap1'
     });
 
+    var channelUnAuthorizeLogin = pusher.subscribe('nsmarttrac-unauthorize-login');
+    channelUnAuthorizeLogin.bind('force-logout-user', function(data) {
+        location.href = base_url + '/logout';
+    });
+
     var channel = pusher.subscribe('nsmarttrac');
     channel.bind('my-event', function(data) {
 
