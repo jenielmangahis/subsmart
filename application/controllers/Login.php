@@ -160,6 +160,51 @@ class Login extends CI_Controller
                     $this->session->set_userdata('userAccessModules', $access_modules);
                     $this->session->set_userdata('is_plan_active', $client->is_plan_active);
                     $this->session->set_userdata('client_industry', $client->industry_type_id);
+
+                    //Capture ip and geolocation
+                    $this->load->model('UserAllowedIP_model');
+                    $user_location = getUserPublicIP();
+                    if( $user_location['ip'] != '' ){
+                        if( $user->last_login_ip_address != '' ){
+                            $allowedIp = $this->UserAllowedIP_model->getByUserIdAndIPAddress($user->id, $user_location['ip']);
+                            if( !$allowedIp ){
+                                //Record location
+                                $ip_location = [
+                                    'user_id' => $user->id,
+                                    'ip_address' => $user_location['ip'],
+                                    'longitude' => $user_location['lon'],
+                                    'latitude' => $user_location['lat'],
+                                    'country' => $user_location['country'],
+                                    'location' => $user_location['location'],
+                                    'is_allowed' => 1,
+                                    'date_created' => date("Y-m-d h:i:s")
+                                ];
+
+                                $this->UserAllowedIP_model->create($ip_location);
+
+                                //Send email notification
+                                $body = $this->generateUnrecognizeLoginEmailHtml($user, $user_location);
+                                $mail = email__getInstance();
+                                $mail->FromName = 'nSmarTrac';
+                                $recipient_name = $user->FName . ' ' . $user->LName;
+                                $mail->addAddress($user->email, $recipient_name);
+                                $mail->isHTML(true);
+                                $mail->Subject = "nSmartrac: Unrecognize Login";
+                                $mail->Body = $body;
+                                $mail->Send();
+                            }else{
+                                if( $allowedIp->is_allowed == 0 ){
+                                    //redirect to logout 
+                                    redirect('/logout');
+                                }
+                            }
+                        }
+
+                        //Log last login ip
+                        $update_user = ['last_login_ip_address' => $user_location['ip']];
+                        $this->users_model->update($user->id, $update_user);
+                    }
+
                 }
             }
         } elseif ($attempt == 'invalid_password') {
@@ -190,29 +235,6 @@ class Login extends CI_Controller
             $this->index();
             return;
         }
-
-        /*$ipaddress = $this->timesheet_model->gtMyIpGlobal();
-
-        $get_location = json_decode(file_get_contents('http://ip-api.com/json/'.$ipaddress));
-        $lat = $get_location->lat;
-        $lng = $get_location->lon;
-
-        $utimezone = $get_location->timezone;
-
-        date_default_timezone_set($utimezone);
-
-        $this->users_model->update($user->id, [
-            'user_time_zone'	=>	$utimezone,
-            'time_zone_update'	=>	date('Y-m-d H:m:i'),
-        ]);*/
-
-        // $this->load->model('Activity_model', 'activity');
-        // $activity['activityName'] = "User Login";
-        // $activity['activity'] = " User " . logged('username') . " is loggedin";
-        // $activity['createdAt']   = date("Y-m-d H:i:s");
-        // $activity['user_id'] = logged('id');
-
-        // $isUserInserted = $this->activity->addEsignActivity($activity);
 
         if ($is_startup == 1) {
             redirect('onboarding/business_info');
@@ -553,6 +575,61 @@ class Login extends CI_Controller
 
             $this->customer();
             return;
+        }
+    }
+
+    public function generateUnrecognizeLoginEmailHtml($user, $ip_data)
+    {
+        $encrypted_user_id = hashids_encrypt($user->id, '', 15);
+
+        $this->page_data['user'] = $user;
+        $this->page_data['encrypted_user_id'] = $encrypted_user_id;
+        $this->page_data['ip_data'] = $ip_data;
+        return $this->load->view('v2/pages/users/email_unrecognize_login', $this->page_data, true);
+    }
+
+    public function unAuthorizeLogin($eid)
+    {
+        $this->load->helper(array('hashids_helper'));
+        $this->load->model('Users_model');
+        $this->load->model('UserAllowedIP_model');
+        
+        $user_id   = hashids_decrypt($eid, '', 15);
+        $public_ip = $this->input->get('ip');
+        $user      = $this->Users_model->getUser(81);
+        if( $user ){
+            //Change to random password then redirect to reset password
+            $random_pw = generateRandomString(6);
+            $data = [
+                'password_plain' => $random_pw,
+                'password' => hash("sha256", $random_pw)
+            ];
+            $this->Users_model->update($user->id, $data);
+
+            //Update allowed ips
+            $userAllowedIp = $this->UserAllowedIP_model->getByUserIdAndIPAddress($user_id, $public_ip);
+            if( $userAllowedIp ){
+                $data_ip = ['is_allowed' => 0];
+                $this->UserAllowedIP_model->update($userAllowedIp->id, $data_ip);
+            }
+
+            $options = array(
+                'cluster' => 'ap1',
+                'useTLS' => true
+            );
+
+            $data = ['user_id' => $user->id];
+            $pusher = new Pusher\Pusher(
+                'f3c73bc6ff54c5404cc8',
+                '20b5e1eb05dc73068e61',
+                '1168724',
+                $options
+            );
+            $pusher->trigger('nsmarttrac-unauthorize-login', 'force-logout-user', $data);
+
+            redirect('login/forget');
+        }else{
+            redirect('/');
         }
     }
 }
