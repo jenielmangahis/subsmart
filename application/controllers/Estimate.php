@@ -472,7 +472,7 @@ class Estimate extends MY_Controller
         add_css([
             'assets/plugins/font-awesome/css/font-awesome.min.css',
         ]);
-
+        
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('estimate/v2/add', $this->page_data);
         // print_r($this->page_data['customers']);
@@ -749,6 +749,16 @@ class Estimate extends MY_Controller
         $company_id = getLoggedCompanyID();
         $user_id = getLoggedUserID();
 
+        $next_remind_date = '';
+        if( $this->input->post('reminder_14d') ){
+            $next_remind_date = date("Y-m-d", strtotime("+14 days"));
+        } 
+
+        $no_tax = 0;
+        if( $this->input->post('no_tax') ){
+            $no_tax = 1;
+        } 
+
         $new_data = [
             'customer_id' => $this->input->post('customer_id'),
             'job_location' => $this->input->post('job_location'),
@@ -784,7 +794,7 @@ class Estimate extends MY_Controller
             // 'created_by' => logged('id'),
 
             // 'sub_total' => $this->input->post('sub_total'),
-            'deposit_request' => '$',
+            'deposit_request' => 2, // 1 = amount / 2 = percentage
             'deposit_amount' => $this->input->post('adjustment_input'),
             'bundle1_total' => $this->input->post('grand_total'),
             'bundle2_total' => $this->input->post('grand_total2'),
@@ -801,7 +811,8 @@ class Estimate extends MY_Controller
 
             'markup_type' => '$',
             'markup_amount' => $this->input->post('markup_input_form'),
-
+            'no_tax' => $no_tax,
+            'next_remind_date' => $next_remind_date,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ];
@@ -980,6 +991,16 @@ class Estimate extends MY_Controller
         $company_id = getLoggedCompanyID();
         $user_id = getLoggedUserID();
 
+        $no_tax = 0;
+        if( $this->input->post('no_tax') ){
+            $no_tax = 1;
+        } 
+
+        $next_remind_date = '';
+        if( $this->input->post('reminder_14d') ){
+            $next_remind_date = date("Y-m-d", strtotime("+14 days"));
+        }  
+
         $new_data = [
             'customer_id' => $this->input->post('customer_id'),
             'job_location' => $this->input->post('job_location'),
@@ -994,12 +1015,12 @@ class Estimate extends MY_Controller
             'type' => $this->input->post('estimate_type'),
             'attachments' => 'testing',
             // 'status' => $this->input->post('status'),
-            'deposit_request' => $this->input->post('deposit_request'),
+            'deposit_request' => 2, // 1 = amount / 2 = percentage
             'deposit_amount' => $this->input->post('deposit_amount'),
             'customer_message' => $this->input->post('customer_message'),
             'terms_conditions' => $this->input->post('terms_conditions'),
             'instructions' => $this->input->post('instructions'),
-
+            'no_tax' => $no_tax,
             'option_message' => $this->input->post('option1_message'),
             'option2_message' => $this->input->post('option2_message'),
             'option1_total' => $this->input->post('grand_total'),
@@ -1017,7 +1038,7 @@ class Estimate extends MY_Controller
 
             'user_id' => $user_id,
             'company_id' => $company_id,
-
+            'next_remind_date' => $next_remind_date,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ];
