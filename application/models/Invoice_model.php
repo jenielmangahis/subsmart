@@ -138,6 +138,16 @@ class Invoice_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllInvoices()
+    {
+        $this->db->select('*');        
+        $this->db->from($this->table);
+        $this->db->order_by('invoices.id', 'ASC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getAllNotVoidedByCompanyId($cid, $search = array())
     {
         $this->db->select('invoices.*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');        
@@ -287,6 +297,22 @@ class Invoice_model extends MY_Model
         $this->db->where('company_id', $cid);
         $this->db->where('view_flag', 0);
         $this->db->where('status', 'Paid');
+
+        if( !empty($date_range) ){
+            $this->db->where('date_issued >=', $date_range['from']);
+            $this->db->where('date_issued <=', $date_range['to']);
+        }
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getCompanyTotalAmountInvoices($cid, $date_range = array())
+    {
+        $this->db->select('id, COALESCE(SUM(grand_total),0) AS total_amount');    
+        $this->db->from($this->table);   
+        $this->db->where('company_id', $cid);
+        $this->db->where('view_flag', 0);
 
         if( !empty($date_range) ){
             $this->db->where('date_issued >=', $date_range['from']);

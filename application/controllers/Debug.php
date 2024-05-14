@@ -2653,23 +2653,55 @@ class Debug extends MYF_Controller {
         $this->load->model('AcsProfile_model');
         
         $total_updated = 0;
-        $acsBilling = $this->AcsProfile_model->getAllBilling();
+
+        $conditions[] = ['field' => 'is_updated', 'value' => 0];
+        $acsBilling = $this->AcsProfile_model->getAllBilling($conditions, 800);
         foreach($acsBilling as $bill){
-            $bill_start_date = '';
-            if( $bill->bill_start_date != '' ){
+            $bill_start_date = '1970-01-01';
+            if( $bill->bill_start_date != '0000-00-00' ){
                 $bill_start_date = date("Y-m-d", strtotime($bill->bill_start_date));
             }
 
-            $bill_end_date = '';
-            if( $bill->bill_end_date != '' ){
+            $bill_end_date = '1970-01-01';
+            if( $bill->bill_end_date != '0000-00-00' ){
                 $bill_end_date = date("Y-m-d", strtotime($bill->bill_end_date));
             }
 
             $data = [
                 'bill_start_date' => $bill_start_date,
-                'bill_end_date' => $bill_end_date
+                'bill_end_date' => $bill_end_date,
+                'is_updated' => 1
             ];
             $this->AcsProfile_model->updateBillingByBillId($bill->bill_id, $data);
+
+            $total_updated++;
+        }
+
+        echo 'Total Updated :' . $total_updated;
+    }
+
+    public function fixInvoicesData()
+    {
+        $this->load->model('Invoice_model');
+        
+        $total_updated = 0;
+        $invoices = $this->Invoice_model->getAllInvoices();
+        foreach($invoices as $invoice){
+            $due_date = '1970-01-01';
+            if( $invoice->due_date != '' ){
+                $due_date = date("Y-m-d", strtotime($invoice->due_date));
+            }
+
+            $date_issued = '1970-01-01';
+            if( $invoice->date_issued != '' ){
+                $date_issued = date("Y-m-d", strtotime($invoice->date_issued));
+            }
+
+            $data = [
+                'due_date' => $due_date,
+                'date_issued' => $date_issued
+            ];
+            $this->Invoice_model->update($invoice->id, $data);
 
             $total_updated++;
         }

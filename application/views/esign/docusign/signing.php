@@ -247,7 +247,12 @@
     <script src="<?= base_url('assets/js/esign/docusign/input.autoresize.js'); ?>"></script>
 
     <script src="<?= base_url('assets/js/esign/docusign/o9n.js'); ?>"></script>
-    <script src="<?= base_url('assets/js/esign/docusign/signing.js'); ?>"></script>
+    <?php if( $load_mobile_signing_js == 1 ){ ?>
+        <script src="<?= base_url('assets/js/esign/docusign/mobile-signing.js'); ?>"></script>
+    <?php }else{ ?>
+        <script src="<?= base_url('assets/js/esign/docusign/signing.js'); ?>"></script>
+    <?php } ?>
+    
 
     <script type="text/javascript" src=" https://cdnjs.cloudflare.com/ajax/libs/FitText.js/1.2.0/jquery.fittext.min.js"></script>
     <script>
