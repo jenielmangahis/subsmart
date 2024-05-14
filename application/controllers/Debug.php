@@ -2655,7 +2655,7 @@ class Debug extends MYF_Controller {
         $total_updated = 0;
 
         $conditions[] = ['field' => 'is_updated', 'value' => 0];
-        $acsBilling = $this->AcsProfile_model->getAllBilling($conditions, 50);
+        $acsBilling = $this->AcsProfile_model->getAllBilling($conditions, 200);
         foreach($acsBilling as $bill){
             $bill_start_date = '';
             if( $bill->bill_start_date != '' ){
