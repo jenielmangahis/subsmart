@@ -1075,11 +1075,21 @@ $('.update-quantity').on('click', function (e) {
         method: 'POST',
         data: { quantities: updatedQuantities },
         success: function (response) {
-            location.reload();
-            console.log('Quantities updated successfully!');
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Quantities updated successfully!'
+            }).then(function () {
+                location.reload();
+                $('#items-table').load(location.href + ' #items-table');
+            });
         },
         error: function (xhr, status, error) {
-            console.error('Error updating quantities:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error updating quantities: ' + error
+            });
         }
     });
 });
@@ -1094,6 +1104,7 @@ $('#item-locations-modal').on('hidden.bs.modal', function () {
     </tr>`);
 });
 
+// Search
 const $overlay = document.getElementById('overlay');
 $("#import-items-modal #file-upload").change(function () {
     const formData = new FormData();
@@ -1174,8 +1185,6 @@ $(document).on('click', "#import-items-modal .step03", function () {
 
 
 $(document).on('click', "#import-items-modal #importItem", function (e) {
-    // prepare form data to be posted
-
     var selectedHeader = [];
     $('#import-items-modal select[name="headers[]"]').each(function () {
         selectedHeader.push(this.value);
@@ -1187,7 +1196,6 @@ $(document).on('click', "#import-items-modal #importItem", function (e) {
     formData.append('csvHeaders', JSON.stringify(csvHeaders));
 
     if ($overlay) $overlay.style.display = "flex";
-    // perform post request
     fetch(base_url + 'accounting/products-and-services/import-items-data', {
         method: 'POST',
         body: formData,
@@ -1199,7 +1207,6 @@ $(document).on('click', "#import-items-modal #importItem", function (e) {
         } else {
             sweetAlert('Sorry!', 'error', message);
         }
-
         console.log(response);
     }).catch((error) => {
         console.log('Error:', error);
@@ -1224,32 +1231,60 @@ function sweetAlert(title, icon, information, is_reload) {
     });
 }
 
+// For testing
 function test() {
     var selectedHeader = [];
-    var head = [];
     $('#import-items-modal select[name="headers[]"]').each(function () {
         selectedHeader.push(this.value);
     });
+
+    $('#tableHeader').empty();
+    selectedHeader.forEach(function (headerValue) {
+        if (headerValue !== "") {
+            var headerName = $('#headersSelector' + selectedHeader.indexOf(headerValue)).find('option[value="' + headerValue + '"]').text();
+            $('#tableHeader').append('<th>' + headerName + '</th>');
+        }
+    });
+
     var ar = selectedHeader.length;
     for (var x = 0; x < ar; x++) {
-        head.push(x);
-    }
-
-    var arHead = head.length;
-
-    for (var x = 0; x < ar; x++) {
         if (selectedHeader[x] != "") {
-            document.getElementById('headersSelector' + x).value = selectedHeader[x];
-            var text = "headersSelector" + x + "";
-            for (var i = 0; i < arHead; i++) {
-                var text1 = "headersSelector" + i + "";
-                if (text != text1) {
-                    $("#headersSelector" + i + " option[value='" + selectedHeader[x] + "'").remove();
+            $('#headersSelector' + x).val(selectedHeader[x]);
+            for (var i = 0; i < ar; i++) {
+                if (i != x) {
+                    $("#headersSelector" + i + " option[value='" + selectedHeader[x] + "']").remove();
                 }
             }
         }
     }
 }
+
+// function test() {
+//     var selectedHeader = [];
+//     var head = [];
+//     $('#import-items-modal select[name="headers[]"]').each(function () {
+//         selectedHeader.push(this.value);
+//     });
+//     var ar = selectedHeader.length;
+//     for (var x = 0; x < ar; x++) {
+//         head.push(x);
+//     }
+
+//     var arHead = head.length;
+
+//     for (var x = 0; x < ar; x++) {
+//         if (selectedHeader[x] != "") {
+//             document.getElementById('headersSelector' + x).value = selectedHeader[x];
+//             var text = "headersSelector" + x + "";
+//             for (var i = 0; i < arHead; i++) {
+//                 var text1 = "headersSelector" + i + "";
+//                 if (text != text1) {
+//                     $("#headersSelector" + i + " option[value='" + selectedHeader[x] + "'").remove();
+//                 }
+//             }
+//         }
+//     }
+// }
 
 function changeType(type) {
     var form = $('#item-modal form');

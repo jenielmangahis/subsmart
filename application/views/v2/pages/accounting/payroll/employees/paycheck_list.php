@@ -23,10 +23,10 @@
                                     <div class="col grid-mb">
                                         <label for="filter-employee">Employee</label>
                                         <select class="nsm-field form-select" name="filter_employee" id="filter-employee">
-                                            <?php if(isset($employee)) : ?>
-                                            <option value="<?=$employee->id?>" selected><?=$employee->name?></option>
+                                            <?php if (isset($employee)) : ?>
+                                                <option value="<?= $employee->id ?>" selected><?= $employee->name ?></option>
                                             <?php else : ?>
-                                            <option value="all" selected>All</option>
+                                                <option value="all" selected>All</option>
                                             <?php endif; ?>
                                         </select>
                                     </div>
@@ -35,30 +35,30 @@
                                     <div class="col-12 col-md-4 grid-mb">
                                         <label for="filter-date-range">Date range</label>
                                         <select class="nsm-field form-select" name="filter_date_range" id="filter-date-range" data-applied="last-pay-date">
-                                            <option value="last-pay-date" <?=empty($filter_date) || $filter_date === 'last-pay-date' ? 'selected' : ''?>>Last pay date</option>
-                                            <option value="this-month" <?=$filter_date === 'this-month' ? 'selected' : ''?>>This month</option>
-                                            <option value="this-quarter" <?=$filter_date === 'this-quarter' ? 'selected' : ''?>>This quarter</option>
-                                            <option value="this-year" <?=$filter_date === 'this-year' ? 'selected' : ''?>>This year</option>
-                                            <option value="last-month" <?=$filter_date === 'last-month' ? 'selected' : ''?>>Last month</option>
-                                            <option value="last-quarter" <?=$filter_date === 'last-quarter' ? 'selected' : ''?>>Last quarter</option>
-                                            <option value="last-year" <?=$filter_date === 'last-year' ? 'selected' : ''?>>Last year</option>
-                                            <option value="first-quarter" <?=$filter_date === 'first-quarter' ? 'selected' : ''?>>First quarter</option>
-                                            <option value="second-quarter" <?=$filter_date === 'second-quarter' ? 'selected' : ''?>>Second quarter</option>
-                                            <option value="third-quarter" <?=$filter_date === 'third-quarter' ? 'selected' : ''?>>Third quarter</option>
-                                            <option value="fourth-quarter" <?=$filter_date === 'fourth-quarter' ? 'selected' : ''?>>Fourth quarter</option>
-                                            <option value="custom" <?=$filter_date === 'custom' ? 'selected' : ''?>>Custom</option>
+                                            <option value="last-pay-date" <?= empty($filter_date) || $filter_date === 'last-pay-date' ? 'selected' : '' ?>>Last pay date</option>
+                                            <option value="this-month" <?= $filter_date === 'this-month' ? 'selected' : '' ?>>This month</option>
+                                            <option value="this-quarter" <?= $filter_date === 'this-quarter' ? 'selected' : '' ?>>This quarter</option>
+                                            <option value="this-year" <?= $filter_date === 'this-year' ? 'selected' : '' ?>>This year</option>
+                                            <option value="last-month" <?= $filter_date === 'last-month' ? 'selected' : '' ?>>Last month</option>
+                                            <option value="last-quarter" <?= $filter_date === 'last-quarter' ? 'selected' : '' ?>>Last quarter</option>
+                                            <option value="last-year" <?= $filter_date === 'last-year' ? 'selected' : '' ?>>Last year</option>
+                                            <option value="first-quarter" <?= $filter_date === 'first-quarter' ? 'selected' : '' ?>>First quarter</option>
+                                            <option value="second-quarter" <?= $filter_date === 'second-quarter' ? 'selected' : '' ?>>Second quarter</option>
+                                            <option value="third-quarter" <?= $filter_date === 'third-quarter' ? 'selected' : '' ?>>Third quarter</option>
+                                            <option value="fourth-quarter" <?= $filter_date === 'fourth-quarter' ? 'selected' : '' ?>>Fourth quarter</option>
+                                            <option value="custom" <?= $filter_date === 'custom' ? 'selected' : '' ?>>Custom</option>
                                         </select>
                                     </div>
                                     <div class="col-12 col-md-4 grid-mb">
                                         <label for="filter-from-date">From</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control date" id="date-range-start" value="<?=$start_date?>">
+                                            <input type="text" class="nsm-field form-control date" id="date-range-start" value="<?= $start_date ?>">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-4 grid-mb">
                                         <label for="filter-to-date">To</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control date" id="date-range-end" value="<?=$end_date?>">
+                                            <input type="text" class="nsm-field form-control date" id="date-range-end" value="<?= $end_date ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -107,53 +107,53 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if(count($paychecks) > 0) : ?>
-						<?php foreach($paychecks as $paycheck) : ?>
-                        <tr>
-                            <td>
-                                <div class="table-row-icon table-checkbox">
-                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$paycheck['id']?>">
-                                </div>
-                            </td>
-                            <td><?=$paycheck['pay_date']?></td>
-                            <td><?=$paycheck['name']?></td>
-                            <td><?=str_replace('$-', '-$', '$'.$paycheck['total_pay'])?></td>
-                            <td><?=str_replace('$-', '-$', '$'.$paycheck['net_pay'])?></td>
-                            <td><?=$paycheck['pay_method']?></td>
-                            <td><?=!in_array($paycheck['check_number'], ['-', 'Void']) ? '<input type="text" name="check_number[]" class="form-control nsm-field" value="'.$paycheck['check_number'].'">' : $paycheck['check_number'] ?></td>
-                            <td><?=$paycheck['status']?></td>
-                            <td>
-                                <div class="dropdown float-end">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
-                                            <a class="dropdown-item print-paycheck" href="#">Print</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item delete-paycheck" href="#">Delete</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item void-paycheck" href="#">Void</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item edit-paycheck" href="#">Edit</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-						<?php else : ?>
-						<tr>
-							<td colspan="14">
-								<div class="nsm-empty">
-									<span>No results found.</span>
-								</div>
-							</td>
-						</tr>
-						<?php endif; ?>
+                        <?php if (count($paychecks) > 0) : ?>
+                            <?php foreach ($paychecks as $paycheck) : ?>
+                                <tr>
+                                    <td>
+                                        <div class="table-row-icon table-checkbox">
+                                            <input class="form-check-input select-one table-select" type="checkbox" value="<?= $paycheck['id'] ?>">
+                                        </div>
+                                    </td>
+                                    <td><?= isset($paycheck['pay_date']) ? $paycheck['pay_date'] : 'No pay date' ?></td>
+                                    <td><?= isset($paycheck['name']) ? $paycheck['name'] : 'No name provided' ?></td>
+                                    <td><?= isset($paycheck['total_pay']) ? str_replace('$-', '-$', '$' . $paycheck['total_pay']) : '0' ?></td>
+                                    <td><?= isset($paycheck['net_pay']) ? str_replace('$-', '-$', '$' . $paycheck['net_pay']) : '0' ?></td>
+                                    <td><?= isset($paycheck['pay_method']) ? $paycheck['pay_method'] : 'No payment method' ?></td>
+                                    <td><?= !in_array($paycheck['check_number'], ['-', 'Void']) ? '<input type="text" name="check_number[]" class="form-control nsm-field" value="' . $paycheck['check_number'] . '">' : $paycheck['check_number'] ?></td>
+                                    <td><?= $paycheck['status'] ?></td>
+                                    <td>
+                                        <div class="dropdown float-end">
+                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item print-paycheck" href="#">Print</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item delete-paycheck" href="#">Delete</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item void-paycheck" href="#">Void</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item edit-paycheck" href="#">Edit</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else : ?>
+                            <tr>
+                                <td colspan="14">
+                                    <div class="nsm-empty">
+                                        <span>No results found.</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -162,3 +162,11 @@
 </div>
 
 <?php include viewPath('v2/includes/footer'); ?>
+
+<script>
+    $(document).ready(function() {
+        $("#paycheck-table").nsmPagination({
+            itemsPerPage: 10,
+        });
+    });
+</script>

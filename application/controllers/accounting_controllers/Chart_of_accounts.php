@@ -155,15 +155,10 @@ class Chart_of_accounts extends MY_Controller {
         $this->page_data['attachments'] = $this->expenses_model->getAttachment();
         $this->page_data['items'] = $this->items_model->getItemlist();
 
-        $status = [
-            0, 1
-        ];
+        $status = get('status');            
+        $type   = get('type');
 
-        if(get('status') === 'all') {
-            array_push($status, 0);
-        }
-
-        $accounts = $this->chart_of_accounts_model->getFilteredAccounts($status);
+        $accounts = $this->chart_of_accounts_model->getFilteredAccounts($status, $type);
 
         $data = [];
         foreach($accounts as $index => $account) {
@@ -225,6 +220,9 @@ class Chart_of_accounts extends MY_Controller {
         }
         if(!empty(get('status'))) {
             $this->page_data['status'] = get('status');
+        }
+        if(!empty(get('type'))) {
+            $this->page_data['type'] = get('type');
         }
 
         $this->page_data['accounts'] = $data;

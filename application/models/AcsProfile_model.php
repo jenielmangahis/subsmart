@@ -634,6 +634,23 @@ class AcsProfile_model extends MY_Model
         return $cust;
     }
 
+    public function getAllBilling()
+    {
+        $this->db->select('*');
+        $this->db->from($this->table2);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    public function updateBillingByBillId($bill_id, $data)
+    {
+        $this->db->from($this->table2);
+        $this->db->set($data);
+        $this->db->where('bill_id', $bill_id);
+        $this->db->update();
+    }
+
     public function getCompanyTotalSubscriptions($cid, $date_range = [])
     {
         $this->db->select('acs_billing.bill_id, COALESCE(SUM(acs_billing.mmr),0) AS total_subscription');

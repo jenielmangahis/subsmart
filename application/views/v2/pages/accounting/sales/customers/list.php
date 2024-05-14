@@ -596,6 +596,8 @@
             // "order": [[0, 'desc'] ],
         });
 
+        $('#print-customer-list').nsmPagination({itemsPerPage: 9});
+
         $(document).on('keyup', '#search_field', function () {
             customers_table.search($(this).val()).draw();
         });

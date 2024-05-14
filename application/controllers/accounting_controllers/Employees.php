@@ -209,11 +209,13 @@ class Employees extends MY_Controller {
                     $payMethod = 'Missing';
                 }
 
-                $payRate = 'Missing';
+                $payRate = '$0.00/hour'; //'Missing';
                 $payscale = $this->users_model->get_payscale_by_id($employee->payscale_id);
 
                 if($payscale->pay_type === 'Hourly') {
                     $payRate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_hourly)), 2, '.', ',')).'/hour';
+    
+                    $totalPay = floatval(str_replace(',', '', $employee->base_hourly)) * $totalHrs;
                 }
 
                 if($payscale->pay_type === 'Daily') {
@@ -222,10 +224,23 @@ class Employees extends MY_Controller {
 
                 if($payscale->pay_type === 'Weekly') {
                     $payRate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_weekly)), 2, '.', ',')).'/week';
+    
+                    $weeklyPay = floatval(str_replace(',', '', $employee->base_weekly));
+                    $hoursPerWeek = 40.00;
+                    $perHourPay = $weeklyPay / $hoursPerWeek;
+    
+                    $totalPay = $perHourPay * $totalHrs;
                 }
 
                 if($payscale->pay_type === 'Monthly') {
                     $payRate = str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_monthly)), 2, '.', ',')).'/month';
+    
+                    $monthlyPay = floatval(str_replace(',', '', $employee->base_monthly));
+                    $hoursPerWeek = 40.00;
+                    $hoursPerMonth = $hoursPerWeek * 4;
+                    $perHourPay = $monthlyPay / $hoursPerMonth;
+    
+                    $totalPay = $perHourPay * $totalHrs;
                 }
 
                 if($payscale->pay_type === 'Yearly') {
@@ -308,6 +323,14 @@ class Employees extends MY_Controller {
         $empPayDetails = $this->users_model->getEmployeePayDetails($employee->id);
         if($empPayDetails) {
             $employee->payment_method = $empPayDetails->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check';
+
+            if($empPayDetails->pay_type === 'hourly') {
+                $employee->pay_rate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/hour';
+            } else if($empPayDetails->pay_type === 'salary') {
+                $employee->pay_rate = '$'.number_format(floatval($empPayDetails->pay_rate), 2, '.', ',').'/'.str_replace('per-', '', $empPayDetails->salary_frequency);
+            } else {
+                $employee->pay_rate = 'Commission only';
+            }
         } else {
             $employee->payment_method = 'Missing';
         }
@@ -596,7 +619,7 @@ class Employees extends MY_Controller {
             'base_monthly' => $payscale->pay_type === 'Monthly' ? $this->input->post('salary_rate') : '',
             'base_salary' => $payscale->pay_type === 'Daily' ? $this->input->post('salary_rate') : '',
             'base_yearly' => $payscale->pay_type === 'Yearly' ? $this->input->post('salary_rate') : '',
-            'employee_number' => $this->input->post('emp_number'),
+            'employee_number' => $this->input->post('employee_number'),
             'date_hired' => date('Y-m-d', strtotime($this->input->post('hire_date'))),
             'phone' => $this->input->post('phone'),
             'mobile' => $this->input->post('mobile'),
@@ -663,31 +686,7 @@ class Employees extends MY_Controller {
 
     public function update($type, $id)
     {
-		$employee = $this->users_model->getUserByID($id);
-
         if($type === 'personal-info') {
-            if(isset($_FILES['userfile']) && $_FILES['userfile']['size'] > 0){
-                $config = array(
-                    'upload_path' => './uploads/users/user-profile/',
-                    'allowed_types' => '*',
-                    'overwrite' => TRUE,
-                    'max_size' => '20000',
-                    'max_height' => '0',
-                    'max_width' => '0',
-                    'encrypt_name' => true
-                );
-                $config = $this->uploadlib->initialize($config);
-                $this->load->library('upload',$config);					
-                if ($this->upload->do_upload("userfile")){
-                    $uploadData = $this->upload->data();
-                    $profile_image = $uploadData['file_name'];
-                }else{
-                    $profile_image = $employee->profile_img;
-                }
-            }else{
-                $profile_image = $employee->profile_img;
-            }
-
             $data = [
                 'FName' => $this->input->post('first_name'),
                 'LName' => $this->input->post('last_name'),
@@ -695,7 +694,7 @@ class Employees extends MY_Controller {
                 'email' => $this->input->post('email'),
                 'role' => $this->input->post('role'),
                 'status' => $this->input->post('status'),
-                'profile_img' => $profile_image,
+                'profile_img' => $this->input->post('profile_photo'),
                 'address' => $this->input->post('address'),
                 'state' => $this->input->post('state'),
                 'city' => $this->input->post('city'),
@@ -706,11 +705,6 @@ class Employees extends MY_Controller {
             ];
         } else {
             switch($type) {
-                case 'status' :
-                    $data = [
-                        'status' => $this->input->post('status')
-                    ];
-                break;
                 case 'payment-method' :
                     $payDetails = [
                         'pay_method' => $this->input->post('payment_method')
@@ -2369,53 +2363,8 @@ class Employees extends MY_Controller {
         ]);
     }
 
-    public function remove_profile_photo($employeeId)
+    public function edit_paycheck($paycheckId)
     {
-        $data = [
-            'profile_img' => null,
-        ];
-
-        $update = $this->users_model->update($employeeId,$data);
         
-        echo json_encode([
-            'success' => $update ? true : false,
-            'message' => $update ? 'Successfully Removed!' : 'Failed to remove profile photo.'
-        ]);
-    }
-
-    public function update_profile_photo($employeeId)
-    {
-        if(isset($_FILES['userfile']) && $_FILES['userfile']['size'] > 0){
-            $config = array(
-                'upload_path' => './uploads/users/user-profile/',
-                'allowed_types' => '*',
-                'overwrite' => TRUE,
-                'max_size' => '20000',
-                'max_height' => '0',
-                'max_width' => '0',
-                'encrypt_name' => true
-            );
-            $config = $this->uploadlib->initialize($config);
-            $this->load->library('upload',$config);					
-            if ($this->upload->do_upload("userfile")){
-                $uploadData = $this->upload->data();
-                $profile_image = $uploadData['file_name'];
-            }else{
-                $profile_image = $employee->profile_img;
-            }
-        }else{
-            $profile_image = $employee->profile_img;
-        }
-
-        $data = [
-            'profile_img' => $profile_image,
-        ];
-
-        $update = $this->users_model->update($employeeId,$data);
-        
-        echo json_encode([
-            'success' => $update ? true : false,
-            'message' => $update ? 'Successfully uploaded!' : 'Failed to upload profile photo.'
-        ]);
     }
 }

@@ -171,7 +171,7 @@ $(function () {
         payroll.paySchedForm = $('div#payrollModal div.modal-body').html();
         var paySchedName = $('#payrollModal [name="pay_schedule"]:checked').next().find('.pay_sched_name').html();
         if (payroll.paySchedule !== "" && payroll.paySchedule !== undefined) {
-            $.get('/accounting/get-payroll-form/' + payroll.paySchedule, function (res) {
+            $.get(base_url + 'accounting/get-payroll-form/' + payroll.paySchedule, function (res) {
                 $('div#payrollModal .modal-body').html(res);
 
                 $('div#payrollModal .modal-header .modal-title').html('Run Payroll: ' + paySchedName);
@@ -285,7 +285,7 @@ $(function () {
                 });
 
                 $.ajax({
-                    url: '/accounting/generate-payroll',
+                    url: base_url + 'accounting/generate-payroll',
                     data: payrollFormData,
                     type: 'post',
                     processData: false,
@@ -2561,7 +2561,7 @@ $(function () {
                     });
                     break;
                 case 'employee':
-                    $.get('/accounting/get-employee-details/' + split[1], function (res) {
+                    $.get(base_url + 'accounting/get-employee-details/' + split[1], function (res) {
                         var employee = JSON.parse(res);
 
                         var employeeName = '';
@@ -2869,7 +2869,7 @@ $(function () {
             unlinkTransaction();
 
             if (split[0] === 'vendor') {
-                $.get('/accounting/get-linkable-transactions/expense/' + split[1], function (res) {
+                $.get(base_url + 'accounting/get-linkable-transactions/expense/' + split[1], function (res) {
                     var transactions = JSON.parse(res);
 
                     if (transactions.length > 0) {
@@ -2948,7 +2948,7 @@ $(function () {
             unlinkTransaction();
 
             if (split[0] === 'vendor') {
-                $.get('/accounting/get-linkable-transactions/check/' + split[1], function (res) {
+                $.get(base_url + 'accounting/get-linkable-transactions/check/' + split[1], function (res) {
                     var transactions = JSON.parse(res);
 
                     if (transactions.length > 0) {

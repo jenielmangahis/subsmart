@@ -351,9 +351,11 @@ function test(){
 }
 
 $('#apply-filter-coa-button').on('click', function() {
-    var filterType = $('.filter-coa-type').val();            
-    var url = `${base_url}accounting/chart-of-accounts?`;
+    var filterType = $('.filter-coa-type').val();
+    var filterStatus = $('.filter-coa-status').val();            
+    var url        = `${base_url}accounting/chart-of-accounts?`;
     url += filterType !== 0 ? `type=${filterType}&` : '';
+    url += filterStatus !== 0 ? `status=${filterStatus}&` : '';
     if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
         url = url.slice(0, -1); 
     }

@@ -58,7 +58,7 @@
         width: 100%;
         bottom: 0;
         font-size: 14px;
-    }
+    }  
 
     #import-accounts-modal #progress-bar-container li.active,
     #import-accounts-modal #progress-bar-container li:hover {
@@ -231,7 +231,7 @@
         align-items: center;
         justify-content: center;
         margin: auto;
-    }
+    } 
 </style>
 
 <div class="row page-content g-0">
@@ -270,8 +270,32 @@
                                 <div class="col">
                                     <label for="filter-type">Type</label>
                                     <select class="nsm-field form-select filter-coa-type" name="filter_type" id="filter-coa-type">            
-                                        <option value="0" <?=$status == 0 ? 'selected' : ''?>>All</option>
-                                        <option value="0" <?=$status == 0 ? 'selected' : ''?>>Expenses</option>>
+                                        <option value="all" <?=$type == 'all' ? 'selected' : ''?>>All</option>
+                                        <option value="1" <?=$type == '1' ? 'selected' : ''?>>Accounts receivable (A/R)</option>
+                                        <option value="2" <?=$type == '2' ? 'selected' : ''?>>Other Current Assets</option>
+                                        <option value="3" <?=$type == '3' ? 'selected' : ''?>>Bank</option>
+                                        <option value="4" <?=$type == '4' ? 'selected' : ''?>>Fixed Assets</option>
+                                        <option value="5" <?=$type == '5' ? 'selected' : ''?>>Other Assets</option>
+                                        <option value="6" <?=$type == '6' ? 'selected' : ''?>>Accounts payable (A/P)</option>
+                                        <option value="7" <?=$type == '7' ? 'selected' : ''?>>Credit Card</option>
+                                        <option value="8" <?=$type == '8' ? 'selected' : ''?>>Other Current Liabilities</option>
+                                        <option value="9" <?=$type == '9' ? 'selected' : ''?>>Long Term Liabilities</option>
+                                        <option value="10" <?=$type == '10' ? 'selected' : ''?>>Equity</option>
+                                        <option value="11" <?=$type == '11' ? 'selected' : ''?>>Income</option>
+                                        <option value="12" <?=$type == '12' ? 'selected' : ''?>>Other Income</option>
+                                        <option value="13" <?=$type == '13' ? 'selected' : ''?>>Cost of Goods Sold</option>
+                                        <option value="14" <?=$type == '14' ? 'selected' : ''?>>Expenses</option>
+                                        <option value="15" <?=$type == '15' ? 'selected' : ''?>>Other Expenses</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="filter-type">Status</label>
+                                    <select class="nsm-field form-select filter-coa-status" name="filter_status" id="filter-coa-status">   
+                                        <option value="all" <?=$status == 'all' ? 'selected' : ''?>>All</option>         
+                                        <option value="active" <?=$status == 'active' ? 'selected' : ''?>>Active</option>
+                                        <option value="inactive" <?=$status == 'inactive' ? 'selected' : ''?>>Inactive</option>>
                                     </select>
                                 </div>
                             </div>
