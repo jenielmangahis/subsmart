@@ -2687,12 +2687,12 @@ class Debug extends MYF_Controller {
         $total_updated = 0;
         $invoices = $this->Invoice_model->getAllInvoices();
         foreach($invoices as $invoice){
-            $due_date = '';
+            $due_date = '1970-01-01';
             if( $invoice->due_date != '' ){
                 $due_date = date("Y-m-d", strtotime($invoice->due_date));
             }
 
-            $date_issued = '';
+            $date_issued = '1970-01-01';
             if( $invoice->date_issued != '' ){
                 $date_issued = date("Y-m-d", strtotime($invoice->date_issued));
             }
