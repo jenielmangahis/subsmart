@@ -167,7 +167,12 @@ class Login extends CI_Controller
                     if( $user_location['ip'] != '' ){
                         if( $user->last_login_ip_address != '' ){
                             $allowedIp = $this->UserAllowedIP_model->getByUserIdAndIPAddress($user->id, $user_location['ip']);
-                            if( !$allowedIp ){
+                            if( $allowedIp ){
+                                if( $allowedIp->is_allowed == 0 ){
+                                    //redirect to logout 
+                                    redirect('/logout');
+                                }
+                            }else{
                                 //Record location
                                 $ip_location = [
                                     'user_id' => $user->id,
@@ -192,11 +197,23 @@ class Login extends CI_Controller
                                 $mail->Subject = "nSmartrac: Unrecognize Login";
                                 $mail->Body = $body;
                                 $mail->Send();
-                            }else{
-                                if( $allowedIp->is_allowed == 0 ){
-                                    //redirect to logout 
-                                    redirect('/logout');
-                                }
+                            }
+                        }else{
+                            $allowedIp = $this->UserAllowedIP_model->getByUserIdAndIPAddress($user->id, $user_location['ip']);
+                            if( !$allowedIp ){
+                                //Record location
+                                $ip_location = [
+                                    'user_id' => $user->id,
+                                    'ip_address' => $user_location['ip'],
+                                    'longitude' => $user_location['lon'],
+                                    'latitude' => $user_location['lat'],
+                                    'country' => $user_location['country'],
+                                    'location' => $user_location['location'],
+                                    'is_allowed' => 1,
+                                    'date_created' => date("Y-m-d h:i:s")
+                                ];
+
+                                $this->UserAllowedIP_model->create($ip_location);
                             }
                         }
 
@@ -418,24 +435,21 @@ class Login extends CI_Controller
 
             //Send email            
             $url   = url('login/forget?token=' . $token);
-            $subject = 'nSmarTrac : Password Reset';
-            $to   = $user->email;
             $body = "<p>Hi <b>".$user->FName."</b></p>";
             $body .= "<p>Please click link below to reset your password.</p>";
             $body .= "<p><a href='".$url."'>Reset Your Password</a></p><br />";
             $body .= "<p>Thank you</p>";
             $body .= "<p>nSmarTrac Team</p>";
 
-            $data = [
-                'to' => $to, 
-                'subject' => $subject, 
-                'body' => $body,
-                'cc' => '',
-                'bcc' => '',
-                'attachment' => ''
-            ];
-
-            $isSent = sendEmail($data);
+            //Send email notification
+            $mail = email__getInstance();
+            $mail->FromName = 'nSmarTrac';
+            $recipient_name = $user->FName . ' ' . $user->LName;
+            $mail->addAddress($user->email, $recipient_name);
+            $mail->isHTML(true);
+            $mail->Subject = "nSmartrac: Password Reset";
+            $mail->Body = $body;
+            $mail->Send();
 
             $is_success = 1;
             $msg = '';
@@ -580,6 +594,8 @@ class Login extends CI_Controller
 
     public function generateUnrecognizeLoginEmailHtml($user, $ip_data)
     {
+        $this->load->helper(array('hashids_helper'));
+
         $encrypted_user_id = hashids_encrypt($user->id, '', 15);
 
         $this->page_data['user'] = $user;
@@ -627,7 +643,13 @@ class Login extends CI_Controller
             );
             $pusher->trigger('nsmarttrac-unauthorize-login', 'force-logout-user', $data);
 
-            redirect('login/forget');
+            //Save token
+            $token = $this->users_model->generate_verification_token($user->id);
+            $this->users_model->update($user->id, [
+                'reset_token'  =>  $token
+            ]);
+
+            redirect('login/forget?token='.$token);
         }else{
             redirect('/');
         }
