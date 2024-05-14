@@ -38,6 +38,7 @@ class Login extends CI_Controller
             $remember_password = $this->input->cookie('password');
         } 
 
+        $this->data['title'] = 'Login';
         $this->data['remember_username'] = $remember_username;
         $this->data['remember_password'] = $remember_password;
         $this->data['remember_me'] = $remember_me;
@@ -334,6 +335,7 @@ class Login extends CI_Controller
             }
         } 
 
+        $this->data['title'] = 'Reset Password';
         $this->data['reset_token'] = $reset_token;
         $this->data['is_with_token'] = $is_with_token;
         $this->load->view('account/forget_new', $this->data, false);
