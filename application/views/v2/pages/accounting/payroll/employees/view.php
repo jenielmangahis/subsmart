@@ -71,7 +71,13 @@
                                                             </div>
                                                             <div class="col-12 col-md-4">
                                                                 <h6>Birth date</h6>
-                                                                <h5><?=date("m/d/Y", strtotime($employee->birthdate))?></h5>
+                                                                <?php 
+                                                                    $birthdate = 'Not Specified';
+                                                                    if($employee->birthdate != '0000-00-00' || $employee->birthdate == null) {
+                                                                        $birthdate = date("m/d/Y", strtotime($employee->birthdate));
+                                                                    }
+                                                                ?>
+                                                                <h5><?=$birthdate?></h5>
                                                             </div>
                                                             <div class="col-12 col-md-4">
                                                                 <h6>Home address</h6>

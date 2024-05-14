@@ -529,14 +529,14 @@ label.bold {
                                     </select>
                                 </div>
 
-                                <!-- <div class="col-md-6 mt-4">
+                                <div class="col-md-6 mt-4">
                                     <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="reminder_14d" value="1" id="reminder14d">
                                     <label class="form-check-label" for="reminder14d">
                                         <b>Remind me in 14 days</b>
                                     </label>
                                     </div>
-                                </div> -->
+                                </div>
                             </div>
 
                             <div class="row mb-3 mt-5" style="background-color:white;font-size:16px;">

@@ -701,7 +701,9 @@ class Employees extends MY_Controller {
                 'postal_code' => $this->input->post('zip_code'),
                 'phone' => $this->input->post('phone'),
                 'mobile' => $this->input->post('mobile'),
-                'birthdate' => date('Y-m-d', strtotime($this->input->post('birth_date')))
+                'birthdate' => date('Y-m-d', strtotime($this->input->post('birth_date'))),
+                'has_web_access' => !empty($this->input->post('web_access')) ? 1 : 0,
+                'has_app_access' => !empty($this->input->post('app_access')) ? 1 : 0
             ];
         } else {
             switch($type) {
