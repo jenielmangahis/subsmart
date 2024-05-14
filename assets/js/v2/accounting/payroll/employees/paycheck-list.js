@@ -242,21 +242,32 @@ $('#paycheck-table .delete-paycheck').on('click', function(e) {
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
 
-    $.get(`/accounting/delete-paycheck/${id}`, function(res) {
-        var result = JSON.parse(res);
-        Swal.fire({
-            title: result.success ? 'Delete Successful!' : 'Failed!',
-            text: result.success ? 'Paycheck has been successfully deleted.' : 'Something is wrong in the process.',
-            icon: result.success ? 'success' : 'error',
-            showCancelButton: false,
-            confirmButtonText: 'Okay'
-        }).then((r) => {
-            if(r.value) {
-                if(result.success) {
-                    location.reload();
-                }
-            }
-        });
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to delete this paycheck. This action cannot be undone.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#aaa',
+        confirmButtonText: 'Confirm'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Proceed with the delete action
+            $.get(`/accounting/delete-paycheck/${id}`, function(res) {
+                var result = JSON.parse(res);
+                Swal.fire({
+                    title: result.success ? 'Delete Successful!' : 'Failed!',
+                    text: result.success ? 'Paycheck has been successfully deleted.' : 'Something is wrong in the process.',
+                    icon: result.success ? 'success' : 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                }).then((r) => {
+                    if (r.value && result.success) {
+                        location.reload();
+                    }
+                });
+            });
+        }
     });
 });
 
@@ -265,15 +276,25 @@ $('#paycheck-table .void-paycheck').on('click', function(e) {
 
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
-
-    $.get(`/accounting/void-paycheck/${id}`, function(res) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You are about to void this paycheck.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#aaa',
+        confirmButtonText: 'Confirm'
+    }).then((result) => {
+        if (result.isConfirmed) {
+         $.get(`/accounting/void-paycheck/${id}`, function(res) {
         var result = JSON.parse(res);
         Swal.fire({
             title: result.success ? 'Void Successful!' : 'Failed!',
             text: result.success ? 'Paycheck has been successfully voided.' : 'Something is wrong in the process.',
             icon: result.success ? 'success' : 'error',
             showCancelButton: false,
-            confirmButtonText: 'Okay'
+            confirmButtonText: 'Okay',
+            confirmButtonColor: '#6a4a86',
         }).then((r) => {
             if(r.value) {
                 if(result.success) {
@@ -282,6 +303,8 @@ $('#paycheck-table .void-paycheck').on('click', function(e) {
             }
         });
     });
+}
+});
 });
 
 $('#paycheck-table .edit-paycheck').on('click', function(e) {

@@ -558,11 +558,6 @@
                             <td data-name="Name">NAME</td>
                             <td data-name="SKU">SKU</td>
                             <td data-name="Type">TYPE</td>
-                            <!-- <td data-name="Sales Description">SALES DESCRIPTION</td>
-                            <td data-name="Income Account">INCOME ACCOUNT</td>
-                            <td data-name="Expense Account">EXPENSE ACCOUNT</td>
-                            <td data-name="Inventory Account">INVENTORY ACCOUNT</td>
-                            <td data-name="Purchase Description">PURCHASE DESCRIPTION</td> -->
                             <td data-name="Sales Price">SALES PRICE</td>
                             <td data-name="Category">Category</td>
                             <td data-name="Cost">COST</td>

@@ -282,7 +282,7 @@
 
 <div class="modal fade nsm-modal" id="edit-payment-method-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form method="POST" id="edit-payment-method-form" action="/accounting/employees/update/payment-method/<?=$employee->id?>">
+    <form method="POST" id="edit-payment-method-form" action="<?= base_url('/accounting/employees/update/payment-method/' . $employee->id) ?>">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">Select payment method</span>
@@ -315,7 +315,7 @@
 
 <div class="modal fade nsm-modal" id="edit-pay-types-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form method="POST" id="edit-pay-types-form" action="/accounting/employees/update/pay-types/<?=$employee->id?>">
+    <form method="POST" id="edit-pay-types-form" action="<?= base_url('accounting/employees/update/pay-types/' . $employee->id) ?>">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">Pay types</span>
