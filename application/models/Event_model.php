@@ -239,7 +239,8 @@ class Event_model extends MY_Model
             acs_profile.last_name,
             acs_profile.fk_user_id as user_id,
             invoices.grand_total,
-            invoices.grand_total - COALESCE(SUM(accounting_receive_payment_invoices.payment_amount), 0) as balance
+            invoices.grand_total - COALESCE(SUM(accounting_receive_payment_invoices.payment_amount), 0) as balance,
+            invoices.date_updated
         ');
         $this->db->join('accounting_receive_payment_invoices', 'accounting_receive_payment_invoices.invoice_id = invoices.id', 'left');
         $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
