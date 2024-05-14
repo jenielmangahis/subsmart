@@ -2647,6 +2647,35 @@ class Debug extends MYF_Controller {
 
         echo 'Total updated :' .$total_updated;        
     }
+
+    public function fixAcsBillingDateValues()
+    {
+        $this->load->model('AcsProfile_model');
+        
+        $total_updated = 0;
+        $acsBilling = $this->AcsProfile_model->getAllBilling();
+        foreach($acsBilling as $bill){
+            $bill_start_date = '';
+            if( $bill->bill_start_date != '' ){
+                $bill_start_date = date("Y-m-d", strtotime($bill->bill_start_date));
+            }
+
+            $bill_end_date = '';
+            if( $bill->bill_end_date != '' ){
+                $bill_end_date = date("Y-m-d", strtotime($bill->bill_end_date));
+            }
+
+            $data = [
+                'bill_start_date' => $bill_start_date,
+                'bill_end_date' => $bill_end_date
+            ];
+            $this->AcsProfile_model->updateBillingByBillId($bill->bill_id, $data);
+
+            $total_updated++;
+        }
+
+        echo 'Total Updated :' . $total_updated;
+    }
 }
 /* End of file Debug.php */
 
