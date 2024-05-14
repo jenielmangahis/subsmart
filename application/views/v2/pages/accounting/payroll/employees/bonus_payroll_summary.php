@@ -21,7 +21,7 @@
                         <div class="employee-color graph-color" style="border-color: #3980b5; background: #3980b5"></div>
                         <div class="employee ms-2">
                             <h4 class="m-0"><span id="total-employee-tax"><?=str_replace('$-', '-$', '$'.$total['total_taxes'])?></span></h4>
-                            <p class="m-0">EMPLOYEE</p>
+                            <p class="m-0">TAXES</p>
                         </div>
                     </div>
                     <div class="d-flex align-items-center">

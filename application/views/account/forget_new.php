@@ -215,6 +215,7 @@ $(function(){
                   $(".box-step-2").fadeIn();
 
                   $(".step-2").addClass('active');*/
+                  $(".btn-step1-next").html('CONTINUE');
               }else{
                   $('.stp1-msg').hide().html("<p class='alert alert-danger'>"+o.msg+"</p>").fadeIn(500);
                   $(".btn-step1-next").html('CONTINUE');

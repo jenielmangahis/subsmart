@@ -50,7 +50,7 @@
                                 </div>
                             </td>
                             <td>
-                                <a href="#" class="text-decoration-none"><?=$employee->LName . ', ' . $employee->FName?></a>
+                            <span class="text-decoration-none"><?= $employee->LName . ', ' . $employee->FName ?></span>
                             </td>
                             <td><?=$payDetail->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check'?></td>
                             <td>
@@ -98,7 +98,7 @@
         <div class="col-md-4">
             <div class="btn-group float-end" role="group">
                 <button type="button" class="nsm-button success" id="preview-payroll">
-                    Preview payroll
+                    Preview Payroll
                 </button>
                 <div class="btn-group" role="group">
                     <button type="button" class="nsm-button success dropdown-toggle" style="margin-left: 0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
