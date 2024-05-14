@@ -1,6 +1,6 @@
 <div class="modal fade nsm-modal fade" id="edit_employee_modal" tabindex="-1" aria-labelledby="edit_employee_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form method="POST" id="edit_employee_form" action="/accounting/employees/update/personal-info/<?=$employee->id?>">
+        <form method="POST" id="edit_employee_form" action="<?php echo base_url(); ?>accounting/employees/update/personal-info/<?=$employee->id?>">
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Edit Employee</span>
@@ -23,11 +23,11 @@
                     <div class="row gy-3 mb-4">    
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Mobile Number</label>
-                            <input type="text" name="mobile" class="nsm-field form-control" value="<?= $employee->mobile; ?>" />
+                            <input type="text" name="mobile" placeholder="xxx-xxx-xxxx" maxlength="12" id="mobile" class="nsm-field form-control mobile-number" value="<?= $employee->mobile; ?>" />
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
-                            <input type="text" name="phone" class="nsm-field form-control" value="<?= $employee->phone; ?>" />
+                            <input type="text" name="phone" laceholder="xxx-xxx-xxxx" maxlength="12" class="nsm-field form-control phone-number" value="<?= $employee->phone; ?>" />
                         </div>
                     </div>
                     <div class="row gy-3 mb-4">
@@ -73,11 +73,22 @@
                         </div>
                         <div class="col-12">
                             <div class="form-check form-switch nsm-switch d-inline-block me-3">
-                                <input class="form-check-input" type="checkbox" id="app_access" name="app_access" <?=$employee->has_app_access === 1 ? 'checked' : ''?>>
+                                <?php 
+                                    $is_checked_app = '';
+                                    if($employee->has_app_access) {
+                                        $is_checked_app = 'checked';
+                                    }
+
+                                    $is_checked_web = '';
+                                    if($employee->has_web_access) {
+                                        $is_checked_web = 'checked';
+                                    }
+                                ?>
+                                <input class="form-check-input" type="checkbox" id="app_access" name="app_access" <?php echo $is_checked_app; ?>>
                                 <label class="form-check-label" for="app_access">App Access</label>
                             </div>
                             <div class="form-check form-switch nsm-switch d-inline-block">
-                                <input class="form-check-input" type="checkbox" id="web_access" name="web_access" <?=$employee->has_web_access === 1 ? 'checked' : ''?>>
+                                <input class="form-check-input" type="checkbox" id="web_access" name="web_access" <?php echo $is_checked_web; ?>>
                                 <label class="form-check-label" for="web_access">Web Access</label>
                             </div>
                         </div>
@@ -457,3 +468,39 @@
     </form>
     </div>
 </div>
+
+<script>
+
+$(function() {
+    $('.mobile-number').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    });
+
+    $('.phone-number').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    });    
+})
+
+
+
+</script>
