@@ -2657,13 +2657,13 @@ class Debug extends MYF_Controller {
         $conditions[] = ['field' => 'is_updated', 'value' => 0];
         $acsBilling = $this->AcsProfile_model->getAllBilling($conditions, 800);
         foreach($acsBilling as $bill){
-            $bill_start_date = '0000-00-00';
-            if( $bill->bill_start_date != '' ){
+            $bill_start_date = '1970-01-01';
+            if( $bill->bill_start_date != '0000-00-00' ){
                 $bill_start_date = date("Y-m-d", strtotime($bill->bill_start_date));
             }
 
-            $bill_end_date = '0000-00-00';
-            if( $bill->bill_end_date != '' ){
+            $bill_end_date = '1970-01-01';
+            if( $bill->bill_end_date != '0000-00-00' ){
                 $bill_end_date = date("Y-m-d", strtotime($bill->bill_end_date));
             }
 
