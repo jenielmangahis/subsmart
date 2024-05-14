@@ -13,6 +13,13 @@ class DocuSign extends MYF_Controller
 
     public function signing()
     {
+        $load_mobile_signing_js = 0;
+        if( $this->input->get('is_mobile') ){
+            $load_mobile_signing_js = 1;
+        }
+
+        $this->page_data['load_mobile_signing_js'] = $load_mobile_signing_js;
+
         $genPDF = $this->input->get('file');
         if($genPDF == "geratedpdf") {
             $this->load->view('esign/docusign/geratedpdf', $this->page_data);
