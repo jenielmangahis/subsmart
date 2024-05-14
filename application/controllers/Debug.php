@@ -2676,6 +2676,35 @@ class Debug extends MYF_Controller {
 
         echo 'Total Updated :' . $total_updated;
     }
+
+    public function fixInvoicesData()
+    {
+        $this->load->model('Invoice_model');
+        
+        $total_updated = 0;
+        $invoices = $this->Invoice_model->getAllInvoices();
+        foreach($invoices as $invoice){
+            $due_date = '';
+            if( $invoice->due_date != '' ){
+                $due_date = date("Y-m-d", strtotime($invoice->due_date));
+            }
+
+            $date_issued = '';
+            if( $invoice->date_issued != '' ){
+                $date_issued = date("Y-m-d", strtotime($invoice->date_issued));
+            }
+
+            $data = [
+                'due_date' => $due_date,
+                'date_issued' => $date_issued
+            ];
+            $this->Invoice_model->update($invoice->id, $data);
+
+            $total_updated++;
+        }
+
+        echo 'Total Updated :' . $total_updated;
+    }
 }
 /* End of file Debug.php */
 
