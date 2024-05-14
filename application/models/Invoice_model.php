@@ -138,6 +138,16 @@ class Invoice_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllInvoices()
+    {
+        $this->db->select('*');        
+        $this->db->from($this->table);
+        $this->db->order_by('invoices.id', 'ASC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getAllNotVoidedByCompanyId($cid, $search = array())
     {
         $this->db->select('invoices.*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');        

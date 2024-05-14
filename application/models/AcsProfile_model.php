@@ -634,10 +634,21 @@ class AcsProfile_model extends MY_Model
         return $cust;
     }
 
-    public function getAllBilling()
+    public function getAllBilling($conditions = array(), $limit = 0)
     {
         $this->db->select('*');
         $this->db->from($this->table2);
+
+        if (!empty($conditions)) {
+            foreach ($conditions as $c) {
+                $this->db->where($c['field'], $c['value']);
+            }
+        }
+
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        }
+
         $query = $this->db->get();
 
         return $query->result();
