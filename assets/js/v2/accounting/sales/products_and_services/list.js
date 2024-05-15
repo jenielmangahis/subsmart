@@ -1078,9 +1078,9 @@ $('.update-quantity').on('click', function (e) {
             Swal.fire({
                 icon: 'success',
                 title: 'Success',
-                text: 'Quantities updated successfully!'
+                text: 'Stock updated successfully!'
             }).then(function () {
-                location.reload();
+                // location.reload();
                 $('#items-table').load(location.href + ' #items-table');
             });
         },

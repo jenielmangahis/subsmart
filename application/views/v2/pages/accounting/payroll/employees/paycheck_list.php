@@ -12,8 +12,26 @@
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <div class="row">
-                    <div class="col-12 col-md-4 grid-mb"></div>
+                    <div class="col-12 col-md-4 grid-mb">
+                        <form id="search_form" action="javascript:void(0);" method="get">
+                            <div class="nsm-field-group search">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" name="search" id="search_field" placeholder="Find an employee" value="<?php echo (!empty($search)) ? $search : '' ?>">
+                            </div>
+                        </form>
+                    </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
+                        <div class="dropdown d-inline-block">
+                            <input type="hidden" class="nsm-field form-control" id="selected_ids">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>
+                                    Batch Actions
+                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end batch-actions">
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="batch-delete">Delete</a></li>
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="batch-void">Void</a></li>
+                            </ul>
+                        </div>
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
@@ -22,13 +40,21 @@
                                 <div class="row">
                                     <div class="col grid-mb">
                                         <label for="filter-employee">Employee</label>
-                                        <select class="nsm-field form-select" name="filter_employee" id="filter-employee">
+                                        <select class="nsm-field form-select" name="filter_employee[]" id="filter-employee" multiple="multiple">
+                                            <option value="all">All</option>
+                                            <?php foreach ($employees as $employee) : ?>
+                                                <option value="<?= $employee->id ?>" <?= isset($selectedEmployee) && $selectedEmployee->id == $employee->id ? 'selected' : '' ?>>
+                                                    <?= $employee->name ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <!-- <select class="nsm-field form-select" name="filter_employee" id="filter-employee">
                                             <?php if (isset($employee)) : ?>
                                                 <option value="<?= $employee->id ?>" selected><?= $employee->name ?></option>
                                             <?php else : ?>
                                                 <option value="all" selected>All</option>
                                             <?php endif; ?>
-                                        </select>
+                                        </select> -->
                                     </div>
                                 </div>
                                 <div class="row">
@@ -146,8 +172,8 @@
                                 </tr>
                             <?php endforeach; ?>
                         <?php else : ?>
-                            <tr>
-                                <td colspan="14">
+                            <tr class="no-results">
+                                <td colspan="9">
                                     <div class="nsm-empty">
                                         <span>No results found.</span>
                                     </div>
@@ -162,11 +188,3 @@
 </div>
 
 <?php include viewPath('v2/includes/footer'); ?>
-
-<script>
-    $(document).ready(function() {
-        $("#paycheck-table").nsmPagination({
-            itemsPerPage: 10,
-        });
-    });
-</script>
