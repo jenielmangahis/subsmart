@@ -69,14 +69,15 @@
                         <td></td>
                         <td></td>
                         <td>TOTAL</td>
-                        <td>$0.00</td>
+                        <td style="display: none;">$0.00</td>
+                        <td></td>
                         <td></td>
                         <td>$0.00</td>
                     </tr>
                     <tr>
                         <td colspan="6">
                             <div class="nsm-page-buttons page-buttons-container">
-                                <button type="button" class="nsm-button">
+                                <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add_employee_modal">
                                     Add an employee
                                 </button>
                             </div>
