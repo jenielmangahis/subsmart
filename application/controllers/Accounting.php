@@ -8941,62 +8941,41 @@ class Accounting extends MY_Controller
         $this->load->view('accounting/work_order_list', $this->page_data); 
     }
 
-    public function newEstimateList($tab = '')
-    {        
+    public function newEstimateList()
+    {   
+        $this->load->model('EstimateItem_model');
+
         $is_allowed = $this->isAllowedModuleAccess(18);
         if (!$is_allowed) {
             $this->page_data['module'] = 'estimate';
             echo $this->load->view('no_access_module', $this->page_data, true);
             die();
         }
-        $role = logged('role');
-        $company_id = logged('company_id');
-        $this->page_data['jobs'] = $this->jobs_model->getByWhere(['company_id' => $company_id]);
-        if (!empty($tab)) {
-            $query_tab = $tab;
-            if ($tab == 'declined%20by%20customer') {
-                $query_tab = 'Declined By Customer';
-            }
-            $this->page_data['tab'] = $tab;
-            $this->page_data['estimates'] = $this->estimate_model->filterBy(array('status' => lcfirst($query_tab)), $company_id, $role);
-        } else {
 
-            // search
-            if (!empty(get('search'))) {
-                $this->page_data['search'] = get('search');
-                $this->page_data['estimates'] = $this->estimate_model->filterBy(array('search' => get('search')), $company_id, $role);
-            } elseif (!empty(get('order'))) {
-                $this->page_data['search'] = get('search');
-                $this->page_data['estimates'] = $this->estimate_model->filterBy(array('order' => get('order')), $company_id, $role);
-            } else {                
-                $this->page_data['estimates'] = $this->estimate_model->getAllByCompany($company_id);
+        $company_id = logged('company_id');
+        $filter_from_date = date("Y-m-d");        
+        $filter_to_date   = date("Y-m-d");
+        $filter_status    = 'all';
+        if( $this->input->get('estimate_from') && $this->input->get('estimate_to') ){
+            $filter_status = $this->input->get('filter_status');
+            $filter_from_date = date("Y-m-d", strtotime($this->input->get('estimate_from')));        
+            $filter_to_date   = date("Y-m-d", strtotime($this->input->get('estimate_to')));
+            if( $filter_status != 'all' ){
+                $filter[] = ['field' => 'status', 'value' => $filter_status];
+                $data_range = ['from' => $filter_from_date, 'to' => $filter_to_date];
+                $this->page_data['estimates'] = $this->estimate_model->getAllByCompanyIdAndDateRange($company_id, $data_range, $filter);
+            }else{
+                $data_range = ['from' => $filter_from_date, 'to' => $filter_to_date];                
+                $this->page_data['estimates'] = $this->estimate_model->getAllByCompanyIdAndDateRange($company_id, $data_range);
             }
         }
-
-        $this->page_data['role'] = $role;
+        
+        $this->page_data['filter_from_date'] = $filter_from_date;
+        $this->page_data['filter_to_date'] = $filter_to_date;
+        $this->page_data['filter_status'] = $filter_status;
         $this->page_data['estimateStatusFilters'] = $this->estimate_model->getStatusWithCount($company_id);
-
-        $this->load->model('AcsProfile_model');
-        $this->load->model('EstimateItem_model');
-        $this->load->model('Clients_model');
-
-        $estimate = $this->estimate_model->getById($id);
-        $company_id = logged('company_id');
-
-        $customer = $this->AcsProfile_model->getByProfId($estimate->customer_id);
-        $client = $this->Clients_model->getById($company_id);
-
-        $this->page_data['customer'] = $customer;
-        $this->page_data['client'] = $client;
-        $this->page_data['estimate'] = $estimate;
-
-        // $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        // $this->page_data['page_title'] = "Estimate Lists";
-        // print_r($this->page_data);
-
         $this->page_data['page']->title = 'Estimates';
         $this->page_data['page']->parent = 'Sales';
-        // $this->load->view('accounting/estimatesList', $this->page_data);
         $this->load->view('accounting/sales/estimates', $this->page_data);
     }
 
