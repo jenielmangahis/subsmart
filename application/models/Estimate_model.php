@@ -88,6 +88,29 @@ class Estimate_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllByCompanyIdAndDateRange($cid, $date_range = array(), $filter = array())
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $cid);
+
+        if( $date_range ){
+            $this->db->where('estimate_date >=', $date_range['from']);
+            $this->db->where('estimate_date <=', $date_range['to']);
+        }
+        
+        if( $filter ){
+            foreach( $filter as $f ){
+                $this->db->where($f['field'], $f['value']);
+            }
+        }
+
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function mailIsOpen($data)
     {
         // $this->db->where('id', $id);

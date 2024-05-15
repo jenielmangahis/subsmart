@@ -1040,8 +1040,6 @@ class Jobs_model extends MY_Model
 
     public function getAllPendingByCompanyId($cid)
     {
-        $current_date = date("Y-m-d");
-
         $this->db->select('*');        
         $this->db->from($this->table);   
         $this->db->where('company_id', $cid);
@@ -1053,6 +1051,26 @@ class Jobs_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllCompletedJobsByCompanyIdAndDateRange($cid, $date_range = array())
+    {
+        $this->db->select('*');        
+        $this->db->from($this->table);   
+        $this->db->where('company_id', $cid);
+        $this->db->group_start();
+            $this->db->or_where('status', 'Completed');
+            $this->db->or_where('status', 'Finished');
+        $this->db->group_end();
+
+        if( $date_range ){
+            $this->db->where('start_date >=', $date_range['from']);
+            $this->db->where('end_date <=', $date_range['to']);
+        }
+
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 /* End of file Jobs_model.php */
 /* Location: ./application/models/Jobs_model.php */
