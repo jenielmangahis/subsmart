@@ -29,7 +29,7 @@ $('.dropdown-menu.table-settings input[name="col_chk"]').on('change', function()
         } else {
             $($(this).find('td')[index]).hide();
         }
-    });
+    }); 
 });
 
 $('#status-filter li a.dropdown-item').on('click', function(e) {
@@ -219,6 +219,20 @@ $(document).on('change', '#bonus-payroll-modal #payroll-table thead .select-all'
     $('#bonus-payroll-modal #payroll-table tbody .select-one').prop('checked', $(this).prop('checked')).trigger('change');
 });
 
+const updateTotalPay = () => {
+    let total = 0.00;
+    $('#bonus-payroll-modal #payroll-table tbody [name="bonus[]"]').each(function() {
+        const bonusVal = $(this).val().replace(/,/g, ''); // Remove commas for parsing
+        if (bonusVal !== "") {
+            total += parseFloat(bonusVal);
+        }
+    });
+
+    const formattedTotal = formatter.format(total);
+    $('#bonus-payroll-modal #payroll-table tfoot tr:first-child td:nth-child(4), #bonus-payroll-modal #payroll-table tfoot tr:first-child td:last-child').html(formattedTotal);
+    $('#bonus-payroll-modal h2.total-pay').html(formattedTotal);
+};
+
 $(document).on('change', '#bonus-payroll-modal #payroll-table tbody .select-one', function() {
     var row = $(this).closest('tr');
 
@@ -251,11 +265,17 @@ $(document).on('change', '#bonus-payroll-modal #payroll-table tbody .select-one'
     var count = $('#bonus-payroll-modal #payroll-table .select-one').length;
 
     $('#bonus-payroll-modal #payroll-table .select-all').prop('checked', checked === count);
+    updateTotalPay();
 });
 
 $(document).on('change', '#bonus-payroll-modal #payroll-table tbody [name="bonus[]"]', function() {
     if($(this).val() !== '') {
-        $(this).val(formatter.format(parseFloat($(this).val())).replace('$', ''));
+        // $(this).val(formatter.format(parseFloat($(this).val())).replace('$', ''));
+        var inputVal = $(this).val();
+        var floatValue = parseFloat(inputVal);
+        if (!isNaN(floatValue)) {
+            $(this).val(floatValue.toFixed(2));
+        }
         $(this).closest('tr').find('.total-pay').html(formatter.format($(this).val()));
     } else {
         $(this).closest('tr').find('.total-pay').html('$0.00');

@@ -1,19 +1,20 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Accounting_paychecks_model extends MY_Model {
+class Accounting_paychecks_model extends MY_Model
+{
 
-    public $table = 'accounting_paychecks';    
-	
+	public $table = 'accounting_paychecks';
+
 	public function __construct()
 	{
 		parent::__construct();
 	}
-	
+
 	public function insert_by_batch($data)
 	{
-        $this->db->insert_batch($this->table, $data);
-        return $this->db->insert_id();
+		$this->db->insert_batch($this->table, $data);
+		return $this->db->insert_id();
 	}
 
 	public function get_company_paychecks($companyId)
@@ -43,6 +44,22 @@ class Accounting_paychecks_model extends MY_Model {
 		$this->db->where('id', $paycheckId);
 		$update = $this->db->update($this->table, ['status' => 4]);
 		return $update ? true : false;
+	}
+
+	public function batch_void_paycheck($id)
+	{
+		$data = [
+			'status' => '4',
+			'check_no' => 'Void'
+		];
+		$this->db->where('id', $id);
+		$this->db->update('accounting_paychecks', $data);
+	}
+
+	public function batch_delete_paycheck($id)
+	{
+		$this->db->where('id', $id);
+		$this->db->delete('accounting_paychecks');
 	}
 
 	public function get_by_employee_id($employeeId)
