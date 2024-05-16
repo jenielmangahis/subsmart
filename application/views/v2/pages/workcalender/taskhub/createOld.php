@@ -75,13 +75,25 @@ if (isset($selected_participants)) {
                             <div class="nsm-card-content">
                                 <div class="row g-3">
                                     <div class="col-12 col-md-4">
-                                        <?php if ((set_value('title') == '') && (isset($taskHub))) {
-                                            $title = $taskHub->title;
+                                        <?php if ((set_value('subject') == '') && (isset($task))) {
+                                            $subject = $taskHub->subject;
                                         } else {
-                                            $title = set_value('subject');
+                                            $subject = set_value('subject');
                                         } ?>
-                                        <label class="content-subtitle fw-bold d-block mb-2">Title</label>
-                                        <input type="text" name="title" class="nsm-field form-control" value="<?= $title ?>" required>
+                                        <label class="content-subtitle fw-bold d-block mb-2">Subject</label>
+                                        <input type="text" name="subject" class="nsm-field form-control" value="<?= $subject ?>" required>
+                                    </div>
+
+                                    <div class="col-12 col-md-4">
+                                        <label class="content-subtitle fw-bold d-block mb-2">Customer <small>(optional)</small></label>
+                                        <select class="nsm-field form-select" name="customer_id" id="customer_id">
+                                            <?php if ($customer) { ?>
+                                                <option value="<?= $customer->prof_id; ?>"><?= $customer->first_name . ' ' . $customer->last_name; ?></option>
+                                            <?php } ?>
+                                            <?php if ($task) { ?>
+                                                <option value="<?= $taskHub->prof_id; ?>"><?= $taskHub->customer_name; ?></option>
+                                            <?php } ?>
+                                        </select>
                                     </div>
 
                                     <?php if (isset($status_selection)) { ?>
@@ -175,31 +187,35 @@ if (isset($selected_participants)) {
                                     <div class="col-12 col-md-4">
                                         <?php
                                         $date = date("m/d/Y");
-                                        if (isset($taskHub->date_due)) {                                            
-                                            $date = date("m/d/Y",strtotime($taskHub->date_due));
+                                        if (isset($taskHub->estimated_date_complete)) {                                            
+                                            $date = date("m/d/Y",strtotime($taskHub->estimated_date_complete));
                                         }
                                         ?>
-                                        <label class="content-subtitle fw-bold d-block mb-2">Due Date / Time</label>
-                                        <input type="text" name="date_due" class="nsm-field form-control datepicker" value="<?= $date ?>" required>
+                                        <label class="content-subtitle fw-bold d-block mb-2">Estimated Date of Completion</label>
+                                        <input type="text" name="estimated_date_complete" class="nsm-field form-control datepicker" value="<?= $date ?>" required>
                                     </div>
 
                                     <div class="col-12 col-md-4">
-                                            <label class="content-subtitle fw-bold d-block mb-2">Select a group for this task</label>
-                                            <select name="group" id="group-select" class="nsm-field form-select group-select">
-                                                <option value="0">Select a Group</option>
-                                            </select>
+                                        <?php
+                                        $date = date("m/d/Y");
+                                        if (isset($taskHub->date_started)) {                                            
+                                            $date_started = date("m/d/Y",strtotime($taskHub->date_started));
+                                        }
+                                        ?>
+                                        <label class="content-subtitle fw-bold d-block mb-2">Date Started</label>
+                                        <input type="text" name="date_started" class="nsm-field form-control datepicker" value="<?= $date_started ?>" required>
                                     </div>
 
                                     <div class="col-12">
-                                        <label class="content-subtitle fw-bold d-block mb-2">Notes</label>
-                                        <textarea name="notes" class="nsm-field form-control ckeditortaskhub" id="ckeditortaskhub" placeholder="Enter Notes" required>
-                                            <?php
-                                            if ((set_value('notes') == '') && (isset($taskHub))) {
-                                                echo $taskHub->notes;
-                                            } else {
-                                                echo set_value('notes');
-                                            }
-                                            ?>
+                                        <label class="content-subtitle fw-bold d-block mb-2">Description</label>
+                                        <textarea name="description" class="nsm-field form-control ckeditortaskhub" id="ckeditortaskhub" placeholder="Enter Description" required>
+                                        <?php
+                                        if ((set_value('description') == '') && (isset($task))) {
+                                            echo $taskHub->description;
+                                        } else {
+                                            echo set_value('description');
+                                        }
+                                        ?>
                                         </textarea>
                                     </div>
                                 </div>

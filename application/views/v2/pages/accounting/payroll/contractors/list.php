@@ -25,7 +25,36 @@
                         </form>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
-						<div class="dropdown d-inline-block">
+
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>           
+                            <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="filter-type">Status</label>
+                                        <select class="nsm-field form-select filter-contractor-status" name="filter_type" id="filter-contractor-status">  
+                                            <option value="all" <?=$status == 'all' ? 'selected' : ''?>>All</option>          
+                                            <option value="active" <?=$status == 'active' ? 'selected' : ''?>>Active</option>
+                                            <option value="inactive" <?=$status == 'inactive' ? 'selected' : ''?>>Inactive</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-3">
+                                    <div class="col-6">
+                                        <button type="button" class="nsm-button" id="reset-button">
+                                            Reset
+                                        </button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button type="button" class="nsm-button primary float-end" id="apply-filter-contractor-button">
+                                            Apply
+                                        </button>
+                                    </div>
+                                </div>
+                            </ul>                          
+
+						<!-- <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span><?=empty($status) || $status === 'active' ? 'Active' : ucfirst($status)?> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
@@ -34,7 +63,7 @@
                                 <li><a class="dropdown-item <?=!empty($status) && $status === 'inactive' ? 'active' : ''?>" href="javascript:void(0);" id="inactive">Inactive</a></li>
                                 <li><a class="dropdown-item <?=!empty($status) && $status === 'all' ? 'active' : ''?>" href="javascript:void(0);" id="all">All</a></li>
                             </ul>
-                        </div>
+                        </div> -->
 
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button">
@@ -104,5 +133,21 @@
         </div>
     </div>
 </div>
+
+<script>
+
+$(document).ready(function() {
+    $('#apply-filter-contractor-button').on('click', function() {
+        var filterType = $('.filter-contractor-status').val();            
+        var url = `${base_url}accounting/contractors?`;
+        url += filterType !== 0 ? `status=${filterType}&` : '';
+        if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+            url = url.slice(0, -1); 
+        }
+        location.href = url;
+    });
+})
+
+</script>
 
 <?php include viewPath('v2/includes/footer'); ?>
