@@ -44,41 +44,25 @@
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end table-filter p-3" style="width: max-content">
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label for="filter-date">Date</label>
-                                        <select class="nsm-field form-select" name="filter_date" id="filter-date-credit-notes">
-                                            <option value="last-365-days" <?= $date === 'last-365-days' ? 'selected' : ''?>>Last 365 days</option>
-                                            <option value="custom" <?=$date === 'custom' ? 'selected' : ''?>>Custom</option>
-                                            <option value="today" <?= empty($date) || $date === 'today' ? 'selected' : ''?>>Today</option>
-                                            <option value="yesterday" <?=$date === 'yesterday' ? 'selected' : ''?>>Yesterday</option>
-                                            <option value="this-week" <?=$date === 'this-week' ? 'selected' : ''?>>This week</option>
-                                            <option value="this-month" <?=$date === 'this-month' ? 'selected' : ''?>>This month</option>
-                                            <option value="this-quarter" <?=$date === 'this-quarter' ? 'selected' : ''?>>This quarter</option>
-                                            <option value="this-year" <?=$date === 'this-year' ? 'selected' : ''?>>This year</option>
-                                            <option value="last-week" <?=$date === 'last-week' ? 'selected' : ''?>>Last week</option>
-                                            <option value="last-month" <?=$date === 'last-month' ? 'selected' : ''?>>Last month</option>
-                                            <option value="last-quarter" <?=$date === 'last-quarter' ? 'selected' : ''?>>Last quarter</option>
-                                            <option value="last-year" <?=$date === 'last-year' ? 'selected' : ''?>>Last year</option>
-                                            <option value="all-dates" <?=$date === 'all-dates' ? 'selected' : ''?>>All dates</option>
-                                        </select>
-                                    </div>
+                                <form action="<?php echo base_url('accounting/newEstimateList'); ?>" method="GET">
+                                <div class="row">                                    
                                     <div class="col-4">
                                         <label for="filter-from">From</label>
-                                        <input type="date" id="filter-from" class="nsm-field form-control date" value="<?=empty($from_date) ? date("Y-m-d") : $from_date?>" required>
+                                        <input type="date" id="filter-from" name="estimate_from" class="nsm-field form-control date" value="<?= $filter_from_date; ?>" required>
                                     </div>
                                     <div class="col-4">
                                         <label for="filter-to">To</label>
-                                        <input type="date" id="filter-to" class="nsm-field form-control date"value="<?=empty($to_date) ? date("Y-m-d") : $to_date?>" required>
+                                        <input type="date" id="filter-to" name="estimate_to" class="nsm-field form-control date"value="<?= $filter_to_date; ?>" required>
                                     </div>
                                     <div class="col-4">
                                         <label for="filter-status">Status</label>
                                         <select class="nsm-field form-select" name="filter_status" id="filter-status">
-                                            <option value="all" selected>All</option>
-                                            <option value="pending-expired">Pending, expired</option>
-                                            <option value="declined">Declined</option>
-                                            <option value="accepted">Accepted</option>
-                                            <option value="closed-converted">Closed, converted</option>
+                                            <option value="all" <?= $filter_status == 'all' ? 'selected="selected"' : ''; ?>>All</option>
+                                            <?php foreach (get_config_item('estimate_status') as $key => $status) { ?>
+                                                <?php if( $status != '' ){ ?>
+                                                    <option <?= $filter_status == $status ? 'selected="selected"' : ''; ?> value="<?= $status; ?>"><?= $status ?></option>
+                                                <?php } ?>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                 </div>                                
@@ -89,11 +73,12 @@
                                         </button>
                                     </div>
                                     <div class="col-6">
-                                        <button type="button" class="nsm-button primary float-end" id="apply-button">
+                                        <button type="submit" class="nsm-button primary float-end" id="apply-button">
                                             Apply
                                         </button>
                                     </div>
                                 </div>
+                                </form>
                             </ul>
                         </div>
 
@@ -328,6 +313,10 @@
 <script>
 $(function(){
     $("#accounting-estimates").nsmPagination({itemsPerPage:10});  
+
+    $('#reset-button').on('click', function(){
+        location.href = base_url + 'accounting/newEstimateList';
+    });
 
     $(".select-all").click(function(){
         $('.form-check-input').not(this).prop('checked', this.checked);

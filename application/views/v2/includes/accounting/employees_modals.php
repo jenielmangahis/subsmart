@@ -27,11 +27,11 @@
                     <div class="row gy-3 mb-4">    
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Mobile Number</label>
-                            <input type="text" name="mobile" class="nsm-field form-control" value="" />
+                            <input type="text" name="mobile" placeholder="xxx-xxx-xxxx" maxlength="12" class="nsm-field mobile-number form-control" value="" />
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
-                            <input type="text" name="phone" class="nsm-field form-control" value="" />
+                            <input type="text" name="phone" placeholder="xxx-xxx-xxxx" maxlength="12" class="nsm-field phone-number form-control" value="" />
                         </div>
                     </div>
                     <div class="row gy-3 mb-4">
@@ -489,3 +489,38 @@
     <!--end of modal-->
 </form>
 </div>
+
+<script>
+
+$(function() {
+    $('.mobile-number').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    });
+
+    $('.phone-number').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    });    
+})
+
+
+</script>

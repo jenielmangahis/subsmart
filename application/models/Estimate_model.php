@@ -88,6 +88,29 @@ class Estimate_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllByCompanyIdAndDateRange($cid, $date_range = array(), $filter = array())
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $cid);
+
+        if( $date_range ){
+            $this->db->where('estimate_date >=', $date_range['from']);
+            $this->db->where('estimate_date <=', $date_range['to']);
+        }
+        
+        if( $filter ){
+            foreach( $filter as $f ){
+                $this->db->where($f['field'], $f['value']);
+            }
+        }
+
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function mailIsOpen($data)
     {
         // $this->db->where('id', $id);
@@ -398,6 +421,21 @@ class Estimate_model extends MY_Model
         $this->db->join('items_has_storage_loc', 'items_has_storage_loc.id = items.id', 'left');
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function getCompanyTotalAmountEstimates($cid, $date_range = array())
+    {
+        $this->db->select('id, COALESCE(SUM(grand_total),0) AS total_amount');    
+        $this->db->from($this->table);   
+        $this->db->where('company_id', $cid);
+
+        if( !empty($date_range) ){
+            $this->db->where('estimate_date >=', $date_range['from']);
+            $this->db->where('estimate_date <=', $date_range['to']);
+        }
+
+        $query = $this->db->get()->row();
+        return $query;
     }
 
     public function add_estimate_items($data)

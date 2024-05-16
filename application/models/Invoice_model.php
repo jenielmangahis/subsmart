@@ -292,7 +292,7 @@ class Invoice_model extends MY_Model
 
     public function getCompanyTotalAmountPaidInvoices($cid, $date_range = array())
     {
-        $this->db->select('id, COALESCE(SUM(grand_total),0) AS total_paid');    
+        $this->db->select('id, COALESCE(SUM(total_due),0) AS total_paid');    
         $this->db->from($this->table);   
         $this->db->where('company_id', $cid);
         $this->db->where('view_flag', 0);
@@ -1356,6 +1356,22 @@ class Invoice_model extends MY_Model
         $this->db->insert($this->table,$data);
         $insert_id = $this->db->insert_id();
         return  $insert_id;
+    }
+
+    public function getTotalDueByCompanyIdAndDateRange($cid, $date_range = array()){
+        $this->db->select('COALESCE(SUM(total_due),0) as total_amount');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $cid);
+        $this->db->where('status !=', 'Draft');
+        $this->db->where('view_flag', 0);
+
+        if( $date_range ){
+            $this->db->where('date_issued >=', $date_range['from']);
+            $this->db->where('date_issued <=', $date_range['to']);
+        }
+
+        $query = $this->db->get();
+        return $query->row();
     }
 }
 

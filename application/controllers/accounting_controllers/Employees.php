@@ -700,7 +700,9 @@ class Employees extends MY_Controller
                 'postal_code' => $this->input->post('zip_code'),
                 'phone' => $this->input->post('phone'),
                 'mobile' => $this->input->post('mobile'),
-                'birthdate' => date('Y-m-d', strtotime($this->input->post('birth_date')))
+                'birthdate' => date('Y-m-d', strtotime($this->input->post('birth_date'))),
+                'has_web_access' => !empty($this->input->post('web_access')) ? 1 : 0,
+                'has_app_access' => !empty($this->input->post('app_access')) ? 1 : 0
             ];
         } else {
             switch ($type) {
@@ -1317,13 +1319,14 @@ class Employees extends MY_Controller
                 'name' => $emp->LName . ', ' . $emp->FName,
                 'pay_method' => $empPayDetails->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check',
                 'total_pay' => $empTotalPay,
+                'bunos' => $empTotalPay,
                 'employee_tax' => $empTax,
                 'net_pay' => number_format($netPay, 2, '.', ','),
                 'employee_futa' => number_format($empTotalPay * $futa, 2, '.', ','),
                 'employee_sui' => $employeeSUI
             ];
         }
-
+         
         $totalPay = array_sum(array_column($employees, 'total_pay'));
         $totalPay = number_format($totalPay, 2, '.', ',');
         $totalTaxes = array_sum(array_column($employees, 'employee_tax'));

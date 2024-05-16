@@ -231,29 +231,47 @@ const updateTotalPay = () => {
     const formattedTotal = formatter.format(total);
     $('#bonus-payroll-modal #payroll-table tfoot tr:first-child td:nth-child(4), #bonus-payroll-modal #payroll-table tfoot tr:first-child td:last-child').html(formattedTotal);
     $('#bonus-payroll-modal h2.total-pay').html(formattedTotal);
+    
 };
 
 $(document).on('change', '#bonus-payroll-modal #payroll-table tbody .select-one', function() {
     var row = $(this).closest('tr');
 
     if($(this).prop('checked')) {
-        row.children('td').each(function(index, value)  {
+        row.children('td').each(function(index, value) {
             switch(index) {
                 case 2 :
                     $(this).html(row.data().method);
-                break;
+                    break;
                 case 3 :
-                    $(this).html('<input type="number" name="bonus[]" step="0.01" class="form-control nsm-field text-end">');
-                break;
+                    var bonusValue = row.data('bonus') || '';
+                    $(this).html('<input type="number" name="bonus[]" step="0.01" class="form-control nsm-field text-end" value="' + bonusValue + '">');
+                    break;
                 case 4 :
-                    $(this).html(`<input type="text" name="memo[]" class="form-control nsm-field">`);
-                break;
+                    var memoValue = row.data('memo') || ''; 
+                    $(this).html('<input type="text" name="memo[]" class="form-control nsm-field" value="' + memoValue + '">');
+                    break;
                 case 5 :
-                    $(this).html(`<p class="m-0 text-end"><span class="total-pay">$0.00</span></p>`);
-                break;
+                    var totalPayValue = row.data('total-pay') || '$0.00'; 
+                    $(this).html('<p class="m-0 text-end"><span class="total-pay">' + totalPayValue + '</span></p>');
+                    break;
             }
         });
     } else {
+        row.children('td').each(function(index, value) {
+            switch(index) {
+                case 3 :
+                    row.data('bonus', $(this).find('input[name="bonus[]"]').val());
+                    break;
+                case 4 :
+                    row.data('memo', $(this).find('input[name="memo[]"]').val());
+                    break;
+                case 5 :
+                    row.data('total-pay', $(this).find('.total-pay').text());
+                    break;
+            }
+        });
+
         row.find('td').each(function(index, value) {
             if (index > 1) {
                 $(this).html('');
@@ -267,6 +285,7 @@ $(document).on('change', '#bonus-payroll-modal #payroll-table tbody .select-one'
     $('#bonus-payroll-modal #payroll-table .select-all').prop('checked', checked === count);
     updateTotalPay();
 });
+
 
 $(document).on('change', '#bonus-payroll-modal #payroll-table tbody [name="bonus[]"]', function() {
     if($(this).val() !== '') {
@@ -324,6 +343,7 @@ $(document).on('click', '#bonus-payroll-modal #preview-payroll', function() {
         processData: false,
         contentType: false,
         success: function(res) {
+             console.log(res);
             $('div#bonus-payroll-modal div.modal-body').html(res);
 
             var chartHeight = $('div#bonus-payroll-modal div.modal-body div#bonusPayrollChart').parent().prev().height();

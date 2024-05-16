@@ -22,7 +22,7 @@
                                     </div>
                                     <div class="col-12 col-md-6 grid-mb text-end">
                                         <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#change_status_modal">
+                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#edit_employee_modal">
                                                 Change status
                                             </button>
                                         </div>
@@ -53,53 +53,39 @@
                                         <div class="tab-pane fade <?=$has_filter === false ? 'show active' : ''?>" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                                             <div class="row">
                                                 <div class="col-12 col-md-8">
-                                                    <div class="row g-3">
-                                                        <div class="col-12">
-                                                            <div class="nsm-card primary">
-                                                                <div class="row">
-                                                                    <div class="col-12">
-                                                                        <h4 class="float-start">Personal Info</h4>
-                                                                        <button class="nsm-button float-end" data-bs-toggle="modal" data-bs-target="#edit_employee_modal">Edit</button>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-12 col-md-4">
-                                                                        <h6>Name</h6>
-                                                                        <h5><?=$employee->FName?> <?=$employee->LName?></h5>
-                                                                    </div>
-                                                                    <div class="col-12 col-md-4">
-                                                                        <h6>Email</h6>
-                                                                        <h5><?=!in_array($employee->email, ['', null]) ? $employee->email : '-'?></h5>
-                                                                    </div>
-                                                                    <div class="col-12 col-md-4">
-                                                                        <h6>Birth date</h6>
-                                                                        <h5><?=date("m/d/Y", strtotime($employee->birthdate))?></h5>
-                                                                    </div>
-                                                                    <div class="col-12 col-md-4">
-                                                                        <h6>Home address</h6>
-                                                                        <h5><?=$employee->complete_address ? $employee->complete_address : '-'?></h5>
-                                                                    </div>
-                                                                    <div class="col-12 col-md-4">
-                                                                        <h6>Phone number</h6>
-                                                                        <h5><?=$employee->phone ? $employee->phone : '-'?></h5>
-                                                                    </div>
-                                                                </div>
+                                                    <div class="nsm-card primary">
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <h4 class="float-start">Personal Info</h4>
+                                                                <button class="nsm-button float-end" data-bs-toggle="modal" data-bs-target="#edit_employee_modal">Edit</button>
                                                             </div>
                                                         </div>
-                                                        <div class="col-12">
-                                                            <div class="nsm-card primary">
-                                                                <div class="row">
-                                                                    <div class="col-12">
-                                                                        <h4 class="float-start">Payment method</h4>
-                                                                        <button class="nsm-button float-end" data-bs-toggle="modal" data-bs-target="#edit-payment-method-modal">Edit</button>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col-12 col-md-4">
-                                                                        <h6>Payment method</h6>
-                                                                        <h5><?=$employee->payment_method?></h5>
-                                                                    </div>
-                                                                </div>
+                                                        <div class="row">
+                                                            <div class="col-12 col-md-4">
+                                                                <h6>Name</h6>
+                                                                <h5><?=$employee->FName?> <?=$employee->LName?></h5>
+                                                            </div>
+                                                            <div class="col-12 col-md-4">
+                                                                <h6>Email</h6>
+                                                                <h5><?=!in_array($employee->email, ['', null]) ? $employee->email : '-'?></h5>
+                                                            </div>
+                                                            <div class="col-12 col-md-4">
+                                                                <h6>Birth date</h6>
+                                                                <?php 
+                                                                    $birthdate = 'Not Specified';
+                                                                    if($employee->birthdate != '0000-00-00' || $employee->birthdate == null) {
+                                                                        $birthdate = date("m/d/Y", strtotime($employee->birthdate));
+                                                                    }
+                                                                ?>
+                                                                <h5><?=$birthdate?></h5>
+                                                            </div>
+                                                            <div class="col-12 col-md-4">
+                                                                <h6>Home address</h6>
+                                                                <h5><?=$employee->complete_address ? $employee->complete_address : '-'?></h5>
+                                                            </div>
+                                                            <div class="col-12 col-md-4">
+                                                                <h6>Phone number</h6>
+                                                                <h5><?=$employee->phone ? $employee->phone : '-'?></h5>
                                                             </div>
                                                         </div>
                                                         <div class="col-12">
@@ -166,11 +152,12 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-md-4">
+                                                <div class="col-12 col-md-8">
                                                     <div class="nsm-card primary">
-                                                        <div class="nsm-card-header">
-                                                            <div class="nsm-card-title">
-                                                                <span>Profile Picture</span>
+                                                        <div class="row">
+                                                            <div class="col-12">
+                                                                <h4 class="float-start">Employment details</h4>
+                                                                <button class="nsm-button float-end" data-bs-toggle="modal" data-bs-target="#edit-employment-details-modal">Edit</button>
                                                             </div>
                                                         </div>
                                                         <div class="nsm-card-content">
