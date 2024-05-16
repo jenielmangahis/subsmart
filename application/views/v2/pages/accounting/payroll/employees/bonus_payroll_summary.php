@@ -67,16 +67,18 @@
                             <td>TOTAL PAY</td>
                             <td>EMPLOYEE TAXES</td>
                             <td>NET PAY</td>
+                            <td>BUNOS</td>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach($employees as $employee) :?>
+                        <?php foreach($employees as $employee) : ?>
                             <tr>
                                 <td><?=$employee['name']?></td>
                                 <td><?=$employee['pay_method']?></td>
                                 <td><?=$employee['total_pay']?></td>
                                 <td><?=$employee['employee_tax']?></td>
                                 <td><?=$employee['net_pay']?></td>
+                                <td><?=$employee['bunos']?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -84,9 +86,10 @@
                         <tr>
                             <td>TOTAL</td>
                             <td></td>
-                            <td><?=str_replace('$-', '-$', '$'.$total['total_pay'])?></td>
+                            <td><?=str_replace('$-', '-$', '$'.$total['total_pay']) ?></td>
                             <td><?=str_replace('$-', '-$', '$'.$total['total_taxes'])?></td>
                             <td><?=str_replace('$-', '-$', '$'.$total['total_net_pay'])?></td>
+                            <td><?=str_replace('$-', '-$', '$'.$total['bunos'])?></td>
                         </tr>
                     </tfoot>
                 </table>

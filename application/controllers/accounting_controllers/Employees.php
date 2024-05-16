@@ -1319,13 +1319,14 @@ class Employees extends MY_Controller
                 'name' => $emp->LName . ', ' . $emp->FName,
                 'pay_method' => $empPayDetails->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check',
                 'total_pay' => $empTotalPay,
+                'bunos' => $empTotalPay,
                 'employee_tax' => $empTax,
                 'net_pay' => number_format($netPay, 2, '.', ','),
                 'employee_futa' => number_format($empTotalPay * $futa, 2, '.', ','),
                 'employee_sui' => $employeeSUI
             ];
         }
-
+         
         $totalPay = array_sum(array_column($employees, 'total_pay'));
         $totalPay = number_format($totalPay, 2, '.', ',');
         $totalTaxes = array_sum(array_column($employees, 'employee_tax'));

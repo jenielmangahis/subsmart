@@ -37,12 +37,8 @@
                 }
             ?>
             <a class="widget-item" style="text-decoration: none; color: inherit; cursor: pointer;" target="_blank" href="/invoice/genview/<?= $invoice->id; ?>">
-                <?php if (is_null($invoiceAvatar)): ?>
-                    <div class="nsm-profile"><span><?= $invoiceInitial; ?></span></div>
-                <?php else: ?>
-                    <div class="nsm-profile" style="background-image: url('<?= $invoiceAvatar; ?>');"></div>
-                <?php endif; ?>
-
+                <?php $initials = ucwords($invoice->first_name[0]).ucwords($invoice->last_name[0]); ?>
+                <div class="nsm-profile"><span><?= $initials; ?></span></div>
                 <div class="content">
                     <div class="details">
                         <span class="content-title"><?= formatInvoiceNumber($invoice->invoice_number); ?></span>

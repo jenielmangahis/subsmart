@@ -1080,8 +1080,8 @@ $('.update-quantity').on('click', function (e) {
                 title: 'Success',
                 text: 'Stock updated successfully!'
             }).then(function () {
-                // location.reload();
-                $('#items-table').load(location.href + ' #items-table');
+                location.reload();
+                // $('#items-table').load(location.href + ' #items-table');
             });
         },
         error: function (xhr, status, error) {

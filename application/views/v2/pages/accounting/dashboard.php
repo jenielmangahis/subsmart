@@ -1117,7 +1117,7 @@ add_css(array(
             <a href="javascript:void(0);" role="button" class="nsm-button btn-sm m-0 me-2 btn-connect-plaid" id="table-modal">
                 Connect Bank Account
             </a>
-            <div class="dropdown">
+            <div class="dropdown" style="float:right;">
                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                 </a>
@@ -1130,22 +1130,24 @@ add_css(array(
     </div>
     <div class="nsm-card-content">        
         <div class="nsm-widget-table">
-            <?php foreach($accounts as $account) { ?>
-                <div class="widget-item">
-                    <div class="nsm-list-icon">
-                        <i class='bx bx-building-house'></i>
-                    </div>
-                    <div class="content ms-2">
-                        <div class="details">
-                            <span class="content-title mb-1"><?=$account->name; ?></span>
-                            <span class="content-subtitle d-block">Bank balance: $0.00</span>
-                            <span class="content-subtitle d-block">In nSmartrac: <?=str_replace("$-", "-$", '$'.number_format(floatval($account->balance), 2, '.', ','))?></span>
+            <?php if( $accounts ){ ?>
+                <?php foreach($accounts as $account) { ?>
+                    <div class="widget-item">
+                        <div class="nsm-list-icon">
+                            <i class='bx bx-building-house'></i>
                         </div>
-                        <div class="controls">
-                            <!-- <span class="nsm-badge">Updated 1 day ago</span> -->
+                        <div class="content ms-2">
+                            <div class="details">
+                                <span class="content-title mb-1"><?=$account->name; ?></span>
+                                <span class="content-subtitle d-block">Bank balance: $0.00</span>
+                                <span class="content-subtitle d-block">In nSmartrac: <?=str_replace("$-", "-$", '$'.number_format(floatval($account->balance), 2, '.', ','))?></span>
+                            </div>
+                            <div class="controls">
+                                <!-- <span class="nsm-badge">Updated 1 day ago</span> -->
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php } ?>
             <?php } ?>
                                                                                 <!-- </div>
                                                                                 <div class="addFISection">
