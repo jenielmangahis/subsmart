@@ -1570,10 +1570,6 @@ $(function() {
         computeDepositAmount();
     });
 
-    $('#deposit-percentage').keyup(function() {
-        computeDepositAmount();
-    });
-
     $('#grand_total_input').change(function() {
         computeDepositAmount();
         no_tax();
