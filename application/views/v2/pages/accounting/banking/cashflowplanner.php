@@ -1,6 +1,7 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 include viewPath('v2/includes/accounting_header'); 
+
 ?>
 
 <!-- CSS and JS Imports -->
@@ -400,7 +401,7 @@ include viewPath('v2/includes/accounting_header');
 </div>
 
 <!-- Footer Disabled Temporarily Due to some parts didn't work (css, dropdown button, export button didn't show) -->
-<?php // include viewPath('v2/includes/footer'); ?>
+<?php include viewPath('v2/includes/footer'); ?>
 
 <script>
     var BASE_URL = window.location.origin;
