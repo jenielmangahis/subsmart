@@ -24,6 +24,26 @@ class Trac360_model extends MY_Model
         $query = $this->db->query("SELECT trac360_people.*,users.FName,users.LName, users.profile_img FROM trac360_people JOIN users ON trac360_people.user_id = users.id WHERE trac360_people.company_id = " . $company_id);
         return $query->result();
     }
+
+    public function getTrac360PeopleByCompanyIdAndUserId($cid, $uid = array(), $date_range = array())
+    {
+        $this->db->select('trac360_people.*, users.FName,users.LName, users.profile_img');        
+        $this->db->from('trac360_people');   
+        $this->db->join('users', 'trac360_people.user_id  = users.id');
+        $this->db->where('trac360_people.company_id', $cid);
+        $this->db->where_in('trac360_people.user_id', $uid);
+
+        if( $date_range ){
+            $this->db->where('trac360_people.last_tracked_location_date >=', $date_range['from']);
+            $this->db->where('trac360_people.last_tracked_location_date <=', $date_range['to']);
+        }
+
+        $this->db->order_by('trac360_people.id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function get_last_location_from_timesheet_logs($user_id)
     {
         $this->db->order_by('date_created', 'DESC')->limit(1);
