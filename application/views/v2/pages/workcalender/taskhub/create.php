@@ -185,8 +185,11 @@ if (isset($selected_participants)) {
 
                                     <div class="col-12 col-md-4">
                                             <label class="content-subtitle fw-bold d-block mb-2">Select a group for this task</label>
-                                            <select name="group" id="group-select" class="nsm-field form-select group-select">
+                                            <select name="group" id="group-select" class="nsm-field form-select group-select" required>
                                                 <option value="0">Select a Group</option>
+                                                <?php foreach($taskslists as $row) { ?>
+                                                    <option value="<?php echo $row->id; ?>"><?php echo $row->name; ?></option>
+                                                <?php } ?>
                                             </select>
                                     </div>
 
