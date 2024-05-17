@@ -179,10 +179,10 @@
                                         <li><a class="dropdown-item" href="javascript:void(0);" data-row="300">300</a></li>
                                     </ul>
                                 </div>
-                                <div class="form-check">
+                                <!-- <div class="form-check">
                                     <input type="checkbox" id="compact" class="form-check-input">
                                     <label for="compact" class="form-check-label">Compact</label>
-                                </div>
+                                </div> -->
                             </ul>
                         </div>
                     </div>
