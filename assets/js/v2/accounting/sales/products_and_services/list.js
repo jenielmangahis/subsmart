@@ -972,82 +972,48 @@ function occupyFields(id, type, action = 'edit') {
     });
 }
 
-// $('#items-table .see-item-locations').on('click', function (e) {
-//     e.preventDefault();
+function bindSeeItemLocations() {
+    $('#items-table .see-item-locations').off('click').on('click', function (e) {
+        e.preventDefault();
 
-//     var itemId = $(this).closest('tr').find('.select-one').val();
+        var itemId = $(this).closest('tr').find('.select-one').val();
 
-//     $.get(`${base_url}accounting/products-and-services/get-item-locations/${itemId}`, function (result) {
-//         var locations = JSON.parse(result);
+        $.get(`${base_url}accounting/products-and-services/get-item-locations/${itemId}`, function (result) {
+            var locations = JSON.parse(result);
 
-//         $('#item-locations-modal #item-locations-table tbody').empty();
+            $('#item-locations-modal #item-locations-table tbody').empty();
 
-//         if (locations.length > 0) {
-//             for (var i = 0; i < locations.length; i++) {
-//                 var location = locations[i];
+            if (locations.length > 0) {
+                for (var i = 0; i < locations.length; i++) {
+                    var location = locations[i];
 
-//                 $('#item-locations-modal #item-locations-table tbody').append(`
-//                     <tr>
-//                         <td class="d-none"><input type="hidden" class="nsm-field form-control" value="${itemId}"></td>
-//                         <td><input type="text" class="nsm-field form-control" value="${location.name}"></td>
-//                         <td><input type="number" class="nsm-field form-control" value="${location.qty}"></td>
-//                         </tr>
-//                 `);
-
-//             }
-//         } else {
-//             $('#item-locations-modal #item-locations-table tbody').append(`
-//                 <tr>
-//                     <td colspan="3">
-//                         <div class="nsm-empty">
-//                             <span>No results found.</span>
-//                         </div>
-//                     </td>
-//                 </tr>
-//             `);
-//         }
-
-//         $('#item-locations-modal').modal('show');
-//     });
-// });
-
-$('#items-table .see-item-locations').on('click', function (e) {
-    e.preventDefault();
-
-    var itemId = $(this).closest('tr').find('.select-one').val();
-
-    $.get(`${base_url}accounting/products-and-services/get-item-locations/${itemId}`, function (result) {
-        var locations = JSON.parse(result);
-
-        $('#item-locations-modal #item-locations-table tbody').empty();
-
-        if (locations.length > 0) {
-            for (var i = 0; i < locations.length; i++) {
-                var location = locations[i];
-
+                    $('#item-locations-modal #item-locations-table tbody').append(`
+                        <tr>
+                            <td class="d-none"><input type="hidden" class="nsm-field form-control" value="${itemId}"></td>
+                            <td><input type="text" class="nsm-field form-control" value="${location.name}" readonly></td>
+                            <td><input type="number" class="nsm-field form-control location-qty" value="${location.qty}"></td>
+                        </tr>
+                    `);
+                }
+            } else {
                 $('#item-locations-modal #item-locations-table tbody').append(`
                     <tr>
-                        <td class="d-none"><input type="hidden" class="nsm-field form-control" value="${itemId}"></td>
-                        <td><input type="text" class="nsm-field form-control" value="${location.name}" readonly></td>
-                        <td><input type="number" class="nsm-field form-control location-qty" value="${location.qty}"></td>
+                        <td colspan="3">
+                            <div class="nsm-empty">
+                                <span>No results found.</span>
+                            </div>
+                        </td>
                     </tr>
                 `);
-
             }
-        } else {
-            $('#item-locations-modal #item-locations-table tbody').append(`
-                <tr>
-                    <td colspan="3">
-                        <div class="nsm-empty">
-                            <span>No results found.</span>
-                        </div>
-                    </td>
-                </tr>
-            `);
-        }
 
-        $('#item-locations-modal').modal('show');
+            $('#item-locations-modal').modal('show');
+        });
     });
+}
+
+$(document).ready(function() {
+    bindSeeItemLocations();
 });
 
 $('.update-quantity').on('click', function (e) {
@@ -1080,8 +1046,9 @@ $('.update-quantity').on('click', function (e) {
                 title: 'Success',
                 text: 'Stock updated successfully!'
             }).then(function () {
-                location.reload();
-                // $('#items-table').load(location.href + ' #items-table');
+                $('#items-table').load(location.href + ' #items-table', function() {
+                    bindSeeItemLocations();
+                });
             });
         },
         error: function (xhr, status, error) {

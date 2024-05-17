@@ -68,4 +68,17 @@ class Accounting_paychecks_model extends MY_Model
 		$query = $this->db->get($this->table);
 		return $query->result();
 	}
+
+	public function get_voided_paychecks($companyId)
+	{
+		$this->db->where('company_id', $companyId);
+		$this->db->where('status', '4');
+		$query = $this->db->get('accounting_paychecks');
+
+		if ($query->num_rows() > 0) {
+			return $query->result_array();
+		} else {
+			return false;
+		}
+	}
 }

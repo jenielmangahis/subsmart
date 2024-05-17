@@ -601,3 +601,85 @@ $(document).ready(function () {
         }
     });
 });
+
+$(document).ready(function () {
+    $('.void-paychecks-button').on('click', function () {
+        fetchVoidedPaychecks();
+    });
+
+    function fetchVoidedPaychecks() {
+        $.ajax({
+            url: `${base_url}accounting_controllers/employees/get_voided_paychecks`,
+            method: 'GET',
+            success: function (response) {
+                let result = JSON.parse(response);
+                if (result.success) {
+                    displayVoidedPaychecks(result.data);
+                } else {
+                    Swal.fire('No Results', result.message, 'info');
+                }
+            },
+            error: function (error) {
+                Swal.fire('Error!', 'An error occurred while fetching voided paychecks.', 'error');
+            }
+        });
+    }
+
+    function displayVoidedPaychecks(paychecks) {
+        let tbody = $('#paycheck-table tbody');
+        tbody.empty();
+
+        if (paychecks.length > 0) {
+            paychecks.forEach(paycheck => {
+                let row = `
+                    <tr>
+                        <td>
+                            <div class="table-row-icon table-checkbox">
+                                <input class="form-check-input select-one table-select" type="checkbox" value="${paycheck.id}">
+                            </div>
+                        </td>
+                        <td>${paycheck.pay_date || 'No pay date'}</td>
+                        <td>${paycheck.name || 'No name provided'}</td>
+                        <td>${paycheck.total_pay ? `$${paycheck.total_pay}` : '0'}</td>
+                        <td>${paycheck.net_pay ? `$${paycheck.net_pay}` : '0'}</td>
+                        <td>${paycheck.pay_method || 'No payment method'}</td>
+                        <td>Void</td>
+                        <td>-</td>
+                        <td>
+                            <div class="dropdown float-end">
+                                <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                    <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item print-paycheck" href="#">Print</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item delete-paycheck" href="#">Delete</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item void-paycheck" href="#">Void</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item edit-paycheck" href="#">Edit</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                tbody.append(row);
+            });
+        } else {
+            tbody.append(`
+                <tr class="no-results">
+                    <td colspan="9">
+                        <div class="nsm-empty">
+                            <span>No voided paychecks found.</span>
+                        </div>
+                    </td>
+                </tr>
+            `);
+        }
+    }
+});

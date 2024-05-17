@@ -1126,15 +1126,14 @@ function Signing(hash) {
         $(".signing__signatureInput").val("");
 
         $signatureModal.attr("data-field-id", fieldId);
-        const fid = 0;
-
-        $signatureModal.modal("show");
-
+        const fid = 0;        
+        
         if( window.__ismobile ){
           alert('Sign in mobile:'+fid+':'+fieldId+':'+recipient.id+':'+recipient.docfile_id);
         }else{
           $signatureModal.modal("show");
-        }           
+        }      
+             
       });
       return $element;
     }
@@ -2508,7 +2507,15 @@ function Signing(hash) {
       // }
 
       if (data.hash) {
-        window.location = `${prefixURL}/eSign/signing?hash=${data.hash}`;
+        const queryString = window.location.href;
+        const url = new URL(queryString);
+        const params = new URLSearchParams(url.search);
+
+        if( params.has("is_mobile") ){
+          window.location = `${prefixURL}/eSign/signing?is_mobile=1&hash=${data.hash}`;
+        }else{
+          window.location = `${prefixURL}/eSign/signing?hash=${data.hash}`;
+        }
         // console.log('testging...');
         return;
       }

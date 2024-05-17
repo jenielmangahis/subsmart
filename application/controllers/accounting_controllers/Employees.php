@@ -1278,6 +1278,7 @@ class Employees extends MY_Controller
         $this->page_data['bonusPayType'] = $bonusPayType;
         $this->page_data['accounts'] = $accounts;
         $this->page_data['payDetails'] = $this->users_model->getActiveEmployeePayDetails();
+        // print_r($this->page_data['payDetails']);
         $this->load->view('v2/pages/accounting/payroll/employees/bonus_only_payroll_form', $this->page_data);
     }
 
@@ -1319,16 +1320,18 @@ class Employees extends MY_Controller
                 'name' => $emp->LName . ', ' . $emp->FName,
                 'pay_method' => $empPayDetails->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check',
                 'total_pay' => $empTotalPay,
-                'bunos' => $empTotalPay,
+                'bonus' => $empTotalPay,
                 'employee_tax' => $empTax,
                 'net_pay' => number_format($netPay, 2, '.', ','),
                 'employee_futa' => number_format($empTotalPay * $futa, 2, '.', ','),
                 'employee_sui' => $employeeSUI
             ];
         }
-         
+
         $totalPay = array_sum(array_column($employees, 'total_pay'));
         $totalPay = number_format($totalPay, 2, '.', ',');
+        $totalBonus = array_sum(array_column($employees, 'bonus'));
+        $totalBonus = number_format($totalPay, 2, '.', ',');
         $totalTaxes = array_sum(array_column($employees, 'employee_tax'));
         $totalTaxes = number_format($totalTaxes, 2, '.', ',');
         $totalNetPay = array_sum(array_column($employees, 'net_pay'));
@@ -1344,6 +1347,7 @@ class Employees extends MY_Controller
 
         $this->page_data['employees'] = $employees;
         $this->page_data['total'] = [
+            'total_bonus' => $totalBonus,
             'total_pay' => $totalPay,
             'total_taxes' => $totalTaxes,
             'total_net_pay' => $totalNetPay,
@@ -1679,7 +1683,7 @@ class Employees extends MY_Controller
             <thead>
                 <tr>';
         foreach ($post['fields'] as $field) {
-            $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black"><b>' . $field . '</b></th>';
+            $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black; border-left: 1px solid black; border-right: 1px solid black"><b>' . $field . '</b></th>';
         }
         $html .= '</tr>
             </thead>
@@ -1688,7 +1692,7 @@ class Employees extends MY_Controller
         foreach ($post['paychecks'] as $paycheck) {
             $html .= '<tr>';
             foreach ($post['fields'] as $field) {
-                $html .= '<td style="border-bottom: 1px solid black">' . str_replace('class="text-danger"', 'style="color: red"', $paycheck[strtolower(str_replace(' ', '_', $field))]) . '</td>';
+                $html .= '<td style="border-bottom: 1px solid black; border-left: 1px solid black; border-right: 1px solid black">' . str_replace('class="text-danger"', 'style="color: red"', $paycheck[strtolower(str_replace(' ', '_', $field))]) . '</td>';
             }
             $html .= '</tr>';
         }
@@ -2382,6 +2386,23 @@ class Employees extends MY_Controller
         echo json_encode([
             'success' => $void
         ]);
+    }
+
+    public function get_voided_paychecks()
+    {
+        $voided_paychecks = $this->accounting_paychecks_model->get_voided_paychecks(logged('company_id'));
+
+        if ($voided_paychecks !== false) {
+            echo json_encode([
+                'success' => true,
+                'data' => $voided_paychecks
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'No voided paychecks found.'
+            ]);
+        }
     }
 
     public function edit_paycheck($paycheckId)

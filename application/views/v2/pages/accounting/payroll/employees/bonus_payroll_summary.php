@@ -67,7 +67,7 @@
                             <td>TOTAL PAY</td>
                             <td>EMPLOYEE TAXES</td>
                             <td>NET PAY</td>
-                            <td>BUNOS</td>
+                            <td>BONUS</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -78,7 +78,7 @@
                                 <td><?=$employee['total_pay']?></td>
                                 <td><?=$employee['employee_tax']?></td>
                                 <td><?=$employee['net_pay']?></td>
-                                <td><?=$employee['bunos']?></td>
+                                <td><?=$employee['bonus']?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -89,7 +89,7 @@
                             <td><?=str_replace('$-', '-$', '$'.$total['total_pay']) ?></td>
                             <td><?=str_replace('$-', '-$', '$'.$total['total_taxes'])?></td>
                             <td><?=str_replace('$-', '-$', '$'.$total['total_net_pay'])?></td>
-                            <td><?=str_replace('$-', '-$', '$'.$total['bunos'])?></td>
+                            <td><?=str_replace('$-', '-$', '$'.$total['total_bonus'])?></td>
                         </tr>
                     </tfoot>
                 </table>
