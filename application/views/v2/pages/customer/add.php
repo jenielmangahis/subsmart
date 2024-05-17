@@ -121,12 +121,12 @@
     <script src="https://momentjs.com/downloads/moment-with-locales.js"></script>
     <script >
     var autocomplete;
-        function initMap() {
-            var input = document.getElementById('mail_add');
-            autocomplete = new google.maps.places.Autocomplete(input);
-            autocomplete.addListener("place_changed", fillInAddress);
+    function initMap() {
+        var input = document.getElementById('mail_add');
+        autocomplete = new google.maps.places.Autocomplete(input);
+        autocomplete.addListener("place_changed", fillInAddress);
 
-        }
+    }
     function fillInAddress(){
         var place = autocomplete.getPlace();
         var street="";
