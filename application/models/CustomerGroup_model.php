@@ -37,6 +37,16 @@ class CustomerGroup_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getById($id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where("id", $id);
+        $query = $this->db->get();
+        
+        return $query->row();
+    }
 }
 
 /* End of file CustomerGroup_model.php */
