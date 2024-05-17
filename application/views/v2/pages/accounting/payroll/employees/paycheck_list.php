@@ -21,6 +21,11 @@
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button void-paychecks-button">
+                                Voided Paychecks
+                            </button>
+                        </div>
+                        <div class="dropdown d-inline-block">
                             <input type="hidden" class="nsm-field form-control" id="selected_ids">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>

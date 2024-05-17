@@ -207,11 +207,11 @@ $(document).on('click', '#bonus-payroll-modal #continue-bonus-payroll', function
             templateSelection: optionSelect,
             dropdownParent: $('#bonus-payroll-modal')
         });
-        $('#bonus-payroll-modal #payDate').datepicker({
-            format: 'mm/dd/yyyy',
-            orientation: 'bottom',
-            autoclose: true
-        });
+        // $('#bonus-payroll-modal #payDate').datepicker({
+        //     format: 'mm/dd/yyyy',
+        //     orientation: 'bottom',
+        //     autoclose: true
+        // });
     });
 });
 
@@ -587,7 +587,7 @@ $(document).on('click', '#commission-payroll-modal #preview-payroll', function()
     });
 
     $.ajax({
-        url: '/accounting/employees/generate-commission-payroll',
+        url: `/accounting/employees/generate-commission-payroll`,
         data: payrollFormData,
         type: 'post',
         processData: false,
