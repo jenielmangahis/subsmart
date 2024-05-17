@@ -14,7 +14,7 @@
                                 <div class="row g-3">
                                     <div class="col-12">
                                         <label for="tag-group-name">Group name</label>
-                                        <input type="text" name="tags_group_name" id="tag-group-name" class="form-control nsm-field">
+                                        <input type="text" name="tags_group_name" id="tag-group-name" class="form-control nsm-field" required="">
                                     </div>
                                     <div class="col-12">
                                         <button class="nsm-button success" type="submit">Save</button>
@@ -35,7 +35,7 @@
                                 <div class="row">
                                     <div class="col-12 col-md-9">
                                         <label for="tag_name">Tag name</label>
-                                        <input type="text" name="tag_name" id="tag_name" class="form-control nsm-field" disabled>
+                                        <input type="text" name="tag_name" id="tag_name" class="form-control nsm-field" disabled required="">
                                     </div>
                                     <div class="col-12 col-md-3 d-flex align-items-end">
                                         <button class="nsm-button success w-100" type="submit" disabled>Add</button>
