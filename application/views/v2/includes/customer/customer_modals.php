@@ -147,7 +147,7 @@
                     <input type="hidden" class="form-control" name="ls_id" id="ls_id" />
                     <div class="row">
                         <div class="col-12">
-                            <input type="text" placeholder="Sales Area Name" name="ls_name" id="ls_name" class="nsm-field form-control mb-2" required />
+                            <input type="text" placeholder="Lead Source Name" name="ls_name" id="ls_name" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
@@ -172,7 +172,7 @@
                     <input type="hidden" class="form-control" name="ls_id" id="edit_ls_id" />
                     <div class="row">
                         <div class="col-12">
-                            <input type="text" placeholder="Sales Area Name" name="ls_name" id="edit_ls_name" class="nsm-field form-control mb-2" required />
+                            <input type="text" placeholder="Lead Source Name" name="ls_name" id="edit_ls_name" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
