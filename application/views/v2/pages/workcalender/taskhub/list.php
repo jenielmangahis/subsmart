@@ -317,8 +317,28 @@
                                             ?>
                                             <span class="nsm-badge <?= $task_status ?>"><?= $row->status_text != '' ? $row->status_text : 'Draft'; ?></span>
                                         </td>
-                                        <td><?php echo date("F d, Y", strtotime($row->date_started)); ?></td>
-                                        <td><?php echo date("F d, Y", strtotime($row->estimated_date_complete)); ?></td>
+                                        <td>
+                                            <?php //echo date("F d, Y", strtotime($row->date_started)); ?>
+                                            <?php 
+                                                $date_started = "--";
+                                                if($row->date_started != null) {
+                                                    $date_started = date("F d, Y", strtotime($row->date_started));
+                                                } else {
+                                                    $date_started = date("F d, Y", strtotime($row->date_created));
+                                                }
+                                                echo $date_started;
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <?php //echo date("F d, Y", strtotime($row->date_completed)); ?>
+                                            <?php 
+                                                $date_completed = '--';
+                                                if($row->date_completed != null) {
+                                                    $date_completed = date("F d, Y", strtotime($row->date_completed));
+                                                }
+                                                echo $date_completed;
+                                            ?>
+                                        </td>
                                         <td><?php echo date("F d, Y", strtotime($row->date_created)); ?></td>
                                         <td>
                                             <div class="dropdown table-management">
