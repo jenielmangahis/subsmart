@@ -383,12 +383,12 @@ echo put_header_assets();
                             <div class="row mb-3">
                                 <div class="col-md-3">
                                     <label for="job_name"><b>Customer Email</b></label>
-                                    <input id="estimate-customer-email" type="text" class="form-control" disabled value="<?= !is_null($selectedCustomer) ? $selectedCustomer->email : ''; ?>" />
+                                    <input id="estimate-customer-email" type="text" class="form-control" name="customer_email" value="<?= !is_null($selectedCustomer) ? $estimate->customer->email : ''; ?>" />
                                 </div>
 
                                 <div class="col-md-3">
                                     <label for="job_name"><b>Customer Mobile</b></label>
-                                    <input id="estimate-customer-mobile" type="text" class="form-control" disabled value="<?= !is_null($selectedCustomer) ? $selectedCustomer->phone_m : ''; ?>" />
+                                    <input id="estimate-customer-mobile" type="text" class="form-control phone_number" name="customer_mobile" maxlength="12" placeholder="xxx-xxx-xxxx" value="<?= !is_null($selectedCustomer) ? $estimate->customer->phone_m : ''; ?>" />
                                 </div>
                             </div>
                             
@@ -652,6 +652,17 @@ echo put_header_assets();
                                         </tr>
                                         <tr>
                                             <td>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" name="no_tax" type="checkbox" value="1" id="no-tax" <?= $estimate->no_tax == 1 ? 'checked="checked"' : ''; ?>>
+                                                    <label class="form-check-label" for="noTax" style="font-size:15px;">
+                                                        No Tax
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td colspan="2"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
                                                 <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:90%; display:inline-block; border: 1px dashed #d1d1d1" value="<?php echo $estimate->adjustment_name; ?>">
                                                 <span id="help-popover-adjustment" class="fa fa-question-circle"></span>
                                             </td>
@@ -667,7 +678,7 @@ echo put_header_assets();
                                                     }
                                                     ?>
                                                     <input type="number" step="any" name="adjustment_value" id="adjustment_input" value="<?php echo number_format($adjustment_value, 2,".",""); ?>" class="form-control adjustment_input" style="width:50%;display:inline;text-align: right;padding:0px;">                                                    
-                                                </div>
+                                                </div>                                                
                                                 <span id="adjustmentText" style="display: none;"><?php echo $estimate->adjustment_value; ?></span>
                                             </td>
                                         </tr>
@@ -697,11 +708,18 @@ echo put_header_assets();
                                             <td><a href="#" data-bs-toggle="modal" data-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td>
                                             <td><input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="<?php echo $estimate->markup_amount; ?>"><span id="span_markup_input_form"><?php echo $estimate->markup_amount; ?></span></td> -->
                                         </tr>
+                                        <?php
+                                            if( $estimate->no_tax == 1 ){
+                                                $estimate_grand_total = $estimate->grand_total - $estimate->tax1_total;
+                                            }else{
+                                                $estimate_grand_total = $estimate->grand_total;
+                                            }
+                                        ?>
                                         <tr style="color:blue;font-weight:bold;font-size:16px;">
                                             <td><b>Grand Total ($)</b></td>
                                             <td></td>
-                                            <td><b>$ <span id="grand_total"><?php echo $estimate->grand_total; ?></span>
-                                                    <input type="hidden" name="grand_total" id="grand_total_input" value="<?php echo $estimate->grand_total; ?>"></b></td>
+                                            <td><b>$ <span id="grand_total"><?php echo $estimate_grand_total; ?></span>
+                                            <input type="hidden" name="grand_total" id="grand_total_input" value="<?php echo $estimate->grand_total; ?>"></b></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -1127,15 +1145,51 @@ echo put_header_assets();
             computeDepositAmount();
         });
 
-        function computeDepositAmount(){
-            var deposit_amount = $('#deposit-percentage').val() / 100;
-            var total_amount   = $('#grand_total_input').val();
+        $('#grand_total_input').change(function() {
+            computeDepositAmount();
+            no_tax();
+        });
 
-            if( total_amount > 0 ){
+        $('#no-tax').on('change', function(){
+            computeDepositAmount();
+            no_tax();
+        });
+
+        function no_tax(){
+            if($('#no-tax').is(':checked')) {
+                var grand_total = $('#grand_total_input').val();
+                var total_tax   = $('#total_tax_input').val();
+                var new_grand_total = parseFloat(grand_total) - parseFloat(total_tax);
+            }else{            
+                var grand_total = $('#grand_total_input').val();
+                var new_grand_total = parseFloat(grand_total);
+            }
+
+            if( isNaN(new_grand_total) ){
+                new_grand_total = 0;
+            }
+
+            $('#grand_total').text(new_grand_total.toFixed(2));
+        }
+
+        function computeDepositAmount() {
+            if($('#no-tax').is(':checked')) {
+                var grand_total = $('#grand_total_input').val();
+                var total_tax   = $('#total_tax_input').val();
+                var new_grand_total = parseFloat(grand_total) - parseFloat(total_tax);
+            }else{            
+                var grand_total = $('#grand_total_input').val();
+                var new_grand_total = parseFloat(grand_total);
+            }
+
+            var deposit_amount = $('#deposit-percentage').val() / 100;
+            var total_amount   = new_grand_total;
+
+            if (total_amount > 0) {
                 total_amount = total_amount * deposit_amount;
-                $('#deposit-total-amount').val(total_amount.toFixed(2));    
-            }else{
-                $('#deposit-total-amount').val('0.00');   
+                $('#deposit-total-amount').val(total_amount.toFixed(2));
+            } else {
+                $('#deposit-total-amount').val('0.00');
             }
         }
 
@@ -1357,6 +1411,19 @@ echo put_header_assets();
 
 <script>
     $(document).ready(function() {
+        $('.phone_number').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    });
 
         $('#sel-customer').change(function() {
             var id = $(this).val();
@@ -1380,6 +1447,8 @@ echo put_header_assets();
 
                     if (response.customer.phone_m) {
                         $("#estimate-customer-mobile").val(response.customer.phone_m);
+                    }else{
+                        $("#estimate-customer-mobile").val('');
                     }
                 },
                 error: function(response) {

@@ -13,7 +13,7 @@
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body customer-modal-scroll" id="customer-modal-scroll">
-                <table class="nsm-table">
+                <table class="nsm-table" id="print-customer-list">
                     <thead>
                         <tr>
                             <td data-name="Customer/Company">CUSTOMER/COMPANY</td>
@@ -21,7 +21,6 @@
                             <td data-name="Phone">PHONE</td>
                             <td data-name="Email">EMAIL</td>
                             <td data-name="Customer Type">CUSTOMER TYPE</td>
-                            <td data-name="Open Balance">OPEN BALANCE</td>
                         </tr>
                     </thead>
                     <tbody>
@@ -32,18 +31,17 @@
                             <td>
                                 <?php
                                     $address = '';
-                                    $address .= $customer->mail_add !== null ? $customer->mail_add : "";
-                                    $address .= $customer->city !== null ? '<br />' . $customer->city : "";
-                                    $address .= $customer->state !== null ? ', ' . $customer->state : "";
-                                    $address .= $customer->zip_code !== null ? ' ' . $customer->zip_code : "";
+                                    $address .= trim($customer->mail_add) !== null && trim($customer->mail_add) !== '' ? $customer->mail_add : "";
+                                    $address .= trim($customer->city) !== null && trim($customer->city) !== '' ? '<br />' . $customer->city : "";
+                                    $address .= trim($customer->state) !== null && trim($customer->state) !== '' ? ', ' . $customer->state : "";
+                                    $address .= trim($customer->zip_code) !== null && trim($customer->zip_code) !== '' ? ' ' . $customer->zip_code : "";
 
-                                    echo !empty($address) ? $address : 'Not Specified';
+                                    echo !empty(trim($address)) ? $address : 'Not Specified';
                                 ?>
                             </td>
-                            <td><?= !empty($customer->phone_h) ? $customer->phone_h : 'Not Specified';?></td>
+                            <td><?= !empty($customer->phone_m) ? formatPhoneNumber($customer->phone_m) : 'Not Specified';?></td>
                             <td><?= !empty($customer->email) ? $customer->email : 'Not Specified'; ?></td>
                             <td><?= !empty($customer->customer_type) ? $customer->customer_type : 'Not Specified'; ?></td>
-                            <td></td>
                         </tr>
                         <?php endforeach; ?>
 						<?php else : ?>

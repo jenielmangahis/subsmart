@@ -121,15 +121,15 @@
                         },
                         success: function(result) {
                             Swal.fire({
-                                title: 'Good job!',
+                                //title: 'Good job!',
                                 text: "Data Deleted Successfully!",
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'
                             }).then((result) => {
-                                if (result.value) {
+                                //if (result.value) {
                                     location.reload();
-                                }
+                                //}
                             });
                         },
                     });

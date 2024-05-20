@@ -429,14 +429,12 @@ label.bold {
 
                                         <div class="col-md-6 mb-3">
                                             <label for="job_name"><b>Customer Email</b></label>
-                                            <input id="estimate-customer-email" type="text" class="form-control"
-                                                disabled />
+                                            <input id="estimate-customer-email" name="customer_email" type="text" class="form-control" />
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label for="job_name"><b>Customer Mobile</b></label>
-                                            <input id="estimate-customer-mobile" type="text" class="form-control"
-                                                disabled />
+                                            <input id="estimate-customer-mobile" name="customer_mobile" type="text" maxlength="12" placeholder="xxx-xxx-xxxx" class="form-control phone_number" />
                                         </div>
 
                                         <div class="col-md-12 mb-3">
@@ -529,14 +527,14 @@ label.bold {
                                     </select>
                                 </div>
 
-                                <!-- <div class="col-md-6 mt-4">
+                                <div class="col-md-6 mt-4">
                                     <div class="form-check">
                                     <input class="form-check-input" type="checkbox" name="reminder_14d" value="1" id="reminder14d">
                                     <label class="form-check-label" for="reminder14d">
                                         <b>Remind me in 14 days</b>
                                     </label>
                                     </div>
-                                </div> -->
+                                </div>
                             </div>
 
                             <div class="row mb-3 mt-5" style="background-color:white;font-size:16px;">
@@ -1097,6 +1095,20 @@ var base_url = "<?php echo base_url(); ?>";
 //     })
 //   })
 $(document).ready(function() {
+    $('.phone_number').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    });
+
     $('#customer_id').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_customer_lead',

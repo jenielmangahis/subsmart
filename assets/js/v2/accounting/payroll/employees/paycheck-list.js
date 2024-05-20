@@ -643,7 +643,7 @@ $(document).ready(function () {
                         <td>${paycheck.total_pay ? `$${paycheck.total_pay}` : '0'}</td>
                         <td>${paycheck.net_pay ? `$${paycheck.net_pay}` : '0'}</td>
                         <td>${paycheck.pay_method || 'No payment method'}</td>
-                        <td>Void</td>
+                        <td>${paycheck.check_number !== '-' && paycheck.check_number !== 'Void' ? `<input type="text" name="check_number[]" class="form-control nsm-field" value="${paycheck.check_number}">` : 'Void'}</td>
                         <td>-</td>
                         <td>
                             <div class="dropdown float-end">
@@ -683,3 +683,4 @@ $(document).ready(function () {
         }
     }
 });
+

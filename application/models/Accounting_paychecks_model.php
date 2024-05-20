@@ -76,7 +76,36 @@ class Accounting_paychecks_model extends MY_Model
 		$query = $this->db->get('accounting_paychecks');
 
 		if ($query->num_rows() > 0) {
-			return $query->result_array();
+			$paychecks = $query->result_array();
+			$data = [];
+
+			foreach ($paychecks as $paycheck) {
+				$employee = $this->users_model->getUser($paycheck['employee_id']);
+				$employee_name = $employee ? "{$employee->LName}, {$employee->FName}" : 'No name provided';
+
+				$checkNo = $paycheck['check_no'];
+				if ($paycheck['status'] === '4') {
+					$checkNo = 'Void';
+				}
+
+				if ($paycheck['pay_method'] === 'Adjustment' && $paycheck['status'] !== '4') {
+					$checkNo = '-';
+				}
+
+				$data[] = [
+					'id' => $paycheck['id'],
+					'pay_date' => date("m/d/Y", strtotime($paycheck['pay_date'])),
+					'employee_id' => $paycheck['employee_id'],
+					'name' => $employee_name,
+					'total_pay' => number_format(floatval(str_replace(',', '', $paycheck['total_pay'])), 2),
+					'net_pay' => number_format(floatval(str_replace(',', '', $paycheck['net_pay'])), 2),
+					'pay_method' => $paycheck['pay_method'],
+					'check_number' => $checkNo,
+					'status' => 'Void'
+				];
+			}
+
+			return $data;
 		} else {
 			return false;
 		}

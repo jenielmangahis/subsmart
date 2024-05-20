@@ -280,7 +280,7 @@
                     if( result.is_success == 1 ){
                         Swal.fire({
                             title: 'Save Successful!',
-                            text: "Services was successfully updated.",
+                            text: "Credentials was successfully updated.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonText: 'Okay'

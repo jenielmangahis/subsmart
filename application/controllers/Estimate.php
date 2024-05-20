@@ -175,13 +175,16 @@ class Estimate extends MY_Controller
         $customer_lead = explode('/', $this->input->post('customer_id'));
         $customer_id = 0;
         $lead_id = 0;
+        $lead_customer = '';
 
         if ($customer_lead[1] == 'Customer') {
             $customer_id = $customer_lead[0];
+            $lead_customer = 'customer';
         }
 
         if ($customer_lead[1] == 'Lead') {
             $lead_id = $customer_lead[0];
+            $lead_customer = 'lead';
         }
 
         $next_remind_date = '';
@@ -266,6 +269,56 @@ class Estimate extends MY_Controller
                 $estimate_setting = ['estimate_num_next' => $next_num + 1];
                 $this->EstimateSettings_model->update($setting->id, $estimate_setting);
             }
+
+            if( $lead_customer == 'customer' ){
+                //Auto update customer info
+                $this->load->model('AcsProfile_model');
+                $customer = $this->AcsProfile_model->getByProfId($this->input->post('customer_id'));
+                if( $customer ){
+                    $phone_m = $customer->phone_m;
+                    if( $this->input->post('customer_mobile') != '' ){
+                        $phone_m = $this->input->post('customer_mobile');
+                    }
+
+                    $customer_email = $customer->email;
+                    if( $this->input->post('customer_email') != '' ){
+                        $customer_email = $this->input->post('customer_email');
+                    }
+
+                    $customer_data = [
+                        'phone_m' => $phone_m,
+                        'email' => $customer_email
+                    ];
+                    $this->AcsProfile_model->updateCustomerByProfId($customer->prof_id, $customer_data);
+                }
+            }
+
+            if( $lead_customer == 'lead' ){
+                //Auto update lead info
+                $this->load->model('Customer_advance_model');
+                $lead = $this->Customer_advance_model->getLeadByLeadId($this->input->post('customer_id'));
+                if( $lead ){
+                    $phone_cell = $lead->phone_cell;
+                    if( $this->input->post('customer_mobile') != '' ){
+                        $phone_cell = $this->input->post('customer_mobile');
+                    }
+
+                    $lead_email_add = $lead->email_add;
+                    if( $this->input->post('customer_email') != '' ){
+                        $lead_email_add = $this->input->post('customer_email');
+                    }
+
+                    $lead_data = [
+                        'leads_id' => $this->input->post('customer_id'),
+                        'phone_cell' => $phone_cell,
+                        'email_add' => $lead_email_add
+                    ];
+
+                    $this->Customer_advance_model->update_data($lead_data, 'ac_leads', 'leads_id');
+                }
+            }
+            
+
             // $new_data2 = array(
             //     'item_type' => $this->input->post('type'),
             //     'description' => $this->input->post('desc'),
@@ -472,7 +525,7 @@ class Estimate extends MY_Controller
         add_css([
             'assets/plugins/font-awesome/css/font-awesome.min.css',
         ]);
-
+        
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('estimate/v2/add', $this->page_data);
         // print_r($this->page_data['customers']);
@@ -749,6 +802,16 @@ class Estimate extends MY_Controller
         $company_id = getLoggedCompanyID();
         $user_id = getLoggedUserID();
 
+        $next_remind_date = '';
+        if( $this->input->post('reminder_14d') ){
+            $next_remind_date = date("Y-m-d", strtotime("+14 days"));
+        } 
+
+        $no_tax = 0;
+        if( $this->input->post('no_tax') ){
+            $no_tax = 1;
+        } 
+
         $new_data = [
             'customer_id' => $this->input->post('customer_id'),
             'job_location' => $this->input->post('job_location'),
@@ -784,7 +847,7 @@ class Estimate extends MY_Controller
             // 'created_by' => logged('id'),
 
             // 'sub_total' => $this->input->post('sub_total'),
-            'deposit_request' => '$',
+            'deposit_request' => 2, // 1 = amount / 2 = percentage
             'deposit_amount' => $this->input->post('adjustment_input'),
             'bundle1_total' => $this->input->post('grand_total'),
             'bundle2_total' => $this->input->post('grand_total2'),
@@ -801,7 +864,8 @@ class Estimate extends MY_Controller
 
             'markup_type' => '$',
             'markup_amount' => $this->input->post('markup_input_form'),
-
+            'no_tax' => $no_tax,
+            'next_remind_date' => $next_remind_date,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ];
@@ -980,6 +1044,16 @@ class Estimate extends MY_Controller
         $company_id = getLoggedCompanyID();
         $user_id = getLoggedUserID();
 
+        $no_tax = 0;
+        if( $this->input->post('no_tax') ){
+            $no_tax = 1;
+        } 
+
+        $next_remind_date = '';
+        if( $this->input->post('reminder_14d') ){
+            $next_remind_date = date("Y-m-d", strtotime("+14 days"));
+        }  
+
         $new_data = [
             'customer_id' => $this->input->post('customer_id'),
             'job_location' => $this->input->post('job_location'),
@@ -994,12 +1068,12 @@ class Estimate extends MY_Controller
             'type' => $this->input->post('estimate_type'),
             'attachments' => 'testing',
             // 'status' => $this->input->post('status'),
-            'deposit_request' => $this->input->post('deposit_request'),
+            'deposit_request' => 2, // 1 = amount / 2 = percentage
             'deposit_amount' => $this->input->post('deposit_amount'),
             'customer_message' => $this->input->post('customer_message'),
             'terms_conditions' => $this->input->post('terms_conditions'),
             'instructions' => $this->input->post('instructions'),
-
+            'no_tax' => $no_tax,
             'option_message' => $this->input->post('option1_message'),
             'option2_message' => $this->input->post('option2_message'),
             'option1_total' => $this->input->post('grand_total'),
@@ -1017,7 +1091,7 @@ class Estimate extends MY_Controller
 
             'user_id' => $user_id,
             'company_id' => $company_id,
-
+            'next_remind_date' => $next_remind_date,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s'),
         ];
@@ -1485,6 +1559,7 @@ class Estimate extends MY_Controller
             move_uploaded_file($tmp_name, "./uploads/estimates/$estimate->id/$attachment_name");
         }
 
+        $lead_customer = 'customer';
         $new_data = [
             'id' => $id,
             'customer_id' => $this->input->post('customer_id'),
@@ -1534,6 +1609,29 @@ class Estimate extends MY_Controller
         ];
 
         $addQuery = $this->estimate_model->update_estimate($new_data);
+
+        if( $lead_customer == 'customer' ){
+            //Auto update customer info
+            $this->load->model('AcsProfile_model');
+            $customer = $this->AcsProfile_model->getByProfId($this->input->post('customer_id'));
+            if( $customer ){
+                $phone_m = $customer->phone_m;
+                if( $this->input->post('customer_mobile') != '' ){
+                    $phone_m = $this->input->post('customer_mobile');
+                }
+        
+                $customer_email = $customer->email;
+                if( $this->input->post('customer_email') != '' ){
+                    $customer_email = $this->input->post('customer_email');
+                }
+        
+                $customer_data = [
+                    'phone_m' => $phone_m,
+                    'email' => $customer_email
+                ];
+                $this->AcsProfile_model->updateCustomerByProfId($customer->prof_id, $customer_data);
+            }
+        }
 
         // if ($addQuery > 0) {
         // $new_data2 = array(

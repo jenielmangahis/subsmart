@@ -368,6 +368,12 @@ echo put_header_assets();
     #jobs_items_table_body tr.description td {
         margin-bottom: 20px;
     }
+    .select2-container--default .select2-results__option .select2-results__option {
+        padding-left:0px !important;
+    }
+    .select2-results__group{
+        margin-left: 0px !important;
+    }
     </style>
 
     <!-- page wrapper start -->
@@ -446,14 +452,13 @@ echo put_header_assets();
 
                                         <div class="col-md-6 mb-3">
                                             <label for="job_name"><b>Customer Email</b></label>
-                                            <input id="estimate-customer-email" type="text" class="form-control"
-                                                disabled />
+                                            <input id="estimate-customer-email" name="customer_email" type="text" class="form-control" />
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label for="job_name"><b>Customer Mobile</b></label>
-                                            <input id="estimate-customer-mobile" type="text" class="form-control"
-                                                disabled />
+                                            <input id="estimate-customer-mobile" name="customer_mobile" type="text" maxlength="12" placeholder="xxx-xxx-xxxx" class="form-control phone_number"
+                                                />
                                         </div>
 
                                         <div class="col-md-12 mb-3">
@@ -545,6 +550,15 @@ echo put_header_assets();
                                         <option value="Lost">Lost</option>
                                     </select>
                                 </div>
+
+                                <div class="col-md-6 mt-4">
+                                    <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="reminder_14d" value="1" id="reminder14d">
+                                    <label class="form-check-label" for="reminder14d">
+                                        <b>Remind me in 14 days</b>
+                                    </label>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="row mb-3" style="background-color:white;font-size:16px;">
@@ -563,7 +577,7 @@ echo put_header_assets();
                                 </div>
                             </div>
 
-                            <div class="row mb-3" id="plansItemDiv" style="background-color:white;">
+                            <div class="row mb-3 mt-5" id="plansItemDiv" style="background-color:white;">
                                 <div class="col-md-12 table-responsive">
                                     <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
@@ -640,6 +654,17 @@ echo put_header_assets();
                                             <!-- <td></td> -->
                                             <td colspan="2" align="right">$<span id="total_tax_">0.00</span><input
                                                     type="hidden" name="taxes" id="total_tax_input"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" name="no_tax" type="checkbox" value="1" id="no-tax">
+                                                    <label class="form-check-label" for="noTax" style="font-size:15px;">
+                                                        No Tax
+                                                    </label>
+                                                </div>
+                                            </td>
+                                            <td colspan="2"></td>
                                         </tr>
                                         <tr>
                                             <td>
@@ -1098,6 +1123,20 @@ var base_url = "<?php echo base_url(); ?>";
 //   })
 $(document).ready(function() {
 
+    $('.phone_number').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    });
+    
     $('#customer_id').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_customer_lead',
@@ -1550,17 +1589,45 @@ $(function() {
         computeDepositAmount();
     });
 
-    $('#deposit-percentage').keyup(function() {
-        computeDepositAmount();
-    });
-
     $('#grand_total_input').change(function() {
         computeDepositAmount();
+        no_tax();
     });
 
+    $('#no-tax').on('change', function(){
+        computeDepositAmount();
+        no_tax();
+    });
+
+    function no_tax(){
+        if($('#no-tax').is(':checked')) {
+            var grand_total = $('#grand_total_input').val();
+            var total_tax   = $('#total_tax_input').val();
+            var new_grand_total = parseFloat(grand_total) - parseFloat(total_tax);
+        }else{            
+            var grand_total = $('#grand_total_input').val();
+            var new_grand_total = parseFloat(grand_total);
+        }
+
+        if( isNaN(new_grand_total) ){
+            new_grand_total = 0;
+        }
+
+        $('#grand_total').text(new_grand_total.toFixed(2));
+    }
+
     function computeDepositAmount() {
+        if($('#no-tax').is(':checked')) {
+            var grand_total = $('#grand_total_input').val();
+            var total_tax   = $('#total_tax_input').val();
+            var new_grand_total = parseFloat(grand_total) - parseFloat(total_tax);
+        }else{            
+            var grand_total = $('#grand_total_input').val();
+            var new_grand_total = parseFloat(grand_total);
+        }
+
         var deposit_amount = $('#deposit-percentage').val() / 100;
-        var total_amount = $('#grand_total_input').val();
+        var total_amount   = new_grand_total;
 
         if (total_amount > 0) {
             total_amount = total_amount * deposit_amount;

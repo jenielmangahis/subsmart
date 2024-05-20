@@ -132,9 +132,9 @@
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 location.reload();
-                            }
+                            //}
                         });
                     }
                     $("#new_sales_area_modal").modal('hide');
@@ -168,9 +168,9 @@
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 location.reload();
-                            }
+                            //}
                         });
                     } else {
                         Swal.fire({
@@ -180,9 +180,9 @@
                             showCancelButton: false,
                             confirmButtonText: 'Okay'
                         }).then((result) => {
-                            if (result.value) {
+                            //if (result.value) {
                                 location.reload();
-                            }
+                            //}
                         });
                     }
                     $("#edit_sales_area_modal").modal('hide');

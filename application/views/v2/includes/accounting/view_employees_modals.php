@@ -27,7 +27,7 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
-                            <input type="text" name="phone" laceholder="xxx-xxx-xxxx" maxlength="12" class="nsm-field form-control phone-number" value="<?= $employee->phone; ?>" />
+                            <input type="text" name="phone" placeholder="xxx-xxx-xxxx" maxlength="12" class="nsm-field form-control phone-number" value="<?= $employee->phone; ?>" />
                         </div>
                     </div>
                     <div class="row gy-3 mb-4">
@@ -71,6 +71,20 @@
                                 <option value="0" <?= $employee->status == 0 ? 'selected' : ''; ?>>Inactive</option>
                             </select>
                         </div>
+                     
+                        <div class="col-12 col-md-6">
+                            <label class="content-subtitle fw-bold d-block mb-2">Birth date</label>
+                            <div class="nsm-field-group calendar">
+                                <?php 
+                                    $birthdate = 'Not Specified';
+                                    if($employee->birthdate != '0000-00-00' || $employee->birthdate == null) {
+                                        $birthdate = date("m/d/Y", strtotime($employee->birthdate));
+                                    }
+                                ?>                                
+                                <input type="text" class="form-control nsm-field date" id="birth-date" name="birth_date" value="<?php echo $birthdate; ?>">
+                            </div>
+                        </div>
+                                            
                         <div class="col-12">
                             <div class="form-check form-switch nsm-switch d-inline-block me-3">
                                 <?php 

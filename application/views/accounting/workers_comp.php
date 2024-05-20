@@ -514,7 +514,7 @@ visibility: visible;
                             <h1>49 states require workers' comp insurance</h1>
                         </div>
                         <div class="col-12">
-                            On-the-job injuries can happen. Take care of your employees if they get hurt and protect your business from lawsuits and penalties. <a href="#">Learn more</a>.
+                            On-the-job injuries can happen. Take care of your employees if they get hurt and protect your business from lawsuits and penalties.
                         </div>
 					</div>
                     <div class="row pt-3 align-items-center">
