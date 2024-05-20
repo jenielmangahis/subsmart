@@ -368,6 +368,12 @@ echo put_header_assets();
     #jobs_items_table_body tr.description td {
         margin-bottom: 20px;
     }
+    .select2-container--default .select2-results__option .select2-results__option {
+        padding-left:0px !important;
+    }
+    .select2-results__group{
+        margin-left: 0px !important;
+    }
     </style>
 
     <!-- page wrapper start -->
@@ -446,14 +452,13 @@ echo put_header_assets();
 
                                         <div class="col-md-6 mb-3">
                                             <label for="job_name"><b>Customer Email</b></label>
-                                            <input id="estimate-customer-email" type="text" class="form-control"
-                                                disabled />
+                                            <input id="estimate-customer-email" name="customer_email" type="text" class="form-control" />
                                         </div>
 
                                         <div class="col-md-6 mb-3">
                                             <label for="job_name"><b>Customer Mobile</b></label>
-                                            <input id="estimate-customer-mobile" type="text" class="form-control"
-                                                disabled />
+                                            <input id="estimate-customer-mobile" name="customer_mobile" type="text" maxlength="12" placeholder="xxx-xxx-xxxx" class="form-control phone_number"
+                                                />
                                         </div>
 
                                         <div class="col-md-12 mb-3">
@@ -1118,6 +1123,20 @@ var base_url = "<?php echo base_url(); ?>";
 //   })
 $(document).ready(function() {
 
+    $('.phone_number').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    });
+    
     $('#customer_id').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_customer_lead',

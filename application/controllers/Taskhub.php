@@ -1255,13 +1255,14 @@ class Taskhub extends MY_Controller {
         $msg = 'Cannot find data';
 
         $post = $this->input->post();  
+
         $taskHub = $this->Taskhub_model->getById($post['tsid']);
 
         if( $taskHub && $taskHub->company_id == $cid ){
         	if( $taskHub->status_id == 6 ){
         		$msg = 'Task is already completed!';
         	}else{
-        		$data = ['status_id' => 6];
+        		$data = ['status_id' => 6, 'date_completed' => date('Y-m-d')];
 	        	$this->Taskhub_model->updateByTaskId($taskHub->task_id, $data);
 
 				//Activity Logs

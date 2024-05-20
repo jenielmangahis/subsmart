@@ -175,13 +175,16 @@ class Estimate extends MY_Controller
         $customer_lead = explode('/', $this->input->post('customer_id'));
         $customer_id = 0;
         $lead_id = 0;
+        $lead_customer = '';
 
         if ($customer_lead[1] == 'Customer') {
             $customer_id = $customer_lead[0];
+            $lead_customer = 'customer';
         }
 
         if ($customer_lead[1] == 'Lead') {
             $lead_id = $customer_lead[0];
+            $lead_customer = 'lead';
         }
 
         $next_remind_date = '';
@@ -266,6 +269,56 @@ class Estimate extends MY_Controller
                 $estimate_setting = ['estimate_num_next' => $next_num + 1];
                 $this->EstimateSettings_model->update($setting->id, $estimate_setting);
             }
+
+            if( $lead_customer == 'customer' ){
+                //Auto update customer info
+                $this->load->model('AcsProfile_model');
+                $customer = $this->AcsProfile_model->getByProfId($this->input->post('customer_id'));
+                if( $customer ){
+                    $phone_m = $customer->phone_m;
+                    if( $this->input->post('customer_mobile') != '' ){
+                        $phone_m = $this->input->post('customer_mobile');
+                    }
+
+                    $customer_email = $customer->email;
+                    if( $this->input->post('customer_email') != '' ){
+                        $customer_email = $this->input->post('customer_email');
+                    }
+
+                    $customer_data = [
+                        'phone_m' => $phone_m,
+                        'email' => $customer_email
+                    ];
+                    $this->AcsProfile_model->updateCustomerByProfId($customer->prof_id, $customer_data);
+                }
+            }
+
+            if( $lead_customer == 'lead' ){
+                //Auto update lead info
+                $this->load->model('Customer_advance_model');
+                $lead = $this->Customer_advance_model->getLeadByLeadId($this->input->post('customer_id'));
+                if( $lead ){
+                    $phone_cell = $lead->phone_cell;
+                    if( $this->input->post('customer_mobile') != '' ){
+                        $phone_cell = $this->input->post('customer_mobile');
+                    }
+
+                    $lead_email_add = $lead->email_add;
+                    if( $this->input->post('customer_email') != '' ){
+                        $lead_email_add = $this->input->post('customer_email');
+                    }
+
+                    $lead_data = [
+                        'leads_id' => $this->input->post('customer_id'),
+                        'phone_cell' => $phone_cell,
+                        'email_add' => $lead_email_add
+                    ];
+
+                    $this->Customer_advance_model->update_data($lead_data, 'ac_leads', 'leads_id');
+                }
+            }
+            
+
             // $new_data2 = array(
             //     'item_type' => $this->input->post('type'),
             //     'description' => $this->input->post('desc'),
@@ -1506,6 +1559,7 @@ class Estimate extends MY_Controller
             move_uploaded_file($tmp_name, "./uploads/estimates/$estimate->id/$attachment_name");
         }
 
+        $lead_customer = 'customer';
         $new_data = [
             'id' => $id,
             'customer_id' => $this->input->post('customer_id'),
@@ -1555,6 +1609,29 @@ class Estimate extends MY_Controller
         ];
 
         $addQuery = $this->estimate_model->update_estimate($new_data);
+
+        if( $lead_customer == 'customer' ){
+            //Auto update customer info
+            $this->load->model('AcsProfile_model');
+            $customer = $this->AcsProfile_model->getByProfId($this->input->post('customer_id'));
+            if( $customer ){
+                $phone_m = $customer->phone_m;
+                if( $this->input->post('customer_mobile') != '' ){
+                    $phone_m = $this->input->post('customer_mobile');
+                }
+        
+                $customer_email = $customer->email;
+                if( $this->input->post('customer_email') != '' ){
+                    $customer_email = $this->input->post('customer_email');
+                }
+        
+                $customer_data = [
+                    'phone_m' => $phone_m,
+                    'email' => $customer_email
+                ];
+                $this->AcsProfile_model->updateCustomerByProfId($customer->prof_id, $customer_data);
+            }
+        }
 
         // if ($addQuery > 0) {
         // $new_data2 = array(

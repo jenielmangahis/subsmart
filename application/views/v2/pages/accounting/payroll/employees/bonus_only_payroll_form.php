@@ -13,16 +13,16 @@
         <div class="col-12 col-md-2 d-flex align-items-center">
             <h6>Balance <?= str_replace('$-', '-$', '$' . number_format(floatval($accounts[array_key_first($accounts)]->balance), 2, '.', ',')) ?></h6>
         </div>
-        <!-- <div class="col-12 col-md-2">
+        <div class="col-12 col-md-2">
             <label for="payDate">Pay date</label>
             <div class="nsm-field-group calendar">
                 <input type="text" class="form-control nsm-field date" name="pay_date" id="payDate" value="<?php echo date('m/d/Y') ?>" />
             </div>
-        </div> -->
-        <div class="col-12 col-md-2">
+        </div>
+        <!-- <div class="col-12 col-md-2">
             <label for="payDate">Pay date</label>
             <input type="date" class="form-control nsm-field date" name="pay_date" id="payDate" />
-        </div>
+        </div> -->
         <div class="col text-end">
             <h6>TOTAL PAY</h6>
             <h2 class="total-pay">$0.00</h2>
@@ -120,9 +120,9 @@
     </div>
 </div>
 
-<script>
+<!-- <script>
     $(document).ready(function() {
         var today = new Date().toISOString().slice(0, 10);
         $('#payDate').val(today);
     });
-</script>
+</script> -->
