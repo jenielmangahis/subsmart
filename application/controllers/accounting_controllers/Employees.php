@@ -1668,38 +1668,38 @@ class Employees extends MY_Controller
         $this->load->helper('pdf_helper');
 
         $html = '
-            <table style="padding-top:-40px;">
-                <tr>
-                    <td style="text-align: center">';
-        $html .= '<h2 style="margin: 0">' . $post['company_name'] . '</h2>';
-        $html .= '<h3 style="margin: 0">' . $post['report_name'] . '</h3>';
-        $html .= '<h4 style="margin: 0">' . $post['report_period'] . '</h4>';
+        <table style="padding-top:-40px;">
+            <tr>
+                <td style="text-align: center">';
+        $html .= '<h2 style="margin: 0">' . (!empty($post['company_name']) ? $post['company_name'] : 'No Company Name') . '</h2>';
+        $html .= '<h3 style="margin: 0">' . (!empty($post['report_name']) ? $post['report_name'] : 'No Report Name') . '</h3>';
+        $html .= '<h4 style="margin: 0">' . (!empty($post['report_period']) ? $post['report_period'] : 'No Report Period') . '</h4>';
         $html .= '</td>
-                </tr>
-            </table>
-            <br /><br /><br />
+            </tr>
+        </table>
+        <br /><br /><br />
 
-            <table style="width="100%;>
-            <thead>
-                <tr>';
+        <table style="width:100%;">
+        <thead>
+            <tr>';
         foreach ($post['fields'] as $field) {
             $html .= '<th style="border-top: 1px solid black; border-bottom: 1px solid black; border-left: 1px solid black; border-right: 1px solid black"><b>' . $field . '</b></th>';
         }
         $html .= '</tr>
-            </thead>
-            <tbody>';
+        </thead>
+        <tbody>';
 
         foreach ($post['paychecks'] as $paycheck) {
             $html .= '<tr>';
             foreach ($post['fields'] as $field) {
-                $html .= '<td style="border-bottom: 1px solid black; border-left: 1px solid black; border-right: 1px solid black">' . str_replace('class="text-danger"', 'style="color: red"', $paycheck[strtolower(str_replace(' ', '_', $field))]) . '</td>';
+                $fieldValue = isset($paycheck[strtolower(str_replace(' ', '_', $field))]) ? $paycheck[strtolower(str_replace(' ', '_', $field))] : 'No data';
+                $html .= '<td style="border-bottom: 1px solid black; border-left: 1px solid black; border-right: 1px solid black">' . str_replace('class="text-danger"', 'style="color: red"', $fieldValue) . '</td>';
             }
             $html .= '</tr>';
         }
 
         $html .= '</tbody>
         </table>';
-
 
         tcpdf();
         $obj_pdf = new TCPDF($post['orientation'], PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);

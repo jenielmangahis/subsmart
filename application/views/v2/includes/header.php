@@ -809,6 +809,11 @@ if ($this->session->userdata('usertimezone') == null) {
                 </div>
                 <div class="nsm-nav-items">
                     <ul>
+                        <!-- <li>
+                            <div class="dropdown d-flex">
+                                <a id="helpSupportButton" href="#" data-bs-toggle="offcanvas" data-bs-target="#helpSupportSidebar" aria-controls="helpSupportSidebar"><i class='bx bx-support' style="margin-top: 0px !important;"></i></a>
+                            </div>
+                        </li> -->
                         <?php if( isCompanyPlanActive() == 0 && !in_array(logged('company_id'), exempted_company_ids()) ){ ?>
                         <li>
                             <style>
@@ -1200,6 +1205,10 @@ if ($this->session->userdata('usertimezone') == null) {
         font-weight: bold;
     }
 
+    .chatbot_name_section > .chatbot_name {
+        font-size: 15px;
+    }
+
     .chatbot_minimize {
         position: absolute;
         font-size: 25px;
@@ -1217,6 +1226,7 @@ if ($this->session->userdata('usertimezone') == null) {
     .chat_content {
         max-height: 500px;
         height: 500px;
+        font-weight: 500;
     }
 
     .send_chat {
@@ -1270,14 +1280,14 @@ if ($this->session->userdata('usertimezone') == null) {
         left: 20px;
     }
 
-    .chatbox_container {
+    /* .chatbox_container {
         position: fixed;
         bottom: 20px;
         right: 15px;
         width: 450px;
         display: none;
         z-index: 999 !important;
-    }
+    } */
 
     .chaticon {
         height: auto;
@@ -1300,25 +1310,19 @@ if ($this->session->userdata('usertimezone') == null) {
         bottom: 70px;
     }
 
-    /* Bouncing animation with proper keyframes */
     @keyframes bounce {
-
         0%,
         100% {
             transform: translateY(0);
-            /* Start and end at the same level */
         }
 
         50% {
             transform: translateY(-5px);
-            /* Bounce up */
         }
     }
 
-    /* Apply the animation to the typing status text */
     .typing_status {
         animation: bounce 0.5s infinite;
-        /* Infinite bouncing animation */
     }
 
     .send_container,
@@ -1331,51 +1335,130 @@ if ($this->session->userdata('usertimezone') == null) {
     .typing_status {
         display: none;
     }
+
+    .offcanvas {
+        transition: transform 0.3s ease;
+    }
+
+    .offcanvas-end {
+        border-left: unset;
+    }
 </style>
 
-<div class="row d-flex position-relative">
+<!-- <div class="row d-flex position-relative">
     <img class="chaticon" src="https://static.vecteezy.com/system/resources/previews/014/441/089/original/chat-message-icon-design-in-blue-circle-png.png">
-    <div class="col-md-8 col-lg-6 col-xl-4 chatbox_container">
-        <div id="chatbox" class="card">
-            <div class="card-header chatbox_header d-flex align-items-center p-3 text-white border-bottom-0">
-                <img class="chatbot_image" src="https://cdn-icons-png.flaticon.com/512/8943/8943377.png">
-                <p class="mb-0 chatbot_name_section"><span class="chatbot_name">Chatbot</span><br><small>nSmarTrac Chatbot</small></p>
-                <i class="fas fa-times chatbot_minimize"></i>
-            </div>
-            <div class="card-body chatbot_body">
-                <div class="table-responsive chat_content">
-                    <div class="receive_container position-relative">
-                        <small class="receiver_name position-absolute">🤖 <span class="chatbot_name">Chatbot</span></small>
-                        <div class="receive_chat d-flex flex-row justify-content-start">
-                            <div class="p-3 me-3 border receive_chat_container">
-                                <p class="mb-0">Hi, I'm <u class="chatbot_name fw-normal">Chatbot</u>, a chatbot from nSmarTrac, who can help you with your queries.</p>
-                            </div>
-                        </div>
+</div> -->
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="helpSupportSidebar" aria-labelledby="helpSupportSidebarLabel">
+    <div class="offcanvas-header" style="background: #6a4a86;">
+        <h5 id="helpSupportSidebarLabel" style="font-weight: bold; margin: 0; color: white;">Tech Support</h5>
+        <button type="button" class="btn" data-bs-dismiss="offcanvas" aria-label="Close" style="color: white !important;float: left;padding: 0;"><span class="float-start">Back &gt;</span></button>
+    </div>
+    <div class="offcanvas-body">
+        <div class="container">
+            <div class="row chatBotMessenger" style="display: none;">
+            <div class="col-md-8 col-lg-6 col-xl-4 chatbox_container">
+                <div id="chatbox" class="card">
+                    <div class="card-header chatbox_header d-flex align-items-center p-3 text-white border-bottom-0">
+                        <img class="chatbot_image" src="https://cdn-icons-png.flaticon.com/512/8943/8943377.png">
+                        <p class="mb-0 chatbot_name_section"><span class="chatbot_name">Chatbot</span><br><small>Chatbot</small></p>
+                        <i class="fas fa-times chatbot_minimize"></i>
                     </div>
-                    <div class="receive_container position-relative">
-                        <small class="receiver_name position-absolute">🤖 <span class="chatbot_name">Chatbot</span></small>
-                        <div class="receive_chat d-flex flex-row justify-content-start">
-                            <div class="p-3 me-3 border receive_chat_container">
-                                <p class="mb-0">How can I help you today?</p>
+                    <div class="card-body chatbot_body">
+                        <div class="table-responsive chat_content">
+                            <div class="receive_container position-relative">
+                                <small class="receiver_name position-absolute">🤖 <span class="chatbot_name">Chatbot</span></small>
+                                <div class="receive_chat d-flex flex-row justify-content-start">
+                                    <div class="p-3 me-3 border receive_chat_container">
+                                        <p class="mb-0">Hi, I'm <u class="chatbot_name fw-normal">Chatbot</u>, a chatbot from nSmarTrac, who can help you with your queries.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="receive_container position-relative">
+                                <small class="receiver_name position-absolute">🤖 <span class="chatbot_name">Chatbot</span></small>
+                                <div class="receive_chat d-flex flex-row justify-content-start">
+                                    <div class="p-3 me-3 border receive_chat_container">
+                                        <p class="mb-0">How can I help you today?</p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <div class="typing_status"><small class="text-muted"><span class="chatbot_name fw-normal">Chatbot</span> is typing...</small></div>
+                        <form id="sendchat_form">
+                            <div class="input-group message_form_container">
+                                <input name="request" class="form-control" type="text" placeholder="Type your message here..." required>
+                                <button type="submit" class="btn message_form_button">
+                                    <strong><i class='bx bxs-send message_form_button_icon'></i></strong>
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-                <div class="typing_status"><small class="text-muted"><span class="chatbot_name fw-normal">Chatbot</span> is typing...</small></div>
-                <form id="sendchat_form">
-                    <div class="input-group message_form_container">
-                        <input name="request" class="form-control" type="text" placeholder="Type your message here..." required>
-                        <button type="submit" class="btn message_form_button">
-                            <strong><i class='bx bxs-send message_form_button_icon'></i></strong>
-                        </button>
+            </div>
+            </div>
+            <div class="row techSupportMenu">
+                <div class="col-12-md mb-3">
+                    <h4 class="fw-bold">How do you prefer to get in touch with us?</h4>
+                </div>
+                <div class="col-12-md mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Call us</h5>
+                            <p class="card-text">Schedule a call, and we'll reach out to you as soon as possible.</p>
+                            <a href="#" class="btn btn-success fw-bold"><i class="fas fa-phone"></i>&nbsp;&nbsp;Let's talk in call</a>
+                        </div>
+                        <div class="card-footer text-muted"><i class="fas fa-info-circle"></i>&nbsp;&nbsp;Support via call is available only Monday to Friday from 6:00am to 10:00pm.</div>
                     </div>
-                </form>
+                </div>
+                <div class="col-12-md mb-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Real-time chat</h5>
+                            <p class="card-text">Engage in real-time chat with us and expect a prompt response.</p>
+                            <a href="#" class="btn btn-success fw-bold"><i class="fas fa-comments"></i>&nbsp;&nbsp;Start chatting</a>
+                        </div>
+                        <div class="card-footer text-muted"><i class="fas fa-info-circle"></i>&nbsp;&nbsp;Our team is ready to assist you during our operational hours.</div>
+                    </div>
+                </div>
+                <div class="col-12-md mb-2">
+                    <hr>
+                </div>
+                <div class="col-12-md mb-3">
+                    <h4 class="fw-bold">Others</h4>
+                </div>
+                <div class="col-12-md mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Video Binder</h5>
+                            <p class="card-text">Access our video binder for comprehensive pre-recorded information about the system.</p>
+                            <a href="#" class="btn btn-primary fw-bold"><i class="fas fa-folder"></i>&nbsp;&nbsp;Open Video Binder</a>
+                        </div>
+                        <div class="card-footer text-muted"><i class="fas fa-info-circle"></i>&nbsp;&nbsp;The video binder is a collection of pre-recorded videos providing detailed information about the system.</div>
+                    </div>
+                </div>
+                <div class="col-12-md mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Chatbot</h5>
+                            <p class="card-text">Interact with our chatbot for quick assistance.</p>
+                            <a href="#" class="btn btn-primary fw-bold openChatbotButton"><i class="fas fa-robot"></i>&nbsp;&nbsp;Open chatbot</a>
+                        </div>
+                        <div class="card-footer text-muted"><i class="fas fa-info-circle"></i>&nbsp;&nbsp;Our chatbot is available 24/7 to help answer questions on system-related inquiries.</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    $('.openChatbotButton').click(function (e) { 
+        $('.techSupportMenu').hide();
+        $('.chatBotMessenger').fadeIn();
+    });
+
+    // ===============
+
     var BASE_URL = window.origin;
     // Custom Function ===============
     function formDisabler(selector, state) {

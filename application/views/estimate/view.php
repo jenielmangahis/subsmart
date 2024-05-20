@@ -393,7 +393,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                               <td colspan="4" style="border-left: 1px solid Transparent!important;border-top: 1px solid Transparent!important;"></td>
                               <td colspan="2" style="text-align: ;"><p>Deposit Amount Requested</p></td>
                               <td colspan="1" style="text-align: right;">
-                                <?php $deposit_amount = $estimate->grand_total * ($estimate->deposit_amount/100); ?>
+                                <?php 
+                                  //$deposit_amount = $estimate->grand_total * ($estimate->deposit_amount/100); 
+                                  $deposit_amount = $estimate->deposit_amount;
+                                ?>
                                 <p>$<?= number_format((float)$deposit_amount, 2); ?></p></td>
                             </tr>
                           <?php } ?>

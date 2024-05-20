@@ -132,7 +132,10 @@ console.log("datetimepicker");
           <script type="text/javascript" src="<?php echo base_url('assets/js/v2/main.js'); ?>"></script>
           <script type="text/javascript" src="<?php echo base_url('assets/js/v2/nsm.draggable.js'); ?>"></script>
           <script type="text/javascript" src="<?php echo base_url('assets/js/v2/nsm.table.js'); ?>"></script>
+          <?php if( !$disable_clockjs ){ ?>
           <script src="<?php echo $url->assets; ?>js/timesheet/clock.js"></script>
+          <?php } ?>
+          
           <script type="text/javascript">
 var notification_badge_value = 0;
 var current_user_company_id = <?php echo logged('company_id'); ?>;

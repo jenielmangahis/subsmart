@@ -225,7 +225,7 @@ class Users extends MY_Controller
 		$this->page_data['states'] = $states;
 		$this->page_data['userid'] = $user->id;
 		$this->page_data['profiledata'] = $profiledata;
-
+		$this->page_data['disable_clockjs'] = 1;
 		// $this->load->view('business_profile/credentials', $this->page_data);
 		$this->load->view('v2/pages/business_profile/credentials', $this->page_data);
 	}
@@ -482,7 +482,7 @@ class Users extends MY_Controller
 			if (isset($_FILES['license_image']) && $_FILES['license_image']['tmp_name'] != '') {
 				$tmp_name = $_FILES['license_image']['tmp_name'];
 				$extension = strtolower(end(explode('.', $_FILES['license_image']['name'])));
-				$license_image_name = "license_" . basename($_FILES["license_image"]["name"]);
+				$license_image_name = "license_" . time() . '_' . basename($_FILES["license_image"]["name"]);
 				move_uploaded_file($tmp_name, "./uploads/users/business_profile/$profiledata->company_id/$license_image_name");
 			}
 
@@ -490,7 +490,7 @@ class Users extends MY_Controller
 			if (isset($_FILES['license_image']) && $_FILES['insurance_image']['tmp_name'] != '') {
 				$tmp_name = $_FILES['insurance_image']['tmp_name'];
 				$extension = strtolower(end(explode('.', $_FILES['insurance_image']['name'])));
-				$insurance_image = "insurance_" . basename($_FILES["insurance_image"]["name"]);
+				$insurance_image = "insurance_" . time() . '_' . basename($_FILES["insurance_image"]["name"]);
 				move_uploaded_file($tmp_name, "./uploads/users/business_profile/$profiledata->company_id/$insurance_image");
 			}
 
@@ -498,7 +498,7 @@ class Users extends MY_Controller
 			if (isset($_FILES['bond_image']) && $_FILES['bond_image']['tmp_name'] != '') {
 				$tmp_name = $_FILES['bond_image']['tmp_name'];
 				$extension = strtolower(end(explode('.', $_FILES['bond_image']['name'])));
-				$bond_image_name = "bond_" . basename($_FILES["bond_image"]["name"]);
+				$bond_image_name = "bond_" . time() . '_' . basename($_FILES["bond_image"]["name"]);
 				move_uploaded_file($tmp_name, "./uploads/users/business_profile/$profiledata->company_id/$bond_image_name");
 			}
 
@@ -522,6 +522,11 @@ class Users extends MY_Controller
 			];
 
 			$this->business_model->updateByCompanyId($cid, $data_availability);
+
+			//Activity Logs
+			$activity_name = 'Updated Business Profile Credentialsget_shift_duration'; 
+			createActivityLog($activity_name);
+
 		} else {				
 			$this->business_model->updateByCompanyId($cid, $pdata);
 
@@ -530,25 +535,25 @@ class Users extends MY_Controller
 			createActivityLog($activity_name);
 		}
 
-		$imbid = $pdata['user_id'];
+		//$imbid = $pdata['user_id'];
 
 		$is_success = 1;
 		$msg = '';
 
-		if (!empty($_FILES['image']['name'])) {
+		// if (!empty($_FILES['image']['name'])) {
 
-			$target_dir = "./uploads/users/business_profile/$bid/";
+		// 	$target_dir = "./uploads/users/business_profile/$bid/";
 
-			if (!file_exists($target_dir)) {
-				mkdir($target_dir, 0777, true);
-			}
+		// 	if (!file_exists($target_dir)) {
+		// 		mkdir($target_dir, 0777, true);
+		// 	}
 
-			$business_image = $this->moveUploadedFile($bid);
+		// 	$business_image = $this->moveUploadedFile($bid);
 
-			$this->business_model->update($bid, ['business_image' => $business_image]);
-		} else {
-			copy(FCPATH . 'uploads/users/default.png', 'uploads/users/business_profile/' . $user->id . '/default.png');
-		}
+		// 	$this->business_model->update($bid, ['business_image' => $business_image]);
+		// } else {
+		// 	copy(FCPATH . 'uploads/users/default.png', 'uploads/users/business_profile/' . $user->id . '/default.png');
+		// }
 
 		// $this->activity_model->add('New User $'.$id.' Created by User:'.logged('name'), logged('id'));
 		
@@ -772,31 +777,43 @@ class Users extends MY_Controller
 	public function tracklocation()
 	{
 		$this->hasAccessModule(63);
-		//		ifPermissions('users_list');
-		add_css(array(
-			"assets/css/timesheet/tracklocation.css"
-		));
 
-		add_footer_js(array(
-			"assets/js/timesheet/tracklocation.js",
-		));
-		$users = $this->users_model->getUsers();
-		$lasttracklocation_employee = array();
-		foreach ($users as $employee) {
-			$data = $this->users_model->getEmployeeLastestAux($employee->id);
-			if ($data != null) {
-				$lasttracklocation_employee[] = $data;
-			}
+		$this->load->model('Trac360_model');
+
+		$cid           = logged('company_id');
+		$companyUsers  = $this->users_model->getCompanyUsers($cid);
+		$trac360People = $this->Trac360_model->get_current_user_location($cid);
+
+		$geoDataFeatures = [];
+		foreach($trac360People as $trac){
+			$latLong = explode(",", $trac->last_tracked_location);
+			$msg = "<div class='map-popup-container'>
+				<span class='map-user'><i class='bx bxs-user-circle'></i> ". $trac->FName . ' ' . $trac->LName ."</span>
+				<span class='map-date'><i class='bx bxs-calendar'></i> ". date("m/d/Y h:i A",strtotime($trac->last_tracked_location_date)) ."</span>
+				<hr />
+				<span class='map-address'><i class='bx bxs-map'></i> ". $trac->last_tracked_location_address ."</span>
+			</div>";
+			$geoDataFeatures[] = [
+				'type' => 'Feature',
+				'trac_id' => 'trac' . $trac->id,
+				'properties' => [
+					'message' => $msg,
+					'iconSize' => [35, 35],
+					'image' => userProfileImage($trac->user_id)
+				],
+				'geometry' => [
+					'type' => 'Point',
+					'coordinates' => [$latLong[1], $latLong[0]]
+				]
+			];
 		}
 
 		$this->page_data['page']->title = 'Employees Track Location';
         $this->page_data['page']->parent = 'Company';
-		$this->page_data['lasttracklocation_employee'] = $lasttracklocation_employee;
-		$this->page_data['users1'] = $this->users_model->getById(getLoggedUserID());
-		$this->page_data['current_user_id'] = logged('id');
+		$this->page_data['trac360People'] = $trac360People;
+		$this->page_data['geoDataFeatures'] = $geoDataFeatures;
+		$this->page_data['companyUsers'] = $companyUsers;
 		$this->page_data['enable_tracklocation'] = 1;
-
-		//$this->load->view('users/tracklocation', $this->page_data);
 		$this->load->view('v2/pages/users/tracklocation', $this->page_data);
 	}
 
