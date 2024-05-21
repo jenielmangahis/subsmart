@@ -1173,6 +1173,8 @@ $route['job/_send_esign_form'] = 'Job/ajax_send_esign_form';
 $route['job/create_invoice/(:num)'] = 'Job/createInvoice/$1';
 $route['job/_update_job'] = 'Job/ajax_update_job';
 
+$route['job/bird_eye_view'] = 'JobMap/index';
+
 $route['workorder/convert_to_job'] = 'Workorder/ajax_convert_to_job';
 
 // Estimates
@@ -1720,6 +1722,7 @@ $route['widgets/_company_newsletter'] = 'Newsletter/ajax_company_newsletter';
 $route['dashboard/_view_newsletter'] = 'Newsletter/ajax_view_newsletter';
 $route['widgets/_load_income_stat'] = 'Widgets/ajax_load_income_stat';
 $route['widgets/_load_sales_chart'] = 'Widgets/ajax_load_sales_chart';
+$route['widgets/_load_open_estimates_chart'] = 'Widgets/ajax_load_open_estimates_chart';
 
 //Esign
 $route['esign_v2/_tags_sections'] = 'Esign_v2/ajax_company_tags_sections';
@@ -1733,3 +1736,7 @@ $route['esign_v2/_restore_widget'] = 'Esign_v2/ajax_restore_widget';
 
 //Accounting Invoices
 $route['accounting/invoices/delete-selected'] = 'Accounting/ajax_invoice_delete_selected';
+
+//Trac360
+$route['trac360/_create_user_location'] = 'Trac360/ajax_create_user_location';
+$route['trac360/_create_user_geolocation_features'] = 'Trac360/ajax_create_user_geolocation_features';
