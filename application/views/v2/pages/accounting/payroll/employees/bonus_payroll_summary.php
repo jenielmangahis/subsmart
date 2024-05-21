@@ -56,7 +56,7 @@
         <div class="row">
             <div class="col-12 pay-date-period mb-3">
                 <span class="float-end"><b>Pay date:</b> <?=$payDate?></span>
-                <!-- <span class="float-end me-5"><b>Pay period:</b> <?=$payPeriod?></span> -->
+                <span class="float-end me-5"><b>Pay period:</b> <?=$payPeriod?></span>
             </div>
             <div class="col-12">
                 <table class="nsm-table" id="payroll-summary-table">
