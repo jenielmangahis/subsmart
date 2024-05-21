@@ -14,15 +14,23 @@
             <h6>Balance <?= str_replace('$-', '-$', '$' . number_format(floatval($accounts[array_key_first($accounts)]->balance), 2, '.', ',')) ?></h6>
         </div>
         <div class="col-12 col-md-2">
+            <label for="pay-period-start">Pay period start</label>
+            <input type="date" class="form-control nsm-field date" name="pay_period_start" id="pay-period-start" />
+        </div>
+        <div class="col-12 col-md-2">
+            <label for="pay-period-end">Pay period end</label>
+            <input type="date" class="form-control nsm-field date" name="pay_period_end" id="pay-period-end" />
+        </div>
+        <!-- <div class="col-12 col-md-2">
             <label for="payDate">Pay date</label>
             <div class="nsm-field-group calendar">
                 <input type="text" class="form-control nsm-field date" name="pay_date" id="payDate" value="<?php echo date('m/d/Y') ?>" />
             </div>
-        </div>
-        <!-- <div class="col-12 col-md-2">
+        </div> -->
+        <div class="col-12 col-md-2">
             <label for="payDate">Pay date</label>
             <input type="date" class="form-control nsm-field date" name="pay_date" id="payDate" />
-        </div> -->
+        </div>
         <div class="col text-end">
             <h6>TOTAL PAY</h6>
             <h2 class="total-pay">$0.00</h2>
@@ -83,7 +91,7 @@
                     <tr>
                         <td colspan="6">
                             <div class="nsm-page-buttons page-buttons-container">
-                                <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add_employee_modal">
+                                <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#employee-modal">
                                     Add an employee
                                 </button>
                             </div>
@@ -119,10 +127,11 @@
         </div>
     </div>
 </div>
+<?php include viewPath('v2/includes/accounting/modal_forms/employee_modal'); ?>
 
-<!-- <script>
+<script>
     $(document).ready(function() {
         var today = new Date().toISOString().slice(0, 10);
         $('#payDate').val(today);
     });
-</script> -->
+</script>

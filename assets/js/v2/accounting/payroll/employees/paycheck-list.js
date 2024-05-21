@@ -654,15 +654,6 @@ $(document).ready(function () {
                                     <li>
                                         <a class="dropdown-item print-paycheck" href="#">Print</a>
                                     </li>
-                                    <li>
-                                        <a class="dropdown-item delete-paycheck" href="#">Delete</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item void-paycheck" href="#">Void</a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item edit-paycheck" href="#">Edit</a>
-                                    </li>
                                 </ul>
                             </div>
                         </td>

@@ -207,11 +207,11 @@ $(document).on('click', '#bonus-payroll-modal #continue-bonus-payroll', function
             templateSelection: optionSelect,
             dropdownParent: $('#bonus-payroll-modal')
         });
-        $('#bonus-payroll-modal #payDate').datepicker({
-            format: 'mm/dd/yyyy',
-            orientation: 'bottom',
-            autoclose: true
-        });
+        // $('#bonus-payroll-modal #payDate').datepicker({
+        //     format: 'mm/dd/yyyy',
+        //     orientation: 'bottom',
+        //     autoclose: true
+        // });
     });
 });
 
@@ -222,17 +222,21 @@ $(document).on('change', '#bonus-payroll-modal #payroll-table thead .select-all'
 const updateTotalPay = () => {
     let total = 0.00;
     $('#bonus-payroll-modal #payroll-table tbody [name="bonus[]"]').each(function() {
-        const bonusVal = $(this).val().replace(/,/g, ''); // Remove commas for parsing
-        if (bonusVal !== "") {
-            total += parseFloat(bonusVal);
+        if (!$(this).is(':disabled')) {  
+            const bonusVal = $(this).val().replace(/,/g, ''); 
+            if (bonusVal !== "") {
+                const bonusAmount = parseFloat(bonusVal);
+                total += bonusAmount;
+            }
         }
     });
 
     const formattedTotal = formatter.format(total);
     $('#bonus-payroll-modal #payroll-table tfoot tr:first-child td:nth-child(4), #bonus-payroll-modal #payroll-table tfoot tr:first-child td:last-child').html(formattedTotal);
     $('#bonus-payroll-modal h2.total-pay').html(formattedTotal);
-    
 };
+
+
 
 $(document).on('change', '#bonus-payroll-modal #payroll-table tbody .select-one', function() {
     var row = $(this).closest('tr');
@@ -274,7 +278,10 @@ $(document).on('change', '#bonus-payroll-modal #payroll-table tbody .select-one'
 
         row.find('td').each(function(index, value) {
             if (index > 1) {
-                $(this).html('');
+                // Disable input elements if any
+                $(this).find('input, textarea, select').attr('disabled', 'disabled');
+                // Add a class to visually disable the cell
+                $(this).addClass('disabled-cell');
             }
         });
     }
@@ -593,6 +600,7 @@ $(document).on('click', '#commission-payroll-modal #preview-payroll', function()
         processData: false,
         contentType: false,
         success: function(res) {
+            console.log("test", res);
             $('div#commission-payroll-modal div.modal-body').html(res);
 
             var chartHeight = $('div#commission-payroll-modal div.modal-body div#commissionPayrollChart').parent().prev().height();
