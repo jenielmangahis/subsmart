@@ -65,6 +65,7 @@
                                     </h2>
                                 </div>
                                 <div class="col-12">
+
                                     <table class="nsm-table" id="contractors-list-table">
                                         <thead>
                                             <tr>
