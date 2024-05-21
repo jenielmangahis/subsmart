@@ -1,5 +1,36 @@
 <script>
 $(document).ready(function() {
+    // Track user location
+    getLocation();
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(trackPosition);
+        } 
+    }
+
+    function trackPosition(position) {
+        var latitude  = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        $.ajax({
+            type: "POST",
+            url: base_url + "trac360/_create_user_location",
+            dataType: 'json',
+            data: {latitude:latitude, longitude:longitude},
+            success: function(data) {
+                if (data.success) {
+                    $('#new_feed_modal').modal('hide');
+                    notifyUser('', data.msg, 'success');
+                    $('#feedSubject').val('');
+                    $('#feedMessage').val('');
+                }
+                //console.log(data);
+            },
+            beforeSend: function() {
+
+            }
+        });
+    } 
+
     $('#frm-feeds').on('submit', function(e) {
         e.preventDefault();
         $.ajax({
@@ -66,7 +97,9 @@ $(document).ready(function() {
             jobsCompleted,
             onlineBooking,
             lostAccount,
-            collectedAccounts
+            collectedAccounts,
+            invoice_amount_due,
+            collected_amount
         } = response;
 
         if (success) {
@@ -83,39 +116,17 @@ $(document).ready(function() {
             var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = today.getFullYear();
             today = yyyy + '-' + mm + '-' + dd;
+            
+            var total_invoice_amount_due = parseFloat(invoice_amount_due).toFixed(2);
+            var total_collected_amount   = parseFloat(collected_amount).toFixed(2);
 
-            //earned
-            for (var x = 0; x < jobsCompleted.length; x++) {
-                //if(today == data[x].date_issued){
-                totalPayments += parseFloat(jobsCompleted[x].payment_amount);
-                //}
-            }
-            //collected
-            for (var x = 0; x < paymentInvoice.length; x++) {
-                if (today == paymentInvoice[x].date_issued) {
-                    totalCollected += parseFloat(paymentInvoice[x].amount);
-                }
-            }
-            //jobs completed
-            for (var x = 0; x < jobsCompleted.length; x++) {
-                if (jobsCompleted[x].status == "Completed" || jobsCompleted[x].status == "Invoiced" ||
-                    jobsCompleted[x].status == "Finished") {
-                    //if(today == jobsCompleted[x].date_issued){
-                    totalJobsCompleted++;
-                    //}
-                } else if (jobsCompleted[x].status == "New" || jobsCompleted[x].status == "Scheduled") {
-                    //if(today == jobsCompleted[x].date_issued){
-                    totalJobsAdded++;
-                    //}
-                }
-            }
-            $("#earned").text('$' + totalPayments); // total earned
-            $("#jobs_completed").text(totalJobsCompleted); // total jobs completed
+            $("#earned").text('$' + total_invoice_amount_due); // total earned
+            $("#jobs_completed").text(jobsCompleted); // total jobs completed
             $("#jobs_added").text(onlineBookingCount); // total jobs added
             $("#lost_accounts").text(lostAcc); // total lost account
             $("#collections").text(collectedAcc); // total collected account
             $("#collections-thumbnail").text(collectedAcc);
-            $("#collected").text('$' + totalCollected); // total earned
+            $("#collected").text('$' + total_collected_amount); // total earned
         }
     }).catch((error) => {
         console.log('Error:', error);
