@@ -343,7 +343,7 @@ function initializeFields() {
                 var query = {
                     search: params.term,
                     type: 'public',
-                    field: 'bank-account', //checking-savings-account
+                    field: 'bank-account', //checking-savings-account 
                     modal: 'pay-contractors-modal'
                 }
     
