@@ -845,17 +845,33 @@ class Dashboard extends Widgets
 
     public function todays_stats()
     {
+        $this->load->model('Jobs_model');
+        $this->load->model('Tickets_model');
+        $this->load->model('Invoice_model');
+
         $cid = logged('company_id');
-        $date_from = date('Y-m-d', strtotime('last monday'));
+        //$date_from = date('Y-m-d', strtotime('last monday'));
+        $date_from = '2023-11-10';
         $date_to = date('Y-m-d', strtotime('sunday this week'));
 
         $payment = $this->event_model->getTodayStats(); // fetch current data sales on jobs , amount is on job_payments.amount
         $paymentInvoices = $this->event_model->getCollected(); // fetch current data sales on jobs , amount is on job_payments.amount
-        $jobsDone = $this->event_model->getAllJobsByCompanyIdAndDateIssued($cid, ['from' => $date_from, 'to' => $date_to]);
+        //$jobsDone = $this->event_model->getAllJobsByCompanyIdAndDateIssued($cid, ['from' => $date_from, 'to' => $date_to]);
+        
+        $jobsDone    = $this->Jobs_model->getAllCompletedJobsByCompanyIdAndDateRange($cid, ['from' => $date_from, 'to' => $date_to]);
+        $ticketsDone = $this->Tickets_model->getAllCompletedTicketsByCompanyIdAndDateRange($cid, ['from' => $date_from, 'to' => $date_to]);
+        $total_jobs_done = count($jobsDone) + count($ticketsDone);
+
+        $invoiceDue = $this->Invoice_model->getTotalDueByCompanyIdAndDateRange($cid, ['from' => $date_from, 'to' => $date_to]);
+        $total_amount_due = $invoiceDue->total_amount;
+
+        $invoicePaid = $this->Invoice_model->getCompanyTotalAmountPaidInvoices($cid, ['from' => $date_from, 'to' => $date_to]);
+        $total_amount_paid = $invoicePaid->total_paid;
+ 
         $collectedAccounts = $this->event_model->getAccountSituation('Collections'); // collection account count, if Collection Date Office Info is set
         $lostAccounts = $this->event_model->getAccountSituation('Cancelled'); // lost account count, if Cancel Date Office Info is set
         $onlineBookingCount = $this->event_model->getLeadSource('Online Booking');
-        $data_arr = ['success' => true, 'data' => $payment, 'paymentInvoice' => $paymentInvoices, 'onlineBooking' => $onlineBookingCount, 'jobsCompleted' => $jobsDone, 'lostAccount' => $lostAccounts, 'collectedAccounts' => $collectedAccounts];
+        $data_arr = ['success' => true, 'data' => $payment, 'paymentInvoice' => $paymentInvoices, 'onlineBooking' => $onlineBookingCount, 'jobsCompleted' => $total_jobs_done, 'lostAccount' => $lostAccounts, 'collectedAccounts' => $collectedAccounts, 'invoice_amount_due' => $total_amount_due, 'collected_amount' => $total_amount_paid];
         exit(json_encode($data_arr));
     }
 

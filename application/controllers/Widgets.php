@@ -37,7 +37,7 @@ class Widgets extends MY_Controller
         $date_to   = post('tech_leaderboard_date_to');
 
         $tech_field_user_type = 6;
-        $techs     = $this->Users_model->getCompanyUsersByUserType($cid, $tech_field_user_type);
+        $techs = $this->Users_model->getCompanyUsersByUserType($cid, $tech_field_user_type);
         
         //Service Tickets
         $tickets = $this->Tickets_model->get_tickets_by_company_id($cid);
@@ -974,6 +974,82 @@ class Widgets extends MY_Controller
         } 
 
         $return = ['chart_labels' => $chart_labels, 'chart_data' => $sales_data];
+        echo json_encode($return);
+    }
+
+    public function ajax_load_open_estimates_chart()
+    {
+        $this->load->model('Estimate_model');
+
+        $cid  = logged('company_id');
+        $year = date("Y");
+        $sales_data   = [];
+        $chart_labels = [];
+        $start_month  = explode("/", post('filter_date_from'));
+        $end_month    = explode("/", post('filter_date_to'));  
+
+        $draft = 0;
+        $accepted = 0;
+        $invoiced = 0;
+        $other = 0;
+        $sent  = 0;
+        $total_estimates = 0;
+
+        for( $start = $start_month[0]; $start <= $end_month[0]; $start++ ){
+            $start_date = $year . '-' . $start . '-' . 1;
+            $start_date = date("Y-m-d", strtotime($start_date));
+            $end_date   = date("Y-m-t", strtotime($start_date));
+            $date_range = ['from' => $start_date, 'to' => $end_date];
+            $estimates  = $this->Estimate_model->getAllByCompanyIdAndDateRange($cid, $date_range);
+            foreach($estimates as $estimate){
+                switch ($estimate->status){
+                    case 'Draft';
+                        $draft++;
+                        break;
+                    case 'Accepted';
+                        $accepted++;
+                        break;
+                    case 'Invoiced';
+                        $invoiced++;
+                        break;
+                    default;
+                        $other++;
+                        break;
+                }
+
+                if( $estimate->is_sent == 1 ){
+                    $sent++;
+                }
+
+                $total_estimates++;
+            }
+        }
+
+        // $draft_percent = number_format((float)$draft/ (count($total_estimates) ?: 1) ,2,'.','') * 100;
+        // $accepted_percent = number_format((float)$accepted/ (count($total_estimates) ?: 1) ,2,'.','') * 100;
+        // $invoiced_percent = number_format((float)$invoiced/ (count($total_estimates) ?: 1) ,2,'.','') * 100;
+        // $other_percent = number_format((float)$other/ (count($total_estimates) ?: 1) ,2,'.','') * 100;
+        // $sent_percent = number_format((float)$sent/ (count($total_estimates) ?: 1) ,2,'.','') * 100;
+        
+        $draft_percent    = $draft;
+        $accepted_percent = $accepted;
+        $invoiced_percent = $invoiced;
+        $other_percent    = $other;
+        $sent_percent     = $sent;
+
+        $chart_labels = [
+            'Draft',
+            'Accepted',
+            'Invoiced',
+            'Sent',
+            'Others'
+        ];
+
+        $estimates_data = [
+            $draft_percent,$accepted_percent,$invoiced_percent,$sent_percent,$other_percent
+        ];
+
+        $return = ['chart_labels' => $chart_labels, 'chart_data' => $estimates_data, 'total_estimates' => $total_estimates];
         echo json_encode($return);
     }
 }
