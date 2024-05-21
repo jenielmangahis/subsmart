@@ -1,31 +1,42 @@
 <?php include viewPath('v2/includes/header'); ?>
-<?php 
-function get_differenct_of_dates($date_start, $date_end)
-{
-  $start = new DateTime($date_start);
-  $end =  new DateTime($date_end);
-  $interval = $start->diff($end);
-
-  $difference = ($interval->days * 24 * 60) * 60;
-  $difference += ($interval->h * 60) * 60;
-  $difference += ($interval->i) * 60;
-  $difference += $interval->s;
-  return ($difference / 60) / 60; // hours
-}
-?>
 <style>
-.sec-2-option img.active-offline {
-    border: solid #6c7585;
+#trac360-map{
+    height:600px;
+    border:1px #6a4a86  solid;
 }
-.sec-2-option img.user-profile {
-    height: 64px;
-    width: 64px;
-    border-radius: 50%;
+.maplibregl-marker{
+    background-size:cover;
+    border-radius:34px;
 }
-.user-location-info{
-    font-size: 14px;
-    margin-bottom: 2px;
-    font-weight: bold;
+.map-user, .map-address, .map-date{
+    display:block;
+}
+.map-user{
+    font-size:12px;
+    font-weight:bold;
+}
+.autocomplete-left{
+display: inline-block;
+width: 65px;
+}
+.autocomplete-right{
+    display: inline-block;
+    width: 80%;
+    vertical-align: top;
+}
+.autocomplete-img {
+    height: 50px;
+    width: 50px;
+}
+.mapboxgl-popup-content, .maplibregl-popup-content{
+  background-color:#6a4a86 !important;
+  color:#ffffff !important;
+}
+.maplibregl-popup-tip{
+    border-top-color : #6a4a86 !important;
+}
+.maplibregl-popup-close-button{
+    color:#ffffff !important;
 }
 </style>
 <div class="row page-content g-0">
@@ -43,59 +54,40 @@ function get_differenct_of_dates($date_start, $date_end)
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-4 col-md-4" style="padding-right:0px;">
-                        <?php for($i =0;$i < count($lasttracklocation_employee);$i++){ ?>
-                            <?php
-                                /*$image = base_url() . '/uploads/users/user-profile/' . $lasttracklocation_employee[$i]->profile_img;
-                                if (!@getimagesize($image)) {
-                                    $image = base_url('uploads/users/default.png');
-                                }*/
-                                $image    = userProfileImage($lasttracklocation_employee[$i]->user_id);
-                                $exploded = explode(",", $lasttracklocation_employee[$i]->user_location);
-                                if($lasttracklocation_employee[$i]->user_id == $current_user_id){
-                                    $current_user_location = $exploded;
-                                    $current_location_has_set = true;
-                                }
-                                if($lasttracklocation_employee[$i]->action == "Check in" || $lasttracklocation_employee[$i]->action == "Break out"){
-                                    $online_sttaus = "active";
-                                }elseif($lasttracklocation_employee[$i]->action == "Break in" ){
-                                    $online_sttaus = "active-break";
-                                }else{
-                                    $online_sttaus = "active-offline";
-                                }
-                                $time_deference = get_differenct_of_dates($lasttracklocation_employee[$i]->date_created, date("Y-m-d H:i:s"));
-                            ?>
-                            <div id="sec-2-option-<?=$lasttracklocation_employee[$i]->user_id ?>" class="sec-2-option <?=$lasttracklocation_employee[$i]->user_id==$current_user_id?"current_view":""?>" onclick="employee_selected(<?=$exploded[0]?>,<?=$exploded[1]?>,<?=$lasttracklocation_employee[$i]->user_id?>)">
-                                <div class="row ">
-                                    <div class="col-3 profile">
-                                        <center><img src="<?=$image?>" alt="user" class="rounded-circle user-profile <?=$online_sttaus?>"></center>
-                                    </div>
-                                    <div class="col-md-9 details">
-                                        <p class="user-location-info"><i class='bx bxs-user-pin'></i> <?= $lasttracklocation_employee[$i]->FName . ' ' . $lasttracklocation_employee[$i]->LName ?></p>
-                                        <p class="user-location-info" id="last_tract_location_14"><i class='bx bxs-map-pin'></i> <?=($lasttracklocation_employee[$i]->user_location_address=="")?"Location Not Available.": $lasttracklocation_employee[$i]->user_location_address ?></p>
-                                        <p class="user-location-info">
-                                            <i class='bx bxs-time-five' ></i>
-                                            <?php 
-                                                if($time_deference > 24){
-                                                    echo round(($time_deference/24),0)
-                                                    ." days ago";
-                                                }elseif($time_deference > 0.59){
-                                                    echo round(($time_deference),0)
-                                                    ." hours ago";
-                                                }else{
-                                                    echo round(($time_deference*60),0)
-                                                    ." minutes ago";
-                                                }
-                                            ?>
-                                        </p>
-                                    </div>
-                                </div>
+                    <div class="col-5 col-md-5" style="padding-right:0px;">
+                        <div class="filter-container nsm-card primary">
+                            <div class="nsm-card-header d-block">
+                                <div class="nsm-card-title"><span><i class='bx bxs-map'></i>&nbsp;Filter Map Marker</span></div>
                             </div>
-                            <div style="display:none;"><div id="map_marker_<?=$lasttracklocation_employee[$i]->user_id ?>" class="popup-map-marker <?=$online_sttaus?>" data-online-status="<?=$online_sttaus?>"><img src="<?=$image ?>" class="popup-map-marker" title="<?=$lasttracklocation_employee[$i]->FName . ' ' . $lasttracklocation_employee[$i]->LName ?>" /></div></div>
-                        <?php } ?>
+                            <hr>
+                            <div class="row mb-3">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Employee</label>
+                                <div class="col-sm-7">
+                                    <select id="list-company-users" class="form-control" multiple=""></select>                                    
+                                </div>                                
+                            </div>    
+                            <div class="row mb-3">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Date From</label>
+                                <div class="col-sm-6">
+                                    <input type="date" id="date-from" class="form-control" value="<?= date("Y-m-d"); ?>" />                                    
+                                </div>                                
+                            </div>    
+                            <div class="row mb-3">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Date To</label>
+                                <div class="col-sm-6">
+                                    <input type="date" id="date-to" class="form-control" value="<?= date("Y-m-d"); ?>" />                                    
+                                </div>                                
+                            </div>    
+                            <div class="col-md-10 mt-5">                                    
+                            <a class="nsm-button primary btn-reset-map" href="javascript:void(0);" style="float:right;">Reset</a>                                    
+                                <a class="nsm-button primary btn-filter-marker" href="javascript:void(0);" style="float:right;">Filter Map</a>                                    
+                            </div>                        
+                        </div>
                     </div>
-                    <div class="col-8 map-section">
-                        <div id="map"></div>
+                    <div class="col-7 col-md-7">
+                        <div class="nsm-card primary">
+                            <div id="trac360-map"></div>
+                        </div>
                     </div>
                 </div>
                 
@@ -104,105 +96,170 @@ function get_differenct_of_dates($date_start, $date_end)
     </div>
 </div>
 <?php include viewPath('v2/includes/footer'); ?>
+<script type="text/javascript" src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css" />
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.umd.js"></script>
+<link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
+<script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
+    
 <script type="text/javascript">
-    var map;
-    var popup, Popup;
 
-    function myMap2() {
-        let mapProp= {
-            center:new google.maps.LatLng(29.8134,-95.4641),
-            zoom:5,
-        };
-        let map = new google.maps.Map(document.getElementById("map"),mapProp);
-    }
+var myAPIKey = "41ddeb87ff654af488b283ba54ba576f";   
+var default_lat = '8.8888';
+var default_lon = '11.5812';
 
-    function initMap() {
-        var lat =7.3087;
-        var lng = 125.6841;
-        <?php 
-        if($current_location_has_set == true){
-            echo "lat=".$current_user_location[0].";";
-            echo "lng=".$current_user_location[1].";";
+var center = {
+    lat: default_lat,
+    lon: default_lon
+};
+var map_zoom_level = '1'; 
+var map_style = 'klokantech-basic';
+var geojson = {
+        'type': 'FeatureCollection',
+    'features': <?= json_encode($geoDataFeatures); ?>
+};
+
+var map = new maplibregl.Map({
+center: [center.lon, center.lat],
+zoom: map_zoom_level,
+container: 'trac360-map',
+style: `https://maps.geoapify.com/v1/styles/${map_style}/style.json?apiKey=${myAPIKey}`,
+});
+map.addControl(new maplibregl.NavigationControl()); 
+
+// add markers to map
+var currentMarkers=[];
+geojson.features.forEach((marker) => {
+    // create a DOM element for the marker
+    const el = document.createElement('div');
+    el.className = 'marker';    
+    el.style.backgroundImage =
+            `url(${marker.properties.image})`;
+    el.style.width = `${marker.properties.iconSize[0]}px`;
+    el.style.height = `${marker.properties.iconSize[1]}px`;
+
+    // el.addEventListener('click', () => {
+    //     window.alert(marker.properties.message);
+    // });
+
+    // create the popup
+    const popup = new maplibregl.Popup({offset: 25}).setHTML(
+        marker.properties.message
+    );
+
+    // add marker to map
+    var marker = new maplibregl.Marker({element: el})
+        .setLngLat(marker.geometry.coordinates)
+        .setPopup(popup)
+        .addTo(map);
+
+    currentMarkers.push(marker);
+});
+
+$(function(){
+    
+    $('.btn-reset-map').on('click', function(){
+        location.reload();
+    });
+
+    $('.btn-filter-marker').on('click', function(){
+        var uid = $('#list-company-users').val();
+        var date_from = $('#date-from').val();
+        var date_to   = $('#date-to').val();
+
+        if (currentMarkers!==null) {
+            for (var i = currentMarkers.length - 1; i >= 0; i--) {                
+                currentMarkers[i].remove();
+            }
         }
-        ?>
-        let mapProp= {
-            center:new google.maps.LatLng(lat,lng),
-            zoom:5,
-        };
-         map = new google.maps.Map(document.getElementById("map"),mapProp);
 
-    /**
-     * A customized popup on the map.
-     */
-    class Popup extends google.maps.OverlayView {
-      constructor(position, content,online_status) {
-        super();
-        this.position = position;
-        content.classList.add("popup-bubble");
-        
-        // This zero-height div is positioned at the bottom of the bubble.
-        const bubbleAnchor = document.createElement("div");
-        bubbleAnchor.classList.add("popup-bubble-anchor");
-        bubbleAnchor.classList.add(online_status);
-        bubbleAnchor.appendChild(content);
-        // This zero-height div is positioned at the bottom of the tip.
-        this.containerDiv = document.createElement("div");
-        this.containerDiv.classList.add("popup-container");
-        this.containerDiv.appendChild(bubbleAnchor);
-        // Optionally stop clicks, etc., from bubbling up to the map.
-        Popup.preventMapHitsAndGesturesFrom(this.containerDiv);
-      }
-      /** Called when the popup is added to the map. */
-      onAdd() {
-        this.getPanes().floatPane.appendChild(this.containerDiv);
-      }
-      /** Called when the popup is removed from the map. */
-      onRemove() {
-        if (this.containerDiv.parentElement) {
-          this.containerDiv.parentElement.removeChild(this.containerDiv);
+        $.ajax({
+            type: "POST",
+            url: base_url + "trac360/_create_user_geolocation_features",
+            dataType: 'json',
+            data: {uid:uid, date_from:date_from, date_to:date_to},
+            success: function(data) {
+                if (data.is_valid) {
+                    var geojson = {
+                            'type': 'FeatureCollection',
+                            'features': data.geoFeatures
+                    }; 
+
+                    geojson.features.forEach((marker) => {
+                        // create a DOM element for the marker
+                        const el = document.createElement('div');
+                        el.className = 'marker';    
+                        el.style.backgroundImage =
+                                `url(${marker.properties.image})`;
+                        el.style.width = `${marker.properties.iconSize[0]}px`;
+                        el.style.height = `${marker.properties.iconSize[1]}px`;
+
+                        // create the popup
+                        const popup = new maplibregl.Popup({offset: 25}).setHTML(
+                            marker.properties.message
+                        );
+
+                        // add marker to map
+                        var marker = new maplibregl.Marker({element: el})
+                            .setLngLat(marker.geometry.coordinates)
+                            .setPopup(popup)
+                            .addTo(map);
+
+                        currentMarkers.push(marker);
+                    });
+                }
+            },
+            beforeSend: function() {
+
+            }
+        });
+    });
+
+    $('#list-company-users').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_users',
+            dataType: 'json',
+            delay: 250,                
+            data: function(params) {
+                return {
+                    q: params.term,
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+
+                return {
+                    results: data,
+                };
+            },
+            cache: true
+        },
+        placeholder: 'Select User',
+        maximumSelectionLength: 5,
+        minimumInputLength: 0,
+        templateResult: formatRepoUser,
+        templateSelection: formatRepoSelectionUser
+    });
+
+    function formatRepoUser(repo) {
+        if (repo.loading) {
+            return repo.text;
         }
-      }
-      /** Called each frame when the popup needs to draw itself. */
-      draw() {
-        const divPosition = this.getProjection().fromLatLngToDivPixel(
-          this.position
+
+        var $container = $(
+            '<div><div class="autocomplete-left"><img class="autocomplete-img" src="' + repo.user_image + '" /></div><div class="autocomplete-right">' + repo.FName + ' ' + repo.LName + '<br /><small>' + repo.email + '</small></div></div>'
         );
-        // Hide the popup when it is far out of view.
-        const display =
-          Math.abs(divPosition.x) < 4000 && Math.abs(divPosition.y) < 4000 ?
-          "block" :
-          "none";
 
-        if (display === "block") {
-          this.containerDiv.style.left = divPosition.x + "px";
-          this.containerDiv.style.top = divPosition.y + "px";
-        }
-
-        if (this.containerDiv.style.display !== display) {
-          this.containerDiv.style.display = display;
-        }
-      }
+        return $container;
     }
 
-    <?php
-    for ($i=0;$i<count($lasttracklocation_employee);$i++) {
-      
-        $exploded = explode(",", $lasttracklocation_employee[$i]->user_location);
-    ?>
-        popup = new Popup(
-          new google.maps.LatLng(<?= $exploded[0] ?>, <?= $exploded[1] ?>),
-          document.getElementById("map_marker_<?= $lasttracklocation_employee[$i]->user_id ?>"),
-          $("#map_marker_<?= $lasttracklocation_employee[$i]->user_id ?>").attr("data-online-status")
-        );
-        popup.setMap(map);
-      
-        <?php
-          }
-        ?>
+    function formatRepoSelectionUser(repo) {
+        return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
     }
+});
+
 </script>
-<!-- <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU&callback=initMap&libraries=&v=weekly" async></script>
-<script src="https://maps.googleapis.com/maps/api/geocode/json?address=Winnetka&key=AIzaSyBg27wLl6BoSPmchyTRgvWuGHQhUUHE5AU"></script> -->
-<script src="<?="https://maps.googleapis.com/maps/api/js?key=".GOOGLE_MAP_API_KEY."&callback=initMap&libraries=&v=weekly"?>" async></script>
-<script src="<?="https://maps.googleapis.com/maps/api/geocode/json?address=Winnetka&key=".GOOGLE_MAP_API_KEY?>"> </script>
-
