@@ -24,14 +24,14 @@
                             <input type="text" name="lastname" class="nsm-field form-control" required />
                         </div>
                     </div>
-                    <div class="row gy-3 mb-4">    
+                    <div class="row gy-3 mb-4">
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Mobile Number</label>
-                            <input type="text" name="mobile" class="nsm-field form-control" value="" />
+                            <input type="text" name="mobile" placeholder="xxxxxxxxxxx" maxlength="12" class="nsm-field mobile-number form-control" value="" />
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
-                            <input type="text" name="phone" class="nsm-field form-control" value="" />
+                            <input type="text" id="phone-number" name="phone" placeholder="xxx-xxx-xxxx" maxlength="12" class="nsm-field phone-number form-control" value="" />
                         </div>
                     </div>
                     <div class="row gy-3 mb-4">
@@ -57,30 +57,30 @@
                             </div>
                         </div>
                     </div>
-                    <?php if(isSolarCompany() == 1){ ?>
-                    <div class="row gy-3 mb-4">
-                        <div class="col-12">
-                            <label class="content-title">ADT Sales App Login Details</label>
-                        </div>
-                        <div class="col-12">
-                            <label class="content-subtitle fw-bold d-block mb-2">Username</label>
-                            <div class="nsm-field-group icon-right">
-                                <input type="text" class="nsm-field form-control" id="portal_username" name="portal_username" />
+                    <?php if (isSolarCompany() == 1) { ?>
+                        <div class="row gy-3 mb-4">
+                            <div class="col-12">
+                                <label class="content-title">ADT Sales App Login Details</label>
+                            </div>
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Username</label>
+                                <div class="nsm-field-group icon-right">
+                                    <input type="text" class="nsm-field form-control" id="portal_username" name="portal_username" />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="content-subtitle fw-bold d-block mb-2">Password</label>
+                                <div class="nsm-field-group show icon-right">
+                                    <input type="password" class="nsm-field form-control password-field" id="portal_password" name="portal_password" />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="content-subtitle fw-bold d-block mb-2">Confirm Password</label>
+                                <div class="nsm-field-group show icon-right">
+                                    <input type="password" class="nsm-field form-control password-field" id="portal_confirm_password" name="portal_confirm_password" />
+                                </div>
                             </div>
                         </div>
-                        <div class="col-12 col-md-6">
-                            <label class="content-subtitle fw-bold d-block mb-2">Password</label>
-                            <div class="nsm-field-group show icon-right">
-                                <input type="password" class="nsm-field form-control password-field" id="portal_password" name="portal_password" />
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <label class="content-subtitle fw-bold d-block mb-2">Confirm Password</label>
-                            <div class="nsm-field-group show icon-right">
-                                <input type="password" class="nsm-field form-control password-field" id="portal_confirm_password" name="portal_confirm_password" />
-                            </div>
-                        </div>
-                    </div>
                     <?php } ?>
                     <div class="row gy-3 mb-4">
                         <div class="col-12">
@@ -237,12 +237,12 @@
                         <div class="col-12 col-md-12">
                             <table class="table" id="commission-settings">
                                 <thead>
-                                <tr>
-                                    <td style="width: 50%;">Name</td>
-                                    <td style="width:30%;">Type</td>
-                                    <td>Value</td>
-                                    <td style="width:5%;"></td>
-                                </tr>
+                                    <tr>
+                                        <td style="width: 50%;">Name</td>
+                                        <td style="width:30%;">Type</td>
+                                        <td>Value</td>
+                                        <td style="width: 5px"></td>
+                                    </tr>
                                 </thead>
                                 <tbody></tbody>
                             </table>
@@ -255,13 +255,15 @@
                         </div>
                         <div class="col-6">
                             <div class="row">
-                                <div class="col-12 col-md-4">
-                                    <label for="hire_date">Hire date</label>
-                                </div>
+                                <!-- <label for="hire_date">Hire date</label>
                                 <div class="col-12 col-md-8">
                                     <div class="nsm-field-group calendar">
                                         <input type="text" name="hire_date" id="hire_date" class="form-control nsm-field date">
                                     </div>
+                                </div> -->
+                                <div class="col-12 col-md-8">
+                                    <label for="payDate">Hire Date</label>
+                                    <input type="date" class="form-control nsm-field date" name="hire_date" id="hire_date" />
                                 </div>
                             </div>
                         </div>
@@ -286,3 +288,13 @@
         </form>
     </div>
 </div>
+
+<script>
+    var phoneInput = document.getElementById('phone-number');
+    var add_employee_form = document.getElementById('add_employee_form');
+
+    phoneInput.addEventListener('input', function(e) {
+        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+        e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
+    });
+</script>

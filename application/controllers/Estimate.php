@@ -2242,6 +2242,7 @@ class Estimate extends MY_Controller
         ];
 
         $recipient = $customerData->email;
+
         $config = ['subject' => 'Estimate Details'];
         if( logged('company_id') == 58 ){
         //if( logged('company_id') == 1 ){

@@ -428,67 +428,70 @@ class Timesheet_model extends MY_Model
 
     public function calculateShiftDuration_and_overtime($attn_id)
     {
-        date_default_timezone_set('UTC');
-        $user_id = logged('id');
-        $qry = $this->db->get_where('timesheet_attendance', array('id' => $attn_id));
-        foreach ($qry->result() as $att) {
-            $user_id = $att->user_id;
-            break;
-        }
-        $user_logs = $this->db->get_where('timesheet_logs', array('attendance_id' => $attn_id));
-        // var_dump($user_logs);
-        $count_of_checkins = 0;
-        $check_in = "";
-        $total_hours = 0;
-        $total_minutes = 0;
-        foreach ($user_logs->result() as $row) {
-            if ($row->action == "Check in") {
-                $count_of_checkins++;
-                if ($count_of_checkins == 1) {
-                    $check_in = $row->date_created;
+        $data = [];
+        if( $attn_id > 0 ){
+            date_default_timezone_set('UTC');
+            $user_id = logged('id');
+            $qry = $this->db->get_where('timesheet_attendance', array('id' => $attn_id));
+            foreach ($qry->result() as $att) {
+                $user_id = $att->user_id;
+                break;
+            }
+            $user_logs = $this->db->get_where('timesheet_logs', array('attendance_id' => $attn_id));
+            $count_of_checkins = 0;
+            $check_in = "";
+            $total_hours = 0;
+            $total_minutes = 0;
+            foreach ($user_logs->result() as $row) {
+                if ($row->action == "Check in") {
+                    $count_of_checkins++;
+                    if ($count_of_checkins == 1) {
+                        $check_in = $row->date_created;
+                    }
+                } elseif ($row->action == "Check out" && $count_of_checkins > 1) {
+                    $start = new DateTime($check_in);
+                    $end = new DateTime($row->date_created);
+                    $interval = $start->diff($end);
+                    $minutes = ($interval->days * 24 * 60) * 60;
+                    $minutes += ($interval->h * 60) * 60;
+                    $minutes += ($interval->i) * 60;
+                    $minutes += $interval->s;
+                    $minutes = $minutes / 60;
                 }
-            } elseif ($row->action == "Check out" && $count_of_checkins > 1) {
+            }
+
+            if ($count_of_checkins % 2 != 0) {
                 $start = new DateTime($check_in);
-                $end = new DateTime($row->date_created);
+                $end =  new DateTime(date('Y-m-d H:i:s'));
                 $interval = $start->diff($end);
+
                 $minutes = ($interval->days * 24 * 60) * 60;
                 $minutes += ($interval->h * 60) * 60;
                 $minutes += ($interval->i) * 60;
                 $minutes += $interval->s;
                 $minutes = $minutes / 60;
             }
+
+            $break_duration = 0;
+            $qry = $this->db->query("SELECT * FROM timesheet_attendance WHERE id = " . $attn_id);
+            $attendance = $qry->result();
+            foreach ($attendance as $row) {
+                $break_duration = $row->break_duration;
+            }
+
+            $total_worked_hours = ($minutes / 60) - $break_duration;
+
+            if ($total_worked_hours > 8) {
+                $shift_duration = 8;
+                $over_time = $total_worked_hours - 8;
+            } else {
+                $shift_duration = $total_worked_hours;
+                $over_time = 0;
+            }
+
+            $data = array($shift_duration, $over_time);
         }
-
-        if ($count_of_checkins % 2 != 0) {
-            $start = new DateTime($check_in);
-            $end =  new DateTime(date('Y-m-d H:i:s'));
-            $interval = $start->diff($end);
-
-            $minutes = ($interval->days * 24 * 60) * 60;
-            $minutes += ($interval->h * 60) * 60;
-            $minutes += ($interval->i) * 60;
-            $minutes += $interval->s;
-            $minutes = $minutes / 60;
-        }
-
-        $break_duration = 0;
-        $qry = $this->db->query("SELECT * FROM timesheet_attendance WHERE id = " . $attn_id);
-        $attendance = $qry->result();
-        foreach ($attendance as $row) {
-            $break_duration = $row->break_duration;
-        }
-
-        $total_worked_hours = ($minutes / 60) - $break_duration;
-
-        if ($total_worked_hours > 8) {
-            $shift_duration = 8;
-            $over_time = $total_worked_hours - 8;
-        } else {
-            $shift_duration = $total_worked_hours;
-            $over_time = 0;
-        }
-
-        $data = array($shift_duration, $over_time);
+            
         return $data;
     }
     public function calculateBreakDuration($attn_id)

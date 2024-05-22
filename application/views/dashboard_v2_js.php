@@ -834,7 +834,6 @@ fetch('<?php echo base_url('Dashboard/income_subscription'); ?>', {}).then(respo
             type: 'line',
             data: sales_data,
             options: {
-                responsive: true,
                 plugins: {
                     legend: {
                         position: 'bottom',
@@ -891,7 +890,6 @@ fetch('<?php echo base_url('Dashboard/unpaid_invoices_graph'); ?>', {}).then(res
             type: 'line',
             data: unpaid_graph_data,
             options: {
-                responsive: true,
                 plugins: {
                     legend: {
                         position: 'bottom',
@@ -951,7 +949,6 @@ fetch('<?php echo base_url('Dashboard/sales_graph'); ?>', {}).then(response => r
             type: 'line',
             data: sales_graph_data,
             options: {
-                responsive: true,
                 plugins: {
                     legend: {
                         position: 'bottom',
@@ -1013,7 +1010,6 @@ fetch('<?php echo base_url('Dashboard/get_all_customer_group'); ?>', {}).then(re
             type: 'pie',
             data: customer_graph_data,
             options: {
-                responsive: true,
                 plugins: {
                     legend: {
                         position: 'right',
@@ -1029,7 +1025,6 @@ fetch('<?php echo base_url('Dashboard/get_all_customer_group'); ?>', {}).then(re
                         top: 0, 
                     }
                 },
-                aspectRatio: 1.2,
             },
         });
         $(".recent-customer-container-count").html(totalCustomer);
@@ -1037,6 +1032,81 @@ fetch('<?php echo base_url('Dashboard/get_all_customer_group'); ?>', {}).then(re
 
 
         window.NewCustomerWidgetsGraph = NewCustomerWidgetsGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+
+fetch('<?php echo base_url('Dashboard/accounting_expense'); ?>', {}).then(response => response.json()).then(
+    response => {
+
+        var {
+            success,
+            accounting_expense
+        } = response;
+
+        console.log('accounting_expense',accounting_expense)
+
+        let expenseCategory =[];
+        let dataTemp =[];
+        let total_expense = 0;
+
+
+        if(accounting_expense){
+        for(var x =0 ; x <accounting_expense.length ; x++){
+            expenseCategory.push(accounting_expense[x].category.name)
+            dataTemp.push(accounting_expense[x].total)
+            total_expense += parseInt(accounting_expense[x].total)
+        }
+       }
+
+
+       var new_leads_data = {
+            labels: expenseCategory,
+            datasets: [{
+                label: 'Total leads',
+                data: dataTemp,
+                backgroundColor: [
+                'rgb(106 74 134)',
+                'rgb(199 149 28)',
+                'rgb(64 136 84)',
+                'rgb(220 53 69)',
+                'rgb(206, 128, 255)'
+              ],
+            }]
+        };
+
+        $('#AccountingExpenseGraphLoader').hide()
+
+
+        const AccountingExpenseGraph = new Chart($('#AccountingExpenseGraph'), {
+            type: 'doughnut',
+            data: new_leads_data,
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            boxWidth: 10,
+                        }
+                    },
+                },
+                layout: {
+                    padding: {
+                        left: 5,
+                        right: 5,
+                        top: 0, 
+                    }
+                },
+            },
+        });
+
+        $(".total_expense_graph_total").html('$ '+total_expense);
+        $("#total_expense_graph").html('$'+total_expense);
+
+        
+        
+
+        window.AccountingExpenseGraph = AccountingExpenseGraph;
     }).catch((error) => {
     console.log(error);
 })
@@ -1086,7 +1156,6 @@ fetch('<?php echo base_url('Dashboard/leads_graph'); ?>', {}).then(response => r
             type: 'doughnut',
             data: new_leads_data,
             options: {
-                responsive: true,
                 plugins: {
                     legend: {
                         position: 'right',
@@ -1102,7 +1171,6 @@ fetch('<?php echo base_url('Dashboard/leads_graph'); ?>', {}).then(response => r
                         top: 0, 
                     }
                 },
-                aspectRatio: 1.2,
             },
         });
 
@@ -1157,7 +1225,6 @@ fetch('<?php echo base_url('Dashboard/jobs_thumbnail_graph'); ?>', {}).then(resp
             type: 'bar',
             data: jobs_data,
             options: {
-                responsive: true,
                 plugins: {
                     legend: {
                         position: 'bottom',
@@ -1216,7 +1283,6 @@ fetch('<?php echo base_url('Dashboard/open_invoices_graph'); ?>', {}).then(respo
             type: 'bar',
             data: openinvoices_data,
             options: {
-                responsive: true,
                 plugins: {
                     legend: {
                         position: 'bottom',
@@ -1274,7 +1340,6 @@ fetch('<?php echo base_url('Dashboard/past_due_invoices'); ?>', {}).then(respons
             type: 'bar',
             data: pastdue_data,
             options: {
-                responsive: true,
                 plugins: {
                     legend: {
                         position: 'bottom',

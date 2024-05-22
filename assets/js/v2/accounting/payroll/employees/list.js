@@ -181,7 +181,7 @@ $(document).on('click', '#bonus-payroll-modal #continue-bonus-payroll', function
     bonusPayType = $('#bonus-payroll-modal [name="bonus_as"]:checked').val();
     bonusPayAsFields = $('#bonus-payroll-modal .modal-content').html();
 
-    $.get(base_url + '/accounting/employees/bonus-only-payroll-form/' + bonusPayType, function(res) {
+    $.get(base_url + 'accounting/employees/bonus-only-payroll-form/' + bonusPayType, function(res) {
         $('#bonus-payroll-modal .modal-content').html(res);
         $('#bonus-payroll-modal .modal-body select:not(#bank-account)').select2({
             minimumResultsForSearch: -1,

@@ -61,7 +61,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         id="thumbnail_content_graph_<?php echo $id; ?>">
         <h1 id='GuageEstimateLoader'> <span class="bx bx-loader bx-spin"></span></h1>
 
-        <canvas id="GuageEstimate" data-open="<?php echo count($expired_estimates); ?>"
+        <canvas id="GuageEstimate" style="max-height:100%;" data-open="<?php echo count($expired_estimates); ?>"
             data-total="<?php echo count($estimates ); ?>"></canvas>
     </div>
     <div class="nsm-card-content" style="  height: calc(100% - 120px);" id="thumbnail_content_list<?php echo $id; ?>"  display: <?php echo $isListView ? 'none' : 'block'; ?>>

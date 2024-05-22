@@ -30,6 +30,12 @@ function email__getInstance($config = [])
     }else{
         $mail->FromName = $config['from_name'];    
     }
+
+    if( $config['cc'] ){
+        foreach($config['cc'] as $email){
+            $mail->AddCC($email, $$email);
+        }
+    }
     
     $mail->Subject = $subject;
     $mail->IsHTML($config['isHTML']);

@@ -61,7 +61,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         id="thumbnail_content_graph_<?php echo $id; ?>">
         <h1 id='IncomeSubscriptioneGraphLoader'> <span class="bx bx-loader bx-spin"></span></h1>
 
-        <canvas id="income_subscription" class="nsm-chart" data-chart-type="sales"></canvas>
+        <canvas id="income_subscription" style="max-height:100%;" class="nsm-chart" data-chart-type="sales"></canvas>
     </div>
     <div class="nsm-card-content"
         style="  height: calc(100% - 120px);  display: <?php echo $isListView ? 'none' : 'block'; ?>"

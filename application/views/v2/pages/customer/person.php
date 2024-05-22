@@ -52,10 +52,13 @@ padding: 0.8rem 1rem;
     font-size: 15px;
     padding: 10px;
 }
+.select-filter-card{
+    cursor: pointer
+}
 </style>
 
 <div class="nsm-fab-container">
-    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
+    <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead'); ?>'">
         <i class="bx bx-plus"></i>
     </div>
 </div>
@@ -76,32 +79,33 @@ padding: 0.8rem 1rem;
                     </div>
                 </div>
                 <div class="row g-3 mb-3">
-                    <?php 
+                    <?php
                       $colorClasses = ['primary', 'success', 'error', 'secondary'];
-                      $index = 0;
-                    foreach($statusCounts as $status => $count){?>
-                    <div class="col-6 col-md-3 col-lg-2">
+$index = 0;
+foreach ($statusCounts as $status => $count) {?>
+                    <div class="col-6 col-md-3 col-lg-2 select-filter-card" data-value="<?php echo $status; ?>" >
                         <div class="nsm-counter <?php echo $colorClasses[$index % 4]; ?> h-100 mb-2 " id="estimates">
                             <div class="row h-100 w-auto">
                                 <div class=" w-100 col-md-8 text-start d-flex align-items-center  justify-content-between">
-                                    <span><i class="bx bx-receipt"></i><?= $status; ?></span>
-                                    <h2 id="total_this_year"><?php echo $count ?></h2>
+                                    <span><i class="bx bx-receipt"></i><?php echo $status; ?></span>
+                                    <h2 id="total_this_year"><?php echo $count; ?></h2>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <?php $index++;}; ?>
+                    <?php ++$index;
+} ?>
                 </div>
                 <div class="row mt-5">
                     <div class="col-12 col-md-4">
-                        <form action="<?php echo base_url('admin/companies') ?>" method="GET">
+                        <form action="<?php echo base_url('admin/companies'); ?>" method="GET">
                             <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="PERSON_SEARCHBAR" name="search" placeholder="Search Residential" value="<?php echo (!empty($search)) ? $search : '' ?>">                                
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="PERSON_SEARCHBAR" name="search" placeholder="Search Residential" value="<?php echo (!empty($search)) ? $search : ''; ?>">                                
                             </div>
                         </form>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
-                        <div class="dropdown d-inline-block">
+                    <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter by : <span id="filter-selected">All Status</span></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
@@ -125,128 +129,128 @@ padding: 0.8rem 1rem;
                 </div>
                 <input type="hidden" id="page_type" value="person">
                 
-                <?php if (!empty($enabled_table_headers)) : ?>
+                <?php if (!empty($enabled_table_headers)) { ?>
                     <div class="cont">
                         <table id="person-list" style="width:100%;">
                             <thead>
                                 <tr>
                                     <th class="table-icon"></th>
-                                    <?php if (in_array('name', $enabled_table_headers)) : ?><th data-name="Name">Name</th><?php endif; ?>
-                                    <?php if (in_array('email', $enabled_table_headers)) : ?><th data-name="Name">Email</th><?php endif; ?>
-                                    <?php if (in_array('industry', $enabled_table_headers)) : ?><th data-name="Name">Industry</th><?php endif; ?>
-                                    <?php if (in_array('city', $enabled_table_headers)) : ?><th data-name="City">City</th><?php endif; ?>
-                                    <?php if (in_array('state', $enabled_table_headers)) : ?><th data-name="State">State</th><?php endif; ?>
-                                    <?php if (in_array('source', $enabled_table_headers)) : ?><th data-name="Source">Source</th><?php endif; ?>
-                                    <?php if (in_array('added', $enabled_table_headers)) : ?><th data-name="Added">Added</th><?php endif; ?>
-                                    <?php if (in_array('sales_rep', $enabled_table_headers)) : ?><th data-name="Sales Rep">Sales Rep</th><?php endif; ?>
-                                    <?php if (in_array('tech', $enabled_table_headers)) : ?><th data-name="Tech">Tech</th><?php endif; ?>
-                                    <?php if (in_array('plan_type', $enabled_table_headers)) : ?><th data-name="Plan Type">Plan Type</th><?php endif; ?>
-                                    <?php if (in_array('rate_plan', $enabled_table_headers)) : ?><th data-name="Rate Plan">Rate Plan</th><?php endif; ?>
-                                    <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?><th data-name="<?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> "><?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'   ?> </th><?php endif; ?>
-                                    <?php if (in_array('job_amount', $enabled_table_headers)) : ?><th data-name="<?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount' ?>"><?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?></th><?php endif; ?>
-                                    <?php if (in_array('phone', $enabled_table_headers)) : ?><th data-name="Phone">Phone</th><?php endif; ?>
-                                    <?php if (in_array('status', $enabled_table_headers)) : ?><th data-name="Status">Status</th><?php endif; ?>
+                                    <?php if (in_array('name', $enabled_table_headers)) { ?><th data-name="Name">Name</th><?php } ?>
+                                    <?php if (in_array('email', $enabled_table_headers)) { ?><th data-name="Name">Email</th><?php } ?>
+                                    <?php if (in_array('industry', $enabled_table_headers)) { ?><th data-name="Name">Industry</th><?php } ?>
+                                    <?php if (in_array('city', $enabled_table_headers)) { ?><th data-name="City">City</th><?php } ?>
+                                    <?php if (in_array('state', $enabled_table_headers)) { ?><th data-name="State">State</th><?php } ?>
+                                    <?php if (in_array('source', $enabled_table_headers)) { ?><th data-name="Source">Source</th><?php } ?>
+                                    <?php if (in_array('added', $enabled_table_headers)) { ?><th data-name="Added">Added</th><?php } ?>
+                                    <?php if (in_array('sales_rep', $enabled_table_headers)) { ?><th data-name="Sales Rep">Sales Rep</th><?php } ?>
+                                    <?php if (in_array('tech', $enabled_table_headers)) { ?><th data-name="Tech">Tech</th><?php } ?>
+                                    <?php if (in_array('plan_type', $enabled_table_headers)) { ?><th data-name="Plan Type">Plan Type</th><?php } ?>
+                                    <?php if (in_array('rate_plan', $enabled_table_headers)) { ?><th data-name="Rate Plan">Rate Plan</th><?php } ?>
+                                    <?php if (in_array('subscription_amount', $enabled_table_headers)) { ?><th data-name="<?php echo $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?> "><?php echo $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?> </th><?php } ?>
+                                    <?php if (in_array('job_amount', $enabled_table_headers)) { ?><th data-name="<?php echo $companyId == 58 ? 'Proposed Solar' : 'Job Amount'; ?>"><?php echo $companyId == 58 ? 'Proposed Solar' : 'Job Amount'; ?></th><?php } ?>
+                                    <?php if (in_array('phone', $enabled_table_headers)) { ?><th data-name="Phone">Phone</th><?php } ?>
+                                    <?php if (in_array('status', $enabled_table_headers)) { ?><th data-name="Status">Status</th><?php } ?>
                                     <th data-name="Manage"></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                if (!empty($profiles)) :
-                                ?>
+            if (!empty($profiles)) {
+                ?>
                                     <?php
-                                    foreach ($profiles as $customer) :
-                                        switch (strtoupper($customer->status)):
-                                            case "INSTALLED":
-                                                $badge = "success";
-                                                break;
-                                            case "CANCELLED":
-                                                $badge = "error";
-                                                break;
-                                            case "COLLECTIONS":
-                                                $badge = "secondary";
-                                                break;
-                                            case "CHARGED BACK":
-                                                $badge = "primary";
-                                                break;
-                                            default:
-                                                $badge = "";
-                                                break;
-                                        endswitch;
-                                    ?>
-                                        <?php if (in_array('name', $enabled_table_headers)) : ?>
+                    foreach ($profiles as $customer) {
+                        switch (strtoupper($customer->status)) {
+                            case 'INSTALLED':
+                                $badge = 'success';
+                                break;
+                            case 'CANCELLED':
+                                $badge = 'error';
+                                break;
+                            case 'COLLECTIONS':
+                                $badge = 'secondary';
+                                break;
+                            case 'CHARGED BACK':
+                                $badge = 'primary';
+                                break;
+                            default:
+                                $badge = '';
+                                break;
+                        }
+                        ?>
+                                        <?php if (in_array('name', $enabled_table_headers)) { ?>
                                             <td>
                                                 <div class="nsm-profile">
-                                                    <?php if ($customer->customer_type === 'Business'): ?>
+                                                    <?php if ($customer->customer_type === 'Business') { ?>
                                                         <span>
-                                                        <?php 
-                                                            $parts = explode(' ', strtoupper(trim($customer->business_name)));
-                                                            echo count($parts) > 1 ? $parts[0][0] . end($parts)[0] : $parts[0][0];
+                                                        <?php
+                                                $parts = explode(' ', strtoupper(trim($customer->business_name)));
+                                                        echo count($parts) > 1 ? $parts[0][0].end($parts)[0] : $parts[0][0];
                                                         ?>
                                                         </span>
-                                                    <?php else: ?>
-                                                        <span><?= ucwords($customer->first_name[0]) . ucwords($customer->last_name[0]) ?></span>
-                                                    <?php endif; ?>
+                                                    <?php } else { ?>
+                                                        <span><?php echo ucwords($customer->first_name[0]).ucwords($customer->last_name[0]); ?></span>
+                                                    <?php } ?>
                                                 </div>
                                             </td>
                                             <td class="nsm-text-primary">
-                                                <label class="nsm-link default d-block fw-bold" onclick="location.href='<?= base_url('/customer/module/' . $customer->prof_id); ?>'">
-                                                    <?php if ($customer->customer_type === 'Business'): ?>
-                                                        <?= $customer->business_name ?>
-                                                    <?php else: ?>
-                                                        <?= ($customer) ? $customer->first_name . ' ' . $customer->last_name : ''; ?>
-                                                    <?php endif; ?>
+                                                <label class="nsm-link default d-block fw-bold" onclick="location.href='<?php echo base_url('/customer/module/'.$customer->prof_id); ?>'">
+                                                    <?php if ($customer->customer_type === 'Business') { ?>
+                                                        <?php echo $customer->business_name; ?>
+                                                    <?php } else { ?>
+                                                        <?php echo ($customer) ? $customer->first_name.' '.$customer->last_name : ''; ?>
+                                                    <?php } ?>
                                                 </label>
                                                 <label class="nsm-link default content-subtitle fst-italic d-block"><?php echo $customer->email; ?></label>
                                             </td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('industry', $enabled_table_headers)) : ?>
+                                        <?php } ?>
+                                        <?php if (in_array('industry', $enabled_table_headers)) { ?>
                                             <td>
-                                                <?php 
-                                                    if( $customer->industry_type_id > 0 ){
+                                                <?php
+                                                    if ($customer->industry_type_id > 0) {
                                                         echo $customer->industry_type;
-                                                    }else{
-                                                        echo 'Not Specified';                                                    
+                                                    } else {
+                                                        echo 'Not Specified';
                                                     }
-                                                ?>
+                                            ?>
                                             </td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('city', $enabled_table_headers)) : ?>
+                                        <?php } ?>
+                                        <?php if (in_array('city', $enabled_table_headers)) { ?>
                                             <td><?php echo $customer->city; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('state', $enabled_table_headers)) : ?>
+                                        <?php } ?>
+                                        <?php if (in_array('state', $enabled_table_headers)) { ?>
                                             <td><?php echo $customer->state; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('source', $enabled_table_headers)) : ?>
-                                            <td><?= $customer->lead_source != "" ? $customer->lead_source : 'n/a'; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('added', $enabled_table_headers)) : ?>
+                                        <?php } ?>
+                                        <?php if (in_array('source', $enabled_table_headers)) { ?>
+                                            <td><?php echo $customer->lead_source != '' ? $customer->lead_source : 'n/a'; ?></td>
+                                        <?php } ?>
+                                        <?php if (in_array('added', $enabled_table_headers)) { ?>
                                             <td><?php echo $customer->entered_by; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('sales_rep', $enabled_table_headers)) : ?>
-                                            <td><?php print_r( get_sales_rep_name($customer->fk_sales_rep_office)); ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('tech', $enabled_table_headers)) : ?>
-                                            <?php $techician = !empty($customer->technician) ?  get_employee_name($customer->technician)->FName : 'Not Assigned'; ?>
-                                            <td><?= $techician; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('plan_type', $enabled_table_headers)) : ?>
+                                        <?php } ?>
+                                        <?php if (in_array('sales_rep', $enabled_table_headers)) { ?>
+                                            <td><?php print_r(get_sales_rep_name($customer->fk_sales_rep_office)); ?></td>
+                                        <?php } ?>
+                                        <?php if (in_array('tech', $enabled_table_headers)) { ?>
+                                            <?php $techician = !empty($customer->technician) ? get_employee_name($customer->technician)->FName : 'Not Assigned'; ?>
+                                            <td><?php echo $techician; ?></td>
+                                        <?php } ?>
+                                        <?php if (in_array('plan_type', $enabled_table_headers)) { ?>
                                             <td><?php echo $customer->system_type; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('rate_plan', $enabled_table_headers)) : ?>
+                                        <?php } ?>
+                                        <?php if (in_array('rate_plan', $enabled_table_headers)) { ?>
                                             <td><?php echo $customer->rate_plan; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
-                                            <td>$<?= $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',') ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('subscription_amount', $enabled_table_headers)) : ?>
-                                            <td>$<?= $companyId == 58 ? number_format(floatval($customer->proposed_solar), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ',') ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('phone', $enabled_table_headers)) : ?>
+                                        <?php } ?>
+                                        <?php if (in_array('subscription_amount', $enabled_table_headers)) { ?>
+                                            <td>$<?php echo $companyId == 58 ? number_format(floatval($customer->proposed_payment), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ','); ?></td>
+                                        <?php } ?>
+                                        <?php if (in_array('subscription_amount', $enabled_table_headers)) { ?>
+                                            <td>$<?php echo $companyId == 58 ? number_format(floatval($customer->proposed_solar), 2, '.', ',') : number_format(floatval($customer->total_amount), 2, '.', ','); ?></td>
+                                        <?php } ?>
+                                        <?php if (in_array('phone', $enabled_table_headers)) { ?>
                                             <td><?php echo $customer->phone_m; ?></td>
-                                        <?php endif; ?>
-                                        <?php if (in_array('status', $enabled_table_headers)) : ?>
-                                            <td><span class="nsm-badge <?= $badge ?>"><?= $customer->status != null ? $customer->status : 'Pending'; ?></span></td>
-                                        <?php endif; ?>
+                                        <?php } ?>
+                                        <?php if (in_array('status', $enabled_table_headers)) { ?>
+                                            <td><span class="nsm-badge <?php echo $badge; ?>"><?php echo $customer->status != null ? $customer->status : 'Pending'; ?></span></td>
+                                        <?php } ?>
                                         <td>
                                             <div class="dropdown table-management">
                                                 <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -254,39 +258,39 @@ padding: 0.8rem 1rem;
                                                 </a>
                                                 <ul class="dropdown-menu dropdown-menu-end">
                                                     <li>
-                                                        <a class="dropdown-item" href="<?php echo base_url('customer/preview_/' . $customer->prof_id); ?>">Preview</a>
+                                                        <a class="dropdown-item" href="<?php echo base_url('customer/preview_/'.$customer->prof_id); ?>">Preview</a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item" href="<?php echo base_url('customer/add_advance/' . $customer->prof_id); ?>">Edit</a>
+                                                        <a class="dropdown-item" href="<?php echo base_url('customer/add_advance/'.$customer->prof_id); ?>">Edit</a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item" href="mailto:<?= $customer->email; ?>">Email</a>
+                                                        <a class="dropdown-item" href="mailto:<?php echo $customer->email; ?>">Email</a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item call-item" href="javascript:void(0);" data-id="<?= $customer->phone_m; ?>">Call</a>
+                                                        <a class="dropdown-item call-item" href="javascript:void(0);" data-id="<?php echo $customer->phone_m; ?>">Call</a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item" href="<?= base_url('invoice/add/'); ?>">Invoice</a>
+                                                        <a class="dropdown-item" href="<?php echo base_url('invoice/add/'); ?>">Invoice</a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item" href="<?= base_url('customer/module/' . $customer->prof_id); ?>">Dashboard</a>
+                                                        <a class="dropdown-item" href="<?php echo base_url('customer/module/'.$customer->prof_id); ?>">Dashboard</a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item" href="<?= base_url('job/new_job1/'); ?>">Schedule</a>
+                                                        <a class="dropdown-item" href="<?php echo base_url('job/new_job1/'); ?>">Schedule</a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item btn-messages" href="javascript:void(0);" data-id="<?= $customer->prof_id; ?>">Message</a>
+                                                        <a class="dropdown-item btn-messages" href="javascript:void(0);" data-id="<?php echo $customer->prof_id; ?>">Message</a>
                                                     </li>
                                                 </ul>
                                             </div>
                                         </td>
                                         </tr>
                                     <?php
-                                    endforeach;
-                                    ?>
+                    }
+                ?>
                                 <?php
-                                else :
-                                ?>
+            } else {
+                ?>
                                     <tr>
                                         <td colspan="14">
                                             <div class="nsm-empty">
@@ -295,30 +299,30 @@ padding: 0.8rem 1rem;
                                         </td>
                                     </tr>
                                 <?php
-                                endif;
-                                ?>
+            }
+                    ?>
                             </tbody>
                         </table>
                     </div>
-                <?php else : ?>
+                <?php } else { ?>
                     <div class="cont">
                         <table id="person-list" style="width:100%">
                             <thead>
                                 <tr>
                                     <th class="table-icon"></th>
                                     <th data-name="Name">Name   </th>
-                                    <?php if($companyId == 1): ?>
+                                    <?php if ($companyId == 1) { ?>
                                     <th data-name="Name">Industry</th>
-                                    <?php endif; ?>
+                                    <?php } ?>
                                     <th data-name="City">City</th>
                                     <th data-name="State">State</th>
                                     <th data-name="Source">Source</th>
                                     <th data-name="Added">Added</th>
                                     <th data-name="Sales Rep">Sales Rep</th>
-                                    <th data-name="<?= $companyId == 58 ? 'Mentor' : 'Tech'   ?>"><?= $companyId == 58 ? 'Mentor' : 'Tech'   ?></th>
+                                    <th data-name="<?php echo $companyId == 58 ? 'Mentor' : 'Tech'; ?>"><?php echo $companyId == 58 ? 'Mentor' : 'Tech'; ?></th>
                                     <th data-name="Plan Type">Plan Type</th>
-                                    <th data-name="<?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?>"><?= $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?></th>
-                                    <th data-name="<?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?>"><?= $companyId == 58 ? 'Proposed Solar' : 'Job Amount'   ?></th>
+                                    <th data-name="<?php echo $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?>"><?php echo $companyId == 58 ? 'Proposed Payment' : 'Subscription Amount'; ?></th>
+                                    <th data-name="<?php echo $companyId == 58 ? 'Proposed Solar' : 'Job Amount'; ?>"><?php echo $companyId == 58 ? 'Proposed Solar' : 'Job Amount'; ?></th>
                                     <th data-name="Phone">Phone</th>
                                     <th data-name="Status">Status</th>
                                     <th data-name="Manage"></th>
@@ -328,7 +332,7 @@ padding: 0.8rem 1rem;
                             </tbody>
                         </table>
                     </div>
-                <?php endif; ?>
+                <?php } ?>
             </div>
             </div>
         </div>
@@ -352,9 +356,9 @@ padding: 0.8rem 1rem;
                                 <div class="col-md-8">
                                     <select data-type="customer_status" id="status" name="status" data-customer-source="dropdown" class="input_select" >
                                         <option  value=""></option>
-                                        <?php foreach ($customer_status as $status): ?>
-                                            <option value="<?= $status->name ?>"><?= $status->name ?></option>
-                                        <?php endforeach; ?>
+                                        <?php foreach ($customer_status as $status) { ?>
+                                            <option value="<?php echo $status->name; ?>"><?php echo $status->name; ?></option>
+                                        <?php } ?>
                                     </select>
                                 </div>
                             </div>
@@ -370,8 +374,8 @@ padding: 0.8rem 1rem;
                                 <div class="col-md-4">Customer Group</div>
                                 <div class="col-md-8">
                                     <select id="customer_group" name="customer_group" data-customer-source="dropdown" class="form-controls input_select">
-                                        <?php foreach($customerGroups as $cg){ ?>
-                                            <option value="<?= $cg->id; ?>"><?= $cg->title; ?></option>
+                                        <?php foreach ($customerGroups as $cg) { ?>
+                                            <option value="<?php echo $cg->id; ?>"><?php echo $cg->title; ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
@@ -380,8 +384,8 @@ padding: 0.8rem 1rem;
                                 <div class="col-md-4">Sales Area</div>
                                 <div class="col-md-8">
                                     <select name="fk_sa_id" id="fk_sa_id" data-type="customer_sales_area" class="form-control">
-                                        <?php foreach( $salesAreaSelected as $salesArea){?>
-                                            <option value="<?= $salesArea->sa_id; ?>"><?=  $salesArea->sa_name; ?></option>
+                                        <?php foreach ($salesAreaSelected as $salesArea) {?>
+                                            <option value="<?php echo $salesArea->sa_id; ?>"><?php echo $salesArea->sa_name; ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
@@ -413,8 +417,8 @@ padding: 0.8rem 1rem;
                                 <div class="col-md-4">Name Prefix</div>
                                 <div class="col-md-8">
                                     <select id="prefix" name="prefix" data-customer-source="dropdown" class="form-controls input_select searchable-dropdown">
-                                        <?php for ($prefix=0;$prefix<28;$prefix++){ ?>
-                                            <option value="<?= prefix_name($prefix); ?>"><?= prefix_name($prefix); ?></option>
+                                        <?php for ($prefix = 0; $prefix < 28; ++$prefix) { ?>
+                                            <option value="<?php echo prefix_name($prefix); ?>"><?php echo prefix_name($prefix); ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
@@ -423,8 +427,8 @@ padding: 0.8rem 1rem;
                                 <div class="col-md-4">Suffix</div>
                                 <div class="col-md-8">
                                     <select id="suffix" name="suffix" data-customer-source="dropdown" class="input_select searchable-dropdown" >
-                                        <?php for ($suffix=0;$suffix<14;$suffix++){ ?>
-                                            <option value="<?= suffix_name($suffix); ?>"><?= suffix_name($suffix); ?></option>
+                                        <?php for ($suffix = 0; $suffix < 14; ++$suffix) { ?>
+                                            <option value="<?php echo suffix_name($suffix); ?>"><?php echo suffix_name($suffix); ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
@@ -534,7 +538,7 @@ var PERSON_LIST_TABLE = $('#person-list').DataTable({
     //"lengthMenu": [10, 25, 50, 75, 100], // Display options for the length menu
     "pageLength": 10,
     "ajax": {
-        "url": "<?= base_url('customer/getPersonList'); ?>",
+        "url": "<?php echo base_url('customer/getPersonList'); ?>",
         "type": "POST",
         "data": function (d) {
         // Include custom parameters for filtering
@@ -573,11 +577,25 @@ $(document).ready(function() {
         var filterValue = $(this).attr('data-value');
         var filterText = $(this).text();
 
+        console.log('filterValue',filterValue)
+        console.log('filterText',filterText)
+
         // Update the text inside #filter-selected span
         $('#filter-selected').text(filterText);
 
         PERSON_LIST_TABLE.ajax.reload();
     });
+
+    $('.select-filter-card').on('click', function(e) {
+        e.preventDefault();
+        var filterValue = $(this).attr('data-value');
+        console.log('filterValue',filterValue)
+        $('#filter-selected').text(filterValue);
+
+        PERSON_LIST_TABLE.ajax.reload();
+    });
+
+    
 
     function deleteItem(itemId) {
         Swal.fire({
