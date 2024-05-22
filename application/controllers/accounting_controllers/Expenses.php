@@ -109,7 +109,7 @@ class Expenses extends MY_Controller
     }
 
     public function index()
-    {
+    {        
         add_footer_js(array(
             "assets/js/v2/printThis.js",
             "assets/js/v2/accounting/expenses/expenses/list.js"
