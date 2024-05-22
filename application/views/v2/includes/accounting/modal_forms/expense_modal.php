@@ -655,7 +655,7 @@
                                 </div>
                             </div>
 
-                            <button type="button" class="nsm-button float-end" id="save">Save</button>
+                            <!-- <button type="button" class="nsm-button float-end" id="save">Save</button> -->
                         </div>
                     </div>
                 </div>
