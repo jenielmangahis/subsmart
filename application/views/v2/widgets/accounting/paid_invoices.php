@@ -29,6 +29,24 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content">
+        <div class="row mb-4 mt-2">
+            <div class="col-4">
+                <select class="nsm-field form-select" name="filter_date" id="tech-leader-board-filter-date">                                                
+                    <option value="today">Today</option>                        
+                    <option value="custom">Custom</option>
+                    <option value="this-week" <?=$date === 'this-week' ? 'selected' : ''?>>This week</option>
+                    <option value="this-month">This month</option>
+                    <option value="this-quarter">This quarter</option>
+                    <option value="this-year" selected="">This year</option>
+                </select>
+            </div>
+            <div class="col-4">
+                <input type="date" id="tech-leaderboard-filter-from" class="nsm-field form-control date" value="<?= date("Y-01-01"); ?>" />
+            </div>
+            <div class="col-4">
+                <input type="date" id="tech-leaderboard-filter-to" class="nsm-field form-control date" value="<?= date("Y-12-31"); ?>" required>
+            </div>
+        </div>   
         <div class="row">
             <div class="col-12 col-md-12">
                 <div class="nsm-counter primary mb-2 widget-tile-paid-invoices">
