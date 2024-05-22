@@ -7,7 +7,7 @@ var attachmentId = [];
 var attachedFiles = [];
 Dropzone.autoDiscover = false;
 var previewAttachments = new Dropzone('#previewVendorAttachments', {
-    url: '/accounting/vendors/update-attachments/'+vendorId,
+    url: base_url + '/accounting/vendors/update-attachments/'+vendorId,
     maxFilesize: 20,
     uploadMultiple: true,
     addRemoveLinks: true,
@@ -121,7 +121,7 @@ $('.dropdown-menu.table-settings, .dropdown-menu.p-3').on('click', function(e) {
 $('.edit-vendor, .notes-container').on('click', function(e) {
     e.preventDefault();
 
-    $.get(`/accounting/vendors/${vendorId}/edit`, function(res) {
+    $.get(base_url + `/accounting/vendors/${vendorId}/edit`, function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -171,12 +171,12 @@ $('.edit-vendor, .notes-container').on('click', function(e) {
         });
 
         var attachments = new Dropzone('#vendAtt', {
-            url: '/accounting/attachments/attach',
+            url: base_url + '/accounting/attachments/attach/'+vendorId,
             maxFilesize: 20,
             uploadMultiple: true,
             addRemoveLinks: true,
             init: function() {
-                $.getJSON('/accounting/get-linked-attachments/vendor/'+vendorId, function(data) {
+                $.getJSON(base_url + '/accounting/get-linked-attachments/vendor/'+vendorId, function(data) {
                     if(data.length > 0) {
                         $.each(data, function(index, val) {
                             // attachmentId.push(val.id);
