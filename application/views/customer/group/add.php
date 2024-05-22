@@ -37,7 +37,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                         <div class="col-sm-12">
                                             <div class="form-group <?php echo (isset($custom_errors['title']) && $custom_errors['title']!='' )?'has-feedback':''; ?>">
                                                 <label for="title">Name *</label>
-                                                <input type="text" class="form-control col-sm-6" name="title" id="title" value="<?php echo (isset($old_data['title']))?$old_data['title']:''  ?>" placeholder="Enter title" autofocus/>
+                                                <input style="width:50%;" type="text" class="form-control col-sm-6" name="title" id="title" value="<?php echo (isset($old_data['title']))?$old_data['title']:''  ?>" placeholder="Group Name" autofocus/>
                                                 <?php if(isset($custom_errors['title']) && $custom_errors['title']!='' ) { ?>
                                                     <label id="title-error" class="error" for="title"><?php echo $custom_errors['title']; ?></label>
                                                 <?php } ?>
