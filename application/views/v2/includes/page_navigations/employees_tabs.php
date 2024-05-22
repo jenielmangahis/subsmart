@@ -6,11 +6,12 @@
                 <span>Employees</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Attendance' || $page->title == 'My Schedule'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Attendance' || $page->title == 'My Schedule' || $page->title == 'Notification' || $page->title == 'Attendance Logs' || $page->title == 'Time Employee' || $page->title == 'Time Schedule' || $page->title == 'Requests' || $page->title == 'Shift Schedule' || $page->title == 'Timesheet Settings'): echo 'active'; endif; ?>">
             <div class="dropdown" id="test_dropdown">
                 <a class="nsm-page-link dropdown-toggle" role="button" href="javascript:void(0);">
                     <i class='bx bx-fw bx-spreadsheet'></i>
-                    <span><?= $page->title ?></span>
+                    <span>Users Settings</span>
+                    <!-- <span><?= $page->title ?></span> -->
                     <i class='bx bx-fw bx-chevron-down dropdown-icon'></i>
                 </a>
                 <ul class="dropdown-menu">
