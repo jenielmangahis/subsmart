@@ -4144,6 +4144,10 @@ class Customer extends MY_Controller
             unset($input['lead_id']);
             $input['company_id'] = logged('company_id');
             if ($this->customer_ad_model->add($input, 'ac_leadtypes')) {
+                //Activity Logs
+                $activity_name = 'Created Lead Type : ' . $input['lead_name']; 
+                createActivityLog($activity_name);
+
                 echo 'Success';
             } else {
                 echo 'Error';
@@ -4243,6 +4247,10 @@ class Customer extends MY_Controller
             unset($input['sa_id']);
             $input['fk_comp_id'] = logged('company_id');
             if ($this->customer_ad_model->add($input, 'ac_salesarea')) {
+                //Activity Logs
+                $activity_name = 'Created New Sales Area : ' . $input['sa_name']; 
+                createActivityLog($activity_name);
+
                 echo 'Sales Area Added!';
             } else {
                 echo 'Error';
@@ -4261,6 +4269,10 @@ class Customer extends MY_Controller
         $input = $this->input->post();
         $data = ['sa_id' => $input['sa_id'], 'sa_name' => $input['sa_name']];
         if ($this->customer_ad_model->update_data($data, 'ac_salesarea', 'sa_id')) {
+            //Activity Logs
+            $activity_name = 'Updated Sales Area : ' . $input['sa_name']; 
+            createActivityLog($activity_name);
+
             echo 1;
         } else {
             echo 0;
@@ -4275,6 +4287,11 @@ class Customer extends MY_Controller
             unset($input['ls_id']);
             $input['fk_company_id'] = logged('company_id');
             if ($this->customer_ad_model->add($input, 'ac_leadsource')) {
+
+                //Activity Logs
+                $activity_name = 'Created Lead Source : ' . $input['ls_name']; 
+                createActivityLog($activity_name);
+
                 echo 'Lead Source Added!';
             } else {
                 echo 'Error';
@@ -4293,6 +4310,11 @@ class Customer extends MY_Controller
         $input = $this->input->post();
         $data = ['ls_id' => $input['ls_id'], 'ls_name' => $input['ls_name']];
         if ($this->customer_ad_model->update_data($data, 'ac_leadsource', 'ls_id')) {
+
+            //Activity Logs
+            $activity_name = 'Updated Lead Source : ' . $input['ls_name']; 
+            createActivityLog($activity_name);
+
             echo 1;
         } else {
             echo 0;
@@ -4452,17 +4474,31 @@ class Customer extends MY_Controller
 
     public function delete_lead_source()
     {
+        $this->load->model('LeadSource_model');
+
+        $post = $this->input->post();
         $deletion_query = [
             'where' => [
-                'ls_id' => $_POST['id'],
+                'ls_id' => $post['id'],
             ],
             'table' => 'ac_leadsource',
         ];
-        if ($this->general->delete_($deletion_query)) {
-            echo 1;
-        } else {
+
+        $leadSource = $this->LeadSource_model->getById($post['id']);
+        if( $leadSource ){
+            if ($this->general->delete_($deletion_query)) {
+
+                //Activity Logs
+                $activity_name = 'Deleted Lead Source  ' . $leadSource->ls_name; 
+                createActivityLog($activity_name);
+    
+                echo 1;
+            } else {
+                echo 0;
+            }
+        }else{
             echo 0;
-        }
+        }        
     }
 
     public function delete_lead_type()
@@ -5690,6 +5726,11 @@ class Customer extends MY_Controller
             if ($input) {
                 $input['date_added'] = date('d-m-Y h:i A');
                 if ($this->general->update_with_key($input, $id, 'customer_groups')) {
+
+                    //Activity Logs
+                    $activity_name = 'Updated Customer Group  ' . $input['title']; 
+                    createActivityLog($activity_name);
+
                     redirect(base_url('customer/group'));
                 }
             }
@@ -5727,6 +5768,11 @@ class Customer extends MY_Controller
             $input['date_added'] = date('d-m-Y h:i A');
             $input['company_id'] = logged('company_id');
             if ($this->customer_ad_model->add($input, 'customer_groups')) {
+
+                //Activity Logs
+                $activity_name = 'Created Customer Group  ' . $input['title']; 
+                createActivityLog($activity_name);
+
                 redirect(base_url('customer/group'));
             }
         }
@@ -5736,17 +5782,32 @@ class Customer extends MY_Controller
 
     public function group_delete()
     {
+        $this->load->model('CustomerGroup_model');
+
+        $post = $this->input->post();
+
         $group_delete = [
             'where' => [
-                'id' => $_POST['id'],
+                'id' => $post['id'],
             ],
             'table' => 'customer_groups',
         ];
-        if ($this->general->delete_($group_delete)) {
-            echo true;
-        } else {
+
+        $customerGroup = $this->CustomerGroup_model->getById($post['id']);
+        if( $customerGroup ){
+            if ($this->general->delete_($group_delete)) {
+                //Activity Logs
+                $activity_name = 'Deleted Customer Group  ' . $customerGroup->title; 
+                createActivityLog($activity_name);
+    
+                echo true;
+            } else {
+                echo false;
+            }
+        }else{
             echo false;
         }
+        
     }
 
     public function categorizeNameAlphabetically($items)

@@ -67,55 +67,100 @@
                                         <table class="table table-borderless">
                                             <tbody>
                                                 <tr>    
-                                                    <td class="taskhub_sidebar_details_caption font-weight-bold">Created By :</td>
+                                                    <td class="taskhub_sidebar_details_caption font-weight-bold">Created By:</td>
                                                     <td class="taskhub_sidebar_details_values"><?php echo $taskHub->created_by_name; ?></td>
                                                 </tr>
                                                 <?php if( $taskHub->customer_name != '' ){ ?>
                                                 <tr>
-                                                    <td class="taskhub_sidebar_details_caption font-weight-bold">Customer :</td>
+                                                    <td class="taskhub_sidebar_details_caption font-weight-bold">Customer:</td>
                                                     <td class="taskhub_sidebar_details_values"><?php echo $taskHub->customer_name; ?></td>
                                                 </tr>
                                                 <?php } ?>
                                                 <tr>
-                                                    <td class="taskhub_sidebar_details_caption font-weight-bold">Assigned To :</td>
-                                                    <td class="taskhub_sidebar_details_values"><?php
-                                                        $assigned_to_name = '';
-
-                                                        foreach ($participants as $key => $value) {
-                                                            if($value->is_assigned == 1){
-                                                                $assigned_to_name = $value->participant_name;
-
-                                                                break;
-                                                            }
-                                                        }       
-
-                                                        echo $assigned_to_name;
-                                                    ?></td>
+                                                    <td class="taskhub_sidebar_details_caption font-weight-bold">Assignees:</td>
+                                                    <td class="taskhub_sidebar_details_values">
+                                                    <?php
+                                                        if(isset($assignee_name)) {
+                                                            echo substr($assignee_name, 1);
+                                                        } else {
+                                                            echo "Not Specified";
+                                                        }
+                                                    ?>
+                                                    </td>
                                                 </tr>
-                                                <tr>
-                                                    <td class="taskhub_sidebar_details_caption font-weight-bold">Participants :</td>
-                                                    <?php $first = true; ?>
-                                                    <?php foreach ($participants as $key => $value) { ?>
-                                                        <?php if(!$first){ ?>
-                                                            <tr>
-                                                            <td class="taskhub_sidebar_details_caption"></td>
-                                                        <?php } ?>
-                                                            <td class="taskhub_sidebar_details_values"><?php echo $value->participant_name; ?></td>
-                                                            </tr>
-                                                    <?php $first = false; } ?>
-
-                                                <tr>
-                                                    <td class="taskhub_sidebar_details_caption font-weight-bold">Date Created :</td>
+                                                    <td class="taskhub_sidebar_details_caption font-weight-bold">Date Created:</td>
                                                     <td class="taskhub_sidebar_details_values"><?php 
                                                             $date_created = date_create($taskHub->date_created);
                                                             echo date_format($date_created, "F d, Y h:i:s"); ?></td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="taskhub_sidebar_details_caption font-weight-bold">Estimated Date of Completion :</td>
+                                                    <td class="taskhub_sidebar_details_caption font-weight-bold">Due Date:</td>
                                                     <td class="taskhub_sidebar_details_values"><?php 
-                                                            $date_estimated = date_create($taskHub->estimated_date_complete);
-                                                            echo date_format($date_estimated, "F d, Y"); ?></td>    
+                                                            $date_due = date_create($taskHub->date_due);
+                                                            echo date_format($date_due, "F d, Y"); ?></td>    
                                                 </tr>
+                                                <tr>
+                                                    <td class="taskhub_sidebar_details_caption font-weight-bold">Status:</td>
+                                                    <td class="taskhub_sidebar_details_values">
+                                                        <?php
+                                                            switch ($taskHub->status_text):
+                                                                case 'New':
+                                                                    $task_status = "primary";
+                                                                    break;
+                                                                case 'Resumed':
+                                                                    $task_status = "primary";
+                                                                    break;
+                                                                case 'On Hold':
+                                                                    $task_status = "error";
+                                                                    break;
+                                                                case 'Completed':
+                                                                    $task_status = "success";
+                                                                    break;
+                                                                case 'Complete':
+                                                                    $task_status = "success";
+                                                                    break;
+                                                                case 'Re-opened':
+                                                                    $task_status = "primary";
+                                                                    break;
+                                                                case 'On Going':
+                                                                    $task_status = "secondary";
+                                                                    break;
+                                                                default:
+                                                                    $task_status = "";
+                                                                    break;
+                                                            endswitch;
+                                                        ?>
+                                                        <span class="nsm-badge <?= $task_status ?>"><?= $taskHub->status_text != '' ? $taskHub->status_text : 'Draft'; ?></span>                                                        
+                                                    </td>    
+                                                </tr>
+                                                <tr>
+                                                    <td class="taskhub_sidebar_details_caption font-weight-bold">Priority :</td>
+                                                    <td class="taskhub_sidebar_details_values">
+                                                        <?php
+                                                        $class_priority = "";
+                                                        $priority_text  = "";
+                                                        switch ($taskHub->priority):
+                                                            case 'High':
+                                                                $priority_text = $taskHub->priority;
+                                                                $class_priority = "error";
+                                                                break;
+                                                            case 'Medium':
+                                                                $priority_text = $taskHub->priority;
+                                                                $class_priority = "secondary";
+                                                                break;
+                                                            case 'Low':
+                                                                $priority_text = $taskHub->priority;
+                                                                $class_priority = "";
+                                                                break;
+                                                            default:
+                                                                $priority_text = 'Not Specified';
+                                                                break;
+                                                        endswitch;
+                                                        ?>
+                                                        <span class="nsm-badge <?= $class_priority ?>"><?php echo ucwords($priority_text); ?></span>                                                        
+                                                    </td>    
+                                                </tr>
+                                                
                                             </tbody>
                                         </table>
 

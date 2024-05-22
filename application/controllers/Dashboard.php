@@ -29,6 +29,10 @@ class Dashboard extends Widgets
         $this->load->model('Accounting_bank_accounts', 'accounting_bank_accounts');
         $this->load->model('Workorder_model', 'workorder_model');
         $this->load->model('Tickets_model', 'tickets_model');
+        $this->load->model('accounting_attachments_model');
+        $this->load->model('vendors_model');
+        $this->load->model('accounting_customers_model');
+        $this->load->model('expenses_model');
 
         add_css([
            // 'https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css',
@@ -145,6 +149,7 @@ class Dashboard extends Widgets
         $this->load->helper('functions_helper');
         $this->load->model('widgets_model');
         $this->load->model('Invoice_model');
+        $this->load->model('expenses_model');
 
         add_css([
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
@@ -369,8 +374,171 @@ class Dashboard extends Widgets
         $this->page_data['estimates'] = $this->estimate_model->getAllOpenEstimatesByCompanyId($companyId);
         $this->page_data['expired_estimates'] = $this->estimate_model->getExpiredEstimatesByCompanyId($companyId);
         $this->page_data['leads'] = count($this->customer_ad_model->get_leads_data());
+
+      
+
         // $this->load->view('dashboard', $this->page_data);
         $this->load->view('dashboard_v2', $this->page_data);
+    }
+
+    private function category_col($transactionId, $transactionType, $for = 'table')
+    {
+        $categories = $this->expenses_model->get_transaction_categories($transactionId, $transactionType);
+        $items = $this->expenses_model->get_transaction_items($transactionId, $transactionType);
+
+        $totalCount = count($categories) + count($items);
+
+        if ($totalCount > 1) {
+            $category = '-Split-';
+        } else {
+            if ($totalCount === 1) {
+                if (count($categories) === 1 && count($items) === 0) {
+                    $expenseAcc = $categories[0]->expense_account_id;
+                } else {
+                    $itemId = $items[0]->item_id;
+                    $itemAccDetails = $this->items_model->getItemAccountingDetails($itemId);
+                    $expenseAcc = $itemAccDetails->inv_asset_acc_id;
+                }
+
+                if ($for === 'table') {
+                    $category = [
+                        'id' => $expenseAcc,
+                        'name' => $this->chart_of_accounts_model->getName($expenseAcc),
+                    ];
+                } else {
+                    $category = $this->chart_of_accounts_model->getName($expenseAcc);
+                }
+            }
+        }
+
+        return $category;
+    }
+
+    private function get_transactions($filters, $for = 'table')
+    {
+        
+        $expenses = $this->expenses_model->get_company_expense_transactions($filters);
+        $checks = $this->expenses_model->get_company_check_transactions($filters);
+        $purchOrders = $this->expenses_model->get_company_purch_order_transactions($filters);
+        $vendorCredits = $this->expenses_model->get_company_vendor_credit_transactions($filters);
+        $ccPayments = $this->expenses_model->get_company_cc_payment_transactions($filters);
+        $billPayments = $this->expenses_model->get_company_bill_payment_items($filters);
+        $creditCardCredits = $this->expenses_model->get_company_cc_credit_transactions($filters);
+        $transfers = $this->expenses_model->get_company_transfers($filters);
+
+        $transactions = [];
+
+        if (isset($billPayments) && count($billPayments) > 0) {
+            foreach ($billPayments as $billPayment) {
+                $transactions[] = [
+                    'category' => '',
+                    'total' => $billPayment->total_amount,
+                ];
+            }
+        }
+
+        if (isset($checks) && count($checks) > 0) {
+            foreach ($checks as $check) {
+                $category = $this->category_col($check->id, 'Check', $for);
+                $transactions[] = [
+                    'category' => $category,
+                    'total' => $check->total_amount,
+                ];
+            }
+        }
+
+        if (isset($creditCardCredits) && count($creditCardCredits) > 0) {
+            foreach ($creditCardCredits as $creditCardCredit) {
+                $category = $this->category_col($creditCardCredit->id, 'Credit Card Credit', $for);
+                $transactions[] = [
+                    'category' => $category,
+                    'total' => $creditCardCredit->total_amount,
+                ];
+            }
+        }
+
+        if (isset($ccPayments) && count($ccPayments) > 0) {
+            foreach ($ccPayments as $ccPayment) {
+                $transactions[] = [
+                    'category' => '',
+                    'total' => $ccPayment->amount,
+                ];
+            }
+        }
+
+        if (isset($expenses) && count($expenses) > 0) {
+            foreach ($expenses as $expense) {
+                $category = $this->category_col($expense->id, 'Expense', $for);
+                $transactions[] = [
+                    'category' => $category,
+                    'total' => $expense->total_amount,
+                ];
+            }
+        }
+
+        if (isset($purchOrders) && count($purchOrders) > 0) {
+            foreach ($purchOrders as $purchOrder) {
+                $category = $this->category_col($purchOrder->id, 'Purchase Order', $for);
+                $transactions[] = [
+                    'category' => $category,
+                    'total' => $purchOrder->total_amount,
+                ];
+            }
+        }
+
+        if (isset($transfers) && count($transfers) > 0) {
+            foreach ($transfers as $transfer) {
+                $transactions[] = [
+                    'category' => '',
+                    'total' => $transfer->transfer_amount,
+                ];
+            }
+        }
+
+        if (isset($vendorCredits) && count($vendorCredits) > 0) {
+            foreach ($vendorCredits as $vendorCredit) {
+                $category = $this->category_col($vendorCredit->id, 'Vendor Credit', $for);
+                $transactions[] = [
+                    'category' => $category,
+                    'total' => $vendorCredit->total_amount,
+                ];
+            }
+        }
+
+        $groupedTransactions = [];
+
+        foreach ($transactions as $transaction) {
+            $category = is_array($transaction['category']) ? json_encode($transaction['category']) : $transaction['category'];
+            $total = $transaction['total'];
+
+            if (!isset($groupedTransactions[$category])) {
+                $groupedTransactions[$category] = 0;
+            }
+
+            $groupedTransactions[$category] += $total;
+        }
+
+        $result = [];
+        foreach ($groupedTransactions as $category => $total) {
+            $category = is_string($category) ? json_decode($category, true) : $category;
+            $result[] = [
+                'category' => $category,
+                'total' => $total,
+            ];
+        }
+
+        usort($result, function ($a, $b) {
+            return $b['total'] - $a['total'];
+        });
+
+        $top5Results = array_slice($result, 0, 5);
+
+        foreach ($top5Results as &$res) {
+            // $res['total'] = '$'.number_format($res['total'], 2, '.', ',');
+            $res['total'] = $res['total'];
+        }
+
+        return $top5Results;
     }
 
     public function loadFilterData()
@@ -845,17 +1013,33 @@ class Dashboard extends Widgets
 
     public function todays_stats()
     {
+        $this->load->model('Jobs_model');
+        $this->load->model('Tickets_model');
+        $this->load->model('Invoice_model');
+
         $cid = logged('company_id');
-        $date_from = date('Y-m-d', strtotime('last monday'));
+        //$date_from = date('Y-m-d', strtotime('last monday'));
+        $date_from = '2023-11-10';
         $date_to = date('Y-m-d', strtotime('sunday this week'));
 
         $payment = $this->event_model->getTodayStats(); // fetch current data sales on jobs , amount is on job_payments.amount
         $paymentInvoices = $this->event_model->getCollected(); // fetch current data sales on jobs , amount is on job_payments.amount
-        $jobsDone = $this->event_model->getAllJobsByCompanyIdAndDateIssued($cid, ['from' => $date_from, 'to' => $date_to]);
+        //$jobsDone = $this->event_model->getAllJobsByCompanyIdAndDateIssued($cid, ['from' => $date_from, 'to' => $date_to]);
+        
+        $jobsDone    = $this->Jobs_model->getAllCompletedJobsByCompanyIdAndDateRange($cid, ['from' => $date_from, 'to' => $date_to]);
+        $ticketsDone = $this->Tickets_model->getAllCompletedTicketsByCompanyIdAndDateRange($cid, ['from' => $date_from, 'to' => $date_to]);
+        $total_jobs_done = count($jobsDone) + count($ticketsDone);
+
+        $invoiceDue = $this->Invoice_model->getTotalDueByCompanyIdAndDateRange($cid, ['from' => $date_from, 'to' => $date_to]);
+        $total_amount_due = $invoiceDue->total_amount;
+
+        $invoicePaid = $this->Invoice_model->getCompanyTotalAmountPaidInvoices($cid, ['from' => $date_from, 'to' => $date_to]);
+        $total_amount_paid = $invoicePaid->total_paid;
+ 
         $collectedAccounts = $this->event_model->getAccountSituation('Collections'); // collection account count, if Collection Date Office Info is set
         $lostAccounts = $this->event_model->getAccountSituation('Cancelled'); // lost account count, if Cancel Date Office Info is set
         $onlineBookingCount = $this->event_model->getLeadSource('Online Booking');
-        $data_arr = ['success' => true, 'data' => $payment, 'paymentInvoice' => $paymentInvoices, 'onlineBooking' => $onlineBookingCount, 'jobsCompleted' => $jobsDone, 'lostAccount' => $lostAccounts, 'collectedAccounts' => $collectedAccounts];
+        $data_arr = ['success' => true, 'data' => $payment, 'paymentInvoice' => $paymentInvoices, 'onlineBooking' => $onlineBookingCount, 'jobsCompleted' => $total_jobs_done, 'lostAccount' => $lostAccounts, 'collectedAccounts' => $collectedAccounts, 'invoice_amount_due' => $total_amount_due, 'collected_amount' => $total_amount_paid];
         exit(json_encode($data_arr));
     }
 
@@ -1174,6 +1358,23 @@ class Dashboard extends Widgets
     {
         $leads = $this->customer_ad_model->get_leads_data_graph();
         $data_arr = ['Success' => true, 'leads' => $leads];
+        exit(json_encode($data_arr));
+    }
+
+    public function accounting_expense()
+    {
+        $accounting_expense_filters = [
+            'company_id' => logged('company_id'),
+            'type' => 'all-transactions',
+            'delivery_method' => 'any',
+            'category' => 'all',
+            'start-date' => date('Y-m-d', strtotime(date('m/d/Y').' -365 days')),
+            'end-date' => date('Y-m-d'),
+        ];
+
+
+        $bills = $this->get_transactions($accounting_expense_filters);
+        $data_arr = ['Success' => true, 'accounting_expense' => $bills];
         exit(json_encode($data_arr));
     }
 

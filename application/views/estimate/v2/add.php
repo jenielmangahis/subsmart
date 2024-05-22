@@ -476,7 +476,7 @@ label.bold {
                                     <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                     <!-- <div class="input-group date" data-provide="datepicker"> -->
                                     <input required type="date" class="form-control" name="estimate_date"
-                                        id="estimate_date_" placeholder="Enter Estimate Date">
+                                        id="estimate_date_" value="<?= date("Y-m-d"); ?>" placeholder="Enter Estimate Date">
                                     <div class="input-group-addon">
                                         <span class="glyphicon glyphicon-th"></span>
                                     </div>
@@ -486,8 +486,11 @@ label.bold {
                                     <label for="expiry_date" class="required"><b>Expiry Date</b></label>
                                     <!-- <input type="text" class="form-control" name="expiry_date" id="expiry_date" required placeholder="Enter Expiry Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                     <!-- <div class="input-group date" data-provide="datepicker"> -->
+                                    <?php 
+                                        $default_expiry_date = date("Y-m-d", strtotime('+14 days'));
+                                    ?>
                                     <input required type="date" class="form-control" name="expiry_date"
-                                        id="expiry_date_" placeholder="Enter Expiry Date">
+                                        id="expiry_date_" value="<?= $default_expiry_date; ?>" placeholder="Enter Expiry Date">
                                     <div class="input-group-addon">
                                         <span class="glyphicon glyphicon-th"></span>
                                     </div>

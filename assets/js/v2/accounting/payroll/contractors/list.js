@@ -31,7 +31,7 @@ $('#contractors-table .write-check').on('click', function(e) {
 
     var row = $(this).closest('tr');
     
-    $.get('/accounting/get-other-modals/check_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/check_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -55,7 +55,7 @@ $('#contractors-table .create-expense').on('click', function(e) {
 
     var row = $(this).closest('tr');
 
-    $.get('/accounting/get-other-modals/expense_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/expense_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -79,7 +79,7 @@ $('#contractors-table .create-bill').on('click', function(e) {
 
     var row = $(this).closest('tr');
 
-    $.get('/accounting/get-other-modals/bill_modal', function(res) {
+    $.get(base_url + 'accounting/get-other-modals/bill_modal', function(res) {
         if ($('div#modal-container').length > 0) {
             $('div#modal-container').html(res);
         } else {
@@ -114,7 +114,7 @@ $(".edit-contractor").on('click', function(e) {
     var row = $(this).closest('tr');
     var id = row.data().id;
 
-    $.get(`/accounting/get-vendor-details/${id}`, function(res) {
+    $.get(base_url + `accounting/get-vendor-details/${id}`, function(res) {
         var vendor = JSON.parse(res);
 
         $('#contractor-modal #name').val(vendor.display_name);
@@ -337,13 +337,13 @@ function computePaymentTotal() {
 function initializeFields() {
     $('#pay-contractors-modal #corresponding-account').select2({
         ajax: {
-            url: '/accounting/get-dropdown-choices',
+            url: base_url + 'accounting/get-dropdown-choices',
             dataType: 'json',
             data: function(params) {
                 var query = {
                     search: params.term,
                     type: 'public',
-                    field: 'checking-savings-account',
+                    field: 'bank-account', //checking-savings-account 
                     modal: 'pay-contractors-modal'
                 }
     
@@ -358,7 +358,7 @@ function initializeFields() {
     
     $('#pay-contractors-modal [name="customer[]"]').select2({
         ajax: {
-            url: '/accounting/get-dropdown-choices',
+            url: base_url + 'accounting/get-dropdown-choices',
             dataType: 'json',
             data: function(params) {
                 var query = {
@@ -379,7 +379,7 @@ function initializeFields() {
     
     $('#pay-contractors-modal [name="account[]"]').select2({
         ajax: {
-            url: '/accounting/get-dropdown-choices',
+            url: base_url + 'accounting/get-dropdown-choices',
             dataType: 'json',
             data: function(params) {
                 var query = {

@@ -1027,6 +1027,7 @@ class Trac360 extends MY_Controller
         $data->html = $html;
         echo json_encode($data);
     }
+
     public function get_live_job_last_track_location()
     {
         $job_id = $this->input->post("the_live_job_id");
@@ -1074,5 +1075,87 @@ class Trac360 extends MY_Controller
         $data->last_route_id = $last_route_id;
         $data->route_latlng = $route_latlng;
         echo json_encode($data);
+    }
+
+    public function ajax_create_user_location()
+    {
+        $this->load->model('Users_model');
+        $this->load->model('Trac360_model');
+
+        $cid = logged('company_id');
+        $uid = logged('id');
+        $post    = $this->input->post();
+
+        $is_success = 0;
+
+        if( $post['latitude'] && $post['longitude'] ){
+            $user = $this->Users_model->getUser($uid);
+            $location = getUserLocationAddressByLonLat($post['longitude'], $post['latitude']);
+            if( $location['is_valid'] == 1 ){
+                $address = $location['district'] . ' ' . $location['address'];
+                $data = [
+                    'user_id' => $uid,
+                    'name' => $user->FName . ' ' . $user->LName,
+                    'last_tracked_location' => $post['latitude'].','.$post['longitude'],
+                    'last_tracked_location_address' => $address,
+                    'last_tracked_location_date' => date("Y-m-d H:i:s"),
+                    'last_battery_percentage' => '',
+                    'is_location_off' => 0,
+                    'low_battery_notification' => 0,
+                    'safe_drive_notification' => 0,
+                    'drive_detection' => 0,
+                    'company_id' => $cid
+                ];
+
+                $this->Trac360_model->add('trac360_people', $data);
+
+                $is_success = 1;
+            }
+        }
+
+        $return = ['is_success' => $is_success];
+        echo json_encode($return);
+    }
+
+    public function ajax_create_user_geolocation_features(){
+        $this->load->model('Trac360_model');
+
+        $is_valid = 0;
+        $post = $this->input->post();   
+        $cid  = logged('company_id');
+
+        $date_from = date("Y-m-d",strtotime($post['date_from'])) . ' 00:00:00';
+        $date_to   = date("Y-m-d",strtotime($post['date_to'])) . ' 23:59:59';
+
+        $date_range = ['from' => $date_from, 'to' => $date_to];
+        $trac360People = $this->Trac360_model->getTrac360PeopleByCompanyIdAndUserId($cid, $post['uid'], $date_range);
+
+        $geoDataFeatures = [];
+		foreach($trac360People as $trac){
+            $is_valid = 1;
+			$latLong = explode(",", $trac->last_tracked_location);
+			$msg = "<div class='map-popup-container'>
+				<span class='map-user'><i class='bx bxs-user-circle'></i> ". $trac->FName . ' ' . $trac->LName ."</span>
+                <span class='map-date'><i class='bx bxs-calendar'></i> ". date("m/d/Y g:i A",strtotime($trac->last_tracked_location_date)) ."</span>
+                <hr />
+				<span class='map-address'><i class='bx bxs-map'></i> ". $trac->last_tracked_location_address ."</span>                
+			</div>";
+			$geoDataFeatures[] = [
+				'type' => 'Feature',
+				'trac_id' => 'trac' . $trac->id,
+				'properties' => [
+					'message' => $msg,
+					'iconSize' => [40, 40],
+					'image' => userProfileImage($trac->user_id)
+				],
+				'geometry' => [
+					'type' => 'Point',
+					'coordinates' => [$latLong[1], $latLong[0]]
+				]
+			];
+		}
+
+        $return = ['is_valid' => $is_valid, 'geoFeatures' => $geoDataFeatures];
+        echo json_encode($return);
     }
 }

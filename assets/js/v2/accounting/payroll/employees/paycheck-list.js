@@ -652,7 +652,7 @@ $(document).ready(function () {
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li>
-                                        <a class="dropdown-item print-paycheck" href="#">Print</a>
+                                        <a class="dropdown-item print-paycheck" href="#" data-id="${paycheck.id}">Print</a>
                                     </li>
                                 </ul>
                             </div>
@@ -673,5 +673,26 @@ $(document).ready(function () {
             `);
         }
     }
+
+    $(document).on('click', '.print-paycheck', function (e) {
+        e.preventDefault();
+
+        var id = $(this).data('id');
+
+        if (id) {
+            printPaycheck(id);
+        } else {
+            console.error('Paycheck ID is missing.');
+        }
+    });
+
+    function printPaycheck(id) {
+        var printForm = $(`<form action="/accounting/print-paycheck" method="post" target="_blank"></form>`);
+        printForm.append(`<input type="hidden" name="paycheck_id" value="${id}">`);
+        $('body').append(printForm);
+        printForm.submit();
+        printForm.remove();
+    }
 });
+
 

@@ -130,7 +130,7 @@ if (isset($selected_participants)) {
                                                     }*/
                                                 ?>
                                             </select> -->
-                                            <select name="assigned_to" id="taskhub-user-id" class="nsm-field mb-2 form-control" required=""></select>
+                                            <select name="assigned_to" id="taskhub-user-id" multiple="multiple" class="nsm-field mb-2 form-control" required=""></select>
                                         </div>
                                     <?php } ?>
 
@@ -442,9 +442,11 @@ if (isset($selected_participants)) {
         $("#frm-taskhub-add").on("submit", function(e) {            
             e.preventDefault();
 
+            var a_to_multiple = $("#taskhub-user-id").val();
             var ContentFromEditor = CKEDITOR.instances.ckeditortaskhub.getData();
             var dataString = $("#frm-taskhub-add").serialize();
-                dataString += '&ContentFromEditor='+ContentFromEditor;              
+                dataString += '&ContentFromEditor='+ContentFromEditor;   
+                dataString += '&a_to_multiple=' + a_to_multiple;           
 
             let _this = $(this);
             var url = "<?php echo base_url('taskhub/_save_taskhub_task'); ?>";

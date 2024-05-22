@@ -2241,12 +2241,20 @@ class Estimate extends MY_Controller
             // 'source' => $source
         ];
 
-        // $recipient  = "emploucelle@gmail.com";
         $recipient = $customerData->email;
-        // $message = "This is a test email";
 
-        $mail = email__getInstance(['subject' => 'Estimate Details']);
+        $config = ['subject' => 'Estimate Details'];
+        if( logged('company_id') == 58 ){
+        //if( logged('company_id') == 1 ){
+            $cc[] = 'bryann.revina03@gmail.com'; 
+            $cc[] = 'moresecureadi@gmail.com';
+            $cc[] = 'ntominbox@gmail.com';
+            $config['cc'] = $cc;  
+        }
+
+        $mail = email__getInstance($config);
         $mail->addAddress($recipient, $recipient);
+        
         $mail->isHTML(true);
         $mail->Body = $this->load->view('estimate/send_email_acs_v3', $data, true);
 
@@ -2261,6 +2269,12 @@ class Estimate extends MY_Controller
             $json_data['error'] = 'Mailer Error: '.$mail->ErrorInfo;
             
         }else{
+            if( $workData->status == 'Draft' ){
+                $this->estimate_model->update($workData->id, ['status' => 'Submitted', 'is_sent' => 1, 'date_sent' => date("Y-m-d H:i:s")]);
+            }else{
+                $this->estimate_model->update($workData->id, ['is_sent' => 1, 'date_sent' => date("Y-m-d H:i:s")]);
+            }
+            
             //Activity Logs
             $activity_name = 'Sent to Customer Email Estimate Number : ' . $workData->estimate_number; 
             createActivityLog($activity_name);
@@ -2366,7 +2380,7 @@ class Estimate extends MY_Controller
                 $this->session->set_flashdata('alert-type', 'danger');
                 $this->session->set_flashdata('alert', 'Cannot send email.');
             } else {
-                $this->estimate_model->update($estimate->id, ['status' => 'Submitted']);
+                $this->estimate_model->update($estimate->id, ['status' => 'Submitted', 'is_sent' => 1, 'date_sent' => date("Y-m-d H:i:s")]);
 
                 $this->session->set_flashdata('alert-type', 'success');
                 $this->session->set_flashdata('alert', 'Your estimate was successfully sent');
@@ -3012,5 +3026,15 @@ class Estimate extends MY_Controller
         $json_data = ['is_success' => $is_success];
 
         echo json_encode($json_data);
+    }
+
+    public function debugEstimateEmail(){
+        $id    = 101;
+        $wo_id = 101;
+        $urlLogo = '';
+
+        $json_data = $this->sendEstimateToCustomer(
+            $id, $wo_id, $urlLogo
+        );
     }
 }

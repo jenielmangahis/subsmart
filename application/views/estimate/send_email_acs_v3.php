@@ -565,7 +565,7 @@
                                                                 <div style="margin-top: 60px">
                                                                     <p style="text-align:center">Powered By:</p>
                                                                     <img src="<?php echo base_url('assets/images/v2/logo.png'); ?>"
-                                                                        style="width: 100%">
+                                                                        style="width: 33%">
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -885,7 +885,7 @@
                                                                 <div style="margin-top: 60px">
                                                                     <p style="text-align:center">Powered By:</p>
                                                                     <img src="<?php echo base_url('assets/images/v2/logo.png'); ?>"
-                                                                        style="width: 100%">
+                                                                        style="width: 33%">
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -1053,7 +1053,7 @@
                                                                 <div style="margin-top: 60px">
                                                                     <p style="text-align:center">Powered By:</p>
                                                                     <img src="<?php echo base_url('assets/images/v2/logo.png'); ?>"
-                                                                        style="width: 100%">
+                                                                        style="width: 33%">
                                                                 </div>
                                                             </td>
                                                         </tr>

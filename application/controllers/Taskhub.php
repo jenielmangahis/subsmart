@@ -902,7 +902,7 @@ class Taskhub extends MY_Controller {
 					'status_id' => $taskStatus->status_id,
 					'priority' => $post['priority'],
 					'company_id' => $company_id,
-					'assigned_employee_ids' => $assigned_to, 
+					'assigned_employee_ids' => !empty($post['a_to_multiple']) ? $post['a_to_multiple'] : $assigned_to, 
 					'list_id' => $list_id
 					
 				];					
@@ -981,7 +981,7 @@ class Taskhub extends MY_Controller {
                 'priority' => $post['priority'],
                 'company_id' => $cid,
                 'view_count' => 0,
-				'assigned_employee_ids' => $assigned_to,
+				'assigned_employee_ids' => !empty($post['a_to_multiple']) ? $post['a_to_multiple'] : $assigned_to,
 				'list_id' => $list_id
             ];
 
@@ -1056,6 +1056,23 @@ class Taskhub extends MY_Controller {
 		$sql = 'update tasks set view_count = view_count + 1 where task_id = ' . $id;
 
 		$this->db->query($sql);
+
+		$assignee_name = "";
+		if(isset($task->assigned_employee_ids) && $task->assigned_employee_ids != null) {
+			$assignees_arr = explode(',', $task->assigned_employee_ids);
+			if($assignees_arr) {
+				foreach($assignees_arr as $uid) {
+					$user_id = (int) $uid;
+					$assignee = $this->users_model->getUser($user_id);
+					if($assignee) {
+						$assignee_name =  $assignee_name . ", " . $assignee->FName . ' ' . $assignee->LName;	
+					}
+				}
+			}
+
+		}
+
+		$this->page_data['assignee_name'] = $assignee_name;
 
 		$this->page_data['page']->title = 'Task Hub';		
 		$this->load->view('v2/pages/workcalender/taskhub/view', $this->page_data);
@@ -1255,13 +1272,14 @@ class Taskhub extends MY_Controller {
         $msg = 'Cannot find data';
 
         $post = $this->input->post();  
+
         $taskHub = $this->Taskhub_model->getById($post['tsid']);
 
         if( $taskHub && $taskHub->company_id == $cid ){
         	if( $taskHub->status_id == 6 ){
         		$msg = 'Task is already completed!';
         	}else{
-        		$data = ['status_id' => 6];
+        		$data = ['status_id' => 6, 'date_completed' => date('Y-m-d')];
 	        	$this->Taskhub_model->updateByTaskId($taskHub->task_id, $data);
 
 				//Activity Logs
