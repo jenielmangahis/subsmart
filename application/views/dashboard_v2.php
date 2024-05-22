@@ -178,6 +178,13 @@
     height: 340px;
     max-height: 340px;
 }
+.top-spending{
+        font-weight: bold;
+        font-size: 12px;
+        position: absolute;
+        right: 0;
+        bottom: -35px;
+}
 
 @media screen and (max-width: 1500px) {
     .main-widget-row {
@@ -216,8 +223,14 @@
 }
 
 @media screen and (max-width: 600px) {
+    .top-spending{
+        right: 0;
+        bottom: -62px;
+    }
     .main-widget-container {
         width: 100%;
+        height: 400px;
+        max-height: 400px;
     }
 }
 

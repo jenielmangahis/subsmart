@@ -4,20 +4,25 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
 ?>
 
 
-<div class="<?php echo $class; ?>" data-id="<?php echo $id; ?>" id="thumbnail_<?php echo $id; ?>" draggable="true">
+<div class="<?php echo $class; ?> position-relative" data-id="<?php echo $id; ?>" id="thumbnail_<?php echo $id; ?>"
+    draggable="true">
+
+
     <div class="nsm-card-header">
+
         <div class="nsm-card-title">
             <div class="nsm-card-header">
+
                 <div class="nsm-card-title summary-report-header">
                     <div class="summary-report-header-sub ">
-                        <div class="icon-summary-income">
-                            <i class="bx bx-box "></i>
+                        <div class="icon-summary-customer">
+                        <i class="bx bx-fw bx-notepad"></i>
                         </div>
-                        <a role="button" class=" btn-sm m-0 me-2" href="invoice" style="color:#dc3545c9 !important ">
-                            Open Invoices
+                        <a role="button" class=" btn-sm m-0 me-2" href="customer/leads"
+                            style="color:#6ba77ced !important ">
+                             Accounting Expense
                         </a>
                     </div>
-
                 </div>
 
             </div>
@@ -30,7 +35,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
 
-                    <li><a class="dropdown-item" href="#" onclick="removeThumbnail('<?php echo $id; ?>');">Remove
+                    <li><a class="dropdown-item" href="#" onclick="removeWidget('<?php echo $id; ?>');">Remove
                             Thumbnail</a></li>
                     <li>
 
@@ -50,7 +55,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
     </div>
     <div class="mb-2">
         <select class="nsm-field form-select" style='width: 55%;
-    border: none;' onChange="filterThumbnail(this.value, '<?php echo $id; ?>', 'open_invoices')">
+    border: none;' onChange="filterThumbnail(this.value, '<?php echo $id; ?>', 'ac_leads')">
             <option value="all">All time</option>
             <option value="week">Last 7 days </option>
             <option value="two-week">last 14 days</option>
@@ -61,8 +66,13 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
     <div class="nsm-card-content"
         style="  height: calc(100% - 120px); display: <?php echo $isListView ? 'block' : 'none'; ?>"
         id="thumbnail_content_graph_<?php echo $id; ?>">
-        <h1 id='OpenInvoicesGraphLoader'> <span class="bx bx-loader bx-spin"></span></h1>
-        <canvas id="OpenInvoicesGraph" style="max-height:100%;" class="nsm-chart" data-chart-type="sales"></canvas>
+        <h3 style="font-size: 14px; text-align: center;font-weight: bolder;">WHERE YOUR MONEY WENT</h3>
+        <p style="margin: 0;font-size: 12px;text-align: center">You spent <span style="font-weight: bold;" id="total_expense_graph"></span> over the past year.</p>
+        <div style="position:relative;"> 
+        <p class="top-spending">Your top spending categories:</p>
+        </div>
+        <h1 id='AccountingExpenseGraphLoader'> <span class="bx bx-loader bx-spin"></span></h1>
+        <canvas id="AccountingExpenseGraph"  style="max-height:80%;margin-top: 10px"  class="nsm-chart" data-chart-type="sales"></canvas>
     </div>
     <div class="nsm-card-content"
         style="  height: calc(100% - 120px);  display: <?php echo $isListView ? 'none' : 'block'; ?>"
@@ -70,15 +80,16 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         <div class="row ">
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
-                    <label for="">Total Open Invoices</label>
-                    <h1 id="first_content_<?php echo $id; ?>">
-                        <?php echo count($open_invoices); ?></h1>
+                    <label for="">Total Spent</label>
+                    <h1 class="total_expense_graph_total" id="first_content_<?php echo $id; ?>">
+                    </h1>
                 </div>
             </div>
         </div>
     </div>
 
 </div>
+
 
 <?php
 if (!is_null($dynamic_load) && $dynamic_load == true) {
