@@ -136,6 +136,14 @@ class Attachments extends MY_Controller {
     {
         $this->load->helper('string');
         $data = [];
+
+        $company_id = getLoggedCompanyID();
+        $target_dir = './uploads/accounting/attachments/'.$company_id.'/';
+
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+
         foreach($files['name'] as $key => $name)
         {
             $extension = end(explode('.', $name));
@@ -143,14 +151,14 @@ class Attachments extends MY_Controller {
             do {
                 $randomString = random_string('alnum');
                 $fileNameToStore = $randomString . '.' .$extension;
-                $exists = file_exists('./uploads/accounting/attachments/'.$fileNameToStore);
+                $exists = file_exists('./uploads/accounting/attachments/'.$company_id.'/'.$fileNameToStore);
             } while ($exists);
 
             $fileType = explode('/', $files['type'][$key]);
             $uploadedName = str_replace('.'.$extension, '', $name);
 
             $data[] = [
-                'company_id' => getLoggedCompanyID(),
+                'company_id' => $company_id,
                 'type' => $fileType[0] === 'application' ? ucfirst($fileType[1]) : ucfirst($fileType[0]),
                 'uploaded_name' => $uploadedName,
                 'stored_name' => $fileNameToStore,
@@ -162,7 +170,7 @@ class Attachments extends MY_Controller {
                 'updated_at' => date('Y-m-d h:i:s')
             ];
 
-            move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$fileNameToStore);
+            move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$company_id.'/'.$fileNameToStore);
         }
 
         $attachmentIds = [];
@@ -463,15 +471,30 @@ class Attachments extends MY_Controller {
         }
     }
 
-    public function attach()
+    public function attach($vendorId)
     {
         $files = $_FILES['file'];
 
         if(count($files['name']) > 0) {
             $insert = $this->uploadFile($files);
+            $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $vendorId);
+            $order = count($attachments);
+            foreach($insert as $attachmentId) {
+                $linkAttachmentData = [
+                    'type' => 'Vendor',
+                    'attachment_id' => $attachmentId,
+                    'linked_id' => $vendorId,
+                    'order_no' => $order
+                ];
+
+                $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                $order++;
+            }
 
             $return = new stdClass();
             $return->attachment_ids = $insert;
+
             echo json_encode($return);
         } else {
             echo json_encode('error');

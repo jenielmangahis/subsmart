@@ -27,6 +27,9 @@
     margin-top: 5px;
     display: block;
 }
+.widget-tile-upcoming-estimate-row:hover{
+    cursor: pointer;
+}
 </style>
 <?php
 if (!is_null($dynamic_load) && $dynamic_load == true) :
@@ -42,7 +45,6 @@ function formatEstimateNumber($number) {
     return 'EST-' . str_pad($numericPart, 7, '0', STR_PAD_LEFT);
 }
 ?>
-
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
@@ -102,7 +104,7 @@ function formatEstimateNumber($number) {
                                 }
                             ?>
                             <tr>                    
-                                <td>
+                                <td class="widget-tile-upcoming-estimate-row" data-id="<?= $estimate->id; ?>">
                                     <span class="content-title"><?= $estimate->estimate_number; ?></span>
                                     <span class="content-subtitle d-block"><i class='bx bxs-user-circle' style="font-size: 14px;position: relative;top: 2px;"></i> <?= $estimate->first_name . ' ' . $estimate->last_name; ?></span>
                                     <?php if( $show_no_movement_notice == 1 ){  ?>
@@ -140,6 +142,10 @@ endif;
 ?>
 <script>
 $(function(){
-    $("#nsm-table-open-estimates").nsmPagination({itemsPerPage:5});   
+    $("#nsm-table-open-estimates").nsmPagination({itemsPerPage:5}); 
+    $('.widget-tile-upcoming-estimate-row').on('click', function(){
+        var estimate_id = $(this).attr('data-id');
+        location.href  = base_url + 'estimate/view/' + estimate_id;
+    });  
 });
 </script>

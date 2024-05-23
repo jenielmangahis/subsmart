@@ -506,6 +506,9 @@ class Vendors extends MY_Controller
         if(!empty(get('date'))) {
             $this->page_data['date'] = get('date');
         }
+
+        $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $vendorId);
+        
         $this->page_data['transactions'] = $this->get_transactions($vendorId, $filters);
         $this->page_data['openBalance'] = $openBal;
         $this->page_data['overdueBalance'] = $overdueBal;
@@ -517,7 +520,7 @@ class Vendors extends MY_Controller
         $this->page_data['categoryAccs'] = $this->get_category_accs();
         $this->page_data['vendorDetails'] = $vendor;
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['attachments'] = $this->accounting_attachments_model->get_attachments('Vendor', $vendorId);
+        $this->page_data['attachments'] = $attachments;
         $this->page_data['page_title'] = "Vendors";
         $this->load->view('v2/pages/accounting/expenses/vendors/view', $this->page_data);
     }
@@ -746,6 +749,14 @@ class Vendors extends MY_Controller
     private function uploadFile($files)
     {
         $this->load->helper('string');
+
+        $company_id = getLoggedCompanyID();
+        $target_dir = './uploads/accounting/attachments/'.$company_id.'/';
+
+        if (!file_exists($target_dir)) {
+            mkdir($target_dir, 0777, true);
+        }
+
         $data = [];
         foreach ($files['name'] as $key => $name) {
             $extension = end(explode('.', $name));
@@ -753,14 +764,14 @@ class Vendors extends MY_Controller
             do {
                 $randomString = random_string('alnum');
                 $fileNameToStore = $randomString . '.' .$extension;
-                $exists = file_exists('./uploads/accounting/attachments/'.$fileNameToStore);
+                $exists = file_exists('./uploads/accounting/attachments/'.$company_id.'/'.$fileNameToStore);
             } while ($exists);
 
             $fileType = explode('/', $files['type'][$key]);
             $uploadedName = str_replace('.'.$extension, '', $name);
 
             $data[] = [
-                'company_id' => getLoggedCompanyID(),
+                'company_id' => $company_id,
                 'type' => $fileType[0] === 'application' ? ucfirst($fileType[1]) : ucfirst($fileType[0]),
                 'uploaded_name' => $uploadedName,
                 'stored_name' => $fileNameToStore,
@@ -770,7 +781,7 @@ class Vendors extends MY_Controller
                 'status' => 1
             ];
 
-            move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$fileNameToStore);
+            move_uploaded_file($files['tmp_name'][$key], './uploads/accounting/attachments/'.$company_id.'/'.$fileNameToStore);
         }
 
         $attachmentIds = [];

@@ -1502,7 +1502,7 @@ class Employees extends MY_Controller
                 'id' => $paycheck->id,
                 'pay_date' => date("m/d/Y", strtotime($paycheck->pay_date)),
                 'employee_id' => $paycheck->employee_id,
-                'name' => "$employee->LName, $employee->FName",
+                'name' => (!empty($employee->LName) && !empty($employee->FName)) ? "$employee->LName, $employee->FName" : 'No name provided',
                 'total_pay' => number_format(floatval(str_replace(',', '', $paycheck->total_pay)), 2),
                 'net_pay' => number_format(floatval(str_replace(',', '', $paycheck->net_pay)), 2),
                 'pay_method' => $paycheck->pay_method,
@@ -2224,7 +2224,7 @@ class Employees extends MY_Controller
         $name = $employee->FName . ' ' . $employee->LName;
 
         $address = '';
-        $address .= !empty($employee->address) ? $employee->address . '<br>' : '';
+        $address .= !empty($employee->address) ? $employee->address : '';
         $address .= !empty($employee->city) ? $employee->city : '';
         $address .= !empty($employee->state) ? ', ' . $employee->state : '';
         $address .= !empty($employee->postal_code) ? ' ' . $employee->postal_code : '';
