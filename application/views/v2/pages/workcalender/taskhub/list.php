@@ -254,20 +254,33 @@
                                         </td>   
                                         <td>
                                             <div class="widget-item">
-                                                <?php $assignedUser = getTaskAssignedUserV2($row->task_id); ?>
-                                                <?php if( $assignedUser['user_id'] > 0 ){ ?>
-                                                    <?php $image = userProfilePicture($assignedUser['user_id']); ?>
-                                                    <?php if (is_null($image)) { ?>
-                                                        <div class="nsm-profile" style="">
-                                                            <span><?php echo getLoggedNameInitials($assignedUser['name']); ?></span>
-                                                        </div>
-                                                    <?php } else { ?>
-                                                        <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
-                                                        <span class="nsm-profile-name"><?= $assignedUser['name']; ?></span>
-                                                    <?php } ?>
+                                                <?php if($row->assigned_employee_ids != null) { ?>
+                                                    <table>
+                                                        <?php 
+                                                            $assignees_arr = explode(',', $row->assigned_employee_ids);
+                                                            if($assignees_arr) {
+                                                                foreach($assignees_arr as $uid) {
+                                                                    $user_id = (int) $uid;
+                                                                    $image = userProfilePicture($user_id);
+                                                                    $assignee = $this->users_model->getUser($user_id);
+                                                                    if($assignee) {
+                                                                        echo '<tr>';
+                                                                            echo '<td><div class="nsm-profile" style="background-image: url(' . $image . ');"></div></td>';
+                                                                            echo '<td><span class="nsm-profile-name">' . $assignee->FName . ' ' . $assignee->LName . '</span></td>';
+                                                                        echo '</tr>';
+                                                                    } else {
+                                                                        echo 'No Assigned User';
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                echo 'No Assigned User';
+                                                            }
+                                                        ?>
+                                                    </table>
                                                 <?php }else{ ?>
-                                                    No Assigned User
-                                                <?php } ?>        
+                                                        No Assigned User
+                                                <?php } ?>
+                                                
                                             </div>                                
                                         </td>                                       
                                         <td>
