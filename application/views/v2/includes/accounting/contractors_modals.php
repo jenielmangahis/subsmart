@@ -1,7 +1,7 @@
 <div class="modal fade nsm-modal" id="contractor-modal" tabindex="-1" role="dialog" aria-labelledby="contractor-modal-label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <form action="/accounting/contractors/add" method="post" class="form-validate" novalidate="novalidate">
+            <form action="<?php echo base_url() ?>accounting/contractors/add" method="post" class="form-validate" novalidate="novalidate">
                 <div class="modal-header">
                     <span class="modal-title content-title" id="contractor-modal-label">Add a contractor</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>

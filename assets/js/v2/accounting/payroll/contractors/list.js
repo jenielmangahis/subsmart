@@ -120,13 +120,13 @@ $(".edit-contractor").on('click', function(e) {
         $('#contractor-modal #name').val(vendor.display_name);
         $('#contractor-modal #email').val(vendor.email);
 
-        $('#contractor-modal form').attr('action', `/accounting/contractors/${id}/update`);
+        $('#contractor-modal form').attr('action', base_url + `accounting/contractors/${id}/update`);
         $('#contractor-modal').modal('show');
     });
 });
 
 $('#contractor-modal').on('hidden.bs.modal', function() {
-    $('#contractor-modal form').attr('action', `/accounting/contractors/add`);
+    $('#contractor-modal form').attr('action', base_url + `accounting/contractors/add`);
     $('#contractor-modal #name').val('');
     $('#contractor-modal #email').val('');
 });
@@ -239,7 +239,7 @@ $(document).on('click', '#pay-contractors-modal #preview-contractor-payment', fu
     data.append('total_amount', $('#pay-contractors-modal .transaction-total-amount').html().replace('$', ''));
 
     $.ajax({
-        url: '/accounting/contractors/preview-contractor-payment',
+        url: base_url + 'accounting/contractors/preview-contractor-payment',
         data: data,
         type: 'post',
         processData: false,
