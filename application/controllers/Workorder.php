@@ -12941,6 +12941,19 @@ class Workorder extends MY_Controller
         $json_data = ['is_success' => $is_success, 'msg' => $msg, 'job_id' => $job_id, 'is_update' => 0];
         echo json_encode($json_data);
     }
+
+    public function status()
+    {
+        add_footer_js(array(
+            'assets/js/jquery.minicolors.js'
+        ));
+
+		$company_id = logged('company_id');		
+        $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
+        $this->page_data['page']->title = 'Workorder Status';
+        $this->page_data['page']->parent = 'Sales';
+		$this->load->view('v2/pages/workstatus/list', $this->page_data);
+    }
 }
 /* End of file Workorder.php */
 

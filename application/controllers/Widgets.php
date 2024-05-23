@@ -1052,4 +1052,75 @@ class Widgets extends MY_Controller
         $return = ['chart_labels' => $chart_labels, 'chart_data' => $estimates_data, 'total_estimates' => $total_estimates];
         echo json_encode($return);
     }
+
+    public function ajax_load_paid_invoices_summary()
+    {
+        $this->load->model('Invoice_model');
+
+        $cid       = getLoggedCompanyID();
+        $date_from = post('filter_date_from');
+        $date_to   = post('filter_date_to');
+
+        $date_range = ['from' => $date_from, 'to' => $date_to];
+        $paidInvoices = $this->Invoice_model->getCompanyPaidInvoices($cid, $date_range);
+
+        $paid_invoices_total_amount = 0;
+        $paid_invoices_total_number = 0;
+        if( $paidInvoices ){
+            foreach($paidInvoices as $inv){
+                $paid_invoices_total_amount += (float)$inv->grand_total;
+                $paid_invoices_total_number++;
+            }
+        }
+
+        $return = [
+            'paid_invoices_total_amount' => number_format($paid_invoices_total_amount,2,'.',''),
+            'paid_invoices_total_number' => $paid_invoices_total_number
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_load_service_ticket_chart_data()
+    {
+        $this->load->model('Tickets_model');
+
+        $cid  = logged('company_id');
+        $year = date("Y");
+
+        $total_tickets_amount_data = [];
+        $total_tickets_number_data = [];
+        $chart_labels = [];
+
+        $start_month  = explode("/", post('filter_date_from'));
+        $end_month    = explode("/", post('filter_date_to'));  
+        for( $start = $start_month[0]; $start <= $end_month[0]; $start++ ){
+            $start_date = $year . '-' . $start . '-' . 1;
+            $start_date = date("Y-m-d", strtotime($start_date));
+            $end_date   = date("Y-m-t", strtotime($start_date));
+
+            //$date_range    = ['from' => $start_date, 'to' => $end_date];
+            //$totalPaidInvoices = $this->Invoice_model->getCompanyTotalAmountPaidInvoices($cid, $date_range);            
+            //$sales_data[]  = number_format($totalPaidInvoices->total_paid, 2, '.', '');
+            $total_service_tickets = 0;
+            $total_service_ticket_amount = 0;
+            $date_range    = ['from' => $start_date, 'to' => $end_date];
+            $serviceTickets = $this->Tickets_model->getAllTicketsByCompanyIdAndDateRange($cid, $date_range);
+            if( $serviceTickets ){
+                foreach($serviceTickets as $st){
+                    $total_service_ticket_amount += (float) $st->grandtotal;
+                    $total_service_tickets++;
+                }
+            }
+
+            $total_tickets_amount_data[] = number_format($total_service_ticket_amount,2, '.', '');
+            $total_tickets_number_data[] = $total_service_tickets;                        
+            $chart_month    = date('F', strtotime($start_date));
+            $chart_end_day  = date("t", strtotime($start_date));
+            $chart_labels[] = $chart_month;
+        } 
+
+        $return = ['chart_labels' => $chart_labels, 'total_tickets_amount_data' => $total_tickets_amount_data, 'total_tickets_number_data' => $total_tickets_number_data];
+        echo json_encode($return);
+    }
 }
