@@ -283,7 +283,7 @@ $(document).on('click', '#pay-contractors-modal #submit-payment', function(e) {
     e.preventDefault();
 
     $.ajax({
-        url: '/accounting/contractors/submit-contractor-payment',
+        url: base_url + 'accounting/contractors/submit-contractor-payment',
         data: data,
         type: 'post',
         processData: false,
@@ -292,6 +292,21 @@ $(document).on('click', '#pay-contractors-modal #submit-payment', function(e) {
             var res = JSON.parse(result);
 
             Swal.fire({
+                title: res.success ? 'Success' : 'Error',
+                //text: 'Customer profile was successfully updated!',
+                html: res.message,
+                icon: res.success ? 'success' : 'error',
+                showCancelButton: false,
+                confirmButtonColor: '#32243d',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ok'
+            }).then((result) => {
+                if(result.isConfirmed) {
+                    location.reload();
+                }
+            });            
+
+            /*Swal.fire({
                 title: res.success ? 'Success' : 'Error',
                 html: res.message,
                 icon: res.success ? 'success' : 'error',
@@ -303,7 +318,7 @@ $(document).on('click', '#pay-contractors-modal #submit-payment', function(e) {
                 if(result.isConfirmed) {
                     location.reload();
                 }
-            });
+            });*/
         }
     });
 });

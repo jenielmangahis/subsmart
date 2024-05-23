@@ -46,7 +46,7 @@
                     <div class="row" style="min-height: 100%">
                         <div class="col-12">
                             <div class="row grid-mb">
-                                <div class="col-md-2 col-12 grid-mb">
+                                <div class="col-md-3 col-12 grid-mb">
                                     <label for="corresponding-account">Corresponding account in nSmarTrac</label>
                                     <select name="corresponding_account" id="corresponding-account" class="form-control nsm-field"></select>
                                 </div>
@@ -56,7 +56,7 @@
                                         <input type="text" name="pay_date" id="pay-date" class="form-control nsm-field mb-2 date" value="<?=date("m/d/Y")?>" required>
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-8 text-end grid-mb">
+                                <div class="col-12 col-md-7 text-end grid-mb">
                                     <h6>
                                         TOTAL PAY
                                     </h6>
@@ -125,7 +125,7 @@
                                                     <label for="amount">&nbsp;</label>
                                                     <div class="input-group">
                                                         <span class="input-group-text">$</span>
-                                                        <input type="text" class="nsm-field form-control text-end" placeholder="0.00" name="amount[]" id="amount-<?=$contractor->id?>">
+                                                        <input type="number" class="nsm-field form-control text-end" placeholder="0.00" min="0" name="amount[]" id="amount-<?=$contractor->id?>">
                                                     </div>
                                                 </td>
                                                 <td>
