@@ -1074,6 +1074,9 @@ class Taskhub extends MY_Controller {
 
 		$this->page_data['assignee_name'] = $assignee_name;
 
+		$activity_logs = $this->taskhub_updates_model->getAllActivityByTaskId($id);
+		$this->page_data['activity_logs'] = $activity_logs;
+
 		$this->page_data['page']->title = 'Task Hub';		
 		$this->load->view('v2/pages/workcalender/taskhub/view', $this->page_data);
 	}

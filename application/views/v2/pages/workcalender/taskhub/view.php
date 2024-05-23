@@ -184,6 +184,30 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-8">
+                    </div>  
+                    <div class="col-4">
+                        <div class="nsm-card primary mt-2">
+                            <div class="nsm-card-header">
+                                <div class="nsm-card-title">
+                                    <span>Activity</span>
+                                </div>
+                            </div>  
+                            <div class="nsm-card-content">
+                                                        
+                                <ul class="list-group">
+                                    <?php foreach($activity_logs as $activity_log) { ?>
+                                        <li class="list-group-item">
+                                            <i class="fa fa-user" aria-hidden="true"></i> <strong><?php echo $activity_log->FName . " " . $activity_log->LName; ?> </strong> | <?php echo $activity_log->notes; ?>
+                                        </li>
+                                    <?php } ?>
+                                </ul>                            
+
+                            </div>                                                      
+                        </div>                        
+                    </div>                  
+                </div>
             </div>
         </div>
     </div>
