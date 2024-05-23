@@ -163,7 +163,7 @@
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="new-time-activity">Time activity</a></li>
+                                <!-- <li><a class="dropdown-item" href="javascript:void(0);" id="new-time-activity">Time activity</a></li> -->
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="new-bill">Bill</a></li>
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="new-expense">Expense</a></li>
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="new-check">Check</a></li>

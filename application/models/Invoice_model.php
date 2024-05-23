@@ -273,6 +273,25 @@ class Invoice_model extends MY_Model
         return $query->result();
     }
 
+    public function getCompanyPaidInvoices($cid, $date_range = array())
+    {
+        $this->db->select('*');        
+        $this->db->from($this->table);   
+        $this->db->where('company_id', $cid);
+        $this->db->where('view_flag', 0);
+        $this->db->where_in('status', ['Paid']);
+
+        if( !empty($date_range) ){
+            $this->db->where('date_issued >=', $date_range['from']);
+            $this->db->where('date_issued <=', $date_range['to']);
+        }
+        
+        $this->db->order_by('invoices.id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getCompanyTotalAmountUnPaidInvoices($cid, $date_range = array())
     {
         $this->db->select('id, COALESCE(SUM(grand_total),0) AS total_amount');       

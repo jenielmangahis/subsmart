@@ -70,8 +70,24 @@
 <script>
 $(function(){
     $('#btn-quick-link-account').on('click', function(){
-        $('#sidebar-modal-add-multi-account').modal({backdrop: false});
-        $('#sidebar-modal-add-multi-account').modal('show');
+        var url = "<?php echo base_url('mycrm/_check_max_link_account'); ?>";
+        $.ajax({
+            type: 'POST',
+            url: url,
+            dataType: 'json',
+            success: function(result) {
+                if( result.is_limit == 1 ){
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: result.msg
+                    });
+                }else{
+                    $('#sidebar-modal-add-multi-account').modal({backdrop: false});
+                    $('#sidebar-modal-add-multi-account').modal('show');
+                }
+            }
+        });
     });
 
     $('.hdr-multi-account').on('click', function(){

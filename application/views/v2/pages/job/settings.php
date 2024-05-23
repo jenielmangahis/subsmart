@@ -34,12 +34,11 @@ table.dataTable.no-footer {
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/job_tabs_v2'); ?>
     </div>
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/job_subtabs'); ?>
     </div>
-
     <div class="col-12" style="min-height:750px">
         <div class="nsm-page">
             <div class="nsm-page-content">                
