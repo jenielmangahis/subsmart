@@ -475,20 +475,18 @@ include viewPath('v2/includes/header'); ?>
                     <div class="row">
                         <div class="col-md-12">
                             <div class="row">
-                                <div class="col-md-3" align="center">
-                                    <a href="#" style="color:#0077C5;">History</a>
-                                </div>
-                                <div class="col-md-1" align="center">
-                                    |
-                                </div>
-                                <div class="col-md-4" align="center">
-                                    <a href="<?= url('/accounting/taxEditSettings'); ?>" style="color:#0077C5;">Sales tax settings</a>
-                                </div>
-                                <div class="col-md-1" align="center">
-                                    |
-                                </div>
                                 <div class="col-md-2" align="center">
-                                    <a href="#" style="color:#0077C5;">Reports</a>
+                                    <button class="nsm-button primary" onclick="location.href='#'">History</button>
+                                </div>
+                                <div class="col-md-1" align="center">
+                                </div>
+                                <div class="col-md-6" align="center">
+                                    <button class="nsm-button primary" onclick="location.href='<?= url('/accounting/taxEditSettings'); ?>'">Sales tax settings</button>
+                                </div>
+                                <div class="col-md-1" align="center">
+                                    
+                                <div class="col-md-2" align="center">
+                                    <button class="nsm-button primary" onclick="location.href='#'">Reports</button>
                                 </div>
                             </div>
                         </div>

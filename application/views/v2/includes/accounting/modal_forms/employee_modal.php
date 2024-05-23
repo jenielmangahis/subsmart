@@ -27,7 +27,7 @@
                     <div class="row gy-3 mb-4">
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Mobile Number</label>
-                            <input type="text" name="mobile" placeholder="xxxxxxxxxxx" maxlength="12" class="nsm-field mobile-number form-control" value="" />
+                            <input type="text" id="mobile-number" name="mobile" placeholder="xxx-xxx-xxxx" maxlength="12" class="nsm-field mobile-number form-control" value="" />
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
@@ -253,26 +253,15 @@
                             <label class="content-title">What are this employee's employment details?</label>
                             <label class="content-subtitle">Add employee's hire date and where they work.</label>
                         </div>
-                        <div class="col-6">
-                            <div class="row">
-                                <!-- <label for="hire_date">Hire date</label>
-                                <div class="col-12 col-md-8">
-                                    <div class="nsm-field-group calendar">
-                                        <input type="text" name="hire_date" id="hire_date" class="form-control nsm-field date">
-                                    </div>
-                                </div> -->
-                                <div class="col-12 col-md-8">
-                                    <label for="payDate">Hire Date</label>
-                                    <input type="date" class="form-control nsm-field date" name="hire_date" id="hire_date" />
-                                </div>
-                            </div>
+                        <div class="col-12 col-md-6 col-lg-2">
+                            <label for="hire_date">Hire Date</label>
+                            <input type="date" class="form-control nsm-field date" name="hire_date" id="hire_date" />
                         </div>
-                    </div>
-                    <div class="row gy-3 mb-4">
                         <div class="col-12">
                             <label class="content-title">How do you want to pay this employee?</label>
                         </div>
-                        <div class="col-12 col-md-4">
+                        <div class="col-12 col-md-6 col-lg-2">
+                            <label for="pay-method">Pay Method</label>
                             <select name="pay_method" id="pay-method" class="form-select nsm-field">
                                 <option value="direct-deposit">Direct deposit</option>
                                 <option value="paper-check">Paper check</option>
@@ -291,9 +280,14 @@
 
 <script>
     var phoneInput = document.getElementById('phone-number');
-    var add_employee_form = document.getElementById('add_employee_form');
+    var mobileInput = document.getElementById('mobile-number');
 
     phoneInput.addEventListener('input', function(e) {
+        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+        e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
+    });
+
+    mobileInput.addEventListener('input', function(e) {
         var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
         e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2] + (x[3] ? '-' + x[3] : '');
     });
