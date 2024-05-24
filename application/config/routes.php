@@ -512,7 +512,7 @@ $route['accounting/attachments/load-attachments']['post'] = 'accounting_controll
 $route['accounting/attachments/download'] = 'accounting_controllers/attachments/download';
 $route['accounting/attachments/update/(:any)']['post'] = 'accounting_controllers/attachments/edit/$1';
 $route['accounting/attachments/delete/(:any)']['DELETE'] = 'accounting_controllers/attachments/delete/$1';
-$route['accounting/attachments/attach']['post'] = 'accounting_controllers/attachments/attach';
+$route['accounting/attachments/attach/(:any)']['post'] = 'accounting_controllers/attachments/attach/$1';
 $route['accounting/attachments/get-all-attachments-ajax'] = 'accounting_controllers/attachments/get_all_attachments';
 $route['accounting/attachments/get-unlinked-attachments-ajax'] = 'accounting_controllers/attachments/get_unlinked_attachments';
 $route['accounting/attachments/print-attachments']['post'] = 'accounting_controllers/attachments/print_attachments';
@@ -1090,6 +1090,7 @@ $route['customer/_convert_lead_to_customer'] = 'Customer/ajax_convert_lead_to_cu
 // workstatus
 $route['workstatus/_create_workorder_type'] = 'Workstatus/ajax_save_workorder_type';
 $route['workstatus/_update_workorder_type'] = 'Workstatus/ajax_update_workorder_type';
+$route['workstatus/_delete_workorder_status'] = 'Workstatus/ajax_delete_workorder_status';
 
 // Addon Upgrades
 $route['more/_load_plugin_details'] = 'More/ajax_load_plugin_details';
@@ -1723,6 +1724,8 @@ $route['dashboard/_view_newsletter'] = 'Newsletter/ajax_view_newsletter';
 $route['widgets/_load_income_stat'] = 'Widgets/ajax_load_income_stat';
 $route['widgets/_load_sales_chart'] = 'Widgets/ajax_load_sales_chart';
 $route['widgets/_load_open_estimates_chart'] = 'Widgets/ajax_load_open_estimates_chart';
+$route['widgets/_load_paid_invoices_summary'] = 'Widgets/ajax_load_paid_invoices_summary';
+$route['widgets/_load_service_ticket_chart_data'] = 'Widgets/ajax_load_service_ticket_chart_data';
 
 //Esign
 $route['esign_v2/_tags_sections'] = 'Esign_v2/ajax_company_tags_sections';

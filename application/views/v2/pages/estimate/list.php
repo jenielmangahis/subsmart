@@ -30,35 +30,37 @@
     .swal2-styled {
     padding: 5px 10px;
     font-size: 12px!important;
+    }
+    .swal2-icon{
+        width: 3em;
+        height: 3em;
+    }
+    .swal2-icon-content {
+        font-size: 2.75em!important;
+    }
+    .swal2-icon.swal2-success .swal2-success-fix{
+        display: none;
+    }
+    .swal2-icon.swal2-success [class^=swal2-success-line][class$=long]{
+        top: 1.375em;
+        right: 2px;
+        width: 25px;
+    }
+    .swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=left]{
+        left: -1.0635em;
+    }
+    .swal2-success [class^="swal2-success-line"] {
+        display: none; /* Hide the success lines */
+    }
+    .swal2-icon.swal2-success [class^=swal2-success-line][class$=tip] {
+        top: 1.5em;
+        left: 5px;
+        width: 1.200em;
+    }
 }
-.swal2-icon{
-    width: 3em;
-    height: 3em;
-}
-.swal2-icon-content {
-    font-size: 2.75em!important;
-}
-.swal2-icon.swal2-success .swal2-success-fix{
-    display: none;
-}
-.swal2-icon.swal2-success [class^=swal2-success-line][class$=long]{
-    top: 1.375em;
-    right: 2px;
-    width: 25px;
-}
-.swal2-icon.swal2-success [class^=swal2-success-circular-line][class$=left]{
-    left: -1.0635em;
-}
-.swal2-success [class^="swal2-success-line"] {
-    display: none; /* Hide the success lines */
-}
-.swal2-icon.swal2-success [class^=swal2-success-line][class$=tip] {
-    top: 1.5em;
-    left: 5px;
-    width: 1.200em;
-
-}
-
+.with-reminder td{
+    background-color:#f8d7da;
+    color:#721c24;
 }
 </style>
 
@@ -217,32 +219,41 @@
                         if (!empty($estimates)) {
                             ?>
                         <?php
-                                foreach ($estimates as $estimate) {
-                                    switch ($estimate->status) {
-                                        case 'Draft':
-                                            $badge = '';
-                                            break;
-                                        case 'Submitted':
-                                            $badge = 'success';
-                                            break;
-                                        case 'Accepted':
-                                            $badge = 'success';
-                                            break;
-                                        case 'Invoiced':
-                                            $badge = 'primary';
-                                            break;
-                                        case 'Lost':
-                                            $badge = 'secondary';
-                                            break;
-                                        case 'Declined By Customer':
-                                            $badge = 'error';
-                                            break;
-                                    }
-                                    ?>
-                        <tr>
+                            foreach ($estimates as $estimate) {
+                                switch ($estimate->status) {
+                                    case 'Draft':
+                                        $badge = '';
+                                        break;
+                                    case 'Submitted':
+                                        $badge = 'success';
+                                        break;
+                                    case 'Accepted':
+                                        $badge = 'success';
+                                        break;
+                                    case 'Invoiced':
+                                        $badge = 'primary';
+                                        break;
+                                    case 'Lost':
+                                        $badge = 'secondary';
+                                        break;
+                                    case 'Declined By Customer':
+                                        $badge = 'error';
+                                        break;
+                                }
+
+                                $row_class = '';
+                                if( $estimate->next_remind_date == date("Y-m-d") ){
+                                    $row_class = 'with-reminder';
+                                }
+                        ?>
+                        <tr class="<?= $row_class; ?>">
                             <td>
                                 <div class="table-row-icon">
-                                    <i class='bx bx-chart'></i>
+                                    <?php if( $row_class == '' ){ ?>
+                                        <i class='bx bx-chart'></i>
+                                    <?php }else{ ?>
+                                        <i class='bx bx-alarm-exclamation'></i>
+                                    <?php } ?>
                                 </div>
                             </td>
                             <td class="fw-bold nsm-text-primary"><?php echo $estimate->estimate_number; ?></td>

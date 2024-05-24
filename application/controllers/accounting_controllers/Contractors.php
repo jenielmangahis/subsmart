@@ -9,7 +9,7 @@ class Contractors extends MY_Controller {
         $this->checkLogin();
         $this->load->model('vendors_model');
         $this->load->model('account_model');
-        $this->load->model('expenses_model');
+        $this->load->model('expenses_model');        
         $this->load->model('accounting_account_transactions_model');
         $this->load->model('accounting_customers_model');
         $this->load->model('accounting_invoices_model');
@@ -619,61 +619,67 @@ class Contractors extends MY_Controller {
     {
         $correspondingAcc = $this->chart_of_accounts_model->getById($this->input->post('corresponding_account'));
 
-        $html = '<div class="row" style="min-height: 100%">
-            <div class="col-12">
-                <div class="row grid-mb">
-                    <div class="col-md-2 col-12 grid-mb">
-                        <label for="corresponding-account">Corresponding account in nSmarTrac</label>
-                        <h4>'.$correspondingAcc->name.'</h4>
-                    </div>
-                    <div class="col-md-2 col-12 grid-mb">
-                        <label for="pay-date">Pay date</label>
-                        <h4>'.$this->input->post('pay_date').'</h4>
-                    </div>
-                    <div class="col-12 col-md-8 text-end grid-mb">
-                        <h6>
-                            TOTAL PAY
-                        </h6>
-                        <h2>
-                            <span class="transaction-total-amount">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $this->input->post('total_amount'))), 2)).'</span>
-                        </h2>
-                    </div>
-                    <div class="col-12">
-                        <table class="nsm-table" id="preview-contractor-payment-table">
-                            <thead>
-                                <tr>
-                                    <td data-name="Contractor">CONTRACTOR</td>
-                                    <td data-name="Pay Method">PAY METHOD</td>
-                                    <td data-name="Transaction Info" width="50%">TRANSACTION INFO</td>
-                                    <td data-name="Fixed Pay" class="text-end">FIXED PAY</td>
-                                    <td data-name="Total Pay" class="text-end">TOTAL PAY</td>
-                                </tr>
-                            </thead>
-                            <tbody>';
-                            foreach($this->input->post('contractor') as $index => $contractorId) {
-                                $contractor = $this->vendors_model->get_contractor($contractorId);
-                                $amount = $this->input->post('amount[]')[$index];
+        if($this->input->post('contractor')) {
+            $html = '<div class="row" style="min-height: 100%">
+                <div class="col-12">
+                    <div class="row grid-mb">
+                        <div class="col-md-2 col-12 grid-mb">
+                            <label for="corresponding-account">Corresponding account in nSmarTrac</label>
+                            <h4>'.$correspondingAcc->name.'</h4>
+                        </div>
+                        <div class="col-md-2 col-12 grid-mb">
+                            <label for="pay-date">Pay date</label>
+                            <h4>'.$this->input->post('pay_date').'</h4>
+                        </div>
+                        <div class="col-12 col-md-8 text-end grid-mb">
+                            <h6>
+                                TOTAL PAY
+                            </h6>
+                            <h2>
+                                <span class="transaction-total-amount">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $this->input->post('total_amount'))), 2)).'</span>
+                            </h2>
+                        </div>
+                        <div class="col-12">
+                            <table class="nsm-table" id="preview-contractor-payment-table">
+                                <thead>
+                                    <tr>
+                                        <td data-name="Contractor">CONTRACTOR</td>
+                                        <td data-name="Pay Method">PAY METHOD</td>
+                                        <td data-name="Transaction Info" width="50%">TRANSACTION INFO</td>
+                                        <td data-name="Fixed Pay" class="text-end">FIXED PAY</td>
+                                        <td data-name="Total Pay" class="text-end">TOTAL PAY</td>
+                                    </tr>
+                                </thead>
+                                <tbody>';
+                                foreach($this->input->post('contractor') as $index => $contractorId) {
+                                    $contractor = $this->vendors_model->get_contractor($contractorId);
+                                    $amount = $this->input->post('amount[]')[$index];
 
-                                $html .= '<tr>
-                                    <td>'.$contractor->display_name.'</td>
-                                    <td>Paper check</td>
-                                    <td></td>
-                                    <td class="text-end">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $amount)), 2)).'</td>
-                                    <td class="text-end">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $amount)), 2)).'</td>
-                                </tr>';
-                            }
-                            $html .= '</tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="4"><b>TOTAL</b></td>
-                                    <td class="text-end">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $this->input->post('total_amount'))), 2)).'</td>
-                                </tr>
-                            </tfoot>
-                        </table>
+                                    $html .= '<tr>
+                                        <td>'.$contractor->display_name.'</td>
+                                        <td>Paper check</td>
+                                        <td></td>
+                                        <td class="text-end">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $amount)), 2)).'</td>
+                                        <td class="text-end">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $amount)), 2)).'</td>
+                                    </tr>';
+                                }
+                                $html .= '</tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4"><b>TOTAL</b></td>
+                                        <td class="text-end">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $this->input->post('total_amount'))), 2)).'</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>';
+            </div>';
+        } else {
+            $html = '<div class="row"><div class="col-12">NO SELECTED CONTRACTOR</div></div>';
+        }
+
+
 
         echo $html;
     }
@@ -792,5 +798,5 @@ class Contractors extends MY_Controller {
             'success' => count($post['contractor']) === $inserted ? true : false,
             'message' => count($post['contractor']) === $inserted ? 'Contractor payment successful.' : 'Contractor payment error.'
         ]);
-    }
+    }    
 }

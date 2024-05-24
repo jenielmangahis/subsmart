@@ -288,12 +288,12 @@ class Dashboard extends Widgets
         $this->page_data['invoice_paid_last_30days'] = $this->general->get_data_with_param($invoice_paid_last_30days, false);
 
         // fetch open estimates
-        $total_amount_invoice = [
-            'where' => ['company_id' => logged('company_id'), 'status' => 'Paid'],
-            'table' => 'invoices',
-            'select' => 'SUM(grand_total) as total',
-        ];
-        $this->page_data['total_amount_invoice'] = $this->general->get_data_with_param($total_amount_invoice, false);
+        // $total_amount_invoice = [
+        //     'where' => ['company_id' => logged('company_id'), 'status' => 'Paid'],
+        //     'table' => 'invoices',
+        //     'select' => 'SUM(grand_total) as total',
+        // ];
+        // $this->page_data['total_amount_invoice'] = $this->general->get_data_with_param($total_amount_invoice, false);
 
         // fetch open estimates
         $total_invoice_paid = [

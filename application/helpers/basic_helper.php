@@ -5278,6 +5278,20 @@ function getAcsProfileCustomerName($prof_id)
     return $customer_name;
 }
 
+function getUserLocationByLonLat($lat, $lon)
+{
+    $location = '';
+
+    if( $long && $lat ){
+        $url = `https://api.geoapify.com/v1/geocode/reverse?lat={$lat}&lon={$lon}&lang=en&apiKey=41ddeb87ff654af488b283ba54ba576f`;
+        $data = json_decode(file_get_contents($url), true);
+        $address  = $data['features'][0]['properties']['formatted'];
+        $district = $data['features'][0]['properties']['district'];
+    }
+
+    return $location;
+}
+
 function getUserPublicIP()
 {
     $return = [];
@@ -5329,4 +5343,29 @@ function getUserPublicIP()
     }
 
     return $return;
+}
+
+function getUserLocationAddressByLonLat($lon, $lat){
+    $is_valid = 0;
+    $address  = '';
+    $district = '';
+
+    if( $lon != '' && $lat != '' ){
+        $url  = 'https://api.geoapify.com/v1/geocode/reverse?lat='.$lat.'&lon='.$lon.'&lang=en&apiKey=41ddeb87ff654af488b283ba54ba576f';        
+        $data = json_decode(file_get_contents($url), true);
+        if( $data['features'][0]['properties']['formatted'] ){
+            $address  = $data['features'][0]['properties']['formatted'];
+            $district = $data['features'][0]['properties']['district'];
+            $is_valid = 1;
+        }
+    }
+
+    $data = [
+        'is_valid' => $is_valid,
+        'address' => $address,
+        'district' => $district
+    ];
+
+    return $data;
+    
 }

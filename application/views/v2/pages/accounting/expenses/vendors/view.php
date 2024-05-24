@@ -4,10 +4,30 @@
 <style>
     .notes-container {
         border-radius: 5px;
-        border: 1px solid transparent;
+        /* border: 1px solid transparent; */
     }
     .notes-container:hover {
         border-color: #dee2e6;
+    }
+    .nsm-table > tbody td {
+        border-bottom:none !important;
+    }
+    .custom-header{
+        font-size:17px;
+        background-color:#6a4a86;
+        color:#ffffff;
+        padding:10px;
+    }
+    .list-attachments{
+        list-style:none;
+        padding:0px;
+    }
+    .list-attachments li{
+        margin:5px;
+        display:inline-block;
+    }
+    .btn-download-attachment{
+        width:200px;
     }
 </style>
 
@@ -358,32 +378,58 @@
                                                     <table class="nsm-table">
                                                         <tbody>
                                                             <tr>
-                                                                <td class="fw-bold nsm-text-primary">Vendor</td>
+                                                                <td class="fw-bold nsm-text-primary">Name</td>
                                                                 <td><?=$vendorDetails->display_name?></td>
                                                             </tr>
                                                             <tr>
+                                                                <td class="fw-bold nsm-text-primary">Company</td>
+                                                                <td><?= $vendorDetails->company != '' ? $vendorDetails->company : 'Not Specified'; ?></td>
+                                                            </tr>  
+                                                            <tr>
                                                                 <td class="fw-bold nsm-text-primary">Email</td>
-                                                                <td><?=$vendorDetails->email?></td>
+                                                                <td><?= $vendorDetails->email ?></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Phone</td>
-                                                                <td><?=$vendorDetails->phone?></td>
+                                                                <td><?= $vendorDetails->phone != '' ? formatPhoneNumber($vendorDetails->phone) : 'Not Specicied'; ?></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Mobile</td>
-                                                                <td><?=$vendorDetails->mobile?></td>
+                                                                <td><?= $vendorDetails->mobile != '' ? formatPhoneNumber($vendorDetails->mobile) : 'Not Specicied'; ?></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Fax</td>
-                                                                <td><?=$vendorDetails->fax?></td>
+                                                                <td><?= $vendorDetails->fax != '' ? $vendorDetails->fax : 'None'; ?></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="fw-bold nsm-text-primary">Address</td>
+                                                                <td>
+                                                                    <p class="m-0"><?=$vendorDetails->street?></p>
+                                                                    <p class="m-0"><?=$vendorDetails->city ?>,<?=$vendorDetails->state ?> <?=$vendorDetails->zip?></p>
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="fw-bold nsm-text-primary">Website</td>
-                                                                <td><?=$vendorDetails->website?></td>
+                                                                <td><?= $vendorDetails->website != '' ? $vendorDetails->website : 'Not Specified'; ?></td>
                                                             </tr>
                                                         </tbody>
-                                                    </table>
-                                                    <div class="attachments-container w-75">
+                                                    </table>                                                    
+                                                </div>
+                                                <div class="col-12 col-md-4">
+                                                    <h3 class="custom-header">Attachments</h3>
+                                                    <?php if( $attachments ){ ?>
+                                                        <ul class="list-attachments">
+                                                            <?php foreach($attachments as $a){ ?>
+                                                            <li>
+                                                                <a class="nsm-button primary btn-download-attachment" target="_new" href="<?= base_url('uploads/accounting/attachments/'.$a->company_id.'/'.$a->stored_name); ?>">
+                                                                    <span class="attachment-name"><i class='bx bx-link-alt'></i> <?= $a->stored_name; ?></span>
+                                                                </a>
+                                                            </li>
+                                                            <?php } ?>
+                                                        </ul>
+                                                    <?php } ?>
+
+                                                    <div class="attachments-container w-75" style="display:none;">
                                                         <label for="attachment" style="margin-right: 15px"><i class="fa fa-paperclip"></i>&nbsp;Attachment</label> 
                                                         <span>Maximum size: 20MB</span>
                                                         <div id="previewVendorAttachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
@@ -396,28 +442,7 @@
                                                             <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <div class="col-12 col-md-4">
-                                                    <table class="nsm-table">
-                                                        <tbody>
-                                                            <tr rowspan="2">
-                                                                <td class="fw-bold nsm-text-primary">Billing address</td>
-                                                                <td>
-                                                                    <p class="m-0"><?=$vendorDetails->street?></p>
-                                                                    <p class="m-0"><?=$vendorDetails->city?>,<?=$vendorDetails->state?></p>
-                                                                    <p class="m-0"><?=$vendorDetails->zip?></p>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="fw-bold nsm-text-primary">Terms</td>
-                                                                <td></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="fw-bold nsm-text-primary">Company</td>
-                                                                <td><?=$vendorDetails->company?></td>
-                                                            </tr>                                                            
-                                                        </tbody>
-                                                    </table>
+                                                    
                                                 </div>
                                             </div>
                                         </div>

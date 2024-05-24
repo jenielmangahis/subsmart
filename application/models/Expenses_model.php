@@ -376,6 +376,7 @@ class Expenses_model extends MY_Model
     }
 
     public function addCheck($new_data){
+
         // $type = "Check";
         // $trans_id = $this->transaction($type,false,null,$new_data['total']);
         // $qry = $this->db->get_where('accounting_check',array(
@@ -401,6 +402,7 @@ class Expenses_model extends MY_Model
         // }else{
         //     return false;
         // }
+        
         $vendor = $this->db->insert('accounting_check', $new_data);
         $insert_id = $this->db->insert_id();
 

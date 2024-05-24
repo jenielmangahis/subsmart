@@ -17,7 +17,14 @@ class Workstatus extends MY_Controller {
 	}
 
 	public function index()
-	{
+	{		
+		add_css(array(
+            'assets/css/jquery.minicolors.css'
+        ));
+
+        add_footer_js(array(
+            'assets/js/jquery.minicolors.js'
+        ));
 		$this->page_data['page']->title = 'Workorder Status';
         $this->page_data['page']->parent = 'Sales';
 
@@ -50,7 +57,7 @@ class Workstatus extends MY_Controller {
             'assets/js/bootstrap-colorpicker.min.js'
         ));
 
-		$this->load->view('workstatus/add', $this->page_data);
+		$this->load->view('v2/pages/workstatus/add', $this->page_data);
 	}
 
 
@@ -172,6 +179,26 @@ class Workstatus extends MY_Controller {
 
         echo json_encode($json_data);
     }
+
+	public function ajax_delete_workorder_status()
+	{
+		$is_success = 0;
+		$msg = 'Cannot find data';
+
+		$post       = $this->input->post();
+		$company_id =  logged('company_id');
+        $workorderStatus = $this->Workstatus_model->getWorkStatusByIdAndCompanyId($post['wtid'], $company_id);
+        if( $workorderStatus ){
+        	$this->Workstatus_model->delete($post['wtid']);		
+
+			$is_success = 1;
+			$msg = '';
+		}
+
+		$json_data  = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
+	}
 
 }
 

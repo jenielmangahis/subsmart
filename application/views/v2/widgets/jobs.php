@@ -21,7 +21,23 @@
             </div>
         </div>
     </div>
-    <div class="nsm-card-content d-flex justify-content-center flex-column align-items-center">
+    <div class="nsm-card-content">
+        <div class="row mb-4 mt-2">
+            <div class="col-4">
+                <select class="nsm-field form-select" name="filter_date" id="widget-service-ticket-filter-date">   
+                    <option value="custom">Custom</option>
+                    <option value="this-month">This month</option>
+                    <option value="this-quarter">This quarter</option>
+                    <option value="this-year" selected="">This year</option>
+                </select>
+            </div>
+            <div class="col-4">
+                <input type="text" id="widget-service-ticket-filter-from" class="nsm-field form-control widget-service-ticket-datepicker" value="<?= date("01/Y"); ?>" />
+            </div>
+            <div class="col-4">
+                <input type="text" id="widget-service-ticket-filter-to" class="nsm-field form-control widget-service-ticket-datepicker" value="<?= date("12/Y"); ?>" required>
+            </div>
+        </div>  
         <canvas id="jobs_chart" class="nsm-chart" data-chart-type="jobs"></canvas>
     </div>
 </div>

@@ -107,6 +107,7 @@
                             <select class="nsm-field form-select" name="role" id="employee_role" required>
                                 <option value="" disabled>Select Title</option>
                                 <?php foreach ($roles as $r) : ?>
+                                    <?php var_dump($r); ?>
                                     <option value="<?= $r->id; ?>"><?= $r->title; ?></option>
                                 <?php endforeach; ?>
                             </select>
