@@ -7,6 +7,7 @@ class Employees extends MY_Controller
     public function __construct()
     {
         parent::__construct();
+        $this->load->library('session');
         $this->checkLogin();
         $this->load->model('PayScale_model');
         $this->load->model('accounting_customers_model');
@@ -179,6 +180,7 @@ class Employees extends MY_Controller
         $cid   = logged('company_id');
         $roles = $this->users_model->getRoles($cid);
         $this->page_data['roles'] = $roles;
+        $this->session->set_userdata('roles', $roles);
         $this->page_data['nextPayDate'] = $nextPayDate;
         $this->page_data['nextPayPeriodEnd'] = date('m/d/Y', strtotime("wednesday"));
         $this->page_data['nextPayday'] = date('m/d/Y', strtotime("friday"));
@@ -1288,6 +1290,8 @@ class Employees extends MY_Controller
         $accounts = array_filter($accounts, function ($v, $k) {
             return $v->account_id === 3 || $v->account_id === "3";
         }, ARRAY_FILTER_USE_BOTH);
+        $roles = $this->session->userdata('roles');
+        $this->page_data['roles'] = $roles;
         $this->page_data['bonusPayType'] = $bonusPayType;
         $this->page_data['accounts'] = $accounts;
         $this->page_data['payDetails'] = $this->users_model->getActiveEmployeePayDetails();
@@ -1383,29 +1387,43 @@ class Employees extends MY_Controller
         $this->page_data['payPeriod'] = $postData['pay_date'] . ' to ' . $postData['pay_date'];
         $this->page_data['payDate'] = $payDate;
 
-        $employees = [];
-        $totalPay = $totalBonus = $totalTaxes = $totalNetPay = $totalFuta = $totalSUI = 0;
+        $employeesData = [];
 
         foreach ($postData['employees'] as $key => $empId) {
+            $employeesData[$empId] = [
+                'id' => $empId,
+                'bonus' => $postData['bonus'][$key]
+            ];
+        }
+        
+        $employees = [];
+        $employeeData = [];
+        
+        foreach ($employeesData as $data) {
+            $empId = $data['id'];
+            $bonus = $data['bonus'];
+        
             $emp = $this->users_model->getUser($empId);
             $empPayDetails = $this->users_model->getEmployeePayDetails($emp->id);
-
-            $empTotalPay = floatval($postData['bonus'][$key]);
-
-            $empSocial = ($empTotalPay * $socialSecurity) / 100;
-            $empMedicare = ($empTotalPay * $medicare) / 100;
-            $empTax = $empSocial + $empMedicare;
-            $employeeSUI = ($empTotalPay * $sui) / 100;
-
+        
+            $empTotalPay = floatval($bonus);
+            $empTotalPay = number_format($empTotalPay, 2, '.', ',');
+        
+            $empSocial = ($empTotalPay / 100) * $socialSecurity;
+            $empSocial = number_format($empSocial, 2, '.', ',');
+            $empMedicare = ($empTotalPay / 100) * $medicare;
+            $empMedicare = number_format($empMedicare, 2, '.', ',');
+            $empTax = number_format($empSocial + $empMedicare, 2, '.', ',');
+            $employeeSUI = ($empTotalPay / 100) * $sui;
+            $employeeSUI = number_format($employeeSUI, 2, '.', ',');
+        
             if ($bonusPayType === 'net-pay') {
                 $empTotalPay += $empTax;
             }
-
+        
             $netPay = $empTotalPay - $empTax;
-
-            $employeeFUTA = $empTotalPay * $futa;
-
-            $employees[] = [
+        
+            $newEmployeeData = [
                 'id' => $emp->id,
                 'name' => $emp->LName . ', ' . $emp->FName,
                 'pay_method' => $empPayDetails->pay_method === 'direct-deposit' ? 'Direct deposit' : 'Paper check',
@@ -1413,17 +1431,30 @@ class Employees extends MY_Controller
                 'bonus' => number_format($empTotalPay, 2, '.', ','),
                 'employee_tax' => number_format($empTax, 2, '.', ','),
                 'net_pay' => number_format($netPay, 2, '.', ','),
-                'employee_futa' => number_format($employeeFUTA, 2, '.', ','),
-                'employee_sui' => number_format($employeeSUI, 2, '.', ',')
+                'employee_futa' => number_format($empTotalPay * $futa, 2, '.', ','),
+                'employee_sui' => $employeeSUI
             ];
-
-            $totalPay += $empTotalPay;
-            $totalBonus += $empTotalPay;
-            $totalTaxes += $empTax;
-            $totalNetPay += $netPay;
-            $totalFuta += $employeeFUTA;
-            $totalSUI += $employeeSUI;
+        
+            // Overwrite any existing entry for the same employee ID
+            $employeeData[$empId] = $newEmployeeData;
         }
+        
+        // Extract the values from the associative array
+        $employees = array_values($employeeData);
+        
+        
+        $totalPay = array_sum(array_column($employees, 'total_pay'));
+        $totalPay = number_format($totalPay, 2, '.', ',');
+        $totalBonus = array_sum(array_column($employees, 'bonus'));
+        $totalBonus = number_format($totalPay, 2, '.', ',');
+        $totalTaxes = array_sum(array_column($employees, 'employee_tax'));
+        $totalTaxes = number_format($totalTaxes, 2, '.', ',');
+        $totalNetPay = array_sum(array_column($employees, 'net_pay'));
+        $totalNetPay = number_format($totalNetPay, 2, '.', ',');
+        $totalFuta = array_sum(array_column($employees, 'employee_futa'));
+        $totalFuta = number_format($totalFuta, 2, '.', ',');
+        $totalSUI = array_sum(array_column($employees, 'employee_sui'));
+        $totalSUI = number_format($totalSUI, 2, '.', ',');
 
         $totalEmployerTax = $totalTaxes + $totalFuta + $totalSUI;
         $totalPayrollCost = $totalNetPay + $totalTaxes + $totalEmployerTax;

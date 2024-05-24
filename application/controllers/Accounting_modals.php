@@ -12118,15 +12118,15 @@ class Accounting_modals extends MY_Controller
                 'text' => 'All'
             ];
 
-            $choices['results'][] = [
-                'id' => 'not-specified',
-                'text' => 'Not Specified'
-            ];
+            // $choices['results'][] = [
+            //     'id' => 'not-specified',
+            //     'text' => 'Not Specified'
+            // ];
 
-            $choices['results'][] = [
-                'id' => 'specified',
-                'text' => 'Specified'
-            ];
+            // $choices['results'][] = [
+            //     'id' => 'specified',
+            //     'text' => 'Specified'
+            // ];
         }
 
         foreach ($employees as $employee) {
