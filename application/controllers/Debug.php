@@ -2733,7 +2733,12 @@ class Debug extends MYF_Controller {
                 $payment_date = date("Y-m-d", strtotime($exp->payment_date));
             }
 
-            $data = ['payment_date' => $payment_date, 'is_updated' => 1];
+            $created_at = $exp->created_at;
+            if( $created_at == '0000-00-00 00:00:00' ){
+                $created_at = NULL;
+            }            
+
+            $data = ['payment_date' => $payment_date, 'is_updated' => 1, 'created_at' => $created_at];
 
             $this->Accounting_expense->update($exp->id, $data);
 
