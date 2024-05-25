@@ -224,6 +224,7 @@ const updateTotalPay = () => {
     $('#bonus-payroll-modal #payroll-table tbody [name="bonus[]"]').each(function() {
         if (!$(this).is(':disabled')) {  
             const bonusVal = $(this).val().replace(/,/g, ''); 
+            console.log("test", bonusVal);
             if (bonusVal !== "") {
                 const bonusAmount = parseFloat(bonusVal);
                 total += bonusAmount;
@@ -293,30 +294,49 @@ $(document).on('change', '#bonus-payroll-modal #payroll-table tbody .select-one'
     updateTotalPay();
 });
 
+let total = 0.00;
+
+let bonusValues = {};
 
 $(document).on('change', '#bonus-payroll-modal #payroll-table tbody [name="bonus[]"]', function() {
-    if($(this).val() !== '') {
-        // $(this).val(formatter.format(parseFloat($(this).val())).replace('$', ''));
-        var inputVal = $(this).val();
-        var floatValue = parseFloat(inputVal);
-        if (!isNaN(floatValue)) {
-            $(this).val(floatValue.toFixed(2));
-        }
-        $(this).closest('tr').find('.total-pay').html(formatter.format($(this).val()));
+    const $this = $(this);
+    const inputValue = $this.val().trim();
+    const newFloatValue = parseFloat(inputValue);
+
+    const employeeId = $this.closest('tr').data('employee-id');
+
+    const previousBonusVal = bonusValues[employeeId] || 0;
+
+    total -= previousBonusVal;
+
+    if (!isNaN(newFloatValue)) {
+        $this.val(newFloatValue.toFixed(2));
+        $this.closest('tr').find('.total-pay').html(formatter.format(newFloatValue));
     } else {
-        $(this).closest('tr').find('.total-pay').html('$0.00');
+        $this.closest('tr').find('.total-pay').html('$0.00');
+        $this.val(''); 
     }
 
-    var total = 0.00;
-    $('#bonus-payroll-modal #payroll-table tbody [name="bonus[]"]').each(function() {
-        if($(this).val() !== "") {
-            total += parseFloat($(this).val());
-        }
+    bonusValues[employeeId] = newFloatValue;
+
+    total += newFloatValue;
+
+    const formattedTotal = formatter.format(total);
+
+    // Update the total in various places
+    const totalSelectors = [
+        '#bonus-payroll-modal #payroll-table tfoot tr:first-child td:nth-child(4)',
+        '#bonus-payroll-modal #payroll-table tfoot tr:first-child td:last-child',
+        '#bonus-payroll-modal h2.total-pay'
+    ];
+
+    totalSelectors.forEach(selector => {
+        $(selector).html(formattedTotal);
     });
 
-    $('#bonus-payroll-modal #payroll-table tfoot tr:first-child td:nth-child(4)').html(formatter.format(parseFloat(total)));
-    $('#bonus-payroll-modal #payroll-table tfoot tr:first-child td:last-child').html(formatter.format(parseFloat(total)));
-    $('#bonus-payroll-modal h2.total-pay').html(formatter.format(parseFloat(total)));
+    console.log("Total bonus:", total);
+
+    console.log("Employee ID:", employeeId);
 });
 
 $(document).on('click', '#bonus-payroll-modal #bonus-pay-select', function() {
@@ -408,6 +428,105 @@ $(document).on('click', '#bonus-payroll-modal #preview-payroll', function() {
     });
 });
 
+
+// $(document).on('click', '#bonus-payroll-modal #preview-payroll', function() {
+//     var el = $(this);
+//     var parent = el.parent();
+//     payrollForm = $('#bonus-payroll-modal .modal-body').html();
+
+//     for (const pair of payrollFormData.entries()) {
+//         payrollFormData.delete(pair[0]);
+//     }
+
+//     payrollFormData.append('pay_from_account', $('#bonus-payroll-modal #bank-account').val());
+//     payrollFormData.append('pay_date', $('#bonus-payroll-modal #payDate').val());
+
+
+//     $('#bonus-payroll-modal #payroll-table tbody tr .select-one:checked').each(function() {
+//         var row = $(this).closest('tr');
+//         var employeeId = $(this).val();
+
+//         // Check if the employee already exists in the form data
+//         var existingEmployeeIndex = Array.from(payrollFormData.getAll('employees[]')).indexOf(employeeId);
+//         console.log("exist", existingEmployeeIndex);
+//         // If the employee already exists, update the bonus value; otherwise, append it
+//         if (existingEmployeeIndex !== -1) {
+//             // Update the bonus value for the existing employee
+//             payrollFormData.set('bonus[]', row.find('[name="bonus[]"]').val());
+//             payrollFormData.set('memo[]', row.find('[name="memo[]"]').val());
+//         } else {
+//             // Append the new bonus value for the new employee
+//             payrollFormData.append('employees[]', employeeId);
+//             payrollFormData.append('bonus[]', row.find('[name="bonus[]"]').val());
+//             payrollFormData.append('memo[]', row.find('[name="memo[]"]').val());
+//         }
+//     });
+
+
+//     $.ajax({
+//         url: base_url + '/accounting/employees/generate-bonus-payroll/' + bonusPayType,
+//         data: payrollFormData,
+//         type: 'post',
+//         processData: false,
+//         contentType: false,
+//         success: function(res) {
+//             $('div#bonus-payroll-modal div.modal-body').html(res);
+
+//             var chartHeight = $('div#bonus-payroll-modal div.modal-body div#bonusPayrollChart').parent().prev().height();
+//             var chartWidth = $('div#bonus-payroll-modal div.modal-body div#bonusPayrollChart').parent().width();
+
+//             $('div#bonus-payroll-modal div#bonusPayrollChart').height(chartHeight);
+//             $('div#bonus-payroll-modal div#bonusPayrollChart').width(chartWidth);
+
+//             var payrollCost = $('div#bonus-payroll-modal #total-payroll-cost').html().replace('$', '');
+//             var totalNetPay = $('div#bonus-payroll-modal #total-net-pay').html().replace('$', '');
+//             var employeeTax = $('div#bonus-payroll-modal #total-employee-tax').html().replace('$', '');
+//             var employerTax = $('div#bonus-payroll-modal #total-employer-tax').html().replace('$', '');
+
+//             var netPayPercent = parseFloat((parseFloat(totalNetPay) / parseFloat(payrollCost)) * 100).toFixed(2);
+//             var employeeTaxPercent = parseFloat((parseFloat(employeeTax) / parseFloat(payrollCost)) * 100).toFixed(2);
+//             var employerTaxPercent = parseFloat((parseFloat(employerTax) / parseFloat(payrollCost)) * 100).toFixed(2);
+
+//             new Chart('bonusPayrollChart', {
+//                 type: 'doughnut',
+//                 data: {
+//                     labels: ['Net Pay', 'Employee', 'Employer'],
+//                     datasets: [{
+//                         label: 'Payroll',
+//                         data: [netPayPercent, employeeTaxPercent, employerTaxPercent],
+//                         backgroundColor: [
+//                             'rgba(255, 99, 132, 0.2)',
+//                             'rgba(75, 192, 192, 0.2)',
+//                             'rgba(54, 162, 235, 0.2)'
+//                           ],
+//                           borderColor: [
+//                             'rgba(255, 99, 132, 1)',
+//                             'rgba(75, 192, 192, 1)',
+//                             'rgba(54, 162, 235, 1)',
+//                           ],
+//                           borderWidth: 1
+//                     }]
+//                 },
+//                 options: {
+//                     responsive: true,
+//                     plugins: {
+//                       legend: {
+//                         position: 'bottom',
+//                       },
+//                     },
+//                     aspectRatio: 1.5,
+//                   }
+//             });
+
+//             el.remove();
+//             parent.prepend(`<button type="submit" class="nsm-button success">Submit Payroll</button>`);
+//             $('#bonus-payroll-modal #bonus-pay-select').html('Back');
+//             $('#bonus-payroll-modal #bonus-pay-select').removeAttr('data-bs-dismiss');
+//             $('#bonus-payroll-modal #bonus-pay-select').attr('id', 'back-payroll-form');
+//         }
+//     });
+// });
+
 $(document).on('click', '#bonus-payroll-modal #back-payroll-form', function() {
     $('#bonus-payroll-modal .modal-body').html(payrollForm);
 
@@ -417,14 +536,14 @@ $(document).on('click', '#bonus-payroll-modal #back-payroll-form', function() {
     var employees = payrollFormData.getAll('employees[]');
 
     $('#bonus-payroll-modal #payroll-table tr td .select-one').each(function() {
-        if(employees.includes($(this).val())) {
+        if (employees.includes($(this).val())) {
             $(this).prop('checked', true);
         } else {
             $(this).prop('checked', false);
         }
     });
 
-    if(employees.length === $('#bonus-payroll-modal #payroll-table tr td .select-one').length) {
+    if (employees.length === $('#bonus-payroll-modal #payroll-table tr td .select-one').length) {
         $('#bonus-payroll-modal #payroll-table thead .select-all').prop('checked', true);
     } else {
         $('#bonus-payroll-modal #payroll-table thead .select-all').prop('checked', false);
@@ -432,10 +551,19 @@ $(document).on('click', '#bonus-payroll-modal #back-payroll-form', function() {
 
     var bonus = payrollFormData.getAll('bonus[]');
     var memos = payrollFormData.getAll('memo[]');
-    for(i = 0; i < memos.length; i++)
-    {
-        $(`#bonus-payroll-modal #payroll-table tr td .select-one[value="${employees[i]}"]`).closest('tr').find('input[name="bonus[]"]').val(bonus[i]);
-        $(`#bonus-payroll-modal #payroll-table tr td .select-one[value="${employees[i]}"]`).closest('tr').find('input[name="memo[]"]').val(memos[i]);
+    for (var i = 0; i < memos.length; i++) {
+        var employeeId = employees[i];
+        var bonusValue = bonus[i];
+        var memoValue = memos[i];
+
+        var $row = $(`#bonus-payroll-modal #payroll-table tr td .select-one[value="${employeeId}"]`).closest('tr');
+        $row.find('input[name="bonus[]"]').val(bonusValue);
+        $row.find('input[name="memo[]"]').val(memoValue);
+
+        // Log the values of the current row
+        console.log(`Row for employee ID: ${employeeId}`);
+        console.log(`Bonus: ${bonusValue}`);
+        console.log(`Memo: ${memoValue}`);
     }
 
     $(this).parent().html('<button type="button" class="nsm-button primary" id="bonus-pay-select">Back</button>');
@@ -453,7 +581,7 @@ $(document).on('click', '#bonus-payroll-modal #back-payroll-form', function() {
                     type: 'public',
                     field: 'bank-account',
                     modal: 'bonus-payroll-modal'
-                }
+                };
 
                 // Query parameters will be ?search=[term]&type=public&field=[type]
                 return query;
@@ -464,6 +592,7 @@ $(document).on('click', '#bonus-payroll-modal #back-payroll-form', function() {
         dropdownParent: $('#bonus-payroll-modal')
     });
 });
+
 
 $('#commission-payroll-modal .modal-body select:not(#bank-account)').select2({
     minimumResultsForSearch: -1,

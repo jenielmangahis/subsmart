@@ -619,6 +619,12 @@ class Contractors extends MY_Controller {
     {
         $correspondingAcc = $this->chart_of_accounts_model->getById($this->input->post('corresponding_account'));
 
+        $contractors  = $this->input->post('contractor');
+
+        $unique_contractors = isset($contractors) ? array_unique($contractors) : [];
+        $total_amount = $this->input->post('total_pay');
+
+
         if($this->input->post('contractor')) {
             $html = '<div class="row" style="min-height: 100%">
                 <div class="col-12">
@@ -651,18 +657,25 @@ class Contractors extends MY_Controller {
                                     </tr>
                                 </thead>
                                 <tbody>';
-                                foreach($this->input->post('contractor') as $index => $contractorId) {
-                                    $contractor = $this->vendors_model->get_contractor($contractorId);
-                                    $amount = $this->input->post('amount[]')[$index];
+                                //if(isset($unique_contractors)) {
+                                    //foreach($this->input->post('contractor') as $index => $contractorId) {
+                                    foreach($unique_contractors as $index => $contractorId) {
+                                        $contractor = $this->vendors_model->get_contractor($contractorId);
+                                        $amount = $this->input->post('amount[]')[$index];
+    
+                                        //if(isset($total_amount[$index]) && $total_amount[$index] > 0 ) {
+                                            $html .= '<tr>
+                                                <td>'.$contractor->display_name.'</td>
+                                                <td>Paper check</td>
+                                                <td></td>
+                                                <td class="text-end">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $amount)), 2)).'</td>
+                                                <td class="text-end">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $amount)), 2)).'</td>
+                                            </tr>';
+                                        //}
+    
+                                    }
+                                //}
 
-                                    $html .= '<tr>
-                                        <td>'.$contractor->display_name.'</td>
-                                        <td>Paper check</td>
-                                        <td></td>
-                                        <td class="text-end">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $amount)), 2)).'</td>
-                                        <td class="text-end">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $amount)), 2)).'</td>
-                                    </tr>';
-                                }
                                 $html .= '</tbody>
                                 <tfoot>
                                     <tr>

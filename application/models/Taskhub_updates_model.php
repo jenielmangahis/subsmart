@@ -10,13 +10,6 @@ class Taskhub_updates_model extends MY_Model {
 
     public function getAllActivityByTaskId($task_id, $limit = 15)
     {
-        /*$this->db->select('*');
-        $this->db->from($this->table);
-        $this->db->where('task_id', $task_id);
-        $this->db->order_by('update_id', 'DESC');
-        $this->db->limit($limit);
-        $query = $this->db->get();*/
-
 		$this->db->select('tasks_updates.*, users.FName, users.LName');
 		$this->db->join('users', 'tasks_updates.performed_by = users.id','left');
         $this->db->from($this->table);
