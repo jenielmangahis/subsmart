@@ -2680,6 +2680,17 @@ class Debug extends MYF_Controller {
         echo 'Total Updated :' . $total_updated;
     }
 
+    public function geoApiGetLocation()
+    {
+        $url = 'https://api.geoapify.com/v1/geocode/reverse?lat=14.2901248&lon=121.1072512&lang=fr&apiKey=41ddeb87ff654af488b283ba54ba576f';
+        $data = json_decode(file_get_contents($url), true);
+        // echo "<pre>";
+        // print_r($data);        
+        $address  = $data['features'][0]['properties']['formatted'];
+        $district = $data['features'][0]['properties']['district'];
+        echo $address . ' ' . $district;
+    }
+
     public function fixInvoicesData()
     {
         $this->load->model('Invoice_model');
@@ -2702,6 +2713,29 @@ class Debug extends MYF_Controller {
                 'date_issued' => $date_issued
             ];
             $this->Invoice_model->update($invoice->id, $data);
+
+            $total_updated++;
+        }
+
+        echo 'Total Updated :' . $total_updated;
+    }
+
+    public function fixAccountingExpensesData()
+    {
+        $this->load->model('Accounting_expense');
+        
+        $total_updated = 0;
+        $limit = 500;
+        $expenses = $this->Accounting_expense->getAll($limit);
+        foreach($expenses as $exp){
+            $payment_date = '1970-01-01';
+            if(strtotime($exp->payment_date)){
+                $payment_date = date("Y-m-d", strtotime($exp->payment_date));
+            }
+
+            $data = ['payment_date' => $payment_date, 'is_updated' => 1];
+
+            $this->Accounting_expense->update($exp->id, $data);
 
             $total_updated++;
         }

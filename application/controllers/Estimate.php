@@ -2432,7 +2432,7 @@ class Estimate extends MY_Controller
             $this->page_data['items_dataOP2'] = $this->estimate_model->getItemlistByIDOption2($id);
 
             $this->page_data['items_dataBD1'] = $this->estimate_model->getItemlistByIDBundle1($id);
-            $this->page_data['items_dataBD2'] = $this->estimate_model->getItemlistByIDBundle2($id);
+            $this->page_data['items_dataBD2'] = $this->estimate_model->getItemlistByIDBundle2($id);            
             $this->load->view('estimate/view', $this->page_data);
         } else {
             $this->session->set_flashdata('message', 'Record not found.');
@@ -3036,5 +3036,59 @@ class Estimate extends MY_Controller
         $json_data = $this->sendEstimateToCustomer(
             $id, $wo_id, $urlLogo
         );
+    }
+
+    public function ajax_update_next_reminder_date()
+    {
+        $is_success = 0;
+        $msg = 'Cannot save settings';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        $estimate = $this->estimate_model->getById($post['estimateId']);
+        if( $estimate && $estimate->company_id == $company_id ){
+            $next_remind_date = date("Y-m-d", strtotime("+14 days"));
+            $data = ['next_remind_date' => $next_remind_date];
+            $this->estimate_model->update($estimate->id, $data);
+
+            $is_success = 1;
+            $msg = '';
+        }        
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
+    }
+
+    public function ajax_update_estimate_status()
+    {
+        $is_success = 0;
+        $msg = 'Cannot save settings';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        $estimate = $this->estimate_model->getById($post['estiamteId']);
+        if( $estimate && $estimate->company_id == $company_id ){
+            $status = '';
+            if( $post['estimateStatus'] == 'Submitted' ){
+                $status = 'Submitted';
+            }elseif( $post['estimateStatus'] == 'Declined' ){
+                $status = 'Declined By Customer';
+            }elseif( $post['estimateStatus'] == 'Pending' ){
+                $status = 'Pending';
+            }
+            
+            if( $status != '' ){
+                $data = ['status' => $status];
+                $this->estimate_model->update($estimate->id, $data);
+
+                $is_success = 1;
+                $msg = '';
+            }
+        }        
+
+        $json_data = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($json_data);
     }
 }
