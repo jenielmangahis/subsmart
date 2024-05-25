@@ -1071,6 +1071,26 @@ class Jobs_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getAllJobsByCompanyIdAndDateRange($cid, $date_range = array())
+    {
+        $this->db->select('jobs.*, COALESCE(invoices.grand_total,0) AS amount');
+        $this->db->from($this->table);   
+        $this->db->join('invoices', 'jobs.id = invoices.job_id');
+        $this->db->where('jobs.company_id', $cid);
+
+        if( $date_range ){
+            $date_start = $date_range['from'] . ' 00:00:00';
+            $date_end   = $date_range['to'] . ' 23:59:59';
+            $this->db->where('jobs.date_created >=', $date_start);
+            $this->db->where('jobs.date_created <=', $date_end);
+        }
+
+        $this->db->order_by('jobs.id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 /* End of file Jobs_model.php */
 /* Location: ./application/models/Jobs_model.php */
