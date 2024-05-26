@@ -5,7 +5,7 @@
                 <span>Sales Tax</span>
             </a>
         </li>
-        <li class="active" onclick="location.href='<?= base_url('accounting/payrollTax') ?>'">
+        <li class="" onclick="location.href='<?= base_url('accounting/payrollTax') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
                 <span>Payroll Tax</span>
             </a>
