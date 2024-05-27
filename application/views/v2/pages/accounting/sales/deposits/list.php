@@ -80,14 +80,15 @@
                                                     ?>
                                                 </small>
                                                 <small class="help help-sm float-end text-end">Net amount: <?=str_replace('$-', '-$', '$'.number_format($deposit['total'] - $deposit['fees'], 2))?> </small>
-                                                <br>
+                                                <!-- <br>
                                                 <small class="help help-sm">Deposit ID: 6095509905</small>
-                                                <small class="help help-sm float-end text-end">REGIONS BANK (...1234) </small>
+                                                <small class="help help-sm float-end text-end">REGIONS BANK (...1234) </small> -->
                                                 <br>
 
                                                 <table class="nsm-table">
                                                     <thead>
                                                         <td>Customer</td>
+                                                        <td>Account Name</td>
                                                         <td>Payment Method</td>
                                                         <td>Reference No.</td>
                                                         <td>nSmarTrac Record</td>
@@ -97,11 +98,18 @@
                                                     <tbody>
                                                         <?php foreach($deposit['invoices'] as $invoice) : ?>
                                                         <tr>
-                                                            <td><?=$invoice['customer_name']?></td>
+                                                            <td><?=$invoice['customer_name'] != '' ? $invoice['customer_name'] : '---';?></td>
+                                                            <td><?=$invoice['account_name']?></td>
                                                             <td><?=$invoice['payment_method']?></td>
-                                                            <td><?=$invoice['ref_no']?></td>
-                                                            <td><a target="_blank" href="<?php echo base_url('invoice/genview/' . $invoice['invoice_id']) ?>">Invoice</a></td>
-                                                            <td>Tip: <?=str_replace('$-', '-$', '$'.number_format($invoice['fees'],2))?></td>
+                                                            <td><?=$invoice['ref_no'] != '' ? $invoice['ref_no'] : 'Not Specified'?></td>
+                                                            <td>
+                                                                <?php if( $invoice['type'] == 'invoice' ){ ?>
+                                                                    <a target ="_blank" href="<?php echo base_url('invoice/genview/' . $invoice['invoice_id']) ?>">Invoice</a>
+                                                                <?php }else{ ?>
+                                                                    Linked Bank Account
+                                                                <?php } ?>
+                                                            </td>
+                                                            <td><?=str_replace('$-', '-$', '$'.number_format($invoice['fees'],2))?></td>
                                                             <td><?=str_replace('$-', '-$', '$'.number_format($invoice['amount'],2))?></td>
                                                         </tr>
                                                         <?php endforeach; ?>
