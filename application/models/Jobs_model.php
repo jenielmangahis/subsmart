@@ -164,14 +164,17 @@ class Jobs_model extends MY_Model
     }
 
     public function getTotalSalesBySalesRepresentative($employee_id , $date_range = []){        
-        $this->db->select('COALESCE(SUM(job_payments.amount),0)AS total_sales');
-        $this->db->from($this->table_job_payments);
-        $this->db->join('jobs', 'job_payments.job_id = jobs.id', 'left');        
+        $this->db->select('COALESCE(SUM(invoices.grand_total),0)AS total_sales');
+        $this->db->from($this->table);
+        $this->db->join('invoices', 'jobs.id = invoices.job_id');        
         $this->db->where("jobs.employee_id", $employee_id);
 
         if( !empty($date_range) ){
-            $this->db->where("job_payments.date_created >= ", $date_range['from']);
-            $this->db->where("job_payments.date_created <= ", $date_range['to']);
+            $date_start = $date_range['from'] . ' 00:00:00';
+            $date_end   = $date_range['to'] . ' 23:59:59';
+
+            $this->db->where("invoices.date_created >= ", $date_start);
+            $this->db->where("invoices.date_created <= ", $date_end);
         }
 
         $query = $this->db->get();

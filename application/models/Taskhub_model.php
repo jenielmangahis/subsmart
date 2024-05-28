@@ -42,7 +42,7 @@ class Taskhub_model extends MY_Model {
         return $query->row();
     }
 
-    public function getAllByCompanyId($company_id)
+    public function getAllByCompanyIdOld($company_id)
     {
         $id = $user_id;
         $this->db->select('tasks.*, tasks_status.status_text, tasks_status.status_color, CONCAT(acs_profile.first_name," ",acs_profile.last_name)AS customer_name');
@@ -56,7 +56,7 @@ class Taskhub_model extends MY_Model {
         return $query->result();
     }
 
-    public function getAllByCompanyIdAndStatus($company_id, $status_id)
+    public function getAllByCompanyIdAndStatusOld($company_id, $status_id)
     {
         $id = $user_id;
         $this->db->select('tasks.*, tasks_status.status_text, tasks_status.status_color, CONCAT(acs_profile.first_name," ",acs_profile.last_name)AS customer_name');
@@ -272,6 +272,76 @@ class Taskhub_model extends MY_Model {
         ];
 
         return $options;
+    }
+
+    public function getAllByCompanyId($cid, $date_range = [])
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $cid);
+
+        if( !empty($date_range) ){
+            $date_start = $date_range['from'] . ' 00:00:00';
+            $date_end   = $date_range['to'] . ' 23:59:59';
+            $this->db->where("date_created >= ", $date_start);
+            $this->db->where("date_created <= ", $date_end);
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllByCompanyIdAndPriority($cid, $priority, $date_range = [])
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $cid);
+        $this->db->where('priority', $priority);
+
+        if( !empty($date_range) ){
+            $date_start = $date_range['from'] . ' 00:00:00';
+            $date_end   = $date_range['to'] . ' 23:59:59';
+            $this->db->where("date_created >= ", $date_start);
+            $this->db->where("date_created <= ", $date_end);
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllOngoingTasksByCompanyId($cid, $date_range = [])
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $cid);
+        $this->db->where('status !=', 'Done');
+        $this->db->where('status !=', 'Closed');
+
+        if( !empty($date_range) ){
+            $this->db->where("date_due >= ", $date_range['from']);
+            $this->db->where("date_due <= ", $date_range['to']);
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllByCompanyIdAndStatus($cid, $status, $date_range = [])
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $cid);
+        $this->db->where('status', $status);
+
+        if( !empty($date_range) ){
+            $date_start = $date_range['from'] . ' 00:00:00';
+            $date_end   = $date_range['to'] . ' 23:59:59';
+            $this->db->where("date_created >= ", $date_start);
+            $this->db->where("date_created <= ", $date_end);
+        }
+
+        $query = $this->db->get();
+        return $query->result();
     }
         
 }
