@@ -375,7 +375,12 @@ class Dashboard extends Widgets
         $this->page_data['expired_estimates'] = $this->estimate_model->getExpiredEstimatesByCompanyId($companyId);
         $this->page_data['leads'] = count($this->customer_ad_model->get_leads_data());
 
-      
+        $payments = $this->invoice_model->get_company_payments(logged('company_id'));
+        $deposits = 0;
+        foreach ($payments as $payment) {
+            $deposits += floatval($payment->invoice_amount);
+        }
+        $this->page_data['deposits'] = $deposits;
 
         // $this->load->view('dashboard', $this->page_data);
         $this->load->view('dashboard_v2', $this->page_data);
@@ -416,7 +421,6 @@ class Dashboard extends Widgets
 
     private function get_transactions($filters, $for = 'table')
     {
-        
         $expenses = $this->expenses_model->get_company_expense_transactions($filters);
         $checks = $this->expenses_model->get_company_check_transactions($filters);
         $purchOrders = $this->expenses_model->get_company_purch_order_transactions($filters);
@@ -790,6 +794,18 @@ class Dashboard extends Widgets
                 $this->output->set_output(json_encode(['first' => null, 'second' => null, 'unpaid' => $resultInvoice]));
 
                 break;
+            case 'income':
+                $income_query = [
+                    'where' => ['company_id' => logged('company_id'),  'DATE(payment_date)  >=' => date('Y-m-d', strtotime($date_from)),
+                    'DATE(payment_date) <=' => date('Y-m-d', strtotime($date_to))],
+                    'table' => 'payment_records',
+                    'select' => '*',
+                ];
+                $income = $this->general->get_data_with_param($income_query);
+
+                $this->output->set_output(json_encode(['first' => null, 'second' => null, 'income' => $income]));
+
+                break;
         }
     }
 
@@ -1018,15 +1034,15 @@ class Dashboard extends Widgets
         $this->load->model('Invoice_model');
 
         $cid = logged('company_id');
-        //$date_from = date('Y-m-d', strtotime('last monday'));
+        // $date_from = date('Y-m-d', strtotime('last monday'));
         $date_from = '2023-11-10';
         $date_to = date('Y-m-d', strtotime('sunday this week'));
 
         $payment = $this->event_model->getTodayStats(); // fetch current data sales on jobs , amount is on job_payments.amount
         $paymentInvoices = $this->event_model->getCollected(); // fetch current data sales on jobs , amount is on job_payments.amount
-        //$jobsDone = $this->event_model->getAllJobsByCompanyIdAndDateIssued($cid, ['from' => $date_from, 'to' => $date_to]);
-        
-        $jobsDone    = $this->Jobs_model->getAllCompletedJobsByCompanyIdAndDateRange($cid, ['from' => $date_from, 'to' => $date_to]);
+        // $jobsDone = $this->event_model->getAllJobsByCompanyIdAndDateIssued($cid, ['from' => $date_from, 'to' => $date_to]);
+
+        $jobsDone = $this->Jobs_model->getAllCompletedJobsByCompanyIdAndDateRange($cid, ['from' => $date_from, 'to' => $date_to]);
         $ticketsDone = $this->Tickets_model->getAllCompletedTicketsByCompanyIdAndDateRange($cid, ['from' => $date_from, 'to' => $date_to]);
         $total_jobs_done = count($jobsDone) + count($ticketsDone);
 
@@ -1035,7 +1051,7 @@ class Dashboard extends Widgets
 
         $invoicePaid = $this->Invoice_model->getCompanyTotalAmountPaidInvoices($cid, ['from' => $date_from, 'to' => $date_to]);
         $total_amount_paid = $invoicePaid->total_paid;
- 
+
         $collectedAccounts = $this->event_model->getAccountSituation('Collections'); // collection account count, if Collection Date Office Info is set
         $lostAccounts = $this->event_model->getAccountSituation('Cancelled'); // lost account count, if Cancel Date Office Info is set
         $onlineBookingCount = $this->event_model->getLeadSource('Online Booking');
@@ -1329,6 +1345,13 @@ class Dashboard extends Widgets
         exit(json_encode($data_arr));
     }
 
+    public function income_thumbnail_graph()
+    {
+        $income = $this->invoice_model->get_company_payments(logged('company_id'));
+        $data_arr = ['Success' => true, 'income' => $income];
+        exit(json_encode($data_arr));
+    }
+
     public function unpaid_invoices_graph()
     {
         $CI = &get_instance();
@@ -1371,7 +1394,6 @@ class Dashboard extends Widgets
             'start-date' => date('Y-m-d', strtotime(date('m/d/Y').' -365 days')),
             'end-date' => date('Y-m-d'),
         ];
-
 
         $bills = $this->get_transactions($accounting_expense_filters);
         $data_arr = ['Success' => true, 'accounting_expense' => $bills];

@@ -78,7 +78,7 @@
                         </div>
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span id="selectedSortOption">Sort by Date Issued: Newest </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span id="selectedSortOption">Sort by <?= $sort_selected; ?> </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
                                 <li><a class="dropdown-item" href="<?php echo base_url('/accounting/workorder') ?>?order=date-issued-desc">Date Issued: Newest</a></li>
@@ -200,7 +200,7 @@
                                                                             $workorder->work_order_number ?></td>
                                     <td><?php echo date('M d, Y', strtotime($workorder->date_created)) ?></td>
                                     <td>
-                                        <a href="<?php echo base_url('customer/view/' . $workorder->customer_id) ?>" class="nsm-link">
+                                        <a href="<?php echo base_url('customer/preview_/' . $workorder->customer_id) ?>" class="nsm-link">
                                             <?php
                                             //echo $workorder->first_name . ' ' .  $workorder->middle_name . ' ' . $workorder->last_name; 
                                             if (empty($workorder->first_name)) {

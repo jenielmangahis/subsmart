@@ -159,7 +159,13 @@
                                                 </label>
                                             </div>
                                             <div class="col-12 col-md-6">
-                                                <?= date("d-M-Y", strtotime($client->next_billing_date)); ?>
+                                                <?php $exempted_company_ids = exempted_company_ids(); ?>
+                                                <?php if( in_array($client->id, $exempted_company_ids) ){ ?>
+                                                    <span><b>Included in Exempted Companies - No renewal</b></span>
+                                                <?php }else{ ?>
+                                                    <?= date("d-M-Y", strtotime($client->next_billing_date)); ?>
+                                                <?php } ?>
+                                                
                                             </div>
                                             <div class="col-12 col-md-6">
                                                 <label class="content-title">Recurring Payments</label>

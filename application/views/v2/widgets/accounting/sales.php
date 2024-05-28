@@ -62,7 +62,7 @@ $(function(){
             responsive: true,
             plugins: {
                 legend: {
-                    position: 'bottom',
+                    position: 'bottom',                    
                 },
             },
             scales: {
@@ -154,11 +154,24 @@ $(function(){
                 const sales_data = {
                     labels: sales_labels,
                     datasets: [{
-                        label: 'Sales',
-                        backgroundColor: 'rgb(106, 74, 134)',
-                        borderColor: 'rgb(106, 74, 134)',
-                        data: data.chart_data,
-                    },]
+                            label: 'Sales',
+                            backgroundColor: 'rgb(106, 74, 134)',
+                            borderColor: 'rgb(106, 74, 134)',
+                            data: data.chart_data_sales,
+                        },
+                        {
+                            label: 'Jobs',
+                            backgroundColor: 'rgb(51, 153, 255)',
+                            borderColor: 'rgb(51, 153, 255)',
+                            data: data.chart_data_jobs,
+                        },
+                        {
+                            label: 'Services',
+                            backgroundColor: 'rgb(255, 102, 0)',
+                            borderColor: 'rgb(255, 102, 0)',
+                            data: data.chart_data_services,
+                        }
+                    ]
                 };
 
                 salesChart.data = sales_data;

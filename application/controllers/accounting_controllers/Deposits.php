@@ -104,22 +104,67 @@ class Deposits extends MY_Controller {
 
     public function index()
     {
-        $payments = $this->invoice_model->get_company_payments(logged('company_id'));
+        $this->load->helper(array('plaid_helper'));
+
+        $this->load->model('PlaidAccount_model');
+        $this->load->model('PlaidBankAccount_model');
+
+        $cid = logged('company_id');
+
+        $plaidBankAccounts = $this->PlaidBankAccount_model->getAllByCompanyId($cid);    
+        $plaidAccount      = $this->PlaidAccount_model->getDefaultCredentials();        
+        $payments          = $this->invoice_model->get_company_payments(logged('company_id'));
 
         $deposits = [];
         foreach($payments as $payment)
-        {
+        {            
             $invoice = $this->invoice_model->get_invoice_by_invoice_number($payment->invoice_number, logged('company_id'));
             $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
             $customerName = $customer->first_name . ' ' . $customer->last_name;
             $deposits[$payment->payment_date]['invoices'][] = [
                 'invoice_id' => $invoice->id,
                 'customer_name' => $customerName,
-                'payment_method' => $payment->payment_method,
+                'account_name' => 'N/A',
+                'payment_method' => strtoupper($payment->payment_method),
                 'ref_no' => $invoice->invoice_number,
                 'fees' => floatval($payment->invoice_tip),
-                'amount' => floatval($payment->invoice_amount)
+                'amount' => floatval($payment->invoice_amount),
+                'type' => 'invoice'
             ];
+        }    
+        
+        //Plaid        
+        if( $plaidAccount ){
+            foreach($plaidBankAccounts as $pc){            
+                try{
+                    $start_date = date('Y-m-d', strtotime("-1 week"));
+                    $end_date   = date("Y-m-d");
+
+                    $plaidTransactions = transactionGet($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $start_date, $end_date, $pc->account_id, 5);  
+                    if( $plaidTransactions && $plaidTransactions->transactions ){
+                        foreach($plaidTransactions->transactions as $transaction){
+                            $categories = [];
+                            foreach($transaction->category as $category){
+                                $categories[] = $category;
+                            }
+
+                            $payment_method = implode(" ", $categories);
+                            $deposits[$transaction->authorized_date]['invoices'][] = [
+                                'invoice_id' => 0,
+                                'customer_name' => 'N/A',
+                                'account_name' => $pc->account_name,
+                                'payment_method' => strtoupper($payment_method),
+                                'ref_no' => $transaction->transaction_id,
+                                'fees' => 0,
+                                'amount' => floatval($transaction->amount),
+                                'type' => 'api'
+                            ];
+                        }                        
+                    }
+                }catch(Exception $e){
+                    $err = $e->getMessage();
+                }
+            }
         }
 
         foreach($deposits as $date => $deposit)

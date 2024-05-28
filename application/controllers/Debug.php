@@ -1422,17 +1422,18 @@ class Debug extends MYF_Controller {
         $this->load->helper(array('plaid_helper'));
 
         $post = $this->input->post();
-
-        $client_id = '630c41bbbc22bd0014dea7b4';
-        $client_secret = 'f0b47cf4bcff50491e2f34924bd30c';
+        
+        $client_id = '62cd17c4e7bf0f001347726e';
+        $client_secret = '1c19081bc8fb40a3716dc94aac8d28';
         $client_name = 'NsmarTrac';
         $client_user_id = 'user_good';
-        $access_token = 'access-development-5ce37cf9-1695-4dd1-932d-fa6d56cca00e';
-        $account_id   = 'VepJM45qjqT6QZXbmx9AuDpgEr1ewPUn3wvB3';
+        $access_token = 'access-development-35757939-7790-4f43-b2b7-17a501e89670';
+        $account_id   = 'rwy7A4QmZrinR7Lm839pTK4j9ADYADSVmzE8K';
 
         $start_date = date('Y-m-d', strtotime("-1 week"));
         $end_date   = date("Y-m-d");
         //$balance      = balanceGet($client_id, $client_secret, $access_token, $account_id);
+        //$plaidToken        = linkTokenCreate($client_id, $client_secret, $client_user_id, $client_name);
         $plaidTransactions = transactionGet($client_id, $client_secret, $access_token, $start_date, $end_date, $account_id, 5);
         echo "<pre>";
         print_r($plaidTransactions);
@@ -2680,6 +2681,17 @@ class Debug extends MYF_Controller {
         echo 'Total Updated :' . $total_updated;
     }
 
+    public function geoApiGetLocation()
+    {
+        $url = 'https://api.geoapify.com/v1/geocode/reverse?lat=14.2901248&lon=121.1072512&lang=fr&apiKey=41ddeb87ff654af488b283ba54ba576f';
+        $data = json_decode(file_get_contents($url), true);
+        // echo "<pre>";
+        // print_r($data);        
+        $address  = $data['features'][0]['properties']['formatted'];
+        $district = $data['features'][0]['properties']['district'];
+        echo $address . ' ' . $district;
+    }
+
     public function fixInvoicesData()
     {
         $this->load->model('Invoice_model');
@@ -2707,6 +2719,78 @@ class Debug extends MYF_Controller {
         }
 
         echo 'Total Updated :' . $total_updated;
+    }
+
+    public function fixAccountingExpensesData()
+    {
+        $this->load->model('Accounting_expense');
+        
+        $total_updated = 0;
+        $limit = 500;
+        $expenses = $this->Accounting_expense->getAll($limit);
+        foreach($expenses as $exp){
+            $payment_date = '1970-01-01';
+            if(strtotime($exp->payment_date)){
+                $payment_date = date("Y-m-d", strtotime($exp->payment_date));
+            }
+
+            $created_at = $exp->created_at;
+            if( $created_at == '0000-00-00 00:00:00' ){
+                $created_at = NULL;
+            }            
+
+            $data = ['payment_date' => $payment_date, 'is_updated' => 1, 'created_at' => $created_at];
+
+            $this->Accounting_expense->update($exp->id, $data);
+
+            $total_updated++;
+        }
+
+        echo 'Total Updated :' . $total_updated;
+    }
+
+    public function plaidDeposits()
+    {
+        $this->load->helper(array('plaid_helper'));
+        
+        $this->load->model('PlaidAccount_model');
+        $this->load->model('PlaidBankAccount_model');
+        $this->load->model('PlaidErrorLogs_model');
+
+        $is_valid = 1;
+        $cid = logged('company_id');
+        $uid = logged('id');
+
+        $plaidAccounts = $this->PlaidBankAccount_model->getAllByCompanyId($cid);        
+        $plaidAccount  = $this->PlaidAccount_model->getDefaultCredentials();
+
+        if( $plaidAccount ){
+            foreach($plaidAccounts as $pc){            
+                try{
+                    $balance = balanceGet($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $pc->account_id);
+                    echo "<pre";
+                    print_r($balance);
+                    exit;
+                    
+                }catch(Exception $e){
+                    $is_valid = 0;
+                    $err_data = [
+                        'user_id' => $uid,
+                        'log_date' => date("Y-m-d H:i:s"),
+                        'log_msg' => $e->getMessage()
+                    ];
+                }         
+            }
+        }else{
+            $err_data = [
+                'user_id' => $uid,
+                'log_date' => date("Y-m-d H:i:s"),
+                'log_msg' => 'Token Error'
+            ];
+        }
+
+        echo "<pre>";
+        print_r($err_data);        
     }
 }
 /* End of file Debug.php */

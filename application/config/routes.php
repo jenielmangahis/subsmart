@@ -1190,6 +1190,8 @@ $route['estimate/view_pdf/(:num)'] = 'Estimate/pdf_estimate/$1';
 $route['estimate/print/(:num)'] = 'Estimate/print_estimate/$1';
 $route['estimate/settings'] = 'Estimate/estimate_settings';
 $route['estimate/_save_estimate_setttings'] = 'Estimate/ajax_save_estimate_setttings';
+$route['estimate/_update_next_reminder_date'] = 'Estimate/ajax_update_next_reminder_date';
+$route['estimate/_update_estimate_status'] = 'Estimate/ajax_update_estimate_status';
 
 // Credit Notes
 $route['credit_notes'] = 'Credit_Notes/index';
@@ -1726,6 +1728,7 @@ $route['widgets/_load_sales_chart'] = 'Widgets/ajax_load_sales_chart';
 $route['widgets/_load_open_estimates_chart'] = 'Widgets/ajax_load_open_estimates_chart';
 $route['widgets/_load_paid_invoices_summary'] = 'Widgets/ajax_load_paid_invoices_summary';
 $route['widgets/_load_service_ticket_chart_data'] = 'Widgets/ajax_load_service_ticket_chart_data';
+$route['widgets/_load_job_chart_data'] = 'Widgets/ajax_load_job_chart_data';
 
 //Esign
 $route['esign_v2/_tags_sections'] = 'Esign_v2/ajax_company_tags_sections';

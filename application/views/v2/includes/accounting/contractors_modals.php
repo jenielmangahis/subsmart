@@ -125,7 +125,7 @@
                                                     <label for="amount">&nbsp;</label>
                                                     <div class="input-group">
                                                         <span class="input-group-text">$</span>
-                                                        <input type="number" class="nsm-field form-control text-end" placeholder="0.00" min="0" name="amount[]" id="amount-<?=$contractor->id?>">
+                                                        <input type="number" class="nsm-field form-control text-end" required placeholder="0.00" min="0" name="amount[]" id="amount-<?=$contractor->id?>">
                                                     </div>
                                                 </td>
                                                 <td>

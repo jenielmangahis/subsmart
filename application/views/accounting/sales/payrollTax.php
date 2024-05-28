@@ -1,50 +1,46 @@
-<?php
-defined('BASEPATH') or exit('No direct script access allowed');
-include viewPath('v2/includes/header'); ?>
-<style>
-    
-element.style {
-}
-.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
-    color: #6a4a86;
-    background-color: white;
-    border: solid #6a4a86 2px;
-}
-div.disabled
-{
-  pointer-events: none;
+<?php include viewPath('v2/includes/header');  ?>
 
-  /* for "disabled" effect */
-  opacity: 0.5;
-  background: #CCC;
-}
+<style> 
+    .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+        color: #6a4a86;
+        background-color: white;
+        border: solid #6a4a86 2px;
+    }
+    div.disabled
+    {
+    pointer-events: none;
 
-.ul-class{
-    padding:1%;
-}
-.ul-class li{
-    padding:1%;
-    color:green;
-}
+    /* for "disabled" effect */
+    opacity: 0.5;
+    background: #CCC;
+    }
 
-.ul-class li a{
-    color:#0077C5;
-}
+    .ul-class{
+        padding:1%;
+    }
+    .ul-class li{
+        padding:1%;
+        color:green;
+    }
 
-.payrollTax__resources .payrollTax__spacer {
-    height: 20px;
-}
-.payrollTax__resources {
-    font-family: var(--font-family-sans-serif);
-    font-weight: 400;
-}
-.payrollTax__resourcesLink {
-    color: #055393;
-    font-weight: 500;
-}
-.payrollTax__resourcesBody {
-    color: #6b6c72;
-}
+    .ul-class li a{
+        color:#0077C5;
+    }
+
+    .payrollTax__resources .payrollTax__spacer {
+        height: 20px;
+    }
+    .payrollTax__resources {
+        font-family: var(--font-family-sans-serif);
+        font-weight: 400;
+    }
+    .payrollTax__resourcesLink {
+        color: #055393;
+        font-weight: 500;
+    }
+    .payrollTax__resourcesBody {
+        color: #6b6c72;
+    }
 </style>
 
 <template id="overdueItemTemplate">
@@ -102,53 +98,41 @@ div.disabled
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/accounting/tabs/dashboard'); ?>
+        <?php include viewPath('v2/includes/page_navigations/accounting/tabs/payroll_tax'); ?>
     </div>
-    <div class="col-6">
-        <br>
-        <nav class="nav nav-pills nav-justified">
-            <a class="nav-link" aria-current="page" href="<?=url('/accounting/salesTax')?>">Sales Tax</a>
-            <a class="nav-link active" href="<?=url('/accounting/payrollTax')?>">Payroll Tax</a>
-            <a class="nav-link" href="<?=url('/accounting/payrollTaxFillings')?>">1099 filings</a>
-        </nav>
-    <br>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/accounting/subtabs/payroll_tax_subtabs'); ?>
     </div>
-    <div class="col-12" style="padding-left:2%;">
+    <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <div class="row">
-                     <div class="col-md-12">
-                          <h3 class="page-title left" style="font-family: Sarabun, sans-serif !important;font-size: 1.75rem !important;font-weight: 600 !important;">Payroll Tax Center</h3>
-                    </div>
-                    <div class="col-md-12">
-                        <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:20px;">
-                            Go to Taxes and select Payroll Tax.<br>
-                            Select Pay Taxes.<br>
-                            Select Create payment on the tax you want to pay.<br>
-                            Select E-pay.<br>
-                            Always choose Earliest as it's the recommended date to pay taxes, then select Approve. ...<br>
-                            An e-payment confirmation window appears, select Done.
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class='bx bx-x'></i></button>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3 class="page-title left" style="font-family: Sarabun, sans-serif !important;font-size: 1.75rem !important;font-weight: 600 !important;">Payroll Tax Center</h3>
+                                </div>
+                                <div class="col-md-12">
+                                    <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:20px;">
+                                        Go to Taxes and select Payroll Tax.<br>
+                                        Select Pay Taxes.<br>
+                                        Select Create payment on the tax you want to pay.<br>
+                                        Select E-pay.<br>
+                                        Always choose Earliest as it's the recommended date to pay taxes, then select Approve. ...<br>
+                                        An e-payment confirmation window appears, select Done.
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+                
                         </div>
                     </div>
                 </div>
-                
-            <div class="payrollTax">
-                <!-- <div class="payrollTax__title">Payroll Tax Center</div> -->
-
-                <!-- <div class="payrollTax__spacer"></div> -->
-
-                <!-- <div class="payrollTaxTab">
-                    <a href="<?=url('/accounting/payrollTax')?>" class="payrollTaxTab__btn payrollTaxTab__btn--first payrollTaxTab__btn--active">Payments</a>
-                    <a href="<?=url('/accounting/payrollTaxFillings')?>" class="payrollTaxTab__btn payrollTaxTab__btn--last">Fillings</a>
-                </div> -->
-
-                <div class="payrollTax__spacer"></div>
-                <br><br>
 
                 <div class="payrollTax__title payrollTax__title--sm"><h4>Upcoming tax payments</h4></div>
-
-                <div class="payrollTax__spacer"></div>
 
                 <table class="table table-hover">
                     <template id="taxRowTemplate">
@@ -214,11 +198,8 @@ div.disabled
                             <td colspan="6">Loading...</td>
                         </tr>
                     </tbody>
-                </table>
-
-                <br><br>
-                <div class="payrollTax__spacer"></div>
-
+                </table>    
+                
                 <div class="payrollTax__resources">
                     <div class="payrollTax__title payrollTax__resourcesTitle">Payment resources</div>
 
@@ -263,14 +244,12 @@ div.disabled
                         <div><a class="payrollTax__resourcesLink" href="#">COBRA premium assistance <div class="payrollTax__resourcesNew">NEW</div></a></div>
                         <div class="payrollTax__resourcesBody">Claim a tax credit as part of the American Rescue Plan Act of 2021 (eligibility applies).</div>
                     </div>
-                </div>
-            </div>
+                </div>                
+
 
             </div>
         </div>
     </div>
 </div>
 
-
-
-<?php include viewPath('v2/includes/footer');?>
+<?php include viewPath('v2/includes/footer'); ?>

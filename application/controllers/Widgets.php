@@ -944,14 +944,18 @@ class Widgets extends MY_Controller
     public function ajax_load_sales_chart()
     {   
         $this->load->model('Invoice_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('Tickets_model');
         $this->load->model('Estimate_model');
 
         $cid  = logged('company_id');
         $year = date("Y");
-        $sales_data   = [];
-        $chart_labels = [];
-        $start_month  = explode("/", post('filter_date_from'));
-        $end_month    = explode("/", post('filter_date_to'));  
+        $sales_data    = [];
+        $jobs_data     = [];
+        $services_data = [];
+        $chart_labels  = [];
+        $start_month   = explode("/", post('filter_date_from'));
+        $end_month     = explode("/", post('filter_date_to'));  
         for( $start = $start_month[0]; $start <= $end_month[0]; $start++ ){
             $start_date = $year . '-' . $start . '-' . 1;
             $start_date = date("Y-m-d", strtotime($start_date));
@@ -964,16 +968,33 @@ class Widgets extends MY_Controller
             $date_range    = ['from' => $start_date, 'to' => $end_date];
             $totalInvoices = $this->Invoice_model->getCompanyTotalAmountInvoices($cid, $date_range);
             $totalEstimate = $this->Estimate_model->getCompanyTotalAmountEstimates($cid, $date_range);
-            $total_sales = $totalInvoices->total_amount + $totalEstimate->total_amount;
+            $total_sales   = $totalInvoices->total_amount + $totalEstimate->total_amount;
+            $sales_data[]  = number_format($total_sales, 2, '.', '');
+
+            //Jobs
+            $jobs = $this->Jobs_model->getAllJobsByCompanyIdAndDateRange($cid, $date_range);
+            $total_amount_jobs = 0;
+            foreach( $jobs as $j ){
+                $total_amount_jobs += (float) $j->amount;
+            }
+            $jobs_data[] = $total_amount_jobs;
+
+            //Service Tickets
+            $serviceTickets = $this->Tickets_model->getAllTicketsByCompanyIdAndDateRange($cid, $date_range);
+            $total_amount_services = 0;
+            foreach($serviceTickets as $st){
+                $total_amount_services += (float) $st->grandtotal;
+            }
+            $services_data[] = $total_amount_services;
             
-            $sales_data[]   = number_format($total_sales, 2, '.', '');
+            
             $chart_month    = date('F', strtotime($start_date));
             $chart_end_day  = date("t", strtotime($start_date));
             //$chart_labels[] = $chart_month . ' 01-'.$chart_end_day;
             $chart_labels[] = $chart_month;
         } 
 
-        $return = ['chart_labels' => $chart_labels, 'chart_data' => $sales_data];
+        $return = ['chart_labels' => $chart_labels, 'chart_data_sales' => $sales_data, 'chart_data_jobs' => $jobs_data, 'chart_data_services' => $services_data];
         echo json_encode($return);
     }
 
@@ -1122,5 +1143,86 @@ class Widgets extends MY_Controller
 
         $return = ['chart_labels' => $chart_labels, 'total_tickets_amount_data' => $total_tickets_amount_data, 'total_tickets_number_data' => $total_tickets_number_data];
         echo json_encode($return);
+    }
+
+    public function ajax_load_job_chart_data()
+    {
+        $this->load->model('Jobs_model');
+
+        $cid  = logged('company_id');
+        $year = date("Y");
+
+        $total_jobs_amount_data = [];
+        $total_jobs_number_data = [];
+        $chart_labels = [];
+
+        $start_month  = explode("/", post('filter_date_from'));
+        $end_month    = explode("/", post('filter_date_to'));  
+        for( $start = $start_month[0]; $start <= $end_month[0]; $start++ ){
+            $start_date = $year . '-' . $start . '-' . 1;
+            $start_date = date("Y-m-d", strtotime($start_date));
+            $end_date   = date("Y-m-t", strtotime($start_date));
+
+            //$date_range    = ['from' => $start_date, 'to' => $end_date];
+            //$totalPaidInvoices = $this->Invoice_model->getCompanyTotalAmountPaidInvoices($cid, $date_range);            
+            //$sales_data[]  = number_format($totalPaidInvoices->total_paid, 2, '.', '');
+            $total_jobs = 0;
+            $total_jobs_amount = 0;
+            $date_range    = ['from' => $start_date, 'to' => $end_date];
+            $jobs = $this->Jobs_model->getAllJobsByCompanyIdAndDateRange($cid, $date_range);
+            if( $jobs ){
+                foreach($jobs as $j){
+                    $total_jobs_amount += (float) $j->amount;
+                    $total_jobs++;
+                }
+            }
+
+            $total_jobs_amount_data[] = number_format($total_jobs_amount,2, '.', '');
+            $total_jobs_number_data[] = $total_jobs;                        
+            $chart_month    = date('F', strtotime($start_date));
+            $chart_end_day  = date("t", strtotime($start_date));
+            $chart_labels[] = $chart_month;
+        } 
+
+        $return = ['chart_labels' => $chart_labels, 'total_jobs_amount_data' => $total_jobs_amount_data, 'total_jobs_number_data' => $total_jobs_number_data];
+        echo json_encode($return);
+    }
+
+    public function ajax_load_taskhub_summary()
+    {
+        $this->load->model('Taskhub_model');
+
+        $cid  = logged('company_id');
+        $user_id = logged('id');
+
+        $date_range['from'] = date("Y-m-d");
+        $date_range['to'] = date("Y-m-d");
+        $todaysTask   = $this->Taskhub_model->getAllOngoingTasksByCompanyId($cid, $date_range);
+        $ongoingTasks = $this->Taskhub_model->getAllOngoingTasksByCompanyId($cid);
+        $sharedTasks  = $this->Taskhub_model->getAllOngoingTasksByCompanyId($cid);
+        $flaggedTasks = $this->Taskhub_model->getAllByCompanyIdAndPriority($cid, 'Urgent');
+        $completedTasks = $this->Taskhub_model->getAllByCompanyIdAndStatus($cid, 'Done');
+        $activitiesTasks = $this->Taskhub_model->getAllByCompanyId($cid);
+
+        $totalAssignedTasks = 0;
+        foreach($ongoingTasks as $task){
+            $assigned_users = json_decode($task->assigned_employee_ids);
+            foreach($assigned_users as $uid){
+                if( $uid == $user_id ){
+                    $totalAssignedTasks++;
+                }
+            }
+        }
+
+        $taskhubSummary = [
+            'todaysTask' => count($todaysTask), 
+            'sharedTasks' => count($sharedTasks), 
+            'flaggedTasks' => count($flaggedTasks),
+            'completedTasks' => count($completedTasks),
+            'totalAssignedTasks' => $totalAssignedTasks,
+            'activitiesTasks' => count($activitiesTasks)
+        ];
+
+        echo json_encode($taskhubSummary);
     }
 }

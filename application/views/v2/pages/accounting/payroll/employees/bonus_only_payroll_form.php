@@ -129,8 +129,16 @@
 <?php include viewPath('v2/includes/accounting/modal_forms/employee_modal'); ?>
 
 <script>
-    $(document).ready(function() {
-        var today = new Date().toISOString().slice(0, 10);
-        $('#payDate').val(today);
-    });
+  $(document).ready(function() {
+    var today = new Date().toISOString().slice(0, 10);
+    $('#payDate').val(today);
+    $('#pay-period-start').val(today);
+
+    // Calculate the date 15 days from today
+    var endDate = new Date();
+    endDate.setDate(endDate.getDate() + 15);
+    var formattedEndDate = endDate.toISOString().slice(0, 10);
+
+    $('#pay-period-end').val(formattedEndDate);
+});
 </script>
