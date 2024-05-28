@@ -9339,6 +9339,7 @@ class Accounting extends MY_Controller
             'assets/js/accounting/invoice/accounting.min.js',
         ]);
 
+        $this->page_data['page_uri_segment'] = $this->uri->segment(2, 0);
         $this->load->view('accounting/sales/salesTax', $this->page_data);
     }
 
@@ -9346,6 +9347,7 @@ class Accounting extends MY_Controller
     {
         add_css('assets/css/accounting/payroll/payroll.css');
         add_footer_js('assets/js/accounting/tax/payroll/payroll.js');
+        $this->page_data['page_uri_segment'] = $this->uri->segment(2, 0);
         $this->load->view('accounting/sales/payrollTax', $this->page_data);
     }
 
@@ -9353,6 +9355,7 @@ class Accounting extends MY_Controller
     {
         add_css('assets/css/accounting/payroll/payroll.css');
         add_footer_js('assets/js/accounting/tax/payroll/fillings.js');
+        $this->page_data['page_uri_segment'] = $this->uri->segment(2, 0);
         $this->load->view('accounting/sales/payrollTaxFillings', $this->page_data);
     }
 
