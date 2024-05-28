@@ -132,7 +132,7 @@ console.log("datetimepicker");
           <script type="text/javascript" src="<?php echo base_url('assets/js/v2/main.js'); ?>"></script>
           <script type="text/javascript" src="<?php echo base_url('assets/js/v2/nsm.draggable.js'); ?>"></script>
           <script type="text/javascript" src="<?php echo base_url('assets/js/v2/nsm.table.js'); ?>"></script>
-          <?php if( !$disable_clockjs ){ ?>
+          <?php if (!$disable_clockjs) { ?>
           <script src="<?php echo $url->assets; ?>js/timesheet/clock.js"></script>
           <?php } ?>
           
@@ -713,11 +713,38 @@ function loadDataFilter(from_date, to_date, table, id) {
 
                 filterUnpaidInvoicesThumbnailGraph(data['unpaid'])
             }
+            if (table == 'income') {
+                var income = data['income'];
+                var totalIncome = 0;
+                for (var x = 0; x < income.length; x++) {
+                    totalIncome += parseFloat(income[x].invoice_amount);
+                }
+
+                $(`#first_content_${id}`).html('$ '+totalIncome.toFixed(2));
+
+                filterIncomeThumbnailGraph(data['income'])
+            }
 
 
 
         }
     });
+}
+
+function filterIncomeThumbnailGraph(income) {
+    var monthlyAmounts = new Array(12).fill(0);
+
+    for (var x = 0; x < income.length; x++) {
+                var payment_date = income[x].payment_date;
+                if (payment_date) {
+                    var due = new Date(payment_date);
+                    var month = due.getMonth();
+                    monthlyAmounts[month] += parseFloat(income[x].invoice_amount);
+                }
+            }
+
+    IncomeThumbnailGraph.data.datasets[0].data = monthlyAmounts;
+    IncomeThumbnailGraph.update();
 }
 
 function filterUnpaidInvoicesThumbnailGraph(sales) {

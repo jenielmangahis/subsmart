@@ -301,25 +301,25 @@ let bonusValues = {};
 $(document).on('change', '#bonus-payroll-modal #payroll-table tbody [name="bonus[]"]', function() {
     const $this = $(this);
     const inputValue = $this.val().trim();
-    const newFloatValue = parseFloat(inputValue);
+    let newFloatValue = parseFloat(inputValue);
 
     const employeeId = $this.closest('tr').data('employee-id');
-
     const previousBonusVal = bonusValues[employeeId] || 0;
 
     total -= previousBonusVal;
 
-    if (!isNaN(newFloatValue)) {
-        $this.val(newFloatValue.toFixed(2));
+    if (!isNaN(newFloatValue) && isFinite(newFloatValue)) {
+        newFloatValue = newFloatValue.toFixed(2);
+        $this.val(newFloatValue);
         $this.closest('tr').find('.total-pay').html(formatter.format(newFloatValue));
     } else {
+        newFloatValue = 0;
         $this.closest('tr').find('.total-pay').html('$0.00');
-        $this.val(''); 
+        $this.val('');
     }
 
-    bonusValues[employeeId] = newFloatValue;
-
-    total += newFloatValue;
+    bonusValues[employeeId] = parseFloat(newFloatValue);
+    total += parseFloat(newFloatValue);
 
     const formattedTotal = formatter.format(total);
 
@@ -335,7 +335,6 @@ $(document).on('change', '#bonus-payroll-modal #payroll-table tbody [name="bonus
     });
 
     console.log("Total bonus:", total);
-
     console.log("Employee ID:", employeeId);
 });
 
@@ -354,6 +353,7 @@ $(document).on('click', '#bonus-payroll-modal #preview-payroll', function() {
     }
 
     payrollFormData.append('pay_from_account', $('#bonus-payroll-modal #bank-account').val());
+    payrollFormData.append('pay_period', $('#bonus-payroll-modal #pay-period-start').val()+'-'+$('#bonus-payroll-modal #pay-period-end').val());
     payrollFormData.append('pay_date', $('#bonus-payroll-modal #payDate').val());
 
     $('#bonus-payroll-modal #payroll-table tbody tr .select-one:checked').each(function() {
@@ -532,6 +532,27 @@ $(document).on('click', '#bonus-payroll-modal #back-payroll-form', function() {
 
     $('#bonus-payroll-modal #bank-account').val(payrollFormData.get('pay_from_account')).trigger('change');
     $('#bonus-payroll-modal #payDate').val(payrollFormData.get('pay_date'));
+   // Extract the pay period data
+        var payPeriod = payrollFormData.get('pay_period').split('-');
+
+        // Log the payPeriod array for debugging
+        console.log("test", payPeriod);
+
+        // Extract the start and end dates from the payPeriod array
+        var startYear = payPeriod[0];
+        var startMonth = payPeriod[1];
+        var startDay = payPeriod[2];
+        var endYear = payPeriod[3];
+        var endMonth = payPeriod[4];
+        var endDay = payPeriod[5];
+
+        // Format the dates as YYYY-MM-DD
+        var startDate = `${startYear}-${startMonth}-${startDay}`;
+        var endDate = `${endYear}-${endMonth}-${endDay}`;
+
+        // Set the formatted dates in the modal inputs
+        $('#bonus-payroll-modal #pay-period-start').val(startDate);
+        $('#bonus-payroll-modal #pay-period-end').val(endDate);
 
     var employees = payrollFormData.getAll('employees[]');
 
@@ -723,7 +744,7 @@ $(document).on('click', '#commission-payroll-modal #preview-payroll', function()
     });
 
     $.ajax({
-        url: `/accounting/employees/generate-commission-payroll`,
+        url: `/nsmartrac/accounting/employees/generate-commission-payroll`,
         data: payrollFormData,
         type: 'post',
         processData: false,

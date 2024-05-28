@@ -1383,8 +1383,34 @@ class Employees extends MY_Controller
         $futa = 0.006;
         $sui = 0.00;
 
+        $payPeriod = $postData['pay_period'];
+
+        if (isset($payPeriod)) {
+            $dates = explode('-', $payPeriod);
+        
+            if (count($dates) == 6) {
+
+                $startDate = $dates[0] . '-' . $dates[1] . '-' . $dates[2];
+
+                $endDate = $dates[3] . '-' . $dates[4] . '-' . $dates[5];
+            } else {
+                $startDate = '';
+                $endDate = '';
+            }
+        } else {
+            $startDate = '';
+            $endDate = '';
+        }
+        // if (count($dates) === 2) {
+            $startDate = $startDate;
+            $endDate = $endDate;
+            $formattedPayPeriod = $startDate . ' to ' . $endDate;
+        // } 
+
+        $this->page_data['payPeriod'] = $formattedPayPeriod;
+         
         $payDate = date('m/d/Y', strtotime($postData['pay_date']));
-        $this->page_data['payPeriod'] = $postData['pay_date'] . ' to ' . $postData['pay_date'];
+        // $this->page_data['payPeriod'] = $postData['pay_date'] . ' to ' . $postData['pay_date'];
         $this->page_data['payDate'] = $payDate;
 
         $employeesData = [];
@@ -1545,32 +1571,23 @@ class Employees extends MY_Controller
         if (!empty(get('employee'))) {
             $this->page_data['employee'] = new stdClass();
             $this->page_data['employee']->id = get('employee');
-            if (!in_array(get('employee'), ['all', 'not-specified', 'specified'])) {
+            
+            if (get('employee') !== 'all') {
                 $explode = explode('-', get('employee'));
-
+        
                 $employee = $this->users_model->getUserByID($explode[1]);
                 $this->page_data['employee']->name = $employee->FName . ' ' . $employee->LName;
-
+        
                 $filters = [
                     'key' => $explode[0],
                     'id' => $explode[1]
                 ];
-
+        
                 $data = array_filter($data, function ($v, $k) use ($filters) {
                     return $v['employee_id'] === $filters['id'];
                 }, ARRAY_FILTER_USE_BOTH);
             } else {
                 $this->page_data['employee']->name = ucwords(str_replace('-', ' ', get('employee')));
-
-                if (get('employee') === 'not-specified') {
-                    $data = array_filter($data, function ($v, $k) {
-                        return empty($v['employee_id']);
-                    }, ARRAY_FILTER_USE_BOTH);
-                } else {
-                    $data = array_filter($data, function ($v, $k) {
-                        return !empty($v['employee_id']);
-                    }, ARRAY_FILTER_USE_BOTH);
-                }
             }
         }
 

@@ -1186,6 +1186,62 @@ fetch('<?php echo base_url('Dashboard/leads_graph'); ?>', {}).then(response => r
     console.log(error);
 })
 
+fetch('<?php echo base_url('Dashboard/income_thumbnail_graph'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
+
+        var {
+            success,
+            income,
+        } = response;
+
+
+        if (income) {
+            for (var x = 0; x < income.length; x++) {
+                var payment_date = income[x].payment_date;
+                if (payment_date) {
+                    var due = new Date(payment_date);
+                    var month = due.getMonth();
+                    monthlyAmounts[month] += parseFloat(income[x].invoice_amount);
+                }
+            }
+        }
+
+        var jobs_data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Income',
+                backgroundColor: 'rgb(220, 53, 69 ,0.79)',
+                borderColor: 'rgb(220, 53, 69 ,0.79)',
+                data: monthlyAmounts
+            }]
+        };
+        $('#IncomeGraphLoader').hide()
+
+        const IncomeThumbnailGraph = new Chart($('#IncomeThumbnailGraph'), {
+            type: 'bar',
+            data: jobs_data,
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
+                },
+                aspectRatio: 1.2,
+            },
+        });
+
+        window.IncomeThumbnailGraph = IncomeThumbnailGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+
 fetch('<?php echo base_url('Dashboard/jobs_thumbnail_graph'); ?>', {}).then(response => response.json()).then(
     response => {
         var monthlyAmounts = new Array(12).fill(0);
