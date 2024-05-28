@@ -257,9 +257,10 @@
                                                 <?php if($row->assigned_employee_ids != null) { ?>
                                                     <table>
                                                         <?php 
-                                                            $assignees_arr = explode(',', $row->assigned_employee_ids);
-                                                            if($assignees_arr) {
-                                                                foreach($assignees_arr as $uid) {
+                                                            $assignees_json_decode = json_decode($row->assigned_employee_ids);
+                                                            //$assignees_arr = explode(',', $row->assigned_employee_ids);
+                                                            if($assignees_json_decode && is_array($assignees_json_decode)) {
+                                                                foreach($assignees_json_decode as $uid) {
                                                                     $user_id = (int) $uid;
                                                                     $image = userProfilePicture($user_id);
                                                                     $assignee = $this->users_model->getUser($user_id);
