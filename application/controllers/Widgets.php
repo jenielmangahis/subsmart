@@ -1187,4 +1187,42 @@ class Widgets extends MY_Controller
         $return = ['chart_labels' => $chart_labels, 'total_jobs_amount_data' => $total_jobs_amount_data, 'total_jobs_number_data' => $total_jobs_number_data];
         echo json_encode($return);
     }
+
+    public function ajax_load_taskhub_summary()
+    {
+        $this->load->model('Taskhub_model');
+
+        $cid  = logged('company_id');
+        $user_id = logged('id');
+
+        $date_range['from'] = date("Y-m-d");
+        $date_range['to'] = date("Y-m-d");
+        $todaysTask   = $this->Taskhub_model->getAllOngoingTasksByCompanyId($cid, $date_range);
+        $ongoingTasks = $this->Taskhub_model->getAllOngoingTasksByCompanyId($cid);
+        $sharedTasks  = $this->Taskhub_model->getAllOngoingTasksByCompanyId($cid);
+        $flaggedTasks = $this->Taskhub_model->getAllByCompanyIdAndPriority($cid, 'Urgent');
+        $completedTasks = $this->Taskhub_model->getAllByCompanyIdAndStatus($cid, 'Done');
+        $activitiesTasks = $this->Taskhub_model->getAllByCompanyId($cid);
+
+        $totalAssignedTasks = 0;
+        foreach($ongoingTasks as $task){
+            $assigned_users = json_decode($task->assigned_employee_ids);
+            foreach($assigned_users as $uid){
+                if( $uid == $user_id ){
+                    $totalAssignedTasks++;
+                }
+            }
+        }
+
+        $taskhubSummary = [
+            'todaysTask' => count($todaysTask), 
+            'sharedTasks' => count($sharedTasks), 
+            'flaggedTasks' => count($flaggedTasks),
+            'completedTasks' => count($completedTasks),
+            'totalAssignedTasks' => $totalAssignedTasks,
+            'activitiesTasks' => count($activitiesTasks)
+        ];
+
+        echo json_encode($taskhubSummary);
+    }
 }
