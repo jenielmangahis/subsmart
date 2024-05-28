@@ -45,19 +45,19 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-lg-12">
-                                    <?php 
-                                        $tableID = "auditloglist_table"; 
-                                        $reportCategory = "audit_log_list"; 
+                                    <?php
+                                    $tableID = "auditloglist_table";
+                                    $reportCategory = "audit_log_list";
                                     ?>
-                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
+                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 audit_log">
                                         <thead>
                                             <tr>
                                                 <th>DATE CHANGED</th>
-                                                <th>USER</th>
+                                                <th>USER TYPE</th>
                                                 <th>EVENT</th>
                                                 <th>NAME</th>
                                                 <th>DATE</th>
-                                                <th>AMOUNT</th>
+                                                <!-- <th>AMOUNT</th> -->
                                                 <th>HISTORY</th>
                                             </tr>
                                         </thead>
@@ -130,10 +130,10 @@
                                         <label class="mb-1 fw-xnormal">User</label>
                                         <select class="form-select">
                                             <option value="all" selected>All</option>
-                                            <?php 
-                                                foreach ($customerByCompanyID as $customerByCompanyIDs) {
-                                                    echo "<option value='$customerByCompanyIDs->prof_id'>$customerByCompanyIDs->first_name $customerByCompanyIDs->last_name</option>";
-                                                }
+                                            <?php
+                                            foreach ($customerByCompanyID as $customerByCompanyIDs) {
+                                                echo "<option value='$customerByCompanyIDs->prof_id'>$customerByCompanyIDs->first_name $customerByCompanyIDs->last_name</option>";
+                                            }
                                             ?>
                                         </select>
                                     </div>
@@ -324,7 +324,7 @@
 <!-- END: PRINT/SAVE MODAL -->
 <!-- START: EMAIL REPORT MODAL -->
 <div class="modal" id="emailReportModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Email Report</span>
@@ -342,7 +342,7 @@
                         <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>CC</h6>
-                                <input id="emailCC" class="form-control" type="email" placeholder="Carbon Copy" required>
+                                <input id="emailCC" class="form-control" type="email" placeholder="Carbon Copy">
                             </div>
                         </div>
                         <div class="col-sm-12 mt-3">
@@ -354,7 +354,7 @@
                         <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>Body</h6>
-                                    <div id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title ?> from <?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?></div>
+                                <div id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title ?> from <?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?></div>
                             </div>
                         </div>
                         <div class="col-sm-12 mt-3">
@@ -395,3 +395,12 @@
 <!-- END: MODALS -->
 <?php include viewPath('accounting/reports/reports_assets/report_js'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
+
+
+<script>
+    $(document).ready(function() {
+        $(".audit_log").nsmPagination({
+            itemsPerPage: 10,
+        })
+    });
+</script>

@@ -169,7 +169,9 @@
                                                     <a class="dropdown-item void-paycheck" href="#">Void</a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item edit-paycheck" href="#">Edit</a>
+                                                <li>
+                                                    <a class="dropdown-item edit-paycheck" href="#" onclick="location.href='<?php echo base_url('accounting/employees/view/' . $paycheck['employee_id']) ?>'">Edit</a>
+                                                </li>
                                                 </li>
                                             </ul>
                                         </div>
