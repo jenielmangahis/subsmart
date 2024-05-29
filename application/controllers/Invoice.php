@@ -1250,6 +1250,7 @@ class Invoice extends MY_Controller
         $invoiceLogs = $this->CustomerAuditLog_model->getAllByObjIdAndModule($id, 'Invoice');
         $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($cid);
 
+        $this->page_data['default_late_fee'] = $this->invoice_model->defaultLateFee();
         $this->page_data['record_payment'] = $this->input->get('do');
         $this->page_data['payments'] = $this->payment_records_model->getAllByInvoiceId($invoice->id);
         $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
@@ -1889,6 +1890,57 @@ class Invoice extends MY_Controller
             }
 
             customerAuditLog(logged('id'), $invoice->customer_id, $invoice->id, 'Invoice', 'Sent invoice '.$invoice->invoice_number.' to customer');
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+        ];
+
+        echo json_encode($return);    
+    }
+
+    public function ajax_send_invoice_email_with_late_fee()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $post     = $this->input->post();
+        $invoice  = get_invoice_by_id($post['invoice_id']);
+        $customer = $this->AcsProfile_model->getByProfId($invoice->customer_id);
+        if( !$customer ){
+            $msg = 'Cannot find customer data';
+            $is_success = 0;
+        }
+
+        if( !$invoice ){
+            $msg = 'Cannot find invoice data';
+            $is_success = 0;
+        }
+        
+        if( $is_success == 1 ){
+            //Record late fee
+            $grand_total = $invoice->grand_total + $post['late_fee'];
+            $data = ['late_fee' => $post['late_fee'], 'grand_total' => $grand_total];
+            $this->invoice_model->update($invoice->id, $data);
+
+            $mail = email__getInstance();
+            $mail->FromName = 'NsmarTrac';
+            $customerName = $customer->first_name . ' ' . $customer->last_name;
+            $mail->addAddress($customer->email, $customerName);
+            //$mail->addAddress('bryann.revina03@gmail.com', $customerName);
+            $mail->isHTML(true);
+            $mail->Subject = "nSmartrac: {$invoice->invoice_number} Invoice";
+            $mail->Body = $this->generateInvoiceHTML($invoice->id);
+
+            if(!$mail->Send()) {
+                $is_success = 0;
+                $msg = 'Cannot send email';
+            }
+
+            customerAuditLog(logged('id'), $invoice->customer_id, $invoice->id, 'Invoice', 'Sent invoice '.$invoice->invoice_number.' to customer with late fee amounting of ' . $post['late_fee']);
         }
 
         $return = [
