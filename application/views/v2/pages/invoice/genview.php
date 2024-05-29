@@ -59,11 +59,15 @@
                                         <li style="font-size:17px;">
                                             <a class="dropdown-item" href="<?php echo base_url('invoice/invoice_edit/' . $invoice->id) ?>"><i class="bx bx-edit"></i> Edit</a>
                                         </li>
+                                        
                                         <?php if(strtolower($invoice->status) === 'paid') : ?>
                                             <li style="font-size:17px;">
                                                 <a class="dropdown-item" href="<?php echo base_url('invoice/emailInvoice/'. $invoice->id) ?>"><i class="bx bxs-envelope"></i> Send Invoice</a>
                                             </li>
                                         <?php elseif(strtolower($invoice->status) === 'due') : ?>
+                                            <li style="font-size:17px;">
+                                                <a class="dropdown-item" id="resend-invoice-late-fee" href="javascript:void(0);" data-id="<?= $invoice->id; ?>"><i class="bx bxs-envelope"></i> Resend Invoice with Late Fee</a>
+                                            </li>
                                             <li style="font-size:17px;">
                                                 <a class="dropdown-item payNowBtn" href="javascript:void(0)" data-id="<?php echo $invoice->id ?>" data-invoice-number="<?php echo $invoice->invoice_number ?>"><i class='bx bxs-dollar-circle' ></i> Pay Now</a>
                                             </li>
@@ -73,6 +77,9 @@
                                         <?php else : ?>
                                             <li style="font-size:17px;">
                                                 <a class="dropdown-item btn-send-invoice" data-id="<?= $invoice->id; ?>" href="javascript:void(0);"><i class="bx bxs-envelope"></i> Send Invoice</a>
+                                            </li>
+                                            <li style="font-size:17px;">
+                                                <a class="dropdown-item" id="resend-invoice-late-fee" href="javascript:void(0);" data-id="<?= $invoice->id; ?>"><i class="bx bxs-envelope"></i> Resend Invoice with Late Fee</a>
                                             </li>
                                             <li style="font-size:17px;">
                                                 <a class="dropdown-item margin-right-sec" href="<?php echo base_url('invoice/send/'. $invoice->id .'?scheduled=1') ?>"><i class='bx bxs-calendar'></i> 
@@ -262,6 +269,30 @@
         <?php endif; ?>
     </div>
 
+    <div class="modal fade nsm-modal fade" id="modal-resend-invoice-late-fee" tabindex="-1" aria-labelledby="modal-resend-invoice-late-fee_label" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <form id="frm-send-invoice-late-fee" method="POST">
+                <input type="hidden" name="invoice_id" id="invoice-id" value="" />
+                <div class="modal-content" style="width:560px;">
+                    <div class="modal-header">
+                        <span class="modal-title content-title">Resend Invoice</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="late-fee mb-2">Late Fee</label>
+                            <input type="number" step="any" required="" class="form-control" id="late-fee" name="late_fee" placeholder="Late Fee" value="<?= $default_late_fee; ?>">
+                        </div>
+                    </div>
+                    <div class="modal-footer">                    
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="btn-record-payment" class="nsm-button primary">Send</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <div class="modal fade nsm-modal fade" id="loading_modal" tabindex="-1" aria-labelledby="loading_modal_label" aria-hidden="true" style="margin-top:10%;">
         <div class="modal-dialog modal-md">
             <div class="modal-content">
@@ -277,6 +308,62 @@
 <script>
 $(function(){
     $('#modalPayNowForm').modal({backdrop: 'static', keyboard: false});
+});
+
+$(document).on('click touchstart', '#resend-invoice-late-fee', function(){
+    var invoice_id = $(this).attr('data-id');    
+    $('#invoice-id').val(invoice_id);
+    $('#modal-resend-invoice-late-fee').modal('show');
+});
+
+$(document).on('submit', '#frm-send-invoice-late-fee', function(e){
+    e.preventDefault();
+    var late_fee = $('#late-fee').val();
+
+    Swal.fire({
+        text: "Continue sending invoice to customer with late fee amounting of " + late_fee + "?",
+        icon: 'question',
+        confirmButtonText: 'Proceed',
+        showCancelButton: true,
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            $.ajax({
+                type: 'POST',
+                url: base_url + "invoice/_send_invoice_email_with_late_fee",
+                data: $('#frm-send-invoice-late-fee').serialize(),
+                dataType:'json',
+                beforeSend: function(data) {
+                    $('#modal-resend-invoice-late-fee').modal('hide');
+                    $('#loading_modal').modal('show');
+                    $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Sending email...');
+                },
+                success: function(result) {
+                    if( result.is_success == 1 ){
+                        Swal.fire({
+                            text: "Invoice was successfully sent to customer",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                
+                            }
+                        });
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: result.msg
+                        });
+                    }
+                },
+                complete : function(){
+                    $('#loading_modal').modal('hide');
+                },
+            });
+        }
+    });
 });
 
 $(document).on('click touchstart', '.btn-send-invoice', function(){

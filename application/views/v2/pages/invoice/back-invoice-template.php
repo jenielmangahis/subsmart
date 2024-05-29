@@ -360,6 +360,14 @@ $payment_link = base_url('/invoice/customer_view/' . $invoice->id);
                     </tr>
                 <?php } ?>
 
+                <?php if( $invoice->late_fee > 0  ){ ?>
+                    <tr>
+                        <td colspan="2" style="padding: 8px; border: 1px solid;">
+                            <b>LATE FEE</b>
+                        </td>
+                        <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->late_fee, 2, '.', ','); ?></td>
+                    </tr>
+                <?php } ?>
                 <tr>
                     <td colspan="2" style="padding: 8px; border: 1px solid;">
                         <b>GRAND TOTAL</b>
