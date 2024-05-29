@@ -246,6 +246,7 @@ class Taskhub_model extends MY_Model {
     {
         $this->db->from($this->table);
         $this->db->set(['status_id' => 6]);
+        $this->db->set(['status' => 'Closed']);
         $this->db->set(['date_completed' => date('Y-m-d')]);
         $this->db->where_in('task_id', $ids);
         $this->db->update();

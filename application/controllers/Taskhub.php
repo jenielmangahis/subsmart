@@ -336,6 +336,23 @@ class Taskhub extends MY_Controller {
 			$task = $this->taskhub_model->getById($taskid);
 			$this->page_data['taskHub'] = $task;
 
+			$default_assigned_users = [];
+			if(isset($task->assigned_employee_ids) && $task->assigned_employee_ids != null) {
+				$aeids = json_decode($task->assigned_employee_ids);
+				$assignees_arr = $aeids; 
+				if($assignees_arr && is_array($assignees_arr)) {
+					foreach($assignees_arr as $uid) {
+						$user_id  = (int) $uid;
+						$assignee = $this->users_model->getUser($user_id);
+						if($assignee) {
+							$default_assigned_users[$user_id] = $assignee->FName . ' ' . $assignee->LName;	
+						}
+					}
+				}
+			}	
+
+			$this->page_data['default_assigned_users'] = $default_assigned_users;
+			
 			$this->page_data['selected_participants'] = $this->db->query(
 				'select a.*, concat(b.FName, " ", b.LName) as `name` from tasks_participants a '.
 				'left join users b on b.id = a.user_id '.
@@ -818,6 +835,9 @@ class Taskhub extends MY_Controller {
         $msg = 'Cannot find data';
 
         $post = $this->input->post();  
+	
+		$assigned_to_arr = explode(",", $post['a_to_multiple']);
+		$post_encode_assigned_to = json_encode($assigned_to_arr);
 
 		$taskid = trim($this->input->post('taskid'));
 		if(($id > 0) || ($taskid > 0)){
@@ -902,7 +922,8 @@ class Taskhub extends MY_Controller {
 					'status_id' => $taskStatus->status_id,
 					'priority' => $post['priority'],
 					'company_id' => $company_id,
-					'assigned_employee_ids' => !empty($post['a_to_multiple']) ? $post['a_to_multiple'] : $assigned_to, 
+					//'assigned_employee_ids' => !empty($post['a_to_multiple']) ? $post['a_to_multiple'] : $assigned_to, 
+					'assigned_employee_ids' => !empty($post_encode_assigned_to) ? $post_encode_assigned_to : $assigned_to,
 					'list_id' => $list_id
 					
 				];					
@@ -944,6 +965,9 @@ class Taskhub extends MY_Controller {
 
         $post = $this->input->post();  
 
+		$assigned_to_arr = explode(",", $post['a_to_multiple']);
+		$post_encode_assigned_to = json_encode($assigned_to_arr);
+
         if( $post['title'] != '' ){
             $taskStatus = $this->Taskhub_status_model->getById($post['status']);
 
@@ -981,7 +1005,8 @@ class Taskhub extends MY_Controller {
                 'priority' => $post['priority'],
                 'company_id' => $cid,
                 'view_count' => 0,
-				'assigned_employee_ids' => !empty($post['a_to_multiple']) ? $post['a_to_multiple'] : $assigned_to,
+				//'assigned_employee_ids' => !empty($post['a_to_multiple']) ? $post['a_to_multiple'] : $assigned_to,
+				'assigned_employee_ids' => !empty($post_encode_assigned_to) ? $post_encode_assigned_to : $assigned_to,
 				'list_id' => $list_id
             ];
 
@@ -1059,8 +1084,10 @@ class Taskhub extends MY_Controller {
 
 		$assignee_name = "";
 		if(isset($task->assigned_employee_ids) && $task->assigned_employee_ids != null) {
-			$assignees_arr = explode(',', $task->assigned_employee_ids);
-			if($assignees_arr) {
+			$aeids = json_decode($task->assigned_employee_ids);
+
+			$assignees_arr = $aeids; // explode(',', $task->assigned_employee_ids);
+			if($assignees_arr && is_array($assignees_arr)) {
 				foreach($assignees_arr as $uid) {
 					$user_id = (int) $uid;
 					$assignee = $this->users_model->getUser($user_id);
@@ -1069,7 +1096,6 @@ class Taskhub extends MY_Controller {
 					}
 				}
 			}
-
 		}
 
 		$this->page_data['assignee_name'] = $assignee_name;
@@ -1279,10 +1305,10 @@ class Taskhub extends MY_Controller {
         $taskHub = $this->Taskhub_model->getById($post['tsid']);
 
         if( $taskHub && $taskHub->company_id == $cid ){
-        	if( $taskHub->status_id == 6 ){
+        	if( $taskHub->status_id == 6 && ($taskHub->status == 'Closed')){
         		$msg = 'Task is already completed!';
         	}else{
-        		$data = ['status_id' => 6, 'date_completed' => date('Y-m-d')];
+        		$data = ['status_id' => 6, 'date_completed' => date('Y-m-d'), 'status' => 'Closed',];
 	        	$this->Taskhub_model->updateByTaskId($taskHub->task_id, $data);
 
 				//Activity Logs
