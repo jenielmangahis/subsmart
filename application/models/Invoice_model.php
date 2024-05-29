@@ -1392,6 +1392,12 @@ class Invoice_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function defaultLateFee(){
+        $late_fee = 50;
+
+        return $late_fee;
+    }
 }
 
 /* End of file Invoice_model.php */

@@ -1077,9 +1077,10 @@ class Jobs_model extends MY_Model
 
     public function getAllJobsByCompanyIdAndDateRange($cid, $date_range = array())
     {
-        $this->db->select('jobs.*, COALESCE(invoices.grand_total,0) AS amount');
+        $this->db->select('jobs.*, COALESCE(invoices.grand_total,0) AS amount,acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state, acs_profile.zip_code as cust_zipcode');
         $this->db->from($this->table);   
         $this->db->join('invoices', 'jobs.id = invoices.job_id');
+        $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id', 'left');
         $this->db->where('jobs.company_id', $cid);
 
         if( $date_range ){
@@ -1087,6 +1088,25 @@ class Jobs_model extends MY_Model
             $date_end   = $date_range['to'] . ' 23:59:59';
             $this->db->where('jobs.date_created >=', $date_start);
             $this->db->where('jobs.date_created <=', $date_end);
+        }
+
+        $this->db->order_by('jobs.id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function getAllJobsByCompanyIdAndStartDate($cid, $date_range = array())
+    {
+        $this->db->select('jobs.*, COALESCE(invoices.grand_total,0) AS amount,acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state, acs_profile.zip_code as cust_zipcode');
+        $this->db->from($this->table);   
+        $this->db->join('invoices', 'jobs.id = invoices.job_id');
+        $this->db->join('acs_profile', 'jobs.customer_id = acs_profile.prof_id', 'left');
+        $this->db->where('jobs.company_id', $cid);
+
+        if( $date_range ){
+            $this->db->where('jobs.start_date >=', $date_range['from']);
+            $this->db->where('jobs.start_date <=', $date_range['to']);
         }
 
         $this->db->order_by('jobs.id', 'DESC');
