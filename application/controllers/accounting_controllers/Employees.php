@@ -1573,24 +1573,35 @@ class Employees extends MY_Controller
             $this->page_data['employee']->id = get('employee');
             
             if (get('employee') !== 'all') {
-                $explode = explode('-', get('employee'));
-        
-                $employee = $this->users_model->getUserByID($explode[1]);
-                $this->page_data['employee']->name = $employee->FName . ' ' . $employee->LName;
-        
-                $filters = [
-                    'key' => $explode[0],
-                    'id' => $explode[1]
-                ];
-        
-                $data = array_filter($data, function ($v, $k) use ($filters) {
-                    return $v['employee_id'] === $filters['id'];
+                // Split the input string by ',' to get individual employee entries
+                $employeeEntries = explode(',', get('employee'));
+            
+                $employeeIds = [];
+                $employeeNames = [];
+            
+                foreach ($employeeEntries as $entry) {
+                    $explode = explode('-', $entry);
+                    $employeeId = $explode[1];
+            
+                    $employee = $this->users_model->getUserByID($employeeId);
+                    if ($employee) {
+                        $employeeNames[] = $employee->FName . ' ' . $employee->LName;
+                        $employeeIds[] = $employeeId;
+                    }
+                }
+            
+                $this->page_data['employee']->name = implode(', ', $employeeNames);
+            
+                $data = array_filter($data, function ($v, $k) use ($employeeIds) {
+                    return in_array($v['employee_id'], $employeeIds);
                 }, ARRAY_FILTER_USE_BOTH);
             } else {
                 $this->page_data['employee']->name = ucwords(str_replace('-', ' ', get('employee')));
             }
+            
+            
         }
-
+     
         $report_period = 'Paychecks from ' . date("M d, Y", strtotime($this->page_data['start_date'])) . ' to ' . date("M d, Y", strtotime($this->page_data['end_date'])) . ' for all employees';
 
         $companyName = $this->page_data['clients']->business_name;
@@ -1614,6 +1625,7 @@ class Employees extends MY_Controller
             'orientation' => 'L',
             'paychecks' => $data
         ];
+       
         $obj_pdf = $this->generate_paycheck_pdf($pdfData);
         $fileName = str_replace(' ', '_', $companyName) . '_Paycheck_List_' . date("mdY") . '.pdf';
         $blob = $obj_pdf->Output(getcwd() . "/assets/pdf/$fileName", 'S');

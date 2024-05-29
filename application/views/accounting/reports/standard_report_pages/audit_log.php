@@ -348,7 +348,7 @@
                         <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>Subject</h6>
-                                <input id="emailSubject" class="form-control" type="text" value="<?php echo $page->title ?>" required>
+                                <input id="emailSubject" class="form-control" type="text" value="Company Name: <?php echo $page->title ?>" required>
                             </div>
                         </div>
                         <div class="col-sm-12 mt-3">
