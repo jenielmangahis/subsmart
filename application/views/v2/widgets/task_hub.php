@@ -3,7 +3,12 @@
         echo '<div class="col-12 col-lg-4">';
     endif;
 ?>
-
+<style>
+.widget-taskhub .bx {
+    font-size: 23px !important;
+    background-color:transparent !important;
+}
+</style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
@@ -27,15 +32,88 @@
             </div>
         </div>
     </div>
-    <div class="nsm-card-content taskhub-container"  style="  height: calc(100% - 120px);">
-        <div class="nsm-loader">
-            <i class='bx bx-loader-alt bx-spin'></i>
+    <div class='nsm-card-footer widget-taskhub'>
+        <div class="row h-100 g-2">
+            <div class="col-12 col-md-6">
+                <div class="nsm-counter success h-100 mb-2">
+                    <div class="row h-100">
+                        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                            <i class='bx bx-calendar' ></i>                            
+                        </div>
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                            <h3 id="taskhub-today">0</h3>
+                            <span>Today</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="nsm-counter primary h-100 mb-2">
+                    <div class="row h-100">
+                        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                            <i class='bx bx-calendar-check' ></i>
+                        </div>
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                            <h3 id="taskhub-shared-task">0</h3>
+                            <span>Shared Task</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="nsm-counter success h-100 mb-2">
+                    <div class="row h-100">
+                        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                            <i class='bx bxs-inbox'></i>
+                        </div>
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                            <h2 id="taskhub-activities">0</h2>
+                            <span>Activities</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="nsm-counter h-100 mb-2">
+                    <div class="row h-100">
+                        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                            <i class='bx bxs-flag-alt'></i>
+                        </div>
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                            <h2 id="taskhub-flagged">0</h2>
+                            <span>Flagged</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="nsm-counter error h-100 mb-2">
+                    <div class="row h-100">
+                        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                            <i class='bx bx-check-circle'></i>
+                        </div>
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                            <h2 id="taskhub-done">0</h2>
+                            <span>Done</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="nsm-counter primary h-100 mb-2">
+                    <div class="row h-100">
+                        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                            <i class='bx bx-list-ol' ></i>
+                        </div>
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                            <h2 id="taskhub-my-tasks">0</h2>
+                            <span>My Tasks</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class='nsm-card-footer'>
-        <a role="button" class="nsm-button btn-sm m-0 me-2" href="taskhub">
-            <i class='bx bx-right-arrow-alt'></i>
-        </a>
+
     </div>
 </div>
 
@@ -43,7 +121,7 @@
     var enable_clear_all = false;
     
     $(document).ready(function(){
-        //loadTasks();
+        loadTaskhubSummary();
     });
 
     $(document).on('click','.btn-task-list',function(){
@@ -153,7 +231,7 @@
                         confirmButtonText: 'Okay'
                     }).then((result) => {
                         //if (result.value) {
-                        location.reload();
+                        loadTaskhubSummary();
                         //}
                     });
                 }else{
@@ -170,14 +248,29 @@
         }, 800);
     });
 
-    function loadTasks(){
+    function loadTaskhubSummary(){
         $.ajax({
-            url: '<?php echo base_url(); ?>taskhub/loadV2WidgetContents',
+            url: base_url + 'widgets/_load_taskhub_summary',
             method: 'get',
             data: {},
-            success: function (response) {
-                $('.taskhub-container').html(response);
-            }
+            dataType: 'json',
+            beforeSend: function() {
+                var loader = "<span class='bx bx-loader bx-spin'></span>";
+                $('#taskhub-today').html(loader);
+                $('#taskhub-activities').html(loader);
+                $('#taskhub-shared-task').html(loader);
+                $('#taskhub-flagged').html(loader);
+                $('#taskhub-done').html(loader);
+                $('#taskhub-my-tasks').html(loader);
+            },
+            success: function (data) {
+                $('#taskhub-today').html(data.todaysTask);
+                $('#taskhub-shared-task').html(data.sharedTasks);
+                $('#taskhub-flagged').html(data.flaggedTasks);
+                $('#taskhub-activities').html(data.activitiesTasks);
+                $('#taskhub-done').html(data.completedTasks);
+                $('#taskhub-my-tasks').html(data.totalAssignedTasks);
+            },
         });
     }
 </script>

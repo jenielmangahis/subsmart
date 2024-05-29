@@ -1,4 +1,4 @@
-<?php 
+<?php
 defined('BASEPATH') or exit('No direct script access allowed');
 include viewPath('v2/includes/header');
 ?>
@@ -435,7 +435,7 @@ include viewPath('v2/includes/header');
                         <br>
 
                         <div class="dropdownWithSearchContainer" id="dueDateInputs">
-                            <div>
+                            <!-- <div>
                                 <label>Due Date Start</label>
                                 <div data-type="due_start" class="dropdownWithSearch">
                                     <input type="text" class="form-control dropdownWithSearch__input">
@@ -443,8 +443,14 @@ include viewPath('v2/includes/header');
                                         <i class="fa fa-chevron-down"></i>
                                     </button>
                                 </div>
-                            </div>
+                            </div> -->
                             <div>
+                                <label for="due-date-start">Due Date Start</label>
+                                <div class="dropdownWithSearch">
+                                    <input type="date" id="due-date-start" class="form-control dropdownWithSearch__input nsm-field date" data-type="due_start">
+                                </div>
+                            </div>
+                            <!-- <div>
                                 <label>Due Date End</label>
                                 <div data-type="due_end" class="dropdownWithSearch">
                                     <input type="text" class="form-control dropdownWithSearch__input">
@@ -452,9 +458,16 @@ include viewPath('v2/includes/header');
                                         <i class="fa fa-chevron-down"></i>
                                     </button>
                                 </div>
+                            </div> -->
+                            <div>
+                                <label for="due-date-end">Due Date End</label>
+                                <div class="dropdownWithSearch">
+                                    <input type="date" id="due-date-end" class="form-control dropdownWithSearch__input nsm-field date" data-type="due_end">
+                                </div>
                             </div>
 
-                            <button class="btn btn-primary" id="refreshList" disabled>Refresh</button>
+                            <!-- <button class="btn btn-primary" id="refreshList" disabled>Refresh</button> -->
+                            <button class="nsm-button primary" id="refreshList" style="height: 35px; margin-top: 20px;" disabled>Refresh</button>
                             <span class="dropdownWithSearchContainer__error d-none">
                                 Invalid date range, end date must be after start date.
                             </span>
@@ -585,7 +598,7 @@ include viewPath('v2/includes/header');
                             </div>
                         </div>
                     </div>
-                </div>                
+                </div>
 
                 <br /><br /><br />
                 <div class="modal fade taxModal" tabindex="-1" role="dialog" id="reviewSalesTaxModal">
@@ -919,7 +932,7 @@ include viewPath('v2/includes/header');
 
                 <div id="modal-container">
                     <div class="full-screen-modal"></div>
-                </div>                
+                </div>
             </div>
         </div>
     </div>
@@ -937,6 +950,11 @@ include viewPath('v2/includes/header');
                 }
             }
         });
+
+        var currentDate = new Date().toISOString().split('T')[0];
+
+        document.getElementById('due-date-start').value = currentDate;
+        document.getElementById('due-date-end').value = currentDate;
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

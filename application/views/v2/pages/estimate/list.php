@@ -528,7 +528,7 @@ $(document).ready(function() {
                     },
                     success: function(result) {
                         Swal.fire({
-                            title: 'Good job!',
+                            //title: 'Good job!',
                             text: "Data Deleted Successfully!",
                             icon: 'success',
                             showCancelButton: false,
