@@ -1416,12 +1416,16 @@ class Employees extends MY_Controller
         $employeesData = [];
 
         foreach ($postData['employees'] as $key => $empId) {
-            $employeesData[$empId] = [
-                'id' => $empId,
-                'bonus' => $postData['bonus'][$key]
-            ];
+            // Check if the employee ID is already in the array
+            if (!isset($employeesData[$empId])) {
+                // If not, add the employee data to the array
+                $employeesData[$empId] = [
+                    'id' => $empId,
+                    'bonus' => $postData['bonus'][$key]
+                ];
+            }
         }
-        
+        // print_r($employeesData);
         $employees = [];
         $employeeData = [];
         
@@ -1467,6 +1471,7 @@ class Employees extends MY_Controller
         
         // Extract the values from the associative array
         $employees = array_values($employeeData);
+          
         
         
         $totalPay = array_sum(array_column($employees, 'total_pay'));
