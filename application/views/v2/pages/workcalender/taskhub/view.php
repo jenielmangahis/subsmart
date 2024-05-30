@@ -80,10 +80,10 @@
                                                     <td class="taskhub_sidebar_details_caption font-weight-bold">Assignees:</td>
                                                     <td class="taskhub_sidebar_details_values">
                                                     <?php
-                                                        if(isset($assignee_name)) {
+                                                        if(isset($assignee_name) && $assignee_name != "") {
                                                             echo substr($assignee_name, 1);
                                                         } else {
-                                                            echo "Not Specified";
+                                                            echo "Not Assigned User";
                                                         }
                                                     ?>
                                                     </td>

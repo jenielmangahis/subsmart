@@ -304,6 +304,7 @@ $route['invoice/_process_cash_payment'] = 'Invoice/ajax_process_cash_payment';
 $route['invoice/customer_view/(:any)'] = 'Invoice/front_pay_now/$1';
 $route['invoice/_create_invoice'] = 'Invoice/ajax_create_invoice';
 $route['invoice/standard_invoice'] = 'Invoice/standard_invoice_template';
+$route['invoice/_send_invoice_email_with_late_fee'] = 'Invoice/ajax_send_invoice_email_with_late_fee';
 
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
@@ -1162,7 +1163,7 @@ $route['payscale/_get_details'] = 'Users/ajax_payscale_get_details';
 // Jobs
 $route['job/details/(:any)'] = 'job/details/$1';
 $route['job/_load_upcoming_jobs'] = 'Job/ajax_load_upcoming_jobs';
-$route['job/bird_eye_view'] = 'Workorder/map';
+$route['workorder/map'] = 'Workorder/map';
 $route['job/_load_job_payments'] = 'Job/ajax_load_job_payments';
 $route['job/_create_job_payment'] = 'Job/ajax_create_job_payment';
 $route['job/edit_job_item/(:num)'] = 'Job/edit_job_item/$1';
@@ -1174,7 +1175,11 @@ $route['job/_send_esign_form'] = 'Job/ajax_send_esign_form';
 $route['job/create_invoice/(:num)'] = 'Job/createInvoice/$1';
 $route['job/_update_job'] = 'Job/ajax_update_job';
 
+//Trac360
 $route['job/bird_eye_view'] = 'JobMap/index';
+$route['job_map/_calendar_data'] = 'JobMap/ajax_calendar_data';
+$route['job_map/_update_map_marker'] = 'JobMap/ajax_update_map_marker';
+
 
 $route['workorder/convert_to_job'] = 'Workorder/ajax_convert_to_job';
 
@@ -1729,6 +1734,7 @@ $route['widgets/_load_open_estimates_chart'] = 'Widgets/ajax_load_open_estimates
 $route['widgets/_load_paid_invoices_summary'] = 'Widgets/ajax_load_paid_invoices_summary';
 $route['widgets/_load_service_ticket_chart_data'] = 'Widgets/ajax_load_service_ticket_chart_data';
 $route['widgets/_load_job_chart_data'] = 'Widgets/ajax_load_job_chart_data';
+$route['widgets/_load_taskhub_summary'] = 'Widgets/ajax_load_taskhub_summary';
 
 //Esign
 $route['esign_v2/_tags_sections'] = 'Esign_v2/ajax_company_tags_sections';
@@ -1746,3 +1752,4 @@ $route['accounting/invoices/delete-selected'] = 'Accounting/ajax_invoice_delete_
 //Trac360
 $route['trac360/_create_user_location'] = 'Trac360/ajax_create_user_location';
 $route['trac360/_create_user_geolocation_features'] = 'Trac360/ajax_create_user_geolocation_features';
+

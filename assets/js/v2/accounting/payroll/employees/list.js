@@ -348,12 +348,14 @@ $(document).on('click', '#bonus-payroll-modal #preview-payroll', function() {
     var parent = el.parent();
     payrollForm = $('#bonus-payroll-modal .modal-body').html();
 
+    // Clear old data in payrollFormData
     for (const pair of payrollFormData.entries()) {
         payrollFormData.delete(pair[0]);
     }
 
+    // Append new data to payrollFormData
     payrollFormData.append('pay_from_account', $('#bonus-payroll-modal #bank-account').val());
-    payrollFormData.append('pay_period', $('#bonus-payroll-modal #pay-period-start').val()+'-'+$('#bonus-payroll-modal #pay-period-end').val());
+    payrollFormData.append('pay_period', $('#bonus-payroll-modal #pay-period-start').val() + '-' + $('#bonus-payroll-modal #pay-period-end').val());
     payrollFormData.append('pay_date', $('#bonus-payroll-modal #payDate').val());
 
     $('#bonus-payroll-modal #payroll-table tbody tr .select-one:checked').each(function() {
@@ -370,7 +372,7 @@ $(document).on('click', '#bonus-payroll-modal #preview-payroll', function() {
         processData: false,
         contentType: false,
         success: function(res) {
-             console.log(res);
+            console.log(res);
             $('div#bonus-payroll-modal div.modal-body').html(res);
 
             var chartHeight = $('div#bonus-payroll-modal div.modal-body div#bonusPayrollChart').parent().prev().height();
@@ -399,24 +401,24 @@ $(document).on('click', '#bonus-payroll-modal #preview-payroll', function() {
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(75, 192, 192, 0.2)',
                             'rgba(54, 162, 235, 0.2)'
-                          ],
-                          borderColor: [
+                        ],
+                        borderColor: [
                             'rgba(255, 99, 132, 1)',
                             'rgba(75, 192, 192, 1)',
-                            'rgba(54, 162, 235, 1)',
-                          ],
-                          borderWidth: 1
+                            'rgba(54, 162, 235, 1)'
+                        ],
+                        borderWidth: 1
                     }]
                 },
                 options: {
                     responsive: true,
                     plugins: {
-                      legend: {
-                        position: 'bottom',
-                      },
+                        legend: {
+                            position: 'bottom'
+                        }
                     },
-                    aspectRatio: 1.5,
-                  }
+                    aspectRatio: 1.5
+                }
             });
 
             el.remove();
@@ -427,6 +429,7 @@ $(document).on('click', '#bonus-payroll-modal #preview-payroll', function() {
         }
     });
 });
+
 
 
 // $(document).on('click', '#bonus-payroll-modal #preview-payroll', function() {
@@ -535,8 +538,8 @@ $(document).on('click', '#bonus-payroll-modal #back-payroll-form', function() {
    // Extract the pay period data
         var payPeriod = payrollFormData.get('pay_period').split('-');
 
-        // Log the payPeriod array for debugging
-        console.log("test", payPeriod);
+        // // Log the payPeriod array for debugging
+        // console.log("test", payPeriod);
 
         // Extract the start and end dates from the payPeriod array
         var startYear = payPeriod[0];
@@ -572,19 +575,36 @@ $(document).on('click', '#bonus-payroll-modal #back-payroll-form', function() {
 
     var bonus = payrollFormData.getAll('bonus[]');
     var memos = payrollFormData.getAll('memo[]');
-    for (var i = 0; i < memos.length; i++) {
+    var employees = payrollFormData.getAll('employees[]');
+
+    // Track which employee IDs have been processed
+    var processedEmployees = {};
+
+    // Loop through the employees to remove old values
+    for (var i = 0; i < employees.length; i++) {
         var employeeId = employees[i];
         var bonusValue = bonus[i];
         var memoValue = memos[i];
 
-        var $row = $(`#bonus-payroll-modal #payroll-table tr td .select-one[value="${employeeId}"]`).closest('tr');
-        $row.find('input[name="bonus[]"]').val(bonusValue);
-        $row.find('input[name="memo[]"]').val(memoValue);
+        if (!processedEmployees[employeeId]) {
+            processedEmployees[employeeId] = true;
 
-        // Log the values of the current row
-        console.log(`Row for employee ID: ${employeeId}`);
-        console.log(`Bonus: ${bonusValue}`);
-        console.log(`Memo: ${memoValue}`);
+            // Find the corresponding row in the table
+            var $row = $(`#bonus-payroll-modal #payroll-table tr td .select-one[value="${employeeId}"]`).closest('tr');
+
+            // Set the new bonus and memo values
+            $row.find('input[name="bonus[]"]').val(bonusValue);
+            $row.find('input[name="memo[]"]').val(memoValue);
+
+            // Remove the first occurrence of bonus and memo for this employee ID
+            payrollFormData.delete('bonus[]');
+            payrollFormData.delete('memo[]');
+
+            // Log the values of the current row
+            console.log(`Row for employee ID: ${employeeId}`);
+            console.log(`Bonus: ${bonusValue}`);
+            console.log(`Memo: ${memoValue}`);
+        }
     }
 
     $(this).parent().html('<button type="button" class="nsm-button primary" id="bonus-pay-select">Back</button>');

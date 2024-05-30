@@ -129,13 +129,15 @@ if (isset($selected_participants)) {
                                                         $hidden = '';
                                                         echo '<option value="' . $row->id . '"' . $tag . $hidden . '>' . $row->name . '</option>';
                                                     }*/
-                                                    if (set_value('assigned_to') != '') {
+                                                    /*if (set_value('assigned_to') != '') {
                                                         $sel_assigned_to = set_value('assigned_to');
-                                                    }                                                   
+                                                    }*/                                                 
                                                 ?>
-                                            </select> -->                                                                                       
-                                            <select name="assigned_to" id="taskhub-user-id" class="nsm-field mb-2 form-control" multiple="multiple" required="">      
-                                                <option value="0" selected="selected">My Self</option>                                          
+                                            </select> -->                                                                                     
+                                            <select name="assigned_to" id="taskhub-user-id" class="nsm-field mb-2 form-control" multiple="multiple" required="">     
+                                                <?php foreach($default_assigned_users as $assigned_id => $assigned_name) { ?>
+                                                        <option value="<?php echo $assigned_id; ?>" selected="selected"><?php echo $assigned_name; ?></option> 
+                                                <?php } ?>                        
                                             </select>
                                         </div>
                                     <?php } ?>
@@ -266,9 +268,9 @@ if (isset($selected_participants)) {
             minimumInputLength: 0,
             templateResult: formatRepoUser,
             templateSelection: formatRepoSelectionUser,
-            initSelection: function(element, callback) {
+            /*initSelection: function(element, callback) {
                 callback({id: default_assigned_to, text: default_assigned_to_text });
-            }
+            }*/
         });  
 
     });

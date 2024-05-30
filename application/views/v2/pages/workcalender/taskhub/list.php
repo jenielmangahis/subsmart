@@ -257,9 +257,9 @@
                                                 <?php if($row->assigned_employee_ids != null) { ?>
                                                     <table>
                                                         <?php 
-                                                            $assignees_arr = explode(',', $row->assigned_employee_ids);
-                                                            if($assignees_arr) {
-                                                                foreach($assignees_arr as $uid) {
+                                                            $assignees_json_decode = json_decode($row->assigned_employee_ids);
+                                                            if($assignees_json_decode && is_array($assignees_json_decode)) {
+                                                                foreach($assignees_json_decode as $uid) {
                                                                     $user_id = (int) $uid;
                                                                     $image = userProfilePicture($user_id);
                                                                     $assignee = $this->users_model->getUser($user_id);
@@ -301,7 +301,7 @@
                                         </td>
                                         <td>
                                         <?php
-                                            switch ($row->status_text):
+                                            switch ($row->status):
                                                 case 'New':
                                                     $task_status = "primary";
                                                     break;
@@ -317,6 +317,9 @@
                                                 case 'Complete':
                                                     $task_status = "success";
                                                     break;
+                                                case 'Closed':
+                                                    $task_status = "success";
+                                                    break;
                                                 case 'Re-opened':
                                                     $task_status = "primary";
                                                     break;
@@ -328,7 +331,8 @@
                                                     break;
                                             endswitch;
                                             ?>
-                                            <span class="nsm-badge <?= $task_status ?>"><?= $row->status_text != '' ? $row->status_text : 'Draft'; ?></span>
+
+                                            <span class="nsm-badge <?= $task_status ?>"><?= $row->status != '' ? $row->status == 'Closed' ? 'Completed' : $row->status : 'Draft'; ?></span>
                                         </td>
                                         <td>
                                             <?php //echo date("F d, Y", strtotime($row->date_started)); ?>

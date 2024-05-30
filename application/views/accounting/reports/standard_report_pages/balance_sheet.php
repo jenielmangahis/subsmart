@@ -58,13 +58,13 @@
                                     <div class="col-12 col-md-6">
                                         <label for="filter-from">From</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" value="<?=date("01/01/Y")?>" id="filter-from">
+                                            <input type="text" class="nsm-field form-control datepicker" value="<?= date("01/01/Y") ?>" id="filter-from">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <label for="filter-to">To</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" value="<?=date("m/d/Y")?>" id="filter-to">
+                                            <input type="text" class="nsm-field form-control datepicker" value="<?= date("m/d/Y") ?>" id="filter-to">
                                         </div>
                                     </div>
                                 </div>
@@ -276,11 +276,11 @@
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?=$clients->business_name?></span></h4>
+                                        <h4 class="text-center fw-bold"><span class="company-name"><?= $clients->business_name ?></span></h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
                                         <p class="m-0 fw-bold">Balance Sheet</p>
-                                        <p>As of <?=date("F d, Y")?></p>
+                                        <p>As of <?= date("F d, Y") ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -293,15 +293,15 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
+                                        <tr data-bs-toggle="collapse" data-bs-target="#accordion" class="clickable collapse-row collapsed">
                                             <td><i class="bx bx-fw bx-caret-right"></i> ASSETS</td>
                                             <td>$571,265.66</td>
                                         </tr>
-                                        <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion">
+                                        <tr data-bs-toggle="collapse" data-bs-target="#accordion1" class="clickable collapse-row collapse" id="accordion">
                                             <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Current Assets</td>
                                             <td></td>
                                         </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion2">
+                                        <tr id="accordion1" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion2">
                                             <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Bank Accounts</td>
                                             <td></td>
                                         </tr>
@@ -309,7 +309,7 @@
                                             <td>&emsp;&emsp;&emsp;Checking</td>
                                             <td>305,061.93</td>
                                         </tr>
-                                        <tr id="accordion2" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion3">
+                                        <tr id="accordion2" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion3">
                                             <td>&emsp;&emsp;&emsp;<i class="bx bx-fw bx-caret-right"> Test Bank (Cash on hand)</td>
                                             <td>990.77</td>
                                         </tr>
@@ -329,7 +329,7 @@
                                             <td>&emsp;&emsp;&emsp;<b>Total Bank Accounts</b></td>
                                             <td><b>$307,052.70</b></td>
                                         </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion4">
+                                        <tr id="accordion1" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion4">
                                             <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Accounts Receivable</td>
                                             <td></td>
                                         </tr>
@@ -341,7 +341,7 @@
                                             <td>&emsp;&emsp;&emsp;<b>Total Accounts Receivable</b></td>
                                             <td><b>$205,324.93</b></td>
                                         </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion5">
+                                        <tr id="accordion1" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion5">
                                             <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Other Current Assets</td>
                                             <td></td>
                                         </tr>
@@ -377,7 +377,7 @@
                                             <td>&emsp;&emsp;<b>Total Current Assets</b></td>
                                             <td><b>$564,732.95</b></td>
                                         </tr>
-                                        <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion6">
+                                        <tr data-bs-toggle="collapse" data-bs-target="#accordion1" class="clickable collapse-row collapse" id="accordion6">
                                             <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Fixed Assets</td>
                                             <td></td>
                                         </tr>
@@ -401,7 +401,7 @@
                                             <td>&emsp;&emsp;<b>Total Fixed Assets</b></td>
                                             <td><b>$6,382.00</b></td>
                                         </tr>
-                                        <tr  class="clickable collapse-row collapse"  id="accordion">
+                                        <tr class="clickable collapse-row collapse" id="accordion7">
                                             <td>&emsp;<b>TOTAL ASSETS</b></td>
                                             <td><b>$571,114.95</b></td>
                                         </tr>
@@ -413,7 +413,7 @@
                                 </table>
                             </div>
                             <div class="nsm-card-footer text-center">
-                                <p class="m-0">Accrual basis <?=date("l, F j, Y h:i A eP")?></p>
+                                <p class="m-0">Accrual basis <?= date("l, F j, Y h:i A eP") ?></p>
                             </div>
                         </div>
                     </div>
@@ -424,3 +424,10 @@
 </div>
 
 <?php include viewPath('v2/includes/footer'); ?>
+<script>
+        $(document).ready(function(){
+            $(".collapse-row").click(function(){
+                $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
+            });
+        });
+    </script>
