@@ -697,6 +697,36 @@ class Tickets_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getByIdAndCompanyId($id, $company_id)
+    {
+        $this->db->select('tickets.*, acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state, acs_profile.zip_code as cust_zipcode');
+        $this->db->from($this->table);        
+        $this->db->join('acs_profile', 'tickets.customer_id = acs_profile.prof_id', 'left');
+        $this->db->where("tickets.id", $id);
+        $this->db->where("tickets.company_id", $company_id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getAllByCompanyIdAndTicketDate($cid, $date_range = array())
+    {
+        $this->db->select('tickets.*, acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state, acs_profile.zip_code as cust_zipcode');
+        $this->db->from($this->table);   
+        $this->db->join('acs_profile', 'tickets.customer_id = acs_profile.prof_id', 'left');
+        $this->db->where('tickets.company_id', $cid);
+
+        if( $date_range ){
+            $this->db->where('tickets.ticket_date >=', $date_range['from']);
+            $this->db->where('tickets.ticket_date <=', $date_range['to']);
+        }
+
+        $this->db->order_by('tickets.id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
 }
 
 ?>
