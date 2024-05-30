@@ -28,6 +28,57 @@ class Taskhub extends MY_Controller {
         }
 
 	public function index(){
+        $this->page_data['page']->title  = 'Task Hub';
+        $this->page_data['page']->parent = 'Calendar';
+
+		$this->hasAccessModule(6); 
+		$cid = logged('company_id');
+		$selected_customer_id = 0;
+
+		$keyword = '';
+        if(!empty(get('search'))) {
+			$keyword = get('search');
+            $this->page_data['search'] = $keyword;
+
+			$task_data = $this->taskhub_model->getCompanyTasksWithFilter($cid,$keyword, $this->input->get('status'), []);
+        } else {
+			if( $this->input->get('status') && $this->input->get('cus_id') ){
+				$selected_customer_id = $this->input->get('cus_id');
+				$task_data = $this->taskhub_model->getAllTasksByCustomerIdAndStatusId($this->input->get('cus_id'), $this->input->get('status'));
+			}else{
+				if($this->input->get('status') != 0) {
+					$task_data = $this->taskhub_model->getAllByCompanyIdAndStatus($cid, $this->input->get('status'));	
+				} else {
+					$task_data = $this->taskhub_model->getAllByCompanyId($cid);	
+				}
+			}			
+		}
+
+		$this->page_data['tasks'] = $task_data;
+		$this->page_data['status'] = $this->input->get('status');
+
+		$total_backlog    = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Backlog');
+		$total_task_doing = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Doing');
+		$total_task_review_fail = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Review Fail');
+		$total_task_on_testing  = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'On Testing');
+		$total_task_review = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Review');
+		$total_task_done   = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Done');
+		$total_task_closed = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Closed');
+		
+		$this->page_data['total_backlog']           = count($total_backlog);
+		$this->page_data['total_task_doing']        = count($total_task_doing);
+		$this->page_data['total_task_review_fail']  = count($total_task_review_fail);
+		$this->page_data['total_task_on_testing']   = count($total_task_on_testing);
+		$this->page_data['total_task_review']       = count($total_task_review);
+		$this->page_data['total_task_done']         = count($total_task_done);
+		$this->page_data['total_task_closed']       = count($total_task_closed);
+
+		$this->page_data['selected_customer_id'] = $selected_customer_id;
+		$this->page_data['status_selection']     = $this->taskhub_status_model->get();
+		$this->load->view('v2/pages/workcalender/taskhub/list', $this->page_data);
+	}
+
+	public function indexOld(){
         $this->page_data['page']->title = 'Task Hub';
         $this->page_data['page']->parent = 'Calendar';
 
@@ -60,9 +111,8 @@ class Taskhub extends MY_Controller {
 
 		$total_task_new = $this->taskhub_model->getAllTasksByCompanyIdAndStatusId($cid, 1);
 		$task_ongoing   = $this->taskhub_model->getAllTasksByCompanyIdAndStatusId($cid, 2);
-
-		$task_onhold   = $this->taskhub_model->getAllTasksByCompanyIdAndStatusId($cid, 3);
-		$task_resumed  = $this->taskhub_model->getAllTasksByCompanyIdAndStatusId($cid, 4);
+		$task_onhold    = $this->taskhub_model->getAllTasksByCompanyIdAndStatusId($cid, 3);
+		$task_resumed   = $this->taskhub_model->getAllTasksByCompanyIdAndStatusId($cid, 4);
 		$task_for_evaluation = $this->taskhub_model->getAllTasksByCompanyIdAndStatusId($cid, 5);
 
 		$task_completed  = $this->taskhub_model->getAllTasksByCompanyIdAndStatusId($cid, 6);
@@ -78,7 +128,7 @@ class Taskhub extends MY_Controller {
 		$this->page_data['status_selection']     = $this->taskhub_status_model->get();
 		// $this->load->view('workcalender/taskhub/list', $this->page_data);
 		$this->load->view('v2/pages/workcalender/taskhub/list', $this->page_data);
-	}
+	}	
 
 	public function create(){
         $this->page_data['page']->title  = 'Task';
@@ -1324,7 +1374,7 @@ class Taskhub extends MY_Controller {
 	        		createCronAutoSmsNotification($cid, $taskHub->task_id, 'taskhub', $taskStatus->status_text, $taskHub->created_by);
 	        	}
 
-	        	$msg ='';
+	        	$msg = '';
 	        	$is_success = 1;
         	}        	
         }
