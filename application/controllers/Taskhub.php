@@ -151,7 +151,19 @@ class Taskhub extends MY_Controller {
 		}
 
 		$taskid = trim($this->input->post('taskid'));
-		$this->page_data['status_selection'] = $this->taskhub_status_model->get();
+		//$this->page_data['status_selection'] = $this->taskhub_status_model->get();
+
+		$task_status_data[] = 'Backlog';
+		$task_status_data[] = 'Doing';
+		$task_status_data[] = 'Review Fail';
+		$task_status_data[] = 'On Testing';
+		$task_status_data[] = 'Review';
+		$task_status_data[] = 'Done';
+		$task_status_data[] = 'Closed';
+		
+
+		$this->page_data['status_selection'] = $task_status_data;
+
 		if(($id > 0) || ($taskid > 0)){
 			if($id > 0){
 				$taskid = $id;
@@ -378,7 +390,17 @@ class Taskhub extends MY_Controller {
 		$taskslists = $this->taskslists_model->getAll();
 
 		$taskid = trim($this->input->post('taskid'));
-		$this->page_data['status_selection'] = $this->taskhub_status_model->get();
+
+		$task_status_data[] = 'Backlog';
+		$task_status_data[] = 'Doing';
+		$task_status_data[] = 'Review Fail';
+		$task_status_data[] = 'On Testing';
+		$task_status_data[] = 'Review';
+		$task_status_data[] = 'Done';
+		$task_status_data[] = 'Closed';
+		$this->page_data['status_selection'] = $task_status_data;		
+
+		//$this->page_data['status_selection'] = $this->taskhub_status_model->get();
 		if(($id > 0) || ($taskid > 0)){
 			if($id > 0){
 				$taskid = $id;
@@ -956,7 +978,7 @@ class Taskhub extends MY_Controller {
 					$list_id = 0;
 				}					
 	
-				$taskStatus = $this->Taskhub_status_model->getById($post['status']);
+				//$taskStatus = $this->Taskhub_status_model->getById($post['status']);
 				$data = [
 					'prof_id' => $prof_id,
 					'title'   => isset($post['title']) ? $post['title'] : $post['subject'],
@@ -967,15 +989,15 @@ class Taskhub extends MY_Controller {
 					'estimated_date_complete' => date('Y-m-d', strtotime($post['estimated_date_complete'])),
 					'date_completed' => isset($post['date_completed']) ? $post['date_completed'] : $actual_date_complete,
 					'actual_date_complete' => $actual_date_complete,
-					'color' => isset($post['color']) ? $post['color'] : $taskStatus->status_color,
+					'color' => 'NA', //isset($post['color']) ? $post['color'] : $taskStatus->status_color,
 					'task_color' => null, //$taskStatus->status_color,
-					'status_id' => $taskStatus->status_id,
+					//'status_id' => $taskStatus->status_id,
 					'priority' => $post['priority'],
 					'company_id' => $company_id,
 					//'assigned_employee_ids' => !empty($post['a_to_multiple']) ? $post['a_to_multiple'] : $assigned_to, 
 					'assigned_employee_ids' => !empty($post_encode_assigned_to) ? $post_encode_assigned_to : $assigned_to,
-					'list_id' => $list_id
-					
+					'list_id' => $list_id,
+					'status'=> $post['status']
 				];					
 	
 				$process_successful = $this->taskhub_model->trans_update($data, array('task_id' => trim($taskid)));
@@ -1049,15 +1071,15 @@ class Taskhub extends MY_Controller {
                 'estimated_date_complete' => !empty($post['estimated_date_complete']) ? date('Y-m-d', strtotime($post['estimated_date_complete'])) : null,
 				'date_completed' => isset($post['date_completed']) ? $post['date_completed'] : null,
                 'actual_date_complete' => null,
-				'color' => isset($post['color']) ? $post['color'] : $taskStatus->status_color,
+				'color' => 'NA', //isset($post['color']) ? $post['color'] : $taskStatus->status_color,
                 'task_color' => null, //$taskStatus->status_color
-                'status_id' => $taskStatus->status_id,
+                'status_id' => null, //$taskStatus->status_id,
                 'priority' => $post['priority'],
                 'company_id' => $cid,
                 'view_count' => 0,
-				//'assigned_employee_ids' => !empty($post['a_to_multiple']) ? $post['a_to_multiple'] : $assigned_to,
 				'assigned_employee_ids' => !empty($post_encode_assigned_to) ? $post_encode_assigned_to : $assigned_to,
-				'list_id' => $list_id
+				'list_id' => $list_id,
+				'status' => $post['status']
             ];
 
             $taskId = $this->Taskhub_model->create($task_data);
