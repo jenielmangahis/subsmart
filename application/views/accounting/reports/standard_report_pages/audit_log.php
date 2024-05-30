@@ -348,7 +348,7 @@
                         <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>Subject</h6>
-                                <input id="emailSubject" class="form-control" type="text" value="Company Name: <?php echo $page->title ?>" required>
+                                <input id="emailSubject" class="form-control" type="text" value="<?php echo $companyInfo ? strtoupper($companyInfo->business_name) : ''; ?> <?php echo $page->title; ?>" required>
                             </div>
                         </div>
                         <div class="col-sm-12 mt-3">
@@ -396,11 +396,34 @@
 <?php include viewPath('accounting/reports/reports_assets/report_js'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
 
+<style>
+    .nsm-table-pagination {
+        margin-right: -60rem;
+    }
+
+    @media screen and (max-width: 1920px) {
+        .nsm-table-pagination {
+            margin-right: -75rem;
+        }
+    }
+
+    @media screen and (max-width: 1560px) {
+        .nsm-table-pagination {
+            margin-right: -60rem;
+        }
+    }
+
+    @media screen and (max-width: 1280px) {
+        .nsm-table-pagination {
+            margin-right: -50rem;
+        }
+    }
+</style>
 
 <script>
     $(document).ready(function() {
         $(".audit_log").nsmPagination({
             itemsPerPage: 10,
-        })
+        });
     });
 </script>
