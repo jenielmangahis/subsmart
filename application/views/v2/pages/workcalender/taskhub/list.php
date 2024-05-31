@@ -170,14 +170,19 @@
                                 <div class="row">
                                     <div class="col">
                                         <label for="filter-type">Status</label>
-                                        <select class="nsm-field form-select filter-task-hub-type" name="filter_type" id="filter-task-hub-type">            
-                                            <option value="0" <?=$status == 0 ? 'selected' : ''?>>All</option>
+                                        <select class="nsm-field form-select filter-task-hub-type" name="filter_type" id="filter-task-hub-type"> 
+
+                                            <?php foreach($status_selection as $d_status) { ?>
+                                                    <option value="<?php echo $d_status; ?>" <?=$status == $d_status ? 'selected' : ''?>><?php echo $d_status; ?></option>
+                                            <?php } ?>
+                                        
+                                            <!--<option value="0" <?=$status == 0 ? 'selected' : ''?>>All</option>
                                             <option value="1" <?=$status == 1 ? 'selected' : ''?>>New</option>
                                             <option value="2" <?=$status == 2 ? 'selected' : ''?>>On Going</option>
                                             <option value="3" <?=$status == 3 ? 'selected' : ''?>>On Hold</option>
                                             <option value="4" <?=$status == 4 ? 'selected' : ''?>>Resumed</option>
                                             <option value="5" <?=$status == 5 ? 'selected' : ''?>>For Evaluation</option>
-                                            <option value="6" <?=$status == 6 ? 'selected' : ''?>>Completed</option>
+                                            <option value="6" <?=$status == 6 ? 'selected' : ''?>>Completed</option>-->
                                         </select>
                                     </div>
                                 </div>

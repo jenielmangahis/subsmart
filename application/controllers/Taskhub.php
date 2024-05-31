@@ -46,7 +46,7 @@ class Taskhub extends MY_Controller {
 				$selected_customer_id = $this->input->get('cus_id');
 				$task_data = $this->taskhub_model->getAllTasksByCustomerIdAndStatusId($this->input->get('cus_id'), $this->input->get('status'));
 			}else{
-				if($this->input->get('status') != 0) {
+				if($this->input->get('status') != '') {
 					$task_data = $this->taskhub_model->getAllByCompanyIdAndStatus($cid, $this->input->get('status'));	
 				} else {
 					$task_data = $this->taskhub_model->getAllByCompanyId($cid);	
@@ -56,6 +56,16 @@ class Taskhub extends MY_Controller {
 
 		$this->page_data['tasks'] = $task_data;
 		$this->page_data['status'] = $this->input->get('status');
+
+		$task_status_data[] = 'Backlog';
+		$task_status_data[] = 'Doing';
+		$task_status_data[] = 'Review Fail';
+		$task_status_data[] = 'On Testing';
+		$task_status_data[] = 'Review';
+		$task_status_data[] = 'Done';
+		$task_status_data[] = 'Closed';
+		$this->page_data['status_selection'] = $task_status_data;		
+		//$this->page_data['status_selection'] = $this->taskhub_status_model->get();
 
 		$total_backlog    = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Backlog');
 		$total_task_doing = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Doing');
@@ -74,7 +84,6 @@ class Taskhub extends MY_Controller {
 		$this->page_data['total_task_closed']       = count($total_task_closed);
 
 		$this->page_data['selected_customer_id'] = $selected_customer_id;
-		$this->page_data['status_selection']     = $this->taskhub_status_model->get();
 		$this->load->view('v2/pages/workcalender/taskhub/list', $this->page_data);
 	}
 
