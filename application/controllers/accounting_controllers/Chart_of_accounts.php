@@ -157,8 +157,12 @@ class Chart_of_accounts extends MY_Controller {
 
         $status = get('status');            
         $type   = get('type');
+        $detail_type_id = get('detail_type_id');
 
-        $accounts = $this->chart_of_accounts_model->getFilteredAccounts($status, $type);
+        $acc_details_types = $this->account_detail_model->getDetailTypesById(3);
+        $this->page_data['acc_details_types'] = $acc_details_types;
+
+        $accounts = $this->chart_of_accounts_model->getFilteredAccounts($status, $type, $detail_type_id);
 
         $data = [];
         foreach($accounts as $index => $account) {
@@ -223,6 +227,9 @@ class Chart_of_accounts extends MY_Controller {
         }
         if(!empty(get('type'))) {
             $this->page_data['type'] = get('type');
+        }
+        if(!empty(get('detail_type_id'))) {
+            $this->page_data['detail_type_id'] = get('detail_type_id');
         }
 
         $this->page_data['accounts'] = $data;

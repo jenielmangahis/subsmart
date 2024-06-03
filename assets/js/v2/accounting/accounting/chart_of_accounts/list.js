@@ -352,12 +352,19 @@ function test(){
 
 $('#apply-filter-coa-button').on('click', function() {
     var filterType = $('.filter-coa-type').val();
-    var filterStatus = $('.filter-coa-status').val();            
+    var filterStatus = $('.filter-coa-status').val();       
+    var filterDetailType = $('.filter-coa-detail-type').val();    
     var url        = `${base_url}accounting/chart-of-accounts?`;
     url += filterType !== 0 ? `type=${filterType}&` : '';
     url += filterStatus !== 0 ? `status=${filterStatus}&` : '';
+    url += filterDetailType !== 0 ? `detail_type_id=${filterDetailType}&` : '';
     if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
         url = url.slice(0, -1); 
     }
     location.href = url;
+});
+
+
+$(".reset-button").click(function(){
+    window.location.href = base_url + "accounting/chart-of-accounts";
 });

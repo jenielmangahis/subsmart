@@ -268,7 +268,7 @@
 								</div>
 								<div class="row align-items-end mx-0 p-4">
 									<div class="col">
-										<a href="/accounting/employees/paycheck-list">View paycheck list</a>
+										<a href="<?php echo base_url(); ?>accounting/employees/paycheck-list">View paycheck list</a>
 									</div>
 								</div>
 							</div>
@@ -282,15 +282,15 @@
 										<h6>Run Payroll</h6></a>
 									</div>
                                     <div class="col-sm-6">
-                                        <a href="/accounting/employees" class="pr-a"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
+                                        <a href="<?php echo base_url(); ?>accounting/employees" class="pr-a"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
 										<h6 >Add Employee</h6> </a>
                                     </div>
                                     <div class="col-sm-6">
-                                        <a href="/accounting/contractors" class="pr-a"><p class=""><i class="fa fa-briefcase h2 text-success border border-dark rounded-circle p-4"></i></p>
+                                        <a href="<?php echo base_url(); ?>accounting/contractors" class="pr-a"><p class=""><i class="fa fa-briefcase h2 text-success border border-dark rounded-circle p-4"></i></p>
 										<h6>Pay Contractor</h6></a>
                                     </div>
                                     <div class="col-sm-6">
-                                        <a href="/accounting/contractors" class="pr-a"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
+                                        <a href="<?php echo base_url(); ?>accounting/contractors" class="pr-a"><p class=""><i class="fa fa-user-plus h2 text-success border border-dark rounded-circle p-4"></i></p>
 										<h6>Add Contractor</h6></a>
                                     </div>
 								</div>
@@ -1109,6 +1109,7 @@
             }
         });
 
+        /*
         var profilePhoto = new Dropzone('#employeeProfilePhotoUpdate', {
             url: base_url + 'users/profilePhoto',
             acceptedFiles: "image/*",
@@ -1148,5 +1149,6 @@
                 return (previewElement = file.previewElement) != null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
             }
         });
+        */
     });
 </script>
