@@ -398,7 +398,7 @@
 
 <style>
     .nsm-table-pagination {
-        margin-right: -60rem;
+        margin-right: -83rem;
     }
 
     @media screen and (max-width: 1920px) {

@@ -17,7 +17,7 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
                                 <div class="row">
-                                    <div class="col-12 col-md-6">
+                                    <div class="col-12 col-md-12">
                                         <label for="filter-report-period">Report period</label>
                                         <select class="nsm-field form-select" name="filter_report_period" id="filter-report-period">
                                             <option value="all-dates">All Dates</option>
@@ -56,15 +56,15 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12 col-md-6">
-                                        <label for="filter-from">From</label>
-                                        <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" value="<?= date("01/01/Y") ?>" id="filter-from">
+                                        <label for="from">From</label>
+                                        <div class="">
+                                            <input type="date" id="from" class="form-control nsm-field date" data-type="from">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <label for="filter-to">To</label>
-                                        <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" value="<?= date("m/d/Y") ?>" id="filter-to">
+                                        <label for="to">To</label>
+                                        <div class="">
+                                            <input type="date" id="to" class="form-control nsm-field date" data-type="to">
                                         </div>
                                     </div>
                                 </div>
@@ -83,8 +83,6 @@
                                             <option value="products-services">Products/Services</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-12 col-md-6">
                                         <label for="filter-display-columns-by">Show non-zero or active only</label>
                                         <div class="dropdown">
@@ -123,6 +121,9 @@
                                             </ul>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row">
+
                                 </div>
                                 <div class="row">
                                     <div class="col-12 col-md-6">
@@ -178,8 +179,6 @@
                                             </ul>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row grid-mb">
                                     <div class="col-12 col-md-6">
                                         <label for="" class="w-100">Accounting method</label>
                                         <div class="form-check d-inline-block">
@@ -191,6 +190,9 @@
                                             <label for="accrual-method" class="form-check-label">Accrual</label>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row grid-mb">
+
                                 </div>
                                 <div class="row">
                                     <div class="col-12 d-flex justify-content-center">
@@ -217,7 +219,7 @@
                                 <div class="row">
                                     <div class="col-12 col-md-6 grid-mb">
                                         <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button">
+                                            <button type="button" class="nsm-button" id="collapseButton">
                                                 <span>Collapse</span>
                                             </button>
                                             <button type="button" class="nsm-button" data-bs-toggle="dropdown">
@@ -247,10 +249,10 @@
                                     </div>
                                     <div class="col-12 col-md-6 grid-mb text-end">
                                         <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
+                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#email_accounts_modal">
                                                 <i class='bx bx-fw bx-envelope'></i>
                                             </button>
-                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
+                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal" onclick="previewPDF()">
                                                 <i class='bx bx-fw bx-printer'></i>
                                             </button>
                                             <button type="button" class="nsm-button" data-bs-toggle="dropdown">
@@ -266,7 +268,7 @@
                                             <ul class="dropdown-menu dropdown-menu-end p-3">
                                                 <p class="m-0">Display density</p>
                                                 <div class="form-check">
-                                                    <input type="checkbox" checked id="compact-display" class="form-check-input">
+                                                    <input type="checkbox" id="compact-display" class="form-check-input">
                                                     <label for="compact-display" class="form-check-label">Compact</label>
                                                 </div>
                                             </ul>
@@ -276,7 +278,7 @@
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?= $clients->business_name ?></span></h4>
+                                        <h4 class="text-center fw-bold" id="businessName"><span class="company-name"><?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?></span></h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
                                         <p class="m-0 fw-bold">Balance Sheet</p>
@@ -292,120 +294,130 @@
                                             <td data-name="Total">TOTAL</td>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr data-bs-toggle="collapse" data-bs-target="#accordion" class="clickable collapse-row collapsed">
+                                    <tbody id="reportTable">
+                                        <!-- ASSETS -->
+                                        <tr data-bs-toggle="collapse" data-bs-target="#assets" class="clickable collapse-row collapsed">
                                             <td><i class="bx bx-fw bx-caret-right"></i> ASSETS</td>
-                                            <td>$571,265.66</td>
+                                            <td>$564,732.95</td>
                                         </tr>
-                                        <tr data-bs-toggle="collapse" data-bs-target="#accordion1" class="clickable collapse-row collapse" id="accordion">
-                                            <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Current Assets</td>
-                                            <td></td>
+                                        <tr class="collapse" id="assets">
+                                            <td colspan="2">
+                                                <table class="table mb-0">
+                                                    <tbody>
+                                                        <tr data-bs-toggle="collapse" data-bs-target="#currentAssets" class="clickable collapse-row collapsed">
+                                                            <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Current Assets</td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr id="currentAssets" class="collapse">
+                                                            <td colspan="2">
+                                                                <table class="table mb-0">
+                                                                    <tbody>
+                                                                        <tr data-bs-toggle="collapse" data-bs-target="#bankAccounts" class="clickable collapse-row collapsed">
+                                                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Bank Accounts</td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr id="bankAccounts" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Checking</td>
+                                                                            <td>305,061.93</td>
+                                                                        </tr>
+                                                                        <tr id="bankAccounts" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Test Category</td>
+                                                                            <td>10.00</td>
+                                                                        </tr>
+                                                                        <tr id="bankAccounts" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;<b>Total Bank Accounts</b></td>
+                                                                            <td><b>$307,052.70</b></td>
+                                                                        </tr>
+                                                                        <tr data-bs-toggle="collapse" data-bs-target="#accountsReceivable" class="clickable collapse-row collapsed">
+                                                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Accounts Receivable</td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr id="accountsReceivable" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Accounts Receivable</td>
+                                                                            <td>205,324.93</td>
+                                                                        </tr>
+                                                                        <tr id="accountsReceivable" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;<b>Total Accounts Receivable</b></td>
+                                                                            <td><b>$205,324.93</b></td>
+                                                                        </tr>
+                                                                        <tr data-bs-toggle="collapse" data-bs-target="#otherCurrentAssets" class="clickable collapse-row collapsed">
+                                                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Other Current Assets</td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr id="otherCurrentAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Credit Card Receivables</td>
+                                                                            <td>207.95</td>
+                                                                        </tr>
+                                                                        <tr id="otherCurrentAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Inventory</td>
+                                                                            <td>25.00</td>
+                                                                        </tr>
+                                                                        <tr id="otherCurrentAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Inventory Asset-1</td>
+                                                                            <td>25,705.75</td>
+                                                                        </tr>
+                                                                        <tr id="otherCurrentAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Test OCA</td>
+                                                                            <td>1,000.00</td>
+                                                                        </tr>
+                                                                        <tr id="otherCurrentAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Uncategorized Asset</td>
+                                                                            <td>9,068.80</td>
+                                                                        </tr>
+                                                                        <tr id="otherCurrentAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Undeposited Funds</td>
+                                                                            <td>16,347.82</td>
+                                                                        </tr>
+                                                                        <tr id="otherCurrentAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;<b>Total Other Current Assets</b></td>
+                                                                            <td><b>$52,355.32</b></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr data-bs-toggle="collapse" data-bs-target="#fixedAssets" class="clickable collapse-row collapsed">
+                                                            <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Fixed Assets</td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr id="fixedAssets" class="collapse">
+                                                            <td colspan="2">
+                                                                <table class="table mb-0">
+                                                                    <tbody>
+                                                                        <tr id="fixedAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;Accumulated Depreciation</td>
+                                                                            <td>-26,176.00</td>
+                                                                        </tr>
+                                                                        <tr id="fixedAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;Fixed Asset Computers</td>
+                                                                            <td>6,069.00</td>
+                                                                        </tr>
+                                                                        <tr id="fixedAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;Fixed Asset Furniture</td>
+                                                                            <td>25,289.00</td>
+                                                                        </tr>
+                                                                        <tr id="fixedAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;Fixed Asset Phone</td>
+                                                                            <td>1,200.00</td>
+                                                                        </tr>
+                                                                        <tr id="fixedAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;<b>Total Fixed Assets</b></td>
+                                                                            <td><b>$6,382.00</b></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <!-- <tr id="assets" class="collapse">
+                                                            <td>&emsp;<b>TOTAL ASSETS</b></td>
+                                                            <td><b>$571,114.95</b></td>
+                                                        </tr> -->
+                                                    </tbody>
+                                                </table>
+                                            </td>
                                         </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion2">
-                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Bank Accounts</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr id="accordion2" class="collapse">
-                                            <td>&emsp;&emsp;&emsp;Checking</td>
-                                            <td>305,061.93</td>
-                                        </tr>
-                                        <tr id="accordion2" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion3">
-                                            <td>&emsp;&emsp;&emsp;<i class="bx bx-fw bx-caret-right"> Test Bank (Cash on hand)</td>
-                                            <td>990.77</td>
-                                        </tr>
-                                        <tr id="accordion3" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;&emsp; Sub-bank (Cash on hand)</td>
-                                            <td>990.00</td>
-                                        </tr>
-                                        <tr id="accordion3" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;&emsp; <b>Total Test Bank (Cash on hand)</b></td>
-                                            <td><b>1,980.77</b></td>
-                                        </tr>
-                                        <tr id="accordion2" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;Test Category</td>
-                                            <td>10.00</td>
-                                        </tr>
-                                        <tr id="accordion2" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;<b>Total Bank Accounts</b></td>
-                                            <td><b>$307,052.70</b></td>
-                                        </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion4">
-                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Accounts Receivable</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr id="accordion4" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;Accounts Receivable</td>
-                                            <td>205,324.93</td>
-                                        </tr>
-                                        <tr id="accordion4" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;<b>Total Accounts Receivable</b></td>
-                                            <td><b>$205,324.93</b></td>
-                                        </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion5">
-                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Other Current Assets</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr id="accordion5" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;Credit Card Receivables</td>
-                                            <td>207.95</td>
-                                        </tr>
-                                        <tr id="accordion5" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;Inventory</td>
-                                            <td>25.00</td>
-                                        </tr>
-                                        <tr id="accordion5" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;Inventory Asset-1</td>
-                                            <td>25,705.75</td>
-                                        </tr>
-                                        <tr id="accordion5" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;Test OCA</td>
-                                            <td>1,000.00</td>
-                                        </tr>
-                                        <tr id="accordion5" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;Uncategorized Asset</td>
-                                            <td>9,068.80</td>
-                                        </tr>
-                                        <tr id="accordion5" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;Undeposited Funds</td>
-                                            <td>16,347.82</td>
-                                        </tr>
-                                        <tr id="accordion5" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;<b>Total Other Current Assets</b></td>
-                                            <td><b>$52,355.32</b></td>
-                                        </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;<b>Total Current Assets</b></td>
-                                            <td><b>$564,732.95</b></td>
-                                        </tr>
-                                        <tr data-bs-toggle="collapse" data-bs-target="#accordion1" class="clickable collapse-row collapse" id="accordion6">
-                                            <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Fixed Assets</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr id="accordion6" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;Accumulated Depreciation</td>
-                                            <td>-26,176.00</td>
-                                        </tr>
-                                        <tr id="accordion6" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;Fixed Asset Computers</td>
-                                            <td>6,069.00</td>
-                                        </tr>
-                                        <tr id="accordion6" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;Fixed Asset Furniture</td>
-                                            <td>25,289.00</td>
-                                        </tr>
-                                        <tr id="accordion6" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;Fixed Asset Phone</td>
-                                            <td>1,200.00</td>
-                                        </tr>
-                                        <tr id="accordion6" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;<b>Total Fixed Assets</b></td>
-                                            <td><b>$6,382.00</b></td>
-                                        </tr>
-                                        <tr class="clickable collapse-row collapse" id="accordion7">
-                                            <td>&emsp;<b>TOTAL ASSETS</b></td>
-                                            <td><b>$571,114.95</b></td>
-                                        </tr>
-                                        <tr>
+                                        <!-- LIABILITIES AND EQUITY -->
+                                        <tr data-bs-toggle="collapse" data-bs-target="#liabilitiesEquity" class="clickable collapse-row collapsed">
                                             <td><i class="bx bx-fw bx-caret-right"></i> LIABILITIES AND EQUITY</td>
                                             <td>$571,265.66</td>
                                         </tr>
@@ -423,11 +435,322 @@
     </div>
 </div>
 
+<!-- START: PRINT/SAVE MODAL -->
+<div class="modal" id="print_accounts_modal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Print or save as PDF</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-3 mt-1 mb-3">
+                        <h6>Report print settings</h6>
+                        <hr>
+                        <div class="form-group mb-2">
+                            <label>Orientation</label>
+                            <select id="pageOrientation" name="pageOrientation" class="form-select">
+                                <option value="P" selected>Portrait</option>
+                                <option value="L">Landscape</option>
+                            </select>
+                        </div>
+                        <div class="form-check">
+                            <input id="pageHeaderRepeat" name="pageHeaderRepeat" class="form-check-input" type="checkbox">
+                            <label class="form-check-label" for="pageHeaderRepeat">Repeat Page Header</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <iframe id="pdfPreview" class="border-0" width="100%" height="450px"></iframe>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="float-start">
+                            <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        </div>
+                        <div class="float-end">
+                            <button type="button" class="nsm-button primary savePDF">Save as PDF</button>
+                            <!-- <button type="button" class="nsm-button primary printPDF">Print</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END: PRINT/SAVE MODAL -->
+<!-- START: EMAIL REPORT MODAL -->
+<div class="modal" id="email_accounts_modal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Email Report</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="sendEmailForm">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1">
+                            <div class="form-group">
+                                <h6>To</h6>
+                                <input id="emailTo" class="form-control" type="email" placeholder="Send to" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <div class="form-group">
+                                <h6>CC</h6>
+                                <input id="emailCC" class="form-control" type="email" placeholder="Carbon Copy">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <div class="form-group">
+                                <h6>Subject</h6>
+                                <input id="emailSubject" class="form-control" type="text" value="<?php echo $clients->business_name ?>" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <div class="form-group">
+                                <h6>Body</h6>
+                                <div id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title ?> from <?php echo $clients->business_name ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?></div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <div class="form-group">
+                                <h6>Attachment</h6>
+                                <div class="row">
+                                    <div class="input-group borderRadius0 pdfAttachment">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 pdfAttachmentCheckbox" type="checkbox"></div>
+                                        <input id="pdfReportFilename" class="form-control" type="text" value="<?php echo $page->title ?>" required>
+                                        <input class="form-control" type="text" disabled readonly value=".pdf" style="max-width: 60px;">
+                                    </div>
+                                    <div class="input-group borderRadius0">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 xlsxAttachmentCheckbox" type="checkbox"></div>
+                                        <input id="xlsxReportFileName" class="form-control" type="text" value="<?php echo $page->title ?>" required>
+                                        <input class="form-control" type="text" disabled readonly value=".xlsx" style="max-width: 60px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="float-start">
+                                <button type="button" id="emailCloseModal" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                            <div class="float-end">
+                                <button type="submit" class="nsm-button primary sendEmail"><span class="sendEmail_Loader"></span>Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END: EMAIL REPORT MODAL -->
+
 <?php include viewPath('v2/includes/footer'); ?>
+<style>
+    .compact-table td,
+    .compact-table th {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+</style>
 <script>
-        $(document).ready(function(){
-            $(".collapse-row").click(function(){
-                $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
-            });
+    $(document).ready(function() {
+        var isCollapsed = true;
+        var originalOrder = $("#reportTable").children();
+
+        $("#collapseButton").click(function() {
+            if (isCollapsed) {
+                $(".collapse").collapse('show');
+                $("#collapseButton span").text('Uncollapse');
+            } else {
+                $(".collapse").collapse('hide');
+                $("#collapseButton span").text('Collapse');
+            }
+            isCollapsed = !isCollapsed;
         });
-    </script>
+
+        $(".collapse-row").click(function() {
+            var target = $(this).data("bs-target");
+            $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
+            $(target).collapse('toggle');
+        });
+
+        $("input[name='sort_order']").change(function() {
+            var sortOrder = $("input[name='sort_order']:checked").attr('id');
+            sortTable(sortOrder);
+        });
+
+        function sortTable(order) {
+            var rows = $("#reportTable > tr").toArray();
+
+            if (order === 'sort-default') {
+                $("#reportTable").html(originalOrder);
+            } else {
+                rows.sort(function(a, b) {
+                    var aValue = parseFloat($(a).find("td").eq(1).text().replace(/[\$,]/g, '')) || 0;
+                    var bValue = parseFloat($(b).find("td").eq(1).text().replace(/[\$,]/g, '')) || 0;
+                    if (order === 'sort-asc') {
+                        return aValue - bValue;
+                    } else if (order === 'sort-desc') {
+                        return bValue - aValue;
+                    }
+                });
+                $("#reportTable").html(rows);
+            }
+        }
+
+        $("#compact-display").change(function() {
+            if ($(this).is(":checked")) {
+                $("#reportTable").addClass("compact-table");
+            } else {
+                $("#reportTable").removeClass("compact-table");
+            }
+        });
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+<script>
+    document.getElementById('export-to-excel').addEventListener('click', function() {
+        var table = document.querySelector('.nsm-table');
+        var wb = XLSX.utils.table_to_book(table, {
+            sheet: "Sheet1"
+        });
+        XLSX.writeFile(wb, 'table_data.xlsx');
+    });
+
+    document.getElementById('export-to-pdf').addEventListener('click', function() {
+        generatePDF(false);
+    });
+
+    document.getElementById('preview-pdf').addEventListener('click', function() {
+        generatePDF(true);
+    });
+
+    function generatePDF(preview = false) {
+        var table = document.querySelector('.nsm-table');
+        var companyName = document.querySelector('.company-name').textContent;
+        var reportTitle = "Balance Sheet";
+        var reportDate = "As of " + new Date().toLocaleDateString();
+
+        html2canvas(table, {
+            onrendered: function(canvas) {
+                var imgData = canvas.toDataURL('image/png');
+                var {
+                    jsPDF
+                } = window.jspdf;
+                var pdf = new jsPDF('p', 'pt', 'a4');
+
+                var imgWidth = 555; 
+                var pageHeight = 792; 
+                var imgHeight = canvas.height * imgWidth / canvas.width;
+                var heightLeft = imgHeight;
+
+                var margin = 20; 
+                var yOffset = 80; 
+
+                // Add header
+                pdf.setFontSize(18);
+                pdf.text(companyName, pdf.internal.pageSize.getWidth() / 2, margin, {
+                    align: 'center'
+                });
+
+                pdf.setFontSize(16);
+                pdf.text(reportTitle, pdf.internal.pageSize.getWidth() / 2, margin + 20, {
+                    align: 'center'
+                });
+
+                pdf.setFontSize(14);
+                pdf.text(reportDate, pdf.internal.pageSize.getWidth() / 2, margin + 40, {
+                    align: 'center'
+                });
+
+                pdf.setLineWidth(0.5);
+                pdf.line(margin, margin + 50, pdf.internal.pageSize.getWidth() - margin, margin + 50);
+
+                // Add table
+                pdf.addImage(imgData, 'PNG', margin, yOffset, imgWidth, imgHeight);
+                heightLeft -= pageHeight - yOffset;
+
+                var pageNumber = 1;
+                pdf.setFontSize(10);
+                pdf.text('Page ' + String(pageNumber), pdf.internal.pageSize.getWidth() - margin - 30, pageHeight - 30);
+
+                while (heightLeft >= 0) {
+                    pageNumber++;
+                    yOffset = heightLeft - imgHeight;
+                    pdf.addPage();
+                    // Re-add header
+                    pdf.setFontSize(18);
+                    pdf.text(companyName, pdf.internal.pageSize.getWidth() / 2, margin, {
+                        align: 'center'
+                    });
+
+                    pdf.setFontSize(16);
+                    pdf.text(reportTitle, pdf.internal.pageSize.getWidth() / 2, margin + 20, {
+                        align: 'center'
+                    });
+
+                    pdf.setFontSize(14);
+                    pdf.text(reportDate, pdf.internal.pageSize.getWidth() / 2, margin + 40, {
+                        align: 'center'
+                    });
+
+                    pdf.setLineWidth(0.5);
+                    pdf.line(margin, margin + 50, pdf.internal.pageSize.getWidth() - margin, margin + 50);
+
+                    pdf.addImage(imgData, 'PNG', margin, margin + 60, imgWidth, imgHeight);
+                    heightLeft -= pageHeight;
+                    pdf.setFontSize(10);
+                    pdf.text('Page ' + String(pageNumber), pdf.internal.pageSize.getWidth() - margin - 30, pageHeight - 30);
+                }
+
+                if (preview) {
+                    var pdfData = pdf.output('datauristring');
+                    document.getElementById('pdfPreview').src = pdfData;
+                    showPDFModal();
+                } else {
+                    pdf.save('Balance_Sheet.pdf');
+                }
+            }
+        });
+    }
+
+    function previewPDF() {
+        generatePDF(true);
+        closeModal();
+    }
+
+    function closeModal() {
+        var modalElement = document.getElementById('print_accounts_modal');
+        var modal = bootstrap.Modal.getInstance(modalElement);
+        modal.hide();
+    }
+
+
+    function showPDFModal() {
+        var modal = new bootstrap.Modal(document.getElementById('print_accounts_modal'));
+        modal.show();
+    }
+
+    document.getElementById('print_accounts_modal').addEventListener('hide.bs.modal', function() {
+        var modalBackdrop = document.querySelector('.modal-backdrop');
+        if (modalBackdrop) {
+            modalBackdrop.parentNode.removeChild(modalBackdrop);
+        }
+    });
+</script>
+<script>
+    var currentDate = new Date().toISOString().split('T')[0];
+
+    document.getElementById('from').value = currentDate;
+    document.getElementById('to').value = currentDate;
+</script>

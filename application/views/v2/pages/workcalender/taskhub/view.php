@@ -83,7 +83,7 @@
                                                         if(isset($assignee_name) && $assignee_name != "") {
                                                             echo substr($assignee_name, 1);
                                                         } else {
-                                                            echo "Not Assigned User";
+                                                            echo "No Assigned User";
                                                         }
                                                     ?>
                                                     </td>
