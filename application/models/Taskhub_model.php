@@ -140,6 +140,18 @@ class Taskhub_model extends MY_Model {
         return $query->result();
     }
 
+    public function getAllTasksByCompanyIdAndStatus($company_id, $status = "")
+    {
+        $this->db->select('tasks.task_id');
+        $this->db->from($this->table);
+
+        $this->db->where('tasks.company_id', $company_id);
+        $this->db->where('tasks.status', $status);
+        $this->db->order_by('tasks.date_created','DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getAllByTaskIds($ids = array())
     {
         $this->db->select('*');

@@ -58,13 +58,54 @@
                                     <i class="bx bx-receipt"></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year"><?php echo isset($total_task_new) ? $total_task_new : 0; ?></h2>
-                                    <span>TASK NEW</span>
+                                    <h2 id="total_this_year"><?php echo isset($total_backlog) ? $total_backlog : 0; ?></h2>
+                                    <span>BACKLOG</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+        
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter success h-100 mb-2 " id="task-ongoing">
+                            <div class="row h-100">
+                                <div class="col d-flex justify-content-center align-items-center">
+                                    <i class="bx bx-receipt"></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id="total_this_year"><?php echo isset($total_task_doing) ? $total_task_doing : 0; ?></h2>
+                                    <span>DOING</span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter primary h-100 mb-2" id="task-completed">
+                            <div class="row h-100">
+                                <div class="col d-flex justify-content-center align-items-center">
+                                    <i class="bx bx-receipt"></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id="total_this_year"><?php echo isset($total_task_review_fail) ? $total_task_review_fail : 0; ?></h2>
+                                    <span>REVIEW FAIL</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  
+                    <div class="col-12 col-md-3">
+                        <div class="nsm-counter primary h-100 mb-2" id="task-completed">
+                            <div class="row h-100">
+                                <div class="col d-flex justify-content-center align-items-center">
+                                    <i class="bx bx-receipt"></i>
+                                </div>
+                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                    <h2 id="total_this_year"><?php echo isset($total_task_on_testing) ? $total_task_on_testing : 0; ?></h2>
+                                    <span>ON TESTING</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     
                     <div class="col-12 col-md-3">
                         <div class="nsm-counter success h-100 mb-2 " id="task-ongoing">
@@ -73,8 +114,8 @@
                                     <i class="bx bx-receipt"></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year"><?php echo isset($total_task_hold) ? $total_task_hold : 0; ?></h2>
-                                    <span>TASK ONHOLD</span>
+                                    <h2 id="total_this_year"><?php echo isset($total_task_review) ? $total_task_review : 0; ?></h2>
+                                    <span>REVIEW</span>
                                 </div>
                             </div>
                         </div>
@@ -87,28 +128,12 @@
                                     <i class="bx bx-receipt"></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year"><?php echo isset($total_task_resumed) ? $total_task_resumed : 0; ?></h2>
-                                    <span>TASK RESUMED</span>
+                                    <h2 id="total_this_year"><?php echo isset($total_task_done) ? $total_task_done : 0; ?></h2>
+                                    <span>DONE</span>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    
-                    <div class="col-12 col-md-3">
-                        <div class="nsm-counter primary h-100 mb-2" id="task-completed">
-                            <div class="row h-100">
-                                <div class="col d-flex justify-content-center align-items-center">
-                                    <i class="bx bx-receipt"></i>
-                                </div>
-                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year"><?php echo isset($total_task_for_evaluation) ? $total_task_for_evaluation : 0; ?></h2>
-                                    <span>TASK FOR EVALUATION</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
 
                     <div class="col-12 col-md-3">
                         <div class="nsm-counter success h-100 mb-2 " id="task-ongoing">
@@ -117,27 +142,12 @@
                                     <i class="bx bx-receipt"></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year"><?php echo isset($total_task_ongoing) ? $total_task_ongoing : 0; ?></h2>
-                                    <span>TASK ONGOING</span>
+                                    <h2 id="total_this_year"><?php echo isset($total_task_closed) ? $total_task_closed : 0; ?></h2>
+                                    <span>CLOSED</span>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-12 col-md-3">
-                        <div class="nsm-counter primary h-100 mb-2" id="task-completed">
-                            <div class="row h-100">
-                                <div class="col d-flex justify-content-center align-items-center">
-                                    <i class="bx bx-receipt"></i>
-                                </div>
-                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year"><?php echo isset($total_task_completed) ? $total_task_completed : 0; ?></h2>
-                                    <span>TASK COMPLETED</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
+                    </div>                    
                 </div>
  
                 <div class="row">
@@ -160,14 +170,19 @@
                                 <div class="row">
                                     <div class="col">
                                         <label for="filter-type">Status</label>
-                                        <select class="nsm-field form-select filter-task-hub-type" name="filter_type" id="filter-task-hub-type">            
-                                            <option value="0" <?=$status == 0 ? 'selected' : ''?>>All</option>
+                                        <select class="nsm-field form-select filter-task-hub-type" name="filter_type" id="filter-task-hub-type"> 
+
+                                            <?php foreach($status_selection as $d_status) { ?>
+                                                    <option value="<?php echo $d_status; ?>" <?=$status == $d_status ? 'selected' : ''?>><?php echo $d_status; ?></option>
+                                            <?php } ?>
+                                        
+                                            <!--<option value="0" <?=$status == 0 ? 'selected' : ''?>>All</option>
                                             <option value="1" <?=$status == 1 ? 'selected' : ''?>>New</option>
                                             <option value="2" <?=$status == 2 ? 'selected' : ''?>>On Going</option>
                                             <option value="3" <?=$status == 3 ? 'selected' : ''?>>On Hold</option>
                                             <option value="4" <?=$status == 4 ? 'selected' : ''?>>Resumed</option>
                                             <option value="5" <?=$status == 5 ? 'selected' : ''?>>For Evaluation</option>
-                                            <option value="6" <?=$status == 6 ? 'selected' : ''?>>Completed</option>
+                                            <option value="6" <?=$status == 6 ? 'selected' : ''?>>Completed</option>-->
                                         </select>
                                     </div>
                                 </div>

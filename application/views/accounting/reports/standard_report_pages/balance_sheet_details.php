@@ -58,13 +58,13 @@
                                     <div class="col-12 col-md-6">
                                         <label for="filter-from">From</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" value="<?=date("01/01/Y")?>" id="filter-from">
+                                            <input type="text" class="nsm-field form-control datepicker" value="<?= date("01/01/Y") ?>" id="filter-from">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <label for="filter-to">To</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" value="<?=date("m/d/Y")?>" id="filter-to">
+                                            <input type="text" class="nsm-field form-control datepicker" value="<?= date("m/d/Y") ?>" id="filter-to">
                                         </div>
                                     </div>
                                 </div>
@@ -100,7 +100,7 @@
                 </div>
 
                 <div class="row g-3">
-                    <div class="col-12 col-md-6 offset-md-3">
+                    <div class="col-12 col-md-10 offset-md-1">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
                                 <div class="row">
@@ -269,11 +269,11 @@
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?=$clients->business_name?></span></h4>
+                                        <h4 class="text-center fw-bold"><span class="company-name"><?= $clients->business_name ?></span></h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
                                         <p class="m-0 fw-bold">Balance Sheet Detail</p>
-                                        <p>As of <?=date("F d, Y")?></p>
+                                        <p>As of <?= date("F d, Y") ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -293,8 +293,9 @@
                                             <td data-name="Balance">BALANCE</td>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
+                                    <tbody id="reportTable">
+                                        <!-- ASSETS -->
+                                        <tr data-bs-toggle="collapse" data-bs-target="#assets" class="clickable collapse-row collapsed">
                                             <td><i class="bx bx-fw bx-caret-right"></i> ASSETS</td>
                                             <td></td>
                                             <td></td>
@@ -306,67 +307,84 @@
                                             <td>$22,544.77</td>
                                             <td>$1,404,676.97</td>
                                         </tr>
-                                        <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion">
-                                            <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Checking</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                        <tr id="assets" class="collapse">
+                                            <td colspan="10">
+                                                <table class="table mb-0">
+                                                    <tbody>
+                                                        <tr data-bs-toggle="collapse" data-bs-target="#checking" class="clickable collapse-row collapsed">
+                                                            <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Checking</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr id="checking" class="collapse">
+                                                            <td colspan="10">
+                                                                <table class="table mb-0">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>Beginning balance</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td>1,081,409.39</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>06/01/2022</td>
+                                                                            <td>Expense</td>
+                                                                            <td></td>
+                                                                            <td>QuickBooks Payment</td>
+                                                                            <td></td>
+                                                                            <td>QuickBooks Payment Fees-1</td>
+                                                                            <td></td>
+                                                                            <td>$19.95</td>
+                                                                            <td>-19.95</td>
+                                                                            <td>1,081,389.44</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>06/01/2022</td>
+                                                                            <td>Deposit</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td>-Split-</td>
+                                                                            <td>$1,167.62</td>
+                                                                            <td></td>
+                                                                            <td>1,167.62</td>
+                                                                            <td>1,082,557.06</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&emsp;<b>TOTAL ASSETS</b></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td>$22,544.77</td>
+                                                            <td>$1,404,676.97</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
                                         </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion2">
-                                            <td>Beginning balance</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>1,081,409.39</td>
-                                        </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion2">
-                                            <td>06/01/2022</td>
-                                            <td>Expense</td>
-                                            <td></td>
-                                            <td>QuickBooks Payment</td>
-                                            <td></td>
-                                            <td>QuickBooks Payment Fees-1</td>
-                                            <td></td>
-                                            <td>$19.95</td>
-                                            <td>-19.95</td>
-                                            <td>1,081,389.44</td>
-                                        </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion2">
-                                            <td>06/01/2022</td>
-                                            <td>Deposit</td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>-Split-</td>
-                                            <td>$1,167.62</td>
-                                            <td></td>
-                                            <td>1,167.62</td>
-                                            <td>1,082,557.06</td>
-                                        </tr>
-                                        <tr  class="clickable collapse-row collapse"  id="accordion">
-                                            <td>&emsp;<b>TOTAL ASSETS</b></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td>$22,544.77</td>
-                                            <td>$1,404,676.97</td>
-                                        </tr>
-                                        <tr>
+                                        <!-- LIABILITIES AND EQUITY -->
+                                        <tr data-bs-toggle="collapse" data-bs-target="#liabilitiesEquity" class="clickable collapse-row collapsed">
                                             <td><i class="bx bx-fw bx-caret-right"></i> LIABILITIES AND EQUITY</td>
                                             <td></td>
                                             <td></td>
@@ -382,7 +400,7 @@
                                 </table>
                             </div>
                             <div class="nsm-card-footer text-center">
-                                <p class="m-0">Accrual basis <?=date("l, F j, Y h:i A eP")?></p>
+                                <p class="m-0">Accrual basis <?= date("l, F j, Y h:i A eP") ?></p>
                             </div>
                         </div>
                     </div>
@@ -393,3 +411,24 @@
 </div>
 
 <?php include viewPath('v2/includes/footer'); ?>
+
+<script>
+    var isCollapsed = true;
+
+    $("#collapseButton").click(function() {
+        if (isCollapsed) {
+            $(".collapse").collapse('show');
+            $("#collapseButton span").text('Uncollapse');
+        } else {
+            $(".collapse").collapse('hide');
+            $("#collapseButton span").text('Collapse');
+        }
+        isCollapsed = !isCollapsed;
+    });
+
+    $(".collapse-row").click(function() {
+        var target = $(this).data("bs-target");
+        $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
+        $(target).collapse('toggle');
+    });
+</script>

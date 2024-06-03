@@ -88,23 +88,9 @@ if (isset($selected_participants)) {
                                         <div class="col-12 col-md-4">
                                             <label class="content-subtitle fw-bold d-block mb-2">Status</label>
                                             <select name="status" id="status-select" class="nsm-field form-select status-select">
-                                                <?php
-                                                if ((empty(set_value('status'))) && (isset($task))) {
-                                                    $sel_status = $taskHub->status_id;
-                                                } else {
-                                                    $sel_status = set_value('status');
-                                                }
-
-                                                foreach ($status_selection as $row) {
-                                                    $tag = '';
-                                                    $sfx = '';
-                                                    if ($row->status_id == $sel_status) {
-                                                        $tag = ' selected';
-                                                        $sfx = ' - Current';
-                                                    }
-                                                    echo '<option value="' . $row->status_id . '"' . $tag . '>' . $row->status_text . $sfx . '</option>';
-                                                }
-                                                ?>
+                                                <?php foreach($status_selection as $status) { ?>
+                                                <option value="<?php echo $status; ?>"><?php echo $status; ?></option>
+                                                <?php } ?>
                                             </select>
                                         </div>
                                     <?php } ?>

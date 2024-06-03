@@ -45,7 +45,7 @@
 $(function(){
     var jobs = $('#jobs_chart');
     var jobsChart = new Chart(jobs, {
-        type: 'line',        
+        type: 'bar',        
         options: {
             responsive: true,
             plugins: {
@@ -64,14 +64,7 @@ $(function(){
                     },
                     ticks: {
                         beginAtZero: true,
-                        callback: function(value, index, values) {
-                            if (parseInt(value) >= 1000) {
-                                return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g,
-                                    ",");
-                            } else {
-                                return value;
-                            }
-                        }
+                        stepSize: 1                        
                     }
                 },
                 B: {

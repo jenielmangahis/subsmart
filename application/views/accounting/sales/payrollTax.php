@@ -200,6 +200,7 @@
                     </tbody>
                 </table>    
                 
+                <!-- 
                 <div class="payrollTax__resources">
                     <div class="payrollTax__title payrollTax__resourcesTitle">Payment resources</div>
 
@@ -244,8 +245,8 @@
                         <div><a class="payrollTax__resourcesLink" href="#">COBRA premium assistance <div class="payrollTax__resourcesNew">NEW</div></a></div>
                         <div class="payrollTax__resourcesBody">Claim a tax credit as part of the American Rescue Plan Act of 2021 (eligibility applies).</div>
                     </div>
-                </div>                
-
+                </div>   
+                -->             
 
             </div>
         </div>
