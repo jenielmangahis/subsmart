@@ -149,11 +149,11 @@
                                                 </div>
                                                 <div class="grid-mb <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? 'd-none' : ''?>">
                                                     <label for="time"><?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? 'Break' : 'Time'?></label>
-                                                    <input type="text" name="time" id="time" class="form-control nsm-field" placeholder="hh:mm" required value="<?=isset($timeActivity) && !is_null($timeActivity->start_time) ? substr($timeActivity->break_duration, 0, -3) : substr($timeActivity->time, 0, -3)?>">
+                                                    <input type="text" name="time" id="breaktime-a" class="form-control nsm-field" placeholder="hh:mm" required value="<?=isset($timeActivity) && !is_null($timeActivity->start_time) ? substr($timeActivity->break_duration, 0, -3) : substr($timeActivity->time, 0, -3)?>">
                                                 </div>
                                                 <div class="grid-mb <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? '' : 'd-none'?>">
                                                     <label for="break">Break</label>
-                                                    <input type="text" name="break" id="break" class="form-control nsm-field" placeholder="hh:mm" value="<?=isset($timeActivity) ? substr($timeActivity->break_duration, 0, -3) : ''?>">
+                                                    <input type="text" name="break" id="breaktime-b" class="form-control nsm-field" placeholder="hh:mm" value="<?=isset($timeActivity) ? substr($timeActivity->break_duration, 0, -3) : ''?>">
                                                 </div>
                                                 <div class="grid-mb">
                                                     <label for="description">Description</label>
@@ -198,7 +198,7 @@
                                     </div>
                                 </div>
 
-                                <button type="button" class="nsm-button float-end" id="save">Save</button>
+                                <!-- <button type="button" class="nsm-button float-end" id="save">Save</button> -->
                             </div>
                         </div>
                     </div>
@@ -212,9 +212,17 @@
     <script>
            $(document).ready(function(){
 
-            $('#time').datetimepicker({
-                 format: 'LT'
-             });
-              });
+                $('#time').datetimepicker({
+                    format: 'LT'
+                });
+
+                $('#breaktime-a').datetimepicker({
+                    format: 'LT'
+                });
+
+                $('#breaktime-b').datetimepicker({
+                    format: 'LT'
+                });
+            });
     </script>
 </div>
