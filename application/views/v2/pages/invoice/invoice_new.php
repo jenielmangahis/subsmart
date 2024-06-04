@@ -237,6 +237,9 @@
                                                     <a class="dropdown-item" href="<?php echo base_url('invoice/send/' . $invoice->id) ?>">Send Invoice</a>
                                                 </li>
                                                 <li>
+                                                    <a class="dropdown-item" id="resend-invoice-late-fee" href="javascript:void(0);" data-id="<?= $invoice->id; ?>">Resend Invoice with Late Fee</a>
+                                                </li>
+                                                <li>
                                                     <a class="dropdown-item" href="<?php echo base_url('invoice/invoice_edit/' . $invoice->id) ?>">Edit</a>
                                                 </li>
                                                 <li>
@@ -318,6 +321,12 @@
             _form.submit();
         }, 1500));
 
+        $(document).on('click touchstart', '#resend-invoice-late-fee', function(){
+            var invoice_id = $(this).attr('data-id');    
+            $('#invoice-id').val(invoice_id);
+            $('#modal-resend-invoice-late-fee').modal('show');
+        });
+
         $(document).on("click", ".delete-item", function(){
             let id = $(this).attr('data-id');
 
@@ -348,6 +357,56 @@
                                     location.reload();
                                 }
                             });
+                        },
+                    });
+                }
+            });
+        });
+
+        $(document).on('submit', '#frm-send-invoice-late-fee', function(e){
+            e.preventDefault();
+            var late_fee = $('#late-fee').val();
+
+            Swal.fire({
+                text: "Continue sending invoice to customer with late fee amounting of " + late_fee + "?",
+                icon: 'question',
+                confirmButtonText: 'Proceed',
+                showCancelButton: true,
+                cancelButtonText: "Cancel"
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: 'POST',
+                        url: base_url + "invoice/_send_invoice_email_with_late_fee",
+                        data: $('#frm-send-invoice-late-fee').serialize(),
+                        dataType:'json',
+                        beforeSend: function(data) {
+                            $('#modal-resend-invoice-late-fee').modal('hide');
+                            $('#loading_modal').modal('show');
+                            $('#loading_modal .modal-body').html('<span class="bx bx-loader bx-spin"></span> Sending email...');
+                        },
+                        success: function(result) {
+                            if( result.is_success == 1 ){
+                                Swal.fire({
+                                    text: "Invoice was successfully sent to customer",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        
+                                    }
+                                });
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    html: result.msg
+                                });
+                            }
+                        },
+                        complete : function(){
+                            $('#loading_modal').modal('hide');
                         },
                     });
                 }

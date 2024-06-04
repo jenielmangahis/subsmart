@@ -104,7 +104,8 @@
                                                             <td><?=$invoice['ref_no'] != '' ? $invoice['ref_no'] : 'Not Specified'?></td>
                                                             <td>
                                                                 <?php if( $invoice['type'] == 'invoice' ){ ?>
-                                                                    <a target ="_blank" href="<?php echo base_url('invoice/genview/' . $invoice['invoice_id']) ?>">Invoice</a>
+                                                                    <a target="_blank" href="<?php echo base_url('accounting/invoices') ?>">Invoice</a>
+                                                                    <!-- <a target ="_blank" href="<?php echo base_url('invoice/genview/' . $invoice['invoice_id']) ?>">Invoice</a> -->
                                                                 <?php }else{ ?>
                                                                     Linked Bank Account
                                                                 <?php } ?>

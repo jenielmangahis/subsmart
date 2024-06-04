@@ -508,7 +508,6 @@ class Vendors extends MY_Controller
         }
 
         $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $vendorId);
-        
         $this->page_data['transactions'] = $this->get_transactions($vendorId, $filters);
         $this->page_data['openBalance'] = $openBal;
         $this->page_data['overdueBalance'] = $overdueBal;

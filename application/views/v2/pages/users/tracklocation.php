@@ -118,7 +118,7 @@ var center = {
 var map_zoom_level = '1'; 
 var map_style = 'klokantech-basic';
 var geojson = {
-        'type': 'FeatureCollection',
+    'type': 'FeatureCollection',
     'features': <?= json_encode($geoDataFeatures); ?>
 };
 

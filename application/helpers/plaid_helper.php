@@ -449,3 +449,25 @@ function transferGet($client_id, $client_secret, $transfer_id){
 
     return $data;
 }
+
+/*For Sandbox only*/
+function accountGet($client_id, $client_secret, $access_token)
+{
+    $post = [
+        'client_id' => $client_id,
+        'secret' => $client_secret,
+        'access_token' => $access_token,
+    ];
+
+    $url = PLAID_API_URL . '/accounts/get';
+
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($post));
+    curl_setopt( $ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
+
+    $response = curl_exec($ch);
+    $data = json_decode($response);
+
+    return $data;
+}

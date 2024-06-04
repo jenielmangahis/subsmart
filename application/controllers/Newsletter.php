@@ -14,46 +14,76 @@ class Newsletter extends MY_Controller {
     }
     
     function saveNewsBulletin()
-    {
-        
+    {        
         $this->load->library('notify');
         $this->load->model('users_model');
         $this->load->helper('file');
         $this->load->model('feeds_model');
 
-        $file_path = 'uploads/news/';
-        $config['upload_path'] = $file_path;
-        $config['allowed_types'] = 'gif|jpg|png|pdf|docx';
-
-        $this->load->library('upload', $config);
-        $this->upload->initialize($config);
-        
-        if (!is_dir($file_path)) {
-            mkdir($file_path, 0777, TRUE);
-        }
-        
-        $news = post('news');
+        $is_success = 0;
+        $msg        = 'Cannot create newsletter';
         $company_id = logged('company_id');
-        
-        if (!$this->upload->do_upload('file')) {
-            $error = array('error' => $this->upload->display_errors());
-            print_r($error);
-        } else {
-            $data = $this->upload->data();
+        $user_id    = logged('id');
+
+        if( post('news_subject') == '' ){
+            $msg = 'Newsletter subject is required.';
+        }elseif( post('news_content') == '' ){
+            $msg = 'Newsletter content is required.';
+        }else{
+            $file_path = 'uploads/news/'.$company_id.'/';
+            $config['upload_path']   = $file_path;
+            $config['allowed_types'] = 'gif|jpg|png|pdf|docx';
             
+            $this->load->library('upload', $config);
+            $this->upload->initialize($config);
+            
+            if (!is_dir($file_path)) {
+                mkdir($file_path, 0777, TRUE);
+            }
+
+            $attachment = '';
+            if(isset($_FILES['newsletter_file']) && $_FILES['newsletter_file']['tmp_name'] != '') {
+                $this->upload->do_upload('newsletter_file');
+                $data = $this->upload->data();
+                $attachment = $data['file_name'];
+            }
+
             $details = array(
-                'message'       => $news,
-                'company_id'    => $company_id,
-                'file_link'     => $file_path.$data['file_name']
+                'title'       => post('news_subject'),
+                'message'     => post('news_content'),
+                'company_id'  => $company_id,
+                'user_id'     => $user_id,
+                'file_link'   => $attachment
             );
-            
-            if($this->feeds_model->saveNewsletter($details)):
-                $json_return = array('success' => true, 'msg' => 'Successfully Sent', 'data' => $data);
-            else:
-                $json_return = array('success' => false, 'msg' => 'Sorry Something went wrong');
-            endif;
-            
-            echo json_encode($json_return);
+
+            if( $this->feeds_model->saveNewsletter($details) ){
+                $is_success = 1;
+                $msg = 'Newsletter was successfully created';
+            }
         }
+
+        $json_return = array('success' => $is_success, 'msg' => $msg, 'data' => $data);
+        echo json_encode($json_return);
+    }
+
+    public function ajax_company_newsletter()
+    {
+        $this->load->model('Feeds_model');
+        
+        $company_id  = logged('company_id');
+        $newsLetters = $this->Feeds_model->getAllNewsLetterByCompanyId($company_id);
+
+        $this->page_data['newsLetters'] = $newsLetters;
+        $this->load->view('v2/widgets/newsletter_details', $this->page_data);
+    }
+    
+    public function ajax_view_newsletter()
+    {
+        $this->load->model('Feeds_model');
+
+        $newsLetter = $this->Feeds_model->getNewsById(post('newsid'));
+
+        $this->page_data['newsLetter'] = $newsLetter;
+        $this->load->view('v2/widgets/view_newsletter', $this->page_data);
     }
 }
