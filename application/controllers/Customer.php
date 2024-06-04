@@ -1657,7 +1657,7 @@ class Customer extends MY_Controller
             ];
             $this->page_data['subscriptions'] = $this->general->get_data_with_param($subscriptions_query);
         }
-
+        
         $this->load->view('v2/pages/customer/subscription', $this->page_data);
     }
 
@@ -6500,11 +6500,15 @@ class Customer extends MY_Controller
     }
 
     public function customer_subscriptions()
-    {
+    {        
+        $this->load->model('Customer_advance_model');
+
         $this->page_data['page']->title = 'Customer Subscriptions';
         $this->page_data['page']->parent = 'Customers';
 
+        $subscriptionSummary = $this->Customer_advance_model->countTotalSubscriptionsByCompanyId($company_id);
         // $this->load->view('customer/subscription_list', $this->page_data);
+        $this->page_data['subscriptionSummary'] = $subscriptionSummary;
         $this->load->view('v2/pages/customer/subscription_list', $this->page_data);
     }
 
@@ -6515,8 +6519,17 @@ class Customer extends MY_Controller
         $company_id = logged('company_id');
         $activeSubscriptions = $this->Customer_advance_model->get_all_active_subscription_by_company_id($company_id);
         $this->page_data['activeSubscriptions'] = $activeSubscriptions;
-        // $this->load->view('customer/ajax_load_active_subscriptions', $this->page_data);
         $this->load->view('v2/pages/customer/load_active_subscriptions', $this->page_data);
+    }
+
+    public function ajax_load_all_subscriptions()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $company_id = logged('company_id');
+        $subscriptions = $this->Customer_advance_model->get_all_subscription_by_company_id($company_id);
+        $this->page_data['subscriptions'] = $subscriptions;
+        $this->load->view('v2/pages/customer/load_all_subscriptions', $this->page_data);
     }
 
     public function ajax_load_completed_subscriptions()

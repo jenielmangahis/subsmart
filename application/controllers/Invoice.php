@@ -199,6 +199,7 @@ class Invoice extends MY_Controller
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         // $this->page_data['invoices'] = $this->invoice_model->getAllData($company_id);
+        $this->page_data['default_late_fee'] = $this->invoice_model->defaultLateFee();
         $this->page_data['page_title'] = "Invoices & Payments";
         $this->page_data['page']->title = 'Invoices & Payments';
         $this->page_data['page']->parent = 'Sales';

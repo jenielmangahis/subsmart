@@ -87,6 +87,30 @@
     </div>
 </div>
 
+<div class="modal fade nsm-modal fade" id="modal-resend-invoice-late-fee" tabindex="-1" aria-labelledby="modal-resend-invoice-late-fee_label" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <form id="frm-send-invoice-late-fee" method="POST">
+                <input type="hidden" name="invoice_id" id="invoice-id" value="" />
+                <div class="modal-content" style="width:560px;">
+                    <div class="modal-header">
+                        <span class="modal-title content-title">Resend Invoice</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="late-fee mb-2">Late Fee</label>
+                            <input type="number" step="any" required="" class="form-control" id="late-fee" name="late_fee" placeholder="Late Fee" value="<?= $default_late_fee; ?>">
+                        </div>
+                    </div>
+                    <div class="modal-footer">                    
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="btn-record-payment" class="nsm-button primary">Send</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 <script>
 $(function(){
     $('#frm-create-tax-rate').on('submit', function(e){

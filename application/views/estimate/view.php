@@ -72,7 +72,29 @@ defined('BASEPATH') or exit('No direct script access allowed');
                           <a class="dropdown-item print-estimate" href="javascript:void(0);"><i class='bx bxs-printer'></i> Print</a>
                         </li>
                         <li style="font-size:17px;">
-                          <a class="dropdown-item approveEstimate" href="javascript:void(0);" data-estimatenumber="<?= $estimate->estimate_number; ?>" estimateID="<?php echo $estimate->id; ?>"><i class='bx bx-check-square' ></i> Approve</a>
+                          <div class="dropdown-divider"></div>
+                        </li>
+                        <li style="font-size:17px;">
+                          <a class="dropdown-item submitEstimate" href="javascript:void(0);" data-estimatenumber="<?= $estimate->estimate_number; ?>" data-estimateID="<?php echo $estimate->id; ?>"><i class='bx bx-send'></i> Submit</a>
+                        </li>
+                        <li style="font-size:17px;">
+                          <a class="dropdown-item approveEstimate" href="javascript:void(0);" data-estimatenumber="<?= $estimate->estimate_number; ?>" estimateID="<?php echo $estimate->id; ?>"><i class='bx bxs-like'></i> Approve</a>
+                        </li>
+                        <li style="font-size:17px;">
+                          <a class="dropdown-item declineEstimate" href="javascript:void(0);" data-estimatenumber="<?= $estimate->estimate_number; ?>" data-estimateID="<?php echo $estimate->id; ?>"><i class='bx bxs-dislike' ></i> Decline</a>
+                        </li>
+                        <li style="font-size:17px;">
+                          <a class="dropdown-item pendingEstimate" href="javascript:void(0);" data-estimatenumber="<?= $estimate->estimate_number; ?>" data-estimateID="<?php echo $estimate->id; ?>"><i class='bx bxs-hand' ></i> Pending</a>
+                        </li>
+                        <li style="font-size:17px;">
+                          <div class="dropdown-divider"></div>
+                        </li>
+                        <li style="font-size:17px;">
+                          <?php $next_14d = date("m/d/Y", strtotime('+14 days')); ?>
+                          <a class="dropdown-item btn-next-reminder" href="javascript:void(0);" data-nextreminder="<?= $next_14d; ?>" data-estimatenumber="<?= $estimate->estimate_number; ?>" data-estimateID="<?php echo $estimate->id; ?>"><i class='bx bxs-bell'></i> Remind in 14 Days</a>
+                        </li>
+                        <li style="font-size:17px;">
+                          <a class="dropdown-item btn-archive-estimate" href="javascript:void(0);" data-estimatenumber="<?= $estimate->estimate_number; ?>" data-estimateID="<?php echo $estimate->id; ?>"><i class='bx bxs-trash'></i> Delete</a>
                         </li>
                     </ul>
                 </div>
@@ -91,7 +113,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                       <table class="table">
                         <tr>
                           <td colspan="2" style="text-align:left;font-weight:bold;"><h2><?= $estimate->estimate_number; ?></h2></td>
-                        </tr>
+                        </tr>                        
                         <tr>
                           <td style="text-align:left ;">Estimate Date:</td>
                           <td style="text-align:right;"><b><?= date("F d, Y",strtotime($estimate->estimate_date)); ?></b></td>
@@ -100,15 +122,21 @@ defined('BASEPATH') or exit('No direct script access allowed');
                           <td style="text-align:left;">Expiry Date:</td>
                           <td style="text-align: right;"><b><?= date("F d, Y",strtotime($estimate->expiry_date)); ?></b></td>
                         </tr>
+                        <?php if( $estimate->next_remind_date != '' && $estimate->next_remind_date != '0000-00-00' ){ ?>
+                          <tr>
+                            <td style="text-align:left ;">Reminder Date:</td>
+                            <td style="text-align:right;"><b><?= date("F d, Y",strtotime($estimate->next_remind_date)); ?></b></td>
+                          </tr>
+                        <?php } ?>
                         <tr>
                           <td style="text-align:left;">Status:</td>
                           <td style="text-align: right;"><b><?= $estimate->status; ?></b></td>
                         </tr>
                         <?php if( $estimate->customer_id > 0 ){ ?>
-                        <tr>
+                        <!-- <tr>
                           <td style="text-align:left;">Business Name:</td>
                           <td style="text-align: right;"><b><?= $customer->business_name; ?></b></td>
-                        </tr>
+                        </tr> -->
                         <?php } ?>
                       </table>
                     </div>
@@ -456,10 +484,95 @@ $(document).on('click touchstart', '.print-estimate', function(){
   printDiv('printableArea');
 });
 
+$(document).on('click', '.btn-archive-estimate', function(){
+  var estimateId = $(this).attr('data-estimateID');
+  Swal.fire({
+      title: 'Delete Estimate',
+      text: "Are you sure you want to delete this Estimate?",
+      icon: 'question',
+      confirmButtonText: 'Proceed',
+      showCancelButton: true,
+      cancelButtonText: "Cancel"
+  }).then((result) => {
+      if (result.value) {
+          $.ajax({
+              type: 'POST',
+              url: base_url + "estimate/delete_estimate",
+              data: {
+                  id: estimateId
+              },
+              success: function(result) {
+                  Swal.fire({
+                      //title: 'Good job!',
+                      text: "Data Deleted Successfully!",
+                      icon: 'success',
+                      showCancelButton: false,
+                      confirmButtonText: 'Okay'
+                  }).then((result) => {
+                      //if (result.value) {
+                          location.href = base_url + 'estimate';
+                      //}
+                  });
+              },
+          });
+      }
+  });
+});
+
+$(document).on('click touchstart', '.btn-next-reminder', function(){
+  var estimatenumber     = $(this).attr('data-estimatenumber');
+  var next_reminder_date = $(this).attr('data-nextreminder');
+  var estimateId         = $(this).attr('data-estimateID');
+
+  Swal.fire({            
+      html: "Set reminder for estimate number <b>"+estimatenumber+"</b>? Next reminder date will be on <b>" + next_reminder_date + "</b>",
+      icon: 'question',
+      confirmButtonText: 'Proceed',
+      showCancelButton: true,
+      cancelButtonText: "Cancel"
+  }).then((result) => {
+      if (result.value) {
+        var estId = $(this).attr("estimateID");
+        $.ajax({
+          type: "POST",          
+          data:{'estimateId':estimateId },
+          url : base_url + "estimate/_update_next_reminder_date",
+          dataType: 'json',
+          beforeSend: function(data) {
+              
+          },
+          success: function (data) {   
+            if( data.is_success == 1 ){
+              Swal.fire({                        
+                  text: "Data was successfully updated!",
+                  icon: 'success',
+                  showCancelButton: false,
+                  confirmButtonText: 'Okay'
+              }).then((result) => {
+                  //if (result.value) {
+                      location.reload();
+                  //}
+              });  
+            }else{
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                html: data.smg
+              });
+            } 
+          },
+          error: function (data) {
+
+          }
+        });
+      }
+  });
+});
+
 $(document).on('click touchstart', '.approveEstimate', function(){
   var estimatenumber = $(this).attr('data-estimatenumber');
   Swal.fire({            
-      html: "Are you sure you want to Estimate# <b>"+estimatenumber+"</b>?",
+      html: "Are you sure you want to change estimate number <b>"+estimatenumber+"</b> status to <b>Approved</b>?",
       icon: 'question',
       confirmButtonText: 'Proceed',
       showCancelButton: true,
@@ -491,6 +604,150 @@ $(document).on('click touchstart', '.approveEstimate', function(){
           },
           error: function (data) {
               console.log('Error:', data);
+          }
+        });
+      }
+  });
+});
+
+$(document).on('click touchstart', '.submitEstimate', function(){
+  var estimatenumber = $(this).attr('data-estimatenumber');
+  var estiamteId     = $(this).attr('data-estimateID');
+  var estimateStatus = 'Submitted';
+  Swal.fire({            
+      html: "Are you sure you want to change estimate number <b>"+estimatenumber+"</b> status to <b>Submitted</b>?",
+      icon: 'question',
+      confirmButtonText: 'Proceed',
+      showCancelButton: true,
+      cancelButtonText: "Cancel"
+  }).then((result) => {
+      if (result.value) {
+        $.ajax({
+          type: "POST",          
+          url : base_url + "estimate/_update_estimate_status",
+          data:{'estiamteId':estiamteId, 'estimateStatus':estimateStatus},          
+          dataType: 'json',
+          beforeSend: function(data) {
+              
+          },
+          success: function (data) {            
+            if( data.is_success == 1 ){
+              Swal.fire({                        
+                  text: "Data was successfully updated!",
+                  icon: 'success',
+                  showCancelButton: false,
+                  confirmButtonText: 'Okay'
+              }).then((result) => {
+                  //if (result.value) {
+                      location.reload();
+                  //}
+              });  
+            }else{
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                html: data.smg
+              });
+            } 
+          },
+          error: function (data) {
+              
+          }
+        });
+      }
+  });
+});
+
+$(document).on('click touchstart', '.declineEstimate', function(){
+  var estimatenumber = $(this).attr('data-estimatenumber');
+  var estiamteId     = $(this).attr('data-estimateID');
+  var estimateStatus = 'Declined';
+  Swal.fire({            
+      html: "Are you sure you want to change estimate number <b>"+estimatenumber+"</b> status to <b>Declined</b>?",
+      icon: 'question',
+      confirmButtonText: 'Proceed',
+      showCancelButton: true,
+      cancelButtonText: "Cancel"
+  }).then((result) => {
+      if (result.value) {
+        $.ajax({
+          type: "POST",          
+          url : base_url + "estimate/_update_estimate_status",
+          data:{'estiamteId':estiamteId, 'estimateStatus':estimateStatus},          
+          dataType: 'json',
+          beforeSend: function(data) {
+              
+          },
+          success: function (data) {    
+            if( data.is_success == 1 ){
+              Swal.fire({                        
+                  text: "Data was successfully updated!",
+                  icon: 'success',
+                  showCancelButton: false,
+                  confirmButtonText: 'Okay'
+              }).then((result) => {
+                  //if (result.value) {
+                      location.reload();
+                  //}
+              });  
+            }else{
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                html: data.smg
+              });
+            } 
+          },
+          error: function (data) {
+
+          }
+        });
+      }
+  });
+});
+
+$(document).on('click touchstart', '.pendingEstimate', function(){
+  var estimatenumber = $(this).attr('data-estimatenumber');
+  var estiamteId     = $(this).attr('data-estimateID');
+  var estimateStatus = 'Pending';
+  Swal.fire({            
+      html: "Are you sure you want to change estimate number <b>"+estimatenumber+"</b> status to <b>Pending</b>?",
+      icon: 'question',
+      confirmButtonText: 'Proceed',
+      showCancelButton: true,
+      cancelButtonText: "Cancel"
+  }).then((result) => {
+      if (result.value) {
+        $.ajax({
+          type: "POST",          
+          url : base_url + "estimate/_update_estimate_status",
+          data:{'estiamteId':estiamteId, 'estimateStatus':estimateStatus},          
+          dataType: 'json',
+          beforeSend: function(data) {
+              
+          },
+          success: function (data) {    
+            if( data.is_success == 1 ){
+              Swal.fire({                        
+                  text: "Data was successfully updated!",
+                  icon: 'success',
+                  showCancelButton: false,
+                  confirmButtonText: 'Okay'
+              }).then((result) => {
+                  //if (result.value) {
+                      location.reload();
+                  //}
+              });  
+            }else{
+              Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                html: data.smg
+              });
+            } 
+          },
+          error: function (data) {
+
           }
         });
       }

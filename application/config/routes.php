@@ -1179,6 +1179,9 @@ $route['job/_update_job'] = 'Job/ajax_update_job';
 $route['job/bird_eye_view'] = 'JobMap/index';
 $route['job_map/_calendar_data'] = 'JobMap/ajax_calendar_data';
 $route['job_map/_update_map_marker'] = 'JobMap/ajax_update_map_marker';
+$route['job_map/_get_map_location'] = 'JobMap/ajax_get_map_location';
+$route['job_map/_calendar_resource_users'] = 'JobMap/ajax_calendar_resource_users';
+$route['job_map/_update_map_settings'] = 'JobMap/ajax_update_map_settings';
 
 
 $route['workorder/convert_to_job'] = 'Workorder/ajax_convert_to_job';
@@ -1501,6 +1504,7 @@ $route['customer/_load_esign_doc'] = 'Customer/ajax_load_esign_doc';
 $route['customer/_check_customer_esign_pdf'] = 'Customer/ajax_check_customer_esign_pdf';
 $route['customer/download_esign_doc'] = 'Customer/downloadEsignDoc';
 $route['customer/_load_customer_sms_messages'] = 'Customer/ajax_load_customer_sms_messages';
+$route['customer/_load_all_subscriptions'] = 'Customer/ajax_load_all_subscriptions';
 
 // Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';
