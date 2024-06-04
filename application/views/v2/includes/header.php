@@ -255,7 +255,7 @@ $hdrCompanyData = getCompanyData($cid, $fields);
                         <li class="<?php if ($page->title == '') {
                             echo 'selected';
                         } ?>">
-                            <a href="<?php echo base_url('workorder/map'); ?>">
+                            <a href="<?php echo base_url('job/bird_eye_view'); ?>">
                                 <i class='bx bx-fw bx-show-alt'></i> Bird's Eye View
                             </a>
                         </li>
