@@ -299,9 +299,20 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col">
+                                    <label for="filter-detail-type">Detail Type</label>
+                                    <select class="nsm-field form-select filter-coa-detail-type" name="filter_detail_type" id="filter-coa-detail-type">   
+                                        <option value="all" <?=$detail_type_id == 'all' ? 'selected' : ''?>>All</option>         
+                                        <?php foreach($acc_details_types as $acc_details_type) {?>
+                                            <option value="<?php echo $acc_details_type->acc_detail_id; ?>" <?php echo $detail_type_id == $acc_details_type->acc_detail_id ? 'selected' : ''?>><?php echo $acc_details_type->acc_detail_name; ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="row mt-3">
                                 <div class="col-6">
-                                    <button type="button" class="nsm-button" id="reset-button">
+                                    <button type="button" class="nsm-button reset-button" id="reset-button">
                                         Reset
                                     </button>
                                 </div>

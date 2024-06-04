@@ -240,14 +240,14 @@
                                     <input class="form-check-input table-select select-all-tasks check-input-all-tasks" id="check-input-all-tasks" type="checkbox">
                                 </td>
                                 <td class="table-icon"></td>
-                                <td data-name="Subject" style="width:40%;">Task</td>     
+                                <td data-name="Subject" style="width:35%;">Task</td>     
                                 <td data-name="Assigned" style="width:20%;">Assigned To</td>           
                                 <td data-name="Priority">Priority</td>
                                 <td data-name="Status">Status</td>
                                 <td data-name="Date Started">Date Started</td>
                                 <td data-name="Date Completion">Completion Date</td>
                                 <td data-name="Date Created">Date Created</td>
-                                <td data-name="Manage"></td>
+                                <td data-name="Manage" style="width:2%;"></td>
                             </tr>
                         </thead>
                         <tbody>
@@ -284,18 +284,28 @@
                                                                             echo '<td><span class="nsm-profile-name">' . $assignee->FName . ' ' . $assignee->LName . '</span></td>';
                                                                         echo '</tr>';
                                                                     } else {
-                                                                        echo 'No Assigned User';
+                                                                        echo '<tr>';
+                                                                            echo '<td><div class="nsm-profile" style="background-image: url(' . url('uploads/users/default.png') . ');"></div></td>';
+                                                                            echo '<td><span class="nsm-profile-name">No Assigned User</span></td>';
+                                                                        echo '</tr>';
                                                                     }
                                                                 }
                                                             } else {
-                                                                echo 'No Assigned User';
+                                                                echo '<tr>';
+                                                                    echo '<td><div class="nsm-profile" style="background-image: url(' . url('uploads/users/default.png') . ');"></div></td>';
+                                                                    echo '<td><span class="nsm-profile-name">No Assigned User</span></td>';
+                                                                echo '</tr>';
                                                             }
                                                         ?>
                                                     </table>
                                                 <?php }else{ ?>
-                                                        No Assigned User
+                                                        <?php 
+                                                            echo '<tr>';
+                                                                echo '<td><div class="nsm-profile" style="background-image: url(' . url('uploads/users/default.png') . ');"></div></td>';
+                                                                echo '<td><span class="nsm-profile-name">No Assigned User</span></td>';
+                                                            echo '</tr>';    
+                                                        ?>
                                                 <?php } ?>
-                                                
                                             </div>                                
                                         </td>                                       
                                         <td>
