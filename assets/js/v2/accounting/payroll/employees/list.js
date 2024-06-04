@@ -686,7 +686,7 @@ $('#commission-payroll-modal #payroll-table tbody .select-one').on('change', fun
         data.set('pay_period', $('#commission-payroll-modal #pay-period-start').val()+'-'+$('#commission-payroll-modal #pay-period-end').val());
 
         $.ajax({
-            url: '/accounting/get-employee-pay-details',
+            url: base_url + '/accounting/get-employee-pay-details',
             data: data,
             type: 'post',
             processData: false,
@@ -764,7 +764,7 @@ $(document).on('click', '#commission-payroll-modal #preview-payroll', function()
     });
 
     $.ajax({
-        url: `/nsmartrac/accounting/employees/generate-commission-payroll`,
+        url: base_url + '/accounting/employees/generate-commission-payroll',
         data: payrollFormData,
         type: 'post',
         processData: false,

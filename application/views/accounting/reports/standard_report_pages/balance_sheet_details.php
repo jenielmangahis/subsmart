@@ -56,15 +56,15 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-12 col-md-6">
-                                        <label for="filter-from">From</label>
-                                        <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" value="<?= date("01/01/Y") ?>" id="filter-from">
+                                        <label for="from">From</label>
+                                        <div class="">
+                                            <input type="date" id="from" class="form-control nsm-field date" data-type="from">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
-                                        <label for="filter-to">To</label>
-                                        <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" value="<?= date("m/d/Y") ?>" id="filter-to">
+                                        <label for="to">To</label>
+                                        <div class="">
+                                            <input type="date" id="to" class="form-control nsm-field date" data-type="to">
                                         </div>
                                     </div>
                                 </div>
@@ -431,4 +431,10 @@
         $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
         $(target).collapse('toggle');
     });
+</script>
+<script>
+    var currentDate = new Date().toISOString().split('T')[0];
+
+    document.getElementById('from').value = currentDate;
+    document.getElementById('to').value = currentDate;
 </script>
