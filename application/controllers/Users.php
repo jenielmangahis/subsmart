@@ -786,26 +786,28 @@ class Users extends MY_Controller
 
 		$geoDataFeatures = [];
 		foreach($trac360People as $trac){
-			$latLong = explode(",", $trac->last_tracked_location);
-			$msg = "<div class='map-popup-container'>
-				<span class='map-user'><i class='bx bxs-user-circle'></i> ". $trac->FName . ' ' . $trac->LName ."</span>
-				<span class='map-date'><i class='bx bxs-calendar'></i> ". date("m/d/Y h:i A",strtotime($trac->last_tracked_location_date)) ."</span>
-				<hr />
-				<span class='map-address'><i class='bx bxs-map'></i> ". $trac->last_tracked_location_address ."</span>
-			</div>";
-			$geoDataFeatures[] = [
-				'type' => 'Feature',
-				'trac_id' => 'trac' . $trac->id,
-				'properties' => [
-					'message' => $msg,
-					'iconSize' => [35, 35],
-					'image' => userProfileImage($trac->user_id)
-				],
-				'geometry' => [
-					'type' => 'Point',
-					'coordinates' => [$latLong[1], $latLong[0]]
-				]
-			];
+			if( $trac->last_tracked_location != '' && $trac->last_tracked_location_address != ''){
+				$latLong = explode(",", $trac->last_tracked_location);
+				$msg = "<div class='map-popup-container'>
+					<span class='map-user'><i class='bx bxs-user-circle'></i> ". $trac->FName . ' ' . $trac->LName ."</span>
+					<span class='map-date'><i class='bx bxs-calendar'></i> ". date("m/d/Y h:i A",strtotime($trac->last_tracked_location_date)) ."</span>
+					<hr />
+					<span class='map-address'><i class='bx bxs-map'></i> ". $trac->last_tracked_location_address ."</span>
+				</div>";
+				$geoDataFeatures[] = [
+					'type' => 'Feature',
+					'trac_id' => 'trac' . $trac->id,
+					'properties' => [
+						'message' => $msg,
+						'iconSize' => [35, 35],
+						'image' => userProfileImage($trac->user_id)
+					],
+					'geometry' => [
+						'type' => 'Point',
+						'coordinates' => [$latLong[1], $latLong[0]]
+					]
+				];
+			}			
 		}
 
 		$this->page_data['page']->title = 'Employees Track Location';
