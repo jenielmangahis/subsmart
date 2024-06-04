@@ -2,10 +2,13 @@
     <thead>
         <tr>
             <td class="table-icon"></td>
-            <td data-name="Customer Name">Customer Name</td>
-            <td data-name="Date">Date</td>
-            <td data-name="Error Message">Error Message</td>
-            <td data-name="Amount">Amount</td>
+            <td data-name="CustomerName">Customer Name</td>
+            <td data-name="CustomerAddress">Address</td>
+            <td data-name="CustomerEmail">Email</td>
+            <td data-name="CustomerPhone">Phone Number</td>
+            <td data-name="DateStart">Start Date</td>
+            <td data-name="DateEnd">End Date</td>
+            <td data-name="Amount">Subscription Amount</td>
             <td data-name="Manage"></td>
         </tr>
     </thead>
@@ -18,16 +21,22 @@
             ?>
                 <tr>
                     <td>
-                        <div class="table-row-icon">
-                            <i class='bx bx-user-pin'></i>
-                        </div>
+                        <?php $n = ucwords($as->first_name[0]).ucwords($as->last_name[0]); ?>
+                        <div class='nsm-profile'><span><?= $n; ?></span></div>
                     </td>
                     <td class="fw-bold nsm-text-primary"><?= $as->first_name . ' ' . $as->last_name; ?></td>
+                    <td>
+                        <?php $address = $as->mail_add . ' ' . $as->city . ', ' . $as->state . ' ' . $as->zip_code; ?>
+                        <?= $address; ?>
+                    </td>
+                    <td><?= formatPhoneNumber($as->phone_m); ?></td>
+                    <td><?= $as->email; ?></td>
                     <td><?= date("d-M-Y", strtotime($as->recurring_start_date)); ?></td>
                     <td><?= date("d-M-Y", strtotime($as->recurring_end_date)); ?></td>
                     <td>
                         <?php
-                            $total_amount = (float)$as->transaction_amount + (float)$as->finance_amount;
+                            //$total_amount = (float)$as->transaction_amount + (float)$as->finance_amount;
+                            $total_amount   = (float)$as->mmr;
                             echo number_format($total_amount, 2);
                         ?>
                     </td>

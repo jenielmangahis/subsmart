@@ -233,7 +233,7 @@ add_css(array(
                                                             Card Number
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="text" class="form-control" name="card_number" id="first_name" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>" required/>
+                                                            <input type="text" class="form-control" name="card_number" id="card_number" value="<?php if(isset($billing_info ) && $billing_info->credit_card_num != 0){ echo $billing_info->credit_card_num; } ?>"/>
                                                         </div>
                                                     </div>
                                                     <div class="row form_line">
