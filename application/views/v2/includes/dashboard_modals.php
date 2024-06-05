@@ -54,7 +54,7 @@
         <form id="frm-feeds">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="new_feed_modal_label">New Feed</span>
+                <span class="modal-title content-title" id="new_feed_modal_label"><i class="bx bx-fw bx-comment"></i> Create News Feed</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
@@ -67,7 +67,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="nsm-button primary">Save Feed</button>
+                <button type="submit" class="nsm-button primary">Save</button>
             </div>
         </div>
         </form>
@@ -78,21 +78,24 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="news_letter_modal_label">Company's News Letter</span>
+                <span class="modal-title content-title" id="news_letter_modal_label"><i class="bx bx-fw bx-news"></i> Create News Letter</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-12">
-                        <textarea style="height:130px;" class="form-control mb-2" id="news" placeholder="News Bulletin" required></textarea>
-                        <input class="float-left" id="file" type="file" value="Upload File" required />
+            <form id="frm-newsletter" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <input type="text" placeholder="Title" name="news_subject" id="news-subject" class="nsm-field form-control mb-2" required />
+                            <textarea style="height:130px;" class="form-control mb-2" name="news_content" id="news-content" placeholder="News Bulletin" required></textarea>
+                            <input class="float-left" id="file" name="newsletter_file" type="file" value="Upload File" />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="nsm-button primary" onclick="sendNewsLetter()">Send Newsletter</button>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="nsm-button primary">Save</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -126,6 +129,19 @@
                 <button type="submit" class="nsm-button primary btn-save-task">Save</button>
             </div>
             </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modalViewNewsLetter" tabindex="-1" aria-labelledby="modalViewNewsLetterLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id="newsletter_modal_label"><i class="bx bx-fw bx-news"></i> Newsletter</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>
+            <div class="modal-body" id="modal-view-newsletter-container"></div>
+            <div class="modal-footer"></div>
         </div>
     </div>
 </div>

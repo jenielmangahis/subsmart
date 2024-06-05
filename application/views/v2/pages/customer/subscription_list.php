@@ -16,16 +16,51 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="row g-3 mb-3">
+                    <div class="col-12 col-md-4">
+                        <div class="row">
+                                <div class="col-12 col-md-6">
+                                    <div class="nsm-counter primary h-100 mb-2">
+                                        <div class="row h-100">
+                                            <div class="col-12 col-md-3 d-flex justify-content-center align-items-center">
+                                                <i class='bx bx-receipt'></i>
+                                            </div>
+                                            <div class="col-12 col-md-9 text-center text-md-start d-flex flex-column justify-content-center">
+                                                <h2 id="total_this_year"><?= $subscriptionSummary->total_subscriptions; ?></h2>
+                                                <span>TOTAL NUMBER</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    <div class="nsm-counter secondary h-100 mb-2">
+                                        <div class="row h-100">
+                                            <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                                                <i class='bx bx-receipt'></i>
+                                            </div>
+                                            <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                                                <h2 id="total_this_year">$<?= number_format($subscriptionSummary->total_amount_subscriptions,2,'.',''); ?></h2>
+                                                <span>TOTAL AMOUNT</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="row">
                     <div class="col-12 grid-mb text-end">
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                Sort by Status: <span id="dropdown_active">Active</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                Sort by Status: <span id="dropdown_active">All</span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a class="dropdown-item" href="javascript:void(0);" id="status_all">All</a></li>
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="status_active">Active</a></li>
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="status_completed">Completed</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0);" id="status_biller">Biller Errors</a></li>
                             </ul>
                         </div>
                     </div>
@@ -33,82 +68,6 @@
                 <div class="row">
                     <div class="col-12" id="subscription_container"></div>
                 </div>
-                <!-- <table class="nsm-table">
-                    <thead>
-                        <tr>
-                            <td class="table-icon"></td>
-                            <td data-name="Name">Name</td>
-                            <td data-name="City">City</td>
-                            <td data-name="State">State</td>
-                            <td data-name="Assigned To">Assigned To</td>
-                            <td data-name="Email">Email</td>
-                            <td data-name="SSS Number">SSS Number</td>
-                            <td data-name="Phone">Phone</td>
-                            <td data-name="Status">Status</td>
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (!empty($leads)) :
-                        ?>
-                            <?php
-                            foreach ($leads as $lead) :
-                            ?>
-                                <tr>
-                                    <td>
-                                        <div class="table-row-icon">
-                                            <i class='bx bx-chart'></i>
-                                        </div>
-                                    </td>
-                                    <td class="fw-bold nsm-text-primary"><?= $lead->firstname . ' ' . $lead->lastname; ?></td>
-                                    <td><?= $lead->city ?></td>
-                                    <td><?= $lead->state ?></td>
-                                    <td><?= $lead->FName . ' ' . $lead->LName; ?></td>
-                                    <td><?= $lead->email_add; ?></td>
-                                    <td><?= $lead->sss_num; ?></td>
-                                    <td><?= $lead->phone_cell; ?></td>
-                                    <td><span class="nsm-badge <?= $badge ?>"><?= $lead->status; ?></span></td>
-                                    <td>
-                                        <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item" href="<?php echo url('/customer/add_lead/' . $lead->leads_id); ?>">Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="<?php echo url('/customer/add_lead/' . $lead->leads_id); ?>">Send SMS</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="mailto:<?= $lead->email_add; ?>">Send Email</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $lead->leads_id; ?>">Delete</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php
-                            endforeach;
-                            ?>
-                        <?php
-                        else :
-                        ?>
-                            <tr>
-                                <td colspan="11">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php
-                        endif;
-                        ?>
-                    </tbody>
-                </table> -->
             </div>
         </div>
     </div>
@@ -116,10 +75,16 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        showSubscriptions();
+        showSubscriptions('all');
+
+        $("#status_all").on("click", function() {
+            showSubscriptions('all');
+
+            $("#dropdown_active").text("Active");
+        });
 
         $("#status_active").on("click", function() {
-            showSubscriptions();
+            showSubscriptions('active');
 
             $("#dropdown_active").text("Active");
         });
@@ -230,8 +195,11 @@
             case "biller_errors":
                 url = "<?php echo base_url(); ?>customer/_load_billing_error_subscriptions";
                 break;
-            default:
+                case "active":
                 url = "<?php echo base_url(); ?>customer/_load_active_subscriptions";
+                break;
+            default:
+                url = "<?php echo base_url(); ?>customer/_load_all_subscriptions";
         }
 
         showLoader($("#subscription_container"));

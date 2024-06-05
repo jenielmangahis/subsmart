@@ -136,7 +136,7 @@ class Chart_of_accounts_model extends MY_Model {
 		return $query->result();
 	}
 
-	public function getFilteredAccounts($status = null, $type = null, $order = 'asc', $orderColumn = 'name')
+	public function getFilteredAccounts($status = null, $type = null, $detail_type_id = null, $order = 'asc', $orderColumn = 'name')
 	{
 		
 		$company_id = logged('company_id');
@@ -154,6 +154,12 @@ class Chart_of_accounts_model extends MY_Model {
 				$this->db->where('accounting_chart_of_accounts.account_id', $type);
 			}
 		}
+
+		if($detail_type_id != null) {
+			if($detail_type_id != 'all') {
+				$this->db->where('accounting_chart_of_accounts.acc_detail_id', $detail_type_id);
+			}
+		}		
 
 		if($orderColumn !== 'nsmartrac_balance') {
 			$this->db->where('accounting_chart_of_accounts.parent_acc_id', null);

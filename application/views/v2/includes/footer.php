@@ -665,15 +665,16 @@ function loadDataFilter(from_date, to_date, table, id) {
         },
         success: function(response) {
             var data = JSON.parse(response);
-            console.log('data', data['first'])
             $(`#first_content_${id}`).html(data['first']);
             $(`#second_content_${id}`).html(data['second']);
+
+            console.log("data['first']", data['first'])
+            console.log("data['second']", data['second'])
             if (table == 'acs_billing') {
                 // window.subscriptionChart.destroy();
                 filterSubsciptionThumbnailGraph(data['mmr'])
             }
             if (table == 'estimates') {
-                window.gauge_estimate_Chart.destroy();
                 filterEstimateThumbnailGraph(data['first'], data['second'])
             }
             if (table == 'invoices') {
@@ -908,111 +909,8 @@ function filterSubsciptionThumbnailGraph(mmr) {
 
 
 function filterEstimateThumbnailGraph(first, second) {
-    var openCount = second;
-    var totalCount = first;
-    var ctx = document.getElementById('GuageEstimate').getContext('2d');
-    var gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(106,74,134, 1)');
-    gradient.addColorStop(1, 'rgba(142,43,227, 1)');
-    const gauge_estimate_data = {
-        labels: ['Score', 'Gray Area'],
-        datasets: [{
-            label: 'Weekly Sales',
-            data: [openCount, totalCount],
-            backgroundColor: [
-                gradient,
-                'rgb(240,240,240)'
-            ],
-            borderColor: [
-                gradient,
-                'rgb(240,240,240)'
-            ],
-            borderWidth: 1,
-            cutout: '80%',
-            circumference: 300,
-            rotation: 210
-        }]
-    };
-
-    const gaugeChartText = {
-        id: 'gaugeChartText',
-        afterDatasetDraw(chart, args, pluginOptions) {
-            const {
-                ctx,
-                data,
-                chartArea: {
-                    top,
-                    bottom,
-                    left,
-                    right,
-                    width,
-                    height
-                },
-                scales: {
-                    r
-                }
-            } = chart;
-
-            ctx.save();
-            console.log(r);
-            const xCoor = chart.getDatasetMeta(0).data[0].x;
-            const yCoor = chart.getDatasetMeta(0).data[0].y;
-
-            ctx.font = '30px FontAwesome';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillStyle = '#6a4a86'; // Color of the icon
-            ctx.fillText('\uf681', xCoor, yCoor - 30);
-
-            ctx.font = '16px sans-serif';
-            ctx.fillStyle = "rgb(40, 40, 43)";
-            ctx.textBaseLine = 'top';
-            ctx.textAlign = 'left';
-            ctx.fillText('Total', left + 80, yCoor + 5);
-            ctx.textAlign = 'right';
-            ctx.fillText('Expired', right - 70, yCoor + 5);
-            ctx.font = '16px sans-serif';
-            ctx.textAlign = 'left';
-            ctx.fillText(totalCount, left + 90, yCoor + 25);
-            ctx.textAlign = 'right';
-            ctx.fillText(openCount, right - 80, yCoor + 25);
-            ctx.font = '16px sans-serif'
-            ctx.textAlign = 'center';
-            ctx.textBaseLine = 'bottom';
-
-
-        }
-    }
-
-
-    // config 
-    const gauge_estimate_config = {
-        type: 'doughnut',
-        data: gauge_estimate_data,
-        options: {
-            aspectRatio: 1.5,
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    enabled: false
-                }
-            }
-        },
-        plugins: [gaugeChartText],
-    };
-    $(document).ready(function() {
-        $('#canvas_container').show();
-        $('#estimate-title').hide();
-        $('#GuageEstimateLoader').hide();
-        const gauge_estimate_Chart = new Chart(
-            document.getElementById('GuageEstimate'),
-            gauge_estimate_config
-        );
-        window.gauge_estimate_Chart = gauge_estimate_Chart;
-
-    });
+    estimateChart.data.datasets[0].data = [first,second];
+    estimateChart.update();
 }
 
 

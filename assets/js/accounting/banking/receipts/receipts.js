@@ -102,7 +102,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 
   Dropzone.autoDiscover = false;
   new Dropzone("#receiptsUploadDropzone", {
-    url: `${api.prefixURL}/AccountingReceipts/uploadImage`,
+    url: base_url + `AccountingReceipts/uploadImage`,
     acceptedFiles: "image/jpeg,image/jpg,image/png",
     addRemoveLinks: true,
     init: function () {
@@ -112,6 +112,15 @@ window.addEventListener("DOMContentLoaded", async () => {
         if (rest.success === false) return;
         $table.DataTable().row.add(data).draw();
         file.previewElement.parentNode.removeChild(file.previewElement);
+
+        Swal.fire({
+            //title: 'Success',
+            text: 'File was successfully uploaded',
+            icon: 'success',
+            showCancelButton: false,
+            confirmButtonText: 'Okay'
+        });
+
       });
 
       this.on("error", (file, { error }) => {

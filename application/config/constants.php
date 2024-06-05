@@ -209,3 +209,5 @@ define('VONAGE_API_KEY', '50b47ee3');
 define('VONAGE_API_SECRET', '4WKDyyrBj5Ru45BD');
 define('VONAGE_BRANDING', 'Nsmart');
 define('VONAGE_NUMBER', '13078777301');
+
+define('GEOAPIKEY', '41ddeb87ff654af488b283ba54ba576f');
