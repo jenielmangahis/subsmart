@@ -563,7 +563,7 @@ class Dashboard extends Widgets
                 $total_query = [
                     'where' => ['estimates.company_id' => logged('company_id'), 'estimates.status !=' => 'Lost',
                 'estimates.status !=' => 'Invoiced', 'estimates.view_flag' => '0', 'estimates.status !=' => 'Declined By Customer',
-                'estimates.estimate_date >=' => $date_from, 'estimates.estimate_date <=' => $date_to],
+                'estimates.estimate_date >=' => date('Y-m-d', strtotime($date_from)), 'estimates.estimate_date <=' => date('Y-m-d', strtotime($date_to))],
                     'table' => 'estimates',
                     'join' => [
                        [
@@ -577,10 +577,17 @@ class Dashboard extends Widgets
                 ];
                 $total = $this->general->get_data_with_param($total_query);
                 $expired_query = [
-                    'where' => ['estimates.company_id' => logged('company_id'), 'estimates.status =' => 'Lost',
-                                 'estimates.view_flag' => '0', 'acs_profile.', 'estimates.estimate_date >=' => $date_from, 'estimates.estimate_date <=' => $date_to,
+                    'where' => ['estimates.company_id' => logged('company_id'), 
+                                'estimates.status !=' => 'Submitted',
+                                'estimates.status!=' => 'Accepted',
+                                'estimates.status!=' => 'Declined By Customer',
+                                'estimates.status!=' => 'Draft',
+                                'estimates.status!=' => 'Invoiced',
+                                'estimates.status!=' => 'Pending',
+                                 'estimates.view_flag' => '0',
+                                 'estimates.estimate_date >=' => date('Y-m-d', strtotime($date_from)),
+                                 'estimates.estimate_date <=' => date('Y-m-d', strtotime($date_to)),
                     ],
-                    'or_where' => ['estimates.status =' => 'Cancelled'],
                     'table' => 'estimates',
                     'join' => [
                         [
@@ -1318,6 +1325,15 @@ class Dashboard extends Widgets
     {
         $mmr = $this->AcsProfile_model->getSubscription(logged('company_id'));
         $data_arr = ['Success' => true, 'mmr' => $mmr];
+        exit(json_encode($data_arr));
+    }
+
+    public function estimate_thumbnail()
+    {
+        $companyId = logged('company_id');
+        $estimates = $this->estimate_model->getAllOpenEstimatesByCompanyId($companyId);
+        $expired_estimates = $this->estimate_model->getExpiredEstimatesByCompanyId($companyId);
+        $data_arr = ['Success' => true, 'estimates' => count($estimates), 'expired_estimates' => count($expired_estimates)];
         exit(json_encode($data_arr));
     }
 
