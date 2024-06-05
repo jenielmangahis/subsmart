@@ -327,37 +327,33 @@
                                         <td>
                                         <?php
                                             switch ($row->status):
-                                                case 'New':
+                                                case 'Backlog':
+                                                    $task_status = "warning";
+                                                    break;
+                                                case 'Doing':
                                                     $task_status = "primary";
                                                     break;
-                                                case 'Resumed':
-                                                    $task_status = "primary";
-                                                    break;
-                                                case 'On Hold':
+                                                case 'Review Fail':
                                                     $task_status = "error";
                                                     break;
-                                                case 'Completed':
+                                                case 'On Testing':
                                                     $task_status = "success";
                                                     break;
-                                                case 'Complete':
+                                                case 'Review':
+                                                    $task_status = "success";
+                                                    break;
+                                                case 'Done':
                                                     $task_status = "success";
                                                     break;
                                                 case 'Closed':
-                                                    $task_status = "success";
-                                                    break;
-                                                case 'Re-opened':
                                                     $task_status = "primary";
-                                                    break;
-                                                case 'On Going':
-                                                    $task_status = "secondary";
                                                     break;
                                                 default:
                                                     $task_status = "";
                                                     break;
                                             endswitch;
                                             ?>
-
-                                            <span class="nsm-badge <?= $task_status ?>"><?= $row->status != '' ? $row->status == 'Closed' ? 'Completed' : $row->status : 'Draft'; ?></span>
+                                            <span class="nsm-badge <?= $task_status ?>"><?= $row->status != '' ? $row->status : 'Draft'; ?></span>
                                         </td>
                                         <td>
                                             <?php //echo date("F d, Y", strtotime($row->date_started)); ?>
@@ -401,7 +397,7 @@
                                                         <a class="dropdown-item" name="dropdown_updated" href="<?php echo url('taskhub/addupdate/' . $row->task_id) ?>">Add Update</a>
                                                     </li> -->
                                                     <li>
-                                                        <a class="dropdown-item" name="dropdown_view_comments" href="<?php echo url('taskhub/view/' . $row->task_id) ?>">Add Update</a>
+                                                        <a class="dropdown-item" name="dropdown_view_comments" href="<?php echo url('taskhub/view/' . $row->task_id) ?>">View</a>
                                                     </li>
                                                 </ul>
                                             </div>
