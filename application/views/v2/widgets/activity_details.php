@@ -2,7 +2,7 @@
     <table class="nsm-table" id="dashboard_activity_logs">
         <thead>
             <tr>
-                <td data-name="LogsDetailsProfile" style="width:75%;"></td>
+                <td data-name="LogsDetailsProfile" style="width:72%;"></td>
                 <td data-name="LogsDetailsDetails"></td>
             </tr>
         </thead>
