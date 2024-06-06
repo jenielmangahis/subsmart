@@ -1626,7 +1626,7 @@ class Customer extends MY_Controller
     }
 
     public function subscription($id = null)
-    {
+    {        
         $this->hasAccessModule(9);
 
         $this->page_data['page']->parent = 'Customers';
@@ -4180,6 +4180,11 @@ class Customer extends MY_Controller
             unset($input['id']);
             $input['company_id'] = logged('company_id');
             if ($this->customer_ad_model->add($input, 'ac_rateplan')) {
+
+                //Activity Logs
+                $activity_name = 'Created Rate Plan : ' . $input['plan_name']; 
+                createActivityLog($activity_name);
+
                 echo 1;
             } else {
                 echo 0;
@@ -4198,6 +4203,11 @@ class Customer extends MY_Controller
         $input = $this->input->post();
         $data = ['id' => $input['rate-plan-id'], 'amount' => $input['amount'], 'plan_name' => $input['plan_name']];
         if ($this->customer_ad_model->update_data($data, 'ac_rateplan', 'id')) {
+
+            //Activity Logs
+            $activity_name = 'Updated Rate Plan : ' . $input['plan_name']; 
+            createActivityLog($activity_name);
+
             echo 1;
         } else {
             echo 0;
@@ -4524,7 +4534,13 @@ class Customer extends MY_Controller
             ],
             'table' => 'ac_rateplan',
         ];
+
+        $ratePlan = $this->customer_ad_model->getRatePlanById($_POST['id']);
         if ($this->general->delete_($deletion_query)) {
+            //Activity Logs
+            $activity_name = 'Deleted Rate Plan : ' . $ratePlan->plan_name; 
+            createActivityLog($activity_name);
+
             echo 1;
         } else {
             echo 0;

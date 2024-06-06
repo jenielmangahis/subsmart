@@ -297,6 +297,7 @@ class JobMap extends MY_Controller
             } 
 
             $map_data[$j->customer_id][] = [
+                'id' => $j->id,
                 'type' => 'job',
                 'number' => $j->job_number,
                 'location' => $location,
@@ -335,7 +336,8 @@ class JobMap extends MY_Controller
             }
 
             $map_data[$t->customer_id][] = [
-                'type' => 'ticket',
+                'id' => $t->id,
+                'type' => 'ticket',                
                 'number' => $t->ticket_no,
                 'location' => $location,
                 'date' => date("m/d/Y",strtotime($t->ticket_date))                        
@@ -357,7 +359,7 @@ class JobMap extends MY_Controller
                     ";
 
                     foreach($map_data[$key] as $subdata){
-                        $msg .= "<li class='map-info-details header-info'><i class='bx bx-briefcase'></i> ".$subdata['number']. " - " . $subdata['date'] ."</li>"; 
+                        $msg .= "<li class='map-info-details header-info'><a class='map-detail-link' href='javascript:void(0);' data-type='".$subdata['type']."' data-id='".$subdata['id']."'><i class='bx bx-briefcase'></i> ".$subdata['number']. " - " . $subdata['date'] ."</a></li>"; 
                     }
 
                     $msg .= '</ul></div>';

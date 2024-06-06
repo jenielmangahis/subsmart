@@ -161,6 +161,7 @@ class Dashboard extends Widgets
         add_footer_js([
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
             // 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+            'https://code.jquery.com/ui/1.13.3/jquery-ui.js',
             'assets/js/v2/bootstrap-datetimepicker.v2.min.js',
             'assets/plugins/timeline_calendar/main.js',
             'assets/frontend/js/workcalender/workcalender.js',
