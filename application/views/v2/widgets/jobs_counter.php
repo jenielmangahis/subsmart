@@ -71,7 +71,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
                     <label for="">Jobs Count </label>
-                    <h1 id="first_content_<?php echo $id; ?>" class="jobs_count_thumbnail"></h1>
+                    <h1 id="first_content_<?php echo $id; ?>" class="jobs_count_thumbnail"><span class="bx bx-loader bx-spin"></span></h1>
                 </div>
             </div>
         </div>

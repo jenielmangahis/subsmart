@@ -593,6 +593,7 @@ class Invoice_model extends MY_Model
         $this->db->from($this->table);
         $this->db->join('payment_records', 'payment_records.invoice_id = invoices.id','left');
         $this->db->where('invoices.company_id', $company_id);
+        $this->db->where('invoices.status', 'Unpaid');
         $this->db->where('invoices.view_flag', 0);
         
         $query = $this->db->get();

@@ -996,7 +996,7 @@ fetch('<?php echo base_url('Dashboard/unpaid_invoices_graph'); ?>', {}).then(res
         var unpaid_graph_data = {
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             datasets: [{
-                label: 'Sales',
+                label: 'Unpaid Invoices',
                 backgroundColor: 'rgb(106, 74, 134)',
                 borderColor: 'rgb(106, 74, 134)',
                 data: monthlyAmounts

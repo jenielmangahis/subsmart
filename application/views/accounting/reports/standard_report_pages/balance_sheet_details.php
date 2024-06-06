@@ -337,7 +337,7 @@
                                                                             <td></td>
                                                                             <td></td>
                                                                             <td></td>
-                                                                            <td>1,081,409.39</td>
+                                                                            <td style="width: 7.8rem;">1,081,409.39</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>06/01/2022</td>
@@ -347,8 +347,8 @@
                                                                             <td></td>
                                                                             <td>QuickBooks Payment Fees-1</td>
                                                                             <td></td>
-                                                                            <td>$19.95</td>
-                                                                            <td>-19.95</td>
+                                                                            <td style="width: 5rem;">$19.95</td>
+                                                                            <td style="width: 8.8rem;">-19.95</td>
                                                                             <td>1,081,389.44</td>
                                                                         </tr>
                                                                         <tr>
@@ -358,7 +358,7 @@
                                                                             <td></td>
                                                                             <td></td>
                                                                             <td>-Split-</td>
-                                                                            <td>$1,167.62</td>
+                                                                            <td style="width: 5.3rem;">$1,167.62</td>
                                                                             <td></td>
                                                                             <td>1,167.62</td>
                                                                             <td>1,082,557.06</td>
@@ -426,8 +426,8 @@
                                                                             <td></td>
                                                                             <td></td>
                                                                             <td></td>
-                                                                            <td>$10,000.00</td>
-                                                                            <td>$15,000.00</td>
+                                                                            <td style="width: 8.8rem">$10,000.00</td>
+                                                                            <td style="width: 7.8rem;">$15,000.00</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Short-term Loans</td>

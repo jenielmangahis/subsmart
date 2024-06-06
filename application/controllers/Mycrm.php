@@ -584,6 +584,37 @@ class Mycrm extends MY_Controller
         $obj_pdf->Output($title, 'I');
     }
 
+    public function send_statement_pdf($id)
+    {
+        $this->load->model('CompanySubscriptionPayments_model');
+        $this->load->model('Business_model');
+
+        $company_id = logged('company_id');
+        $payment = $this->CompanySubscriptionPayments_model->getById($id);
+        $company = $this->Business_model->getByCompanyId($payment->company_id);
+        $recipient = $company->business_email;
+
+        $this->load->helper(['url', 'hashids_helper']);
+        $imageUrl = getCompanyBusinessProfileImage();
+
+        $data = [
+            'payment' => $payment,
+            'company' => $company,
+        ];
+        $config = ['subject' => 'PDF Statement'];
+        if (logged('company_id') == 58) {
+            $cc[] = 'bryann.revina03@gmail.com';
+            $cc[] = 'moresecureadi@gmail.com';
+            $cc[] = 'ntominbox@gmail.com';
+            $config['cc'] = $cc;
+        }
+        $mail = email__getInstance($config);
+        $mail->addAddress($recipient, $recipient);
+
+        $mail->isHTML(true);
+        $mail->Body = $this->load->view('mycrm/email_template/send_email_statement', $data, true);
+    }
+
     public function pdf_statement($id)
     {
         $this->load->model('CompanySubscriptionPayments_model');
@@ -594,6 +625,8 @@ class Mycrm extends MY_Controller
         $company = $this->Business_model->getByCompanyId($payment->company_id);
         $this->page_data['payment'] = $payment;
         $this->page_data['company'] = $company;
+        $this->page_data['id'] = $id;
+        $this->page_data['url'] = base_url('mycrm/send_statement_pdf/'.$id);
         $content = $this->load->view('mycrm/pdf_statement', $this->page_data, true);
 
         $this->load->library('Reportpdf');
@@ -606,18 +639,22 @@ class Mycrm extends MY_Controller
         $obj_pdf->setPrintFooter(false);
         $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
         $obj_pdf->setFontSubsetting(false);
-        // set some language-dependent strings (optional)
+
         if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
             require_once dirname(__FILE__).'/lang/eng.php';
             $pdf->setLanguageArray($l);
         }
+
         $obj_pdf->AddPage('P');
         $html = '';
         $obj_pdf->writeHTML($html.$content, true, false, true, false, '');
-        // echo $display;
-        $content = ob_get_contents();
-        ob_end_clean();
-        $obj_pdf->writeHTML($content, true, false, true, false, '');
+
+        // Replace placeholder with hyperlink
+        $obj_pdf->SetXY(110, 227.2); // Set position (adjust as needed)
+        $obj_pdf->SetTextColor(255, 255, 255);
+        $obj_pdf->SetFillColor(92, 184, 92);
+        $obj_pdf->Cell(40, 10.5, 'Email', 0, 1, 'C', 1, $this->page_data['url']);
+
         $obj_pdf->Output($title, 'I');
     }
 

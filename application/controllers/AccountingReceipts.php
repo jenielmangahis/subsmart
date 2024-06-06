@@ -325,6 +325,8 @@ class AccountingReceipts extends MY_Controller
     {
         header('content-type: application/json');
 
+
+
         if (empty($_FILES)) {
             echo json_encode(['success' => false]);
             return;
@@ -357,7 +359,7 @@ class AccountingReceipts extends MY_Controller
         $record = $this->db->get('accounting_receipts')->row();
 
         $this->prepareReceipt($record);
-        echo json_encode(['data' => $record]);
+        echo json_encode(['success' => true, 'data' => $record]);
     }
 
     public function apiSearchReceipts()

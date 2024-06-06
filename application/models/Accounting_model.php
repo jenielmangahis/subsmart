@@ -1,17 +1,18 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Accounting_model extends MY_Model {
+class Accounting_model extends MY_Model
+{
 
-	public function fetchReportData($reportType, $reportConfig = array()) {
+    public function fetchReportData($reportType, $reportConfig = array())
+    {
         $loggedInUser = logged('id');
-		$companyID = logged('company_id');
+        $companyID = logged('company_id');
 
         // Get Sales Tax Liability Report data in Database
         if ($reportType == "sales_tax_liability") {
-        
         }
-        
+
         // Get Customer Contact List Report data in Database
         if ($reportType == "customer_contact_list") {
             $this->db->select('prof_id, CONCAT(first_name  , " ", last_name) AS customer, phone_h AS phoneNumber, email, mail_add AS billingAddress, CONCAT(city, " ", state, " ", zip_code) AS shippingAddress');
@@ -49,72 +50,131 @@ class Accounting_model extends MY_Model {
         }
 
         // Get Audit log list data in Database
+        // if ($reportType == "audit_log_list") {
+        //     $this->db->select('customer_audit_logs.date_created AS date_changed, users.user_type, customer_audit_logs.id AS id, customer_audit_logs.user_id AS user, customer_audit_logs.prof_id AS prof_id, customer_audit_logs.obj_id AS obj_id, customer_audit_logs.module AS module, customer_audit_logs.remarks AS event, CONCAT(users.FName, " ", users.LName) AS name, customer_audit_logs.date_created AS date, work_orders.date_updated AS workorder_datechanged, work_orders.grand_total AS workorder_amount, invoices.date_updated AS invoice_datechanged, invoices.grand_total AS invoice_amount, tasks.date_created AS taskhub_datechanged, customer_audit_logs.date_created AS customer_datechanged, estimates.updated_at AS estimate_datechanged, estimates.grand_total AS estimate_amount, events.date_updated AS event_datechanged, appointments.created AS appointment_datechanged, jobs.date_updated AS job_datechanged, jobs.amount_collected AS job_amount');
+        //     $this->db->from('customer_audit_logs');
+        //     $this->db->join('users', 'users.id = customer_audit_logs.user_id', 'left');
+        //     $this->db->join('work_orders', 'work_orders.id = customer_audit_logs.obj_id', 'left');
+        //     $this->db->join('invoices', 'invoices.id = customer_audit_logs.obj_id', 'left');
+        //     $this->db->join('tasks', 'tasks.task_id = customer_audit_logs.obj_id', 'left');
+        //     $this->db->join('estimates', 'estimates.id = customer_audit_logs.obj_id', 'left');
+        //     $this->db->join('events', 'events.id = customer_audit_logs.obj_id', 'left');
+        //     $this->db->join('appointments', 'appointments.id = customer_audit_logs.obj_id', 'left');
+        //     $this->db->join('jobs', 'jobs.id = customer_audit_logs.obj_id', 'left');
+        //     // $this->db->where('company_id', $companyID); not applicable
+        //     $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+        //     $this->db->limit($reportConfig['page_size']);
+        //     $data = $this->db->get();
+        //     $auditLogsData = $data->result();
+
+
+
+        //     // re assign objects
+        //     $arrayStdObject = array();
+        //     for ($i = 0; $i < count($auditLogsData); $i++) { 
+        //         $output = new stdClass();
+        //         $output->id = $auditLogsData[$i]->id;
+        //         $output->obj_id = $auditLogsData[$i]->obj_id;
+        //         $output->user = $auditLogsData[$i]->user_type;
+        //         $output->module = $auditLogsData[$i]->module;
+        //         $output->event = $auditLogsData[$i]->event;
+        //         $output->name = $auditLogsData[$i]->name;
+        //         $output->date = $auditLogsData[$i]->date;
+
+        //         // get Date Change and Amount data from other table based on the module type
+        //         if ($auditLogsData[$i]->module == "Workorder") {
+        //             $output->date_changed = $auditLogsData[$i]->workorder_datechanged;
+        //             $output->amount = $auditLogsData[$i]->workorder_amount;
+        //         }
+        //         if ($auditLogsData[$i]->module == "Invoice") {
+        //             $output->date_changed = $auditLogsData[$i]->invoice_datechanged;
+        //             $output->amount = $auditLogsData[$i]->invoice_amount;
+        //         }
+        //         if ($auditLogsData[$i]->module == "Taskhub") {
+        //             $output->date_changed = $auditLogsData[$i]->taskhub_datechanged;
+        //             $output->amount = "";
+        //         }
+        //         if ($auditLogsData[$i]->module == "Customer") {
+        //             $output->date_changed = $auditLogsData[$i]->customer_datechanged;
+        //             $output->amount = "";
+        //         }
+        //         if ($auditLogsData[$i]->module == "Estimate") {
+        //             $output->date_changed = $auditLogsData[$i]->estimate_datechanged;
+        //             $output->amount = $auditLogsData[$i]->estimate_amount;
+        //         }
+        //         if ($auditLogsData[$i]->module == "Event" || $auditLogsData[$i]->module == "Events") {
+        //             $output->date_changed = $auditLogsData[$i]->event_datechanged;
+        //             $output->amount = "";
+        //         }
+        //         if ($auditLogsData[$i]->module == "Appointment") {
+        //             $output->date_changed = $auditLogsData[$i]->appointment_datechanged;
+        //             $output->amount = "";
+        //         }
+        //         if ($auditLogsData[$i]->module == "Jobs") {
+        //             $output->date_changed = $auditLogsData[$i]->job_datechanged;
+        //             $output->amount = $auditLogsData[$i]->job_amount;
+        //         }
+
+        //         $arrayStdObject[$i] = $output;
+        //     }
+
+        //     return $arrayStdObject;
+        // }
+
         if ($reportType == "audit_log_list") {
-            $this->db->select('customer_audit_logs.date_created AS date_changed, users.user_type, customer_audit_logs.id AS id, customer_audit_logs.user_id AS user, customer_audit_logs.prof_id AS prof_id, customer_audit_logs.obj_id AS obj_id, customer_audit_logs.module AS module, customer_audit_logs.remarks AS event, CONCAT(users.FName, " ", users.LName) AS name, customer_audit_logs.date_created AS date, work_orders.date_updated AS workorder_datechanged, work_orders.grand_total AS workorder_amount, invoices.date_updated AS invoice_datechanged, invoices.grand_total AS invoice_amount, tasks.date_created AS taskhub_datechanged, customer_audit_logs.date_created AS customer_datechanged, estimates.updated_at AS estimate_datechanged, estimates.grand_total AS estimate_amount, events.date_updated AS event_datechanged, appointments.created AS appointment_datechanged, jobs.date_updated AS job_datechanged, jobs.amount_collected AS job_amount');
-            $this->db->from('customer_audit_logs');
-            $this->db->join('users', 'users.id = customer_audit_logs.user_id', 'left');
-            $this->db->join('work_orders', 'work_orders.id = customer_audit_logs.obj_id', 'left');
-            $this->db->join('invoices', 'invoices.id = customer_audit_logs.obj_id', 'left');
-            $this->db->join('tasks', 'tasks.task_id = customer_audit_logs.obj_id', 'left');
-            $this->db->join('estimates', 'estimates.id = customer_audit_logs.obj_id', 'left');
-            $this->db->join('events', 'events.id = customer_audit_logs.obj_id', 'left');
-            $this->db->join('appointments', 'appointments.id = customer_audit_logs.obj_id', 'left');
-            $this->db->join('jobs', 'jobs.id = customer_audit_logs.obj_id', 'left');
-            // $this->db->where('company_id', $companyID); not applicable
+            $this->db->select('cal.date_created AS date_changed, u.user_type, cal.id AS id, cal.user_id AS user, cal.prof_id AS prof_id, cal.obj_id AS obj_id, cal.module AS module, cal.remarks AS event, CONCAT(u.FName, " ", u.LName) AS name, cal.date_created AS date, wo.date_updated AS workorder_datechanged, wo.grand_total AS workorder_amount, inv.date_updated AS invoice_datechanged, inv.grand_total AS invoice_amount, t.date_created AS taskhub_datechanged, cal.date_created AS customer_datechanged, est.updated_at AS estimate_datechanged, est.grand_total AS estimate_amount, e.date_updated AS event_datechanged, a.created AS appointment_datechanged, j.date_updated AS job_datechanged, j.amount_collected AS job_amount');
+            $this->db->from('customer_audit_logs AS cal');
+            $this->db->join('users AS u', 'u.id = cal.user_id', 'left');
+            $this->db->join('work_orders AS wo', 'wo.id = cal.obj_id', 'left');
+            $this->db->join('invoices AS inv', 'inv.id = cal.obj_id', 'left');
+            $this->db->join('tasks AS t', 't.task_id = cal.obj_id', 'left');
+            $this->db->join('estimates AS est', 'est.id = cal.obj_id', 'left');
+            $this->db->join('events AS e', 'e.id = cal.obj_id', 'left');
+            $this->db->join('appointments AS a', 'a.id = cal.obj_id', 'left');
+            $this->db->join('jobs AS j', 'j.id = cal.obj_id', 'left');
+            $this->db->where('u.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             $auditLogsData = $data->result();
 
-
-
-            // re assign objects
+            // reassign objects
             $arrayStdObject = array();
-            for ($i = 0; $i < count($auditLogsData); $i++) { 
+            foreach ($auditLogsData as $auditLog) {
                 $output = new stdClass();
-                $output->id = $auditLogsData[$i]->id;
-                $output->obj_id = $auditLogsData[$i]->obj_id;
-                $output->user = $auditLogsData[$i]->user_type;
-                $output->module = $auditLogsData[$i]->module;
-                $output->event = $auditLogsData[$i]->event;
-                $output->name = $auditLogsData[$i]->name;
-                $output->date = $auditLogsData[$i]->date;
+                $output->id = $auditLog->id;
+                $output->obj_id = $auditLog->obj_id;
+                $output->user = $auditLog->user_type;
+                $output->module = $auditLog->module;
+                $output->event = $auditLog->event;
+                $output->name = $auditLog->name;
+                $output->date = $auditLog->date;
 
                 // get Date Change and Amount data from other table based on the module type
-                if ($auditLogsData[$i]->module == "Workorder") {
-                    $output->date_changed = $auditLogsData[$i]->workorder_datechanged;
-                    $output->amount = $auditLogsData[$i]->workorder_amount;
-                }
-                if ($auditLogsData[$i]->module == "Invoice") {
-                    $output->date_changed = $auditLogsData[$i]->invoice_datechanged;
-                    $output->amount = $auditLogsData[$i]->invoice_amount;
-                }
-                if ($auditLogsData[$i]->module == "Taskhub") {
-                    $output->date_changed = $auditLogsData[$i]->taskhub_datechanged;
-                    $output->amount = "";
-                }
-                if ($auditLogsData[$i]->module == "Customer") {
-                    $output->date_changed = $auditLogsData[$i]->customer_datechanged;
-                    $output->amount = "";
-                }
-                if ($auditLogsData[$i]->module == "Estimate") {
-                    $output->date_changed = $auditLogsData[$i]->estimate_datechanged;
-                    $output->amount = $auditLogsData[$i]->estimate_amount;
-                }
-                if ($auditLogsData[$i]->module == "Event" || $auditLogsData[$i]->module == "Events") {
-                    $output->date_changed = $auditLogsData[$i]->event_datechanged;
-                    $output->amount = "";
-                }
-                if ($auditLogsData[$i]->module == "Appointment") {
-                    $output->date_changed = $auditLogsData[$i]->appointment_datechanged;
-                    $output->amount = "";
-                }
-                if ($auditLogsData[$i]->module == "Jobs") {
-                    $output->date_changed = $auditLogsData[$i]->job_datechanged;
-                    $output->amount = $auditLogsData[$i]->job_amount;
+                switch ($auditLog->module) {
+                    case "Workorder":
+                        $output->date_changed = $auditLog->workorder_datechanged;
+                        $output->amount = $auditLog->workorder_amount;
+                        break;
+                    case "Invoice":
+                        $output->date_changed = $auditLog->invoice_datechanged;
+                        $output->amount = $auditLog->invoice_amount;
+                        break;
+                    case "Estimate":
+                        $output->date_changed = $auditLog->estimate_datechanged;
+                        $output->amount = $auditLog->estimate_amount;
+                        break;
+                    case "Jobs":
+                        $output->date_changed = $auditLog->job_datechanged;
+                        $output->amount = $auditLog->job_amount;
+                        break;
+                    default:
+                        $output->date_changed = null;
+                        $output->amount = null;
+                        break;
                 }
 
-                $arrayStdObject[$i] = $output;
+                $arrayStdObject[] = $output;
             }
 
             return $arrayStdObject;
@@ -217,7 +277,7 @@ class Accounting_model extends MY_Model {
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
-            return $data->result();            
+            return $data->result();
         }
 
         // Get Sales by Customer Type Detail data in Database
@@ -236,10 +296,10 @@ class Accounting_model extends MY_Model {
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
-            return $data->result();            
+            return $data->result();
         }
 
-       // Get Sales by Product/Service Detail data in Database
+        // Get Sales by Product/Service Detail data in Database
         if ($reportType == "sales_by_product_service_detail") {
             $this->db->select('invoices.customer_id AS customer_id, items.type AS product_service, DATE_FORMAT(invoices.date_created,"%Y-%m-%d") AS date, "Invoice" AS transaction_type, invoices.id AS num, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, items.title AS memo_description, invoices_items.qty AS qty, items.price AS sales_price, (((invoices_items.qty * items.price) - invoices_items.discount) + invoices_items.tax) AS amount, invoices.total_due AS balance');
             $this->db->from('invoices');
@@ -258,7 +318,7 @@ class Accounting_model extends MY_Model {
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
-            return $data->result();            
+            return $data->result();
         }
 
         // Get Vendor Balance Summary data in Database
@@ -330,7 +390,7 @@ class Accounting_model extends MY_Model {
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
-            return $data->result();            
+            return $data->result();
         }
 
         // Get Inventory Valuation Detail data in Database
@@ -350,9 +410,9 @@ class Accounting_model extends MY_Model {
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
-            return $data->result();            
+            return $data->result();
         }
-        
+
         // Get Estimates by Customer data in Database
         if ($reportType == "estimates_by_customer") {
             $this->db->select('estimates.id AS estimates_id, acs_profile.prof_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, DATE_FORMAT(estimates.created_at,"%Y-%m-%d") AS date, estimates.estimate_number AS num, estimates.status AS status, estimates.accepted_date AS accepted_date, estimates.expiry_date AS expiration_date, ((items.price * estimates_items.qty) + estimates_items.tax) AS amount');
@@ -375,8 +435,8 @@ class Accounting_model extends MY_Model {
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
-            return $data->result();            
-        } 
+            return $data->result();
+        }
 
         // Get Invoice List by Date data in Database
         if ($reportType == "invoice_list_by_date") {
@@ -440,10 +500,10 @@ class Accounting_model extends MY_Model {
             $query = $this->db->get();
             return $query->result();
         }
-        
+
         // Get Sales by Product/Service Summary data in Database
         if ($reportType == "sales_by_product_service_summary") {
-            $this->db->select('invoices.id AS invoice_id, items.title AS product_service, invoices_items.qty AS quantity, SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) AS amount, ((SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) / (SELECT SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) FROM invoices LEFT JOIN invoices_items ON invoices_items.invoice_id = invoices.id LEFT JOIN items ON items.id = invoices_items.items_id WHERE invoices.company_id = '.$companyID.')) * 100) AS sales_percentage, (SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) / invoices_items.qty) AS average_price, SUM(items.COGS * invoices_items.qty) AS COGS, (SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) - SUM(items.COGS * invoices_items.qty)) AS gross_margin, (((SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) - SUM(items.COGS * invoices_items.qty)) / SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax)) * 100) AS gross_margin_percentage');
+            $this->db->select('invoices.id AS invoice_id, items.title AS product_service, invoices_items.qty AS quantity, SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) AS amount, ((SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) / (SELECT SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) FROM invoices LEFT JOIN invoices_items ON invoices_items.invoice_id = invoices.id LEFT JOIN items ON items.id = invoices_items.items_id WHERE invoices.company_id = ' . $companyID . ')) * 100) AS sales_percentage, (SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) / invoices_items.qty) AS average_price, SUM(items.COGS * invoices_items.qty) AS COGS, (SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) - SUM(items.COGS * invoices_items.qty)) AS gross_margin, (((SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax) - SUM(items.COGS * invoices_items.qty)) / SUM(((items.price - invoices_items.discount) * invoices_items.qty) + invoices_items.tax)) * 100) AS gross_margin_percentage');
             $this->db->from('invoices');
             $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
             $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
@@ -456,7 +516,7 @@ class Accounting_model extends MY_Model {
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
-            return $data->result();     
+            return $data->result();
         }
 
         // Get Taxable Sales Detail data in Database
@@ -478,9 +538,9 @@ class Accounting_model extends MY_Model {
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
-            return $data->result();            
+            return $data->result();
         }
-        
+
         // Get Taxable Sales Summary data in Database
         if ($reportType == "taxable_sales_summary") {
             $this->db->select('items.type AS product_type, SUM((((invoices_items.qty * items.price) - invoices_items.discount) + invoices_items.tax)) AS total');
@@ -500,7 +560,7 @@ class Accounting_model extends MY_Model {
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
-            return $data->result();            
+            return $data->result();
         }
 
         // Get Income by Customer Summary data in Database
@@ -522,7 +582,7 @@ class Accounting_model extends MY_Model {
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
-            return $data->result();            
+            return $data->result();
         }
 
         // Get Estimates & Progress Invoicing Summary by Customer data in Database
@@ -544,7 +604,7 @@ class Accounting_model extends MY_Model {
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
-            return $data->result();            
+            return $data->result();
         }
 
         // Get Terms Lists data in Database
@@ -558,7 +618,7 @@ class Accounting_model extends MY_Model {
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
-            return $data->result();            
+            return $data->result();
         }
 
         // Get Statement List data in Database
@@ -572,7 +632,7 @@ class Accounting_model extends MY_Model {
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
-            return $data->result();            
+            return $data->result();
         }
 
         // Get Bill Payment List data in Database
@@ -586,7 +646,7 @@ class Accounting_model extends MY_Model {
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
-            return $data->result();            
+            return $data->result();
         }
 
         // Get Collections Report data in Database
@@ -610,7 +670,7 @@ class Accounting_model extends MY_Model {
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
-            return $data->result();            
+            return $data->result();
         }
 
         // Get Invoices and Received Payments data in Database
@@ -629,7 +689,7 @@ class Accounting_model extends MY_Model {
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
-            return $data->result();            
+            return $data->result();
         }
 
         // Get Account List data in Database
@@ -656,6 +716,5 @@ class Accounting_model extends MY_Model {
             $data = $this->db->get();
             return $data->result();
         }
-
     }
 }
