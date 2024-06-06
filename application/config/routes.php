@@ -1600,6 +1600,7 @@ $route['taskhub/_delete_task'] = 'Taskhub/ajax_delete_task';
 $route['taskhub/_complete_selected_tasks'] = 'Taskhub/ajax_complete_selected_tasks';
 $route['taskhub/_ongoing_selected_tasks'] = 'Taskhub/ajax_ongoing_selected_tasks';
 $route['taskhub/_delete_selected_tasks'] = 'Taskhub/ajax_delete_selected_tasks';
+$route['taskhub/_delete_selected_task_comment'] = 'Taskhub/ajax_delete_selected_task_comment';
 $route['taskhub/create'] = 'Taskhub/create';
 $route['taskhub/edit/(:num)'] = 'Taskhub/edit/$1';
 
