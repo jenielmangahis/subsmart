@@ -1,3 +1,14 @@
+<link rel="icon" href="data:;base64,iVBORw0KGgo=" hidden>
+
+<style>
+    .top-button{
+        height: 30px;
+    }
+    .icon-top{
+        margin-bottom: -3px;
+    }
+</style>
+
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('accounting/reports/reports_assets/report_css'); ?>
 <div class="container-fluid">
@@ -20,14 +31,14 @@
                                     <button class="nsm-button addNotes">Add Notes</button>
                                 </span>
                                 <span class="float-end">
-                                    <button data-bs-toggle="modal" data-bs-target="#emailReportModal" class="nsm-button border-0"><i class="bx bx-fw bx-envelope"></i></button>
-                                    <button data-bs-toggle="modal" data-bs-target="#printPreviewModal" class="nsm-button border-0"><i class="bx bx-fw bx-printer"></i></button>
-                                    <button class="nsm-button border-0" data-bs-toggle="dropdown"><i class="bx bx-fw bx-export"></i></button>
+                                    <button data-bs-toggle="modal" data-bs-target="#emailReportModal" class="nsm-button border-0 top-button"><i class="bx bx-fw bx-envelope icon-top"></i></button>
+                                    <button data-bs-toggle="modal" data-bs-target="#printPreviewModal" class="nsm-button border-0 top-button"><i class="bx bx-fw bx-printer icon-top"></i></button>
+                                    <button class="nsm-button border-0 top-button" data-bs-toggle="dropdown"><i class="bx bx-fw bx-export icon-top"></i></button>
                                     <ul class="dropdown-menu dropdown-menu-end export-dropdown" style="">
                                         <li><a class="dropdown-item" href="javascript:void(0);" id="exportToXLSX">Export to Excel</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);" id="exportToPDF" download>Export to PDF</a></li>
                                     </ul>
-                                    <button class="nsm-button border-0 primary" data-bs-toggle="modal" data-bs-target="#reportSettings"><i class="bx bx-fw bx-cog"></i></button>
+                                    <button class="nsm-button border-0 primary top-button" data-bs-toggle="modal" data-bs-target="#reportSettings"><i class="bx bx-fw bx-cog icon-top"></i></button>
                                 </span>
                             </div>
                         </div>
@@ -398,25 +409,7 @@
 
 <style>
     .nsm-table-pagination {
-        margin-right: -83rem;
-    }
-
-    @media screen and (max-width: 1920px) {
-        .nsm-table-pagination {
-            margin-right: -75rem;
-        }
-    }
-
-    @media screen and (max-width: 1560px) {
-        .nsm-table-pagination {
-            margin-right: -60rem;
-        }
-    }
-
-    @media screen and (max-width: 1280px) {
-        .nsm-table-pagination {
-            margin-right: -60rem;
-        }
+        margin-right: -70rem;
     }
 </style>
 

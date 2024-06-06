@@ -376,8 +376,8 @@
                                                             <td></td>
                                                             <td></td>
                                                             <td></td>
-                                                            <td>$22,544.77</td>
-                                                            <td>$1,404,676.97</td>
+                                                            <td style="width: 8.8rem;">$22,544.77</td>
+                                                            <td style="width: 8.3rem;">$1,404,676.97</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -396,8 +396,86 @@
                                             <td>$1,922,289.76</td>
                                             <td>$1,404,676.97</td>
                                         </tr>
+                                        <tr id="liabilitiesEquity" class="collapse">
+                                            <td colspan="10">
+                                                <table class="table mb-0">
+                                                    <tbody>
+                                                        <!-- Liabilities -->
+                                                        <tr data-bs-toggle="collapse" data-bs-target="#liabilities" class="clickable collapse-row collapsed">
+                                                            <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Liabilities</td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr id="liabilities" class="collapse">
+                                                            <td colspan="10">
+                                                                <table class="table mb-0">
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>Accounts Payable</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td>$10,000.00</td>
+                                                                            <td>$15,000.00</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Short-term Loans</td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td>$5,000.00</td>
+                                                                            <td>$7,000.00</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>&emsp;<b>TOTAL LIABILITIES</b></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td></td>
+                                                                            <td>$15,000.00</td>
+                                                                            <td>$22,000.00</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>&emsp;<b>TOTAL LIABILITIES AND EQUITY</b></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td></td>
+                                                            <td style="width: 8.8rem;">$1,922,289.76</td>
+                                                            <td style="width: 8.3rem;">$1,404,676.97</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
+
                             </div>
                             <div class="nsm-card-footer text-center">
                                 <p class="m-0">Accrual basis <?= date("l, F j, Y h:i A eP") ?></p>

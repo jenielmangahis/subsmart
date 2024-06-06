@@ -2,20 +2,24 @@
 $(document).ready(function() {
     // Track user location
     getLocation();
+
     function getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(trackPosition);
-        } 
+        }
     }
 
     function trackPosition(position) {
-        var latitude  = position.coords.latitude;
+        var latitude = position.coords.latitude;
         var longitude = position.coords.longitude;
         $.ajax({
             type: "POST",
             url: base_url + "trac360/_create_user_location",
             dataType: 'json',
-            data: {latitude:latitude, longitude:longitude},
+            data: {
+                latitude: latitude,
+                longitude: longitude
+            },
             success: function(data) {
                 if (data.success) {
                     $('#new_feed_modal').modal('hide');
@@ -29,7 +33,7 @@ $(document).ready(function() {
 
             }
         });
-    } 
+    }
 
     $('#frm-feeds').on('submit', function(e) {
         e.preventDefault();
@@ -116,9 +120,9 @@ $(document).ready(function() {
             var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
             var yyyy = today.getFullYear();
             today = yyyy + '-' + mm + '-' + dd;
-            
+
             var total_invoice_amount_due = parseFloat(invoice_amount_due).toFixed(2);
-            var total_collected_amount   = parseFloat(collected_amount).toFixed(2);
+            var total_collected_amount = parseFloat(collected_amount).toFixed(2);
 
             $("#earned").text('$' + total_invoice_amount_due); // total earned
             $("#jobs_completed").text(jobsCompleted); // total jobs completed
@@ -796,6 +800,118 @@ $(document).ready(function() {
 
 })
 
+fetch('<?php echo base_url('Dashboard/estimate_thumbnail'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
+
+        var {
+            success,
+            estimates,
+            expired_estimates
+        } = response;
+
+
+        var ctx = document.getElementById('estimate_chart').getContext('2d');
+        var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(106,74,134, 1)');
+        gradient.addColorStop(1, 'rgba(142,43,227, 1)');
+
+        const gaugeChartText = {
+            id: 'gaugeChartText',
+            afterDatasetDraw(chart, args, pluginOptions) {
+                const {
+                    ctx,
+                    data,
+                    chartArea: {
+                        top,
+                        bottom,
+                        left,
+                        right,
+                        width,
+                        height
+                    },
+                    scales: {
+                        r
+                    }
+                } = chart;
+
+
+                ctx.save();
+
+                // Destructure the data array
+                const [totalEstimate, expiredEstimate] = chart.data.datasets[0].data;
+
+                const xCoor = chart.getDatasetMeta(0).data[0].x;
+                const yCoor = chart.getDatasetMeta(0).data[0].y;
+
+                ctx.font = '30px FontAwesome';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = '#6a4a86'; // Color of the icon
+                ctx.fillText('\uf681', xCoor, yCoor - 30);
+
+                ctx.font = '16px sans-serif';
+                ctx.fillStyle = "rgb(40, 40, 43)";
+                ctx.textBaseline = 'top';
+                ctx.textAlign = 'left';
+                ctx.fillText('Total', left + 80, yCoor + 5);
+                ctx.textAlign = 'right';
+                ctx.fillText('Expired', right - 70, yCoor + 5);
+
+                // Use the destructured variables
+                ctx.textAlign = 'left';
+                ctx.fillText(totalEstimate, left + 90, yCoor + 25);
+                ctx.textAlign = 'right';
+                ctx.fillText(expiredEstimate, right - 80, yCoor + 25);
+
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+            }
+        }
+
+
+
+        $('#GuageEstimateLoader').hide()
+
+        const estimateChart = new Chart($('#estimate_chart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Total', 'Expired'],
+                datasets: [{
+                    data: [estimates, expired_estimates],
+                    backgroundColor: [
+                        gradient,
+                        'rgb(240,240,240)'
+                    ],
+                    borderColor: [
+                        gradient,
+                        'rgb(240,240,240)'
+                    ],
+                    borderWidth: 1,
+                    cutout: '80%',
+                    circumference: 300,
+                    rotation: 210
+                }]
+            },
+            options: {
+                aspectRatio: 1.5,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false
+                    }
+                }
+            },
+            plugins: [gaugeChartText],
+        });
+
+        window.estimateChart = estimateChart;
+    }).catch((error) => {
+    console.log(error);
+})
+
 
 fetch('<?php echo base_url('Dashboard/income_subscription'); ?>', {}).then(response => response.json()).then(
     response => {
@@ -867,11 +983,12 @@ fetch('<?php echo base_url('Dashboard/unpaid_invoices_graph'); ?>', {}).then(res
         if (unpaid_invoices) {
             for (var x = 0; x < unpaid_invoices.length; x++) {
                 var dueDate = unpaid_invoices[x].date_created;
-                var total_amount_paid = unpaid_invoices[x].total_amount_paid ? unpaid_invoices[x].total_amount_paid : 0
+                var total_amount_paid = unpaid_invoices[x].total_amount_paid ? unpaid_invoices[x]
+                    .total_amount_paid : 0
                 if (dueDate) {
                     var due = new Date(dueDate);
                     var month = due.getMonth();
-                    monthlyAmounts[month] += parseFloat(unpaid_invoices[x].grand_total - total_amount_paid );
+                    monthlyAmounts[month] += parseFloat(unpaid_invoices[x].grand_total - total_amount_paid);
                 }
             }
         }
@@ -979,17 +1096,17 @@ fetch('<?php echo base_url('Dashboard/get_all_customer_group'); ?>', {}).then(re
             customer
         } = response;
 
-        let labelsTemp =[];
-        let dataTemp =[];
+        let labelsTemp = [];
+        let dataTemp = [];
         let totalCustomer = 0;
 
-       if(customer){
-        for(var x =0 ; x <customer.length ; x++){
-            labelsTemp.push(customer[x].title)
-            dataTemp.push(customer[x].total_customer)
-            totalCustomer += parseInt(customer[x].total_customer)
+        if (customer) {
+            for (var x = 0; x < customer.length; x++) {
+                labelsTemp.push(customer[x].title)
+                dataTemp.push(customer[x].total_customer)
+                totalCustomer += parseInt(customer[x].total_customer)
+            }
         }
-       }
 
         var customer_graph_data = {
             labels: labelsTemp,
@@ -997,11 +1114,11 @@ fetch('<?php echo base_url('Dashboard/get_all_customer_group'); ?>', {}).then(re
                 label: 'Total Customer Groups',
                 data: dataTemp,
                 backgroundColor: [
-                'rgb(106 74 134)',
-                'rgb(64 136 84)',
-                'rgb(220 53 69)',
-                'rgb(206, 128, 255)'
-              ],
+                    'rgb(106 74 134)',
+                    'rgb(64 136 84)',
+                    'rgb(220 53 69)',
+                    'rgb(206, 128, 255)'
+                ],
             }]
         };
         $('#NewCustomerGraphLoader').hide()
@@ -1023,7 +1140,7 @@ fetch('<?php echo base_url('Dashboard/get_all_customer_group'); ?>', {}).then(re
                     padding: {
                         left: 5,
                         right: 5,
-                        top: 0, 
+                        top: 0,
                     }
                 },
             },
@@ -1045,34 +1162,34 @@ fetch('<?php echo base_url('Dashboard/accounting_expense'); ?>', {}).then(respon
             accounting_expense
         } = response;
 
-        console.log('accounting_expense',accounting_expense)
+        console.log('accounting_expense', accounting_expense)
 
-        let expenseCategory =[];
-        let dataTemp =[];
+        let expenseCategory = [];
+        let dataTemp = [];
         let total_expense = 0;
 
 
-        if(accounting_expense){
-        for(var x =0 ; x <accounting_expense.length ; x++){
-            expenseCategory.push(accounting_expense[x].category.name)
-            dataTemp.push(accounting_expense[x].total)
-            total_expense += parseInt(accounting_expense[x].total)
+        if (accounting_expense) {
+            for (var x = 0; x < accounting_expense.length; x++) {
+                expenseCategory.push(accounting_expense[x].category.name)
+                dataTemp.push(accounting_expense[x].total)
+                total_expense += parseInt(accounting_expense[x].total)
+            }
         }
-       }
 
 
-       var new_leads_data = {
+        var new_leads_data = {
             labels: expenseCategory,
             datasets: [{
                 label: 'Total leads',
                 data: dataTemp,
                 backgroundColor: [
-                'rgb(106 74 134)',
-                'rgb(199 149 28)',
-                'rgb(64 136 84)',
-                'rgb(220 53 69)',
-                'rgb(206, 128, 255)'
-              ],
+                    'rgb(106 74 134)',
+                    'rgb(199 149 28)',
+                    'rgb(64 136 84)',
+                    'rgb(220 53 69)',
+                    'rgb(206, 128, 255)'
+                ],
             }]
         };
 
@@ -1095,17 +1212,17 @@ fetch('<?php echo base_url('Dashboard/accounting_expense'); ?>', {}).then(respon
                     padding: {
                         left: 5,
                         right: 5,
-                        top: 0, 
+                        top: 0,
                     }
                 },
             },
         });
 
-        $(".total_expense_graph_total").html('$ '+total_expense);
-        $("#total_expense_graph").html('$'+total_expense);
+        $(".total_expense_graph_total").html('$ ' + total_expense);
+        $("#total_expense_graph").html('$' + total_expense);
 
-        
-        
+
+
 
         window.AccountingExpenseGraph = AccountingExpenseGraph;
     }).catch((error) => {
@@ -1121,32 +1238,32 @@ fetch('<?php echo base_url('Dashboard/leads_graph'); ?>', {}).then(response => r
             leads
         } = response;
 
-        let labelsTemp =[];
-        let dataTemp =[];
+        let labelsTemp = [];
+        let dataTemp = [];
         let totalLeads = 0;
 
 
-        if(leads){
-        for(var x =0 ; x <leads.length ; x++){
-            labelsTemp.push(leads[x].lead_name)
-            dataTemp.push(leads[x].total_leads)
-            totalLeads += parseInt(leads[x].total_leads)
+        if (leads) {
+            for (var x = 0; x < leads.length; x++) {
+                labelsTemp.push(leads[x].lead_name)
+                dataTemp.push(leads[x].total_leads)
+                totalLeads += parseInt(leads[x].total_leads)
+            }
         }
-       }
 
 
-       var new_leads_data = {
+        var new_leads_data = {
             labels: labelsTemp,
             datasets: [{
                 label: 'Total leads',
                 data: dataTemp,
                 backgroundColor: [
-                'rgb(106 74 134)',
-                'rgb(199 149 28)',
-                'rgb(64 136 84)',
-                'rgb(220 53 69)',
-                'rgb(206, 128, 255)'
-              ],
+                    'rgb(106 74 134)',
+                    'rgb(199 149 28)',
+                    'rgb(64 136 84)',
+                    'rgb(220 53 69)',
+                    'rgb(206, 128, 255)'
+                ],
             }]
         };
 
@@ -1169,7 +1286,7 @@ fetch('<?php echo base_url('Dashboard/leads_graph'); ?>', {}).then(response => r
                     padding: {
                         left: 5,
                         right: 5,
-                        top: 0, 
+                        top: 0,
                     }
                 },
             },
@@ -1178,8 +1295,8 @@ fetch('<?php echo base_url('Dashboard/leads_graph'); ?>', {}).then(response => r
         $(".total_leads_graph_total").html(totalLeads);
         $("#total_leads_graph").html(totalLeads);
 
-        
-        
+
+
 
         window.NewLeadsWidgetsGraph = NewLeadsWidgetsGraph;
     }).catch((error) => {

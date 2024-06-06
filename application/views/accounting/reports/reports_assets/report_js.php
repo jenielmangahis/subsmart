@@ -125,7 +125,7 @@
                 loadReportPreview();
                 $("#<?php echo $tableID; ?> > tbody").html(data);
                 $(".settingsApplyButton").removeAttr('disabled').html('Apply');
-                $('#reportSettings').modal('hide');
+                // $('#reportSettings').modal('hide');
             }
         });
     }
