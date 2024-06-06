@@ -649,6 +649,9 @@ function filterThumbnail(val, id, table) {
             break;
 
     }
+    if (table == 'jobs') {
+        $('.jobs_count_thumbnail').html('<span class="bx bx-loader bx-spin"></span>')
+    }
     loadDataFilter(from_date, to_date, table, id);
 
 }

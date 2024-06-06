@@ -578,7 +578,7 @@ class Dashboard extends Widgets
                 ];
                 $total = $this->general->get_data_with_param($total_query);
                 $expired_query = [
-                    'where' => ['estimates.company_id' => logged('company_id'), 
+                    'where' => ['estimates.company_id' => logged('company_id'),
                                 'estimates.status !=' => 'Submitted',
                                 'estimates.status!=' => 'Accepted',
                                 'estimates.status!=' => 'Declined By Customer',
@@ -747,7 +747,7 @@ class Dashboard extends Widgets
                 $acs_profile_query = [
                     'where' => ['customer_groups.company_id' => logged('company_id'),
                     'DATE(acs_profile.created_at)  >=' => date('Y-m-d', strtotime($date_from)),
-                    'DATE(acs_profile.created_at)  <' => date('Y-m-d', strtotime($date_to)),
+                    'DATE(acs_profile.created_at)  <=' => date('Y-m-d', strtotime($date_to)),
                      ],
                     'or_where' => ['customer_groups.company_id' => 0],
                     'groupBy' => ['customer_groups.title'],
@@ -785,8 +785,8 @@ class Dashboard extends Widgets
                 break;
             case 'unpaid_invoices':
                 $unpaid_query = [
-                    'where' => ['invoices.company_id' => logged('company_id'),  'date_created >=' => date('Y-m-d', strtotime($date_from)),
-                    'date_created <=' => date('Y-m-d', strtotime($date_to))],
+                    'where' => ['invoices.company_id' => logged('company_id'),  'DATE(invoices.date_created) >=' => date('Y-m-d', strtotime($date_from)),
+                    'DATE(invoices.date_created) <=' => date('Y-m-d', strtotime($date_to)), 'invoices.status =' => 'Unpaid'],
                     'table' => 'invoices',
                     'join' => [
                         [

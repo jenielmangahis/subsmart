@@ -63,18 +63,17 @@
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 audit_log">
                                         <thead>
                                             <tr>
-                                                <th>DATE CHANGED</th>
-                                                <th>USER TYPE</th>
-                                                <th>EVENT</th>
-                                                <th>NAME</th>
-                                                <th>DATE</th>
-                                                <!-- <th>AMOUNT</th> -->
-                                                <th>HISTORY</th>
+                                                <td data-name="DateChanged">DATE CHANGED</td>
+                                                <td data-name="UserTYpe">USER TYPE</td>
+                                                <td data-name="Event">EVENT</td>
+                                                <td data-name="UserName">NAME</td>
+                                                <td data-name="LogDate">DATE</td>
+                                                <td data-name="LogsDetailsProfile">Action</td>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="7">
+                                                <td colspan="6">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
@@ -406,13 +405,6 @@
 <!-- END: MODALS -->
 <?php include viewPath('accounting/reports/reports_assets/report_js'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
-
-<style>
-    .nsm-table-pagination {
-        margin-right: -70rem;
-    }
-</style>
-
 <script>
     $(document).ready(function() {
         $(".audit_log").nsmPagination({
