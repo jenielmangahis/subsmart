@@ -76,6 +76,7 @@
                                             <p style="margin-bottom: 0 !important">
                                                 <img src="<?php echo $image; ?>" alt="<?php echo $value->user; ?>" class="img-thumbnail" style="width:25px;">
                                                 <strong><?php echo $value->user; ?></strong>
+                                                <a href="javascript:void(0)" onClick="javascript:deleteComment(<?php echo $value->comment_id; ?>, <?php echo $taskHub->task_id; ?>);" class="" style="float:right; margin-left: 3px;"><i style="" class="bx bx-fw bx-trash"></i></a>
                                                 <span style="float:right;"><?= $date_updated; ?></span>
                                             </p>
                                         </div>
@@ -219,9 +220,55 @@
     </div>
 </div>
 <script type="text/javascript">
+    function deleteComment(id, task_id) {
+        Swal.fire({
+            title: 'Delete Comment',
+            text: "This will delete selected task comment. Proceed with action?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: "<?php echo base_url('taskhub/_delete_selected_task_comment'); ?>",
+                    dataType: 'json',
+                    data: {id:id, task_id:task_id},
+                    success: function(result) {
+                        if (result.is_success == 1) {
+                            Swal.fire({
+                                title: 'Delete Successful!',
+                                text: "Taskhub comment is successfully deleted!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'An Error Occured',
+                                text: result.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                if (result.value) {
+                                    //location.reload();
+                                }
+                            });
+                        }
+                    },
+                });
+            }
+        });
+    }
+
     $(document).ready(function(){
         var bg_header = '';
-
         $('#btnAddComment').click(function(){
             if($('#comment').val() == ""){
                 Swal.fire({

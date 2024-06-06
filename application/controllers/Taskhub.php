@@ -1142,10 +1142,11 @@ class Taskhub extends MY_Controller {
 		$this->page_data['updates_and_comments'] = $this->db->query(			
 			'select '.
 			'b.id as user_id, ' .
+			'a.comment_id as comment_id, '.
 			'a.comment as `text`, '.
 			'a.comment_date as `update_date`, '.
 			'concat(b.FName, " ", b.LName) as `user`, '.
-
+			 
 			'0 as `is_update` '.
 
 			'from comments a '.
@@ -1588,10 +1589,41 @@ class Taskhub extends MY_Controller {
 		} else {
 			$json_data = ['is_success' => 0, 'msg' => 'No selected task'];
 			echo json_encode($json_data);  			
-
 		}
+	}
 
+	public function ajax_delete_selected_task_comment()
+	{
+		$this->load->model('Comments_model'); 
+		$this->load->model('taskhub_updates_model'); 
 
+		$post_data = $this->input->post();	
+		if(!empty($post_data) && isset($post_data['id'])) {
+
+			$this->Comments_model->deleteByCommentId($post_data['id']);
+
+			//Task activity logs
+			$uid           = logged('id');
+			$activity_text = ' deleted task comment.';
+			$activity_data = array(
+				'task_id'      => trim($post_data['task_id']),
+				'notes'        => $activity_text,
+				'date_updated' => date('Y-m-d h:i:s'),
+				'performed_by' => $uid
+			);
+			$this->taskhub_updates_model->trans_create($activity_data);				
+
+			//Activity Logs
+			$activity_name = 'Deleted task comment.'; 
+			createActivityLog($activity_name);
+
+			$json_data = ['is_success' => 1, 'msg' => $msg];
+			echo json_encode($json_data);  			
+
+		} else {
+			$json_data = ['is_success' => 0, 'msg' => 'No selected task comment.'];
+			echo json_encode($json_data);  	
+		}
 	}
 }
 ?>
