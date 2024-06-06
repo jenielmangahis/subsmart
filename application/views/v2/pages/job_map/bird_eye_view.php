@@ -100,6 +100,14 @@ width: 65px;
 .btn-settings-map{
     float:right;    
 }
+.map-detail-link, .map-detail-link:hover{
+    text-decoration:none;
+    color:#ffffff;
+}
+.modal-quick-view-btn{
+    width: 48%;
+    font-size: 16px;
+}
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -147,9 +155,9 @@ width: 65px;
                 <div class="modal-body" style="max-height:700px; overflow: auto;">
                     <div class="view-schedule-container"></div>
                 </div> 
-                <div class="modal-footer">
-                    <button type="button" class="nsm-button primary" data-id="" data-type="" id="job-schedule-view-more-details"><i class="bx bx-window-open"></i> View More Details</button>                
-                    <button type="button" class="nsm-button primary" data-id="" data-type="" id="job-schedule-view-map-location"><i class='bx bxs-map'></i> View Map Location</button>                                                            
+                <div class="modal-footer" style="justify-content:unset;">
+                    <button type="button" class="nsm-button primary modal-quick-view-btn" data-id="" data-type="" id="job-schedule-view-more-details"><i class="bx bx-window-open"></i> View More Details</button>                
+                    <button type="button" class="nsm-button primary modal-quick-view-btn" data-id="" data-type="" id="job-schedule-view-map-location"><i class='bx bxs-map'></i> View Map Location</button>                                                            
                 </div>           
             </div>        
         </div>
@@ -654,6 +662,10 @@ $(function(){
 
                 $('#job-schedule-view-map-location').attr('data-type', appointment_type);
                 $('#job-schedule-view-map-location').attr('data-id', appointment_id);
+
+                $('#job-schedule-view-more-details').attr('data-type', appointment_type);
+                $('#job-schedule-view-more-details').attr('data-id', appointment_id);
+
                 $('#modal-quick-view-upcoming-schedule').modal('show');
                 $('.view-schedule-container').html('<span class="bx bx-loader bx-spin"></span>');
 
@@ -696,5 +708,43 @@ $(function(){
         calendar.render();
 
     }
+
+    $(document).on('click', '.map-detail-link', function(){
+        var appointment_id   = $(this).attr('data-id');
+        var appointment_type = $(this).attr('data-type');
+
+        if ( appointment_type == 'job' ) {
+            var url = base_url + "job/_quick_view_details";                 
+        } else if ( appointment_type == 'ticket' ) {
+            var url = base_url + "ticket/_quick_view_details";              
+        } 
+
+        $('#job-schedule-view-map-location').attr('data-type', appointment_type);
+        $('#job-schedule-view-map-location').attr('data-id', appointment_id);
+        $('#modal-quick-view-upcoming-schedule').modal('show');
+        $('.view-schedule-container').html('<span class="bx bx-loader bx-spin"></span>');
+
+        setTimeout(function () {
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {appointment_id:appointment_id},
+                success: function(o)
+                {          
+                $(".view-schedule-container").html(o);
+                }
+            });
+        }, 500);   
+    });
+
+    $(document).on('click', '#job-schedule-view-more-details', function(){
+        var appointment_type = $(this).attr('data-type');
+        var appointment_id   = $(this).attr('data-id');
+        if( appointment_type == 'job' ){
+            location.href = base_url + 'job/job_preview/' + appointment_id;
+        }else if( appointment_type == 'service_ticket'){
+            location.href = base_url + 'tickets/viewDetails/' + appointment_id;
+        }
+    });
 });
 </script>
