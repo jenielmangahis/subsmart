@@ -587,7 +587,7 @@ function filterThumbnail(val, id, table) {
     var date = new Date();
     switch (val) {
         case 'all':
-            var from_date = '01-01-2000';
+            var from_date = '00-00-0000';
             var to_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date
                 .getDate()).slice(-2);
             break;
@@ -671,8 +671,7 @@ function loadDataFilter(from_date, to_date, table, id) {
             $(`#first_content_${id}`).html(data['first']);
             $(`#second_content_${id}`).html(data['second']);
 
-            console.log("data['first']", data['first'])
-            console.log("data['second']", data['second'])
+         
             if (table == 'acs_billing') {
                 // window.subscriptionChart.destroy();
                 filterSubsciptionThumbnailGraph(data['mmr'])
@@ -681,6 +680,7 @@ function loadDataFilter(from_date, to_date, table, id) {
                 filterEstimateThumbnailGraph(data['first'], data['second'])
             }
             if (table == 'invoices') {
+                $(`#second_content_${id}`).html("$ "+ data['second']);
                 filterPastDueThumbnailGraph(data['past_due'])
             }
             if (table == 'open_invoices') {
@@ -697,6 +697,10 @@ function loadDataFilter(from_date, to_date, table, id) {
 
             if (table == 'acs_profile') {
                 filterCustomerThumbnailGraph(data['customer'])
+            }
+
+            if (table == 'collection') {
+                filterCollectionThumbnailGraph(data['collection'])
             }
 
             if (table == 'jobs') {
@@ -786,6 +790,26 @@ function filterJobsThumbnailGraph(jobs) {
     JobsThumbnailGraph.update();
 
 }
+
+function filterCollectionThumbnailGraph(collection) {
+    var amountsByMonth = new Array(12).fill(0);
+    var totalCollection = 0;
+    for (var x = 0; x < collection.length; x++) {
+        var dueDate = collection[x].created_at;
+        if (dueDate) {
+            var due = new Date(dueDate);
+            var month = due.getMonth();
+            totalCollection += 1;
+            amountsByMonth[month] += 1;
+        }
+    }
+
+    $('#collections-thumbnail').html(totalCollection)
+
+    collectionGraph.data.datasets[0].data = amountsByMonth;
+    collectionGraph.update();
+}
+
 
 function filterCustomerThumbnailGraph(customer) {
     let totalCustomer = 0;
@@ -968,7 +992,7 @@ function fetchCollections() {
 
         if (success) {
             var collectedAcc = collectedAccounts == '' ? '0' : collectedAccounts[0]['total'];
-            $("#collections-thumbnail").text(collectedAcc);
+           
         }
     }).catch((error) => {
         console.log('Error:', error);
