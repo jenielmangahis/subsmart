@@ -8930,7 +8930,7 @@ $(function () {
                 <td>${item.title}<input type="hidden" name="item[]" value="${item.id}"></td>
                 <td>${type.charAt(0).toUpperCase() + type.slice(1)}</td>
                 <td>${locs}</td>
-                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0" min="0" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"></td>
+                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="0" min="1" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))"></td>
                 <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" min="0" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" value="${item.price}"></td>
                 <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" min="0" value="0.00"></td>
                 <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="7.50"></td>

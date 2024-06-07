@@ -7397,6 +7397,16 @@ class Accounting_modals extends MY_Controller
             $this->form_validation->set_rules('credit_memo_date', 'Credit memo date', 'required');
         }
 
+        $qty_error = 0;
+        if(isset($data['quantity'])) {
+            $all_qty = $data['quantity'];
+            foreach($all_qty as $qty) {
+                if($qty <= 0) {
+                    $qty_error++;
+                }
+            }
+        }
+
         $return = [];
         if ($this->form_validation->run() === false) {
             if( $data['customer'] == '' ){
@@ -7425,6 +7435,10 @@ class Accounting_modals extends MY_Controller
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please select sales representative.';
+        }elseif($qty_error > 0) {
+            $return['data']    = null;
+            $return['success'] = false;
+            $return['message'] = 'Items quantity must not contain 0 value.';            
         } else {
             $salesRep = $this->Users_model->getById($data['sales_rep']);
 
