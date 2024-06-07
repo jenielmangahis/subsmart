@@ -913,8 +913,7 @@ class Taskhub extends MY_Controller {
         $uid = logged('id');
 
         $is_success = 0;
-        $msg = 'Cannot find data';
-
+        $msg  = 'Cannot find data';
         $post = $this->input->post();  
 	
 		$assigned_to_arr = explode(",", $post['a_to_multiple']);
@@ -936,44 +935,32 @@ class Taskhub extends MY_Controller {
 			if($task) {
 				$update_text = '';
 				if(trim($task->subject) != trim($this->input->post('subject'))){
-					$update_text = 'Modified:' . "\n".
-									'- Subject' . "\n";
+					$update_text = "updated task title";
 				}
 	
 				if(trim($task->description) != trim($this->input->post('description'))){
 					if(!empty($update_text)){
-						$update_text .= '- Description' . "\n";
+						$update_text .= ' and task notes.';
 					} else {
-						$update_text = 'Modified:' . "\n".
-										'- Description' . "\n";
-					}
-				}
-	
-				if($task->estimated_date_complete != $this->input->post('estimated_date_complete')){
-					if(!empty($update_text)){
-						$update_text .= '- Estimated Date of Completion' . "\n";
-					} else {
-						$update_text = 'Modified:' . "\n".
-										'- Estimated Date of Completion' . "\n";
+						$update_text = "updated task notes.";
 					}
 				}
 	
 				$status = $this->input->post('status');
 				if(empty($status)){
-					$status = 1;
+					$status = 'Backlog';
 				}
 	
-				if($task->status_id != $status){
+				if($task->status != $status){
 					if(!empty($update_text)){
-						$update_text .= '- Status' . "\n";
+						$update_text .= " Change task status from " . $task->status . ' to ' . $status . '.';
 					} else {
-						$update_text = 'Modified:' . "\n".
-										'- Status' . "\n";
+						$update_text = "change task status from " . $task->status . ' to ' . $status . '.';
 					}
 				}
 	
 				$actual_date_complete = null;
-				if($status == 6) {
+				if($status == 'Closed') {
 					$actual_date_complete = date("Y-m-d");
 				}
 				
@@ -1101,6 +1088,16 @@ class Taskhub extends MY_Controller {
 
             $this->Taskhub_participants_model->create($data_participant);
 
+			$activity_text = ' created the task.';
+			$activity_data = array(
+				'task_id'      => trim($taskId),
+				'notes'        => $activity_text,
+				'date_updated' => date('Y-m-d h:i:s'),
+				'performed_by' => $uid
+			);
+
+			$this->taskhub_updates_model->trans_create($activity_data);			
+
             $is_success = 1;
             $msg = 'Save Successful!';
 
@@ -1144,7 +1141,7 @@ class Taskhub extends MY_Controller {
 
 		$this->page_data['updates_and_comments'] = $this->db->query(			
 			'select '.
-
+			'b.id as user_id, ' .
 			'a.comment as `text`, '.
 			'a.comment_date as `update_date`, '.
 			'concat(b.FName, " ", b.LName) as `user`, '.
@@ -1216,9 +1213,19 @@ class Taskhub extends MY_Controller {
 			$commenter = $user->FName . ' ' . $user->LName;
 			$comment_date = date_create($data['comment_date']);
 
-			$data['error'] = '';
+			$data['error']     = '';
 			$data['commenter'] = $commenter;
 			$data['comment_date'] = date_format($comment_date, 'F d, Y h:i:s');
+
+			$activity_text = ' added a comment.';
+			$activity_data = array(
+				'task_id'      => trim($id),
+				'notes'        => $activity_text,
+				'date_updated' => date('Y-m-d h:i:s'),
+				'performed_by' => $uid
+			);
+
+			$this->taskhub_updates_model->trans_create($activity_data);
 
 		} else {
 			$data = array('error' => "Error in creating comment");

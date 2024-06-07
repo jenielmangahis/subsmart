@@ -4,6 +4,36 @@
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/calendar_tabs'); ?>
     </div>
+
+    <?php
+        switch ($taskHub->status):
+            case 'Backlog':
+                $task_status = "warning";
+                break;
+            case 'Doing':
+                $task_status = "primary";
+                break;
+            case 'Review Fail':
+                $task_status = "error";
+                break;
+            case 'On Testing':
+                $task_status = "success";
+                break;
+            case 'Review':
+                $task_status = "success";
+                break;
+            case 'Done':
+                $task_status = "success";
+                break;
+            case 'Closed':
+                $task_status = "primary";
+                break;
+            default:
+                $task_status = "";
+                break;
+        endswitch;  
+    ?>
+
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
@@ -25,7 +55,8 @@
                                     <div class="box-header with-border">
                                         <h5 class="box-title"><?php echo $taskHub->subject; ?>
                                             <span class="font-weight-lighter">&ensp;#<?php echo $taskHub->task_id; ?></span>
-                                            &ensp;<span class="font-weight-lighter border border-dark px-2 rounded" style='color: #ffffff;background-color: <?php echo $taskHub->status_color; ?>'><?php echo $taskHub->status_text; ?></span>
+                                            &ensp;
+                                            <span class="nsm-badge <?= $task_status ?> px-2 rounded" style="font-size: large;"><?= $taskHub->status != '' ? $taskHub->status : 'Draft'; ?></span>    
                                         </h5>
                                     </div>
                                     <div class="box-body">
@@ -34,6 +65,7 @@
                                 </div>
 
                                 <?php foreach ($updates_and_comments as $key => $value) { ?>
+                                    <?php $image = userProfilePicture($value->user_id); ?>
                                     <div class="card my_card" style="margin-bottom: 11px;border: 1px solid #6a4a86;">
                                         <div class="card-header" style="background-color: #f1f8ff; border-bottom-color: #6a4a86 !important;">
                                             <?php 
@@ -42,6 +74,7 @@
                                             ?>
                                             
                                             <p style="margin-bottom: 0 !important">
+                                                <img src="<?php echo $image; ?>" alt="<?php echo $value->user; ?>" class="img-thumbnail" style="width:25px;">
                                                 <strong><?php echo $value->user; ?></strong>
                                                 <span style="float:right;"><?= $date_updated; ?></span>
                                             </p>
@@ -102,35 +135,7 @@
                                                 <tr>
                                                     <td class="taskhub_sidebar_details_caption font-weight-bold">Status:</td>
                                                     <td class="taskhub_sidebar_details_values">
-                                                        <?php
-                                                            switch ($taskHub->status_text):
-                                                                case 'New':
-                                                                    $task_status = "primary";
-                                                                    break;
-                                                                case 'Resumed':
-                                                                    $task_status = "primary";
-                                                                    break;
-                                                                case 'On Hold':
-                                                                    $task_status = "error";
-                                                                    break;
-                                                                case 'Completed':
-                                                                    $task_status = "success";
-                                                                    break;
-                                                                case 'Complete':
-                                                                    $task_status = "success";
-                                                                    break;
-                                                                case 'Re-opened':
-                                                                    $task_status = "primary";
-                                                                    break;
-                                                                case 'On Going':
-                                                                    $task_status = "secondary";
-                                                                    break;
-                                                                default:
-                                                                    $task_status = "";
-                                                                    break;
-                                                            endswitch;
-                                                        ?>
-                                                        <span class="nsm-badge <?= $task_status ?>"><?= $taskHub->status_text != '' ? $taskHub->status_text : 'Draft'; ?></span>                                                        
+                                                        <span class="nsm-badge <?= $task_status ?>"><?= $taskHub->status != '' ? $taskHub->status : 'Draft'; ?></span>                                                        
                                                     </td>    
                                                 </tr>
                                                 <tr>
@@ -186,8 +191,6 @@
                 </div>
                 <div class="row">
                     <div class="col-8">
-                    </div>  
-                    <div class="col-4">
                         <div class="nsm-card primary mt-2">
                             <div class="nsm-card-header">
                                 <div class="nsm-card-title">
@@ -199,13 +202,16 @@
                                 <ul class="list-group">
                                     <?php foreach($activity_logs as $activity_log) { ?>
                                         <li class="list-group-item">
-                                            <i class="fa fa-user" aria-hidden="true"></i> <strong><?php echo $activity_log->FName . " " . $activity_log->LName; ?> </strong> | <?php echo $activity_log->notes; ?>
+                                            <i class="fa fa-user" aria-hidden="true"></i> <?php echo date("F j, Y, g:i a", strtotime($activity_log->date_updated)); ?> - <strong><?php echo $activity_log->FName . " " . $activity_log->LName; ?> </strong> <?php echo $activity_log->notes; ?>
                                         </li>
                                     <?php } ?>
                                 </ul>                            
 
                             </div>                                                      
-                        </div>                        
+                        </div>                           
+                    </div>  
+                    <div class="col-4">
+                     
                     </div>                  
                 </div>
             </div>

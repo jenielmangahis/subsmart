@@ -129,7 +129,6 @@ $(document).ready(function() {
             $("#jobs_added").text(onlineBookingCount); // total jobs added
             $("#lost_accounts").text(lostAcc); // total lost account
             $("#collections").text(collectedAcc); // total collected account
-            $("#collections-thumbnail").text(collectedAcc);
             $("#collected").text('$' + total_collected_amount); // total earned
         }
     }).catch((error) => {
@@ -967,6 +966,66 @@ fetch('<?php echo base_url('Dashboard/income_subscription'); ?>', {}).then(respo
         });
 
         window.subscriptionChart = subscriptionChart;
+    }).catch((error) => {
+    console.log(error);
+})
+
+fetch('<?php echo base_url('Dashboard/collections_graph'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
+
+        var {
+            success,
+            collection
+        } = response;
+        var totalCollection = 0;
+
+        if (collection) {
+            for (var x = 0; x < collection.length; x++) {
+                var dueDate = collection[x].created_at;
+                var total_amount_paid = collection[x].total_amount_paid ? collection[x]
+                    .total_amount_paid : 0
+                if (dueDate) {
+                    var due = new Date(dueDate);
+                    var month = due.getMonth();
+                    totalCollection += 1;
+                    monthlyAmounts[month] += 1;
+                }
+            }
+        }
+
+        var collection_data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Collection',
+                backgroundColor: 'rgb(199 149 28)',
+                borderColor: 'rgb(199 149 28)',
+                data: monthlyAmounts
+            }]
+        };
+      
+        $('#collectionGraphLoader').hide()
+
+        const collectionGraph = new Chart($('#collectionGraph'), {
+            type: 'line',
+            data: collection_data,
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
+                },
+                aspectRatio: 1.2,
+            },
+        });
+
+        window.collectionGraph = collectionGraph;
     }).catch((error) => {
     console.log(error);
 })

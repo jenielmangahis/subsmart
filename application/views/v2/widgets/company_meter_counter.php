@@ -9,12 +9,19 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         <div class="nsm-card-title">
             <div class="nsm-card-header">
                 <div class="nsm-card-title summary-report-header">
-                    <div class="icon-summary-estimate">
-                        <i class="bx bx-bar-chart-square"></i>
+                    <div class="summary-report-header-sub ">
+                        <div class="icon-summary-sales">
+                            <i class="bx bx-bar-chart-square"></i>
+                        </div>
+                        <a role="button" class=" btn-sm m-0 me-2" href="plaid_accounts"
+                            style="color:#6a4a86 !important ">
+                            <span style="color:#6a4a86; " id='company_meter_title'><?php echo $companyName->business_name; ?>
+                            Meter</span>
+                        </a>
                     </div>
-                    <span style="color:#6a4a86; " id='company_meter_title'><?php echo $companyName->business_name; ?>
-                        Meter</span>
+
                 </div>
+
             </div>
         </div>
         
@@ -46,11 +53,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             </div>
         </div>
     </div>
-    <div class='nsm-card-footer'>
-        <a role="button" class=" btn-sm m-0 me-2" href="plaid_accounts">
-            <i class='bx bx-right-arrow-alt' style="color: #6a4a86"></i>
-        </a>
-    </div>
+  
 </div>
 
 <?php

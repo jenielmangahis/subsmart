@@ -18,7 +18,7 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
                                 <div class="row">
-                                    <div class="col-12 col-md-6">
+                                    <div class="col-12 col-md-12">
                                         <label for="filter-report-period">Report period</label>
                                         <select class="nsm-field form-select" name="filter_report_period" id="filter-report-period">
                                             <option value="all-dates">All Dates</option>
@@ -55,17 +55,31 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <!-- <div class="row">
                                     <div class="col-12 col-md-6">
                                         <label for="filter-from">From</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" value="<?=date("01/01/Y")?>" id="filter-from">
+                                            <input type="text" class="nsm-field form-control datepicker" value="<?= date("01/01/Y") ?>" id="filter-from">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <label for="filter-to">To</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" value="<?=date("m/d/Y")?>" id="filter-to">
+                                            <input type="text" class="nsm-field form-control datepicker" value="<?= date("m/d/Y") ?>" id="filter-to">
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-from">From</label>
+                                        <div class="">
+                                            <input type="date" id="filter-from" class="form-control nsm-field date" data-type="filter-from">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-to">To</label>
+                                        <div class="">
+                                            <input type="date" id="filter-to" class="form-control nsm-field date" data-type="filter-to">
                                         </div>
                                     </div>
                                 </div>
@@ -84,8 +98,6 @@
                                             <option value="products-services">Products/Services</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-12 col-md-6">
                                         <label for="filter-display-columns-by">Show non-zero or active only</label>
                                         <div class="dropdown">
@@ -179,11 +191,9 @@
                                             </ul>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row grid-mb">
                                     <div class="col-12 col-md-6">
                                         <label for="" class="w-100">Accounting method</label>
-                                        <div class="form-check d-inline-block">
+                                        <div class="form-check d-inline-block mt-2">
                                             <input type="radio" id="cash-method" class="form-check-input" name="accounting_method">
                                             <label for="cash-method" class="form-check-label">Cash</label>
                                         </div>
@@ -193,7 +203,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
+
+                                <div class="row mt-3">
                                     <div class="col-12 d-flex justify-content-center">
                                         <button type="button" class="nsm-button primary">
                                             Run Report
@@ -242,7 +253,7 @@
                                                 <span>Add notes</span>
                                             </button>
                                             <button type="button" class="nsm-button">
-                                                <span>Edit titles</span>
+                                                <span>Edit Title</span>
                                             </button>
                                         </div>
                                     </div>
@@ -277,11 +288,11 @@
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?=$clients->business_name?></span></h4>
+                                        <h4 class="text-center fw-bold"><span class="company-name"><?= $clients->business_name ?></span></h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
                                         <p class="m-0 fw-bold">Balance Sheet Summary</p>
-                                        <p>As of <?=date("F d, Y")?></p>
+                                        <p>As of <?= date("F d, Y") ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -402,7 +413,7 @@
                                             <td>&emsp;&emsp;<b>Total Fixed Assets</b></td>
                                             <td><b>$6,382.00</b></td>
                                         </tr>
-                                        <tr  class="clickable collapse-row collapse"  id="accordion">
+                                        <tr class="clickable collapse-row collapse" id="accordion">
                                             <td>&emsp;<b>TOTAL ASSETS</b></td>
                                             <td><b>$571,114.95</b></td>
                                         </tr>
@@ -414,7 +425,7 @@
                                 </table>
                             </div>
                             <div class="nsm-card-footer text-center">
-                                <p class="m-0">Accrual basis <?=date("l, F j, Y h:i A eP")?></p>
+                                <p class="m-0">Accrual basis <?= date("l, F j, Y h:i A eP") ?></p>
                             </div>
                         </div>
                     </div>
@@ -425,3 +436,9 @@
 </div>
 
 <?php include viewPath('v2/includes/footer'); ?>
+<script>
+    var currentDate = new Date().toISOString().split('T')[0];
+
+    document.getElementById('filter-from').value = currentDate;
+    document.getElementById('filter-to').value = currentDate;
+</script>

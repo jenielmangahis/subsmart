@@ -76,7 +76,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                     </div>
                     <div>
                         <label for="">Total Due</label>
-                        <h1 id="second_content_<?php echo $id; ?>"><?php echo number_format($invoices_total_due); ?></h1>
+                        <h1 id="second_content_<?php echo $id; ?>">$ <?php echo number_format($invoices_total_due); ?></h1>
                     </div>
                 </div>
             </div>
