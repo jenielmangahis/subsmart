@@ -71,7 +71,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                 <div class="text-start summary-report-body">
                     <label for="">Total Subscription</label>
                     <h1 id="first_content_<?php echo $id; ?>">
-                        <?php echo number_format($subs->TOTAL_MMR, 2); ?></h1>
+                        <?php echo number_format($subs->total_subscriptions, 2); ?></h1>
                 </div>
             </div>
         </div>

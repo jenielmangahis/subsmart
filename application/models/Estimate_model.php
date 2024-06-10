@@ -1,47 +1,46 @@
 <?php
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 class Estimate_model extends MY_Model
 {
-
     public $table = 'estimates';
     public $table_items = 'job_items';
 
-    public function getAllByCompany($company_id, $sort = '', $filter = array())
+    public function getAllByCompany($company_id, $sort = '', $filter = [])   
     {
-
         $this->db->select('estimates.*, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer_name,CONCAT(ac_leads.firstname, " ", ac_leads.lastname) AS lead_name, users.FName AS user_firstname, users.LName AS user_lastname');
         $this->db->from($this->table);
-        $this->db->join('acs_profile', "estimates.customer_id = acs_profile.prof_id", 'left');
-        $this->db->join('ac_leads', "estimates.lead_id = ac_leads.leads_id", 'left');   
-        $this->db->join('users', "estimates.user_id = users.id", 'left');
-        $this->db->where('estimates.company_id', $company_id);  
-        $this->db->where('estimates.view_flag', 0);  
-        
-        if( !empty($filter) ){
+        $this->db->join('acs_profile', 'estimates.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('ac_leads', 'estimates.lead_id = ac_leads.leads_id', 'left');
+        $this->db->join('users', 'estimates.user_id = users.id', 'left');
+        $this->db->where('estimates.company_id', $company_id);
+        $this->db->where('estimates.view_flag', 0);
+
+        if (!empty($filter)) {
             $this->db->group_start();
-            foreach($filter as $f){                
+            foreach ($filter as $f) {
                 $this->db->or_like($f['field'], trim($f['value']));
             }
             $this->db->group_end();
-        }        
+        }
 
         switch ($sort) {
             case 'added-desc':
-                $this->db->order_by('created_at', 'DESC');
+                $this->db->order_by('created_at', 'DESC');  
                 break;
 
-            case 'added-asc':                    
+            case 'added-asc':
                 $this->db->order_by('created_at', 'ASC');
                 break;
 
             case 'date-accepted-desc':
-                $this->db->order_by("(CASE estimates.status WHEN '" . ESTIMATE_STATUS_ACCEPTED . "' THEN 0 ELSE 1 END), accepted_date DESC");
+                $this->db->order_by("(CASE estimates.status WHEN '".ESTIMATE_STATUS_ACCEPTED."' THEN 0 ELSE 1 END), accepted_date DESC");
                 break;
 
             case 'date-accepted-asc':
-                $this->db->order_by("(CASE estimates.status WHEN '" . ESTIMATE_STATUS_ACCEPTED . "' THEN 1 ELSE 0 END), accepted_date ASC");
-                break;
+                $this->db->order_by("(CASE estimates.status WHEN '".ESTIMATE_STATUS_ACCEPTED."' THEN 1 ELSE 0 END), accepted_date ASC");
+                break; 
 
             case 'number-asc':
                 $this->db->order_by('estimate_number', 'ASC');
@@ -55,29 +54,29 @@ class Estimate_model extends MY_Model
                 $this->db->order_by('grand_total', 'ASC');
                 break;
 
-            case 'amount-desc':                
+            case 'amount-desc':
                 $this->db->order_by('grand_total', 'DESC');
                 break;
             default:
                 $this->db->order_by('estimates.id', 'DESC');
         }
-        
 
         $query = $this->db->get();
+
         return $query->result();
     }
 
     public function getAllByCompanynDraft($company_id)
     {
-        $where = array(
-            'view_flag'     => '0',
-            'company_id'    => $company_id,
+        $where = [
+            'view_flag' => '0',
+            'company_id' => $company_id,
             // 'status'        => 'Submitted',
             // 'status'        => 'Accepted',
             // 'status'        => 'Invoiced',
             // 'status'        => 'Lost',
-            'status !='        => 'Draft',
-          );
+            'status !=' => 'Draft',
+          ];
 
         $this->db->select('*');
         $this->db->from($this->table);
@@ -85,22 +84,23 @@ class Estimate_model extends MY_Model
         $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
+
         return $query->result();
     }
 
-    public function getAllByCompanyIdAndDateRange($cid, $date_range = array(), $filter = array())
+    public function getAllByCompanyIdAndDateRange($cid, $date_range = [], $filter = [])
     {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $cid);
 
-        if( $date_range ){
+        if ($date_range) {
             $this->db->where('estimate_date >=', $date_range['from']);
             $this->db->where('estimate_date <=', $date_range['to']);
         }
-        
-        if( $filter ){
-            foreach( $filter as $f ){
+
+        if ($filter) {
+            foreach ($filter as $f) {
                 $this->db->where($f['field'], $f['value']);
             }
         }
@@ -108,6 +108,7 @@ class Estimate_model extends MY_Model
         $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
+
         return $query->result();
     }
 
@@ -118,10 +119,13 @@ class Estimate_model extends MY_Model
         // return true;
         extract($data);
         $this->db->where('id', $id);
-        $update = $this->db->update('estimates', array('is_mail_open' => $is_mail_open));
+        $update = $this->db->update('estimates', ['is_mail_open' => $is_mail_open]);
         // return $id;
-        if($update) return TRUE;
-        return FALSE;
+        if ($update) {
+            return true;
+        }
+
+        return false;
 
         // $this->db->from($this->table);
         // $this->db->set(['is_mail_open' => 1]);
@@ -129,8 +133,8 @@ class Estimate_model extends MY_Model
         // $this->db->update();
     }
 
-    public function getlastInsert(){
-
+    public function getlastInsert()
+    {
         $this->db->select('*');
         $this->db->from($this->table);
         // $this->db->where('company_id', $company_id);
@@ -139,32 +143,35 @@ class Estimate_model extends MY_Model
 
         // $query = $this->db->query("SELECT * FROM date_data ORDER BY id DESC LIMIT 1");
         $result = $this->db->get();
+
         return $result->result();
     }
 
     public function getPackagelist($id)
     {
         $this->db->select('*');
-		$this->db->from('item_categories');
-		$this->db->where('company_id', $id);
+        $this->db->from('item_categories');
+        $this->db->where('company_id', $id);
         $query = $this->db->get();
+
         return $query->result();
     }
 
     public function getItems($id)
     {
         // $this->db->select('*, estimates_items.cost AS icost, estimates_items.tax AS itax, estimates_items.total AS itotal');
-		// $this->db->from('estimates_items');
+        // $this->db->from('estimates_items');
         // $this->db->join('items', 'estimates_items.estimates_id  = items.id');
-		// $this->db->where('estimates_items.estimates_id', $id);
+        // $this->db->where('estimates_items.estimates_id', $id);
         // $query = $this->db->get();
         // return $query->result();
         $this->db->select('*, estimates_items.cost AS icost, estimates_items.tax AS itax, estimates_items.total AS itotal');
-        //$this->db->select('*, estimates_items.cost AS icost, estimates_items.tax AS itax, estimates_items.total AS itotal');
-		$this->db->from('estimates_items');
+        // $this->db->select('*, estimates_items.cost AS icost, estimates_items.tax AS itax, estimates_items.total AS itotal');
+        $this->db->from('estimates_items');
         $this->db->join('items', 'estimates_items.estimates_id  = items.id');
         $this->db->where('estimates_id', $id);
         $query2 = $this->db->get();
+
         return $query2->result();
     }
 
@@ -172,7 +179,8 @@ class Estimate_model extends MY_Model
     {
         extract($data);
         $this->db->where('id', $id);
-        $this->db->update('estimates', array('view_flag' => $view_flag));
+        $this->db->update('estimates', ['view_flag' => $view_flag]);
+
         return true;
     }
 
@@ -180,25 +188,27 @@ class Estimate_model extends MY_Model
     {
         extract($data);
         $this->db->where('id', $id);
-        $this->db->update('estimates', array('status' => $status));
+        $this->db->update('estimates', ['status' => $status]);
+
         return true;
     }
 
     public function getDataByESTID($id)
     {
         $this->db->select('*');
-		$this->db->from('estimates');
-		$this->db->where('id', $id);
-		$query = $this->db->get();
-		return $query->row();
+        $this->db->from('estimates');
+        $this->db->where('id', $id);
+        $query = $this->db->get();
+
+        return $query->row();
     }
 
-    public function getlastInsertByComp($company_id){
-
-        $where = array(
-            'view_flag'     => '0',
-            'company_id'   => $company_id
-          );
+    public function getlastInsertByComp($company_id)
+    {
+        $where = [
+            'view_flag' => '0',
+            'company_id' => $company_id,
+          ];
 
         $this->db->select('*');
         $this->db->from('estimates');
@@ -208,17 +218,19 @@ class Estimate_model extends MY_Model
 
         // $query = $this->db->query("SELECT * FROM date_data ORDER BY id DESC LIMIT 1");
         $result = $this->db->get();
+
         return $result->result();
     }
 
     public function delete_items($id)
     {
-        $where = array(
-            'estimates_id'   => $id
-          );
+        $where = [
+            'estimates_id' => $id,
+          ];
 
         $this->db->where($where);
         $this->db->delete('estimates_items');
+
         return true;
     }
 
@@ -226,42 +238,43 @@ class Estimate_model extends MY_Model
     {
         extract($data);
         $this->db->where('id', $id);
-        $this->db->update('estimates', array(
-            'customer_id'               => $customer_id,
-            'job_location'              => $job_location,
-            'job_name'                  => $job_name,
-            'attachments'               => $data['attachments'],
-            'estimate_number'           => $estimate_number,
-            'estimate_date'             => $estimate_date,
-            'expiry_date'               => $expiry_date,
-            'purchase_order_number'     => $purchase_order_number,
-            'status'                    => $status,
-            'estimate_type'             => $estimate_type,
-            'status'                    => $status,
-            'deposit_request'           => $deposit_request,
-            'deposit_amount'            => $deposit_amount,
-            'customer_message'          => $customer_message,
-            'terms_conditions'          => $terms_conditions,
-            'instructions'              => $instructions,
-            'sub_total'                 => $sub_total,
-            'grand_total'               => $grand_total,
-            'tax1_total'                => $tax1_total,
-            'adjustment_name'           => $adjustment_name,
-            'adjustment_value'          => $adjustment_value,
-            'markup_type'               => $markup_type,
-            'markup_amount'             => $markup_amount,
-            'updated_at'                => date('Y-m-d H:i:s')
-        ));
+        $this->db->update('estimates', [
+            'customer_id' => $customer_id,
+            'job_location' => $job_location,
+            'job_name' => $job_name,
+            'attachments' => $data['attachments'],
+            'estimate_number' => $estimate_number,
+            'estimate_date' => $estimate_date,
+            'expiry_date' => $expiry_date,
+            'purchase_order_number' => $purchase_order_number,
+            'status' => $status,
+            'estimate_type' => $estimate_type,
+            'status' => $status,
+            'deposit_request' => $deposit_request,
+            'deposit_amount' => $deposit_amount,
+            'customer_message' => $customer_message,
+            'terms_conditions' => $terms_conditions,
+            'instructions' => $instructions,
+            'sub_total' => $sub_total,
+            'grand_total' => $grand_total,
+            'tax1_total' => $tax1_total,
+            'adjustment_name' => $adjustment_name,
+            'adjustment_value' => $adjustment_value,
+            'markup_type' => $markup_type,
+            'markup_amount' => $markup_amount,
+            'updated_at' => date('Y-m-d H:i:s'),
+        ]);
+
         return true;
     }
 
-    public  function approveEstimate($id)
+    public function approveEstimate($id)
     {
         $this->db->where('id', $id);
-        $this->db->update('estimates', array(
-            'status'  => 'Accepted',
-            
-        ));
+        $this->db->update('estimates', [
+            'status' => 'Accepted',
+        ]);
+
         return true;
     }
 
@@ -269,42 +282,42 @@ class Estimate_model extends MY_Model
     {
         extract($data);
         $this->db->where('id', $id);
-        $this->db->update('estimates', array(
-            'customer_id'               => $customer_id,
-            'job_location'              => $job_location,
-            'job_name'                  => $job_name,
-            'estimate_date'             => $estimate_date,
-            'expiry_date'               => $expiry_date,
-            'purchase_order_number'     => $purchase_order_number,
-            'status'                    => $status,
-            'estimate_type'             => $estimate_type,
-            'type'                      => $type,
-            'deposit_request'           => $deposit_request,
-            'deposit_amount'            => $deposit_amount,
-            'customer_message'          => $customer_message,
-            'terms_conditions'          => $terms_conditions,
-            'instructions'              => $instructions,
+        $this->db->update('estimates', [
+            'customer_id' => $customer_id,
+            'job_location' => $job_location,
+            'job_name' => $job_name,
+            'estimate_date' => $estimate_date,
+            'expiry_date' => $expiry_date,
+            'purchase_order_number' => $purchase_order_number,
+            'status' => $status,
+            'estimate_type' => $estimate_type,
+            'type' => $type,
+            'deposit_request' => $deposit_request,
+            'deposit_amount' => $deposit_amount,
+            'customer_message' => $customer_message,
+            'terms_conditions' => $terms_conditions,
+            'instructions' => $instructions,
 
-            'bundle1_message'           => $bundle1_message,
-            'bundle2_message'           => $bundle2_message,
-            'bundle_discount'           => $bundle_discount,
-            
-            'deposit_amount'            => $deposit_amount,
-            'bundle1_total'             => $bundle1_total,
-            'bundle2_total'             => $bundle2_total,
-            'sub_total'                 => $sub_total,
-            'sub_total2'                => $sub_total2,
-            'tax1_total'                => $tax1_total,
-            'tax2_total'                => $tax2_total,
+            'bundle1_message' => $bundle1_message,
+            'bundle2_message' => $bundle2_message,
+            'bundle_discount' => $bundle_discount,
 
-            'grand_total'               => $grand_total,
-            'tax1_total'                => $tax1_total,
-            'adjustment_name'           => $adjustment_name,
-            'adjustment_value'          => $adjustment_value,
-            'markup_type'               => $markup_type,
-            'markup_amount'             => $markup_amount,
-            
-        ));
+            'deposit_amount' => $deposit_amount,
+            'bundle1_total' => $bundle1_total,
+            'bundle2_total' => $bundle2_total,
+            'sub_total' => $sub_total,
+            'sub_total2' => $sub_total2,
+            'tax1_total' => $tax1_total,
+            'tax2_total' => $tax2_total,
+
+            'grand_total' => $grand_total,
+            'tax1_total' => $tax1_total,
+            'adjustment_name' => $adjustment_name,
+            'adjustment_value' => $adjustment_value,
+            'markup_type' => $markup_type,
+            'markup_amount' => $markup_amount,
+        ]);
+
         return true;
     }
 
@@ -312,50 +325,50 @@ class Estimate_model extends MY_Model
     {
         extract($data);
         $this->db->where('id', $id);
-        $this->db->update('estimates', array(
-            'customer_id'               => $customer_id,
-            'job_location'              => $job_location,
-            'job_name'                  => $job_name,
-            'estimate_date'             => $estimate_date,
-            'expiry_date'               => $expiry_date,
-            'purchase_order_number'     => $purchase_order_number,
-            'status'                    => $status,
-            'estimate_type'             => $estimate_type,
-            'type'                      => $type,
-            'deposit_request'           => $deposit_request,
-            'deposit_amount'            => $deposit_amount,
-            'customer_message'          => $customer_message,
-            'terms_conditions'          => $terms_conditions,
-            'instructions'              => $instructions,
+        $this->db->update('estimates', [
+            'customer_id' => $customer_id,
+            'job_location' => $job_location,
+            'job_name' => $job_name,
+            'estimate_date' => $estimate_date,
+            'expiry_date' => $expiry_date,
+            'purchase_order_number' => $purchase_order_number,
+            'status' => $status,
+            'estimate_type' => $estimate_type,
+            'type' => $type,
+            'deposit_request' => $deposit_request,
+            'deposit_amount' => $deposit_amount,
+            'customer_message' => $customer_message,
+            'terms_conditions' => $terms_conditions,
+            'instructions' => $instructions,
 
-            'option_message'            => $option_message,
-            'option2_message'           => $option2_message,
+            'option_message' => $option_message,
+            'option2_message' => $option2_message,
             // 'bundle_discount'           => $bundle_discount,
-            
-            'deposit_amount'            => $deposit_amount,
-            'option1_total'             => $option1_total,
-            'option2_total'             => $option2_total,
-            'sub_total'                 => $sub_total,
-            'sub_total2'                => $sub_total2,
-            'tax1_total'                => $tax1_total,
-            'tax2_total'                => $tax2_total,
 
-            'grand_total'               => $grand_total,
-            'tax1_total'                => $tax1_total,
+            'deposit_amount' => $deposit_amount,
+            'option1_total' => $option1_total,
+            'option2_total' => $option2_total,
+            'sub_total' => $sub_total,
+            'sub_total2' => $sub_total2,
+            'tax1_total' => $tax1_total,
+            'tax2_total' => $tax2_total,
+
+            'grand_total' => $grand_total,
+            'tax1_total' => $tax1_total,
             // 'adjustment_name'           => $adjustment_name,
             // 'adjustment_value'          => $adjustment_value,
             // 'markup_type'               => $markup_type,
             // 'markup_amount'             => $markup_amount,
-            
-        ));
+        ]);
+
         return true;
     }
 
     public function getEstimatesItems($id)
     {
         // $this->db->select('*');
-		// $this->db->from('work_orders_items');
-		// $this->db->where('work_order_id', $id);
+        // $this->db->from('work_orders_items');
+        // $this->db->where('work_order_id', $id);
         // $query = $this->db->get();
         // $cus = $query->row();
 
@@ -364,21 +377,22 @@ class Estimate_model extends MY_Model
         // $this->db->join('acs_profile', 'work_orders.customer_id  = acs_profile.prof_id');
 
         $this->db->select('*, estimates_items.cost as iCost, estimates_items.tax as itax, estimates_items.total as iTotal');
-		$this->db->from('estimates_items');
+        $this->db->from('estimates_items');
         $this->db->join('items', 'estimates_items.items_id  = items.id');
         $this->db->where('estimates_id', $id);
         $query2 = $this->db->get();
+
         return $query2->result();
     }
 
     public function getAllEstimates()
     {
-
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('view_flag', '0');
         $this->db->order_by('id', 'DESC');
         $query = $this->db->get();
+
         return $query->result();
     }
 
@@ -391,24 +405,26 @@ class Estimate_model extends MY_Model
         $this->db->where('estimates.status !=', 'Lost');
         $this->db->where('estimates.status !=', 'Invoiced');
         $this->db->where('estimates.status !=', 'Declined By Customer');
-        $this->db->where('estimates.view_flag', '0');        
+        $this->db->where('estimates.view_flag', '0');
         $this->db->order_by('estimates.id', 'DESC');
         $query = $this->db->get();
-        
+
         return $query->result();
     }
+
     public function getExpiredEstimatesByCompanyId($company_id)
     {
         $this->db->select('estimates.*, acs_profile.first_name, acs_profile.last_name');
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'estimates.customer_id  = acs_profile.prof_id');
         $this->db->where('estimates.company_id', $company_id);
-        $this->db->where('estimates.status =', 'Lost');
-        $this->db->or_where('estimates.status =', 'Cancelled');
-        $this->db->where('estimates.view_flag', '0');        
+        // $this->db->where('estimates.status =', 'Lost');
+        // $this->db->or_where('estimates.status =', 'Cancelled');
+        $this->db->where('estimates.expiry_date <=', date('Y-m-d'));
+        $this->db->where('estimates.view_flag', '0');
         $this->db->order_by('estimates.id', 'DESC');
         $query = $this->db->get();
-        
+
         return $query->result();
     }
 
@@ -416,70 +432,77 @@ class Estimate_model extends MY_Model
     {
         $this->db->select('items.id as fk_item_id, items.id, items.title, items.price, items.type, job_items.cost, job_items.qty, items_has_storage_loc.name as location_name, items_has_storage_loc.id as location_id, job_items.points, job_items.tax, job_items.item_name AS job_item_name');
         $this->db->from($this->table_items);
-        $this->db->where("job_items.job_id", $id);
+        $this->db->where('job_items.job_id', $id);
         $this->db->join('items', 'items.id = job_items.items_id', 'left');
         $this->db->join('items_has_storage_loc', 'items_has_storage_loc.id = items.id', 'left');
         $query = $this->db->get();
+
         return $query->result();
     }
 
-    public function getCompanyTotalAmountEstimates($cid, $date_range = array())
+    public function getCompanyTotalAmountEstimates($cid, $date_range = [])
     {
-        $this->db->select('id, COALESCE(SUM(grand_total),0) AS total_amount');    
-        $this->db->from($this->table);   
+        $this->db->select('id, COALESCE(SUM(grand_total),0) AS total_amount');
+        $this->db->from($this->table);
         $this->db->where('company_id', $cid);
 
-        if( !empty($date_range) ){
+        if (!empty($date_range)) {
             $this->db->where('estimate_date >=', $date_range['from']);
             $this->db->where('estimate_date <=', $date_range['to']);
         }
 
         $query = $this->db->get()->row();
+
         return $query;
     }
 
     public function add_estimate_items($data)
     {
         $vendor = $this->db->insert('estimates_items', $data);
-	    $insert_id = $this->db->insert_id();
-		return  $insert_id;
+        $insert_id = $this->db->insert_id();
+
+        return $insert_id;
     }
 
     public function add_estimate_temp_items($data)
     {
         $vendor = $this->db->insert('temp_items', $data);
-	    $insert_id = $this->db->insert_id();
-		return  $insert_id;
+        $insert_id = $this->db->insert_id();
+
+        return $insert_id;
     }
 
     public function delete_temp_item($id)
     {
-        $where = array(
-            'id'   => $id
-          );
+        $where = [
+            'id' => $id,
+          ];
 
         $this->db->where($where);
         $this->db->delete('temp_items');
+
         return true;
     }
 
-    public function delete_temp_itemType($id,$type)
+    public function delete_temp_itemType($id, $type)
     {
-        $where = array(
-            'id'   => $id,
-            'added_from' => $type
-          );
+        $where = [
+            'id' => $id,
+            'added_from' => $type,
+          ];
 
         $this->db->where($where);
         $this->db->delete('temp_items');
+
         return true;
     }
 
     public function add_new_items($data)
     {
         $vendor = $this->db->insert('items', $data);
-	    $insert_id = $this->db->insert_id();
-		return  $insert_id;
+        $insert_id = $this->db->insert_id();
+
+        return $insert_id;
     }
 
     public function getAllByUserId($type = '', $status = '', $emp_id = 0, $uid = 0)
@@ -496,115 +519,100 @@ class Estimate_model extends MY_Model
         }
 
         if ($type != '' && $type != 'tt') {
-
             $this->db->where('customer_type', $type);
         }
 
         if ($status != '' && $status != 'ss') {
-
             $this->db->where('workorder_status', $status);
         }
 
         if ($emp_id) {
-
             $this->db->where("FIND_IN_SET($emp_id, assign_to)");
         }
         $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
-        //echo $this->db->last_query();die;
+
+        // echo $this->db->last_query();die;
         return $query->result();
     }
 
-
     public function getEstimate($estimate_id)
     {
-
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('id', $estimate_id);
 
         $query = $this->db->get();
+
         return $query->row();
     }
 
-
     /**
      * @param int $company_id
-     * @return mixed
      */
-    function getStatusWithCount($company_id = 0)
+    public function getStatusWithCount($company_id = 0)
     {
-
         $this->db->select('id, status, COUNT(id) as total');
         $this->db->from($this->table);
-
 
         if (isset($company_id)) {
             $this->db->where('company_id', $company_id);
         } else {
-
             $this->db->where('user_id', getLoggedUserID());
         }
 
         $this->db->group_by('id');
 
         $query = $this->db->get();
-//        echo $this->db->last_query();
-//        die;
-        return $query->result();
 
+        //        echo $this->db->last_query();
+        //        die;
+        return $query->result();
     }
 
     /**
      * @param array $filters
-     * @param int $company_id
-     * @return mixed
+     * @param int   $company_id
      */
-    public function filterBy($filters = array(), $company_id = 0, $role_id = 0)
+    public function filterBy($filters = [], $company_id = 0, $role_id = 0)
     {
-        
         $this->db->select('estimates.id, estimates.estimate_number, estimates.job_name, estimates.estimate_eqpt_cost, estimates.user_id, estimates.estimate_date, estimates.customer_id,estimates.estimate_type, estimates.company_id, estimates.status, users.FName AS user_firstname, users.LName AS user_lastname');
-        $this->db->join('acs_profile', "estimates.customer_id = acs_profile.prof_id", 'left');
-        $this->db->join('users', "estimates.user_id = users.id", 'left');
+        $this->db->join('acs_profile', 'estimates.customer_id = acs_profile.prof_id', 'left');
+        $this->db->join('users', 'estimates.user_id = users.id', 'left');
 
-//        $this->db->select("*");
+        //        $this->db->select("*");
         $this->db->from($this->table);
 
         if (!empty($filters)) {
-
             if (isset($filters['status'])) {
-
                 // list of estimate status
                 $items = get_config_item('estimate_status');
 
                 // if search successful, use the data position as status
                 $this->db->where('estimates.status', $filters['status']);
-                //$this->db->where('status', array_search($filters['status'], array_map('strtolower', $items)));
-
-            } elseif (isset($filters['search'])) { 
+                // $this->db->where('status', array_search($filters['status'], array_map('strtolower', $items)));
+            } elseif (isset($filters['search'])) {
                 $this->db->or_like('acs_profile.first_name', trim($filters['search']));
                 $this->db->or_like('acs_profile.last_name', trim($filters['search']));
                 $this->db->or_like('estimates.estimate_number', trim($filters['search']));
             } elseif (isset($filters['order'])) {
-
                 switch ($filters['order']) {
-
                     case 'added-desc':
                         $this->db->order_by('created_at', 'DESC');
                         break;
 
-                    case 'added-asc':                    
+                    case 'added-asc':
                         $this->db->order_by('created_at', 'ASC');
                         break;
 
                     case 'date-accepted-desc':
-                        $this->db->order_by("(CASE estimates.status WHEN '" . ESTIMATE_STATUS_ACCEPTED . "' THEN 0 ELSE 1 END), accepted_date DESC");
+                        $this->db->order_by("(CASE estimates.status WHEN '".ESTIMATE_STATUS_ACCEPTED."' THEN 0 ELSE 1 END), accepted_date DESC");
                         // $this->db->order_by("(CASE status WHEN 'Accepted' THEN 0 ELSE 1 END), date_issued DESC");
                         break;
 
                     case 'date-accepted-asc':
-                        $this->db->order_by("(CASE estimates.status WHEN '" . ESTIMATE_STATUS_ACCEPTED . "' THEN 1 ELSE 0 END), accepted_date ASC");
+                        $this->db->order_by("(CASE estimates.status WHEN '".ESTIMATE_STATUS_ACCEPTED."' THEN 1 ELSE 0 END), accepted_date ASC");
                         break;
 
                     case 'number-asc':
@@ -625,8 +633,8 @@ class Estimate_model extends MY_Model
                 }
             }
         }
-        //
-        if( $role_id > 2 ){            
+
+        if ($role_id > 2) {
             $this->db->where('estimates.company_id', $company_id);
         }
 
@@ -639,21 +647,17 @@ class Estimate_model extends MY_Model
         $this->db->order_by('estimate_date', 'desc');
         $query = $this->db->get();
         $results = $query->result();
-        $estimate_costs = array();
+        $estimate_costs = [];
 
-        if (!empty($filters['order'])) {            
-            if (($filters['order'] === 'amount-asc') || ($filters['order'] === 'amount-desc')) {                
-                //
+        if (!empty($filters['order'])) {
+            if (($filters['order'] === 'amount-asc') || ($filters['order'] === 'amount-desc')) {
                 foreach ($results as $result) {
-
                     $cost = unserialize($result->estimate_eqpt_cost);
 
                     array_push($estimate_costs, $cost['eqpt_cost']);
                 }
 
-
                 usort($results, function ($a, $b) use ($estimate_costs, $filters) {
-
                     $sa = unserialize($a->estimate_eqpt_cost);
                     $sb = unserialize($b->estimate_eqpt_cost);
 
@@ -680,13 +684,14 @@ class Estimate_model extends MY_Model
         $this->db->join('acs_profile', 'estimates.customer_id = acs_profile.prof_id');
 
         $start_date = date('Y-m-d');
-        $end_date   = date('Y-m-d', strtotime($start_date . ' +5 day'));
-        
-        $this->db->where('estimate_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
+        $end_date = date('Y-m-d', strtotime($start_date.' +5 day'));
+
+        $this->db->where('estimate_date BETWEEN "'.$start_date.'" and "'.$end_date.'"');
         $this->db->where('estimates.status', 'Submitted');
         $this->db->where('estimates.user_id', $user_id);
         $this->db->order_by('id', 'DESC');
         $query = $this->db->get();
+
         return $query->result();
     }
 
@@ -698,13 +703,14 @@ class Estimate_model extends MY_Model
         $this->db->join('acs_profile', 'estimates.customer_id = acs_profile.prof_id');
 
         $start_date = date('Y-m-d');
-        $end_date   = date('Y-m-d', strtotime($start_date . ' +5 day'));
-        
+        $end_date = date('Y-m-d', strtotime($start_date.' +5 day'));
+
         $this->db->where('estimate_date >=', $start_date);
         $this->db->where('estimates.status', 'Submitted');
         $this->db->where('estimates.company_id', $company_id);
         $this->db->order_by('estimate_date', 'ASC');
         $query = $this->db->get();
+
         return $query->result();
     }
 
@@ -715,13 +721,14 @@ class Estimate_model extends MY_Model
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'estimates.customer_id = acs_profile.prof_id');
 
-        $date = date('Y-m-d', strtotime($date));        
-        
+        $date = date('Y-m-d', strtotime($date));
+
         $this->db->where('estimate_date', $date);
         $this->db->where('estimates.status', 'Submitted');
         $this->db->where('estimates.company_id', $company_id);
         $this->db->order_by('estimate_date', 'ASC');
         $query = $this->db->get();
+
         return $query->result();
     }
 
@@ -733,165 +740,181 @@ class Estimate_model extends MY_Model
         $this->db->join('acs_profile', 'estimates.customer_id = acs_profile.prof_id');
 
         $start_date = date('Y-m-d');
-        $end_date   = date('Y-m-d', strtotime($start_date . ' +5 day'));
-        
-        $this->db->where('estimate_date BETWEEN "'. $start_date . '" and "'. $end_date .'"');
+        $end_date = date('Y-m-d', strtotime($start_date.' +5 day'));
+
+        $this->db->where('estimate_date BETWEEN "'.$start_date.'" and "'.$end_date.'"');
         $this->db->where('estimates.status', 'Submitted');
         $this->db->order_by('id', 'DESC');
         $query = $this->db->get();
+
         return $query->result();
     }
 
-    public function save_estimate($data){
-		$vendor = $this->db->insert('estimates', $data);
-	    $insert = $this->db->insert_id();
-		return  $insert;
-	}
+    public function save_estimate($data)
+    {
+        $vendor = $this->db->insert('estimates', $data);
+        $insert = $this->db->insert_id();
 
-    public function addNewCustomer($data){
-		$vendor = $this->db->insert('acs_profile', $data);
-	    $insert = $this->db->insert_id();
-		return  $insert;
-	}
+        return $insert;
+    }
+
+    public function addNewCustomer($data)
+    {
+        $vendor = $this->db->insert('acs_profile', $data);
+        $insert = $this->db->insert_id();
+
+        return $insert;
+    }
 
     public function add_estimate_details($data)
     {
         $vendor = $this->db->insert('estimates_items', $data);
-	    $insert_id = $this->db->insert_id();
-		return  $insert_id;
+        $insert_id = $this->db->insert_id();
+
+        return $insert_id;
     }
 
     public function getname($id)
     {
         $this->db->select('*');
-		$this->db->from('users');
-		$this->db->where('id', $id);
+        $this->db->from('users');
+        $this->db->where('id', $id);
         $query = $this->db->get();
+
         return $query->row();
     }
 
     public function save_notification($data)
     {
         $vendor = $this->db->insert('user_notification', $data);
-	    $insert = $this->db->insert_id();
-		return  $insert;
+        $insert = $this->db->insert_id();
+
+        return $insert;
     }
 
     public function get_cliets_data($id)
     {
         $this->db->select('*');
-		$this->db->from('clients');
-		$this->db->where('id', $id);
-		$query = $this->db->get();
-		return $query->row();
+        $this->db->from('clients');
+        $this->db->where('id', $id);
+        $query = $this->db->get();
+
+        return $query->row();
     }
 
     public function get_customerData_data($id)
     {
         $this->db->select('*');
-		$this->db->from('acs_profile');
-		$this->db->where('prof_id ', $id);
-		$query = $this->db->get();
-		return $query->row();
+        $this->db->from('acs_profile');
+        $this->db->where('prof_id ', $id);
+        $query = $this->db->get();
+
+        return $query->row();
     }
 
     public function getItemlistByID($id)
     {
         $this->db->select('*, estimates_items.cost as costing');
-		$this->db->from('estimates_items');
+        $this->db->from('estimates_items');
         $this->db->join('items', 'estimates_items.items_id  = items.id');
         // $this->db->join('package_details', 'estimates_items.package_id  = package_details.id');
         $this->db->where('estimates_id', $id);
         $query2 = $this->db->get();
+
         return $query2->result();
     }
 
     public function getItemlistByIDOption1($id)
     {
-        $where = array(
-            'estimates_id'      => $id,
-            'estimate_type'     => 'Option',
-            'bundle_option_type'=> '1',
-          );
+        $where = [
+            'estimates_id' => $id,
+            'estimate_type' => 'Option',
+            'bundle_option_type' => '1',
+          ];
 
         $this->db->select('*, estimates_items.cost as costing');
-		$this->db->from('estimates_items');
+        $this->db->from('estimates_items');
         $this->db->join('items', 'estimates_items.items_id  = items.id');
         $this->db->where($where);
         $query2 = $this->db->get();
+
         return $query2->result();
     }
 
     public function getItemOption($id)
     {
-        $where = array(
-            'estimates_id'      => $id,
-          );
+        $where = [
+            'estimates_id' => $id,
+          ];
 
         $this->db->select('*');
-		$this->db->from('estimates_items');
+        $this->db->from('estimates_items');
         $this->db->join('items', 'estimates_items.items_id  = items.id');
         $this->db->where($where);
         $query2 = $this->db->get();
+
         return $query2->result();
     }
 
     public function getItemlistByIDOption2($id)
     {
-        $where = array(
-            'estimates_id'      => $id,
-            'estimate_type'     => 'Option',
-            'bundle_option_type'=> '2',
-          );
+        $where = [
+            'estimates_id' => $id,
+            'estimate_type' => 'Option',
+            'bundle_option_type' => '2',
+          ];
 
         $this->db->select('*, estimates_items.cost as costing');
-		$this->db->from('estimates_items');
+        $this->db->from('estimates_items');
         $this->db->join('items', 'estimates_items.items_id  = items.id');
         $this->db->where($where);
         $query2 = $this->db->get();
+
         return $query2->result();
     }
 
     public function getItemlistByIDBundle1($id)
     {
-        $where = array(
-            'estimates_id'      => $id,
-            'estimate_type'     => 'Bundle',
-            'bundle_option_type'=> '1',
-          );
+        $where = [
+            'estimates_id' => $id,
+            'estimate_type' => 'Bundle',
+            'bundle_option_type' => '1',
+          ];
 
         $this->db->select('*, estimates_items.cost as costing');
-		$this->db->from('estimates_items');
+        $this->db->from('estimates_items');
         $this->db->join('items', 'estimates_items.items_id  = items.id');
         $this->db->where($where);
         $query2 = $this->db->get();
+
         return $query2->result();
     }
 
     public function getItemlistByIDBundle2($id)
     {
-        $where = array(
-            'estimates_id'      => $id,
-            'estimate_type'     => 'Bundle',
-            'bundle_option_type'=> '2',
-          );
+        $where = [
+            'estimates_id' => $id,
+            'estimate_type' => 'Bundle',
+            'bundle_option_type' => '2',
+          ];
 
         $this->db->select('*, estimates_items.cost as costing');
-		$this->db->from('estimates_items');
+        $this->db->from('estimates_items');
         $this->db->join('items', 'estimates_items.items_id  = items.id');
         $this->db->where($where);
         $query2 = $this->db->get();
+
         return $query2->result();
     }
 
     public function getAllEstimatesByCustomerId($customer_id)
     {
-
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('view_flag', '0');
         $this->db->where('customer_id', $customer_id);
         $query = $this->db->get();
+
         return $query->result();
     }
 
@@ -900,79 +923,82 @@ class Estimate_model extends MY_Model
         $this->db->select('*,estimates.id, estimates.estimate_number, estimates.job_name, estimates.estimate_eqpt_cost, estimates.user_id, estimates.estimate_date, estimates.customer_id, estimates.company_id, estimates.status, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name');
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'estimates.customer_id = acs_profile.prof_id', 'left');
-        $this->db->where("estimates.id", $id);
+        $this->db->where('estimates.id', $id);
         $query = $this->db->get();
+
         return $query->row();
     }
 
-    public function getEstimatesByCustomerWithParam($param){
-        if(array_key_exists("table", $param) && $param['table'] != NULL){
+    public function getEstimatesByCustomerWithParam($param)
+    {
+        if (array_key_exists('table', $param) && $param['table'] != null) {
             $this->db->from($param['table']);
-        }else{
-            return FALSE;
+        } else {
+            return false;
         }
 
-        if(array_key_exists("select", $param) && $param['select'] != NULL){
+        if (array_key_exists('select', $param) && $param['select'] != null) {
             $this->db->select($param['select']);
-        }else{
+        } else {
             $this->db->select('*');
         }
-        if(array_key_exists("where_in", $param)){
-            foreach($param['where_in'] as $key => $val){
-                if($val != ''){
+        if (array_key_exists('where_in', $param)) {
+            foreach ($param['where_in'] as $key => $val) {
+                if ($val != '') {
                     $this->db->where_in($key, $val);
-                }else{
-                    if($val == 0){
+                } else {
+                    if ($val == 0) {
                         $this->db->where_in($key, $val);
-                    }else{
+                    } else {
                         $this->db->where_in($key);
                     }
                 }
             }
         }
-        if(array_key_exists("where", $param)){
-            foreach($param['where'] as $key => $val){
-                if($val != ''){
+        if (array_key_exists('where', $param)) {
+            foreach ($param['where'] as $key => $val) {
+                if ($val != '') {
                     $this->db->where($key, $val);
-                }else{
-                    if($val == 0){
+                } else {
+                    if ($val == 0) {
                         $this->db->where($key, $val);
-                    }else{
+                    } else {
                         $this->db->where($key);
                     }
                 }
             }
         }
-        if(array_key_exists("where_not_in", $param)){
-            foreach($param['where_not_in'] as $key => $val){
-                if($val != ''){
+        if (array_key_exists('where_not_in', $param)) {
+            foreach ($param['where_not_in'] as $key => $val) {
+                if ($val != '') {
                     $this->db->where_not_in($key, $val);
-                }else{
-                    if($val == 0){
+                } else {
+                    if ($val == 0) {
                         $this->db->where_not_in($key, $val);
-                    }else{
+                    } else {
                         $this->db->where_not_in($key);
                     }
                 }
             }
         }
-        
-        if(array_key_exists("group_by",$param) && $param['group_by'] != NULL ){
+
+        if (array_key_exists('group_by', $param) && $param['group_by'] != null) {
             $this->db->group_by($param['group_by']);
         }
 
-        if(array_key_exists("join", $param)){
-            foreach($param['join'] as $key => $val){
-                if($val != ''){
+        if (array_key_exists('join', $param)) {
+            foreach ($param['join'] as $key => $val) {
+                if ($val != '') {
                     $this->db->join($key, $val);
                 }
             }
-        }   
+        }
 
         $query = $this->db->get();
+
         return $query->result();
     }
-    
+
     public function getEstimateCustomerName()
     {
         $this->db->select('acs_profile.first_name, acs_profile.last_name, estimates.customer_id');
@@ -980,6 +1006,7 @@ class Estimate_model extends MY_Model
         $this->db->join('estimates', 'acs_profile.prof_id == estimates.customer_id');
         $this->db->group_by('estimates.customer_id');
         $query = $this->db->get();
+
         return $query->result();
     }
 
@@ -989,6 +1016,7 @@ class Estimate_model extends MY_Model
         $this->db->where_not_in('status', ['Draft', 'Invoiced', 'Lost', 'Declined By Customer']);
         $this->db->where('view_flag', 0);
         $query = $this->db->get($this->table);
+
         return $query->result();
     }
 
@@ -999,6 +1027,7 @@ class Estimate_model extends MY_Model
         $this->db->where_not_in('status', ['Draft', 'Invoiced', 'Lost', 'Declined By Customer']);
         $this->db->where('view_flag', 0);
         $query = $this->db->get($this->table);
+
         return $query->result();
     }
 }

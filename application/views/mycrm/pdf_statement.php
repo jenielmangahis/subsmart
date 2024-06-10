@@ -78,18 +78,6 @@
 </table>
 <div></div>
 
-<p >Term of payment:   By reviewing your statement of products and services, you agree to make payment in full by the specified due date. If a credit card or payment method is on file, payment will be processed automatically; please ensure the card details are current to avoid any payment delays, which may result in account restrictions. Any bank holds or limitations on funds availability are the responsibility of the cardholder's issuing bank and may affect access to our products and services. Our company is unable to expedite the release of bank holds, so please contact your issuing bank directly for assistance with any pending holds. We appreciate your business and prompt attention to this payment. Should you have any questions or require further assistance, please do not hesitate to reach out to us.</p>
+<p>Term of payment: By reviewing your statement of products and services, you agree to make payment in full by the specified due date. If a credit card or payment method is on file, payment will be processed automatically; please ensure the card details are current to avoid any payment delays, which may result in account restrictions. Any bank holds or limitations on funds availability are the responsibility of the cardholder's issuing bank and may affect access to our products and services. Our company is unable to expedite the release of bank holds, so please contact your issuing bank directly for assistance with any pending holds. We appreciate your business and prompt attention to this payment. Should you have any questions or require further assistance, please do not hesitate to reach out to us.</p>
 <div></div>
 <div></div>
-<table>
-    <tr style="text-align:center ; " >
-        <td style="width: 150px"></td>
-        <td style="font-size:10px;background-color:gray; padding:10px 20px; border-radius:25px;line-height: 30px;text-align:center; width:100px;  font-weight: bold;"> 
-            <a  style="color:#fff; background-color:gray;   text-decoration: none">Share</a>
-        </td>
-        <td style="width: 10px"></td>
-
-     
-
-    </tr>
-</table>

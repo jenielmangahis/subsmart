@@ -18,7 +18,7 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
                                 <div class="row">
-                                    <div class="col-12 col-md-6">
+                                    <div class="col-12 col-md-12">
                                         <label for="filter-report-period">Report period</label>
                                         <select class="nsm-field form-select" name="filter_report_period" id="filter-report-period">
                                             <option value="all-dates">All Dates</option>
@@ -55,17 +55,31 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <!-- <div class="row">
                                     <div class="col-12 col-md-6">
                                         <label for="filter-from">From</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" value="<?=date("01/01/Y")?>" id="filter-from">
+                                            <input type="text" class="nsm-field form-control datepicker" value="<?= date("01/01/Y") ?>" id="filter-from">
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6">
                                         <label for="filter-to">To</label>
                                         <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" value="<?=date("m/d/Y")?>" id="filter-to">
+                                            <input type="text" class="nsm-field form-control datepicker" value="<?= date("m/d/Y") ?>" id="filter-to">
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-from">From</label>
+                                        <div class="">
+                                            <input type="date" id="filter-from" class="form-control nsm-field date" data-type="filter-from">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-to">To</label>
+                                        <div class="">
+                                            <input type="date" id="filter-to" class="form-control nsm-field date" data-type="filter-to">
                                         </div>
                                     </div>
                                 </div>
@@ -84,8 +98,6 @@
                                             <option value="products-services">Products/Services</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-12 col-md-6">
                                         <label for="filter-display-columns-by">Show non-zero or active only</label>
                                         <div class="dropdown">
@@ -179,11 +191,9 @@
                                             </ul>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row grid-mb">
                                     <div class="col-12 col-md-6">
                                         <label for="" class="w-100">Accounting method</label>
-                                        <div class="form-check d-inline-block">
+                                        <div class="form-check d-inline-block mt-2">
                                             <input type="radio" id="cash-method" class="form-check-input" name="accounting_method">
                                             <label for="cash-method" class="form-check-label">Cash</label>
                                         </div>
@@ -193,8 +203,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-12 d-flex justify-content-center">
+
+                                <div class="row mt-3">
+                                    <div class="col-12 d-flex justify-content-end">
                                         <button type="button" class="nsm-button primary">
                                             Run Report
                                         </button>
@@ -218,7 +229,7 @@
                                 <div class="row">
                                     <div class="col-12 col-md-6 grid-mb">
                                         <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button">
+                                            <button type="button" id="collapseButton" class="nsm-button">
                                                 <span>Collapse</span>
                                             </button>
                                             <button type="button" class="nsm-button" data-bs-toggle="dropdown">
@@ -241,8 +252,8 @@
                                             <button type="button" class="nsm-button">
                                                 <span>Add notes</span>
                                             </button>
-                                            <button type="button" class="nsm-button">
-                                                <span>Edit titles</span>
+                                            <button type="button" class="nsm-button" id="editButton">
+                                                <span>Edit Title</span>
                                             </button>
                                         </div>
                                     </div>
@@ -267,7 +278,7 @@
                                             <ul class="dropdown-menu dropdown-menu-end p-3">
                                                 <p class="m-0">Display density</p>
                                                 <div class="form-check">
-                                                    <input type="checkbox" checked id="compact-display" class="form-check-input">
+                                                    <input type="checkbox" id="compact-display" class="form-check-input">
                                                     <label for="compact-display" class="form-check-label">Compact</label>
                                                 </div>
                                             </ul>
@@ -277,144 +288,270 @@
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?=$clients->business_name?></span></h4>
+                                        <h4 class="text-center fw-bold"><span class="company-name"><?= $clients->business_name ?></span></h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
                                         <p class="m-0 fw-bold">Balance Sheet Summary</p>
-                                        <p>As of <?=date("F d, Y")?></p>
+                                        <p>As of <?= date("F d, Y") ?></p>
                                     </div>
                                 </div>
                             </div>
                             <div class="nsm-card-content h-auto grid-mb">
-                                <table class="nsm-table">
+                                <table class="nsm-table balance-sheet-summary-table">
                                     <thead>
                                         <tr>
                                             <td data-name="Name"></td>
                                             <td data-name="Total">TOTAL</td>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
+                                    <tbody id="reportTable">
+                                        <!-- ASSETS -->
+                                        <tr data-bs-toggle="collapse" data-bs-target="#assets" class="clickable collapse-row collapsed">
                                             <td><i class="bx bx-fw bx-caret-right"></i> ASSETS</td>
                                             <td>$571,265.66</td>
                                         </tr>
-                                        <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion">
-                                            <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Current Assets</td>
-                                            <td></td>
+                                        <tr class="collapse" id="assets">
+                                            <td colspan="2">
+                                                <table class="table mb-0">
+                                                    <tbody>
+                                                        <tr data-bs-toggle="collapse" data-bs-target="#currentAssets" class="clickable collapse-row collapsed">
+                                                            <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Current Assets</td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr id="currentAssets" class="collapse">
+                                                            <td colspan="2">
+                                                                <table class="table mb-0">
+                                                                    <tbody>
+                                                                        <tr data-bs-toggle="collapse" data-bs-target="#bankAccounts" class="clickable collapse-row collapsed">
+                                                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Bank Accounts</td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr id="bankAccounts" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Checking</td>
+                                                                            <td>$305,061.93</td>
+                                                                        </tr>
+                                                                        <tr id="bankAccounts" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Test Bank (Cash on hand)</td>
+                                                                            <td>$990.77</td>
+                                                                        </tr>
+                                                                        <tr id="bankAccounts" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;&emsp;Sub-bank (Cash on hand)</td>
+                                                                            <td>$990.00</td>
+                                                                        </tr>
+                                                                        <tr id="bankAccounts" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;&emsp;<b>Total Test Bank (Cash on hand)</b></td>
+                                                                            <td><b>$1,980.77</b></td>
+                                                                        </tr>
+                                                                        <tr id="bankAccounts" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Test Category</td>
+                                                                            <td>$10.00</td>
+                                                                        </tr>
+                                                                        <tr id="bankAccounts" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;<b>Total Bank Accounts</b></td>
+                                                                            <td><b>$307,052.70</b></td>
+                                                                        </tr>
+                                                                        <tr data-bs-toggle="collapse" data-bs-target="#accountsReceivable" class="clickable collapse-row collapsed">
+                                                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Accounts Receivable</td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr id="accountsReceivable" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Accounts Receivable</td>
+                                                                            <td>$205,324.93</td>
+                                                                        </tr>
+                                                                        <tr id="accountsReceivable" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;<b>Total Accounts Receivable</b></td>
+                                                                            <td><b>$205,324.93</b></td>
+                                                                        </tr>
+                                                                        <tr data-bs-toggle="collapse" data-bs-target="#otherCurrentAssets" class="clickable collapse-row collapsed">
+                                                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Other Current Assets</td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr id="otherCurrentAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Credit Card Receivables</td>
+                                                                            <td>$207.95</td>
+                                                                        </tr>
+                                                                        <tr id="otherCurrentAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Inventory</td>
+                                                                            <td>$25.00</td>
+                                                                        </tr>
+                                                                        <tr id="otherCurrentAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Inventory Asset-1</td>
+                                                                            <td>$25,705.75</td>
+                                                                        </tr>
+                                                                        <tr id="otherCurrentAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Test OCA</td>
+                                                                            <td>$1,000.00</td>
+                                                                        </tr>
+                                                                        <tr id="otherCurrentAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Uncategorized Asset</td>
+                                                                            <td>$9,068.80</td>
+                                                                        </tr>
+                                                                        <tr id="otherCurrentAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Undeposited Funds</td>
+                                                                            <td>$16,347.82</td>
+                                                                        </tr>
+                                                                        <tr id="otherCurrentAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;<b>Total Other Current Assets</b></td>
+                                                                            <td><b>$52,355.32</b></td>
+                                                                        </tr>
+                                                                        <tr id="currentAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;<b>Total Current Assets</b></td>
+                                                                            <td><b>$564,732.95</b></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr data-bs-toggle="collapse" data-bs-target="#fixedAssets" class="clickable collapse-row collapsed">
+                                                            <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Fixed Assets</td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr id="fixedAssets" class="collapse">
+                                                            <td colspan="2">
+                                                                <table class="table mb-0">
+                                                                    <tbody>
+                                                                        <tr id="fixedAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;Accumulated Depreciation</td>
+                                                                            <td>$-26,176.00</td>
+                                                                        </tr>
+                                                                        <tr id="fixedAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;Fixed Asset Computers</td>
+                                                                            <td>$6,069.00</td>
+                                                                        </tr>
+                                                                        <tr id="fixedAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;Fixed Asset Furniture</td>
+                                                                            <td>$25,289.00</td>
+                                                                        </tr>
+                                                                        <tr id="fixedAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;Fixed Asset Phone</td>
+                                                                            <td>$1,200.00</td>
+                                                                        </tr>
+                                                                        <tr id="fixedAssets" class="collapse">
+                                                                            <td>&emsp;&emsp;<b>Total Fixed Assets</b></td>
+                                                                            <td><b>$6,382.00</b></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr id="assets" class="collapse">
+                                                            <td>&emsp;<b>TOTAL ASSETS</b></td>
+                                                            <td><b>$571,114.95</b></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
                                         </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion2">
-                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Bank Accounts</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr id="accordion2" class="collapse">
-                                            <td>&emsp;&emsp;&emsp;Checking</td>
-                                            <td>305,061.93</td>
-                                        </tr>
-                                        <tr id="accordion2" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion3">
-                                            <td>&emsp;&emsp;&emsp;<i class="bx bx-fw bx-caret-right"> Test Bank (Cash on hand)</td>
-                                            <td>990.77</td>
-                                        </tr>
-                                        <tr id="accordion3" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;&emsp; Sub-bank (Cash on hand)</td>
-                                            <td>990.00</td>
-                                        </tr>
-                                        <tr id="accordion3" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;&emsp; <b>Total Test Bank (Cash on hand)</b></td>
-                                            <td><b>1,980.77</b></td>
-                                        </tr>
-                                        <tr id="accordion2" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;Test Category</td>
-                                            <td>10.00</td>
-                                        </tr>
-                                        <tr id="accordion2" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;<b>Total Bank Accounts</b></td>
-                                            <td><b>$307,052.70</b></td>
-                                        </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion4">
-                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Accounts Receivable</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr id="accordion4" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;Accounts Receivable</td>
-                                            <td>205,324.93</td>
-                                        </tr>
-                                        <tr id="accordion4" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;<b>Total Accounts Receivable</b></td>
-                                            <td><b>$205,324.93</b></td>
-                                        </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion5">
-                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Other Current Assets</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr id="accordion5" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;Credit Card Receivables</td>
-                                            <td>207.95</td>
-                                        </tr>
-                                        <tr id="accordion5" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;Inventory</td>
-                                            <td>25.00</td>
-                                        </tr>
-                                        <tr id="accordion5" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;Inventory Asset-1</td>
-                                            <td>25,705.75</td>
-                                        </tr>
-                                        <tr id="accordion5" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;Test OCA</td>
-                                            <td>1,000.00</td>
-                                        </tr>
-                                        <tr id="accordion5" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;Uncategorized Asset</td>
-                                            <td>9,068.80</td>
-                                        </tr>
-                                        <tr id="accordion5" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;Undeposited Funds</td>
-                                            <td>16,347.82</td>
-                                        </tr>
-                                        <tr id="accordion5" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;&emsp;<b>Total Other Current Assets</b></td>
-                                            <td><b>$52,355.32</b></td>
-                                        </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;<b>Total Current Assets</b></td>
-                                            <td><b>$564,732.95</b></td>
-                                        </tr>
-                                        <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion6">
-                                            <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Fixed Assets</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr id="accordion6" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;Accumulated Depreciation</td>
-                                            <td>-26,176.00</td>
-                                        </tr>
-                                        <tr id="accordion6" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;Fixed Asset Computers</td>
-                                            <td>6,069.00</td>
-                                        </tr>
-                                        <tr id="accordion6" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;Fixed Asset Furniture</td>
-                                            <td>25,289.00</td>
-                                        </tr>
-                                        <tr id="accordion6" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;Fixed Asset Phone</td>
-                                            <td>1,200.00</td>
-                                        </tr>
-                                        <tr id="accordion6" class="collapse clickable collapse-row">
-                                            <td>&emsp;&emsp;<b>Total Fixed Assets</b></td>
-                                            <td><b>$6,382.00</b></td>
-                                        </tr>
-                                        <tr  class="clickable collapse-row collapse"  id="accordion">
-                                            <td>&emsp;<b>TOTAL ASSETS</b></td>
-                                            <td><b>$571,114.95</b></td>
-                                        </tr>
-                                        <tr>
+                                        <!-- LIABILITIES AND EQUITY -->
+                                        <tr data-bs-toggle="collapse" data-bs-target="#liabilitiesEquity" class="clickable collapse-row collapsed">
                                             <td><i class="bx bx-fw bx-caret-right"></i> LIABILITIES AND EQUITY</td>
                                             <td>$571,265.66</td>
+                                        </tr>
+                                        <tr class="collapse" id="liabilitiesEquity">
+                                            <td colspan="2">
+                                                <table class="table mb-0">
+                                                    <tbody>
+                                                        <tr data-bs-toggle="collapse" data-bs-target="#liabilities" class="clickable collapse-row collapsed">
+                                                            <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Liabilities</td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr id="liabilities" class="collapse">
+                                                            <td colspan="2">
+                                                                <table class="table mb-0">
+                                                                    <tbody>
+                                                                        <tr data-bs-toggle="collapse" data-bs-target="#currentLiabilities" class="clickable collapse-row collapsed">
+                                                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Current Liabilities</td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr id="currentLiabilities" class="collapse">
+                                                                            <td colspan="2">
+                                                                                <table class="table mb-0">
+                                                                                    <tbody>
+                                                                                        <tr id="currentLiabilities" class="collapse">
+                                                                                            <td>&emsp;&emsp;&emsp;Accounts Payable</td>
+                                                                                            <td>$15,000.00</td>
+                                                                                        </tr>
+                                                                                        <tr id="currentLiabilities" class="collapse">
+                                                                                            <td>&emsp;&emsp;&emsp;Credit Card</td>
+                                                                                            <td>$5,000.00</td>
+                                                                                        </tr>
+                                                                                        <tr id="currentLiabilities" class="collapse">
+                                                                                            <td>&emsp;&emsp;&emsp;<b>Total Current Liabilities</b></td>
+                                                                                            <td><b>$20,000.00</b></td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr data-bs-toggle="collapse" data-bs-target="#longTermLiabilities" class="clickable collapse-row collapsed">
+                                                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Long-term Liabilities</td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr id="longTermLiabilities" class="collapse">
+                                                                            <td colspan="2">
+                                                                                <table class="table mb-0">
+                                                                                    <tbody>
+                                                                                        <tr id="longTermLiabilities" class="collapse">
+                                                                                            <td>&emsp;&emsp;&emsp;Mortgage Payable</td>
+                                                                                            <td>$100,000.00</td>
+                                                                                        </tr>
+                                                                                        <tr id="longTermLiabilities" class="collapse">
+                                                                                            <td>&emsp;&emsp;&emsp;Car Loan</td>
+                                                                                            <td>$15,000.00</td>
+                                                                                        </tr>
+                                                                                        <tr id="longTermLiabilities" class="collapse">
+                                                                                            <td>&emsp;&emsp;&emsp;<b>Total Long-term Liabilities</b></td>
+                                                                                            <td><b>$115,000.00</b></td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr id="liabilities" class="collapse">
+                                                                            <td>&emsp;&emsp;<b>Total Liabilities</b></td>
+                                                                            <td><b>$135,000.00</b></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr data-bs-toggle="collapse" data-bs-target="#equity" class="clickable collapse-row collapsed">
+                                                            <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Equity</td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr id="equity" class="collapse">
+                                                            <td colspan="2">
+                                                                <table class="table mb-0">
+                                                                    <tbody>
+                                                                        <tr id="equity" class="collapse">
+                                                                            <td>&emsp;&emsp;Owner's Equity</td>
+                                                                            <td>$400,000.00</td>
+                                                                        </tr>
+                                                                        <tr id="equity" class="collapse">
+                                                                            <td>&emsp;&emsp;Retained Earnings</td>
+                                                                            <td>$36,265.66</td>
+                                                                        </tr>
+                                                                        <tr id="equity" class="collapse">
+                                                                            <td>&emsp;&emsp;<b>Total Equity</b></td>
+                                                                            <td><b>$436,265.66</b></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr id="liabilitiesEquity" class="collapse">
+                                                            <td>&emsp;<b>Total Liabilities and Equity</b></td>
+                                                            <td><b>$571,265.66</b></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="nsm-card-footer text-center">
-                                <p class="m-0">Accrual basis <?=date("l, F j, Y h:i A eP")?></p>
+                                <p class="m-0">Accrual basis <?= date("l, F j, Y h:i A eP") ?></p>
                             </div>
                         </div>
                     </div>
@@ -425,3 +562,76 @@
 </div>
 
 <?php include viewPath('v2/includes/footer'); ?>
+<?php include viewPath('accounting/reports/reports_assets/balance_sheet_summary_js'); ?>
+
+<style>
+    .compact-table td,
+    .compact-table th {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+</style>
+
+<script type="text/javascript">
+    var baseUrl = '<?= base_url() ?>';
+</script>
+<script>
+    var currentDate = new Date().toISOString().split('T')[0];
+
+    document.getElementById('filter-from').value = currentDate;
+    document.getElementById('filter-to').value = currentDate;
+
+    $(document).ready(function() {
+        var isCollapsed = true;
+        var originalOrder = $("#reportTable").children();
+
+        $("#collapseButton").click(function() {
+            if (isCollapsed) {
+                $(".collapse").collapse('show');
+                $("#collapseButton span").text('Uncollapse');
+            } else {
+                $(".collapse").collapse('hide');
+                $("#collapseButton span").text('Collapse');
+            }
+            isCollapsed = !isCollapsed;
+        });
+
+        $(".collapse-row").click(function() {
+            var target = $(this).data("bs-target");
+            $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
+            $(target).collapse('toggle');
+        });
+
+        $("input[name='sort_order']").change(function() {
+            var sortOrder = $("input[name='sort_order']:checked").attr('id');
+            sortTable(sortOrder);
+        });
+
+        function sortTable(order) {
+            var rows = $("#reportTable > tr").toArray();
+
+            if (order === 'sort-default') {
+                $("#reportTable").html(originalOrder);
+            } else {
+                rows.sort(function(a, b) {
+                    var aValue = parseFloat($(a).find("td").eq(1).text().replace(/[\$,]/g, '')) || 0;
+                    var bValue = parseFloat($(b).find("td").eq(1).text().replace(/[\$,]/g, '')) || 0;
+                    if (order === 'sort-asc') {
+                        return aValue - bValue;
+                    } else if (order === 'sort-desc') {
+                        return bValue - aValue;
+                    }
+                });
+                $("#reportTable").html(rows);
+            }
+        }
+
+        $("#compact-display").change(function() {
+            if ($(this).is(":checked")) {
+                $("#reportTable").addClass("compact-table");
+            } else {
+                $("#reportTable").removeClass("compact-table");
+            }
+        });
+    });
+</script>

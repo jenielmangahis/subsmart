@@ -619,7 +619,7 @@ class Mycrm extends MY_Controller
     {
         $this->load->model('CompanySubscriptionPayments_model');
         $this->load->model('Business_model');
-
+    
         $company_id = logged('company_id');
         $payment = $this->CompanySubscriptionPayments_model->getById($id);
         $company = $this->Business_model->getByCompanyId($payment->company_id);
@@ -628,35 +628,43 @@ class Mycrm extends MY_Controller
         $this->page_data['id'] = $id;
         $this->page_data['url'] = base_url('mycrm/send_statement_pdf/'.$id);
         $content = $this->load->view('mycrm/pdf_statement', $this->page_data, true);
-
+    
         $this->load->library('Reportpdf');
-
+    
         $title = 'PDF Statement';
-
+    
         $obj_pdf = new Reportpdf('P', 'mm', 'A4', true, 'UTF-8', false);
         $obj_pdf->SetTitle($title);
         $obj_pdf->setPrintHeader(false);
         $obj_pdf->setPrintFooter(false);
         $obj_pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
         $obj_pdf->setFontSubsetting(false);
-
+    
         if (@file_exists(dirname(__FILE__).'/lang/eng.php')) {
             require_once dirname(__FILE__).'/lang/eng.php';
             $pdf->setLanguageArray($l);
         }
-
+    
         $obj_pdf->AddPage('P');
-        $html = '';
-        $obj_pdf->writeHTML($html.$content, true, false, true, false, '');
-
-        // Replace placeholder with hyperlink
+        $obj_pdf->writeHTML($content, true, false, true, false, '');
+    
+        // Email button
         $obj_pdf->SetXY(110, 227.2); // Set position (adjust as needed)
         $obj_pdf->SetTextColor(255, 255, 255);
         $obj_pdf->SetFillColor(92, 184, 92);
         $obj_pdf->Cell(40, 10.5, 'Email', 0, 1, 'C', 1, $this->page_data['url']);
-
+    
+        // Add Share button
+        $obj_pdf->SetXY(65, 227.2); // Set position for Share button (adjust as needed)
+        $obj_pdf->SetTextColor(255, 255, 255);
+        $obj_pdf->SetFillColor(128, 128, 128);
+        $obj_pdf->Cell(40, 10.5, 'Share', 0, 1, 'C', 1, 'javascript:print()');
+    
+ 
+    
         $obj_pdf->Output($title, 'I');
     }
+    
 
     public function invoice_pdf($id)
     {

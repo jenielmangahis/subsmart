@@ -631,6 +631,12 @@ class Customer_model extends MY_Model
         $this->db->delete($this->table, array("prof_id" => $id));        
     }
 
+    public function updateCustomerSpecificData($primayKey, $id, $table, $data) 
+    {
+        $this->db->where($primayKey, $id);
+        return $this->db->update($table, $data);
+    }
+
     // public function update_ibiz_phone($data)
     // {
     //     extract($data);
