@@ -1,6 +1,11 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/customer/customer_modals'); ?>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.bootstrap5.min.css"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
+
 <style>
 .row-adt-project{
     background-color: #d1b3ff !important;
@@ -231,6 +236,7 @@ table.dataTable thead th, table.dataTable thead td{
                         </div>
                     </div>
                     <div class="col-md-8 grid-mb text-end">
+                    <button type="button" class="nsm-button batchCustomerUpdaterButton" data-bs-toggle="modal" data-bs-target=".batchCustomerUpdaterModal" style="display: none;"><i class='bx bxs-edit'></i> Customer Management</button>
                     <button type="button" class="nsm-button dupEntryButton d-none" data-bs-toggle="modal" data-bs-target=".duplicateRemoverModal"><i class='bx bxs-duplicate'></i> Duplicate Entries <small class="text-muted dupEntryCount"></small></button>
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button primary" onclick="location.href='<?= url('customer/import_customer') ?>'">
@@ -788,8 +794,324 @@ table.dataTable thead th, table.dataTable thead td{
     </div>
 </div>
 
+<style>
+    /* Fixed column styles */
+    .customerManagementTable th:nth-child(1),
+    .customerManagementTable th:nth-child(2),
+    .customerManagementTable td:nth-child(1),
+    .customerManagementTable td:nth-child(2) {
+        position: sticky;
+        left: 0;
+        background: white;
+        z-index: 3;
+    }
+
+    .customerManagementTable th:nth-child(2),
+    .customerManagementTable td:nth-child(2) {
+        left: 80px;
+        /* Adjust this value based on the width of the first column */
+    }
+
+    /* Ensure the header has higher z-index */
+    .customerManagementTable th {
+        z-index: 4;
+    }
+
+
+    .tableUpdaterDiv {
+        width: max-content;
+        max-width: 100%;
+        height: 550px;
+        overflow: auto;
+        position: relative;
+
+    }
+
+    .actionButton,
+    .textPreview {
+        cursor: pointer;
+    }
+
+    .customerManagementTable {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+
+
+    .textPreview:hover {
+        color: red;
+        font-weight: bolder;
+    }
+
+    .customerManagementTable th,
+    .customerManagementTable td {
+        border: 1px solid lightgray !important;
+        padding: 8px !important;
+        text-align: left !important;
+        text-wrap: nowrap;
+    }
+
+    .customerManagementTable th {
+        background-color: #f2f2f2 !important;
+    }
+
+    .customerManagementTable~.dataTables_info {
+        display: none;
+    }
+
+    .customerManagementTable~.dataTables_paginate {
+        position: fixed;
+    }
+
+    .customerProfileBanner {
+        font-family: sans-serif;
+        margin: 0;
+    }
+</style>
+
+<div class="modal batchCustomerUpdaterModal" data-bs-backdrop="static" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-fullscreen modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title content-title" style="font-size: 17px;"><i class='bx bxs-edit'></i>&nbsp;&nbsp;Customer Management</div>
+                <i class="fas fa-times" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="container-fluid mb-3 mt-3">
+                            <div class="row">
+                                <h4 class="fw-bold">Batch Customer Updater</h4>
+                                <p>Search and select specific customers to update.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 mb-3">
+                        <div class="container-fluid mb-3">
+                            <div class="row">
+                                <div class="col-xl-12 mb-3">
+                                    <input class="searchCustomerListInput form-control" type="text" placeholder="Search and select specific customer or business to update...">
+                                    <!-- <select class="searchCustomerList" multiple="multiple">
+                                        <option value="Ali Forouzan">Ali Forouzan</option>
+                                    </select> -->
+                                </div>
+                                <div class="col-xl-12 mb-3">
+                                    <div class="table-responsive tableUpdaterDiv">
+                                        <table class="table table-hover customerManagementTable">
+                                            <thead>
+                                                <!-- <tr>
+                                                    <th colspan="24" style="background: #00802e1f !important;"><h5 class="fw-bold customerProfileBanner">C U S T O M E R&emsp;P R O F I L E</h5></th>
+                                                    <th colspan="14" style="background: #0f00801f !important"><h5 class="fw-bold customerBillingInfoBanner">B I L L I N G&emsp;I N F O R M A T I O N</h5></th>
+                                                </tr> -->
+                                                <tr>
+                                                    <th>Firstname</th>
+                                                    <th>Lastname</th>
+                                                    <th>Middle Initial</th>
+                                                    <th>Business Name</th>
+                                                    <th>Status</th>
+                                                    <th>Customer Type</th>
+                                                    <th>Customer Group</th> 
+                                                    <th>Industry Type</th> 
+                                                    <th>Sales Area</th>
+                                                    <th>Prefix</th>
+                                                    <th>Suffix</th>
+                                                    <th>Country</th>
+                                                    <th>Address</th>
+                                                    <th>City</th>
+                                                    <th>County</th>
+                                                    <th>State</th>
+                                                    <th>Zip Code</th>
+                                                    <th>Cross Street</th>
+                                                    <th>Subdivision</th>
+                                                    <th>Social Security No. </th>
+                                                    <th>Birthdate</th>
+                                                    <th>Email</th>
+                                                    <th>Phone (H)</th>
+                                                    <th>Phone (M)</th>
+                                                    <th>Card Firstname</th>
+                                                    <th>Card Lastname</th>
+                                                    <th>Card Address</th>
+                                                    <th>City</th>
+                                                    <th>State</th>
+                                                    <th>Zip</th>
+                                                    <th>Equipment</th>
+                                                    <th>Initial Deposit</th>
+                                                    <th>Rate Plan</th>
+                                                    <th>Billing Frequency</th>
+                                                    <th>Contract Term</th>
+                                                    <th>Billing Start Date</th>
+                                                    <th>Billing End Date</th>
+                                                    <th>Billing Day of Month</th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 mt-5 d-none">
+                                    <form action="">
+                                        <input class="form-control form-control-sm updateID" type="text">
+                                        <input class="form-control form-control-sm updateCategory" type="text">
+                                        <input class="form-control form-control-sm updateColumn" type="text">
+                                        <input class="form-control form-control-sm updateValue" type="text">
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
 <script type="text/javascript">
+    const URL_ORIGIN = window.origin;
+    $(document).ready(function() {
+        var customerManagementTable = $('.customerManagementTable').DataTable({
+            "ordering": false,
+            "processing": true,
+            "serverSide": true,
+            "pageLength": 10,
+            "ajax": {
+                "url": "<?= base_url('customer/customerServersideLoad'); ?>",
+                "type": "POST",
+            }
+        });
+        $('.batchCustomerUpdaterButton').toggle();
+
+        // $(".searchCustomerList").selectize({
+        //     plugins: ["remove_button", "clear_button"],
+        //     placeholder: "Search and select specific Customer...",
+        //     delimiter: ',',
+        //     persist: false,
+        //     create: false
+        // });
+
+        // $('.searchCustomerList').change(function() {
+        //     var selectedCustomers = $(this).val();
+        //     console.log("Selected customers:", selectedCustomers); // Debugging line
+        //     customerManagementTable.search(selectedCustomers ? selectedCustomers.join('|') : '', true, false).draw();
+        // });
+
+        $('.searchCustomerListInput').keyup(function(e) {
+            var searchInput = $(this).val();
+            customerManagementTable.search(searchInput).draw();
+        });
+    });
+
+
+    $(document).on('click', '.textPreview', function() {
+        $(this).hide();
+        $(this).closest('td').find('.inputMode').show();
+    });
+
+    $(document).on('click', '.cancelEdit', function() {
+        $(this).closest('td').find('.textPreview').show();
+        $(this).closest('td').find('.inputMode').hide();
+    });
+
+    $(document).on('click', '.saveChanges', function() {
+        const updateID = $(this).closest('td').find('.updateInputValue').attr('data-id');
+        const updateCategory = $(this).closest('td').find('.updateInputValue').attr('data-category');
+        const updateColumn = $(this).closest('td').find('.updateInputValue').attr('data-column');
+        const updateValue = $(this).closest('td').find('.updateInputValue').val();
+
+        if ($(this).closest('td').find('.updateInputValue').is('select')) {
+            const option = $(this).closest('td').find('.updateInputValue').find('option:selected').text()
+            $(this).closest('td').find('.textPreview').text(option);
+        } else if ($(this).closest('td').find('.moneyInput').is('input[type="number"]')) {
+            let moneyValue = parseFloat($(this).closest('td').find('.moneyInput').val());
+            if (!isNaN(moneyValue)) {
+                let formattedMoney = moneyValue.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+                $(this).closest('td').find('.textPreview').text(formattedMoney);
+            } else {
+                $(this).closest('td').find('.textPreview').text("<small><i>Not Specified</i></small>");
+            }
+        } else {
+            if ($(this).closest('td').find('.updateInputValue').is('input[type="date"]')) {
+                let dateValue = $(this).closest('td').find('.updateInputValue').val();
+                if (dateValue) {
+                    let dateParts = dateValue.split('-');
+                    let formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
+                    $(this).closest('td').find('.textPreview').text(formattedDate);
+                } else {
+                    $(this).closest('td').find('.textPreview').text("<small><i>Not Specified</i></small>");
+                }
+            } else {
+                $(this).closest('td').find('.textPreview').text(updateValue);
+            }
+        }
+
+        $('.updateID').val(updateID);
+        $('.updateCategory').val(updateCategory);
+        $('.updateColumn').val(updateColumn);
+        $('.updateValue').val(updateValue);
+
+        if (updateValue == "") {
+            $(this).closest('td').find('.textPreview').html('<small class="text-muted"><i>Not Specified</i></small>');
+        }
+
+        saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue);
+
+        $(this).closest('td').find('.textPreview').show();
+        $(this).closest('td').find('.inputMode').hide();
+    });
+
+    function validateDecimal(input) {
+            // Allow up to two decimal places
+            let value = input.value;
+            let decimalIndex = value.indexOf('.');
+            
+            if (decimalIndex >= 0) {
+                let decimalPart = value.substring(decimalIndex + 1);
+                if (decimalPart.length > 2) {
+                    input.value = value.substring(0, decimalIndex + 3);
+                }
+            }
+        }
+
+    
+
+
+
+    function saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue) {
+        $.ajax({
+            type: "POST",
+            url: URL_ORIGIN + "/Customer/customerServersideLoadSave",
+            data: {
+                id: updateID,
+                category: updateCategory,
+                column: updateColumn,
+                value: updateValue
+            },
+            success: function(response) {
+                iziToast.success({
+                    message: 'Cell updated successfully!',
+                    timeout: 3000,
+                    position: 'topCenter',
+                });
+            },
+            error: function() {
+                iziToast.info({
+                    message: 'Retrying, please wait..',
+                    timeout: 3000,
+                    position: 'topCenter',
+                });
+                iziToast.error({
+                    message: 'Unable to save changes due to network error.',
+                    timeout: 1500,
+                    position: 'topCenter',
+                });
+                setTimeout(() => {
+                    saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue);
+                }, 3000);
+                // console.log('Unable to save: network error');
+            },
+        });
+    }
 
     function resetOutputEntry() {
         $('input[name="destinationCustomerID"]').val(null).change();
@@ -1119,8 +1441,6 @@ table.dataTable thead th, table.dataTable thead td{
         }
     });
 
-    const URL_ORIGIN = window.origin;
-
     function loadDuplicateCustomerData(status, customerType) {
         switch (status) {
             case "Initialize":
@@ -1134,6 +1454,8 @@ table.dataTable thead th, table.dataTable thead td{
                                 "ordering": false,
                                 "pageLength": 25
                             });
+                            $('.dupEntryButton').removeClass('d-none');
+                            $('.dupEntryCount').text('(' + $(document).find('.fa-caret-right').length + ')');
                         }
                     });
                 } else if (customerType == "Commercial" || customerType == "Business") {
@@ -1146,6 +1468,8 @@ table.dataTable thead th, table.dataTable thead td{
                                 "ordering": false,
                                 "pageLength": 25
                             });
+                            $('.dupEntryButton').removeClass('d-none');
+                            $('.dupEntryCount').text('(' + $(document).find('.fa-caret-right').length + ')');
                         }
                     });
                 }
@@ -1169,6 +1493,9 @@ table.dataTable thead th, table.dataTable thead td{
 
                             // Set page to the stored index
                             window.customerDuplicateTable.page(currentPageResidential).draw('page');
+
+                            $('.dupEntryButton').removeClass('d-none');
+                            $('.dupEntryCount').text('(' + $(document).find('.fa-caret-right').length + ')');
                         }
                     });
                 } else if (customerType == "Commercial" || customerType == "Business") {
@@ -1189,6 +1516,9 @@ table.dataTable thead th, table.dataTable thead td{
 
                             // Set page to the stored index
                             window.commercialDuplicateTable.page(currentPageCommercial).draw('page');
+
+                            $('.dupEntryButton').removeClass('d-none');
+                            $('.dupEntryCount').text('(' + $(document).find('.fa-caret-right').length + ')');
                         }
                     });
                 }
@@ -1577,21 +1907,20 @@ table.dataTable thead th, table.dataTable thead td{
         $("#btn_send_email").html('<span class="bx bx-loader bx-spin"></span>');
     });
 
-    function loadTotalDupEntries() {
-        $.ajax({
-            type: "POST",
-            url: '<?php echo base_url("customer/getDuplicatedEntry"); ?>',
-            success: function (response) {
-                if (response == 0) {
-                    $('.dupEntryCount').text('(' + response + ')');
-                } else {
-                    $('.dupEntryButton').removeClass('d-none');
-                    $('.dupEntryCount').text('(' + response + ')');
-                }
-            }
-        });
-    } loadTotalDupEntries();
-
+    // function loadTotalDupEntries() {
+    //     $.ajax({
+    //         type: "POST",
+    //         url: '<?php echo base_url("customer/getDuplicatedEntry"); ?>',
+    //         success: function (response) {
+    //             if (response == 0) {
+    //                 $('.dupEntryCount').text('(' + response + ')');
+    //             } else {
+    //                 $('.dupEntryButton').removeClass('d-none');
+    //                 $('.dupEntryCount').text('(' + response + ')');
+    //             }
+    //         }
+    //     });
+    // } loadTotalDupEntries();
     
     $(document).on('submit', '#frm-send-message', function(e){
         e.preventDefault();

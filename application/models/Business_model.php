@@ -1,20 +1,21 @@
 <?php
 
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 
 
-class Business_model extends MY_Model {
+class Business_model extends MY_Model
+{
 
 
 
-	public $table = 'business_profile';	
-	public function __construct()
-	{
-		parent::__construct();
-	}
+    public $table = 'business_profile';
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
-	public function getByUserId($id)
+    public function getByUserId($id)
     {
         $user_id = logged('id');
 
@@ -49,6 +50,16 @@ class Business_model extends MY_Model {
         return $query;
     }
 
+    public function update_business_name($business_name)
+    {
+        $data = [
+            'business_name' => strtoupper($business_name)
+        ];
+
+        $this->db->where('company_id', logged('company_id'));
+        return $this->db->update('business_profile', $data);
+    }
+
     public function getBySlug($slug)
     {
         $this->db->select('*');
@@ -81,7 +92,7 @@ class Business_model extends MY_Model {
         $query = $this->db->get()->row();
         return $query;
     }
-    
+
     public function getAll()
     {
         $this->db->select('business_profile.*');

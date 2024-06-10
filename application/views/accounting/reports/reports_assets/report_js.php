@@ -1,10 +1,15 @@
-<script type = "text/javascript">
+<script type="text/javascript">
     // $(function() { $('select').select2('destroy'); });
 
     CKEDITOR.replace('emailBody', {
-        toolbarGroups: [
-            { name: 'clipboard', groups: ['clipboard', 'undo'] },
-            { name: 'basicstyles', groups: ['basicstyles', 'cleanup'] },
+        toolbarGroups: [{
+                name: 'clipboard',
+                groups: ['clipboard', 'undo']
+            },
+            {
+                name: 'basicstyles',
+                groups: ['basicstyles', 'cleanup']
+            },
         ],
         height: '165px',
     });
@@ -13,7 +18,9 @@
     var REPORT_CATEGORY = "<?php echo $reportCategory; ?>";
     var REPORT_ID = "<?php echo $reportTypeId; ?>";
     // =========================
-    var theadColumnNames = $(`#<?php echo $tableID; ?> th`).map(function() { return $(this).text(); }).get();
+    var theadColumnNames = $(`#<?php echo $tableID; ?> th`).map(function() {
+        return $(this).text();
+    }).get();
     var theadTotalColumn = $("#<?php echo $tableID; ?>").find('tr:first th').length;
     var businessLogoURL = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
     var businessName = $('input[name="company_name"]').val();
@@ -51,7 +58,9 @@
 
     // Render Report Data Script
     function renderReportList() {
-        theadColumnNames = $(`#<?php echo $tableID; ?> th`).map(function() { return $(this).text(); }).get();
+        theadColumnNames = $(`#<?php echo $tableID; ?> th`).map(function() {
+            return $(this).text();
+        }).get();
         theadTotalColumn = $("#<?php echo $tableID; ?>").find('tr:first th').length;
         businessLogoURL = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
         businessName = $('input[name="company_name"]').val();
@@ -85,24 +94,78 @@
             date_to: date_to,
         };
         // =========================
-        (enableDisableBusinessName) ? $("#businessName").text(businessName) : businessName = $("#businessName").html("&nbsp;").html() ;
-        (enableDisableReportName) ? $("#reportName").text(reportName) : reportName = $("#reportName").html("&nbsp;").html() ;
+        (enableDisableBusinessName) ? $("#businessName").text(businessName): businessName = $("#businessName").html("&nbsp;").html();
+        (enableDisableReportName) ? $("#reportName").text(reportName): reportName = $("#reportName").html("&nbsp;").html();
         if (showHideLogo == "1") {
             $('#businessLogo').attr('src', BASE_URL + '/uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image?"; ?>' + Math.round(Math.random() * 1000000)).show();
-            if (header_align == "L") { $('.reportTitleInfo').css({textAlign: 'left', marginLeft: '115px'}); }
-            if (header_align == "C") { $('.reportTitleInfo').css({textAlign: 'center', marginLeft: 'unset'}); }
-            if (header_align == "R") { $('.reportTitleInfo').css({textAlign: 'right', marginLeft: 'unset'}); }
-            if (footer_align == "L") { $('.footerInfo').css({textAlign: 'left'}); }
-            if (footer_align == "C") { $('.footerInfo').css({textAlign: 'center'}); }
-            if (footer_align == "R") { $('.footerInfo').css({textAlign: 'right'}); }
+            if (header_align == "L") {
+                $('.reportTitleInfo').css({
+                    textAlign: 'left',
+                    marginLeft: '115px'
+                });
+            }
+            if (header_align == "C") {
+                $('.reportTitleInfo').css({
+                    textAlign: 'center',
+                    marginLeft: 'unset'
+                });
+            }
+            if (header_align == "R") {
+                $('.reportTitleInfo').css({
+                    textAlign: 'right',
+                    marginLeft: 'unset'
+                });
+            }
+            if (footer_align == "L") {
+                $('.footerInfo').css({
+                    textAlign: 'left'
+                });
+            }
+            if (footer_align == "C") {
+                $('.footerInfo').css({
+                    textAlign: 'center'
+                });
+            }
+            if (footer_align == "R") {
+                $('.footerInfo').css({
+                    textAlign: 'right'
+                });
+            }
         } else {
             $('#businessLogo').hide();
-            if (header_align == "L") { $('.reportTitleInfo').css({textAlign: 'left', marginLeft: 'unset'}); }
-            if (header_align == "C") { $('.reportTitleInfo').css({textAlign: 'center', marginLeft: 'unset'}); }
-            if (header_align == "R") { $('.reportTitleInfo').css({textAlign: 'right', marginLeft: 'unset'}); }
-            if (footer_align == "L") { $('.footerInfo').css({textAlign: 'left'}); }
-            if (footer_align == "C") { $('.footerInfo').css({textAlign: 'center'}); }
-            if (footer_align == "R") { $('.footerInfo').css({textAlign: 'right'}); }
+            if (header_align == "L") {
+                $('.reportTitleInfo').css({
+                    textAlign: 'left',
+                    marginLeft: 'unset'
+                });
+            }
+            if (header_align == "C") {
+                $('.reportTitleInfo').css({
+                    textAlign: 'center',
+                    marginLeft: 'unset'
+                });
+            }
+            if (header_align == "R") {
+                $('.reportTitleInfo').css({
+                    textAlign: 'right',
+                    marginLeft: 'unset'
+                });
+            }
+            if (footer_align == "L") {
+                $('.footerInfo').css({
+                    textAlign: 'left'
+                });
+            }
+            if (footer_align == "C") {
+                $('.footerInfo').css({
+                    textAlign: 'center'
+                });
+            }
+            if (footer_align == "R") {
+                $('.footerInfo').css({
+                    textAlign: 'right'
+                });
+            }
         }
         $(".settingsApplyButton").attr('disabled', '').html('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Applying changes...');
         $('#pdfPreview').before('<span class="dataLoader"><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...</span>').hide();
@@ -111,15 +174,15 @@
         $.ajax({
             type: "POST",
             url: BASE_URL + "/accounting_controllers/Reports/getReportData/" + REPORT_CATEGORY,
-            data: { 
+            data: {
                 theadColumnNames: theadColumnNames,
                 theadTotalColumn: theadTotalColumn,
                 businessName: businessName,
-                reportName: reportName, 
-                reportDate: reportDate, 
-                filename: filename, 
-                notes: notes, 
-                reportConfig: reportConfig, 
+                reportName: reportName,
+                reportDate: reportDate,
+                filename: filename,
+                notes: notes,
+                reportConfig: reportConfig,
             },
             success: function(data) {
                 loadReportPreview();
@@ -130,10 +193,48 @@
         });
     }
 
+    document.querySelector('.settingsApplyButton').addEventListener('click', function() {
+        const settings = {
+            showHideLogo: $('select[name="showHideLogo"]').val(),
+            companyName: $('input[name="company_name"]').val(),
+            reportName: $('input[name="report_name"]').val(),
+            headerAlign: $('select[name="header_align"]').val(),
+            footerAlign: $('select[name="footer_align"]').val(),
+            pageSize: $('select[name="page_size"]').val(),
+            sortBy: $('select[name="sort_by"]').val(),
+            sortOrder: $('select[name="sort_order"]').val(),
+            pageOrientation: $('select[name="pageOrientation"]').val(),
+            pageHeaderRepeat: $('input[name="pageHeaderRepeat"]').prop('checked'),
+            dateFrom: $('input[name="date_from"]').val(),
+            dateTo: $('input[name="date_to"]').val()
+        };
+        localStorage.setItem('reportSettings', JSON.stringify(settings));
+        renderReportList();
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const savedSettings = JSON.parse(localStorage.getItem('reportSettings'));
+        if (savedSettings) {
+            if (savedSettings.showHideLogo !== undefined) $('select[name="showHideLogo"]').val(savedSettings.showHideLogo);
+            if (savedSettings.companyName !== undefined) $('input[name="company_name"]').val(savedSettings.companyName);
+            if (savedSettings.reportName !== undefined) $('input[name="report_name"]').val(savedSettings.reportName);
+            if (savedSettings.headerAlign !== undefined) $('select[name="header_align"]').val(savedSettings.headerAlign);
+            if (savedSettings.footerAlign !== undefined) $('select[name="footer_align"]').val(savedSettings.footerAlign);
+            if (savedSettings.pageSize !== undefined) $('select[name="page_size"]').val(savedSettings.pageSize);
+            if (savedSettings.sortBy !== undefined) $('select[name="sort_by"]').val(savedSettings.sortBy);
+            if (savedSettings.sortOrder !== undefined) $('select[name="sort_order"]').val(savedSettings.sortOrder);
+            if (savedSettings.pageOrientation !== undefined) $('select[name="pageOrientation"]').val(savedSettings.pageOrientation);
+            if (savedSettings.pageHeaderRepeat !== undefined) $('input[name="pageHeaderRepeat"]').prop('checked', savedSettings.pageHeaderRepeat);
+            if (savedSettings.dateFrom !== undefined) $('input[name="date_from"]').val(savedSettings.dateFrom);
+            if (savedSettings.dateTo !== undefined) $('input[name="date_to"]').val(savedSettings.dateTo);
+        }
+        renderReportList();
+    });
+
     // Load .pdf Report Script
     function loadReportPreview() {
         $('#pdfPreview').hide();
-        $('#pdfPreview').attr('src', BASE_URL + "/assets/pdf/accounting/" + filename + ".pdf?" + Math.round(Math.random() * 1000000) ).on('load', function() {
+        $('#pdfPreview').attr('src', BASE_URL + "/assets/pdf/accounting/" + filename + ".pdf?" + Math.round(Math.random() * 1000000)).on('load', function() {
             $('.dataLoader').remove();
             $('#pdfPreview').show();
         });
@@ -159,7 +260,9 @@
     $.ajax({
         type: "POST",
         url: BASE_URL + "/accounting_controllers/reports/getNotes",
-        data: { reportID: REPORT_ID, },
+        data: {
+            reportID: REPORT_ID,
+        },
         success: function(data) {
             (data !== "") ? $('.addNotes').text('Edit Notes'): $('.addNotes').text('Add Notes');
             $('#notesContent').html(data);
@@ -178,7 +281,7 @@
         $.ajax({
             type: "POST",
             url: BASE_URL + "/accounting_controllers/reports/saveNotes",
-            data: { 
+            data: {
                 reportID: REPORT_ID,
                 reportNotes: $("#NOTES").val(),
             },
@@ -286,13 +389,21 @@
 
     $('input[name="date_from"]').on('input', function() {
         let numericDate = $(this).val();
-        let wordDate = new Date(numericDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: '2-digit' });
+        let wordDate = new Date(numericDate).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: '2-digit'
+        });
         $('#date_from_text').text(wordDate);
     }).trigger('input');
-      
+
     $('input[name="date_to"]').on('input', function() {
         let numericDate = $(this).val();
-        let wordDate = new Date(numericDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: '2-digit' });
+        let wordDate = new Date(numericDate).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: '2-digit'
+        });
         $('#date_to_text').text(wordDate);
     }).trigger('input');
 </script>

@@ -590,6 +590,13 @@ function filterThumbnail(val, id, table) {
             var from_date = '00-00-0000';
             var to_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date
                 .getDate()).slice(-2);
+
+                if (table == 'accounting_expense') {
+                    var pastDate = new Date();
+                    pastDate.setDate(pastDate.getDate() - 365);
+                    from_date = pastDate.getFullYear() + '-' + ('0' + (pastDate.getMonth() + 1)).slice(-2) + '-' + ('0' + pastDate.getDate()).slice(-2);
+                }
+
             break;
         case 'week':
             var today = new Date();
@@ -652,6 +659,11 @@ function filterThumbnail(val, id, table) {
     if (table == 'jobs') {
         $('.jobs_count_thumbnail').html('<span class="bx bx-loader bx-spin"></span>')
     }
+
+    if (table == 'accounting_expense') {
+        $('#AccountingExpenseGraphLoader').show();
+    }
+    AccountingExpenseGraphLoader
     loadDataFilter(from_date, to_date, table, id);
 
 }
@@ -694,7 +706,10 @@ function loadDataFilter(from_date, to_date, table, id) {
             if (table == 'ac_leads') {
                 filterLeadsThumbnailGraph(data['total_leads'])
             }
-
+            if (table == 'accounting_expense') {
+                filterAccountingExpenseThumbnailGraph(data['accounting_expense'])
+            }
+            
             if (table == 'acs_profile') {
                 filterCustomerThumbnailGraph(data['customer'])
             }
@@ -835,6 +850,34 @@ function filterCustomerThumbnailGraph(customer) {
         NewCustomerWidgetsGraph.data.datasets[0].data = null;
         NewCustomerWidgetsGraph.update();
     }
+
+}
+
+function filterAccountingExpenseThumbnailGraph(accounting_expense){
+
+    let expenseCategory = [];
+    let dataTemp = [];
+    let total_expense = 0;
+
+    if (accounting_expense) {
+            for (var x = 0; x < accounting_expense.length; x++) {
+                if(accounting_expense[x].category){
+                    expenseCategory.push(accounting_expense[x].category.name)
+                    dataTemp.push(accounting_expense[x].total)
+                    total_expense += parseInt(accounting_expense[x].total)
+                }
+            }
+        }
+    
+    $(".total_expense_graph_total").html('$ ' + total_expense);
+    $("#total_expense_graph").html('$' + total_expense);
+    $('#AccountingExpenseGraphLoader').hide();
+    AccountingExpenseGraph.data.labels = expenseCategory;
+    AccountingExpenseGraph.data.datasets[0].data = dataTemp;
+    AccountingExpenseGraph.update();
+
+    
+
 
 }
 

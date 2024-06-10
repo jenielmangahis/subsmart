@@ -55,7 +55,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
     </div>
     <div class="mb-2">
         <select class="nsm-field form-select" style='width: 55%;
-    border: none;' onChange="filterThumbnail(this.value, '<?php echo $id; ?>', 'ac_leads')">
+    border: none;' onChange="filterThumbnail(this.value, '<?php echo $id; ?>', 'accounting_expense')">
             <option value="all">All time</option>
             <option value="week">Last 7 days </option>
             <option value="two-week">last 14 days</option>

@@ -65,7 +65,9 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         <h1 id='collectionGraphLoader' > <span class="bx bx-loader bx-spin"></span></h1>
         <canvas id="collectionGraph" style="max-height:100%;" class="nsm-chart" data-chart-type="sales"></canvas>
     </div>
-    <div class="nsm-card-content" style="  height: calc(100% - 120px);">
+    <div class="nsm-card-content"
+        style="  height: calc(100% - 120px);  display: <?php echo $isListView ? 'none' : 'block'; ?>"
+        id="thumbnail_content_list<?php echo $id; ?>">
         <div class="row ">
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">

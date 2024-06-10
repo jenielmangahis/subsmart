@@ -991,11 +991,11 @@ $hdrCompanyData = getCompanyData($cid, $fields);
                 </div>
                 <div class="nsm-nav-items">
                     <ul>
-                        <!-- <li>
+                        <li>
                             <div class="dropdown d-flex">
                                 <a id="helpSupportButton" href="#" data-bs-toggle="offcanvas" data-bs-target="#helpSupportSidebar" aria-controls="helpSupportSidebar"><i class='bx bx-support' style="margin-top: 0px !important;"></i></a>
                             </div>
-                        </li> -->
+                        </li>
                         <?php if (isCompanyPlanActive() == 0 && !in_array(logged('company_id'), exempted_company_ids())) { ?>
                         <li>
                             <style>

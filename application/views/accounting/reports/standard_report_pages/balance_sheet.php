@@ -242,7 +242,7 @@
                                             <button type="button" class="nsm-button">
                                                 <span>Add notes</span>
                                             </button>
-                                            <button type="button" class="nsm-button">
+                                            <button type="button" class="nsm-button" id="editButton">
                                                 <span>Edit titles</span>
                                             </button>
                                         </div>
@@ -278,7 +278,9 @@
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold" id="businessName"><span class="company-name"><?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?></span></h4>
+                                        <h4 class="text-center fw-bold" id="businessName">
+                                            <span class="company-name"><?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?></span>
+                                        </h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
                                         <p class="m-0 fw-bold">Balance Sheet</p>
@@ -421,6 +423,102 @@
                                             <td><i class="bx bx-fw bx-caret-right"></i> LIABILITIES AND EQUITY</td>
                                             <td>$571,265.66</td>
                                         </tr>
+                                        <tr class="collapse" id="liabilitiesEquity">
+                                            <td colspan="2">
+                                                <table class="table mb-0">
+                                                    <tbody>
+                                                        <tr data-bs-toggle="collapse" data-bs-target="#currentLiabilities" class="clickable collapse-row collapsed">
+                                                            <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Current Liabilities</td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr id="currentLiabilities" class="collapse">
+                                                            <td colspan="2">
+                                                                <table class="table mb-0">
+                                                                    <tbody>
+                                                                        <tr data-bs-toggle="collapse" data-bs-target="#accountsPayable" class="clickable collapse-row collapsed">
+                                                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Accounts Payable</td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr id="accountsPayable" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Accounts Payable</td>
+                                                                            <td>$15,000.00</td>
+                                                                        </tr>
+                                                                        <tr data-bs-toggle="collapse" data-bs-target="#creditCards" class="clickable collapse-row collapsed">
+                                                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Credit Cards</td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr id="creditCards" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Credit Card 1</td>
+                                                                            <td>$5,000.00</td>
+                                                                        </tr>
+                                                                        <tr id="creditCards" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Credit Card 2</td>
+                                                                            <td>$3,000.00</td>
+                                                                        </tr>
+                                                                        <tr data-bs-toggle="collapse" data-bs-target="#otherCurrentLiabilities" class="clickable collapse-row collapsed">
+                                                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Other Current Liabilities</td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr id="otherCurrentLiabilities" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Sales Tax Payable</td>
+                                                                            <td>$1,500.00</td>
+                                                                        </tr>
+                                                                        <tr id="otherCurrentLiabilities" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Payroll Liabilities</td>
+                                                                            <td>$2,000.00</td>
+                                                                        </tr>
+                                                                        <tr id="otherCurrentLiabilities" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;<b>Total Other Current Liabilities</b></td>
+                                                                            <td><b>$3,500.00</b></td>
+                                                                        </tr>
+                                                                        <tr data-bs-toggle="collapse" data-bs-target="#longTermLiabilities" class="clickable collapse-row collapsed">
+                                                                            <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Long-term Liabilities</td>
+                                                                            <td></td>
+                                                                        </tr>
+                                                                        <tr id="longTermLiabilities" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;Loan Payable</td>
+                                                                            <td>$50,000.00</td>
+                                                                        </tr>
+                                                                        <tr id="longTermLiabilities" class="collapse">
+                                                                            <td>&emsp;&emsp;&emsp;<b>Total Long-term Liabilities</b></td>
+                                                                            <td><b>$50,000.00</b></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr data-bs-toggle="collapse" data-bs-target="#equity" class="clickable collapse-row collapsed">
+                                                            <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Equity</td>
+                                                            <td></td>
+                                                        </tr>
+                                                        <tr id="equity" class="collapse">
+                                                            <td colspan="2">
+                                                                <table class="table mb-0">
+                                                                    <tbody>
+                                                                        <tr id="equity" class="collapse">
+                                                                            <td>&emsp;&emsp;Owner's Equity</td>
+                                                                            <td>$500,000.00</td>
+                                                                        </tr>
+                                                                        <tr id="equity" class="collapse">
+                                                                            <td>&emsp;&emsp;Retained Earnings</td>
+                                                                            <td>$100,000.00</td>
+                                                                        </tr>
+                                                                        <tr id="equity" class="collapse">
+                                                                            <td>&emsp;&emsp;<b>Total Equity</b></td>
+                                                                            <td><b>$600,000.00</b></td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                        <tr id="liabilitiesEquity" class="collapse">
+                                                            <td>&emsp;<b>TOTAL LIABILITIES AND EQUITY</b></td>
+                                                            <td><b>$571,265.66</b></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -553,6 +651,8 @@
 <!-- END: EMAIL REPORT MODAL -->
 
 <?php include viewPath('v2/includes/footer'); ?>
+<?php include viewPath('accounting/reports/reports_assets/balance_sheet_js'); ?>
+
 <style>
     .compact-table td,
     .compact-table th {
@@ -560,18 +660,22 @@
         font-size: 12px;
     }
 </style>
+<script type="text/javascript">
+    var baseUrl = '<?= base_url() ?>';
+</script>
 <script>
     $(document).ready(function() {
         var isCollapsed = true;
-        var originalOrder = $("#reportTable").children();
 
         $("#collapseButton").click(function() {
             if (isCollapsed) {
                 $(".collapse").collapse('show');
                 $("#collapseButton span").text('Uncollapse');
+                updateCarets('show');
             } else {
                 $(".collapse").collapse('hide');
                 $("#collapseButton span").text('Collapse');
+                updateCarets('hide');
             }
             isCollapsed = !isCollapsed;
         });
@@ -581,6 +685,18 @@
             $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
             $(target).collapse('toggle');
         });
+
+        function updateCarets(action) {
+            $(".collapse-row").each(function() {
+                var target = $(this).data("bs-target");
+                var icon = $(this).find("i");
+                if (action === 'show') {
+                    icon.removeClass("bx-caret-right").addClass("bx-caret-down");
+                } else {
+                    icon.removeClass("bx-caret-down").addClass("bx-caret-right");
+                }
+            });
+        }
 
         $("input[name='sort_order']").change(function() {
             var sortOrder = $("input[name='sort_order']:checked").attr('id');
@@ -649,13 +765,13 @@
                 } = window.jspdf;
                 var pdf = new jsPDF('p', 'pt', 'a4');
 
-                var imgWidth = 555; 
-                var pageHeight = 792; 
+                var imgWidth = 555;
+                var pageHeight = 792;
                 var imgHeight = canvas.height * imgWidth / canvas.width;
                 var heightLeft = imgHeight;
 
-                var margin = 20; 
-                var yOffset = 80; 
+                var margin = 20;
+                var yOffset = 80;
 
                 // Add header
                 pdf.setFontSize(18);
