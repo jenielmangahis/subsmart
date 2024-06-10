@@ -1742,6 +1742,7 @@ $route['widgets/_load_paid_invoices_summary'] = 'Widgets/ajax_load_paid_invoices
 $route['widgets/_load_service_ticket_chart_data'] = 'Widgets/ajax_load_service_ticket_chart_data';
 $route['widgets/_load_job_chart_data'] = 'Widgets/ajax_load_job_chart_data';
 $route['widgets/_load_taskhub_summary'] = 'Widgets/ajax_load_taskhub_summary';
+$route['widgets/_load_customer_group_chart'] = 'Widgets/ajax_load_customer_group_chart';
 
 //Esign
 $route['esign_v2/_tags_sections'] = 'Esign_v2/ajax_company_tags_sections';
