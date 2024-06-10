@@ -180,10 +180,9 @@ class All_sales extends MY_Controller
         }, ARRAY_FILTER_USE_BOTH);
 
         $openInvoices = array_filter($invoices, function ($v, $k) {
-            return !in_array($v->status, ['Draft', 'Declined', 'Paid']);
+            return !in_array($v->status, ['Draft', 'Declined', 'Paid', 'Closed', 'Partially Paid', 'Due', 'Overdue']);
+            //return in_array($v->status, ['Open']);
         }, ARRAY_FILTER_USE_BOTH);
-
-
 
         $this->page_data['unbilledActs'] = $this->get_unbilled_incomes([], ['start-date' => date('m/d/Y')]);
         $this->page_data['recent_payments'] = $this->invoice_model->get_company_payments(logged('company_id'));

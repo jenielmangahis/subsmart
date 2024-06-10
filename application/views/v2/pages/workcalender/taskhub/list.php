@@ -268,45 +268,53 @@
                                             <?php echo $row->subject; ?>
                                         </td>   
                                         <td>
-                                            <div class="widget-item">
-                                                <?php if($row->assigned_employee_ids != null) { ?>
-                                                    <table>
-                                                        <?php 
-                                                            $assignees_json_decode = json_decode($row->assigned_employee_ids);
-                                                            if($assignees_json_decode && is_array($assignees_json_decode)) {
-                                                                foreach($assignees_json_decode as $uid) {
-                                                                    $user_id = (int) $uid;
-                                                                    $image = userProfilePicture($user_id);
-                                                                    $assignee = $this->users_model->getUser($user_id);
-                                                                    if($assignee) {
-                                                                        echo '<tr>';
-                                                                            echo '<td><div class="nsm-profile" style="background-image: url(' . $image . ');"></div></td>';
-                                                                            echo '<td><span class="nsm-profile-name">' . $assignee->FName . ' ' . $assignee->LName . '</span></td>';
-                                                                        echo '</tr>';
-                                                                    } else {
-                                                                        echo '<tr>';
-                                                                            echo '<td><div class="nsm-profile" style="background-image: url(' . url('uploads/users/default.png') . ');"></div></td>';
-                                                                            echo '<td><span class="nsm-profile-name">No Assigned User</span></td>';
-                                                                        echo '</tr>';
-                                                                    }
+                                            <?php if($row->assigned_employee_ids != null) { ?>
+                                                    <ul class="list-group list-group-flush">
+                                                    <?php 
+                                                        $assignees_json_decode = json_decode($row->assigned_employee_ids);
+                                                        if($assignees_json_decode && is_array($assignees_json_decode)) {
+                                                            foreach($assignees_json_decode as $uid) {
+                                                                $user_id = (int) $uid;
+                                                                $image = userProfilePicture($user_id);
+                                                                $assignee = $this->users_model->getUser($user_id);
+                                                                if($assignee) {
+
+                                                                    echo '<li class="list-group-item">';
+                                                                        echo '<span class="nsm-profile-name d-flex align-items-center">';
+                                                                            echo '<div class="nsm-profile" style="background-image: url(' . $image . '); width: 15px; float: left;"></div>';
+                                                                            echo $assignee->FName . ' ' . $assignee->LName;
+                                                                        echo '</span>';
+                                                                    echo '</li>';                                                                    
+
+                                                                } else {
+                                                                    echo '<li class="list-group-item">';
+                                                                        echo '<span class="nsm-profile-name d-flex align-items-center">';
+                                                                            echo '<div class="nsm-profile" style="background-image: url(' . url('uploads/users/default.png') . '); width: 15px; float: left;"></div>';
+                                                                            echo 'No Assigned User';
+                                                                        echo '</span>';
+                                                                    echo '</li>';
                                                                 }
-                                                            } else {
-                                                                echo '<tr>';
-                                                                    echo '<td><div class="nsm-profile" style="background-image: url(' . url('uploads/users/default.png') . ');"></div></td>';
-                                                                    echo '<td><span class="nsm-profile-name">No Assigned User</span></td>';
-                                                                echo '</tr>';
                                                             }
-                                                        ?>
-                                                    </table>
-                                                <?php }else{ ?>
-                                                        <?php 
-                                                            echo '<tr>';
-                                                                echo '<td><div class="nsm-profile" style="background-image: url(' . url('uploads/users/default.png') . ');"></div></td>';
-                                                                echo '<td><span class="nsm-profile-name">No Assigned User</span></td>';
-                                                            echo '</tr>';    
-                                                        ?>
-                                                <?php } ?>
-                                            </div>                                
+                                                        } else {
+                                                            echo '<li class="list-group-item">';
+                                                                echo '<span class="nsm-profile-name d-flex align-items-center">';
+                                                                    echo '<div class="nsm-profile" style="background-image: url(' . url('uploads/users/default.png') . '); width: 15px; float: left;"></div>';
+                                                                    echo 'No Assigned User';
+                                                                echo '</span>';
+                                                            echo '</li>';
+                                                        }
+                                                    ?>                                                
+                                                    </ul>
+                                            <?php }else{?>
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item">
+                                                        <span class="nsm-profile-name d-flex align-items-center">
+                                                            <div class="nsm-profile" style="background-image: url(<?php echo url('uploads/users/default.png'); ?>); width: 15px; float: left;"></div> 
+                                                            No Assigned User
+                                                        </span>
+                                                    </li>
+                                                </ul>                                                  
+                                            <?php } ?>                                       
                                         </td>                                       
                                         <td>
                                             <?php

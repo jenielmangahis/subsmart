@@ -16,5 +16,9 @@ class Comments_model extends MY_Model {
 		$this->table_key = 'comment_id';
 	}
 
+    public function deleteByCommentId($comment_id){
+        $this->db->delete($this->table, array('comment_id' => $comment_id));
+    }	
+
 	
 }
