@@ -270,9 +270,7 @@
                             <td data-name="Balance">BALANCE</td>
                             <td data-name="Total">TOTAL</td>
                             <td data-name="Status">STATUS</td>
-                            <td class="table-icon text-center" data-name="Attachments">
-                                <i class='bx bx-paperclip'></i>
-                            </td>
+                            <td data-name="Attachments">ATTACHMENT</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -308,7 +306,7 @@
                                 <td><?=$transaction['total']?></td>
                                 <td><?=$transaction['status']?></td>
                                 <td class="overflow-visible">
-                                    <?php if(count($transaction['attachments']) > 0) : ?>
+                                    <?php if(count($transaction['attachments']) > 0) { ?>
                                         <div class="dropdown">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                 <i class="bx bx-fw"><?=count($transaction['attachments'])?></i>
@@ -332,7 +330,9 @@
                                                 <?php endforeach; ?>
                                             </ul>
                                         </div>
-                                    <?php endif; ?>
+                                    <?php }else{ ?>
+                                        No Attachment
+                                    <?php } ?>
                                 </td>
                                 <td><?=$transaction['manage']?></td>
                             </tr>
