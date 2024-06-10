@@ -235,77 +235,78 @@ class Register extends MYF_Controller {
         $count_exist_ip_address = 0;
 
         $is_authentic = 1;
-
+        
         if(!empty($post)) {
-            $aemail = $post['a_email'];
-            $abname = $post['a_bname'];
-            $client_ip_address = getValidIpAddress();
+            if( $post['nsmart_trp'] == '' ){
+                $aemail = $post['a_email'];
+                $abname = $post['a_bname'];
+                $client_ip_address = getValidIpAddress();
 
-            $edata = $this->Clients_model->getByEmail($aemail); 
-            $udata = $this->Users_model->getUserByUsernname($aemail);
-            $edata_business = $this->Clients_model->getByBusinessName($abname); 
-            $edata_ip = $this->Clients_model->getByIPAddress($client_ip_address);
+                $edata = $this->Clients_model->getByEmail($aemail); 
+                $udata = $this->Users_model->getUserByUsernname($aemail);
+                $edata_business = $this->Clients_model->getByBusinessName($abname); 
+                $edata_ip = $this->Clients_model->getByIPAddress($client_ip_address);
 
-          
-            $count_exist_email = 0;
-            if($edata){ 
-                foreach ($edata as $edata_val) {
-                    $count_exist_email++;
+            
+                $count_exist_email = 0;
+                if($edata){ 
+                    foreach ($edata as $edata_val) {
+                        $count_exist_email++;
+                    }
                 }
-            }
 
-            if($count_exist_email > 0) {
-                $is_authentic = 0;
-            }
-
-            if( $udata ){
-                $is_authentic = 0;
-            }
-
-            $count_exist_business_name = 0;
-            if($edata_business){ 
-                foreach ($edata_business as $edata_business_val) {
-                    $count_exist_business_name++;
+                if($count_exist_email > 0) {
+                    $is_authentic = 0;
                 }
-            }
-            if($count_exist_business_name > 0) {
-                $is_authentic = 0;
-            }
 
-
-            $count_exist_ip_address = 0;
-            if($edata_ip){ 
-                foreach ($edata_ip as $edata_ip_val) {
-                    $count_exist_ip_address++;
+                if( $udata ){
+                    $is_authentic = 0;
                 }
-            }
-            if($count_exist_ip_address > 0) {
+
+                $count_exist_business_name = 0;
+                if($edata_business){ 
+                    foreach ($edata_business as $edata_business_val) {
+                        $count_exist_business_name++;
+                    }
+                }
+                if($count_exist_business_name > 0) {
+                    $is_authentic = 0;
+                }
+
+
+                $count_exist_ip_address = 0;
+                if($edata_ip){ 
+                    foreach ($edata_ip as $edata_ip_val) {
+                        $count_exist_ip_address++;
+                    }
+                }
+                if($count_exist_ip_address > 0) {
+                    $is_authentic = 0;
+                }
+            }else{
                 $is_authentic = 0;
             }
-
         }
 
         //echo $is_authentic;
-        $leads_input = array(
-            'firstname'     => $post['firstname'],
-            'lastname'      => $post['lastname'],
-            'phone_cell'    => $post['phone'],
-            'email_add'     => $post['a_email'],
-            'address'       => $post['business_address'],
-        );
+        if( $is_authentic == 1 ){
+            $leads_input = array(
+                'firstname'     => $post['firstname'],
+                'lastname'      => $post['lastname'],
+                'phone_cell'    => $post['phone'],
+                'email_add'     => $post['a_email'],
+                'address'       => $post['business_address'],
+            );
 
-        $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
-        if(isset($reg_temp_user_id) && $reg_temp_user_id > 0)
-        {
-            $leads_input['leads_id'] = $reg_temp_user_id;
-            $this->Customer_advance_model->update_data($leads_input, "ac_leads", "leads_id");
-        }
-        else
-        {
-            $reg_temp_user_id = $this->Customer_advance_model->add($leads_input, "ac_leads");
-
-            $this->session->set_userdata('reg_temp_user_id', $reg_temp_user_id);
-        }
+            $reg_temp_user_id = $this->session->userdata('reg_temp_user_id');
+            if(isset($reg_temp_user_id) && $reg_temp_user_id > 0){
+                $leads_input['leads_id'] = $reg_temp_user_id;
+                //$this->Customer_advance_model->update_data($leads_input, "ac_leads", "leads_id");
+            }else{
+                //$reg_temp_user_id = $this->Customer_advance_model->add($leads_input, "ac_leads");
+                $this->session->set_userdata('reg_temp_user_id', $reg_temp_user_id);
+            }
+        }           
 
         //$is_authentic = 1;
         $json_data = array('is_authentic' => $is_authentic);
@@ -1029,7 +1030,12 @@ class Register extends MYF_Controller {
             }
 
             $plan = $this->NsmartPlan_model->getById($post['plan_id']);
-            $next_billing_date = date("Y-m-d", strtotime("+1 month"));
+            if( $is_trial == 1 ){
+                $next_billing_date = date("Y-m-d", strtotime("+14 days"));
+            }else{
+                $next_billing_date = date("Y-m-d", strtotime("+1 month"));
+            }
+            
             $today = strtotime(date("Y-m-d"));
             //$startup_checklist = generateClientChecklist();
 
@@ -1110,38 +1116,38 @@ class Register extends MYF_Controller {
             //Send invoice
             $this->send_invoice_email($cid, $sid);
 
-            //Create customer
-            $customer_data = array(
-                'company_id'      => 1,
-                'fk_user_id'      => 5,
-                'fk_sa_id'        => 0,
-                'contact_name'    => $post['firstname'] . ' ' . $post['lastname'],
-                'status'          => '',
-                'customer_type'   => 'Business',
-                'industry_type_id' => $post['industry_type_id'],
-                'business_name'   => $post['business_name'],
-                'first_name'      => $post['firstname'],
-                'middle_name'     => '',
-                'last_name'       => $post['lastname'],
-                'mail_add'        => $post['business_address'],
-                'city'            => '',
-                'state'           => '',
-                'zip_code'        => $post['zip_code'],
-                'phone_h'         => '',
-                'phone_m'         => $post['phone']
-            );
-            $fk_prod_id = $this->customer_ad_model->add($customer_data,"acs_profile");
+            // //Create customer
+            // $customer_data = array(
+            //     'company_id'      => 1,
+            //     'fk_user_id'      => 5,
+            //     'fk_sa_id'        => 0,
+            //     'contact_name'    => $post['firstname'] . ' ' . $post['lastname'],
+            //     'status'          => '',
+            //     'customer_type'   => 'Business',
+            //     'industry_type_id' => $post['industry_type_id'],
+            //     'business_name'   => $post['business_name'],
+            //     'first_name'      => $post['firstname'],
+            //     'middle_name'     => '',
+            //     'last_name'       => $post['lastname'],
+            //     'mail_add'        => $post['business_address'],
+            //     'city'            => '',
+            //     'state'           => '',
+            //     'zip_code'        => $post['zip_code'],
+            //     'phone_h'         => '',
+            //     'phone_m'         => $post['phone']
+            // );
+            // $fk_prod_id = $this->customer_ad_model->add($customer_data,"acs_profile");
 
-            //Create leads
-            $leads_input = array(
-                'company_id'    => 1,
-                'firstname'     => $post['firstname'],
-                'lastname'      => $post['lastname'],
-                'phone_cell'    => $post['phone'],
-                'email_add'     => $post['email'],
-                'address'       => $post['business_address'],
-            );
-            $this->Customer_advance_model->add($leads_input, "ac_leads");
+            // //Create leads
+            // $leads_input = array(
+            //     'company_id'    => 1,
+            //     'firstname'     => $post['firstname'],
+            //     'lastname'      => $post['lastname'],
+            //     'phone_cell'    => $post['phone'],
+            //     'email_add'     => $post['email'],
+            //     'address'       => $post['business_address'],
+            // );
+            // $this->Customer_advance_model->add($leads_input, "ac_leads");
         }
 
         $json_data = ['is_success' => $is_success];

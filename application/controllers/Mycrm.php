@@ -1546,6 +1546,59 @@ class Mycrm extends MY_Controller
 
         return $validate;
     }
+
+    public function ajax_customize_menu()
+    {
+        $this->load->model('CompanyMenuSetting_model');
+
+        $cid = logged('company_id');
+
+        $sort_by = ['field' => 'sort', 'order' => 'ASC'];
+        $companyMenus = $this->CompanyMenuSetting_model->getAllByCompanyId($cid, $sort_by);
+        $menus = $this->CompanyMenuSetting_model->optionMenus();
+
+        $this->page_data['companyMenus'] = $companyMenus;
+        $this->page_data['menus'] = $menus;
+        $this->load->view('v2/pages/mycrm/ajax_customize_menu', $this->page_data);
+    }
+
+    public function ajax_update_menu_setting()
+    {
+        $this->load->model('CompanyMenuSetting_model');
+
+        $is_success = 0;
+        $msg = 'Cannot update settings';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $this->CompanyMenuSetting_model->deleteAllByCompanyId($cid);
+        
+        $sort = 1;
+        foreach($post['customizeMenu'] as $key => $item){
+            $data = [
+                'company_id' => $cid,
+                'menu_name' => $item,
+                'is_enabled' => $post['customizeMenuIsEnabled'][$key],
+                'sort' => $sort,
+                'date_created' => date('Y-m-d H:i:s')
+            ];
+            
+            $this->CompanyMenuSetting_model->create($data);
+            $sort++;
+
+        }
+
+        //Activity Logs
+        $activity_name = 'Updated company menu settings'; 
+        createActivityLog($activity_name);
+
+        $is_success = 1;
+        $msg = '';
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
 }
 
 /* End of file Mycrm.php */
