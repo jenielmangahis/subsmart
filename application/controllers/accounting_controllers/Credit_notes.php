@@ -129,14 +129,14 @@ class Credit_notes extends MY_Controller {
             $customer = $this->accounting_customers_model->get_by_id($creditMemo->customer_id);
             if( $customer ){
                 $customerName = $customer->first_name . ' ' . $customer->last_name;
-
+                $print_url = base_url() . 'accounting/customers/print-transaction/credit-memo/' . $creditMemo->id;
                 $manageCol = "<div class='dropdown table-management'>
                     <a href='#' class='dropdown-toggle' data-bs-toggle='dropdown'>
                         <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                     </a>
                     <ul class='dropdown-menu dropdown-menu-end'>
                         <li>
-                            <a class='dropdown-item print-credit-memo' href='/accounting/customers/print-transaction/credit-memo/$creditMemo->id' target='_blank'>Print</a>
+                            <a class='dropdown-item print-credit-memo' href='$print_url' target='_blank'>Print</a>
                         </li>
                         <li>
                             <a class='dropdown-item send-credit-memo' href='#'>Send</a>

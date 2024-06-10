@@ -297,3 +297,42 @@ $('.export-transactions').on('click', function() {
     $('#export-form').submit();
     $('#export-form').remove();
 });
+
+$("#credit-notes-table .copy-transaction").on("click", function (e) {
+    e.preventDefault();
+  
+    var row = $(this).closest("tr");
+    var id = row.find(".select-one").val();
+    var transactionType = row.find("td:nth-child(3)").text().trim();
+    transactionType = transactionType.replaceAll(" ", "-");
+    transactionType = transactionType.toLowerCase();
+  
+    var data = {
+      id: id,
+      type: row.find("td:nth-child(3)").text().trim(),
+    };
+  
+    $.get(base_url + `accounting/copy-transaction/${transactionType}/${id}`,
+      function (res) {
+        if ($("div#modal-container").length > 0) {
+          $("div#modal-container").html(res);
+        } else {
+          $("body").append(`
+                  <div id="modal-container">
+                      ${res}
+                  </div>
+              `);
+        }
+  
+        $("#modal-container form .modal")
+          .parent()
+          .attr("onsubmit", "submitModalForm(event, this)")
+          .removeAttr("data-href");
+  
+        modalName = "#" + $("#modal-container form .modal").attr("id");
+        initModalFields($("#modal-container form .modal").attr("id"), data);
+  
+        $(modalName).modal("show");
+      }
+    );
+});
