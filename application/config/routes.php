@@ -1460,6 +1460,8 @@ $route['mycrm/_hdr_load_multi_account_list'] = 'Mycrm/ajax_hdr_load_multi_accoun
 $route['mycrm/_login_multi_account'] = 'Mycrm/ajax_login_multi_account';
 $route['mycrm/_login_main_multi_account'] = 'Mycrm/ajax_login_main_multi_account';
 $route['mycrm/_check_max_link_account'] = 'Mycrm/ajax_check_company_max_link_account';
+$route['mycrm/_customize_menu'] = 'Mycrm/ajax_customize_menu';
+$route['mycrm/_update_menu_setting'] = 'Mycrm/ajax_update_menu_setting';
 
 // Addons
 $route['more/_load_addons_list'] = 'More/ajax_load_addons_list';
