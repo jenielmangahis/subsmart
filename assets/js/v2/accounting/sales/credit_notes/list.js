@@ -336,3 +336,36 @@ $("#credit-notes-table .copy-transaction").on("click", function (e) {
       }
     );
 });
+
+$("#credit-notes-table .view-edit-credit-memo").on("click", function (e) {
+    e.preventDefault();
+  
+    var row = $(this).closest("tr");
+    var id = row.find(".select-one").val();
+    var transactionType = row.find("td:nth-child(3)").text().trim();
+    transactionType = transactionType.replaceAll(" ", "-");
+    transactionType = transactionType.toLowerCase();
+  
+    var data = {
+      id: id,
+      type: row.find("td:nth-child(3)").text().trim(),
+    };
+  
+    $.get(base_url + "accounting/view-transaction/credit-memo/" + id, function (res) {
+        if ($("div#modal-container").length > 0) {
+            $("div#modal-container").html(res);
+        } else {
+            $("body").append(`
+                    <div id="modal-container"> 
+                        ${res}
+                    </div>
+                `);
+        }
+
+        modalName = "#creditMemoModal";
+        initModalFields("creditMemoModal", data);
+
+        $("#creditMemoModal").modal("show");
+    });
+
+});
