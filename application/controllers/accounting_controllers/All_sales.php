@@ -175,7 +175,9 @@ class All_sales extends MY_Controller
             if (in_array($v->status, ['Draft', 'Declined', 'Paid'])) {
                 return false;
             } else {
-                return strtotime($v->due_date) < strtotime(date('m/d/Y'));
+                if (in_array($v->status, ['Overdue'])) {
+                    return strtotime($v->due_date) < strtotime(date('m/d/Y'));
+                }
             }
         }, ARRAY_FILTER_USE_BOTH);
 

@@ -368,7 +368,22 @@ class Widgets extends MY_Controller
                 }
                $data['invoices_count'] = count($past_due);
                $data['invoices_total_due'] = $invoices_total_due;
-
+               $esign_query = [
+                    'where' => ['user_docfile.company_id' => logged('company_id'), 'user_docfile.status !=' => 'Deleted',
+                        'user_docfile.unique_key <>' => '', 'user_docfile.company_id >' => 0],
+                    'join' => [
+                        [
+                            'table' => 'acs_profile',
+                            'statement' => 'user_docfile.customer_id = acs_profile.prof_id',
+                            'join_as' => 'left',
+                        ],
+                    ],
+                    'groupBy' => ['user_docfile.status'],
+                    'table' => 'user_docfile',
+                    'select' => 'user_docfile.status AS status, COUNT(user_docfile.status) as status_count',
+                ];
+    
+                $data['esign'] = $this->general->get_data_with_param($esign_query);
                 $estimate_draft_query = [
                     'where' => ['company_id' => logged('company_id')],
                     'table' => 'estimates',

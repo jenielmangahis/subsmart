@@ -4675,16 +4675,26 @@ class Customer extends MY_Controller
     {
         $input = $this->input->post();
         // customer_ad_model
-        if (empty($input['id'])) {
+        if (empty($input['id'])) {            
             unset($input['id']);
             $input['company_id'] = logged('company_id');
             if ($this->customer_ad_model->add($input, 'ac_activationfee')) {
+
+                //Activity Logs
+                $activity_name = 'Added Activation Fee : ' . $input['amount']; 
+                createActivityLog($activity_name);
+
                 echo 1;
             } else {
                 echo 0;
             }
         } else {
+            $activationFee = $this->customer_ad_model->getActivationFeeById($input['id']);
             if ($this->customer_ad_model->update_data($input, 'ac_activationfee', 'id')) {
+                //Activity Logs
+                $activity_name = 'Changed Activation Fee from ' . $activationFee->amount . ' to ' . $input['amount']; 
+                createActivityLog($activity_name);
+                
                 echo 'Updated';
             } else {
                 echo 'Error';
@@ -4696,7 +4706,14 @@ class Customer extends MY_Controller
     {
         $input = $this->input->post();
         $data = ['id' => $input['id'], 'amount' => $input['amount']];
+
+        $activationFee = $this->customer_ad_model->getActivationFeeById($input['id']);
         if ($this->customer_ad_model->update_data($data, 'ac_activationfee', 'id')) {
+
+            //Activity Logs
+            $activity_name = 'Changed Activation Fee from ' . number_format($activationFee->amount,2,'.','') . ' to ' . number_format($input['amount'],2,'.',''); 
+            createActivityLog($activity_name);
+
             echo 1;
         } else {
             echo 0;
@@ -4711,6 +4728,10 @@ class Customer extends MY_Controller
             unset($input['id']);
             $input['company_id'] = logged('company_id');
             if ($this->customer_ad_model->add($input, 'ac_system_package_type')) {
+                //Activity Logs
+                $activity_name = 'Created System Package : ' . $input['name']; 
+                createActivityLog($activity_name);
+
                 echo 1;
             } else {
                 echo 0;
@@ -4728,7 +4749,13 @@ class Customer extends MY_Controller
     {
         $input = $this->input->post();
         $data = ['id' => $input['id'], 'name' => $input['name']];
+
+        $packageType = $this->customer_ad_model->getPackageTypeById($input['id']);
         if ($this->customer_ad_model->update_data($data, 'ac_system_package_type', 'id')) {
+            //Activity Logs
+            $activity_name = 'Updated System Package : ' . $packageType->name; 
+            createActivityLog($activity_name);
+
             echo 1;
         } else {
             echo 0;
@@ -4895,7 +4922,14 @@ class Customer extends MY_Controller
             ],
             'table' => 'ac_activationfee',
         ];
+    
+        $activationFee = $this->customer_ad_model->getActivationFeeById($_POST['id']);
         if ($this->general->delete_($deletion_query)) {
+    
+            //Activity Logs
+            $activity_name = 'Deleted Activation Fee amounting of ' . number_format($activationFee->amount,2,'.',''); 
+            createActivityLog($activity_name);
+    
             echo 1;
         } else {
             echo 0;
@@ -4910,7 +4944,13 @@ class Customer extends MY_Controller
             ],
             'table' => 'ac_system_package_type',
         ];
+
+        $packageType = $this->customer_ad_model->getPackageTypeById($_POST['id']);
         if ($this->general->delete_($deletion_query)) {
+            //Activity Logs
+            $activity_name = 'Deleted Package Type ' . $packageType->name; 
+            createActivityLog($activity_name);
+
             echo 1;
         } else {
             echo 0;
@@ -7216,6 +7256,7 @@ class Customer extends MY_Controller
     {
         addJSONResponseHeader();
         $input = $this->input->post();
+        $is_updated = 0;
         if ($input) {
             $importFields = json_decode($input['importFields']);
 
@@ -7236,6 +7277,7 @@ class Customer extends MY_Controller
                 $data['value'] = implode(',', $importFields);
                 if ($this->general->update_with_key_field($data, $customer_settings->customer_settings_id, $table, 'customer_settings_id')) {
                     $data_arr = ['success' => true, 'message' => 'Customer Settings Export updated.'];
+                    $is_updated = 1;
                 } else {
                     $data_arr = ['success' => false, 'message' => 'Something goes wrong.'];
                 }
@@ -7247,9 +7289,21 @@ class Customer extends MY_Controller
                 $customer_setting['company_id'] = logged('company_id');
                 if ($this->general->add_($customer_setting, $table)) {
                     $data_arr = ['success' => true, 'message' => 'Customer Settings Export added.'];
+                    $is_updated = 1;
                 } else {
                     $data_arr = ['success' => false, 'message' => 'Something goes wrong.'];
                 }
+            }
+
+            if( $is_updated == 1 ){
+                //Activity Logs
+                if( $input['type'] == 'export' ){
+                    $activity_name = 'Updated Customer Export Settings'; 
+                }else{
+                    $activity_name = 'Updated Customer Import Settings'; 
+                }
+                
+                createActivityLog($activity_name);
             }
         } else {
             $data_arr = ['success' => false, 'message' => 'Something goes wrong.'];

@@ -190,7 +190,7 @@ class Expenses extends MY_Controller
     private function get_transactions($filters, $for = 'table')
     {
         switch ($filters['type']) {
-            case 'all-transactions':
+            case 'all-transactions':                
                 if (!isset($filters['payee']) || $filters['payee']['type'] === 'vendor') {
                     $bills = $this->expenses_model->get_company_bill_transactions($filters);
                 }
@@ -208,7 +208,7 @@ class Expenses extends MY_Controller
             case 'bill':
                 $bills = $this->expenses_model->get_company_bill_transactions($filters);
             break;
-            case 'expenses':
+            case 'expenses':                
                 $expenses = $this->expenses_model->get_company_expense_transactions($filters);
             break;
             case 'check':

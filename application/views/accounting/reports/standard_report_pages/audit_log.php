@@ -1,10 +1,11 @@
 <link rel="icon" href="data:;base64,iVBORw0KGgo=" hidden>
 
 <style>
-    .top-button{
+    .top-button {
         height: 30px;
     }
-    .icon-top{
+
+    .icon-top {
         margin-bottom: -3px;
     }
 </style>
@@ -358,9 +359,10 @@
                         <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>Subject</h6>
-                                <input id="emailSubject" class="form-control" type="text" value="<?php echo $companyInfo ? strtoupper($companyInfo->business_name) : ''; ?>: <?php echo $page->title; ?>" required>
+                                <input id="emailSubject" class="form-control" type="text" required>
                             </div>
                         </div>
+
                         <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>Body</h6>
@@ -405,10 +407,3 @@
 <!-- END: MODALS -->
 <?php include viewPath('accounting/reports/reports_assets/report_js'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
-<script>
-    $(document).ready(function() {
-        $(".audit_log").nsmPagination({
-            itemsPerPage: 10,
-        });
-    });
-</script>

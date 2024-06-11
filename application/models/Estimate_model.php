@@ -7,7 +7,7 @@ class Estimate_model extends MY_Model
     public $table = 'estimates';
     public $table_items = 'job_items';
 
-    public function getAllByCompany($company_id, $sort = '', $filter = [])
+    public function getAllByCompany($company_id, $sort = '', $filter = [])   
     {
         $this->db->select('estimates.*, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer_name,CONCAT(ac_leads.firstname, " ", ac_leads.lastname) AS lead_name, users.FName AS user_firstname, users.LName AS user_lastname');
         $this->db->from($this->table);
@@ -27,7 +27,7 @@ class Estimate_model extends MY_Model
 
         switch ($sort) {
             case 'added-desc':
-                $this->db->order_by('created_at', 'DESC');
+                $this->db->order_by('created_at', 'DESC');  
                 break;
 
             case 'added-asc':
@@ -40,7 +40,7 @@ class Estimate_model extends MY_Model
 
             case 'date-accepted-asc':
                 $this->db->order_by("(CASE estimates.status WHEN '".ESTIMATE_STATUS_ACCEPTED."' THEN 1 ELSE 0 END), accepted_date ASC");
-                break;
+                break; 
 
             case 'number-asc':
                 $this->db->order_by('estimate_number', 'ASC');
