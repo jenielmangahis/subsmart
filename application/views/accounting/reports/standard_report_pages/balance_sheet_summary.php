@@ -583,15 +583,16 @@
 
     $(document).ready(function() {
         var isCollapsed = true;
-        var originalOrder = $("#reportTable").children();
 
         $("#collapseButton").click(function() {
             if (isCollapsed) {
                 $(".collapse").collapse('show');
                 $("#collapseButton span").text('Uncollapse');
+                updateCarets('show');
             } else {
                 $(".collapse").collapse('hide');
                 $("#collapseButton span").text('Collapse');
+                updateCarets('hide');
             }
             isCollapsed = !isCollapsed;
         });
@@ -602,28 +603,16 @@
             $(target).collapse('toggle');
         });
 
-        $("input[name='sort_order']").change(function() {
-            var sortOrder = $("input[name='sort_order']:checked").attr('id');
-            sortTable(sortOrder);
-        });
-
-        function sortTable(order) {
-            var rows = $("#reportTable > tr").toArray();
-
-            if (order === 'sort-default') {
-                $("#reportTable").html(originalOrder);
-            } else {
-                rows.sort(function(a, b) {
-                    var aValue = parseFloat($(a).find("td").eq(1).text().replace(/[\$,]/g, '')) || 0;
-                    var bValue = parseFloat($(b).find("td").eq(1).text().replace(/[\$,]/g, '')) || 0;
-                    if (order === 'sort-asc') {
-                        return aValue - bValue;
-                    } else if (order === 'sort-desc') {
-                        return bValue - aValue;
-                    }
-                });
-                $("#reportTable").html(rows);
-            }
+        function updateCarets(action) {
+            $(".collapse-row").each(function() {
+                var target = $(this).data("bs-target");
+                var icon = $(this).find("i");
+                if (action === 'show') {
+                    icon.removeClass("bx-caret-right").addClass("bx-caret-down");
+                } else {
+                    icon.removeClass("bx-caret-down").addClass("bx-caret-right");
+                }
+            });
         }
 
         $("#compact-display").change(function() {

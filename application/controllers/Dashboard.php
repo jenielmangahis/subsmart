@@ -382,6 +382,24 @@ class Dashboard extends Widgets
             'select' => 'COUNT(*) as total',
         ];
         $this->page_data['collection'] = $this->general->get_data_with_param($collection_query);
+
+        $esign_query = [
+            'where' => ['user_docfile.company_id' => logged('company_id'), 'user_docfile.status !=' => 'Deleted',
+                'user_docfile.unique_key <>' => '', 'user_docfile.company_id >' => 0],
+            'join' => [
+                [
+                    'table' => 'acs_profile',
+                    'statement' => 'user_docfile.customer_id = acs_profile.prof_id',
+                    'join_as' => 'left',
+                ],
+            ],
+            'groupBy' => ['user_docfile.status'],
+            'table' => 'user_docfile',
+            'select' => 'user_docfile.status AS status, COUNT(user_docfile.status) as status_count',
+        ];
+
+        $this->page_data['esign'] = $this->general->get_data_with_param($esign_query);
+
         $payments = $this->invoice_model->get_company_payments(logged('company_id'));
         $deposits = 0;
         foreach ($payments as $payment) {
@@ -853,6 +871,31 @@ class Dashboard extends Widgets
 
                 $this->output->set_output(json_encode(['first' => null, 'second' => null, 'accounting_expense' => $bills]));
 
+                break;
+            case 'esign':
+                $esign_query = [
+                    'where' => ['user_docfile.company_id' => logged('company_id'),
+                        'user_docfile.status !=' => 'Deleted',
+                        'user_docfile.unique_key <>' => '',
+                        'user_docfile.company_id >' => 0,
+                        'DATE(user_docfile.created_at)  >=' => date('Y-m-d', strtotime($date_from)),
+                        'DATE(user_docfile.created_at)  <=' => date('Y-m-d', strtotime($date_to)),],
+                        
+                    'join' => [
+                        [
+                            'table' => 'acs_profile',
+                            'statement' => 'user_docfile.customer_id = acs_profile.prof_id',
+                            'join_as' => 'left',
+                        ],
+                    ],
+                    'groupBy' => ['user_docfile.status'],
+                    'table' => 'user_docfile',
+                 'select' => 'user_docfile.status AS status, COUNT(user_docfile.status) as status_count',
+                ];
+
+                $esign = $this->general->get_data_with_param($esign_query);
+
+                $this->output->set_output(json_encode(['first' => null, 'second' => null, 'esign' => $esign]));
                 break;
         }
     }
