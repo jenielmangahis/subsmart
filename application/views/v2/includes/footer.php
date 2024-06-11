@@ -663,7 +663,6 @@ function filterThumbnail(val, id, table) {
     if (table == 'accounting_expense') {
         $('#AccountingExpenseGraphLoader').show();
     }
-    AccountingExpenseGraphLoader
     loadDataFilter(from_date, to_date, table, id);
 
 }
@@ -718,6 +717,10 @@ function loadDataFilter(from_date, to_date, table, id) {
                 filterCollectionThumbnailGraph(data['collection'])
             }
 
+            if (table == 'esign') {
+                filterEsignThumbnailGraph(data['esign'])
+            }
+
             if (table == 'jobs') {
                 filterJobsThumbnailGraph(data['jobs'])
             }
@@ -752,6 +755,36 @@ function loadDataFilter(from_date, to_date, table, id) {
 
         }
     });
+}
+
+function filterEsignThumbnailGraph(esign) {
+    console.log('goes here')
+    var $output = '';
+    if (esign.length > 0) {
+        $.each(esign, function(index, data) {
+            $output += '<div class="row js-row-dash mb-2">';
+            $output += '<div class="col-9 marg-top">';
+            $output += '<div class="jname">' + htmlspecialchars(data.status) + '</div>';
+            $output += '</div>';
+            $output += '<div class="col-3 col-center">';
+            $output += '<div class="row">';
+            $output += '<div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">' + htmlspecialchars(data.status_count) + '</span></div>';
+            $output += '</div>';
+            $output += '</div>';
+            $output += '</div>';
+        });
+    }else{
+        $output +='<div class="nsm-empty"><i class="bx bx-meh-blank"></i><span>Empty</span></div>'
+    }
+    $('#esign-content').html($output);
+}
+
+function htmlspecialchars(str) {
+    return str.replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#039;');
 }
 
 function filterIncomeThumbnailGraph(income) {

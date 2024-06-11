@@ -406,4 +406,37 @@
         });
         $('#date_to_text').text(wordDate);
     }).trigger('input');
+
+    // Pagination
+    $(document).ready(function() {
+        $(".audit_log").nsmPagination({
+            itemsPerPage: 10,
+        });
+    });
+
+    // Email Subject
+    document.addEventListener('DOMContentLoaded', function() {
+        const businessName = '<?php echo $companyInfo ? strtoupper($companyInfo->business_name) : ''; ?>: ';
+        const emailSubject = document.getElementById('emailSubject');
+
+        emailSubject.value = businessName + '<?php echo $page->title; ?>';
+
+        emailSubject.addEventListener('input', function() {
+            if (!emailSubject.value.startsWith(businessName)) {
+                emailSubject.value = businessName;
+            }
+        });
+
+        emailSubject.addEventListener('keydown', function(e) {
+            if (emailSubject.selectionStart < businessName.length) {
+                emailSubject.setSelectionRange(businessName.length, businessName.length);
+            }
+        });
+
+        emailSubject.addEventListener('click', function(e) {
+            if (emailSubject.selectionStart < businessName.length) {
+                emailSubject.setSelectionRange(businessName.length, businessName.length);
+            }
+        });
+    });
 </script>
