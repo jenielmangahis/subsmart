@@ -407,25 +407,16 @@ include viewPath('v2/includes/header');
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
+
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <h3 class="page-title left" style="font-family: Sarabun, sans-serif !important;font-size: 1.75rem !important;font-weight: 600 !important;">Sales Tax</h3>
-                                </div>
-                                <div class="col-md-12">
-                                    <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:20px;">
-                                        To start recording sales tax for your company, you need to turn on this feature and set up sales tax items or tax groups. Go to the Edit menu, then select Preferences.<br>On the Preferences window, select Sales Tax then go to the Company Preferences tab. Select Yes to turn on sales tax.
-                                    </div>
-                                </div>
-                            </div>
-
+                            To start recording sales tax for your company, you need to turn on this feature and set up sales tax items or tax groups. Go to the Edit menu, then select Preferences. <br />
+                            On the Preferences window, select Sales Tax then go to the Company Preferences tab. Select Yes to turn on sales tax.
                         </div>
                     </div>
-                </div>
+                </div>            
 
                 <div class="row">
                     <div class="col-md-8">
