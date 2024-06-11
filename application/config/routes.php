@@ -1761,3 +1761,8 @@ $route['accounting/invoices/delete-selected'] = 'Accounting/ajax_invoice_delete_
 $route['trac360/_create_user_location'] = 'Trac360/ajax_create_user_location';
 $route['trac360/_create_user_geolocation_features'] = 'Trac360/ajax_create_user_geolocation_features';
 
+//Before and after photos
+$route['before_after_photos'] = 'Before_after_v2/index';
+$route['before_after_photos/add_photos'] = 'Before_after_v2/addPhoto';
+$route['before_after_photos/_create_photos'] = 'Before_after_v2/ajax_create_photos';
+
