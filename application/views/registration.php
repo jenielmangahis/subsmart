@@ -70,7 +70,8 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 	}
 	.btn-indigo {
 	    color: #fff;
-	    background-color: #3f51b5 !important;
+	    /* background-color: #3f51b5 !important; */
+		background-color:#6a4a86 !important;
 	}
 	.btn-default {
 	    color: #fff;
@@ -305,7 +306,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 				  						          <h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 1 : Select Plan</strong></h4>
 				  						          <select name="subscription_type" id="subscription_type" class="form-control-dr subscription-type" style="width: 100%;margin: 33px auto;max-width: 380px;">
 				  						          	<option value="prospect" <?= $default_type == 'discounted' ? 'selected="selected"' : ''; ?>><?= REGISTRATION_MONTHS_DISCOUNTED; ?> months 50% off</option>
-				  						          	<option value="trial" <?= $default_type == 'free' ? 'selected="selected"' : ''; ?>>Free Trial (30 Days)</option>
+				  						          	<option value="trial" <?= $default_type == 'free' ? 'selected="selected"' : ''; ?>>Free Trial (14 Days)</option>
 				  						          </select>
 				  						          <ul class="plan-list">
 				  						          <?php foreach($ns_plans as $p){ ?>
@@ -353,6 +354,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 							      	<div class="row setup-content" id="step-2">
 								        <div class="col-md-12">
 								          	<h4 class="font-weight-bold pl-0 my-4 sc-pl-2"><strong>Step 2 : Personal Information</strong></h4>
+											<input type="hidden" id="nsmart_trp" value="" />
 								          	<div class="step-2-error-msg"></div>
 
 								          	<div class="row">
@@ -379,18 +381,16 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 
 												<div class="col-md-6">
 													<div class="input-group z-100">
-														<input autocomplete="off" type="text" name="phone" id="phone" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Phone number" required="">
+														<input autocomplete="off" type="text" name="phone" id="phone" maxlength="12" placeholder="xxx-xxx-xxxx" class="form-control ng-pristine ng-untouched ng-valid ng-empty business-phone" required="">
 													</div>
 												</div>
 											</div>
-
 											<div class="row">
 												<div class="col-md-6">
 													<div class="input-group z-100">
-														<input id="google_search_place" type="text" name="business_name" class="business_name form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" required="" />
+														<input autocomplete="off" type="password" name="password" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Create your password" required="">
 													</div>
 												</div>
-
 												<div class="col-md-6">
 													<div class="input-group">
 														<select class="reg-select z-100" id="number_of_employee" name="number_of_employee" required="">
@@ -405,7 +405,14 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 													</div>
 												</div>
 											</div>
-
+											<hr />
+											<div class="row">
+												<div class="col-md-12">
+													<div class="input-group z-100">
+														<input id="google_search_place" type="text" name="business_name" class="business_name form-control ng-pristine ng-untouched ng-valid ng-empty" aria-label="Your Business Name" placeholder="Business Name" autocomplete="on" runat="server" required="" />
+													</div>
+												</div>
+											</div>
 											<div class="row">
 												<div class="col-md-12">
 													<div class="input-group z-100">
@@ -435,16 +442,6 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 														</select>
 													</div>
 												</div>
-											</div>
-
-											<div class="row">
-												<div class="col-md-6">
-													<div class="input-group z-100">
-														<input autocomplete="off" type="password" name="password" class="form-control ng-pristine ng-untouched ng-valid ng-empty" placeholder="Create your password" required="">
-													</div>
-												</div>
-
-												<div class="col-md-6">&nbsp;</div>
 											</div>
 
 											<div class="row">
@@ -996,6 +993,7 @@ $(function(){
         $("#ajax-authentication-alert-container").html('');
 
         if( isValid ){
+			var nsmart_trp          = $('#nsmart_trp').val();
         	var firstname 			= $("input[name=firstname]").val();
         	var lastname 			= $("input[name=lastname]").val();
         	var phone 				= $("input[name=phone]").val();
@@ -1015,6 +1013,7 @@ $(function(){
 	               type: "POST",
 	               url: authenticating_url,
 	               data: {
+					    nsmart_trp:nsmart_trp,
 	               		a_email:a_email,
 	               		a_bname:a_bname,
 	               		firstname:firstname,
@@ -1025,6 +1024,8 @@ $(function(){
 	               	},
 	               success: function(o)
 	               {
+					$("." + curStepBtn + "-error-msg").removeClass('alert alert-danger');
+						$("." + curStepBtn + "-error-msg").html('');
 	               		var obj = jQuery.parseJSON( o );
 	               		//if(obj == 1) {
 	               		if(obj.is_authentic == 1) {
@@ -1358,5 +1359,19 @@ $(function(){
 	        });
 	    }, 500);
     }
+
+	$('.business-phone').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    });
 });
 </script>
