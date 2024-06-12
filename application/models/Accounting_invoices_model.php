@@ -486,12 +486,20 @@ class Accounting_invoices_model extends MY_Model
             $this->db->where('customer_id', $filters['customer_id']);
         }
 
-        if(isset($filters['from_date'])) {
-            $this->db->where('date_issued >=', $filters['from_date']);
+        /*if(isset($filters['from_date'])) {
+            $from_date = $filters['from_date']; 
+            $this->db->where('date_issued >=', $from_date);
         }
 
         if(isset($filters['to_date'])) {
-            $this->db->where('date_issued <=', $filters['to_date']);
+            $to_date = $filters['to_date'];
+            $this->db->where('date_issued <=', $to_date);
+        }*/
+
+        if(isset($filters['from_date']) && isset($filters['to_date'])) {
+            $from_date = $filters['from_date']; 
+            $to_date   = $filters['to_date']; 
+            $this->db->where('DATE(date_issued) BETWEEN "'.$from_date.'" AND "'.$to_date.'"');
         }
 
         if($filters['overdue'] === "1") {

@@ -163,6 +163,7 @@
                                             <br><br>
                                             <!-- <button type="button" id="nextBtn1" class="btn btn-primary btn-sm step step02" disabled ><span class="fa fa-arrow-right"></span> Next</button> -->
                                         </form>
+                                        <a href="#" id="download-chart-of-template">Download Sample Template</a>
                                     </div>
 
                                     <div class="section-content step2">
@@ -240,3 +241,26 @@
         <center><p>Processing...</p></center>
     </div>
 </div>
+
+<script>
+    document.getElementById("download-chart-of-template").addEventListener("click", function() {
+        var csvContent = "#,Account Name,Detail Type,Type\n";
+        csvContent += "1,Building Expense,Detail Type 1,Type 1,\n";
+        csvContent += "2,Building Expense,Detail Type 2,Type 2,\n";
+
+        var blob = new Blob([csvContent], {
+            type: "text/csv;charset=utf-8;"
+        });
+
+        var link = document.createElement("a");
+        if (link.download !== undefined) {
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", "sample_template.csv");
+            link.style.visibility = "hidden";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    });
+</script>
