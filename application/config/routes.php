@@ -1742,6 +1742,7 @@ $route['widgets/_load_paid_invoices_summary'] = 'Widgets/ajax_load_paid_invoices
 $route['widgets/_load_service_ticket_chart_data'] = 'Widgets/ajax_load_service_ticket_chart_data';
 $route['widgets/_load_job_chart_data'] = 'Widgets/ajax_load_job_chart_data';
 $route['widgets/_load_taskhub_summary'] = 'Widgets/ajax_load_taskhub_summary';
+$route['widgets/_load_customer_group_chart'] = 'Widgets/ajax_load_customer_group_chart';
 
 //Esign
 $route['esign_v2/_tags_sections'] = 'Esign_v2/ajax_company_tags_sections';
@@ -1759,4 +1760,9 @@ $route['accounting/invoices/delete-selected'] = 'Accounting/ajax_invoice_delete_
 //Trac360
 $route['trac360/_create_user_location'] = 'Trac360/ajax_create_user_location';
 $route['trac360/_create_user_geolocation_features'] = 'Trac360/ajax_create_user_geolocation_features';
+
+//Before and after photos
+$route['before_after_photos'] = 'Before_after_v2/index';
+$route['before_after_photos/add_photos'] = 'Before_after_v2/addPhoto';
+$route['before_after_photos/_create_photos'] = 'Before_after_v2/ajax_create_photos';
 

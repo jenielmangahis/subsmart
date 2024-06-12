@@ -1240,4 +1240,26 @@ class Widgets extends MY_Controller
 
         echo json_encode($taskhubSummary);
     }
+
+    public function ajax_load_customer_group_chart()
+    {
+        $this->load->model('Customer_advance_model');
+
+        $cid  = logged('company_id');
+        $customerGroups = $this->Customer_advance_model->getAllSettingsCustomerGroupByCompanyId($cid);
+
+        $chart_data   = [];
+        $chart_labels = [];
+
+        foreach($customerGroups as $group){
+            $customers = $this->Customer_advance_model->getAllCustomerByCustomerGroupIdAndCompanyId($group->id, $cid);
+
+            $chart_labels[] = $group->title . ' ('. count($customers) .')';
+            $chart_data[]   = count($customers); 
+            $chart_colors[] = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+        }
+
+        $return = ['chart_labels' => $chart_labels, 'chart_data' => $chart_data, 'chart_colors' => $chart_colors];
+        echo json_encode($return);
+    }
 }

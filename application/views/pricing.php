@@ -38,7 +38,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             <span class="slider round"></span>
           </label>
           <!-- <div class="_toggleButton" data-wa-link="toggle_zeroper-diy" role="switch" tabindex="0" aria-label="Buy now for 50% off for 3 months*" aria-checked="false" data-object="sku" data-object-detail="Trial toggle" data-action="trial started" data-ui-object="toggle" data-ui-object-detail="Free trial for 30 days" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#toggle_zeroper-diy"> </div> -->
-          <span class="ft" data-wa-link="toggle_zeroper-diy" data-di-id="#toggle_zeroper-diy" style="position: relative;top: 4px !important;">Free trial for 30 days</span>
+          <span class="ft" data-wa-link="toggle_zeroper-diy" data-di-id="#toggle_zeroper-diy" style="position: relative;top: 4px !important;">Free trial for 14 days</span>
       </div>
     </div>
     <br style="clear:both;"/>
@@ -57,7 +57,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="blue-button">
                   <div class="center-pricing">
                       <div class="price gray-price">
-                          <span class="line-through"></span><span class="ct gray">$</span><span class="aw">24.99</span>
+                          <span class="line-through"></span><span class="ct gray">$</span><span class="aw">39.99</span>
                           <span class="as"></span><span class="ac"></span>
                       </div>
                       <div class="red-price-text sc-3">
@@ -181,7 +181,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
               <div class="blue-button">
                 <div class="center-pricing">
                     <div class="price gray-price">
-                        <span class="line-through"></span><span class="ct gray">$</span><span class="aw">59.99</span>
+                        <span class="line-through"></span><span class="ct gray">$</span><span class="aw">99.99</span>
                         <span class="as"></span><span class="ac"></span>
                     </div>
                     <div class="red-price-text sc-3">
@@ -375,7 +375,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                 <div class="blue-button">
                   <div class="center-pricing">
                       <div class="price gray-price">
-                          <span class="line-through"></span><span class="ct gray">$</span><span class="aw">79.99</span>
+                          <span class="line-through"></span><span class="ct gray">$</span><span class="aw">139.99</span>
                           <span class="as"></span><span class="ac"></span>
                       </div>
                       <div class="red-price-text sc-3">
@@ -612,7 +612,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                   <div class="blue-button">
                     <div class="center-pricing">
                         <div class="price gray-price">
-                            <span class="line-through"></span><span class="ct gray">$</span><span class="aw">99.99</span>
+                            <span class="line-through"></span><span class="ct gray">$</span><span class="aw">179.99</span>
                             <span class="as"></span><span class="ac"></span>
                         </div>
                         <div class="red-price-text sc-3">
@@ -893,7 +893,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                     <div class="blue-button">
                       <div class="center-pricing">
                           <div class="price gray-price">
-                              <span class="line-through"></span><span class="ct gray">$</span><span class="aw">179.99</span>
+                              <span class="line-through"></span><span class="ct gray">$</span><span class="aw">299.99</span>
                               <span class="as"></span><span class="ac"></span>
                           </div>
                           <div class="red-price-text sc-3">
@@ -1251,7 +1251,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                       <span class="slider round"></span>
                     </label>
                     <!-- <div class="_toggleButton" data-wa-link="toggle_zeroper-diy" role="switch" tabindex="0" aria-label="Buy now for 50% off for 3 months*" aria-checked="false" data-object="sku" data-object-detail="Trial toggle" data-action="trial started" data-ui-object="toggle" data-ui-object-detail="Free trial for 30 days" data-ui-action="clicked" data-ui-access-point="diy pricing group" data-di-id="#toggle_zeroper-diy"> </div> -->
-                    <span class="ft" data-wa-link="toggle_zeroper-diy" data-di-id="#toggle_zeroper-diy">Free trial for 30 days</span>
+                    <span class="ft" data-wa-link="toggle_zeroper-diy" data-di-id="#toggle_zeroper-diy">Free trial for 14 days</span>
                 </div>
                 <div class="cupid-arrow">
                     <svg width="16px" height="13px" viewBox="0 0 16 13" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" data-di-rand="1590202098830">
@@ -1314,7 +1314,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="price-container default-product">
                                     <div class="pricing-section">
                                         <div class="price">
-                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">24.99</span>
+                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">39.99</span>
                                             <span class="as"></span><span class="ac"></span>
                                         </div>
                                         <div class="red-price-text">
@@ -1466,7 +1466,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="price-container default-product">
                                     <div class="pricing-section">
                                         <div class="price">
-                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">59.99</span>
+                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">99.99</span>
                                             <span class="as"></span><span class="ac"></span>
                                         </div>
                                         <div class="red-price-text">
@@ -1655,7 +1655,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="price-container default-product">
                                     <div class="pricing-section">
                                         <div class="price">
-                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">79.99</span>
+                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">139.99</span>
                                             <span class="as"></span><span class="ac"></span>
                                         </div>
                                         <div class="red-price-text">
@@ -1910,7 +1910,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="price-container default-product">
                                     <div class="pricing-section">
                                         <div class="price">
-                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">99.99</span>
+                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">179.99</span>
                                             <span class="as"></span><span class="ac"></span>
                                         </div>
                                         <div class="red-price-text">
@@ -2176,7 +2176,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="price-container default-product">
                                     <div class="pricing-section">
                                         <div class="price">
-                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">179.99</span>
+                                            <span class="line-through"></span><span class="ct">$</span><span class="aw">299.99</span>
                                             <span class="as"></span><span class="ac"></span>
                                         </div>
                                         <div class="red-price-text">
@@ -2520,7 +2520,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
                                 <div class="price-container-freelancer price-container default-product">
                                     <div class="pricing-section mbc-20">
                                       <div class="price">
-                                          <span class="line-through"></span><span class="ct">$</span><span class="aw">299.99</span>
+                                          <span class="line-through"></span><span class="ct">$</span><span class="aw">499.99</span>
                                           <span class="as"></span><span class="ac"></span>
                                       </div>
                                       <div class="red-price-text">

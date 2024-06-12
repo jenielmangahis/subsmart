@@ -288,6 +288,7 @@
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
+                                        <input type="hidden" id="client_id" name="client_id" value="<?= $clients->id ?>">
                                         <h4 class="text-center fw-bold"><span class="company-name"><?= $clients->business_name ?></span></h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
@@ -330,15 +331,15 @@
                                                                             <td>&emsp;&emsp;&emsp;Checking</td>
                                                                             <td>$305,061.93</td>
                                                                         </tr>
-                                                                        <tr id="bankAccounts" class="collapse">
+                                                                        <tr data-bs-toggle="collapse" data-bs-target="#testBank" class="clickable collapse-row collapsed">
                                                                             <td>&emsp;&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Test Bank (Cash on hand)</td>
                                                                             <td>$990.77</td>
                                                                         </tr>
-                                                                        <tr id="bankAccounts" class="collapse">
+                                                                        <tr id="testBank" class="collapse">
                                                                             <td>&emsp;&emsp;&emsp;&emsp;Sub-bank (Cash on hand)</td>
                                                                             <td>$990.00</td>
                                                                         </tr>
-                                                                        <tr id="bankAccounts" class="collapse">
+                                                                        <tr id="testBank" class="collapse">
                                                                             <td>&emsp;&emsp;&emsp;&emsp;<b>Total Test Bank (Cash on hand)</b></td>
                                                                             <td><b>$1,980.77</b></td>
                                                                         </tr>

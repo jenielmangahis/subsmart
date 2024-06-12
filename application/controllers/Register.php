@@ -24,7 +24,7 @@ class Register extends MYF_Controller {
     }
 
     public function index(){
-
+        
         $default_plan = '';
         $default_type = '';
         if( $this->input->get('plan') ){

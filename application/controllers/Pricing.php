@@ -11,7 +11,7 @@ class Pricing extends MYF_Controller {
 	}
 
 	public function index(){
-
+		
 		$get_all_active_addons = $this->NsmartAddons_model->getAllActive();
 
 		$active_addons_by_price_group = array();

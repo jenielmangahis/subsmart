@@ -107,7 +107,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="row">
                                         <div class="col-12 col-md-2">
                                             <label for="purchase-order-no">Purchase Order #</label>
@@ -133,7 +132,6 @@
                                             </select>
                                         </div>
                                     </div>
-
                                     <div class="row">
                                         <div class="col-12 grid-mb">
                                             <div class="accordion">
@@ -494,8 +492,7 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <button type="button" class="nsm-button float-end" id="save">Save</button>
+                                    <!-- <button type="button" class="nsm-button float-end" id="save">Save</button> -->
                                 </div>
                             </div>
                         </div>
