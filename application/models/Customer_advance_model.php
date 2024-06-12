@@ -161,11 +161,38 @@ class Customer_advance_model extends MY_Model
         return $query->result();
     }
 
+    public function getRatePlanById($id)
+    {
+        $this->db->select('*');
+        $this->db->where('id', $id);
+        $query = $this->db->get('ac_rateplan');
+
+        return $query->row();
+    }
+
     public function getCustomerGroupById($id)
     {
         $this->db->select('*');
         $this->db->where('id', $id);
         $query = $this->db->get('customer_groups');
+
+        return $query->row();
+    }
+
+    public function getActivationFeeById($id)
+    {
+        $this->db->select('*');
+        $this->db->where('id', $id);
+        $query = $this->db->get('ac_activationfee');
+
+        return $query->row();
+    }
+
+    public function getPackageTypeById($id)
+    {
+        $this->db->select('*');
+        $this->db->where('id', $id);
+        $query = $this->db->get('ac_system_package_type');
 
         return $query->row();
     }
@@ -338,6 +365,17 @@ class Customer_advance_model extends MY_Model
         $this->db->join('acs_office as ao', 'ao.fk_prof_id = users.id', 'left');
         $this->db->where('acs_profile.prof_id', $id);
         // $this->db->limit(20);
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    public function getAllCustomerByCustomerGroupIdAndCompanyId($customer_group_id, $cid)
+    {
+        $this->db->from('acs_profile');
+        $this->db->select('*');        
+        $this->db->where('customer_group_id', $customer_group_id);
+        $this->db->where('company_id', $cid);
         $query = $this->db->get();
 
         return $query->result();
@@ -749,7 +787,7 @@ class Customer_advance_model extends MY_Model
     public function get_all_active_subscription_by_company_id($company_id = 0)
     {
         $today = date('m/d/Y');
-        $this->db->select('acs_billing.*, acs_profile.first_name, acs_profile.last_name, acs_profile.company_id, acs_profile.mail_add, acs_profile.city, acs_profile.state, acs_profile.zip_code, acs_profile_phone_m, acs_profile.email');
+        $this->db->select('acs_billing.*, acs_profile.first_name, acs_profile.last_name, acs_profile.company_id, acs_profile.mail_add, acs_profile.city, acs_profile.state, acs_profile.zip_code, acs_profile.phone_m, acs_profile.email');
         $this->db->from('acs_billing');
         $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $company_id);
@@ -762,7 +800,7 @@ class Customer_advance_model extends MY_Model
     public function get_all_completed_subscription_by_company_id($company_id = 0)
     {
         $today = date('m/d/Y');
-        $this->db->select('acs_billing.*, acs_profile.first_name, acs_profile.last_name, acs_profile.company_id');
+        $this->db->select('acs_billing.*, acs_profile.first_name, acs_profile.last_name, acs_profile.company_id, acs_profile.mail_add, acs_profile.city, acs_profile.state, acs_profile.zip_code, acs_profile.phone_m, acs_profile.email');
         $this->db->from('acs_billing');
         $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $company_id);
