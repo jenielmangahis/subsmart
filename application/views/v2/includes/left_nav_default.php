@@ -389,7 +389,7 @@ echo 'active';
     </ul>
 </li>
 <li>
-    <a href="<?php echo base_url('vault_v2/beforeafter'); ?>">
+    <a href="<?php echo base_url('before_after_photos'); ?>">
         <i class='bx bx-fw bx-camera'></i> Photo Gallery
     </a>
     <ul>
