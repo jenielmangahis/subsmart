@@ -1765,4 +1765,6 @@ $route['trac360/_create_user_geolocation_features'] = 'Trac360/ajax_create_user_
 $route['before_after_photos'] = 'Before_after_v2/index';
 $route['before_after_photos/add_photos'] = 'Before_after_v2/addPhoto';
 $route['before_after_photos/_create_photos'] = 'Before_after_v2/ajax_create_photos';
+$route['before_after_photos/_delete_photos'] = 'Before_after_v2/ajax_delete_photos';
+$route['before_after_photos/edit/(:num)'] = 'Before_after_v2/editPhoto';
 
