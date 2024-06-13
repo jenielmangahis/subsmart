@@ -135,9 +135,7 @@
                                                     <label for="sort-desc" class="form-check-label">Descending order</label>
                                                 </div>
                                             </ul>
-                                            <button type="button" class="nsm-button">
-                                                <span>Add notes</span>
-                                            </button>
+                                            <button class="nsm-button addNotes">Add Notes</button>
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6 grid-mb text-end">
@@ -337,7 +335,7 @@
                                                                             <td></td>
                                                                             <td></td>
                                                                             <td></td>
-                                                                            <td style="width: 7.8rem;">1,081,409.39</td>
+                                                                            <td>1,081,409.39</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>06/01/2022</td>
@@ -347,8 +345,8 @@
                                                                             <td></td>
                                                                             <td>QuickBooks Payment Fees-1</td>
                                                                             <td></td>
-                                                                            <td style="width: 5rem;">$19.95</td>
-                                                                            <td style="width: 8.8rem;">-19.95</td>
+                                                                            <td>$19.95</td>
+                                                                            <td>-19.95</td>
                                                                             <td>1,081,389.44</td>
                                                                         </tr>
                                                                         <tr>
@@ -358,7 +356,7 @@
                                                                             <td></td>
                                                                             <td></td>
                                                                             <td>-Split-</td>
-                                                                            <td style="width: 5.3rem;">$1,167.62</td>
+                                                                            <td>$1,167.62</td>
                                                                             <td></td>
                                                                             <td>1,167.62</td>
                                                                             <td>1,082,557.06</td>
@@ -376,8 +374,8 @@
                                                             <td></td>
                                                             <td></td>
                                                             <td></td>
-                                                            <td style="width: 8.8rem;">$22,544.77</td>
-                                                            <td style="width: 8.3rem;">$1,404,676.97</td>
+                                                            <td>$22,544.77</td>
+                                                            <td>$1,404,676.97</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -426,8 +424,8 @@
                                                                             <td></td>
                                                                             <td></td>
                                                                             <td></td>
-                                                                            <td style="width: 8.8rem">$10,000.00</td>
-                                                                            <td style="width: 7.8rem;">$15,000.00</td>
+                                                                            <td>$10,000.00</td>
+                                                                            <td>$15,000.00</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>Short-term Loans</td>
@@ -466,8 +464,8 @@
                                                             <td></td>
                                                             <td></td>
                                                             <td></td>
-                                                            <td style="width: 8.8rem;">$1,922,289.76</td>
-                                                            <td style="width: 8.3rem;">$1,404,676.97</td>
+                                                            <td>$1,922,289.76</td>
+                                                            <td>$1,404,676.97</td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -475,7 +473,31 @@
                                         </tr>
                                     </tbody>
                                 </table>
-
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-lg-12">
+                                    <span id="notesContent" class="text-muted">Loading Notes...</span>
+                                    <form id="addNotesForm" method="POST" style="display: none;">
+                                        <div class="row">
+                                            <div class="col-sm-12 mt-1 mb-3">
+                                                <div class="form-group">
+                                                    <textarea id="NOTES" class="form-control" maxlength="4000"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="float-start noteCharMax">
+                                                    4000 characters max
+                                                </div>
+                                                <div class="float-end">
+                                                    <button type="button" id="cancelNotes" class="nsm-button">Cancel</button>
+                                                    <button type="submit" class="nsm-button primary noteSaveButton">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                             <div class="nsm-card-footer text-center">
                                 <p class="m-0">Accrual basis <?= date("l, F j, Y h:i A eP") ?></p>
@@ -489,6 +511,7 @@
 </div>
 
 <?php include viewPath('v2/includes/footer'); ?>
+<?php include viewPath('accounting/reports/reports_assets/balance_sheet_details_js'); ?>
 
 <script>
     var isCollapsed = true;

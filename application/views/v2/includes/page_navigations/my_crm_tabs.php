@@ -30,6 +30,12 @@
                 <span>Support</span>
             </a>
         </li>
+        <li class="<?php if($page->title == 'Account Summary'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?php echo base_url('mycrm/account_summary') ?>">
+                <i class='bx bx-fw bx-book-content'></i>
+                <span>Account Summary</span>
+            </a>
+        </li>
         <!-- Do not remove the last li -->
         <li><label></label></li>
     </ul>

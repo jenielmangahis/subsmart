@@ -249,9 +249,7 @@
                                                     <label for="sort-desc" class="form-check-label">Total in descending order</label>
                                                 </div>
                                             </ul>
-                                            <button type="button" class="nsm-button">
-                                                <span>Add notes</span>
-                                            </button>
+                                            <button class="nsm-button addNotes">Add Notes</button>
                                             <button type="button" class="nsm-button" id="editButton">
                                                 <span>Edit Title</span>
                                             </button>
@@ -288,6 +286,7 @@
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
+                                        <input type="hidden" id="client_id" name="client_id" value="<?= $clients->id ?>">
                                         <h4 class="text-center fw-bold"><span class="company-name"><?= $clients->business_name ?></span></h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
@@ -330,15 +329,15 @@
                                                                             <td>&emsp;&emsp;&emsp;Checking</td>
                                                                             <td>$305,061.93</td>
                                                                         </tr>
-                                                                        <tr id="bankAccounts" class="collapse">
+                                                                        <tr data-bs-toggle="collapse" data-bs-target="#testBank" class="clickable collapse-row collapsed">
                                                                             <td>&emsp;&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Test Bank (Cash on hand)</td>
                                                                             <td>$990.77</td>
                                                                         </tr>
-                                                                        <tr id="bankAccounts" class="collapse">
+                                                                        <tr id="testBank" class="collapse">
                                                                             <td>&emsp;&emsp;&emsp;&emsp;Sub-bank (Cash on hand)</td>
                                                                             <td>$990.00</td>
                                                                         </tr>
-                                                                        <tr id="bankAccounts" class="collapse">
+                                                                        <tr id="testBank" class="collapse">
                                                                             <td>&emsp;&emsp;&emsp;&emsp;<b>Total Test Bank (Cash on hand)</b></td>
                                                                             <td><b>$1,980.77</b></td>
                                                                         </tr>
@@ -549,6 +548,31 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-lg-12">
+                                    <span id="notesContent" class="text-muted">Loading Notes...</span>
+                                    <form id="addNotesForm" method="POST" style="display: none;">
+                                        <div class="row">
+                                            <div class="col-sm-12 mt-1 mb-3">
+                                                <div class="form-group">
+                                                    <textarea id="NOTES" class="form-control" maxlength="4000"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="float-start noteCharMax">
+                                                    4000 characters max
+                                                </div>
+                                                <div class="float-end">
+                                                    <button type="button" id="cancelNotes" class="nsm-button">Cancel</button>
+                                                    <button type="submit" class="nsm-button primary noteSaveButton">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                             <div class="nsm-card-footer text-center">
                                 <p class="m-0">Accrual basis <?= date("l, F j, Y h:i A eP") ?></p>

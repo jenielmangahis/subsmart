@@ -50,6 +50,18 @@ class Business_model extends MY_Model
         return $query;
     }
 
+    // Balance Sheet Summary 4
+    public function update_clients_name($business_name, $clientId)
+    {
+        $data = [
+            'business_name' => strtoupper($business_name)
+        ];
+
+        $this->db->where('id', $clientId); 
+        return $this->db->update('clients', $data);
+    }
+
+    // Balance Sheet 5
     public function update_business_name($business_name)
     {
         $data = [
