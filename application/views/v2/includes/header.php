@@ -882,8 +882,6 @@ if (is_null($image)) {
         $('.chatBotMessenger').fadeIn();
     });
 
-    // ===============
-
     var BASE_URL = window.origin;
     // Custom Function ===============
     function formDisabler(selector, state) {

@@ -106,31 +106,20 @@
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
+
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <h3 class="page-title left" style="font-family: Sarabun, sans-serif !important;font-size: 1.75rem !important;font-weight: 600 !important;">Payroll Tax Center</h3>
-                                </div>
-                                <div class="col-md-12">
-                                    <div style="background-color:#fdeac3; width:100%;padding:.5%;margin-bottom:5px;margin-top:20px;">
-                                        Go to Taxes and select Payroll Tax.<br>
-                                        Select Pay Taxes.<br>
-                                        Select Create payment on the tax you want to pay.<br>
-                                        Select E-pay.<br>
-                                        Always choose Earliest as it's the recommended date to pay taxes, then select Approve. ...<br>
-                                        An e-payment confirmation window appears, select Done.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                
+                            Go to Taxes and select Payroll Tax.<br>
+                            Select Pay Taxes.<br>
+                            Select Create payment on the tax you want to pay.<br>
+                            Select E-pay.<br>
+                            Always choose Earliest as it's the recommended date to pay taxes, then select Approve. ...<br>
+                            An e-payment confirmation window appears, select Done.
                         </div>
                     </div>
-                </div>
+                </div>              
 
                 <div class="payrollTax__title payrollTax__title--sm"><h4>Upcoming tax payments</h4></div>
 

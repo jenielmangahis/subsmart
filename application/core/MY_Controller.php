@@ -20,6 +20,7 @@ class MY_Controller extends CI_Controller {
 		}
 		
 		$this->setNewtimezone();
+		$this->companyLeftNavMenuSetting();
 
 		//date_default_timezone_set( setting('timezone') );
 
@@ -67,6 +68,15 @@ class MY_Controller extends CI_Controller {
 
 	public function gtMyIpGlobal(){
 		return $ipaddress = $this->timesheet_model->gtMyIpGlobal();
+	}
+
+	public function companyLeftNavMenuSetting(){
+		$this->load->model('CompanyMenuSetting_model');
+
+		$cid = logged('company_id');
+		$companyMenuSettings  = $this->CompanyMenuSetting_model->getAllEnabledByCompanyId($cid);
+		
+		$this->page_data['hdr_menu_settings'] = $companyMenuSettings;
 	}
 	
 	public function setNewtimezone() {

@@ -161,7 +161,7 @@ class Dashboard extends Widgets
 
         add_footer_js([
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-            //'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',            
+            // 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
             'assets/js/v2/bootstrap-datetimepicker.v2.min.js',
             'assets/plugins/timeline_calendar/main.js',
             'assets/frontend/js/workcalender/workcalender.js',
@@ -419,7 +419,10 @@ class Dashboard extends Widgets
         $totalCount = count($categories) + count($items);
 
         if ($totalCount > 1) {
-            $category = '-Split-';
+            $category = [
+                'id' => null,
+                'name' => '-Split-',
+            ];
         } else {
             if ($totalCount === 1) {
                 if (count($categories) === 1 && count($items) === 0) {
@@ -533,6 +536,7 @@ class Dashboard extends Widgets
                 ];
             }
         }
+
 
         $groupedTransactions = [];
 
@@ -879,8 +883,8 @@ class Dashboard extends Widgets
                         'user_docfile.unique_key <>' => '',
                         'user_docfile.company_id >' => 0,
                         'DATE(user_docfile.created_at)  >=' => date('Y-m-d', strtotime($date_from)),
-                        'DATE(user_docfile.created_at)  <=' => date('Y-m-d', strtotime($date_to)),],
-                        
+                        'DATE(user_docfile.created_at)  <=' => date('Y-m-d', strtotime($date_to)), ],
+
                     'join' => [
                         [
                             'table' => 'acs_profile',

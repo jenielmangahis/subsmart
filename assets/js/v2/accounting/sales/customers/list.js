@@ -25,6 +25,29 @@ $('#customers-table thead .select-all').on('change', function() {
     $('#customers-table tbody tr:visible .select-one').prop('checked', $(this).prop('checked')).trigger('change');
 });
 
+$('#new-payment').on('click', function() {
+    var customer_id = $(this).attr('data-id');
+    var customer_name = $(this).attr('data-name');
+    $.get(base_url + 'accounting/get-other-modals/receive_payment_modal', function(res) {
+        if ($('div#modal-container').length > 0) {
+            $('div#modal-container').html(res);
+        } else {
+            $('body').append(`
+                <div id="modal-container"> 
+                    ${res}
+                </div>
+            `);
+        }
+
+        $('#receivePaymentModal #customer').html(`<option value="${customer_id}">${customer_name}</option>`).trigger('change');
+
+        modalName = '#receivePaymentModal';
+        initModalFields('receivePaymentModal');
+
+        $('#receivePaymentModal').modal('show');
+    });
+});
+
 $(document).on('change', '#customers-table tbody tr:visible .select-one', function() {
     var checked = $('#customers-table tbody tr:visible input.select-one:checked');
     var totalrows = $('#customers-table tbody tr:visible input.select-one').length;

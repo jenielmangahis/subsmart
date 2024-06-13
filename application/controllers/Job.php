@@ -4711,6 +4711,10 @@ class Job extends MY_Controller
             if ($input['employee6_id'] > 0) {
                 createCronAutoSmsNotification($comp_id, $jobs_id, 'job', 'Scheduled', 0, $input['employee6_id'], 0);
             }
+
+            //Activity Logs
+            $activity_name = 'Created Caledar Schedule ' . $job_number; 
+            createActivityLog($activity_name);
         }
 
         $json_data = ['is_success' => $is_valid, 'msg' => $msg];
