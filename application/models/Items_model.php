@@ -410,14 +410,13 @@ class Items_model extends MY_Model
 
     public function getLocationByItemId($id)
     {
-        $COMPANY_ID = logged('company_id');
-        $role_id = intval(logged('role'));
+        $cid = logged('company_id');
+
         $this->db->select('*');
         $this->db->from($this->table_has_location);
         $this->db->where('item_id', $id);
-        if ($role_id !== 1 && $role_id !== 2) {
-            $this->db->where('company_id', $COMPANY_ID);
-        }
+        $this->db->where('company_id', $cid);
+        $this->db->where('location_name !=', '');
         $query = $this->db->get();
         return $query->result_array();
     }
