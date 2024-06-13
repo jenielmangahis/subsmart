@@ -3014,4 +3014,82 @@ class Vendors extends MY_Controller
 
         echo json_encode($json_data);
     }
+
+    public function ajax_save_vendor()
+    {
+        $is_success = 0;
+        $msg = 'Cannot create data';
+        $vendor_id = 0;
+        $vendor_name = '';
+
+        $new_data = array(
+            'company_id' =>logged('company_id'),
+            'title' => $this->input->post('title'),
+            'f_name' => $this->input->post('f_name'),
+            'm_name' => $this->input->post('m_name'),
+            'l_name' => $this->input->post('l_name'),
+            'suffix' => $this->input->post('suffix'),
+            'email' => $this->input->post('email'),
+            'company' => $this->input->post('company'),
+            'display_name' => $this->input->post('display_name'),
+            'to_display' => $this->input->post('use_display_name'),
+            'print_on_check_name' => $this->input->post('use_display_name') === "1" ? $this->input->post('display_name') : $this->input->post('print_on_check_name'),
+            'street' => $this->input->post('street'),
+            'city' => $this->input->post('city'),
+            'state' => $this->input->post('state'),
+            'zip' => $this->input->post('zip'),
+            'country' => $this->input->post('country'),
+            'phone' => $this->input->post('phone'),
+            'mobile' => $this->input->post('mobile'),
+            'fax' => $this->input->post('fax'),
+            'website' => $this->input->post('website'),
+            'billing_rate' => $this->input->post('billing_rate'),
+            'terms' => $this->input->post('terms'),
+            'opening_balance' => $this->input->post('opening_balance'),
+            'opening_balance_as_of_date' => date("Y-m-d", strtotime($this->input->post('opening_balance_as_of_date'))),
+            'account_number' => $this->input->post('account_number'),
+            'tax_id' => $this->input->post('tax_id'),
+            'default_expense_account' => $this->input->post('default_expense_account'),
+            'notes' => $this->input->post('notes'),
+            'status' => 1,
+            'created_by' => logged('id')
+        );
+
+        $addQuery = $this->vendors_model->createVendor($new_data);
+
+        if ($addQuery > 0) {
+            $attachments = $this->input->post('attachments');
+            if (isset($attachments) && is_array($attachments)) {
+                $order = 1;
+                foreach ($attachments as $attachmentId) {
+                    $linkAttachmentData = [
+                        'type' => 'Vendor',
+                        'attachment_id' => $attachmentId,
+                        //'linked_id' => $vendorId,
+                        'linked_id' => $addQuery,
+                        'order_no' => $order
+                    ];
+
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+
+                    $order++;
+                }
+            }
+
+            $is_success = 1;
+            $msg = '';
+
+            $vendor_id = $addQuery;
+            $vendor_name = $this->input->post('f_name') . ' ' . $this->input->post('l_name');
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+            'vendor_id' => $vendor_id,
+            'vendor_name' => $vendor_name
+        ];
+
+        echo json_encode($return);
+    }
 }
