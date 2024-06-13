@@ -1911,6 +1911,10 @@ class Tickets extends MY_Controller
                 'logs' => "$getUserInfo->FName $getUserInfo->LName created a service ticket with you. <a href='#' onclick='window.open(`".base_url('tickets/viewDetails/').$addQuery."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>".$this->input->post('ticket_no')."</a>"
             );
             $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogsRecording);
+
+            //Activity Logs
+            $activity_name = 'Created Caledar Schedule ' . $this->input->post('ticket_no'); 
+            createActivityLog($activity_name);
         }
 
         $json_data = ['is_success' => $is_valid, 'msg' => $msg, 'job_id' => $jobs_id];
