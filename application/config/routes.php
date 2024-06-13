@@ -747,6 +747,7 @@ $route['accounting/vendors/get-import-data']['post'] = 'accounting_controllers/v
 $route['accounting/vendors/import-vendors-data']['post'] = 'accounting_controllers/vendors/import_vendors_data';
 $route['accounting/vendor/_bill_mark_paid']['post'] = 'accounting_controllers/vendors/ajax_bill_mark_paid';
 $route['accounting/vendors/export_transactions/(:any)'] = 'accounting_controllers/vendors/export_transactions/$1';
+$route['accounting/vendors/_save_vendor'] = 'accounting_controllers/vendors/ajax_save_vendor';
 
 $route['accounting/expenses'] = 'accounting_controllers/expenses/index';
 $route['accounting/expenses/get-expense-transactions']['post'] = 'accounting_controllers/expenses/get_expense_transactions';
@@ -1766,5 +1767,6 @@ $route['before_after_photos'] = 'Before_after_v2/index';
 $route['before_after_photos/add_photos'] = 'Before_after_v2/addPhoto';
 $route['before_after_photos/_create_photos'] = 'Before_after_v2/ajax_create_photos';
 $route['before_after_photos/_delete_photos'] = 'Before_after_v2/ajax_delete_photos';
-$route['before_after_photos/edit/(:num)'] = 'Before_after_v2/editPhoto';
+$route['before_after_photos/edit/(:num)'] = 'Before_after_v2/editPhoto/$1';
+$route['before_after_photos/_update_photos'] = 'Before_after_v2/ajax_update_photos';
 
