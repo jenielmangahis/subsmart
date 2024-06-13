@@ -1247,6 +1247,9 @@ $route['events/save_event_tag'] = 'Events/create_new_event_tag';
 $route['events/edit_event_tags/(:any)'] = 'Events/edit_event_tags/$1';
 $route['events/update_event_tag'] = 'Events/update_event_tag';
 
+// Event Settings
+$route['events/_update_settings'] = 'Events/ajax_update_settings';
+
 // Job Tags
 $route['job/add_new_job_tag'] = 'Job/add_new_job_tag';
 $route['job/save_job_tag'] = 'Job/create_new_job_tag';
