@@ -391,45 +391,46 @@ $("#credit-notes-table .void-credit-memo").on("click", function (e) {
         });
       }
     });
-  });
+});
 
-  $("#credit-notes-table .send-credit-memo").on("click", function (e) {
-    e.preventDefault();
-    var refnumIndex = $(
-      '#credit-notes-table thead tr td[data-name="No."]'
-    ).index();
-    var emailIndex = $(
-      '#credit-notes-table thead tr td[data-name="Email"]'
-    ).index();
-    var customerIndex = $(
-      '#credit-notes-table thead tr td[data-name="Customer"]'
-    ).index();
-  
-    var row = $(this).closest("tr");
-    var ref_no = $(row.find("td")[refnumIndex]).text().trim();
-    var id = row.find(".select-one").val();
-    var email = $(row.find("td")[emailIndex]).text().trim();
-    var customerName = $(row.find("td")[customerIndex]).text().trim();
-    var companyName = '';
-  
-    $("#send-transaction-email span.modal-title").html(
-      "Send email for " + ref_no
-    );
-    $("#send-transaction-email #email-to").val(email);
-    $("#send-transaction-email #email-subject").val(
-      `Credit Memo #${ref_no} from ${companyName}`
-    );
-    $("#send-transaction-email #email-message").val(`Dear ${customerName.trim()},
-  
-  Your credit memo is attached.  We have reduced your account balance by the amount shown on the credit memo.
-  
-  Have a great day!
-  ${companyName}`);
-  
-    $("#send-transaction-email #send-transaction-form").attr(
-      "action",
-      `${base_url}accounting/customers/send-transaction/credit-memo/${id}`
-    );
-    $("#send-transaction-email #send-transaction-form").attr("method", `post`);
-    $("#send-transaction-email").modal("show");
-  });
+$("#credit-notes-table .send-credit-memo").on("click", function (e) {
+e.preventDefault();
+var refnumIndex = $(
+    '#credit-notes-table thead tr td[data-name="No."]'
+).index();
+var emailIndex = $(
+    '#credit-notes-table thead tr td[data-name="Email"]'
+).index();
+var customerIndex = $(
+    '#credit-notes-table thead tr td[data-name="Customer"]'
+).index();
+
+var row = $(this).closest("tr");
+var ref_no = $(row.find("td")[refnumIndex]).text().trim();
+var id = row.find(".select-one").val();
+var email = $(row.find("td")[emailIndex]).text().trim();
+var customerName = $(row.find("td")[customerIndex]).text().trim();
+var companyName = '';
+
+$("#send-transaction-email span.modal-title").html(
+    "Send email for " + ref_no
+);
+$("#send-transaction-email #email-to").val(email);
+$("#send-transaction-email #email-subject").val(
+    `Credit Memo #${ref_no} from ${companyName}`
+);
+$("#send-transaction-email #email-message").val(`Dear ${customerName.trim()},
+
+Your credit memo is attached.  We have reduced your account balance by the amount shown on the credit memo.
+
+Have a great day!
+${companyName}`);
+
+$("#send-transaction-email #send-transaction-form").attr(
+    "action",
+    `${base_url}accounting/customers/send-transaction/credit-memo/${id}`
+);
+$("#send-transaction-email #send-transaction-form").attr("method", `post`);
+$("#send-transaction-email").modal("show");
+});
+
