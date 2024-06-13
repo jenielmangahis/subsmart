@@ -209,7 +209,7 @@
                                 <div class="row">
                                     <div class="col-12 col-md-6 grid-mb">
                                         <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button">
+                                            <button type="button" class="nsm-button" id="collapseButton">
                                                 <span>Collapse</span>
                                             </button>
                                             <button type="button" class="nsm-button" data-bs-toggle="dropdown">
@@ -233,7 +233,7 @@
                                                 <span>Add notes</span>
                                             </button>
                                             <button type="button" class="nsm-button">
-                                                <span>Edit titles</span>
+                                                <span>Edit title</span>
                                             </button>
                                         </div>
                                     </div>
@@ -449,3 +449,33 @@
 </div>
 
 <?php include viewPath('v2/includes/footer'); ?>
+<script>
+$(function(){
+    var isCollapsed = true;
+
+    $("#collapseButton").click(function() {
+        if (isCollapsed) {
+            $(".collapse").collapse('show');
+            $("#collapseButton span").text('Uncollapse');
+            updateCarets('show');
+        } else {
+            $(".collapse").collapse('hide');
+            $("#collapseButton span").text('Collapse');
+            updateCarets('hide');
+        }
+        isCollapsed = !isCollapsed;
+    });
+
+    function updateCarets(action) {
+        $(".collapse-row").each(function() {
+            var target = $(this).data("bs-target");
+            var icon = $(this).find("i");
+            if (action === 'show') {
+                icon.removeClass("bx-caret-right").addClass("bx-caret-down");
+            } else {
+                icon.removeClass("bx-caret-down").addClass("bx-caret-right");
+            }
+        });
+    }
+});
+</script>
