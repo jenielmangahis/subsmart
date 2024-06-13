@@ -276,6 +276,9 @@
         display:inline-block;
         margin-right:5px;
     }
+    .hidden{
+        display:none;
+    }
 </style>
 
 <div class="row page-content g-0">

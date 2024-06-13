@@ -2,18 +2,21 @@
 <?php include viewPath('v2/includes/accounting/view_customer_modals'); ?>
 
 <style>
-    .notes-container {
-        border-radius: 5px;
-        border: 1px solid transparent;
-    }
-    .notes-container:hover {
-        border-color: #dee2e6;
-    }
-    #spinner {
+.notes-container {
+    border-radius: 5px;
+    border: 1px solid transparent;
+}
+.notes-container:hover {
+    border-color: #dee2e6;
+}
+#spinner {
     position: fixed;
     top: 10%; 
     right:50%;
     display: none;
+}
+.hidden{
+    display:none;
 }
 </style>
 
@@ -81,7 +84,7 @@
                                                     <a href="#" class="dropdown-item" id="new-bundle-estimate">Bundle Estimate</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" class="dropdown-item" id="new-payment-link">Payment Link</a>
+                                                    <a href="#" class="dropdown-item hidden" id="new-payment-link">Payment Link</a>
                                                 </li>
                                                 <li>
                                                     <a href="#" class="dropdown-item" id="new-sales-receipt">Sales Receipt</a>
