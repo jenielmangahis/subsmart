@@ -313,15 +313,15 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
+                                        <tr data-bs-toggle="collapse" data-bs-target="#accordion" class="clickable collapse-row collapsed">
                                             <td><i class="bx bx-fw bx-caret-right"></i> INCOME</td>
                                             <td>$571,265.66</td>
                                         </tr>
-                                        <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion">
+                                        <tr data-bs-toggle="collapse" data-bs-target="#accordion1" class="clickable collapse-row collapse" id="accordion">
                                             <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Current Assets</td>
                                             <td></td>
                                         </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion2">
+                                        <tr id="accordion1" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion2">
                                             <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Bank Accounts</td>
                                             <td></td>
                                         </tr>
@@ -329,7 +329,7 @@
                                             <td>&emsp;&emsp;&emsp;Checking</td>
                                             <td>305,061.93</td>
                                         </tr>
-                                        <tr id="accordion2" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion3">
+                                        <tr id="accordion2" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion3">
                                             <td>&emsp;&emsp;&emsp;<i class="bx bx-fw bx-caret-right"> Test Bank (Cash on hand)</td>
                                             <td>990.77</td>
                                         </tr>
@@ -349,7 +349,7 @@
                                             <td>&emsp;&emsp;&emsp;<b>Total Bank Accounts</b></td>
                                             <td><b>$307,052.70</b></td>
                                         </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion4">
+                                        <tr id="accordion1" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion4">
                                             <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Accounts Receivable</td>
                                             <td></td>
                                         </tr>
@@ -361,7 +361,7 @@
                                             <td>&emsp;&emsp;&emsp;<b>Total Accounts Receivable</b></td>
                                             <td><b>$205,324.93</b></td>
                                         </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion5">
+                                        <tr id="accordion1" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion5">
                                             <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Other Current Assets</td>
                                             <td></td>
                                         </tr>
@@ -397,7 +397,7 @@
                                             <td>&emsp;&emsp;<b>Total Current Assets</b></td>
                                             <td><b>$564,732.95</b></td>
                                         </tr>
-                                        <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion6">
+                                        <tr data-bs-toggle="collapse" data-bs-target="#accordion1" class="clickable collapse-row collapse" id="accordion6">
                                             <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Fixed Assets</td>
                                             <td></td>
                                         </tr>
