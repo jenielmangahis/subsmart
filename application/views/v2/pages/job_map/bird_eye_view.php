@@ -362,15 +362,15 @@ $(function(){
                 $('#loading_modal').modal('hide');           
                 if (data.is_success) {
                     Swal.fire({
-                            text: "Map settings was successfully updated",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            //if (result.value) {
-                              location.reload();  
-                            //}
-                        });
+                        text: "Map settings was successfully updated",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            location.reload();  
+                        //}
+                    });
                 }else{
                     Swal.fire({
                         title: 'Error',

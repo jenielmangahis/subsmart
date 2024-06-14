@@ -44,13 +44,13 @@ echo 'active';
                 <i class='bx bx-fw bx-paper-plane'></i> Sent
             </a>
         </li>
-        <li class="<?php if ($page->title == 'Support') {
+        <!-- <li class="<?php if ($page->title == 'Support') {
             echo 'selected';
         } ?>">
             <a href="#">
                 <i class='bx bx-fw bx-support'></i> Support
             </a>
-        </li>
+        </li> -->
 
         <?php if (logged('user_type') == 1 || isAdminBypass()) { ?>
             <li class="btn-admin-switch">
@@ -525,11 +525,11 @@ echo 'active';
                 <i class='bx bx-fw bx-mobile-alt'></i> Mobile Tools
             </a>
         </li>
-        <li>
+        <!-- <li>
             <a href="<?php echo base_url('trac360'); ?>">
                 <i class='bx bx-fw bx-navigation'></i> Trac 360
             </a>
-        </li>
+        </li> -->
     </ul>
 </li>
 <li class="<?php if ($page->title == 'Company') {

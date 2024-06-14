@@ -414,6 +414,13 @@
         });
     });
 
+    // Date picker
+    var currentDate = new Date().toISOString().split('T')[0];
+
+    document.getElementById('filter-date-from').value = currentDate;
+    document.getElementById('filter-date-to').value = currentDate;
+    document.getElementById('filter-date').value = currentDate;
+
     // Email Subject
     document.addEventListener('DOMContentLoaded', function() {
         const businessName = '<?php echo $companyInfo ? strtoupper($companyInfo->business_name) : ''; ?>: ';

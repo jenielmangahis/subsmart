@@ -390,6 +390,12 @@ class Widgets extends MY_Controller
                     'select' => 'id,status',
                 ];
                 $data['estimate_draft'] = $this->general->get_data_with_param($estimate_draft_query);
+                $collection_query = [
+                    'where' => ['company_id' => logged('company_id'), 'status =' => 'Collections'],
+                    'table' => 'acs_profile',
+                    'select' => 'COUNT(*) as total',
+                ];
+                $data['collection'] = $this->general->get_data_with_param($collection_query);
                 if ($widget->w_name === 'Expense') {
                     $data = set_expense_graph_data($data);
                 }

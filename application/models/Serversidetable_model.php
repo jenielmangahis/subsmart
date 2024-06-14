@@ -9,7 +9,8 @@ class Serversidetable_model extends MY_Model {
     private $order;
     private $where; // Added $where property
 
-    public function initializeTable($table, $column_order = array(), $column_search = array(), $order, $where = array()) {
+    public function initializeTable($table, $column_order = array(), $column_search = array(), $order, $where = array()) 
+    {
         $this->table = $table;
         $this->column_order = $column_order;
         $this->column_search = $column_search;
@@ -21,7 +22,8 @@ class Serversidetable_model extends MY_Model {
      * Fetch members data from the database
      * @param $_POST filter data based on the posted parameters
      */
-    public function getRows($postData){
+    public function getRows($postData)
+    {
         $this->_get_datatables_query($postData);
         if($postData['length'] != -1){
             $this->db->limit($postData['length'], $postData['start']);
@@ -33,7 +35,8 @@ class Serversidetable_model extends MY_Model {
     /*
      * Count all records
      */
-    public function countAll(){
+    public function countAll()
+    {
         $this->db->from($this->table);
         return $this->db->count_all_results();
     }
@@ -42,7 +45,8 @@ class Serversidetable_model extends MY_Model {
      * Count records based on the filter params
      * @param $_POST filter data based on the posted parameters
      */
-    public function countFiltered($postData){
+    public function countFiltered($postData)
+    {
         $this->_get_datatables_query($postData);
         $query = $this->db->get();
         return $query->num_rows();
@@ -52,7 +56,8 @@ class Serversidetable_model extends MY_Model {
      * Perform the SQL queries needed for a server-side processing request
      * @param $_POST filter data based on the posted parameters
      */
-    private function _get_datatables_query($postData){
+    private function _get_datatables_query($postData)
+    {
         $this->db->from($this->table);
 
         // Apply the where condition if it is set
@@ -81,6 +86,13 @@ class Serversidetable_model extends MY_Model {
                 }
             }
             $i++;
+        }
+
+        // Apply column-specific search
+        foreach ($postData['columns'] as $colIndex => $col) {
+            if (!empty($col['search']['value'])) {
+                $this->db->like($this->column_order[$colIndex], $col['search']['value']);
+            }
         }
          
         if(isset($postData['order'])){
