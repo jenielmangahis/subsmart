@@ -123,6 +123,13 @@ class Customer extends MY_Controller
             'where' => ['fk_comp_id' => $company_id],
         ];
 
+        $getRatePlanData = [
+            'select' => '*',
+            'table' => 'ac_rateplan',
+            'where' => ['company_id' => $company_id],
+        ];
+
+        $this->page_data['rate_plan'] = $this->general->get_data_with_param($getRatePlanData);
         $this->page_data['customer_status'] = $this->general->get_data_with_param($getCustomerStatus);
         $this->page_data['customer_group'] = $this->general->get_data_with_param($getCustomerGroup);
         $this->page_data['sales_area'] = $this->general->get_data_with_param($getSalesArea);
@@ -1113,8 +1120,8 @@ class Customer extends MY_Controller
         // Initialize Table Information
         $initializeTable = $this->serverside_table->initializeTable(
             "customer_list_view", 
-            array('customer_name', 'customer_business_name', 'profile_first_name', 'profile_last_name', 'profile_middle_name', 'profile_business_name', 'profile_status', 'profile_customer_type', 'profile_prefix', 'profile_suffix', 'profile_country', 'profile_mail_add', 'profile_city', 'profile_county', 'profile_state', 'profile_zip_code', 'profile_cross_street', 'profile_subdivision', 'profile_ssn', 'profile_date_of_birth', 'profile_email', 'profile_phone_h', 'profile_phone_m'),
-            array('customer_name', 'customer_business_name', 'profile_first_name', 'profile_last_name', 'profile_middle_name', 'profile_business_name', 'profile_status', 'profile_customer_type', 'profile_prefix', 'profile_suffix', 'profile_country', 'profile_mail_add', 'profile_city', 'profile_county', 'profile_state', 'profile_zip_code', 'profile_cross_street', 'profile_subdivision', 'profile_ssn', 'profile_date_of_birth', 'profile_email', 'profile_phone_h', 'profile_phone_m'),
+            array('customer_name', 'customer_business_name', 'profile_first_name', 'profile_last_name', 'profile_middle_name', 'profile_business_name', 'profile_status', 'profile_customer_group_id', 'billing_bill_method', 'billing_mmr','profile_customer_type', 'profile_prefix', 'profile_suffix', 'profile_country', 'profile_mail_add', 'profile_city', 'profile_county', 'profile_state', 'profile_zip_code', 'profile_cross_street', 'profile_subdivision', 'profile_ssn', 'profile_date_of_birth', 'profile_email', 'profile_phone_h', 'profile_phone_m'),
+            array('customer_name', 'customer_business_name', 'profile_first_name', 'profile_last_name', 'profile_middle_name', 'profile_business_name', 'profile_status', 'profile_customer_group_id', 'billing_bill_method', 'billing_mmr', 'profile_customer_type', 'profile_prefix', 'profile_suffix', 'profile_country', 'profile_mail_add', 'profile_city', 'profile_county', 'profile_state', 'profile_zip_code', 'profile_cross_street', 'profile_subdivision', 'profile_ssn', 'profile_date_of_birth', 'profile_email', 'profile_phone_h', 'profile_phone_m'),
             null,  
             array(
                 'company_id' => $company_id,    
@@ -1127,7 +1134,8 @@ class Customer extends MY_Controller
 
         $data = $row = array();
         $i = $this->input->post('start');
-        
+
+
         foreach($getData as $getDatas){
             if ($getDatas->company_id == $company_id) {
                 // ===============

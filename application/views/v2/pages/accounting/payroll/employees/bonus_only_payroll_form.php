@@ -131,7 +131,7 @@
 <script>
   $(document).ready(function() {
     var today = new Date().toISOString().slice(0, 10);
-    $('#payDate').val(today);
+    
     $('#pay-period-start').val(today);
 
     // Calculate the date 15 days from today
@@ -140,5 +140,6 @@
     var formattedEndDate = endDate.toISOString().slice(0, 10);
 
     $('#pay-period-end').val(formattedEndDate);
+    $('#payDate').val(formattedEndDate);
 });
 </script>

@@ -22,7 +22,7 @@ foreach ($widgets as $widget) {
         }
         $isDisabled = '';
         $isNotSelected = '';
-        $onClick = "manipulateThumbnail(this,'{$widget->w_id}')";
+        $onClick = "manipulateThumbnail(this,'{$widget->w_id}','{$widget->w_view_link}')";
     } else {
         $isChecked = '';
         $isDisabled = 'disabled';

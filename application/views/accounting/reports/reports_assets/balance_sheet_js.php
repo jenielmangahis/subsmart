@@ -134,3 +134,8 @@
             });
     });
 </script>
+<style>
+    .button-group {
+        margin-top: 5px;
+    }
+</style>

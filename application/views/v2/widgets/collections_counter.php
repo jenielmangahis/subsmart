@@ -4,7 +4,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
 ?>
 
 
-<div class="<?php echo $class; ?> " data-id="<?php echo $id; ?>" id="thumbnail_<?php echo $id; ?>" draggable="true">
+<div class="<?php echo $class; ?> collection-thumbnail" data-id="<?php echo $id; ?>" id="thumbnail_<?php echo $id; ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
             <div class="nsm-card-header">
