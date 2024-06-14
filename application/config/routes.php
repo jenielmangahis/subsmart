@@ -1776,3 +1776,5 @@ $route['before_after_photos/_delete_photos'] = 'Before_after_v2/ajax_delete_phot
 $route['before_after_photos/edit/(:num)'] = 'Before_after_v2/editPhoto/$1';
 $route['before_after_photos/_update_photos'] = 'Before_after_v2/ajax_update_photos';
 
+//Files Vault
+$route['files_vault'] = 'Before_after_v2/ajax_update_photos';
