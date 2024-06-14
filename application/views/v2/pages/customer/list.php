@@ -890,11 +890,62 @@ table.dataTable thead th, table.dataTable thead td{
                     <div class="col-lg-12 mb-3">
                         <div class="container-fluid mb-3">
                             <div class="row">
-                                <div class="col-xl-12 mb-3">
-                                    <input class="searchCustomerListInput form-control" type="text" placeholder="Search and select specific customer or business to update...">
-                                    <!-- <select class="searchCustomerList" multiple="multiple">
-                                        <option value="Ali Forouzan">Ali Forouzan</option>
-                                    </select> -->
+                                <div class="col-xl-3 mb-3">
+                                    <lebel class="text-muted">Customer / Business Filter</lebel>
+                                    <input class="searchCustomerListInput form-control mt-2" type="text" placeholder="Search specific customer or business to update...">
+                                </div>
+                                <div class="col-xl-1 mb-3" style="width: 185px;">
+                                    <lebel class="text-muted">Status filter</lebel>
+                                    <select class="form-select searchStatus mt-2">
+                                        <option value="">None</option>
+                                        <?php
+                                            foreach ($customer_status as $status) {
+                                                echo "<option value='$status->name'>$status->name</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-xl-2 mb-3" style="width: 230px;">
+                                    <lebel class="text-muted">Customer Group filter</lebel>
+                                    <select class="form-select searchGroup mt-2">
+                                        <option value="">None</option>
+                                        <?php
+                                            foreach ($customer_group as $group) {
+                                                echo "<option value='$group->id'>$group->title</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-xl-2 mb-3" style="width: 230px;">
+                                    <lebel class="text-muted">Payment Type filter</lebel>
+                                    <select class="form-select searchPaymentType mt-2">
+                                        <option value="">None</option>
+                                        <option value="CC">Credit Card</option>
+                                        <option value="DC">Debit Card</option>
+                                        <option value="CHECK">Check</option>
+                                        <option value="CASH">Cash</option>
+                                        <option value="ACH">ACH</option>
+                                        <option value="VENMO">Venmo</option>
+                                        <option value="PP">Paypal</option>
+                                        <option value="SQ">Square</option>
+                                        <option value="WW">Warranty Work</option>
+                                        <option value="HOF">Home Owner Financing</option>
+                                        <option value="eT">e-Transfer</option>
+                                        <option value="Invoicing">Invoicing</option>
+                                        <option value="OCCP">Other Credit Card Processor</option>
+                                        <option value="OPT">Other Payment Type</option>
+                                    </select>
+                                </div>
+                                <div class="col-xl-2 mb-3" style="width: 230px;">
+                                    <lebel class="text-muted">Rate Plan filter</lebel>
+                                    <select class="form-select searchPlan mt-2">
+                                        <option value="">None</option>
+                                        <?php
+                                            foreach ($rate_plan as $plan) {
+                                                echo "<option value='$plan->amount'>$plan->plan_name ($$plan->amount)</option>";
+                                            }
+                                        ?>
+                                    </select>
                                 </div>
                                 <div class="col-xl-12 mb-3">
                                     <div class="table-responsive tableUpdaterDiv">
@@ -969,8 +1020,9 @@ table.dataTable thead th, table.dataTable thead td{
 <script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
 <script type="text/javascript">
     const URL_ORIGIN = window.origin;
+    var customerManagementTable
     $(document).ready(function() {
-        var customerManagementTable = $('.customerManagementTable').DataTable({
+        customerManagementTable = $('.customerManagementTable').DataTable({
             "ordering": false,
             "processing": true,
             "serverSide": true,
@@ -982,19 +1034,25 @@ table.dataTable thead th, table.dataTable thead td{
         });
         $('.batchCustomerUpdaterButton').toggle();
 
-        // $(".searchCustomerList").selectize({
-        //     plugins: ["remove_button", "clear_button"],
-        //     placeholder: "Search and select specific Customer...",
-        //     delimiter: ',',
-        //     persist: false,
-        //     create: false
-        // });
+        $('.searchStatus').change(function(e) {
+            var filterData = $(this).val();
+            customerManagementTable.columns(6).search(filterData).draw();
+        });
 
-        // $('.searchCustomerList').change(function() {
-        //     var selectedCustomers = $(this).val();
-        //     console.log("Selected customers:", selectedCustomers); // Debugging line
-        //     customerManagementTable.search(selectedCustomers ? selectedCustomers.join('|') : '', true, false).draw();
-        // });
+        $('.searchGroup').change(function(e) {
+            var filterData = $(this).val();
+            customerManagementTable.columns(7).search(filterData).draw();
+        });
+
+        $('.searchPaymentType').change(function(e) {
+            var filterData = $(this).val();
+            customerManagementTable.columns(8).search(filterData).draw();
+        });
+
+        $('.searchPlan').change(function(e) {
+            var filterData = $(this).val();
+            customerManagementTable.columns(9).search(filterData).draw();
+        });
 
         $('.searchCustomerListInput').keyup(function(e) {
             var searchInput = $(this).val();

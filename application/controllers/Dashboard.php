@@ -911,6 +911,7 @@ class Dashboard extends Widgets
         $this->load->model('widgets_model');
 
         $query = $this->widgets_model->updateListView($id, $val);
+        exit(json_encode(['status' => true]));
     }
 
     public function apiGetUnpaidInvoices()

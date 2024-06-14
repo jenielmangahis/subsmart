@@ -185,21 +185,39 @@
                                 </div>
                             </div> -->
                             <div class="row">
-                                <div class="col-md-2 mb-3">
+                                <div class="col-md-3 mb-3">
                                     <label class="mb-1 fw-xnormal">Logo</label>
                                     <select id="showHideLogo" name="showHideLogo" class="nsm-field form-select">
                                         <option value="1" selected>Show</option>
                                         <option value="0">Hide</option>
                                     </select>
                                 </div>
-                                <div class="col-md-5 mb-3">
+                                <div class="col-md-3 mb-3">
+                                    <label for="filter-date-from">From</label>
+                                    <div class="">
+                                        <input type="date" id="filter-date-from" class="form-control nsm-field date" data-type="filter-date-from">
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="filter-date-to">To</label>
+                                    <div class="">
+                                        <input type="date" id="filter-date-to" class="form-control nsm-field date" data-type="filter-date-to">
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="filter-date">Date</label>
+                                    <div class="">
+                                        <input type="date" id="filter-date" class="form-control nsm-field date" data-type="filter-date">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
                                     <label class="mb-1 fw-xnormal">Company Name</label>
                                     <div class="input-group">
                                         <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
                                         <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>" required>
                                     </div>
                                 </div>
-                                <div class="col-md-5 mb-3">
+                                <div class="col-md-6 mb-3">
                                     <label class="mb-1 fw-xnormal">Report Name</label>
                                     <div class="input-group">
                                         <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" checked></div>

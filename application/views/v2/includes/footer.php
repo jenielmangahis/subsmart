@@ -567,6 +567,18 @@ function manipulateShowGraph(dis, id) {
     }
 }
 
+function fetchGraphs(thumbnail){
+    switch(thumbnail){
+        case 'widgets/collections_counter':
+            console.log('goes here')
+            $('.collection-thumbnail').click();
+            break
+        default: 
+            return;
+    }
+}
+
+
 function updateListView(id, val) {
     $.ajax({
         url: base_url + 'dashboard/updateListView',
@@ -576,9 +588,11 @@ function updateListView(id, val) {
             val: val,
         },
         success: function(response) {
-            var data = JSON.parse(response);
-            $(`#first_content_${id}`).html(data['first']);
-            $(`#second_content_${id}`).html(data['second']);
+
+            console.log('response',response)
+            // var data = JSON.parse(response);
+            // $(`#first_content_${id}`).html(data['first']);
+            // $(`#second_content_${id}`).html(data['second']);
         }
     });
 }
@@ -1017,7 +1031,7 @@ function filterEstimateThumbnailGraph(first, second) {
 }
 
 
-function manipulateThumbnail(dis, id) {
+function manipulateThumbnail(dis, id,link) {
     var count = $('#check_count_thumbnails').val();
 
     if ($(dis).is(":checked")) {
@@ -1025,12 +1039,12 @@ function manipulateThumbnail(dis, id) {
         count++;
 
         if (count < 8) {
-            addThumbnail(id);
+            addThumbnail(id,link);
             $(dis).removeAttr('isnotselected');
 
         } else if (count == 8) {
 
-            addThumbnail(id);
+            addThumbnail(id,link);
             $(dis).removeAttr('isnotselected');
             $('.add_tumbnail_checkbox[isnotselected]').prop('disabled', true);
 
@@ -1141,7 +1155,7 @@ function fetchJobs() {
 }
 
 
-function addThumbnail(id) {
+function addThumbnail(id,link) {
     var isGlobal = $('#widgetGlobal_' + id).is(":checked") ? '1' : 0;
     var isMain = $('#widgetMain_' + id).is(":checked") ? '1' : 0;
     $("#nsm_thumbnail").append(
@@ -1170,9 +1184,8 @@ function addThumbnail(id) {
                 }, 1000);
             }
             fetchJobs();
-            fetchNewCustomer();
             fetchCollections();
-
+            fetchGraphs(link);
         }
     });
 }
