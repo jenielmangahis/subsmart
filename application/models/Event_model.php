@@ -963,4 +963,15 @@ class Event_model extends MY_Model
 
         return $query->result();
     }
+
+    public function getlastInsert($company_id){
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit(1);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
