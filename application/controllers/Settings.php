@@ -60,91 +60,21 @@ class Settings extends MY_Controller {
             $this->session->set_flashdata('alert', 'Calendar Gmail/Gsuit Account Updated Successfully');
         }
 
-        if (!empty($post)) {
-            //Calendar Settings
-            if( $settings ){
-                $calendar_settings = [
-                    'timezone' => $post['calendar_timezone'],
-                    'time_interval' => $post['calendar_time_interval'],
-                    'default_view' => $post['calendar_default_view'],
-                    'week_starts_on' => $post['calendar_week_starts_on'],
-                    'day_starts_on' => $post['calendar_day_starts_on'],
-                    'day_ends_on' => $post['calendar_day_ends_on'],
-                    'display_customer_name' => $post['calendar_display_customer_name'] ? $post['calendar_display_customer_name'] : 0,
-                    'display_job_details' => $post['calendar_display_job_details'] ? $post['calendar_display_job_details'] : 0,
-                    'display_price' => $post['calendar_display_price'] ? $post['calendar_display_price'] : 0,
-                    'display_url_link' => $post['calendar_display_url_link'] ? $post['calendar_display_url_link'] : 0,
-                    'auto_add_appointment' => $post['calendar_auto_add_appointment'] ? $post['calendar_auto_add_appointment'] : 0,
-                    'auto_add_job' => $post['calendar_auto_add_job'] ? $post['calendar_auto_add_job'] : 0,
-                    'auto_add_event' => $post['calendar_auto_add_event'] ? $post['calendar_auto_add_event'] : 0,
-                    'auto_add_ticket' => $post['calendar_auto_add_ticket'] ?  $post['calendar_auto_add_ticket'] : 0,
-                    'auto_add_tcoff' => $post['calendar_auto_add_tcoff'] ?  $post['calendar_auto_add_tcoff'] : 0,
-                    'google_calendar_email_notification' =>  $post['google_calendar_email_notification'],
-                    'google_calendar_popup_notification' => $post['google_calendar_popup_notification'],
-                    'calendar_auto_sms_notification' => $post['calendar_auto_sms_notification']                     
-                ];
-
-                $this->CalendarSettings_model->update($settings->id, $calendar_settings);
-            }else{      
-                $calendar_settings = [
-                    'company_id' => $company_id,
-                    'timezone' => $post['calendar_timezone'],
-                    'time_interval' => $post['calendar_time_interval'],
-                    'default_view' => $post['calendar_default_view'],
-                    'week_starts_on' => $post['calendar_week_starts_on'],
-                    'day_starts_on' => $post['calendar_day_starts_on'],
-                    'day_ends_on' => $post['calendar_day_ends_on'],
-                    'display_customer_name' => $post['calendar_display_customer_name'] ? $post['calendar_display_customer_name'] : 0,
-                    'display_job_details' => $post['calendar_display_job_details'] ? $post['calendar_display_job_details'] : 0,
-                    'display_price' => $post['calendar_display_price'] ? $post['calendar_display_price'] : 0,
-                    'display_url_link' => $post['calendar_display_url_link'] ? $post['calendar_display_url_link'] : 0,
-                    'auto_add_appointment' => $post['calendar_auto_add_appointment'] ? $post['calendar_auto_add_appointment'] : 0,
-                    'auto_add_job' => $post['calendar_auto_add_job'] ? $post['calendar_auto_add_job'] : 0,
-                    'auto_add_event' => $post['calendar_auto_add_event'] ? $post['calendar_auto_add_event'] : 0,
-                    'auto_add_ticket' => $post['calendar_auto_add_ticket'] ?  $post['calendar_auto_add_ticket'] : 0,
-                    'google_calendar_email_notification' =>  $post['google_calendar_email_notification'],
-                    'google_calendar_popup_notification' => $post['google_calendar_popup_notification'],
-                    'calendar_auto_sms_notification' => $post['calendar_auto_sms_notification']                                       
-                ];
-
-                $this->CalendarSettings_model->create($calendar_settings);
-            }            
-
-            //Color Settings
-            $this->ColorSettings_model->deleteAllByCompanyId($company_id);
-            foreach($post['color_name'] as $key => $value){
-                $data = [
-                    'company_id' => $company_id,
-                    'user_id' => logged('id'),
-                    'color_name' => $value,
-                    'color_code' => $post['color_code'][$key]
-                ];
-                $colorSetting = $this->ColorSettings_model->create($data);
-            }
-
-            $this->session->set_flashdata('alert', 'Calendar Settings Updated Successfully');
-            $this->session->set_flashdata('alert-type', 'success');
-
-            redirect('settings/Schedule');
-            exit();
-
-        } else {
-            $this->load->model('GoogleAccounts_model');
-            $googleAccount = $this->GoogleAccounts_model->getByCompanyId($company_id);
-            $is_glink = false;
-            if( $googleAccount ){
-                $is_glink = true;
-            }
-
-            $args = array('company_id' => $company_id);
-            $colorSettings = $this->ColorSettings_model->getByWhere($args);
-            $this->page_data['googleAccount'] = $googleAccount;
-            $this->page_data['colorSettings'] = $colorSettings;
-            $this->page_data['is_glink'] = $is_glink;
-            $this->page_data['page']->menu = 'settings';
-            // $this->load->view('settings/schedule', $this->page_data);
-            $this->load->view('v2/pages/settings/schedule', $this->page_data);
+        $this->load->model('GoogleAccounts_model');
+        $googleAccount = $this->GoogleAccounts_model->getByCompanyId($company_id);
+        $is_glink = false;
+        if( $googleAccount ){
+            $is_glink = true;
         }
+
+        $args = array('company_id' => $company_id);
+        $colorSettings = $this->ColorSettings_model->getByWhere($args);
+        $this->page_data['googleAccount'] = $googleAccount;
+        $this->page_data['colorSettings'] = $colorSettings;
+        $this->page_data['is_glink'] = $is_glink;
+        $this->page_data['page']->menu = 'settings';
+        // $this->load->view('settings/schedule', $this->page_data);
+        $this->load->view('v2/pages/settings/schedule', $this->page_data);
     }
 
     public function email_templates()
@@ -1593,6 +1523,94 @@ class Settings extends MY_Controller {
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
+    }
+
+    public function ajax_update_calendar_settings()
+    {
+        $this->load->model('CalendarSettings_model');
+        $this->load->model('ColorSettings_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+
+        $settings = $this->CalendarSettings_model->getByCompanyId($company_id);             
+        if( $settings ){
+            $calendar_settings = [
+                'timezone' => $post['calendar_timezone'],
+                'time_interval' => $post['calendar_time_interval'],
+                'default_view' => $post['calendar_default_view'],
+                'week_starts_on' => $post['calendar_week_starts_on'],
+                'day_starts_on' => $post['calendar_day_starts_on'],
+                'day_ends_on' => $post['calendar_day_ends_on'],
+                'display_customer_name' => $post['calendar_display_customer_name'] ? $post['calendar_display_customer_name'] : 0,
+                'display_job_details' => $post['calendar_display_job_details'] ? $post['calendar_display_job_details'] : 0,
+                'display_price' => $post['calendar_display_price'] ? $post['calendar_display_price'] : 0,
+                'display_url_link' => $post['calendar_display_url_link'] ? $post['calendar_display_url_link'] : 0,
+                'auto_add_appointment' => $post['calendar_auto_add_appointment'] ? $post['calendar_auto_add_appointment'] : 0,
+                'auto_add_job' => $post['calendar_auto_add_job'] ? $post['calendar_auto_add_job'] : 0,
+                'auto_add_event' => $post['calendar_auto_add_event'] ? $post['calendar_auto_add_event'] : 0,
+                'auto_add_ticket' => $post['calendar_auto_add_ticket'] ?  $post['calendar_auto_add_ticket'] : 0,
+                'auto_add_tcoff' => $post['calendar_auto_add_tcoff'] ?  $post['calendar_auto_add_tcoff'] : 0,
+                'google_calendar_email_notification' =>  $post['google_calendar_email_notification'],
+                'google_calendar_popup_notification' => $post['google_calendar_popup_notification'],
+                'calendar_auto_sms_notification' => $post['calendar_auto_sms_notification']                     
+            ];
+
+            $this->CalendarSettings_model->update($settings->id, $calendar_settings);
+        }else{      
+            $calendar_settings = [
+                'company_id' => $cid,
+                'timezone' => $post['calendar_timezone'],
+                'time_interval' => $post['calendar_time_interval'],
+                'default_view' => $post['calendar_default_view'],
+                'week_starts_on' => $post['calendar_week_starts_on'],
+                'day_starts_on' => $post['calendar_day_starts_on'],
+                'day_ends_on' => $post['calendar_day_ends_on'],
+                'display_customer_name' => $post['calendar_display_customer_name'] ? $post['calendar_display_customer_name'] : 0,
+                'display_job_details' => $post['calendar_display_job_details'] ? $post['calendar_display_job_details'] : 0,
+                'display_price' => $post['calendar_display_price'] ? $post['calendar_display_price'] : 0,
+                'display_url_link' => $post['calendar_display_url_link'] ? $post['calendar_display_url_link'] : 0,
+                'auto_add_appointment' => $post['calendar_auto_add_appointment'] ? $post['calendar_auto_add_appointment'] : 0,
+                'auto_add_job' => $post['calendar_auto_add_job'] ? $post['calendar_auto_add_job'] : 0,
+                'auto_add_event' => $post['calendar_auto_add_event'] ? $post['calendar_auto_add_event'] : 0,
+                'auto_add_ticket' => $post['calendar_auto_add_ticket'] ?  $post['calendar_auto_add_ticket'] : 0,
+                'google_calendar_email_notification' =>  $post['google_calendar_email_notification'],
+                'google_calendar_popup_notification' => $post['google_calendar_popup_notification'],
+                'calendar_auto_sms_notification' => $post['calendar_auto_sms_notification']                                       
+            ];
+
+            $this->CalendarSettings_model->create($calendar_settings);
+        }            
+
+        //Color Settings
+        $this->ColorSettings_model->deleteAllByCompanyId($cid);
+        foreach($post['color_name'] as $key => $value){
+            $data = [
+                'company_id' => $cid,
+                'user_id' => $uid,
+                'color_name' => $value,
+                'color_code' => $post['color_code'][$key]
+            ];
+            $colorSetting = $this->ColorSettings_model->create($data);
+        }
+
+        //Activity Logs
+        $activity_name = 'Updated Calendar Settings'; 
+        createActivityLog($activity_name);
+
+        $is_success = 1;
+        $msg = '';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
     }
 }
 
