@@ -783,6 +783,7 @@ $route['accounting/reports/save-custom-report']['post'] = 'accounting_controller
 $route['accounting/reports/check-custom-report-name']['post'] = 'accounting_controllers/reports/check_name';
 $route['accounting/reports/generate-paychecks-pdf']['post'] = 'accounting_controllers/reports/generate_paychecks_pdf';
 $route['accounting/reports/(:any)/email']['post'] = 'accounting_controllers/reports/email/$1';
+$route['accounting/reports/_update_title'] = 'accounting_controllers/reports/ajax_update_report_title';
 
 $route['accounting/receipts/reviewed'] = 'accounting/reviewed_receipts';
 
@@ -1777,4 +1778,4 @@ $route['before_after_photos/edit/(:num)'] = 'Before_after_v2/editPhoto/$1';
 $route['before_after_photos/_update_photos'] = 'Before_after_v2/ajax_update_photos';
 
 //Files Vault
-$route['files_vault'] = 'Before_after_v2/ajax_update_photos';
+$route['files_vault'] = 'Vault_v2/index_v2';
