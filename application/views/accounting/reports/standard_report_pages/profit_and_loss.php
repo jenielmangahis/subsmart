@@ -53,22 +53,6 @@
                                             <option value="next-year">Next Year</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 col-md-6">
-                                        <label for="filter-from">From</label>
-                                        <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" value="<?=date("01/01/Y")?>" id="filter-from">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <label for="filter-to">To</label>
-                                        <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" value="<?=date("m/d/Y")?>" id="filter-to">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-12 col-md-6">
                                         <label for="filter-display-columns-by">Display columns by</label>
                                         <select class="nsm-field form-select" name="filter_display_columns_by" id="filter-display-columns-by">
@@ -82,6 +66,20 @@
                                             <option value="vendors">Vendors</option>
                                             <option value="products-services">Products/Services</option>
                                         </select>
+                                    </div>                                    
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-from">From</label>
+                                        <div class="nsm-field-group calendar">
+                                            <input type="text" style="" class="nsm-field form-control datepicker" value="<?=date("01/01/Y")?>" id="filter-from">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-to">To</label>
+                                        <div class="nsm-field-group calendar">
+                                            <input type="text" class="nsm-field form-control datepicker" value="<?=date("m/d/Y")?>" id="filter-to">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -123,8 +121,6 @@
                                             </ul>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-12 col-md-6">
                                         <label for="filter-display-columns-by">Compare another period</label>
                                         <div class="dropdown">
@@ -197,10 +193,10 @@
                                                 <p class="m-0"><a href="#" style="text-decoration: none">Reorder columns</a></p>
                                             </ul>
                                         </div>
-                                    </div>
+                                    </div>                                    
                                 </div>
-                                <div class="row grid-mb">
-                                    <div class="col-12 col-md-6">
+                                <div class="row" style="text-align: center; margin-top: 5px; margin-bottom: 5px;">
+                                    <div class="col-12 col-md-12">
                                         <label for="" class="w-100">Accounting method</label>
                                         <div class="form-check d-inline-block">
                                             <input type="radio" id="cash-method" class="form-check-input" name="accounting_method">
