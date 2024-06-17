@@ -192,6 +192,7 @@
                                         <option value="0">Hide</option>
                                     </select>
                                 </div>
+                                <!-- Date Picker -->
                                 <div class="col-md-3 mb-3">
                                     <label for="filter-date-from">From</label>
                                     <div class="">
@@ -377,14 +378,14 @@
                         <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>Subject</h6>
-                                <input id="emailSubject" class="form-control" type="text" required>
+                                <!-- <input id="emailSubject" class="form-control" type="text" value="<?php echo $companyInfo ? strtoupper($companyInfo->business_name) : ''; ?>: <?php echo $page->title; ?>" required> -->
+                                <input id="emailSubject" class="form-control" type="text" value="<?php echo $page->title; ?>" required>
                             </div>
                         </div>
 
                         <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>Body</h6>
-                                <!-- <textarea id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title ?> from <?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?></textarea> -->
                                 <div id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title ?> from <?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?></div>
                             </div>
                         </div>

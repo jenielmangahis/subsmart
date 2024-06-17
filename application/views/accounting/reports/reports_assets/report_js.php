@@ -295,51 +295,116 @@
     });
 
     // Email Report Script
-    $('#sendEmailForm').submit(function(event) {
-        event.preventDefault();
-        $(".sendEmail").attr('disabled', '').empty().append('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Send');
-        var emailTo = $("#emailTo").val();
-        var emailCC = $("#emailCC").val();
-        var emailSubject = $("#emailSubject").val();
-        var emailBody = $("#emailBody").html();
-        var customAttachmentNamePDF = ($('.pdfAttachmentCheckbox').is(":checked") == true) ? $("#pdfReportFilename").val() : "";
-        var customAttachmentNameXLSX = ($('.xlsxAttachmentCheckbox').is(":checked") == true) ? $("#xlsxReportFileName").val() : "";
-        var attachmentConfig = {
-            reportFilePathPDF: filename + ".pdf",
-            reportFilePathXLSX: filename + ".xlsx",
-            customAttachmentNamePDF: customAttachmentNamePDF,
-            customAttachmentNameXLSX: customAttachmentNameXLSX,
-        }
+    // $('#sendEmailForm').submit(function(event) {
+    //     event.preventDefault();
+    //     $(".sendEmail").attr('disabled', '').empty().append('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Send');
+    //     var emailTo = $("#emailTo").val();
+    //     var emailCC = $("#emailCC").val();
+    //     var emailSubject = $("#emailSubject").val();
+    //     var emailBody = $("#emailBody").html();
+    //     var customAttachmentNamePDF = ($('.pdfAttachmentCheckbox').is(":checked") == true) ? $("#pdfReportFilename").val() : "";
+    //     var customAttachmentNameXLSX = ($('.xlsxAttachmentCheckbox').is(":checked") == true) ? $("#xlsxReportFileName").val() : "";
+    //     var attachmentConfig = {
+    //         reportFilePathPDF: filename + ".pdf",
+    //         reportFilePathXLSX: filename + ".xlsx",
+    //         customAttachmentNamePDF: customAttachmentNamePDF,
+    //         customAttachmentNameXLSX: customAttachmentNameXLSX,
+    //     }
 
-        $.ajax({
-            type: "POST",
-            url: BASE_URL + "/AccountingMailer/emailReport/" + REPORT_CATEGORY,
-            data: {
-                emailTo: emailTo,
-                emailCC: emailCC,
-                emailSubject: emailSubject,
-                emailBody: emailBody,
-                attachmentConfig: attachmentConfig,
-            },
-            success: function(data) {
-                $(".sendEmail").removeAttr('disabled').empty().append('Send');
-                if (data == "true") {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: 'Report was emailed successfully!',
-                    }).then((result) => {
-                        $("#emailCloseModal").click();
-                    });
-                } else {
-                    $(".sendEmail").removeAttr('disabled').empty().append('Send');
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Failed to send report!',
-                    });
-                }
+    //     $.ajax({
+    //         type: "POST",
+    //         url: BASE_URL + "/AccountingMailer/emailReport/" + REPORT_CATEGORY,
+    //         data: {
+    //             emailTo: emailTo,
+    //             emailCC: emailCC,
+    //             emailSubject: emailSubject,
+    //             emailBody: emailBody,
+    //             attachmentConfig: attachmentConfig,
+    //         },
+    //         success: function(data) {
+    //             $(".sendEmail").removeAttr('disabled').empty().append('Send');
+    //             if (data == "true") {
+    //                 Swal.fire({
+    //                     icon: 'success',
+    //                     title: 'Success',
+    //                     text: 'Report was emailed successfully!',
+    //                 }).then((result) => {
+    //                     $("#emailCloseModal").click();
+    //                 });
+    //             } else {
+    //                 $(".sendEmail").removeAttr('disabled').empty().append('Send');
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: 'Error',
+    //                     text: 'Failed to send report!',
+    //                 });
+    //             }
+    //         }
+    //     });
+    // });
+
+    $(document).ready(function() {
+        $('#sendEmailForm').submit(function(event) {
+            event.preventDefault();
+
+            // Disable the send button and show a spinner
+            $(".sendEmail").attr('disabled', '').empty().append('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Send');
+
+            // Get form field values
+            var emailTo = $("#emailTo").val();
+            var emailCC = $("#emailCC").val();
+            var emailSubject = $("#emailSubject").val();
+            var emailBody = $("#emailBody").html();
+            var customAttachmentNamePDF = ($('.pdfAttachmentCheckbox').is(":checked")) ? $("#pdfReportFilename").val() : "";
+            var customAttachmentNameXLSX = ($('.xlsxAttachmentCheckbox').is(":checked")) ? $("#xlsxReportFileName").val() : "";
+            var attachmentConfig = {
+                reportFilePathPDF: filename + ".pdf",
+                reportFilePathXLSX: filename + ".xlsx",
+                customAttachmentNamePDF: customAttachmentNamePDF,
+                customAttachmentNameXLSX: customAttachmentNameXLSX,
+            };
+
+            // Define the company name
+            var companyName = "<?php echo $companyInfo ? strtoupper($companyInfo->business_name) : ''; ?>";
+
+            // Prepend company name to the email subject
+            if (emailSubject) {
+                emailSubject = companyName + ": " + emailSubject;
+            } else {
+                emailSubject = companyName + ": " + $("#emailSubject").attr('placeholder');
             }
+
+            // Make the AJAX request
+            $.ajax({
+                type: "POST",
+                url: BASE_URL + "/AccountingMailer/emailReport/" + REPORT_CATEGORY,
+                data: {
+                    emailTo: emailTo,
+                    emailCC: emailCC,
+                    emailSubject: emailSubject,
+                    emailBody: emailBody,
+                    attachmentConfig: attachmentConfig,
+                },
+                success: function(data) {
+                    $(".sendEmail").removeAttr('disabled').empty().append('Send');
+                    if (data == "true") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Report was emailed successfully!',
+                        }).then((result) => {
+                            $("#emailCloseModal").click();
+                        });
+                    } else {
+                        $(".sendEmail").removeAttr('disabled').empty().append('Send');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to send report!',
+                        });
+                    }
+                }
+            });
         });
     });
 
@@ -421,29 +486,29 @@
     document.getElementById('filter-date-to').value = currentDate;
     document.getElementById('filter-date').value = currentDate;
 
-    // Email Subject
-    document.addEventListener('DOMContentLoaded', function() {
-        const businessName = '<?php echo $companyInfo ? strtoupper($companyInfo->business_name) : ''; ?>: ';
-        const emailSubject = document.getElementById('emailSubject');
+    // // Email Subject
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     const businessName = '<?php echo $companyInfo ? strtoupper($companyInfo->business_name) : ''; ?>: ';
+    //     const emailSubject = document.getElementById('emailSubject');
 
-        emailSubject.value = businessName + '<?php echo $page->title; ?>';
+    //     emailSubject.value = businessName + '<?php echo $page->title; ?>';
 
-        emailSubject.addEventListener('input', function() {
-            if (!emailSubject.value.startsWith(businessName)) {
-                emailSubject.value = businessName;
-            }
-        });
+    //     emailSubject.addEventListener('input', function() {
+    //         if (!emailSubject.value.startsWith(businessName)) {
+    //             emailSubject.value = businessName;
+    //         }
+    //     });
 
-        emailSubject.addEventListener('keydown', function(e) {
-            if (emailSubject.selectionStart < businessName.length) {
-                emailSubject.setSelectionRange(businessName.length, businessName.length);
-            }
-        });
+    //     emailSubject.addEventListener('keydown', function(e) {
+    //         if (emailSubject.selectionStart < businessName.length) {
+    //             emailSubject.setSelectionRange(businessName.length, businessName.length);
+    //         }
+    //     });
 
-        emailSubject.addEventListener('click', function(e) {
-            if (emailSubject.selectionStart < businessName.length) {
-                emailSubject.setSelectionRange(businessName.length, businessName.length);
-            }
-        });
-    });
+    //     emailSubject.addEventListener('click', function(e) {
+    //         if (emailSubject.selectionStart < businessName.length) {
+    //             emailSubject.setSelectionRange(businessName.length, businessName.length);
+    //         }
+    //     });
+    // });
 </script>
