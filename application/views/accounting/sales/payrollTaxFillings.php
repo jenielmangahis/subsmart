@@ -145,7 +145,7 @@ include viewPath('v2/includes/header');
                     <h4>Upcoming filings</h4>
                 </div>
 
-                <table class="nsm-table table-hover">
+                <table class="nsm-table table-hover payrollTaxFillings">
                     <div class="row">
                         <div class="col-12 col-md-4 grid-mb">
                             <form id="search_form" action="javascript:void(0);" method="get">
@@ -205,7 +205,21 @@ include viewPath('v2/includes/header');
 </div>
 
 <?php include viewPath('v2/includes/footer'); ?>
+
+<style>
+    .nsm-table-pagination{
+        margin-right: -90rem;
+    }
+</style>
+
 <script>
+    // Pagination
+    $(document).ready(function() {
+        $(".payrollTaxFillings").nsmPagination({
+            itemsPerPage: 10,
+        });
+    });
+
     $(document).ready(function() {
         function performSearch() {
             var searchValue = $('#search_field').val().toLowerCase();

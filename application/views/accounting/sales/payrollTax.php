@@ -115,7 +115,7 @@
                             Select Pay Taxes.<br>
                             Select Create payment on the tax you want to pay.<br>
                             Select E-pay.<br>
-                            Always choose Earliest as it's the recommended date to pay taxes, then select Approve. ...<br>
+                            Always choose Earliest as it's the recommended date to pay taxes, then select Approve.<br>
                             An e-payment confirmation window appears, select Done.
                         </div>
                     </div>

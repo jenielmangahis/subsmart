@@ -747,6 +747,7 @@ $route['accounting/vendors/get-import-data']['post'] = 'accounting_controllers/v
 $route['accounting/vendors/import-vendors-data']['post'] = 'accounting_controllers/vendors/import_vendors_data';
 $route['accounting/vendor/_bill_mark_paid']['post'] = 'accounting_controllers/vendors/ajax_bill_mark_paid';
 $route['accounting/vendors/export_transactions/(:any)'] = 'accounting_controllers/vendors/export_transactions/$1';
+$route['accounting/vendors/_save_vendor'] = 'accounting_controllers/vendors/ajax_save_vendor';
 
 $route['accounting/expenses'] = 'accounting_controllers/expenses/index';
 $route['accounting/expenses/get-expense-transactions']['post'] = 'accounting_controllers/expenses/get_expense_transactions';
@@ -782,6 +783,7 @@ $route['accounting/reports/save-custom-report']['post'] = 'accounting_controller
 $route['accounting/reports/check-custom-report-name']['post'] = 'accounting_controllers/reports/check_name';
 $route['accounting/reports/generate-paychecks-pdf']['post'] = 'accounting_controllers/reports/generate_paychecks_pdf';
 $route['accounting/reports/(:any)/email']['post'] = 'accounting_controllers/reports/email/$1';
+$route['accounting/reports/_update_title'] = 'accounting_controllers/reports/ajax_update_report_title';
 
 $route['accounting/receipts/reviewed'] = 'accounting/reviewed_receipts';
 
@@ -942,6 +944,9 @@ $route['settings/_edit_sms_template'] = 'Settings/ajax_edit_sms_template';
 $route['settings/_add_tax_rate'] = 'Settings/ajax_add_tax_rate';
 $route['settings/_update_tax_rate'] = 'Settings/ajax_update_tax_rate';
 $route['settings/_delete_tax_rate'] = 'Settings/ajax_delete_tax_rate';
+$route['settings/_update_calendar_settings'] = 'Settings/ajax_update_calendar_settings';
+
+//Chatbot
 $route['chatbot/settings'] = 'ChatbotSettings/settings';
 
 // leads
@@ -1245,6 +1250,9 @@ $route['events/add_new_event_tag'] = 'Events/add_new_event_tag';
 $route['events/save_event_tag'] = 'Events/create_new_event_tag';
 $route['events/edit_event_tags/(:any)'] = 'Events/edit_event_tags/$1';
 $route['events/update_event_tag'] = 'Events/update_event_tag';
+
+// Event Settings
+$route['events/_update_settings'] = 'Events/ajax_update_settings';
 
 // Job Tags
 $route['job/add_new_job_tag'] = 'Job/add_new_job_tag';
@@ -1765,4 +1773,9 @@ $route['trac360/_create_user_geolocation_features'] = 'Trac360/ajax_create_user_
 $route['before_after_photos'] = 'Before_after_v2/index';
 $route['before_after_photos/add_photos'] = 'Before_after_v2/addPhoto';
 $route['before_after_photos/_create_photos'] = 'Before_after_v2/ajax_create_photos';
+$route['before_after_photos/_delete_photos'] = 'Before_after_v2/ajax_delete_photos';
+$route['before_after_photos/edit/(:num)'] = 'Before_after_v2/editPhoto/$1';
+$route['before_after_photos/_update_photos'] = 'Before_after_v2/ajax_update_photos';
 
+//Files Vault
+$route['files_vault'] = 'Vault_v2/index_v2';

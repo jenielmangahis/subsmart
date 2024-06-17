@@ -267,11 +267,10 @@ class Taskhub_model extends MY_Model {
     public function onGoingAllTasksByTaskId($ids = array())
     {
         $this->db->from($this->table);
-        $this->db->set(['status_id' => 2]);
+        $this->db->set(['status_id' => 2, 'status' => 'Doing']);
         $this->db->where_in('task_id', $ids);
         $this->db->update();
     }
-
 
     public function deleteByTaskId($task_id){
         $this->db->delete($this->table, array('task_id' => $task_id));

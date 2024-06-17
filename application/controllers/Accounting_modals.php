@@ -59,7 +59,7 @@ class Accounting_modals extends MY_Controller
         $this->load->model('invoice_settings_model');
         $this->load->model('accounting_linked_transactions_model');
         $this->load->model('accounting_print_checks_settings_model');
-        $this->load->model('accounting_account_transactions_model');
+        $this->load->model('Accounting_account_transactions_model');
         $this->load->model('estimate_model');
         $this->load->model('EstimateSettings_model');
         $this->load->model('Clients_model');
@@ -18718,7 +18718,7 @@ class Accounting_modals extends MY_Controller
                 }
             }
 
-            $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Credit Memo', $creditMemoId);
+            $accountTransacs = $this->Accounting_account_transactions_model->get_account_transactions_by_transaction('Credit Memo', $creditMemoId);
 
             foreach($accountTransacs as $transac)
             {
@@ -18742,7 +18742,7 @@ class Accounting_modals extends MY_Controller
                 $this->chart_of_accounts_model->updateBalance($accData);
             }
 
-            $this->accounting_account_transactions_model->delete_account_transactions_by_transaction('Credit Memo', $creditMemoId);
+            $this->Accounting_account_transactions_model->delete_account_transactions_by_transaction('Credit Memo', $creditMemoId);
 
             $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
             $newBalance = floatval(str_replace(',', '', $arAcc->balance)) - floatval(str_replace(',', '', $data['total_amount']));
@@ -18764,7 +18764,7 @@ class Accounting_modals extends MY_Controller
                 'type' => 'decrease'
             ];
 
-            $this->accounting_account_transactions_model->create($accTransacData);
+            $this->Accounting_account_transactions_model->create($accTransacData);
 
             $this->update_customer_transaction_items('Credit Memo', $creditMemo->id, $data);
         }
@@ -23188,7 +23188,7 @@ class Accounting_modals extends MY_Controller
         $void = $this->accounting_credit_memo_model->updateCreditMemo($creditMemoId, $creditMemoData);
 
         if($void) {
-            $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Credit Memo', $creditMemoId);
+            $accountTransacs = $this->Accounting_account_transactions_model->get_account_transactions_by_transaction('Credit Memo', $creditMemoId);
 
             foreach($accountTransacs as $transac)
             {
@@ -23215,7 +23215,8 @@ class Accounting_modals extends MY_Controller
                     'amount' => 0.00
                 ];
 
-                $this->accounting_account_transaction_model->update($transac->id, $transacData);
+                $this->Accounting_account_transactions_model->update($transac->id, $transacData);
+                //$this->Accounting_account_transactions_model->update_transaction($transac->id, $transacData);
             }
 
             $this->void_customer_transaction_items('Credit Memo', $creditMemoId);
