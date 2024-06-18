@@ -107,6 +107,7 @@ class Users_model extends MY_Model
         $query = $this->db->get_where('timesheet_location_for_clock_in_out', array('user_id' => $user_id, 'company_id'=>logged('company_id')));
         return $query->row();
     }
+
     public function insertClock_In_Out_Lat_Long($user_id, $data){
         $query_data_exist = $this->getData_of_Clock_In_Out_Lat_Long($user_id);
         
@@ -215,7 +216,6 @@ class Users_model extends MY_Model
         return $query->result();
     }
     
-
     public function getActiveCompanyUsers($company_id)
     {
         $this->db->select('*');
@@ -304,7 +304,6 @@ class Users_model extends MY_Model
 
         return $query->result();
     }
-
 
     public function getUser($user_id)
     {

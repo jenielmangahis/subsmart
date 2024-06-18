@@ -59,7 +59,7 @@ class Accounting_modals extends MY_Controller
         $this->load->model('invoice_settings_model');
         $this->load->model('accounting_linked_transactions_model');
         $this->load->model('accounting_print_checks_settings_model');
-        $this->load->model('Accounting_account_transactions_model');
+        $this->load->model('accounting_account_transactions_model');
         $this->load->model('estimate_model');
         $this->load->model('EstimateSettings_model');
         $this->load->model('Clients_model');
@@ -18622,6 +18622,16 @@ class Accounting_modals extends MY_Controller
         $creditMemo = $this->accounting_credit_memo_model->getCreditMemoDetails($creditMemoId);
         $diff = floatval(str_replace(',', '', $creditMemo->total_amount)) - floatval(str_replace(',', '', $creditMemo->balance));
 
+        $sales_rep_name = 0;
+        if(isset($data['sales_rep'])) {
+            $salesRepData = $this->users_model->getUser($data['sales_rep']);
+            if($salesRepData) {
+                $sales_rep_name = $salesRepData->FName . " " . $salesRepData->LName;
+            }
+        } else {
+            $sales_rep_name = $creditMemo->sales_rep;
+        }
+
         $creditMemoData = [
             'customer_id' => $data['customer'],
             'email' => $data['email'],
@@ -18630,7 +18640,7 @@ class Accounting_modals extends MY_Controller
             'billing_address' => nl2br($data['billing_address']),
             'location_of_sale' => $data['location_of_sale'],
             'po_number' => $data['purchase_order_no'],
-            'sales_rep' => $data['sales_rep'],
+            'sales_rep' => $sales_rep_name,
             'message_credit_memo' => $data['message_credit_memo'],
             'message_on_statement' => $data['message_on_statement'],
             'adjustment_name' => $data['adjustment_name'],
@@ -18640,6 +18650,7 @@ class Accounting_modals extends MY_Controller
             'subtotal' => floatval(str_replace(',', '', $data['subtotal'])),
             'tax_total' => floatval(str_replace(',', '', $data['tax_total'])),
             'discount_total' => floatval(str_replace(',', '', $data['discount_total'])),
+            'ref_no' => $data['ref_no']
         ];
 
         $update = $this->accounting_credit_memo_model->updateCreditMemo($creditMemo->id, $creditMemoData);
@@ -18718,7 +18729,7 @@ class Accounting_modals extends MY_Controller
                 }
             }
 
-            $accountTransacs = $this->Accounting_account_transactions_model->get_account_transactions_by_transaction('Credit Memo', $creditMemoId);
+            $accountTransacs = $this->accounting_account_transactions_model->get_account_transactions_by_transaction('Credit Memo', $creditMemoId);
 
             foreach($accountTransacs as $transac)
             {
@@ -18742,7 +18753,7 @@ class Accounting_modals extends MY_Controller
                 $this->chart_of_accounts_model->updateBalance($accData);
             }
 
-            $this->Accounting_account_transactions_model->delete_account_transactions_by_transaction('Credit Memo', $creditMemoId);
+            $this->accounting_account_transactions_model->delete_account_transactions_by_transaction('Credit Memo', $creditMemoId);
 
             $arAcc = $this->chart_of_accounts_model->get_accounts_receivable_account(logged('company_id'));
             $newBalance = floatval(str_replace(',', '', $arAcc->balance)) - floatval(str_replace(',', '', $data['total_amount']));
@@ -18764,7 +18775,7 @@ class Accounting_modals extends MY_Controller
                 'type' => 'decrease'
             ];
 
-            $this->Accounting_account_transactions_model->create($accTransacData);
+            $this->accounting_account_transactions_model->create($accTransacData);
 
             $this->update_customer_transaction_items('Credit Memo', $creditMemo->id, $data);
         }

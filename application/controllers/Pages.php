@@ -569,6 +569,11 @@ class Pages extends MYF_Controller {
         $this->load->view('pages/refer_friend', $this->page_data);        
     }
 
+	public function email_sent(){
+		$this->page_data['page']->title = 'Email Sent';	
+        $this->load->view('mycrm/email_template/email_sent', $this->page_data);      
+    }
+
     public function send_refer_email(){
     	include APPPATH . 'libraries/PHPMailer/PHPMailerAutoload.php';
     	

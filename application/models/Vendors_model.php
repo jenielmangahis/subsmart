@@ -602,6 +602,23 @@ class Vendors_model extends MY_Model {
 		return $update;
 	}
 
+	public function get_expense_by_id_business_snapshot($expenseId, $companyId = null)
+	{
+		$currentYear = date('Y');
+		$startDate = "$currentYear-01-01";
+		$endDate = "$currentYear-12-31";
+	
+		if ($companyId) {
+			$this->db->where('company_id', $companyId);
+		}
+		$this->db->where('id', $expenseId);
+		$this->db->where('DATE(created_at) >=', $startDate);
+		$this->db->where('DATE(created_at) <=', $endDate);
+		$query = $this->db->get('accounting_expense');
+		return $query->row();
+	}
+
+
 	public function get_expense_by_id($expenseId, $companyId = null)
 	{
 		if($companyId) {
