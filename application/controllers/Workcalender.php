@@ -1554,9 +1554,10 @@ class Workcalender extends MY_Controller
     {
         $this->load->model('Appointment_model');
         $this->load->model('AppointmentType_model');
+        $this->load->model('AcsProfile_model');
 
         $post       = $this->input->post();
-        $user_id    = getLoggedUserID();
+        $user_id    = logged('id');
         $company_id = logged('company_id');
         $is_success = false;
         $message    = 'Cannot create appointment';
@@ -1636,6 +1637,11 @@ class Workcalender extends MY_Controller
                 createSyncToCalendar($last_id, 'appointment', $company_id);
 
                 customerAuditLog(logged('id'), $post['appointment_customer_id'], $last_id, 'Appointment', 'Created an appointment');
+
+                //Activity Logs
+                $customer = $this->AcsProfile_model->getByProfId($post['appointment_customer_id']);
+                $activity_name = 'Created Calendar Appointment Schedule for ' . $customer->first_name . ' ' . $customer->last_name; 
+                createActivityLog($activity_name);
 
                 $is_success = true;
                 $message    = '';
@@ -3220,9 +3226,10 @@ class Workcalender extends MY_Controller
     public function ajax_create_technician_off_schedule()
     {
         $this->load->model('TechnicianDayOffSchedule_model');
+        $this->load->model('Users_model');
 
         $post       = $this->input->post();
-        $user_id    = getLoggedUserID();
+        $user_id    = logged('id');
         $company_id = logged('company_id');
         $is_success = 0;
         $message    = 'Cannot create schedule';
@@ -3255,6 +3262,21 @@ class Workcalender extends MY_Controller
 
             //Google Calendar
             createSyncToCalendar($last_id, 'tc-off', $company_id);
+
+            //Activity Logs
+            $techs = [];
+            foreach($post['tc_off_user_ids'] as $uid){
+                $user = $this->Users_model->getUser($uid);
+                if( $user ){
+                    $techs[] = $user->FName . ' ' . $user->LName;
+                }
+            }
+
+            if( !empty($techs) ){
+                $tech_name = implode(",", $techs);
+                $activity_name = 'Created Caledar Schedule Technician Schedule Off for ' . $tech_name; 
+                createActivityLog($activity_name);
+            }
 
             $is_success = 1;
             $message    = '';

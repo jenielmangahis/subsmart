@@ -20,6 +20,7 @@ class Events extends MY_Controller
         //$this->load->model('Invoice_model', 'invoice_model');
         //$this->load->model('Roles_model', 'roles_model');
         $this->load->model('General_model', 'general');
+        $this->load->model('EventSettings_model');
 
     }
 
@@ -143,25 +144,6 @@ class Events extends MY_Controller
         $comp_id = logged('company_id');
         $user_id = logged('id');
 
-        // check if settings has been set
-        $get_event_settings = array(
-            'where' => array(
-                'company_id' => $comp_id
-            ),
-            'table' => 'event_settings',
-            'select' => 'id',
-        );
-        $event_settings = $this->general->get_data_with_param($get_event_settings);
-        // add default event settings if not set
-        if(empty($event_settings)){
-            $event_settings_data = array(
-                'event_prefix' => 'EVENT',
-                'event_next_num' => 1,
-                'company_id' => $comp_id,
-            );
-            $this->general->add_($event_settings_data, 'event_settings');
-        }
-
         // get all job tags
         $get_login_user = array(
             'where' => array(
@@ -247,18 +229,36 @@ class Events extends MY_Controller
         if(!$id==NULL){
             $page_action = 'edit';
             $event = $this->event_model->get_specific_event($id);
+            if( $event->company_id == $comp_id ){
+                $a_attendees = json_decode($event->employee_id);
+                foreach($a_attendees as $uid){
+                    $user = $this->Users_model->getUserByID($uid);
+                    if( $user ){
+                        $attendees[$user->id] = $user->FName . ' ' . $user->LName;
+                    }
+                }  
 
-            $a_attendees = json_decode($event->employee_id);
-            foreach($a_attendees as $uid){
-                $user = $this->Users_model->getUserByID($uid);
-                if( $user ){
-                    $attendees[$user->id] = $user->FName . ' ' . $user->LName;
-                }
-            }  
+                $param    = [
+                    'text' => $event->event_address,
+                    'format' => 'json',
+                    'apiKey' => GEOAPIKEY
+                ];            
+                $url = 'https://api.geoapify.com/v1/geocode/search?'.http_build_query($param);
+                $data = file_get_contents($url);            
+                $data = json_decode($data);
+                if( $data && isset($data->results[0] )){ 
+                    $default_lon = $data->results[0]->lon;
+                    $default_lat = $data->results[0]->lat;                    
+                }               
 
-            $this->page_data['jobs_data'] = $event;
-            $this->page_data['event_items'] = $this->event_model->get_specific_event_items($id);
-            //print_r($this->page_data['jobs_data_items'] );
+                $this->page_data['default_lon'] = $default_lon;
+                $this->page_data['default_lat'] = $default_lat;
+                $this->page_data['jobs_data'] = $event;
+                $this->page_data['event_items'] = $this->event_model->get_specific_event_items($id);
+                //print_r($this->page_data['jobs_data_items'] );
+            }else{
+                return redirect('events');
+            }
         }
 
         $default_start_date = date("Y-m-d");
@@ -284,11 +284,14 @@ class Events extends MY_Controller
             }
         }
 
+        $eventSettings = $this->EventSettings_model->getByCompanyId($comp_id);
+
+        $this->page_data['optionsCustomerNotifications'] = $this->EventSettings_model->optionsCustomerNotifications();
         $this->page_data['attendees'] = $attendees;
         $this->page_data['redirect_calendar']  = $redirect_calendar;
         $this->page_data['default_start_date'] = $default_start_date;
         $this->page_data['default_start_time'] = $default_start_time;
-
+        $this->page_data['eventSettings'] = $eventSettings;
         $this->page_data['page_action'] = $page_action;
         // $this->load->view('events/event_new', $this->page_data);
         $this->load->view('v2/pages/events/action/event_add', $this->page_data);
@@ -606,7 +609,7 @@ class Events extends MY_Controller
 
     }
 
-    public function settings() {
+    public function settingsOld() {
         $get = $this->input->get();
         $this->page_data['items'] = $this->items_model->get();
         $comp_id = logged('company_id');
@@ -635,6 +638,25 @@ class Events extends MY_Controller
         $this->load->view('job/job_settings/prefix', $this->page_data);
     }
 
+    public function settings() 
+    {
+        $cid = logged('company_id');
+
+        $eventSettings = $this->EventSettings_model->getByCompanyId($cid);
+        $lastId = $this->event_model->getlastInsert($cid);
+        if( $lastId ){
+            $default_next_num = $lastId->id + 1;
+        }else{
+            $default_next_num = 1;
+        }
+        
+        $this->page_data['optionsCustomerNotifications'] = $this->EventSettings_model->optionsCustomerNotifications();
+        $this->page_data['eventSettings'] = $eventSettings;
+        $this->page_data['default_next_num'] = $default_next_num;
+        $this->page_data['page']->tab = 'Event Settings';
+        $this->load->view('v2/pages/events/settings', $this->page_data);
+    }
+
     public function job_time_settings() {
         $get_job_settings = array(
             'where' => array(
@@ -655,13 +677,22 @@ class Events extends MY_Controller
             $event = $this->event_model->get_specific_event($_POST['EVENT_ID']);
             $EVENT_NUMBER = $event->event_number;
         }else{
-            $GET_EVENT_SETTINGS = array(
-                'where' => array( 'company_id' => $COMPANY_ID ),
-                'table' => 'event_settings',
-                'select' => '*',
-            );
-            $EVENT_SETTINGS = $this->general->get_data_with_param($GET_EVENT_SETTINGS);
-            $EVENT_NUMBER = $EVENT_SETTINGS[0]->event_prefix.' - #000000'.$EVENT_SETTINGS[0]->event_next_num;
+            $eventSettings = $this->EventSettings_model->getByCompanyId($COMPANY_ID);
+            if( $eventSettings ){
+                $prefix   = $eventSettings->event_prefix;
+                $next_num = str_pad($eventSettings->event_next_num, 5, '0', STR_PAD_LEFT);
+            }else{
+                $prefix = 'EVENT-';
+                $lastId = $this->event_model->getlastInsert($COMPANY_ID);
+                if ($lastId) {
+                    $next_num = $lastId->id + 1;
+                    $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+                } else {
+                    $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+                }
+            }
+
+            $EVENT_NUMBER = $prefix . $next_num;
         }
         
         $employee_ids = json_encode($_POST['EMPLOYEE_ID']);
@@ -699,9 +730,29 @@ class Events extends MY_Controller
             }
         }else{
             $EVENT_ID = $this->general->add_return_id($DATA, 'events');   
-            
-            $EVENT_SETTINGS_data = array( 'event_next_num' => $EVENT_SETTINGS[0]->event_next_num + 1,);
-            $this->general->update_with_key($EVENT_SETTINGS_data,$EVENT_SETTINGS[0]->id, 'event_settings');
+
+            //Update event settings
+            if( $eventSettings ){
+                $event_settings_data = array('event_next_num' => $eventSettings->event_next_num + 1);
+                $this->EventSettings_model->update($eventSettings->id, $event_settings_data);
+            }else{
+                $event_settings_data = [
+                    'company_id' => $COMPANY_ID,
+                    'event_prefix' => 'EVENT-',
+                    'event_next_num' => $next_num + 1,
+                    'timezone' => 'Central Time (UTC -5)',
+                    'auto_sync_icloud_cal' => 0,
+                    'auto_sync_google_cal' => 0,
+                    'auto_sync_outlook_cal' => 0,
+                    'display_color_codes' => 0,
+                    'display_customer_info' => 0,
+                    'display_job_info' => 0,
+                    'display_job_price' => 0,
+                    'display_url_link' => 0,
+                    'auto_sync_offline' => 0
+                ];
+                $this->EventSettings_model->create($event_settings_data);
+            }
 
             //Activity Logs
             $activity_name = 'Created Event Number ' . $EVENT_NUMBER; 
@@ -1220,32 +1271,13 @@ class Events extends MY_Controller
         $this->load->model('Users_model');        
         $this->load->helper('functions');
 
-        $comp_id = logged('company_id');
-        $user_id = logged('id');
-
-        // check if settings has been set
-        $get_event_settings = array(
-            'where' => array(
-                'company_id' => $comp_id
-            ),
-            'table' => 'event_settings',
-            'select' => 'id',
-        );
-        $event_settings = $this->general->get_data_with_param($get_event_settings);
-        // add default event settings if not set
-        if(empty($event_settings)){
-            $event_settings_data = array(
-                'event_prefix' => 'EVENT',
-                'event_next_num' => 1,
-                'company_id' => $comp_id,
-            );
-            $this->general->add_($event_settings_data, 'event_settings');
-        }
+        $cid = logged('company_id');
+        $uid = logged('id');
 
         // get all job tags
         $get_login_user = array(
             'where' => array(
-                'id' => $user_id
+                'id' => $uid
             ),
             'table' => 'users',
             'select' => 'id,FName,LName',
@@ -1262,7 +1294,7 @@ class Events extends MY_Controller
         // get color settings
         $get_color_settings = array(
             'where' => array(
-                'company_id' => logged('company_id')
+                'company_id' => $cid
             ),
             'table' => 'color_settings',
             'select' => '*',
@@ -1271,7 +1303,7 @@ class Events extends MY_Controller
 
         $get_job_types = array(
             'where' => array(
-                'company_id' => logged('company_id')
+                'company_id' => $cid
             ),
             'table' => 'event_types',
             'select' => 'id,title,icon_marker',
@@ -1282,9 +1314,11 @@ class Events extends MY_Controller
         );
         $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
 
-        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $eventSettings = $this->EventSettings_model->getByCompanyId($cid);
         $default_date = date("Y-m-d", strtotime($this->input->get('date_selected')));
-        $this->page_data['settings'] = unserialize($settings);
+
+        $this->page_data['optionsCustomerNotifications'] = $this->EventSettings_model->optionsCustomerNotifications($cid);
+        $this->page_data['eventSettings'] = $eventSettings;
         $this->page_data['default_date']  = $default_date;        
         $this->load->view('v2/pages/events/action/ajax_quick_add_event_form', $this->page_data);
     }
@@ -1309,13 +1343,22 @@ class Events extends MY_Controller
         }
 
         if( $is_valid == 1 ){
-            $GET_EVENT_SETTINGS = array(
-                'where' => array( 'company_id' => $cid ),
-                'table' => 'EVENT_SETTINGS',
-                'select' => '*',
-            );
-            $EVENT_SETTINGS = $this->general->get_data_with_param($GET_EVENT_SETTINGS);
-            $EVENT_NUMBER = $EVENT_SETTINGS[0]->event_prefix.' - #000000'.$EVENT_SETTINGS[0]->event_next_num;
+            $eventSettings = $this->EventSettings_model->getByCompanyId($cid);
+            if( $eventSettings ){
+                $prefix   = $eventSettings->event_prefix;
+                $next_num = str_pad($eventSettings->event_next_num, 5, '0', STR_PAD_LEFT);
+            }else{
+                $prefix = 'EVENT-';
+                $lastId = $this->event_model->getlastInsert($cid);
+                if ($lastId) {
+                    $next_num = $lastId->id + 1;
+                    $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+                } else {
+                    $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+                }
+            }
+
+            $EVENT_NUMBER = $prefix . $next_num;
             $employee_ids = json_encode($post['employee_id']);
             $DATA = array(
                 'employee_id' => $employee_ids,
@@ -1350,9 +1393,34 @@ class Events extends MY_Controller
             //Google Calendar
             createSyncToCalendar($event_id, 'event', $cid);
        
-            $EVENT_SETTINGS_data = array( 'event_next_num' => $EVENT_SETTINGS[0]->event_next_num + 1,);
-            $this->general->update_with_key($EVENT_SETTINGS_data,$EVENT_SETTINGS[0]->id, 'event_settings');
+            //Update event settings
+            if( $eventSettings ){
+                $event_settings_data = array('event_next_num' => $eventSettings->event_next_num + 1);
+                $this->EventSettings_model->update($eventSettings->id, $event_settings_data);
+            }else{
+                $event_settings_data = [
+                    'company_id' => $cid,
+                    'event_prefix' => 'EVENT-',
+                    'event_next_num' => $next_num + 1,
+                    'timezone' => 'Central Time (UTC -5)',
+                    'auto_sync_icloud_cal' => 0,
+                    'auto_sync_google_cal' => 0,
+                    'auto_sync_outlook_cal' => 0,
+                    'display_color_codes' => 0,
+                    'display_customer_info' => 0,
+                    'display_job_info' => 0,
+                    'display_job_price' => 0,
+                    'display_url_link' => 0,
+                    'auto_sync_offline' => 0
+                ];
+                $this->EventSettings_model->create($event_settings_data);
+            }
+            
             customerAuditLog(logged('id'), 0, $event_id, 'Events', 'Created an event #'.$EVENT_NUMBER);
+
+            //Activity Logs
+            $activity_name = 'Created Caledar Schedule ' . $EVENT_NUMBER; 
+            createActivityLog($activity_name);
         }           
 
         $json_data = ['is_success' => $is_valid, 'msg' => $msg];
@@ -1385,8 +1453,58 @@ class Events extends MY_Controller
 
         exit;
     }
+
+    public function ajax_update_settings()
+    {
+        $this->load->model('EventSettings_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $eventSettings = $this->EventSettings_model->getByCompanyId($cid);
+        if( $eventSettings ){
+            $event_settings_data = [
+                'event_prefix' => $post['event_settings_prefix'],
+                'event_next_num' => $post['event_settings_next_number'],
+                'timezone' => $post['event_settings_timezone'],
+                'customer_reminder_notification' => $post['event_settings_customer_reminder_notification']
+            ];
+            $this->EventSettings_model->update($eventSettings->id, $event_settings_data);
+        }else{
+            $event_settings_data = [
+                'company_id' => $cid,
+                'event_prefix' => $post['event_settings_prefix'],
+                'event_next_num' => $post['event_settings_next_number'],
+                'timezone' => $post['event_settings_timezone'],
+                'customer_reminder_notification' => $post['event_settings_customer_reminder_notification'],
+                'auto_sync_icloud_cal' => 0,
+                'auto_sync_google_cal' => 0,
+                'auto_sync_outlook_cal' => 0,
+                'display_color_codes' => 0,
+                'display_customer_info' => 0,
+                'display_job_info' => 0,
+                'display_job_price' => 0,
+                'display_url_link' => 0,
+                'auto_sync_offline' => 0
+            ];
+            $this->EventSettings_model->create($event_settings_data);
+        }
+
+        $is_success = 1;
+        $msg = '';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
 }
 
-/* End of file Job.php */
+/* End of file Events.php */
 
-/* Location: ./application/controllers/job.php */
+/* Location: ./application/controllers/Events.php */
