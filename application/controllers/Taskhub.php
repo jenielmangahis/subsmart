@@ -935,14 +935,14 @@ class Taskhub extends MY_Controller {
 			if($task) {
 				$update_text = '';
 				if(trim($task->subject) != trim($this->input->post('subject'))){
-					$update_text = "updated task title";
+					$update_text = "Updated task title";
 				}
 	
 				if(trim($task->description) != trim($this->input->post('description'))){
 					if(!empty($update_text)){
 						$update_text .= ' and task notes.';
 					} else {
-						$update_text = "updated task notes.";
+						$update_text = "Updated task notes.";
 					}
 				}
 	
@@ -953,9 +953,9 @@ class Taskhub extends MY_Controller {
 	
 				if($task->status != $status){
 					if(!empty($update_text)){
-						$update_text .= " Change task status from " . $task->status . ' to ' . $status . '.';
+						$update_text .= " Changed task status from " . $task->status . ' to ' . $status . '.';
 					} else {
-						$update_text = "change task status from " . $task->status . ' to ' . $status . '.';
+						$update_text = "Changed task status from " . $task->status . ' to ' . $status . '.';
 					}
 				}
 	
@@ -1011,7 +1011,11 @@ class Taskhub extends MY_Controller {
 				}	
 				
 				$is_success = 1;
-				$msg = 'Task is saved successfully.';				
+				$msg = 'Task is saved successfully.';		
+				
+				//Activity Logs
+                $activity_name = 'Taskhub : ' .$update_text; 
+                createActivityLog($activity_name);
 			}			
 		}		
 
@@ -1228,6 +1232,11 @@ class Taskhub extends MY_Controller {
 
 			$this->taskhub_updates_model->trans_create($activity_data);
 
+			//Activity Logs
+			$task = $this->taskhub_model->getById($id);
+			$activity_name = 'Taskhub : Posted comment on task ' . $task->subject; 
+			createActivityLog($activity_name);
+
 		} else {
 			$data = array('error' => "Error in creating comment");
 		}
@@ -1413,6 +1422,10 @@ class Taskhub extends MY_Controller {
 	        		createCronAutoSmsNotification($cid, $taskHub->task_id, 'taskhub', $taskStatus->status_text, $taskHub->created_by);
 	        	}
 
+				//Activity Logs
+                $activity_name = 'Taskhub : ' . $activity_name; 
+                createActivityLog($activity_name);
+
 	        	$msg = '';
 	        	$is_success = 1;
         	}        	
@@ -1546,7 +1559,7 @@ class Taskhub extends MY_Controller {
 			$this->Taskhub_model->deleteByTaskId($taskHub->id);
 
 			//Activity Logs
-			$activity_name = 'Deleted Task ' . $taskHub->subject; 
+			$activity_name = 'Taskhub : Deleted Task ' . $taskHub->subject; 
 			createActivityLog($activity_name);
 
         	$msg ='';
