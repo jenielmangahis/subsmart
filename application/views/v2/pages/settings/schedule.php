@@ -60,7 +60,7 @@
                         </div>
                     </div>
                 </div>
-                <?php echo form_open('settings/schedule', ['class' => 'form-validate require-validation', 'id' => 'schedule_settings_form', 'autocomplete' => 'off']); ?>
+                <?php echo form_open(null, ['class' => 'form-validate require-validation', 'id' => 'schedule_settings_form', 'autocomplete' => 'off']); ?>
                 
                 <div class="row">
                     <div class="col-12 col-md-4">
@@ -527,7 +527,7 @@
             let _this = $(this);
             e.preventDefault();
 
-            var url = "<?php echo base_url('settings/schedule'); ?>";
+            var url = base_url + "settings/_update_calendar_settings";
             _this.find("button[type=submit]").html("Saving Changes");
             _this.find("button[type=submit]").prop("disabled", true);
 
@@ -535,6 +535,7 @@
                 type: 'POST',
                 url: url,
                 data: _this.serialize(),
+                dataType:'json',
                 success: function(result) {
                     Swal.fire({
                         title: 'Save Successful!',

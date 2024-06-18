@@ -1779,3 +1779,6 @@ $route['before_after_photos/_update_photos'] = 'Before_after_v2/ajax_update_phot
 
 //Files Vault
 $route['files_vault'] = 'Vault_v2/index_v2';
+
+//Email Broadcast
+$route['email_broadcast'] = 'Vault_v2/index_v2';

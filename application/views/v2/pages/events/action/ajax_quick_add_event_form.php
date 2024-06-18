@@ -108,6 +108,17 @@
         top: -3px;
         left: -4px;;
     }
+    .calendar_button {
+        color: #ffffff;
+        font-size: 20px;
+        padding-top: 3px;
+        position: relative;
+        top: -1px;
+        left: -3px;
+    }
+    .autocomplete-container {
+        position: relative;
+    }
 </style>
 <div class="row page-content g-0">        
     <div class="col-lg-12 mb-3">
@@ -188,31 +199,20 @@
                             <div class="col-lg-12">
                                 <h6>Customer Reminder Notification</h6>
                                 <select required id="customer_reminder" name="customer_reminder_notification" class="form-control">
-                                    <option value="0">None</option>
-                                    <option value="PT5M">5 minutes before</option>
-                                    <option value="PT15M">15 minutes before</option>
-                                    <option value="PT30M">30 minutes before</option>
-                                    <option value="PT1H">1 hour before</option>
-                                    <option value="PT2H">2 hours before</option>
-                                    <option value="PT4H">4 hours before</option>
-                                    <option value="PT6H">6 hours before</option>
-                                    <option value="PT8H">8 hours before</option>
-                                    <option value="PT12H">12 hours before</option>
-                                    <option value="PT16H">16 hours before</option>
-                                    <option value="P1D" selected="selected">1 day before</option>
-                                    <option value="P2D">2 days before</option>
-                                    <option value="PT0M">On date of event</option>
+                                        <?php foreach($optionsCustomerNotifications as $key => $value){ ?>
+                                            <option <?= $eventSettings && $eventSettings->customer_reminder_notification == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
+                                        <?php } ?>     
                                 </select>
                             </div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-lg-12">
-                                <h6>Time Zone</h6>
-                                <select required id="inputState" name="timezone" class="form-control">
+                                <h6>Time Zone</h6>                                
+                                <select required id="inputState" name="timezone" class="form-control">                                    
                                     <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
-                                    <option value="<?php echo $key ?>">
-                                        <?php echo $zone ?>
-                                    </option>
+                                        <option value="<?php echo $key ?>" <?= $eventSettings && $eventSettings->timezone == $key ? 'selected="selected"' : ''; ?>>
+                                            <?php echo $zone ?>
+                                        </option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -220,9 +220,8 @@
                         <div class="row mb-3">
                             <div class="col-lg-12">
                                 <h6>Location</h6>
-                                <div id="pac-container">
-                                    <input required id="event_address" value="" name="event_address" class="form-control" type="text" placeholder="Enter a location" />
-                                </div>
+                                <div id="autocomplete" class="autocomplete-container"></div>
+                                <input required id="event_address" value="" name="event_address" class="form-control" type="hidden" placeholder="Enter a location" />
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -276,7 +275,29 @@
     </div>
 </div>
 
+<!-- Map files -->
+<script type="text/javascript" src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css" />
+<script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.umd.js"></script>
+<link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/styles/minimal.css" />
+<script src="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/dist/index.min.js"></script>
+
 <script type="text/javascript">
+var myAPIKey = "<?= GEOAPIKEY ?>"; 
+setTimeout(() => {
+    autocompleteInput = new autocomplete.GeocoderAutocomplete(
+        document.getElementById("autocomplete"), 
+        myAPIKey, 
+        { /* Geocoder options */ 
+    });
+
+    autocompleteInput.on('select', (location) => {
+        if (location) {    
+            $('#event_address').val(location.properties.address_line2);            
+        }
+    });
+}, 500);
 $(function () {
     $("#start_time, #end_time, #customer_reminder, #inputState").select2();
     $('#event_employee_id').select2({
@@ -347,12 +368,19 @@ $(function () {
 
     $('.event-color-scheme').on('click', function(){
         var id = this.id;
-        var event_color = $(this).attr("data-color");
-        $("#event-color").val(event_color);
-
-        $('.event-color-scheme').empty();        
-        $("#" + id).append("<i class=\"bx bx-check calendar_button event-color-check\" aria-hidden=\"true\"></i>");
+        $('[id="job_color_id"]').val(id);
+        $( "#"+id ).append( "<i class=\"bx bx-check calendar_button\" aria-hidden=\"true\"></i>" );
+        remove_other_event_color(id);        
     });
+
+    function remove_other_event_color(color_id){
+        $('.event-color-scheme').each(function(index) {
+            var idd = this.id;
+            if(idd !== color_id){
+                $( "#"+idd ).empty();
+            }
+        });
+    }
 
 });
 </script>

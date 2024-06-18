@@ -1,17 +1,6 @@
 <?php include viewPath('v2/includes/header'); ?>
 <!-- add css for this page -->
 <?php include viewPath('v2/pages/job/css/job_new'); ?>
-<!-- START: CSS AND JAVASCRIPT IMPORTS -->
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css">
-<link rel="stylesheet" type="text/css" href="https://nightly.datatables.net/css/dataTables.bootstrap5.min.css">
-<script type="text/javascript" src="https://momentjs.com/downloads/moment-with-locales.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/javascript.util/0.12.12/javascript.util.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<script type="text/javascript" src="https://nightly.datatables.net/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<!-- END: CSS AND JAVASCRIPT IMPORTS -->
 <style type="text/css">
     .color-box-custom {
     padding: 0px 0px;
@@ -112,6 +101,12 @@
         background-color: #7367f0 !important;
         color: #fff !important;
     }
+    #event-map{
+        height:380px !important;
+    }
+    .autocomplete-container {
+        position: relative;
+    }
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('events/new_event') ?>'">
@@ -137,32 +132,6 @@
             </div>
         </div>
     </div>
-    <!-- <div class="col-lg-12 mb-3">
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="nsm-card primary">
-                    <div class="nsm-card-header d-block">
-                        <div class="nsm-card-title">
-                            <span>Event Status</span>
-                        </div>
-                    </div>
-                    <div class="nsm-card-content">
-                        <div class="nsm-progressbar my-4">
-                            <div class="progressbar">
-                                <ul class="items-4">
-                                    <li class="<?php echo !isset($jobs_data) || $jobs_data->status == '0'  ? 'active' : ''; ?>">Draft</li>
-                                    <li class="<?php echo isset($jobs_data) && $jobs_data->status == 'Scheduled'  ? 'active' : ''; ?>">Schedule</li>
-                                    <li class="<?php echo isset($jobs_data) && $jobs_data->status == '2'  ? 'active' : ''; ?>" style="display: none;">OMW</li>
-                                    <li class="<?php echo isset($jobs_data) && $jobs_data->status == '3'  ? 'active' : ''; ?>">Started</li>
-                                    <li class="<?php echo isset($jobs_data) && $jobs_data->status == '4'  ? 'active' : ''; ?>">Finished</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
     <form method="POST" name="myform" id="ADD_EVENT_FORM">
         <input type="hidden" id="redirect-calendar" value="<?php echo $redirect_calendar; ?>">
         <input type="hidden" name="eid" value="<?= isset($jobs_data) ? $jobs_data->id : ''; ?>" id="eid">
@@ -273,20 +242,13 @@
                                 <div class="col-lg-12">
                                     <h6>Customer Reminder Notification</h6>
                                     <select required id="customer_reminder" name="customer_reminder_notification" class="form-control">
-                                        <option value="0">None</option>
-                                        <option <?php echo (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT5M') ? 'selected' : ''; ?> value="PT5M">5 minutes before</option>
-                                        <option <?php echo (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT15M') ? 'selected' : ''; ?> value="PT15M">15 minutes before</option>
-                                        <option <?php echo (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT30M') ? 'selected' : ''; ?> value="PT30M">30 minutes before</option>
-                                        <option <?php echo (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT1H') ? 'selected' : ''; ?> value="PT1H">1 hour before</option>
-                                        <option <?php echo (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT2H') ? 'selected' : ''; ?> value="PT2H">2 hours before</option>
-                                        <option <?php echo (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT4H') ? 'selected' : ''; ?> value="PT4H">4 hours before</option>
-                                        <option <?php echo (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT6H') ? 'selected' : ''; ?> value="PT6H">6 hours before</option>
-                                        <option <?php echo (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT8H') ? 'selected' : ''; ?> value="PT8H">8 hours before</option>
-                                        <option <?php echo (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT12H') ? 'selected' : ''; ?> value="PT12H">12 hours before</option>
-                                        <option <?php echo (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT16H') ? 'selected' : ''; ?> value="PT16H">16 hours before</option>
-                                        <option <?php echo (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'P1D') ? 'selected' : ''; ?> value="P1D" selected="selected">1 day before</option>
-                                        <option <?php echo (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'P2D') ? 'selected' : ''; ?> value="P2D">2 days before</option>
-                                        <option <?php echo (isset($jobs_data) && $jobs_data->customer_reminder_notification == 'PT0M') ? 'selected' : ''; ?> value="PT0M">On date of event</option>
+                                        <?php foreach($optionsCustomerNotifications as $key => $value){ ?>
+                                            <?php if( $jobs_data ){ ?>
+                                                <option <?= $jobs_data && $jobs_data->customer_reminder_notification == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
+                                            <?php }else{ ?>
+                                                <option <?= $eventSettings && $eventSettings->customer_reminder_notification == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
+                                            <?php } ?>
+                                        <?php } ?>                                        
                                     </select>
                                 </div>
                             </div>
@@ -295,21 +257,19 @@
                                     <h6>Time Zone</h6>
                                     <select required id="inputState" name="timezone" class="form-control">
                                         <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
-                                        <option value="<?php echo $key ?>" <?php echo ($jobs_data->timezone === $key) ? "selected" : "" ?>>
-                                            <?php echo $zone ?>
-                                        </option>
+                                            <?php if( $jobs_data ){ ?>
+                                                <option value="<?php echo $key ?>" <?php echo ($jobs_data->timezone === $key) ? "selected" : "" ?>>
+                                                    <?php echo $zone ?>
+                                                </option>
+                                            <?php }else{ ?>
+                                                <option value="<?php echo $key ?>" <?= $eventSettings && $eventSettings->timezone == $key ? 'selected="selected"' : ''; ?>>
+                                                    <?php echo $zone ?>
+                                                </option>
+                                            <?php } ?>
                                         <?php } ?>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-lg-12">
-                                    <h6>Location</h6>
-                                    <div id="pac-container">
-                                        <input required id="event_address" value="<?php echo isset($jobs_data) ?  $jobs_data->event_address : '';  ?>" name="event_address" class="form-control" type="text" placeholder="Enter a location" />
-                                    </div>
-                                </div>
-                            </div>
+                            </div>                            
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <h6>URL Link</h6>
@@ -336,66 +296,47 @@
                         <hr>
                         <div class="nsm-card-content">
                             <div class="row mb-3">
-                                <div class="col-lg-6 mb-3">
-                                    <h6>Event Type</h6><a class="SHORTCUT_LINK" href="<?php echo base_url('events/event_types'); ?>">+ Manage Event Type</a>
-                                    <select required id="event_type_option" name="event_types" class="form-control">
-                                        <option selected hidden disabled value>- Select Event Type -</option>
-                                        <?php if(!empty($job_types)): ?>
-                                        <?php foreach ($job_types as $type): ?>
-                                        <option <?php if(isset($jobs_data) && $jobs_data->event_type == $type->title) {echo 'selected'; } ?> value="<?php echo $type->title; ?>" data-image="<?php echo $type->icon_marker ?>"><?php echo $type->title; ?></option>
-                                        <?php endforeach; ?>
-                                        <?php endif; ?>
-                                    </select>
-                                </div>
-                                <div class="col-lg-6 mb-3">
-                                    <h6>Event Tag</h6><a class="SHORTCUT_LINK" href="<?php echo base_url('events/event_tags'); ?>">+ Manage Event Tag</a>
-                                    <select required id="event_tags_option" name="tags" class="form-control">
-                                        <option selected hidden disabled value>- Select Event Tag -</option>
-                                        <?php if(!empty($job_tags)): ?>
-                                        <?php foreach ($job_tags as $tag): ?>
-                                        <option <?php if(isset($jobs_data) && $jobs_data->event_tag == $tag->name) {echo 'selected'; } ?> value="<?php echo $tag->name; ?>" data-image="<?php echo $tag->marker_icon ?>"><?php echo $tag->name; ?></option>
-                                        <?php endforeach; ?>
-                                        <?php endif; ?>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-lg-12">
-                                    <h6>Description of Event</h6>
-                                    <textarea required name="event_description" class="form-control EVENT_DESCRIPTION"><?php echo isset($jobs_data) ? $jobs_data->event_description : ''; ?></textarea>
-                                </div>
-                            </div>
-                            <hr>
-                            <!-- <div class="row mb-3">
-                                <div class="col-lg-12">
-                                    <h6>Event Items Listing</h6>
-                                    <table class="table table-bordered table-hover">
-                                        <thead class="bg-light">
-                                            <tr>
-                                                <td style="width: 0% !important;"></td>
-                                                <td>Item Name</td>
-                                                <td style="width: 0% !important;">Qty</td>
-                                                <td>Unit Price</td>
-                                                <td>Total Amount</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="EVENT_ITEMS_LISTING_TBODY"></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-lg-12">
-                                    <div class="float-end">
-                                        <h5><strong>Total:&nbsp;</strong>$<span class="TOTAL_ITEM_AMOUNT">0.00</span></h5>
+                                <div class="col-md-4">
+                                    <h6>Location</h6>
+                                        <div id="autocomplete" class="autocomplete-container"></div>
+                                        <input id="event_address" value="<?php echo isset($jobs_data) ?  $jobs_data->event_address : '';  ?>" name="event_address" class="form-control" type="hidden" placeholder="Enter a location" />
+
+                                        <input type="hidden" name="center_map_latitude" id="center-lat" value="<?= $mapSetting ? $mapSetting->center_map_latitude : ''; ?>" class="form-control" />
+                                        <input type="hidden" name="center_map_longitude" id="center-lon" value="<?= $mapSetting ? $mapSetting->center_map_longitude : ''; ?>" class="form-control" />
+
+                                    <div class="mt-4">
+                                        <h6>Event Type</h6><a class="SHORTCUT_LINK" href="<?php echo base_url('events/event_types'); ?>">+ Manage Event Type</a>
+                                        <select required id="event_type_option" name="event_types" class="form-control">
+                                            <option selected hidden disabled value>- Select Event Type -</option>
+                                            <?php if(!empty($job_types)): ?>
+                                            <?php foreach ($job_types as $type): ?>
+                                            <option <?php if(isset($jobs_data) && $jobs_data->event_type == $type->title) {echo 'selected'; } ?> value="<?php echo $type->title; ?>" data-image="<?php echo $type->icon_marker ?>"><?php echo $type->title; ?></option>
+                                            <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </select>
                                     </div>
+                                    <div class="mt-4">
+                                        <h6>Event Tag</h6><a class="SHORTCUT_LINK" href="<?php echo base_url('events/event_tags'); ?>">+ Manage Event Tag</a>
+                                        <select required id="event_tags_option" name="tags" class="form-control">
+                                            <option selected hidden disabled value>- Select Event Tag -</option>
+                                            <?php if(!empty($job_tags)): ?>
+                                            <?php foreach ($job_tags as $tag): ?>
+                                            <option <?php if(isset($jobs_data) && $jobs_data->event_tag == $tag->name) {echo 'selected'; } ?> value="<?php echo $tag->name; ?>" data-image="<?php echo $tag->marker_icon ?>"><?php echo $tag->name; ?></option>
+                                            <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </select>
+                                    </div>
+
+                                    <div class="mt-4">
+                                        <h6>Description of Event</h6>
+                                        <textarea required name="event_description" class="form-control EVENT_DESCRIPTION" style="height:120px;"><?php echo isset($jobs_data) ? $jobs_data->event_description : ''; ?></textarea>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-8">
+                                    <div id="event-map"></div>
                                 </div>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-lg-12">
-                                    <button class="nsm-button small" type="button" data-bs-toggle="modal" data-bs-target="#ITEM_LIST_MODAL"><i class='bx bx-plus-medical'></i>&nbsp;Add Items</button>
-                                </div>
-                            </div>
-                            <hr> -->
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="float-end">                                        
@@ -410,93 +351,156 @@
         </div>
     </div>
 </form>
-<!-- START: MODALS -->
-<div class="modal fade" id="ITEM_LIST_MODAL" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Item List</span>
-                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <input id="ITEM_CUSTOM_SEARCH" style="width: 200px;" class="form-control" type="text" placeholder="Search Item...">
-                    </div>
-                    <div class="col-sm-12 mt-1 mb-1">
-                        <table id="ITEMS_TABLE" class="nsm-table w-100">
-                            <thead>
-                                <tr>
-                                    <td style="width: 0% !important;"></td>
-                                    <td>Item</td>
-                                    <td>Qty</td>
-                                    <td>Price</td>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if(!empty($items)): ?>
-                                <?php foreach ($items as $item): ?>
-                                <?php $item_qty = get_total_item_qty($item->id); ?>
-                                <tr>
-                                    <td style="width: 0% !important;"><button id="<?php echo $item->id; ?>" data-quantity="<?php echo $item->units; ?>" data-itemname="<?php echo $item->title; ?>" data-price="<?php echo $item->price; ?>" type="button" data-bs-dismiss="modal" class="btn btn-sm btn-light select_item"><i class='bx bx-plus-medical'></i></button></td>
-                                    <td><?php echo $item->title; ?></td>
-                                    <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : 0; ?></td>
-                                    <td><?php echo $item->price; ?></td>
-                                </tr>
-                                <?php endforeach; ?>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- END: MODALS -->
+<?php //include viewPath('v2/pages/job/js/job_new_js'); ?>
+<?php include viewPath('v2/includes/footer'); ?>
+<!-- Map files -->
+<script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
+<script type="text/javascript" src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.umd.js"></script>
+<link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
+<script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/styles/minimal.css" />
+<script src="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/dist/index.min.js"></script>
+<!-- End Map files -->
 
 <script type="text/javascript">
+//Start Map
+var myAPIKey = "<?= GEOAPIKEY ?>"; 
+<?php if($jobs_data){ ?>
+var default_lat = '<?= $default_lat; ?>';
+var default_lon = '<?= $default_lon; ?>';
+var map_zoom_level = '11'; 
+<?php }else{ ?>
+var default_lat = '39.7837304';
+var default_lon = '-100.445882';
+var map_zoom_level = '5'; 
+<?php } ?>
 
-var TOTAL_ITEM_AMOUNT = 0;
-$(".select_item").click(function (event) {
-    var ROW_ITEM_AMOUNT = 0;
-    const ITEM_ID = $(this).attr("id");
-    const ITEM_NAME = $(this).attr("data-itemname");
-    const ITEM_QUANTITY = parseInt($(this).attr("data-quantity"));
-    const ITEM_PRICE = parseInt($(this).attr("data-price"));
+var map_style = 'osm-bright';
 
-    // START: CREATE DATA AND APPEND
-    var TBODY_DATA = "<tr class='ROW_" + ITEM_ID + "'>" +
-        "<td><button class='btn btn-sm btn-light ITEM_ROW_DELETE' type='button'><i class='bx bxs-trash' ></i></button></td>" +
-        "<td>" + ITEM_NAME + "</td>" +
-        "<td><input style='width: 100px;' class='form-control form-control-sm QTY_INPUT' type='number' min='0'></td>" +
-        "<td>" + ITEM_PRICE.toFixed(2) + "</td>" +
-        "<td class='SUM_ALL_ITEMS'>0</td>" +
-        "</tr>";
-    $("#EVENT_ITEMS_LISTING_TBODY").append(TBODY_DATA);
-    // END: CREATE DATA AND APPEND
+var center = {
+    lat: default_lat,
+    lon: default_lon
+};
 
-    $('.ITEM_ROW_DELETE').click(function (event) {
-        $(this).parent().parent().remove();
-    });
+var geoMap = new maplibregl.Map({
+center: [center.lon, center.lat],
+zoom: map_zoom_level,
+container: 'event-map',
+style: `https://maps.geoapify.com/v1/styles/${map_style}/style.json?apiKey=${myAPIKey}`,
+});
+geoMap.addControl(new maplibregl.NavigationControl()); 
+var currentMarkers=[];
 
-    var ROW_LENGTH = $('#EVENT_ITEMS_LISTING_TBODY > tr').length;
+// check the available autocomplete options on the https://www.npmjs.com/package/@geoapify/geocoder-autocomplete 
+const autocompleteInput = new autocomplete.GeocoderAutocomplete(
+    document.getElementById("autocomplete"), 
+    myAPIKey, 
+    { /* Geocoder options */ 
+});
 
-    $('.QTY_INPUT').change(function (event) {
-        var QUANTITY = $(this).val();
-        var PRICE = $(this).closest('td').next().html();
-        ROW_ITEM_AMOUNT = parseInt(QUANTITY * PRICE);
-        $(this).closest('td').next().next().html(ROW_ITEM_AMOUNT.toFixed(2));
+<?php if( $jobs_data ){ ?>
+$('.geoapify-autocomplete-input').val('<?= $jobs_data->event_address; ?>');
+<?php } ?>
 
-        var SUM_ALL_ITEMS = $('.SUM_ALL_ITEMS');
-        var SUM = 0;
-        for (var i = 0; i < ROW_LENGTH; i++) {
-            SUM += parseInt(SUM_ALL_ITEMS[i].textContent);
-            $(".TOTAL_ITEM_AMOUNT").text(SUM.toFixed(2));
+var markerIcon = L.icon({
+    iconUrl: `https://api.geoapify.com/v1/icon?size=xx-large&type=material&color=rgb(106,74,134)&icon=my_location&apiKey=${myAPIKey}`,
+    iconSize: [38, 56], // size of the icon
+    iconAnchor: [19, 51], // point of the icon which will correspond to marker's location
+    popupAnchor: [0, -60] // point from which the popup should open relative to the iconAnchor
+});      
+
+let zooMarker;
+let marker;
+
+autocompleteInput.on('select', (location) => {
+    // Add marker with the selected location
+    // Add marker with the selected location
+    if (zooMarker) {
+        zooMarker.remove();
+    }
+    
+    if (location) {    
+        
+        if (currentMarkers!==null) {
+            for (var i = currentMarkers.length - 1; i >= 0; i--) {                
+                currentMarkers[i].remove();
+            }
         }
 
-    });
+        var markerIcon = L.icon({
+        iconUrl: `https://api.geoapify.com/v1/icon?size=xx-large&type=material&color=rgb(106,74,134)&icon=my_location&apiKey=${myAPIKey}`,
+        iconSize: [38, 56], // size of the icon
+        iconAnchor: [19, 51], // point of the icon which will correspond to marker's location
+        popupAnchor: [0, -60] // point from which the popup should open relative to the iconAnchor
+        });
+
+        var coordinates = [location.properties.lon, location.properties.lat]
+        var marker_color = 'mediumpurple';
+        let map_icon = `https://api.geoapify.com/v1/icon?size=large&type=material&icon=business_center&noWhiteCircle=0&color=${marker_color}&apiKey=${myAPIKey}`;
+        const el = document.createElement('div');
+        el.className = 'marker';    
+        el.style.width = '30px';
+        el.style.color = marker_color;
+        el.style.height = '50px';
+        el.style.backgroundSize = "contain";
+        el.style.backgroundImage = `url(${map_icon})`;    
+
+        // create the popup
+        const popup = new maplibregl.Popup({offset: 25}).setHTML(
+            location.properties.address_line2
+        );
+
+        // add marker to map
+        var marker = new maplibregl.Marker({element: el})
+            .setLngLat(coordinates)
+            .setPopup(popup)
+            .addTo(geoMap);
+
+        currentMarkers.push(marker);
+
+        geoMap.flyTo({
+            // These options control the ending camera position: centered at
+            // the target, at zoom level 9, and north up.
+            center: coordinates,
+            zoom: 11,
+            bearing: 0,
+
+            // These options control the flight curve, making it move
+            // slowly and zoom out almost completely before starting
+            // to pan.
+            speed: 3, // make the flying slow
+            curve: 1, // change the speed at which it zooms out
+
+            // This can be any easing function: it takes a number between
+            // 0 and 1 and returns another number between 0 and 1.
+            easing (t) {
+                return t;
+            },
+
+            // this animation is considered essential with respect to prefers-reduced-motion
+            essential: true
+        });
+
+        // //let title     = location.properties.address_line2;
+        // let title = "<i class='fa fa-map-marker'></i> " + location.properties.address_line2;
+        // let zooMarkerPopup = L.popup().setContent(title);
+        // let zooMarker = L.marker([location.properties.lat, location.properties.lon], {
+        // icon: markerIcon,
+        // draggable: false
+        // }).addTo(geoMap);
+        
+        $('#event_address').val(location.properties.address_line2);
+        $('#center-lon').val(location.properties.lon);
+        $('#center-lat').val(location.properties.lat);   
+        
+    }
 });
+//End Map
 
 // START: ADD EVENT SCRIPT
 $('#ADD_EVENT_FORM').submit(function (event) {
@@ -621,23 +625,6 @@ function formatState (opt) {
 
 });
 
-var ITEMS_TABLE = $("#ITEMS_TABLE").DataTable({
-    "ordering": false,
-    language: {
-        processing: '<span>Fetching data...</span>'
-    },
-});
-
-$("#ITEM_CUSTOM_SEARCH").keyup(function () {
-    ITEMS_TABLE.search($(this).val()).draw()
-});
-ITEMS_TABLE_SETTINGS = ITEMS_TABLE.settings();
-
-$('#CUSTOM_FILTER_DROPDOWN').change(function (event) {
-    $('#CUSTOM_FILTER_SEARCHBAR').val($('#CUSTOM_FILTER_DROPDOWN').val());
-    ITEMS_TABLE.columns(7).search(this.value).draw();
-});
-
 $("body").delegate(".color-scheme", "click", function () {
     var id = this.id;
     var COLOR = $(this).attr("data-color");
@@ -656,6 +643,3 @@ function remove_others(color_id) {
     });
 }
 </script>
-<?php include viewPath('v2/pages/job/js/job_new_js'); ?>
-<?php include viewPath('v2/includes/footer'); ?>
-
