@@ -15,5 +15,10 @@
                 <span>Event Tags</span>
             </a>
         </li>
+        <li class="<?php if($page->tab == 'Event Settings'): echo 'active'; endif; ?>"  onclick="location.href='<?= base_url('events/settings') ?>'">
+            <a class="nsm-page-link" href="javascript:void(0);">
+                <span>Event Settings</span>
+            </a>
+        </li>
     </ul>
 </div>
