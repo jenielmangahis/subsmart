@@ -1457,6 +1457,14 @@ class Dashboard extends Widgets
         exit(json_encode($data_arr));
     }
 
+    public function business_snapshot_expense()
+    {   
+        $data['business_snapshot']= true;
+        $income =set_expense_graph_data($data);
+        $data_arr = ['Success' => true, 'income' => $income];
+        exit(json_encode($data_arr));
+    }
+
     public function unpaid_invoices_graph()
     {
         $CI = &get_instance();

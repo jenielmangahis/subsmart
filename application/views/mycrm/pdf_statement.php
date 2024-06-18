@@ -21,7 +21,8 @@
             Pensacola, FL 32526<br>
             <br>
             <b><?php echo $company->business_name; ?></b><br>
-            <?php echo $company->business_email; ?>
+            <?php echo $company->business_email; ?><br>
+            <?php echo $company->address; ?>
         </td>
         <td style="vertical-align: top;text-align: right;">
             <table>
@@ -39,7 +40,7 @@
                 </tr>
                 <tr>
                     <td align="right"><b>Balance Due</b>:</td>
-                    <td align="right">$0.00</td>
+                    <td align="right"><b>$<?php echo number_format($payment->total_amount, 2); ?></b></td>
                 </tr>
             </table>
         </td>

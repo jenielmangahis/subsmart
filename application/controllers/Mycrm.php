@@ -613,6 +613,9 @@ class Mycrm extends MY_Controller
 
         $mail->isHTML(true);
         $mail->Body = $this->load->view('mycrm/email_template/send_email_statement', $data, true);
+        
+        $this->page_data['page']->title = 'Email Sent';	
+        $this->load->view('mycrm/email_template/email_sent', $this->page_data);
     }
 
     public function pdf_statement($id)

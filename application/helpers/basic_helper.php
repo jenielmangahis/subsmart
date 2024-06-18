@@ -4744,7 +4744,7 @@ if(!function_exists('set_expense_graph_data')) {
         $accounts = $CI->chart_of_accounts_model->get_company_active_accounts(logged('company_id'));
         $endDate = date("m/d/Y");
         $startDate = date("m/d/Y", strtotime("$endDate -30 days"));
-
+        
         foreach($accounts as $key => $account) {
             $categories = $CI->expenses_model->get_categories_by_expense_account($account->id);
 
@@ -4752,7 +4752,11 @@ if(!function_exists('set_expense_graph_data')) {
             foreach($categories as $category) {
                 switch($category->transaction_type) {
                     case 'Expense' :
-                        $transaction = $CI->vendors_model->get_expense_by_id($category->transaction_id);
+                        if($data['business_snapshot']){
+                            $transaction = $CI->vendors_model->get_expense_by_id_business_snapshot($category->transaction_id);
+                        }else{
+                            $transaction = $CI->vendors_model->get_expense_by_id($category->transaction_id);
+                        }
                         $date = date("m/d/Y", strtotime($transaction->payment_date));
                     break;
                     case 'Check' :

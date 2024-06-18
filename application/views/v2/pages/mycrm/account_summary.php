@@ -1,6 +1,9 @@
 <?php include viewPath('v2/includes/header'); ?>
 <?php include viewPath('v2/includes/mycrm/membership_modals'); ?>
 <style>
+.view_pdf_container{
+    display: flex;
+}
 .view_pdf{
     border: 1px solid #615c5c;
     border-radius: 5px;
@@ -16,8 +19,13 @@
 }
 
 @media screen and (max-width: 567px) {
+    .view_pdf_container{
+        display: block;
+    }
     .view_pdf{
         width: 100%;
+        margin-bottom: 10px;
+        height: unset !important;
     }
 }
 </style>
@@ -38,8 +46,9 @@
                     </div>
                 </div>
                 <div class="row mb-3">
-                    <div class="col-12">
+                    <div class="col-12 view_pdf_container">
                         <a class="view_pdf" href="<?php echo url('mycrm/pdf_statement/'.$lastPayment->id); ?>" target="_new" style="margin-right: 10px;">View PDF Statement</a>
+                        <a class="view_pdf" href="<?php echo url('mycrm/orders/'.$lastPayment->id); ?>" target="_new" style="margin-right: 10px;">View Previous Statement</a>
                     </div>
                 </div>
                 <div class="row g-3 mb-3">

@@ -1,11 +1,12 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Deposits extends MY_Controller {
-	
-	public function __construct()
+class Deposits extends MY_Controller
+{
+
+    public function __construct()
     {
-		parent::__construct();
+        parent::__construct();
         $this->checkLogin();
         $this->load->model('vendors_model');
         $this->load->model('accounting_customers_model');
@@ -53,7 +54,7 @@ class Deposits extends MY_Controller {
             "assets/js/accounting/sales/customer_includes/send_reminder_by_batch_modal.js"
         ));
 
-		$this->page_data['menu_name'] =
+        $this->page_data['menu_name'] =
             array(
                 // array("Dashboard",	array()),
                 // array("Banking", 	array('Link Bank','Rules','Receipts','Tags')),
@@ -111,16 +112,26 @@ class Deposits extends MY_Controller {
 
         $cid = logged('company_id');
 
-        $plaidBankAccounts = $this->PlaidBankAccount_model->getAllByCompanyId($cid);    
-        $plaidAccount      = $this->PlaidAccount_model->getDefaultCredentials();        
+        $plaidBankAccounts = $this->PlaidBankAccount_model->getAllByCompanyId($cid);
+        $plaidAccount      = $this->PlaidAccount_model->getDefaultCredentials();
         $payments          = $this->invoice_model->get_company_payments(logged('company_id'));
 
         $deposits = [];
-        foreach($payments as $payment)
-        {            
+        foreach ($payments as $payment) {
             $invoice = $this->invoice_model->get_invoice_by_invoice_number($payment->invoice_number, logged('company_id'));
-            $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
-            $customerName = $customer->first_name . ' ' . $customer->last_name;
+
+            if ($invoice && $invoice->customer_id) {
+                $customer = $this->accounting_customers_model->get_by_id($invoice->customer_id);
+
+                if ($customer) {
+                    $customerName = $customer->first_name . ' ' . $customer->last_name;
+                } else {
+                    $customerName = 'No Customer Name';
+                }
+            } else {
+                $customerName = 'No Customer Name';
+            }
+
             $deposits[$payment->payment_date]['invoices'][] = [
                 'invoice_id' => $invoice->id,
                 'customer_name' => $customerName,
@@ -131,20 +142,20 @@ class Deposits extends MY_Controller {
                 'amount' => floatval($payment->invoice_amount),
                 'type' => 'invoice'
             ];
-        }    
-        
+        }
+
         //Plaid        
-        if( $plaidAccount ){
-            foreach($plaidBankAccounts as $pc){            
-                try{
+        if ($plaidAccount) {
+            foreach ($plaidBankAccounts as $pc) {
+                try {
                     $start_date = date('Y-m-d', strtotime("-1 week"));
                     $end_date   = date("Y-m-d");
 
-                    $plaidTransactions = transactionGet($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $start_date, $end_date, $pc->account_id, 5);  
-                    if( $plaidTransactions && $plaidTransactions->transactions ){
-                        foreach($plaidTransactions->transactions as $transaction){
+                    $plaidTransactions = transactionGet($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $start_date, $end_date, $pc->account_id, 5);
+                    if ($plaidTransactions && $plaidTransactions->transactions) {
+                        foreach ($plaidTransactions->transactions as $transaction) {
                             $categories = [];
-                            foreach($transaction->category as $category){
+                            foreach ($transaction->category as $category) {
                                 $categories[] = $category;
                             }
 
@@ -159,16 +170,15 @@ class Deposits extends MY_Controller {
                                 'amount' => floatval($transaction->amount),
                                 'type' => 'api'
                             ];
-                        }                        
+                        }
                     }
-                }catch(Exception $e){
+                } catch (Exception $e) {
                     $err = $e->getMessage();
                 }
             }
         }
 
-        foreach($deposits as $date => $deposit)
-        {
+        foreach ($deposits as $date => $deposit) {
             $amountCol = array_column($deposit['invoices'], 'amount');
             $deposits[$date]['total'] = array_sum($amountCol);
 
