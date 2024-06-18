@@ -158,7 +158,7 @@
                                     <!-- <input type="text" name="sales_rep" id="sales-rep" class="form-control nsm-field mb-2" value="<?=isset($creditMemo) ? $creditMemo->sales_rep : ""?>"> -->
 
                                     <label for="ref-no" style="margin-top:12px;">Reference No.</label>
-                                    <input type="text" class="form-control nsm-field mb-2" name="ref_no" id="ref-no" value="<?=isset($creditMemo) ? $creditMemo->ref_no : ""?>">
+                                    <input type="number" class="form-control nsm-field mb-2" name="ref_no" id="ref-no" value="<?=isset($creditMemo) ? $creditMemo->ref_no : ""?>">
                                 </div>
                                 <div class="col-12 col-md-2 offset-md-4">
                                     <label for="location-of-sale">Location of sale</label>
@@ -528,7 +528,10 @@ $(function(){
         maximumSelectionLength: 5,
         minimumInputLength: 0,
         templateResult: formatRepoUser,
-        templateSelection: formatRepoSelectionUser
+        templateSelection: formatRepoSelectionUser,
+        initSelection: function(element, callback) {
+            callback({id: 'default', text: '<?php echo $creditMemo->sales_rep; ?>' });
+        }       
     });
 
     function formatRepoUser(repo) {
