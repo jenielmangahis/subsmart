@@ -306,7 +306,6 @@ $route['invoice/_create_invoice'] = 'Invoice/ajax_create_invoice';
 $route['invoice/standard_invoice'] = 'Invoice/standard_invoice_template';
 $route['invoice/_send_invoice_email_with_late_fee'] = 'Invoice/ajax_send_invoice_email_with_late_fee';
 
-
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
 
 $route['features'] = 'features';
@@ -1180,14 +1179,13 @@ $route['job/_send_esign_form'] = 'Job/ajax_send_esign_form';
 $route['job/create_invoice/(:num)'] = 'Job/createInvoice/$1';
 $route['job/_update_job'] = 'Job/ajax_update_job';
 
-//Trac360
+// Trac360
 $route['job/bird_eye_view'] = 'JobMap/index';
 $route['job_map/_calendar_data'] = 'JobMap/ajax_calendar_data';
 $route['job_map/_update_map_marker'] = 'JobMap/ajax_update_map_marker';
 $route['job_map/_get_map_location'] = 'JobMap/ajax_get_map_location';
 $route['job_map/_calendar_resource_users'] = 'JobMap/ajax_calendar_resource_users';
 $route['job_map/_update_map_settings'] = 'JobMap/ajax_update_map_settings';
-
 
 $route['workorder/convert_to_job'] = 'Workorder/ajax_convert_to_job';
 
@@ -1264,7 +1262,7 @@ $route['job/update_job_tag'] = 'Job/update_job_tag';
 $route['login/_check_user_id_exists'] = 'Login/ajax_check_user_id_exists';
 $route['login/_update_user_password'] = 'Login/ajax_update_user_password';
 
-//Unauthorize access
+// Unauthorize access
 $route['login/unauthorize_access/(:any)'] = 'Login/unAuthorizeLogin/$1';
 
 // Customer Login
@@ -1360,6 +1358,7 @@ $route['_square_process_payment'] = 'Pages/ajax_square_process_payment';
 
 // Refer Friend
 $route['refer_friend'] = 'Pages/front_refer_friend';
+$route['email_sent'] = 'Pages/email_sent';
 $route['_send_refer_email'] = 'Pages/send_refer_email';
 
 // Job Checklists
@@ -1752,7 +1751,7 @@ $route['widgets/_load_job_chart_data'] = 'Widgets/ajax_load_job_chart_data';
 $route['widgets/_load_taskhub_summary'] = 'Widgets/ajax_load_taskhub_summary';
 $route['widgets/_load_customer_group_chart'] = 'Widgets/ajax_load_customer_group_chart';
 
-//Esign
+// Esign
 $route['esign_v2/_tags_sections'] = 'Esign_v2/ajax_company_tags_sections';
 $route['esign_v2/_create_tags'] = 'Esign_v2/ajax_create_tags';
 $route['esign_v2/_edit_widget'] = 'Esign_v2/ajax_edit_widget';
@@ -1762,14 +1761,14 @@ $route['esign_v2/_undo_delete_widget'] = 'Esign_v2/ajax_restore_widget';
 $route['esign_v2/_trash_widgets'] = 'Esign_v2/ajax_trash_widgets';
 $route['esign_v2/_restore_widget'] = 'Esign_v2/ajax_restore_widget';
 
-//Accounting Invoices
+// Accounting Invoices
 $route['accounting/invoices/delete-selected'] = 'Accounting/ajax_invoice_delete_selected';
 
-//Trac360
+// Trac360
 $route['trac360/_create_user_location'] = 'Trac360/ajax_create_user_location';
 $route['trac360/_create_user_geolocation_features'] = 'Trac360/ajax_create_user_geolocation_features';
 
-//Before and after photos
+// Before and after photos
 $route['before_after_photos'] = 'Before_after_v2/index';
 $route['before_after_photos/add_photos'] = 'Before_after_v2/addPhoto';
 $route['before_after_photos/_create_photos'] = 'Before_after_v2/ajax_create_photos';
@@ -1779,3 +1778,6 @@ $route['before_after_photos/_update_photos'] = 'Before_after_v2/ajax_update_phot
 
 //Files Vault
 $route['files_vault'] = 'Vault_v2/index_v2';
+
+//Email Broadcast
+$route['email_broadcast'] = 'Vault_v2/index_v2';

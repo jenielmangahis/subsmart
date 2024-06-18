@@ -3,8 +3,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 echo put_header_assets();
 include viewPath('v2/includes/header');
 ?>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
 <style>
     .select2-container,
     .set__box__icon,
@@ -23,7 +21,7 @@ include viewPath('v2/includes/header');
         --size: 100%;
         width: var(--size);
         height: var(--size);
-        background-color: #f2f2f2;
+        background-color: #6a4a86;
     }
     .set__box img {
         width: inherit;
@@ -36,6 +34,8 @@ include viewPath('v2/includes/header');
         overflow: hidden;
         display: block;
         text-align: center;
+        border-left:0px;
+        border-right:0px;
     }
     .fileinput-button input {
         position: absolute;
@@ -53,6 +53,16 @@ include viewPath('v2/includes/header');
     }
     .upload-group:last-child {
         margin-bottom: 1rem;
+    }
+    span.nsm-button{
+        margin:0px !important;
+        border-radius:0px !important;
+    }
+    .notes{
+        border:none !important;
+    }
+    .txt-notes{
+        height : 150px;
     }
 </style>
 
@@ -97,38 +107,26 @@ include viewPath('v2/includes/header');
     </div>
 
     <?php if (empty($photos)): ?>
-        <?php echo form_open_multipart('Before_after_v2/saveBeforeAfter', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
+        <?php echo form_open_multipart(null, ['class' => 'form-validate', 'id' => 'frm-save-photos', 'autocomplete' => 'off']); ?>
     <?php else: ?>
-        <?php echo form_open('before-after/update-before-after', ['class' => 'form-validate require-validation', 'id' => 'item_categories_form', 'autocomplete' => 'off']); ?>
+        <?php echo form_open('before-after/update-before-after', ['class' => 'form-validate require-validation', 'id' => 'frm-update-photos', 'autocomplete' => 'off']); ?>
     <?php endif;?>
-        <div class="form-group mb-3">
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <label>Customer</label> <span class="help">(optional, assign this session to a customer)</span>
-                    <select id="sel-customer" name="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" placeholder="Select">
-                        <option></option>
-                        <?php foreach ($customers as $c) {?>
-                            <option value="<?=$c->prof_id;?>"><?=$c->first_name . ' ' . $c->last_name;?></option>
-                        <?php }?>
-                    </select>
-                    <input type="hidden" id="job_customer_id" name="">
-                    <input type="hidden" id="group_number" name="group_number" value="<?php echo $group_number; ?>">
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <div class="d-flex justify-content-between">
+                    <h6>Customer <span style="margin-left:2px;" class="bx bxs-help-circle" id="help-popover-customer"></span></h6>
+                    <a class="nsm-link d-flex align-items-center" id="add_another_invoice" data-bs-toggle="modal" data-bs-target="#new_customer" href="javascript:void(0);">
+                        <span class="bx bx-plus"></span>Create Customer
+                    </a>
                 </div>
-
-                <a href="<?php echo base_url() . 'customer/add_advance' ?>"><span class="fa fa-plus"></span> New Customer</a>
+                <select id="sel-customer" name="customer_id" class="form-control searchable-dropdown" required=""></select>
+                <input type="hidden" id="job_customer_id" name="">
+                <input type="hidden" id="group_number" name="group_number" value="<?php echo $group_number; ?>">
             </div>
         </div>
         <div class="card" data-fileupload="list" style="border:1px solid white;">
-            <div class="validation-error" data-fileupload="error" role="alert" style="display: none;"></div>
-            <div class="" data-fileupload="progressbar" style="display: none;">
-                <div class="text">Uploading</div>
-                <div class="progress">
-                    <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;"></div>
-                </div>
-            </div>
-
             <div class="row upload-group">
-                <div class="col-sm-4">
+                <div class="col-md-4 col-sm-4">
                     <div class="set clearfix set--h">
                         <div class="set__box">
                             <div class="set__box__title --off">Before</div>
@@ -140,6 +138,9 @@ include viewPath('v2/includes/header');
                                 <img data-fileupload-image="0,0" id="b1_img" src="<?php echo base_url() . "uploads/" . $photos[0]->before_image ?>">
                             <?php endif;?>
                             <div class="set__box__date"></div>
+                            <span class="nsm-button primary fileinput-button">Upload Before
+                                <input data-fileupload="file" id="b1-image" data-position="0,0" data-orientation="h" onchange="readURLv2(this, 'b1_img');" name="b1_img" type="file" accept="image/*">
+                            </span>
                         </div>
                         <div class="set__box">
                             <div class="set__box__title --off">After</div>
@@ -151,17 +152,14 @@ include viewPath('v2/includes/header');
                                 <img data-fileupload-image="0,0" id="a1_img" src="<?php echo base_url() . "uploads/" . $photos[0]->after_image ?>">
                             <?php endif;?>
                             <div class="set__box__date"></div>
+                            <span class="nsm-button primary fileinput-button">Upload After <input data-fileupload="file" id="a1-image" data-position="0,1" data-orientation="h" onchange="readURLv2(this, 'a1_img');" name="a1_img" type="file" accept="image/*"></span>
                         </div>
                     </div>
-                </div>
-                <div class="col-sm-2">
-                    <span class="nsm-button fileinput-button">Upload Before<input data-fileupload="file" data-position="0,0" data-orientation="h" onchange="readURL(this, 'b1_img');" name="b1_img" type="file" accept="image/*"></span>
-                    <span class="nsm-button fileinput-button">Upload After <input data-fileupload="file" data-position="0,1" data-orientation="h" onchange="readURL(this, 'a1_img');" name="a1_img" type="file" accept="image/*"></span>
-                </div>
-                <div class="col-sm-6">
+                </div>                
+                <div class="col-md-3 col-sm-6">
                     <div class="notes">
                         <label>Comments</label>
-                        <textarea type="text" name="note[0]" value="" class="form-control" autocomplete="off"></textarea>
+                        <textarea type="text" name="note[]" value="" class="form-control txt-notes" autocomplete="off"></textarea>
                     </div>
                 </div>
             </div>
@@ -179,6 +177,7 @@ include viewPath('v2/includes/header');
                                 <img data-fileupload-image="0,0" id="b2_img" src="<?php echo base_url() . "uploads/" . $photos[1]->before_image ?>">
                             <?php endif;?>
                             <div class="set__box__date"></div>
+                            <span class="nsm-button primary fileinput-button">Upload Before<input data-fileupload="file" id="b2-image" data-position="1,0" data-orientation="h" onchange="readURLv2(this, 'b2_img');" name="b2_img" type="file" accept="image/*"></span>
                         </div>
                         <div class="set__box">
                             <div class="set__box__title --off">After</div>
@@ -190,148 +189,161 @@ include viewPath('v2/includes/header');
                                 <img data-fileupload-image="0,0" id="a2_img" src="<?php echo base_url() . "uploads/" . $photos[1]->after_image ?>">
                             <?php endif;?>
                             <div class="set__box__date"></div>
+                            <span class="nsm-button primary fileinput-button">Upload After <input data-fileupload="file" id="a2-image" data-position="1,1" data-orientation="h" onchange="readURLv2(this, 'a2_img');" name="a2_img" type="file" accept="image/*"></span>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-2">
-                    <span class="nsm-button fileinput-button">Upload Before<input data-fileupload="file" data-position="1,0" data-orientation="h" onchange="readURL(this, 'b2_img');" name="b2_img" type="file" accept="image/*"></span>
-                    <span class="nsm-button fileinput-button">Upload After <input data-fileupload="file" data-position="1,1" data-orientation="h" onchange="readURL(this, 'a2_img');" name="a2_img" type="file" accept="image/*"></span>
-                </div>
-                <div class="col-sm-6">
+                <div class="col-md-3 col-sm-6">
                     <div class="notes">
                         <label>Comments</label>
-                        <textarea type="text" name="note[1]" value="" class="form-control" autocomplete="off"></textarea>
+                        <textarea type="text" name="note[]" value="" class="form-control txt-notes" autocomplete="off"></textarea>
                     </div>
                 </div>
             </div>
-
-            <div class="row upload-group">
-                <div class="col-sm-4">
-                    <div class="set clearfix set--h">
-                        <div class="set__box">
-                            <div class="set__box__title --off">Before</div>
-                            <a class="set__box__delete" data-fileupload-delete="2,0" data-id="0" href=""><span class="fa fa-remove"></span></a>
-                            <div class="set__box__icon " data-fileupload="upload" data-position="2,0"><span class="fa fa-camera"></span></div>
-                            <?php if (empty($photos[2])): ?>
-                                <img data-fileupload-image="0,0" id="b3_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png"; ?>">
-                            <?php else: ?>
-                                <img data-fileupload-image="0,0" id="b3_img" src="<?php echo base_url() . "uploads/" . $photos[2]->before_image ?>">
-                            <?php endif;?>
-                            <div class="set__box__date"></div>
-                        </div>
-                        <div class="set__box">
-                            <div class="set__box__title --off">After</div>
-                            <a class="set__box__delete" data-fileupload-delete="2,1" data-id="0" href=""><span class="fa fa-remove"></span></a>
-                            <div class="set__box__icon " data-fileupload="upload" data-position="2,1"><span class="fa fa-camera"></span></div>
-                            <?php if (empty($photos[2]->after_image)): ?>
-                                <img data-fileupload-image="0,0" id="a3_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png"; ?>">
-                            <?php else: ?>
-                                <img data-fileupload-image="0,0" id="a3_img" src="<?php echo base_url() . "uploads/" . $photos[2]->after_image ?>">
-                            <?php endif;?>
-                            <div class="set__box__date"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <span class="nsm-button fileinput-button">Upload Before<input data-fileupload="file" data-position="2,0" data-orientation="h" onchange="readURL(this, 'b3_img');" name="b3_img" type="file" accept="image/*"></span>
-                    <span class="nsm-button fileinput-button">Upload After <input data-fileupload="file" data-position="2,1" data-orientation="h" onchange="readURL(this, 'a3_img');" name="a3_img" type="file" accept="image/*"></span>
-                </div>
-                <div class="col-sm-6">
-                    <div class="notes">
-                        <label>Comments</label>
-                        <textarea type="text" name="note[2]" value="" class="form-control" autocomplete="off"></textarea>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row upload-group">
-                <div class="col-sm-4">
-                    <div class="set clearfix set--h">
-                        <div class="set__box">
-                            <div class="set__box__title --off">Before</div>
-                            <a class="set__box__delete" data-fileupload-delete="3,0" data-id="0" href=""><span class="fa fa-remove"></span></a>
-                            <div class="set__box__icon " data-fileupload="upload" data-position="3,0"><span class="fa fa-camera"></span></div>
-                            <?php if (empty($photos[3])): ?>
-                                <img data-fileupload-image="0,0" id="b4_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png"; ?>">
-                            <?php else: ?>
-                                <img data-fileupload-image="0,0" id="b4_img" src="<?php echo base_url() . "uploads/" . $photos[3]->before_image ?>">
-                            <?php endif;?>
-                            <div class="set__box__date"></div>
-                        </div>
-                        <div class="set__box">
-                            <div class="set__box__title --off">After</div>
-                            <a class="set__box__delete" data-fileupload-delete="3,1" data-id="0" href=""><span class="fa fa-remove"></span></a>
-                            <div class="set__box__icon " data-fileupload="upload" data-position="3,1"><span class="fa fa-camera"></span></div>
-                            <?php if (empty($photos[3]->after_image)): ?>
-                                <img data-fileupload-image="0,0" id="a4_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png"; ?>">
-                            <?php else: ?>
-                                <img data-fileupload-image="0,0" id="a4_img" src="<?php echo base_url() . "uploads/" . $photos[3]->after_image ?>">
-                            <?php endif;?>
-                            <div class="set__box__date"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <span class="nsm-button fileinput-button">Upload Before<input data-fileupload="file" data-position="3,0" data-orientation="h" name="fileimage" onchange="readURL(this, 'b4_img');" id="b4_img" type="file" accept="image/*"></span>
-                    <span class="nsm-button fileinput-button">Upload After <input data-fileupload="file" data-position="3,1" data-orientation="h" onchange="readURL(this, 'a4_img');" name="a4_img" type="file" accept="image/*"></span>
-                </div>
-                <div class="col-sm-6">
-                    <div class="notes">
-                        <label>Comments</label>
-                        <textarea type="text" name="note[3]" value="" class="form-control" autocomplete="off"></textarea>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row upload-group">
-                <div class="col-sm-4">
-                    <div class="set clearfix set--h">
-                        <div class="set__box">
-                            <div class="set__box__title --off">Before</div>
-                            <a class="set__box__delete" data-fileupload-delete="4,0" data-id="0" href=""><span class="fa fa-remove"></span></a>
-                            <div class="set__box__icon" data-fileupload="upload" data-position="4,0"><span class="fa fa-camera"></span></div>
-                            <?php if (empty($photos[5])): ?>
-                                <img data-fileupload-image="0,0" id="b5_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png"; ?>">
-                            <?php else: ?>
-                                <img data-fileupload-image="0,0" id="b5_img" src="<?php echo base_url() . "uploads/" . $photos[4]->before_image ?>">
-                            <?php endif;?>
-                            <div class="set__box__date"></div>
-                        </div>
-                        <div class="set__box">
-                            <div class="set__box__title --off">After</div>
-                            <a class="set__box__delete" data-fileupload-delete="4,1" data-id="0" href=""><span class="fa fa-remove"></span></a>
-                            <div class="set__box__icon " data-fileupload="upload" data-position="4,1"><span class="fa fa-camera"></span></div>
-                            <?php if (empty($photos[4]->after_image)): ?>
-                                <img data-fileupload-image="0,0" id="a5_img" src="<?php echo base_url() . "assets/frontend/images/nopic.png"; ?>">
-                            <?php else: ?>
-                                <img data-fileupload-image="0,0" id="a5_img" src="<?php echo base_url() . "uploads/" . $photos[4]->after_image ?>">
-                            <?php endif;?>
-                            <div class="set__box__date"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-2">
-                    <span class="nsm-button fileinput-button">Upload Before<input data-fileupload="file" data-position="4,0" data-orientation="h"  onchange="readURL(this, 'b5_img');" name="b5_img" type="file" accept="image/*"></span>
-                    <span class="nsm-button fileinput-button">Upload After <input data-fileupload="file" data-position="4,1" data-orientation="h" onchange="readURL(this, 'a5_img');" name="a5_img" type="file" accept="image/*"></span>
-                </div>
-                <div class="col-sm-6">
-                    <div class="notes">
-                        <label>Comments</label>
-                        <textarea type="text" name="note[4]" value="" class="form-control" autocomplete="off"></textarea>
-                    </div>
-                </div>
-            </div>
+            
         </div>
-
-        <a class="nsm-button" href="<?=base_url() . "vault_v2/beforeafter";?>">Cancel</a>
-        <button type="submit" class="nsm-button primary mb-0" id="saveBtnAddPhotos" style="border:0; height:34px;">Save images</button>
+        <div class="mt-4">
+            <a class="nsm-button" href="<?= base_url('before_after_photos'); ?>">Cancel</a>
+            <button type="submit" class="nsm-button primary mb-0" id="" style="border:0; height:34px;">Save images</button>
+        </div>
     <?php echo form_close(); ?>
 </div>
+<?php include viewPath('v2/pages/job/modals/new_customer'); ?>
 <?php include viewPath('v2/includes/footer');?>
 <script>
 $(function(){
-    $("#sel-customer").select2({
-        placeholder: "Select Customer"
+    $('#sel-customer').select2({
+        ajax: {
+            url: '<?= base_url('autocomplete/_company_customer') ?>',
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                q: params.term, // search term
+                page: params.page
+                };
+            },
+            processResults: function (data, params) {
+                params.page = params.page || 1;
+
+                return {
+                results: data
+                // pagination: {
+                //   more: (params.page * 30) < data.total_count
+                // }
+                };
+            },
+            cache: true
+            },
+            placeholder: "Select Customer",
+            minimumInputLength: 0,
+            templateResult: formatRepoCustomer,
+            templateSelection: formatRepoCustomerSelection
+    });
+
+    function formatRepoCustomerSelection(repo) {
+        if( repo.first_name != null ){
+            return repo.first_name + ' ' + repo.last_name;      
+        }else{
+            return repo.text;
+        }
+    }
+
+    function formatRepoCustomer(repo) {
+        if (repo.loading) {
+        return repo.text;
+        }
+
+        var $container = $(
+        '<div>'+repo.first_name + ' ' + repo.last_name +'<br><small>'+repo.phone_m+' / '+repo.email+'</small></div>'
+        );
+
+        return $container;
+    }
+
+    $('#help-popover-customer').popover({
+        placement: 'top',
+        html : true,
+        trigger: "hover focus",
+        content: function() {
+            return 'Tag photos to customer';
+        } 
+    });
+
+    $('#frm-save-photos').on('submit', function(e){
+        let _this = $(this);
+        e.preventDefault();
+
+        var total_photos = 0;
+        var total_empty  = 0;
+        
+        $("input[type='file']").each(function(){
+            if( $(this).val() === '' ){
+                total_empty++;
+            }
+            total_photos++;
+        });
+
+        if( total_empty ==  total_photos ){
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                html: 'Please select a photo'
+            });
+
+            return false;
+        }
+
+        if( Math.abs(total_empty % 2) == 1 ){
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                html: 'Some photos is missing before or after image. Both image are needed.'
+            });
+
+            return false;
+        }
+
+        var url = base_url + "before_after_photos/_create_photos";
+        _this.find("button[type=submit]").html("Saving");
+        _this.find("button[type=submit]").prop("disabled", true);
+
+        let formData = new FormData(_this[0]);   
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: formData,
+            dataType: 'json',
+            contentType: false,
+            processData:false,
+            cache:false,
+            success: function(result) {
+                if( result.is_success == 1 ){
+                    Swal.fire({
+                        title: 'Save Successful!',
+                        text: "Photos was successfully saved.",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            location.href = base_url + 'before_after_photos';
+                        //}
+                    });
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: result.msg
+                    });
+                }          
+                _this.find("button[type=submit]").html("Save");
+                _this.find("button[type=submit]").prop("disabled", false);
+            },
+        });
+
     });
 });
 </script>

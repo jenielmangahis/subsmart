@@ -35,21 +35,23 @@ class Before_after_v2 extends MY_Controller
 
     public function index()
     {
-        $get = $this->input->get();
+        $this->load->model('Before_after_model', 'before_after_model');
 
-        $this->page_data['items'] = logged('company_id');
-        $comp_id = logged('company_id');
+        $cid = logged('company_id');
+        $this->page_data['photos'] = $this->before_after_model->getAllByCompanyId($cid);
+        $this->page_data['page']->title = 'Before and After Photos';
 
-        $comp = array(
-            'company_id' => $comp_id,
-        );
+        add_footer_js(array(
+			"assets/js/jquery.fancybox.min.js"
+		));
 
-        if (!empty($get['search'])) {
-            $this->page_data['search'] = $get['search'];
-            $this->page_data['jobs'] = $this->jobs_model->filterBy(['search' => $get['search']], $comp_id);
-        }
+        add_css([
+            "assets/css/jquery.fancybox.css",
+            'https://nightly.datatables.net/css/jquery.dataTables.css',
+        ]);
 
-        $this->load->view('before_after/main', $this->page_data);
+        $this->page_data['cid'] = $cid;
+        $this->load->view('v2/pages/before_after/index', $this->page_data);
     }
 
     public function addPhoto()
@@ -57,13 +59,6 @@ class Before_after_v2 extends MY_Controller
         $this->load->model('AcsProfile_model');
 
         $comp_id = logged('company_id');
-        $role = logged('role');
-        if ($role == 1 || $role == 2) {
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($comp_id);
-        } else {
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-        }
-
         $group_num_query = $this->db->order_by("id", "desc")->get_where($this->before_after_model->table, $comp_id)->row();
         $this->page_data['group_number'] = 1;
         if ($group_num_query) {
@@ -89,7 +84,8 @@ class Before_after_v2 extends MY_Controller
 
     private function getUploadPath()
     {
-        $filePath = FCPATH . (implode(DIRECTORY_SEPARATOR, ['uploads', 'beforeandafter']) . DIRECTORY_SEPARATOR);
+        $cid = logged('company_id');
+        $filePath = FCPATH . (implode(DIRECTORY_SEPARATOR, ['uploads', 'beforeandafter']) . DIRECTORY_SEPARATOR . $cid . DIRECTORY_SEPARATOR);
         if (!file_exists($filePath)) {
             mkdir($filePath, 0777, true);
         }
@@ -239,5 +235,188 @@ class Before_after_v2 extends MY_Controller
         $this->session->set_flashdata('alert', 'Before/After image was successfully deleted');
 
         redirect('vault_v2/beforeafter');
+    }
+
+    public function ajax_create_photos()
+    {
+        $this->load->model('AcsProfile_model');
+
+        ini_set('post_max_size', '999M');
+        ini_set('upload_max_filesize', '999M');
+
+        $is_success = 1;
+		$msg = '';
+
+        $user_id = logged('id');
+        $comp_id = logged('company_id');  
+
+        $group_number = $this->input->post('group_number');
+        $customer_id  = $this->input->post('customer_id');
+        $notes        = $this->input->post('note');
+        //$uploadFields = array("b1_img", "a1_img", "b2_img", "a2_img", "b3_img", "a3_img", "b4_img", "a4_img", "b5_img", "a5_img");
+        $uploadFields = array("b1_img", "a1_img", "b2_img", "a2_img");
+        $attachmentFolderPath = $this->getUploadPath();
+        
+        for ($i = 1; $i < 6; $i++) {
+            $b_image = "";
+            $a_image = "";                        
+            if(isset($_FILES["b".$i."_img"]) && $_FILES["b".$i."_img"]['tmp_name'] != '') {
+                $tmp_name  = $_FILES["b".$i."_img"]['tmp_name'];
+                $extension = strtolower(end(explode('.',$_FILES["b".$i."_img"]['name'])));
+                $b_image   = "before_".time()."_photo_".basename($_FILES["b".$i."_img"]["name"]);
+                move_uploaded_file($tmp_name, $attachmentFolderPath.$b_image);
+            }
+
+            if(isset($_FILES["a".$i."_img"]) && $_FILES["a".$i."_img"]['tmp_name'] != '') {
+                $tmp_name  = $_FILES["a".$i."_img"]['tmp_name'];
+                $extension = strtolower(end(explode('.',$_FILES["a".$i."_img"]['name'])));
+                $a_image   = "after_".time()."_photo_".basename($_FILES["a".$i."_img"]["name"]);
+                move_uploaded_file($tmp_name, $attachmentFolderPath.$a_image);
+            }
+
+            if ($b_image != "" && $a_image != "") {
+                $note = '';
+                if (isset($notes[$i - 1])) {
+                    $note = $notes[$i - 1];
+                }
+                $data = array(
+                    'user_id' => $user_id,
+                    'company_id' => $comp_id,
+                    'customer_id' => $customer_id,
+                    'before_image' => $b_image,
+                    'after_image' => $a_image,
+                    'group_number' => $group_number,
+                    "note" => $note,
+                );
+
+                $this->before_after_model->create($data);
+
+                //Activity Logs
+                $customer = $this->AcsProfile_model->getByProfId($customer_id);
+                $activity_name = 'Created Before and After photos for customer ' . $customer->first_name . ' ' . $customer->last_name; 
+                createActivityLog($activity_name);
+            }
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_photos()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $is_success = 0;
+		$msg = 'Cannot find data';
+
+        $cid = logged('company_id');
+        $post = $this->input->post();
+
+        $beforeAfterPhoto = $this->before_after_model->getById($post['bai']);
+        if( $beforeAfterPhoto && $beforeAfterPhoto->company_id == $cid ){
+            if( $beforeAfterPhoto->after_image != '' ){
+                unlink('./uploads/beforeandafter/'.$cid.'/'.$beforeAfterPhoto->after_image);
+            }
+
+            if( $beforeAfterPhoto->before_image != '' ){
+                unlink('./uploads/beforeandafter/'.$cid.'/'.$beforeAfterPhoto->before_image);
+            }           
+
+            $this->before_after_model->delete($beforeAfterPhoto->id);
+
+            //Activity Logs
+            $activity_name = 'Deleted Before and After photos for customer ' . $beforeAfterPhoto->first_name . ' ' . $beforeAfterPhoto->last_name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
+    }
+
+    public function editPhoto($id)
+    {
+        $this->load->model('AcsProfile_model');
+
+        $cid = logged('company_id');
+        $beforeAfter = $this->before_after_model->getByIdAndCompanyId($id, $cid);
+        if( $beforeAfter ){   
+            $this->page_data['beforeAfter'] = $beforeAfter;
+            $this->load->view('v2/pages/before_after/edit_photo', $this->page_data);
+        }else{
+            return redirect ('before_after_photos');
+        }
+    }
+
+    public function ajax_update_photos()
+    {
+        $is_success = 0;
+		$msg = 'Cannot find data';
+
+        $uid  = logged('id');
+        $cid  = logged('company_id');
+        $post = $this->input->post(); 
+        $beforeAfterPhoto = $this->before_after_model->getByIdAndCompanyId($post['bfid'], $cid);  
+        if( $beforeAfterPhoto ){
+            $b_image = $beforeAfterPhoto->before_image;
+            $a_image = $beforeAfterPhoto->after_image;    
+            $customer_id  = $this->input->post('customer_id');
+            $note         = $this->input->post('note');         
+            $attachmentFolderPath = $this->getUploadPath();
+
+            if(isset($_FILES["b1_img"]) && $_FILES["b1_img"]['tmp_name'] != '') {
+                $tmp_name  = $_FILES["b1_img"]['tmp_name'];
+                $extension = strtolower(end(explode('.',$_FILES["b1_img"]['name'])));
+                $b_image   = "before_".time()."_photo_".basename($_FILES["b1_img"]["name"]);
+                move_uploaded_file($tmp_name, $attachmentFolderPath.$b_image);
+
+                if( $beforeAfterPhoto->before_image != '' ){
+                    unlink('./uploads/beforeandafter/'.$cid.'/'.$beforeAfterPhoto->before_image);
+                }  
+                
+            }
+
+            if(isset($_FILES["a1_img"]) && $_FILES["a1_img"]['tmp_name'] != '') {
+                $tmp_name  = $_FILES["a1_img"]['tmp_name'];
+                $extension = strtolower(end(explode('.',$_FILES["a1_img"]['name'])));
+                $a_image   = "after_".time()."_photo_".basename($_FILES["a1_img"]["name"]);
+                move_uploaded_file($tmp_name, $attachmentFolderPath.$a_image);
+
+                if( $beforeAfterPhoto->after_image != '' ){
+                    unlink('./uploads/beforeandafter/'.$cid.'/'.$beforeAfterPhoto->after_image);
+                }
+            }
+
+            $data = array(
+                'user_id' => $uid,
+                'customer_id' => $customer_id,
+                'before_image' => $b_image,
+                'after_image' => $a_image,
+                'group_number' => $group_number,
+                "note" => $note,
+            );
+
+            $this->before_after_model->update($beforeAfterPhoto->id, $data);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($json_data);
     }
 }

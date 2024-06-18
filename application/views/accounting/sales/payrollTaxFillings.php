@@ -145,7 +145,7 @@ include viewPath('v2/includes/header');
                     <h4>Upcoming filings</h4>
                 </div>
 
-                <table class="nsm-table table-hover payrollTaxFillings">
+                <table class="nsm-table w-100 border-0 payrollTaxFillings">
                     <div class="row">
                         <div class="col-12 col-md-4 grid-mb">
                             <form id="search_form" action="javascript:void(0);" method="get">

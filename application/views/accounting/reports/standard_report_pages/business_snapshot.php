@@ -1,393 +1,545 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
-<style>
+<?php include viewPath('v2/includes/accounting_header'); ?>
 
-.chart{
-    height:500px;
-    width:500px;
-}
-.pie-legend {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-}
-.pie-legend span {
-	display: inline-block;
-	width: 14px;
-	height: 14px;
-	border-radius: 100%;
-	margin-right: 16px;
-	margin-bottom: -2px;
-}
-.pie-legend li {
-	margin-bottom: 10px;
-}
-.pie-legend
-{
-    display: none;
-}
 
-.flex {
-     -webkit-box-flex: 1;
-     -ms-flex: 1 1 auto;
-     flex: 1 1 auto
- }
+<div class="row page-content g-0">
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
+                <div class="row">
+                    <div class="col-12 col-md-4 grid-mb">
 
- @media (max-width:991.98px) {
-     .padding {
-         padding: 1.5rem
-     }
- }
-
- @media (max-width:767.98px) {
-     .padding {
-         padding: 1rem
-     }
- }
-
- .padding {
-     padding: 5rem
- }
-
- .card {
-     background: #fff;
-     border-width: 0;
-     border-radius: .25rem;
-     box-shadow: 0 1px 3px rgba(0, 0, 0, .05);
-     margin-bottom: 1.5rem
- }
-
- .card {
-     position: relative;
-     display: flex;
-     flex-direction: column;
-     min-width: 0;
-     word-wrap: break-word;
-     background-color: #fff;
-     background-clip: border-box;
-     border: 1px solid rgba(19, 24, 44, .125);
-     border-radius: .25rem
- }
-
- .card-header {
-     padding: .75rem 1.25rem;
-     margin-bottom: 0;
-     background-color: rgba(19, 24, 44, .03);
-     border-bottom: 1px solid rgba(19, 24, 44, .125)
- }
-
- .card-header:first-child {
-     border-radius: calc(.25rem - 1px) calc(.25rem - 1px) 0 0
- }
-
- card-footer,
- .card-header {
-     background-color: transparent;
-     border-color: rgba(160, 175, 185, .15);
-     background-clip: padding-box
- }
-</style>
-<div class="wrapper" role="wrapper">
-    <!-- page wrapper start -->
-    <div wrapper__section style="padding-left:1.4%;">
-        <div class="container-fluid" style="background-color:white;">
-            <div class="page-title-box">
-                <div>
-                    <div class="col-sm-12">
-                            <h3 class="page-title left" style="font-family: Sarabun, sans-serif !important;font-size: 1.5rem !important;font-weight: 600 !important;">Business Snapshot</h3>
-                            <a href="<?php echo url('accounting/reports')?>" class="" style="color:#479cd4;">
-                                <i class="fa fa-angle-left" style="font-size:24px"></i> Back to report list
-                            </a>
-                            <br>
-                            <a href="#" class="" data-toggle="popover" title="See a snapshot in time" data-content="Choose a time period to see where things stood at the end of it." style="text-decoration:underline;text-decoration-style: dotted;">
-                                <span class="back-to-reports" data-dojo-attach-point="_allReportsLink">Report period</span>
-                            </a>
+                        <!-- <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
+                        </div> -->
                     </div>
-                    <br>
+                    <div class="col-12 col-md-8 grid-mb text-end">
+                        <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-report-period">Report period</label>
+                                        <select class="nsm-field form-select" name="filter_report_period"
+                                            id="filter-report-period">
+                                            <option value="all-dates">All Dates</option>
+                                            <option value="custom">Custom</option>
+                                            <option value="today">Today</option>
+                                            <option value="this-week">This Week</option>
+                                            <option value="this-week-to-date">This Week-to-date</option>
+                                            <option value="this-month">This Month</option>
+                                            <option value="this-month-to-date">This Month-to-date</option>
+                                            <option value="this-quarter">This Quarter</option>
+                                            <option value="this-quarter-to-date">This Quarter-to-date</option>
+                                            <option value="this-year">This Year</option>
+                                            <option value="this-year-to-date" selected>This Year-to-date</option>
+                                            <option value="this-year-to-last-month">This Year-to-last-month</option>
+                                            <option value="yesterday">Yesterday</option>
+                                            <option value="recent">Recent</option>
+                                            <option value="last-week">Last Week</option>
+                                            <option value="last-week-to-date">Last Week-to-date</option>
+                                            <option value="last-month">Last Month</option>
+                                            <option value="last-month-to-date">Last Month-to-date</option>
+                                            <option value="last-quarter">Last Quarter</option>
+                                            <option value="last-quarter-to-date">Last Quarter-to-date</option>
+                                            <option value="last-year">Last Year</option>
+                                            <option value="last-year-to-date">Last Year-to-date</option>
+                                            <option value="since-30-days-ago">Since 30 Days Ago</option>
+                                            <option value="since-60-days-ago">Since 60 Days Ago</option>
+                                            <option value="since-90-days-ago">Since 90 Days Ago</option>
+                                            <option value="since-365-days-ago">Since 365 Days Ago</option>
+                                            <option value="next-week">Next Week</option>
+                                            <option value="next-4-weeks">Next 4 Weeks</option>
+                                            <option value="next-month">Next Month</option>
+                                            <option value="next-quarter">Next Quarter</option>
+                                            <option value="next-year">Next Year</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-from">From</label>
+                                        <div class="nsm-field-group calendar">
+                                            <input type="text" class="nsm-field form-control datepicker"
+                                                value="<?php echo date('01/01/Y'); ?>" id="filter-from">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-to">To</label>
+                                        <div class="nsm-field-group calendar">
+                                            <input type="text" class="nsm-field form-control datepicker"
+                                                value="<?php echo date('m/d/Y'); ?>" id="filter-to">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-display-columns-by">Display columns by</label>
+                                        <select class="nsm-field form-select" name="filter_display_columns_by"
+                                            id="filter-display-columns-by">
+                                            <option value="total-only" selected>Total Only</option>
+                                            <option value="days">Days</option>
+                                            <option value="weeks">Weeks</option>
+                                            <option value="months">Months</option>
+                                            <option value="quarters">Quarters</option>
+                                            <option value="years">Years</option>
+                                            <option value="customers">Customers</option>
+                                            <option value="vendors">Vendors</option>
+                                            <option value="products-services">Products/Services</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-display-columns-by">Show non-zero or active only</label>
+                                        <div class="dropdown">
+                                            <button type="button" class="dropdown-toggle nsm-button w-100 m-0"
+                                                data-bs-toggle="dropdown"
+                                                style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                                                <span>
+                                                    Active rows/active columns
+                                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end p-3 w-100">
+                                                <p class="m-0">Show rows</p>
+                                                <div class="form-check">
+                                                    <input type="radio" checked id="active-rows" name="show_rows"
+                                                        class="form-check-input">
+                                                    <label for="active-rows" class="form-check-label">Active</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="radio" id="all-rows" name="show_rows"
+                                                        class="form-check-input">
+                                                    <label for="all-rows" class="form-check-label">All</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="radio" id="non-zero-rows" name="show_rows"
+                                                        class="form-check-input">
+                                                    <label for="non-zero-rows" class="form-check-label">Non-zero</label>
+                                                </div>
+                                                <p class="m-0">Show columns</p>
+                                                <div class="form-check">
+                                                    <input type="radio" checked id="active-columns" name="show_cols"
+                                                        class="form-check-input">
+                                                    <label for="active-columns" class="form-check-label">Active</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="radio" id="all-columns" name="show_cols"
+                                                        class="form-check-input">
+                                                    <label for="all-columns" class="form-check-label">All</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="radio" id="non-zero-columns" name="show_cols"
+                                                        class="form-check-input">
+                                                    <label for="non-zero-columns"
+                                                        class="form-check-label">Non-zero</label>
+                                                </div>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-display-columns-by">Compare another period</label>
+                                        <div class="dropdown">
+                                            <button type="button" class="dropdown-toggle nsm-button w-100 m-0"
+                                                data-bs-toggle="dropdown">
+                                                <span>
+                                                    Select period
+                                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end p-3 w-100">
+                                                <div class="form-check">
+                                                    <input type="checkbox" id="previous-period" name="selected_period"
+                                                        class="form-check-input">
+                                                    <label for="previous-period" class="form-check-label">Previous
+                                                        period (PP)</label>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-check d-inline-block">
+                                                            <input type="checkbox" id="previous-period-dollar-change"
+                                                                class="form-check-input" disabled>
+                                                            <label for="previous-period-dollar-change"
+                                                                class="form-check-label">$ change</label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block">
+                                                            <input type="checkbox" id="previous-period-percent-change"
+                                                                class="form-check-input" disabled>
+                                                            <label for="previous-period-percent-change"
+                                                                class="form-check-label">% change</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" id="previous-year" name="selected_period"
+                                                        class="form-check-input">
+                                                    <label for="previous-year" class="form-check-label">Previous year
+                                                        (PY)</label>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-check d-inline-block">
+                                                            <input type="checkbox" id="previous-year-dollar-change"
+                                                                class="form-check-input" disabled>
+                                                            <label for="previous-year-dollar-change"
+                                                                class="form-check-label">$ change</label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block">
+                                                            <input type="checkbox" id="previous-year-percent-change"
+                                                                class="form-check-input" disabled>
+                                                            <label for="previous-year-percent-change"
+                                                                class="form-check-label">% change</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" id="year-to-date" name="selected_period"
+                                                        class="form-check-input">
+                                                    <label for="year-to-date" class="form-check-label">Year-to-date
+                                                        (YTD)</label>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <div class="form-check d-inline-block">
+                                                            <input type="checkbox" id="ytd-percent"
+                                                                class="form-check-input" disabled>
+                                                            <label for="ytd-percent" class="form-check-label">% of
+                                                                YTD</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" id="percent-of-row" name="selected_period"
+                                                        class="form-check-input">
+                                                    <label for="percent-of-row" class="form-check-label">% of
+                                                        Row</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" id="percent-of-col" name="selected_period"
+                                                        class="form-check-input">
+                                                    <label for="percent-of-col" class="form-check-label">% of
+                                                        Column</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" id="percent-of-income" name="selected_period"
+                                                        class="form-check-input">
+                                                    <label for="percent-of-income" class="form-check-label">% of
+                                                        Income</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="checkbox" id="percent-of-expense"
+                                                        name="selected_period" class="form-check-input">
+                                                    <label for="percent-of-expense" class="form-check-label">% of
+                                                        Expense</label>
+                                                </div>
+                                                <p class="m-0"><a href="#" style="text-decoration: none">Reorder
+                                                        columns</a></p>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row grid-mb">
+                                    <div class="col-12 col-md-6">
+                                        <label for="" class="w-100">Accounting method</label>
+                                        <div class="form-check d-inline-block">
+                                            <input type="radio" id="cash-method" class="form-check-input"
+                                                name="accounting_method">
+                                            <label for="cash-method" class="form-check-label">Cash</label>
+                                        </div>
+                                        <div class="form-check d-inline-block">
+                                            <input type="radio" id="accrual-method" class="form-check-input"
+                                                name="accounting_method" checked>
+                                            <label for="accrual-method" class="form-check-label">Accrual</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <button type="button" class="nsm-button primary">
+                                            Run Report
+                                        </button>
+                                    </div>
+                                </div>
+                            </ul>
+                            <button type="button" class="nsm-button">
+                                <i class='bx bx-fw bx-customize'></i> Customize
+                            </button>
+                            <button type="button" class="nsm-button primary">
+                                <i class='bx bx-fw bx-save'></i> Save customization
+                            </button>
+                        </div>
+                    </div>
+                </div>
 
-                    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-                    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
-                    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-                    <!------ Include the above in your HEAD tag ---------->
+                <div class="row g-3">
+                    <div class="col-12 col-md-6 offset-md-3">
+                        <div class="nsm-card primary">
+                            <div class="nsm-card-header d-block">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 grid-mb">
+                                        <div class="nsm-page-buttons page-button-container">
+                                            <button type="button" class="nsm-button">
+                                                <span>Collapse</span>
+                                            </button>
+                                            <button type="button" class="nsm-button" data-bs-toggle="dropdown">
+                                                <span>Sort</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                            </button>
+                                            <ul class="dropdown-menu p-3">
+                                                <div class="form-check">
+                                                    <input type="radio" checked id="sort-default" name="sort_order"
+                                                        class="form-check-input">
+                                                    <label for="sort-default" class="form-check-label">Default</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="radio" id="sort-asc" name="sort_order"
+                                                        class="form-check-input">
+                                                    <label for="sort-asc" class="form-check-label">Total in ascending
+                                                        order</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input type="radio" id="sort-desc" name="sort_order"
+                                                        class="form-check-input">
+                                                    <label for="sort-desc" class="form-check-label">Total in descending
+                                                        order</label>
+                                                </div>
+                                            </ul>
+                                            <button type="button" class="nsm-button">
+                                                <span>Add notes</span>
+                                            </button>
+                                            <button type="button" class="nsm-button">
+                                                <span>Edit titles</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 grid-mb text-end">
+                                        <div class="nsm-page-buttons page-button-container">
+                                            <button type="button" class="nsm-button" data-bs-toggle="modal"
+                                                data-bs-target="#print_accounts_modal">
+                                                <i class='bx bx-fw bx-envelope'></i>
+                                            </button>
+                                            <button type="button" class="nsm-button" data-bs-toggle="modal"
+                                                data-bs-target="#print_accounts_modal">
+                                                <i class='bx bx-fw bx-printer'></i>
+                                            </button>
+                                            <button type="button" class="nsm-button" data-bs-toggle="dropdown">
+                                                <i class="bx bx-fw bx-export"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end export-dropdown">
+                                                <li><a class="dropdown-item" href="javascript:void(0);"
+                                                        id="export-to-excel">Export to Excel</a></li>
+                                                <li><a class="dropdown-item" href="javascript:void(0);"
+                                                        id="export-to-pdf">Export to PDF</a></li>
+                                            </ul>
+                                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
+                                                <i class="bx bx-fw bx-cog"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end p-3">
+                                                <p class="m-0">Display density</p>
+                                                <div class="form-check">
+                                                    <input type="checkbox" checked id="compact-display"
+                                                        class="form-check-input">
+                                                    <label for="compact-display"
+                                                        class="form-check-label">Compact</label>
+                                                </div>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
 
-
-
-                    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.1/Chart.min.js"></script>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="card text-center shadow">
-                                <div class="card-header text-left"><b>My Income</b></div>
-                                <div class="card-body">
-                                    <div class="chart" style="height:200px !important;">
-                                        <canvas id="property_types" class="pie"></canvas>
-                                        <div id="pie_legend" class="py-3 text-left col-md-7 mx-auto"></div>
+                                <div class="row">
+                                    <div class="col-12 grid-mb">
+                                        <h4 class="text-center fw-bold"><span
+                                                class="company-name"><?php echo $clients->business_name; ?></span></h4>
+                                    </div>
+                                    <div class="col-12 grid-mb text-center">
+                                        <p class="m-0 fw-bold">Business Snapshot</p>
+                                        <p>January 1-<?php echo date('F d, Y'); ?></p>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card text-center shadow">
-                                <div class="card-header text-left"><b>My Expense</b></div>
-                                <div class="card-body">
-                                    <div class="chart" style="height:200px !important;">
-                                        <canvas id="property_types2" class="pie"></canvas>
-                                        <div id="pie_legend2" class="py-3 text-left col-md-7 mx-auto"></div>
-                                    </div>
-                                </div>
+                            <div class="nsm-card-content h-auto grid-mb">
+                                <table class="nsm-table">
+                                    <thead>
+                                        <tr>
+                                            <td data-name="Name"></td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr data-toggle="collapse" data-target="#incomeDetails"
+                                            class="clickable collapse-row collapsed">
+                                            <td><i class="bx bx-fw bx-caret-right"></i>MY INCOME</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="card text-center shadow">
+                                                    <div class="card-header text-left"><b>My Income</b></div>
+                                                    <div class="card-body">
+                                                    <h1 id='myIncomeGraphLoader'> <span
+                                                    class="bx bx-loader bx-spin"></span></h1>
+                                                        <div class="chart" style="height:200px !important;">
+                                                            <canvas id="myIncomeGraph" style="max-height:100%;"
+                                                                class="nsm-chart" data-chart-type="sales"></canvas>
+                                                            <div id="pie_legend"
+                                                                class="py-3 text-left col-md-7 mx-auto"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr data-toggle="collapse" data-target="#incomeDetails"
+                                            class="clickable collapse-row collapsed">
+                                            <td><i class="bx bx-fw bx-caret-right"></i>MY EXPENSE</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="card text-center shadow">
+                                                    <div class="card-header text-left"><b>My Expense</b></div>
+                                                    <div class="card-body">
+                                                        <div class="chart" style="height:200px !important;">
+                                                            <h1 id='MyExpenseGraphLoader'> <span
+                                                                    class="bx bx-loader bx-spin"></span></h1>
+
+                                                            <canvas id="MyExpenseGraph" style="max-height:100%;"
+                                                                class="nsm-chart" data-chart-type="sales"></canvas>
+                                                            <div id="pie_legend"
+                                                                class="py-3 text-left col-md-7 mx-auto"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="nsm-card-footer text-center">
+                                <p class="m-0">Accrual basis <?php echo date('l, F j, Y h:i A eP'); ?></p>
                             </div>
                         </div>
                     </div>
-
-                    <!-- <div class="row"> -->
-                    <!-- <div class="page-content page-container" id="page-content">
-                        <div class="padding"> -->
-                            <div class="row">
-                                <!-- <div class="container-fluid d-flex justify-content-center"> -->
-                                    <div class="col-md-6">
-                                        <div class="card">
-                                            <div class="card-header">Previous Year Income Comparison</div>
-                                            <div class="card-body" style="height: 420px">
-                                                <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
-                                                    <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                                                        <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
-                                                    </div>
-                                                    <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                                                        <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
-                                                    </div>
-                                                </div> <canvas id="chart-line" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-6">
-                                        <div class="card">
-                                            <div class="card-header">Previous Year Expense Comparison</div>
-                                            <div class="card-body" style="height: 420px">
-                                                <div class="chartjs-size-monitor" style="position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;">
-                                                    <div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                                                        <div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div>
-                                                    </div>
-                                                    <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
-                                                        <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div>
-                                                    </div>
-                                                </div> <canvas id="chart-line2" width="299" height="200" class="chartjs-render-monitor" style="display: block; width: 299px; height: 200px;"></canvas>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <!-- </div> -->
-                            </div>
-                        <!-- </div>
-                    </div> -->
-                    <!-- </div> -->
-
-
-
                 </div>
             </div>
-            <!-- end row -->
-            <div class="row"></div>
-            <!-- end row -->
         </div>
     </div>
-        <!-- end container-fluid -->
-	<?php include viewPath('includes/sidebars/accounting/accounting'); ?>
-    <!-- page wrapper end -->
 </div>
-<?php include viewPath('includes/footer_accounting'); ?>
 
-<script>
-
-	// global options variable
-	var options = {
-		responsive: true,
-		easing:'easeInExpo',
-		scaleBeginAtZero: true,
-        // you don't have to define this here, it exists inside the global defaults
-		legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
-	}
-
-		// PIE
-		// PROPERTY TYPE DISTRIBUTION
-		// context
-		var ctxPTD = $("#property_types").get(0).getContext("2d");
-		// data
-		var dataPTD = [
-			{
-				// label: "Single Family Residence",
-				color: "#5093ce",
-				highlight: "#78acd9",
-				value: 52
-			},
-			{
-				// label: "Townhouse/Condo",
-				color: "#c7ccd1",
-				highlight: "#e3e6e8",
-				value: 12
-			},
-			{
-				// label: "Land",
-				color: "#7fc77f",
-				highlight: "#a3d7a3",
-				value: 6
-			},
-			{
-				// label: "Multifamily",
-				color: "#fab657",
-				highlight: "#fbcb88",
-				value: 8
-			},
-			{
-				// label: "Farm/Ranch",
-				color: "#eaaede",
-				highlight: "#f5d6ef",
-				value: 8
-			},
-			{
-				// label: "Commercial",
-				color: "#dd6864",
-				highlight: "#e6918e",
-				value: 14
-			},
-			
-		]
-
-		// Property Type Distribution
-		var propertyTypes = new Chart(ctxPTD).Pie(dataPTD, options);
-			// pie chart legend
-			$("#pie_legend").html(propertyTypes.generateLegend());
-
-
-
-
-</script>
-
-<script>
-
-	// global options variable
-	var options = {
-		responsive: true,
-		easing:'easeInExpo',
-		scaleBeginAtZero: true,
-        // you don't have to define this here, it exists inside the global defaults
-		legendTemplate: "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
-	}
-
-		// PIE
-		// PROPERTY TYPE DISTRIBUTION
-		// context
-		var ctxPTD = $("#property_types2").get(0).getContext("2d");
-		// data
-		var dataPTD = [
-			{
-				// label: "Single Family Residence",
-				color: "#e27d36",
-				highlight: "#e27d36",
-				value: 52
-			},
-			{
-				// label: "Townhouse/Condo",
-				color: "#f3811a",
-				highlight: "#e3e6e8",
-				value: 12
-			},
-			{
-				// label: "Land",
-				color: "#fee18d",
-				highlight: "#a3d7a3",
-				value: 6
-			},
-			{
-				// label: "Multifamily",
-				color: "#f0a3a3",
-				highlight: "#fbcb88",
-				value: 8
-			},
-			{
-				// label: "Farm/Ranch",
-				color: "#fef0c4",
-				highlight: "#f5d6ef",
-				value: 8
-			},
-			{
-				// label: "Commercial",
-				color: "#db1f1f",
-				highlight: "#e6918e",
-				value: 14
-			},
-			
-		]
-
-		// Property Type Distribution
-		var propertyTypes = new Chart(ctxPTD).Pie(dataPTD, options);
-			// pie chart legend
-			$("#pie_legend2").html(propertyTypes.generateLegend());
-
-
-
-
-</script>
-
+<?php include viewPath('v2/includes/footer'); ?>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script>
 <script>
-    $(document).ready(function() {
-        var ctx = $("#chart-line");
-        var myLineChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: [1500, 1600, 1700, 1750, 1800, 1850, 1900, 1950, 1999, 2050],
-                datasets: [{
-                    data: [86, 114, 106, 106, 107, 111, 133, 221, 783, 2478],
-                    label: "",
-                    borderColor: "#009dd4",
-                    backgroundColor: '#009dd4',
-                    fill: false
-                }, {
-                    data: [282, 350, 411, 502, 635, 809, 947, 1402, 3700, 5267],
-                    label: "",
-                    borderColor: "#60c21f",
-                    fill: true,
-                    backgroundColor: '#60c21f'
-                }]
-            },
-            options: {
-                title: {
-                    display: true,
-                    text: 'Income Comparison'
-                }
-            }
-        });
-    });
-</script>
+fetch('<?php echo base_url('Dashboard/income_thumbnail_graph'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
 
-<script>
-    $(document).ready(function() {
-        var ctx = $("#chart-line2");
-        var myLineChart = new Chart(ctx, {
+        var {
+            success,
+            income,
+        } = response;
+
+
+        if (income) {
+            for (var x = 0; x < income.length; x++) {
+                var payment_date = income[x].payment_date;
+                if (payment_date) {
+                    var due = new Date(payment_date);
+                    var month = due.getMonth();
+                    monthlyAmounts[month] += parseFloat(income[x].invoice_amount);
+                }
+            }
+        }
+
+        var jobs_data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Income',
+                backgroundColor: 'rgb(220, 53, 69 ,0.79)',
+                borderColor: 'rgb(220, 53, 69 ,0.79)',
+                data: monthlyAmounts
+            }]
+        };
+        $('#myIncomeGraphLoader').hide()
+
+        const myIncomeGraph = new Chart($('#myIncomeGraph'), {
             type: 'bar',
+            data: jobs_data,
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
+                },
+                aspectRatio: 1.2,
+            },
+        });
+
+        window.myIncomeGraph = myIncomeGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+
+fetch('<?php echo base_url('Dashboard/business_snapshot_expense'); ?>', {})
+    .then(response => response.json())
+    .then(response => {
+        var { success, income } = response;
+
+        var estimates = $("#MyExpenseGraph");
+
+        // Parse the JSON-encoded strings into arrays
+        var accountNames = JSON.parse(income.account_names);
+        var accountExpenses = JSON.parse(income.account_expenses);
+
+        console.log('accountNames',accountNames)
+        console.log('accountExpenses',accountExpenses)
+
+        $('#MyExpenseGraphLoader').hide();
+
+        new Chart(estimates, {
+            type: 'doughnut',
             data: {
-                labels: [1500, 1600, 1700, 1750, 1800, 1850, 1900, 1950, 1999, 2050],
+                labels: accountNames,
                 datasets: [{
-                    data: [86, 114, 106, 106, 107, 111, 133, 221, 783, 2478],
-                    label: "",
-                    borderColor: "#f6a71d",
-                    backgroundColor: '#f6a71d',
-                    fill: false
-                }, {
-                    data: [282, 350, 411, 502, 635, 809, 947, 1402, 3700, 5267],
-                    label: "",
-                    borderColor: "#e45919",
-                    fill: true,
-                    backgroundColor: '#e45919'
+                    label: 'Expenses',
+                    data: accountExpenses,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgb(255, 205, 86, 0.2)',
+                        'rgba(255, 159, 64, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgb(255, 205, 86, 1)',
+                        'rgba(255, 159, 64, 1)',
+                        'rgba(153, 102, 255, 1)',
+                    ],
+                    borderWidth: 1
                 }]
             },
             options: {
-                title: {
-                    display: true,
-                    text: 'Expense Comparison'
-                }
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                aspectRatio: 1.5,
             }
         });
+    })
+    .catch((error) => {
+        console.log(error);
     });
+
 </script>
