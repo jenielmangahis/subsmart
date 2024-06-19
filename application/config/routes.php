@@ -1781,3 +1781,4 @@ $route['files_vault'] = 'Vault_v2/index_v2';
 
 //Email Broadcast
 $route['email_broadcasts'] = 'EmailBroadcast/index';
+$route['email_broadcasts/_customer_list'] = 'EmailBroadcast/ajax_customer_list';
