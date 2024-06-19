@@ -53,22 +53,6 @@
                                             <option value="next-year">Next Year</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 col-md-6">
-                                        <label for="filter-from">From</label>
-                                        <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" value="<?=date("01/01/Y")?>" id="filter-from">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <label for="filter-to">To</label>
-                                        <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker" value="<?=date("m/d/Y")?>" id="filter-to">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-12 col-md-6">
                                         <label for="filter-display-columns-by">Display columns by</label>
                                         <select class="nsm-field form-select" name="filter_display_columns_by" id="filter-display-columns-by">
@@ -82,6 +66,20 @@
                                             <option value="vendors">Vendors</option>
                                             <option value="products-services">Products/Services</option>
                                         </select>
+                                    </div>                                    
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-from">From</label>
+                                        <div class="nsm-field-group calendar">
+                                            <input type="text" class="nsm-field form-control datepicker" value="<?=date("01/01/Y")?>" id="filter-from">
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <label for="filter-to">To</label>
+                                        <div class="nsm-field-group calendar">
+                                            <input type="text" class="nsm-field form-control datepicker" value="<?=date("m/d/Y")?>" id="filter-to">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -123,8 +121,6 @@
                                             </ul>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-12 col-md-6">
                                         <label for="filter-display-columns-by">Compare another period</label>
                                         <div class="dropdown">
@@ -197,10 +193,10 @@
                                                 <p class="m-0"><a href="#" style="text-decoration: none">Reorder columns</a></p>
                                             </ul>
                                         </div>
-                                    </div>
+                                    </div>                                    
                                 </div>
-                                <div class="row grid-mb">
-                                    <div class="col-12 col-md-6">
+                                <div class="row" style="text-align: center; margin-top: 5px; margin-bottom: 5px;">
+                                    <div class="col-12 col-md-12">
                                         <label for="" class="w-100">Accounting method</label>
                                         <div class="form-check d-inline-block">
                                             <input type="radio" id="cash-method" class="form-check-input" name="accounting_method">
@@ -212,7 +208,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row" style="" >
                                     <div class="col-12 d-flex justify-content-center">
                                         <button type="button" class="nsm-button primary">
                                             Run Report
@@ -237,7 +233,7 @@
                                 <div class="row">
                                     <div class="col-12 col-md-6 grid-mb">
                                         <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button">
+                                            <button type="button" class="nsm-button" id="collapseButton">
                                                 <span>Collapse</span>
                                             </button>
                                             <button type="button" class="nsm-button" data-bs-toggle="dropdown">
@@ -257,11 +253,11 @@
                                                     <label for="sort-desc" class="form-check-label">Total in descending order</label>
                                                 </div>
                                             </ul>
-                                            <button type="button" class="nsm-button">
+                                            <button type="button" class="nsm-button addNotes">
                                                 <span>Add notes</span>
                                             </button>
-                                            <button type="button" class="nsm-button">
-                                                <span>Edit titles</span>
+                                            <button type="button" class="nsm-button" id="editButton">
+                                                <span>Edit title</span>
                                             </button>
                                         </div>
                                     </div>
@@ -296,7 +292,9 @@
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?=$clients->business_name?></span></h4>
+                                        <h4 class="text-center fw-bold" id="businessName">                                            
+                                            <span class="company-name"><?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : $clients->business_name; ?></span>
+                                        </h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
                                         <p class="m-0 fw-bold">Profit and Loss % of Total Income</p>
@@ -305,7 +303,7 @@
                                 </div>
                             </div>
                             <div class="nsm-card-content h-auto grid-mb">
-                                <table class="nsm-table">
+                                <table class="nsm-table" id="profit-and-loss-income">
                                     <thead>
                                         <tr>
                                             <td data-name="Name" rowspan="2"></td>
@@ -317,17 +315,17 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr data-toggle="collapse" data-target="#accordion" class="clickable collapse-row collapsed">
+                                        <tr data-bs-toggle="collapse" data-bs-target="#accordion" class="clickable collapse-row collapsed">
                                             <td><i class="bx bx-fw bx-caret-right"></i> INCOME</td>
                                             <td>$571,265.66</td>
                                             <td>100.00 %</td>
                                         </tr>
-                                        <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion">
+                                        <tr data-bs-toggle="collapse" data-bs-target="#accordion1" class="clickable collapse-row collapse" id="accordion">
                                             <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Current Assets</td>
                                             <td></td>
                                             <td></td>
                                         </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion2">
+                                        <tr id="accordion1" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion2">
                                             <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Bank Accounts</td>
                                             <td></td>
                                             <td></td>
@@ -337,7 +335,7 @@
                                             <td>305,061.93</td>
                                             <td>10.00 %</td>
                                         </tr>
-                                        <tr id="accordion2" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion3">
+                                        <tr id="accordion2" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion3">
                                             <td>&emsp;&emsp;&emsp;<i class="bx bx-fw bx-caret-right"> Test Bank (Cash on hand)</td>
                                             <td>990.77</td>
                                             <td>10.00 %</td>
@@ -362,7 +360,7 @@
                                             <td><b>$307,052.70</b></td>
                                             <td>100.00 %</td>
                                         </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion4">
+                                        <tr id="accordion1" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion4">
                                             <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Accounts Receivable</td>
                                             <td></td>
                                             <td></td>
@@ -377,7 +375,7 @@
                                             <td><b>$205,324.93</b></td>
                                             <td>100.00 %</td>
                                         </tr>
-                                        <tr id="accordion1" class="collapse clickable collapse-row" data-toggle="collapse" data-target="#accordion5">
+                                        <tr id="accordion1" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion5">
                                             <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Other Current Assets</td>
                                             <td></td>
                                             <td></td>
@@ -422,7 +420,7 @@
                                             <td><b>$564,732.95</b></td>
                                             <td><b>100.00 %</b></td>
                                         </tr>
-                                        <tr data-toggle="collapse" data-target="#accordion1" class="clickable collapse-row collapse" id="accordion6">
+                                        <tr data-bs-toggle="collapse" data-bs-target="#accordion1" class="clickable collapse-row collapse" id="accordion6">
                                             <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Fixed Assets</td>
                                             <td></td>
                                             <td></td>
@@ -470,6 +468,31 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div class="row mb-3">
+                                <div class="col-lg-12">
+                                    <span id="notesContent" class="text-muted">Loading Notes...</span>
+                                    <form id="addNotesForm" method="POST" style="display: none;">
+                                        <div class="row">
+                                            <div class="col-sm-12 mt-1 mb-3">
+                                                <div class="form-group">
+                                                    <textarea id="NOTES" class="form-control" maxlength="4000"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="float-start noteCharMax">
+                                                    4000 characters max
+                                                </div>
+                                                <div class="float-end">
+                                                    <button type="button" id="cancelNotes" class="nsm-button">Cancel</button>
+                                                    <button type="submit" class="nsm-button primary noteSaveButton">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                             <div class="nsm-card-footer text-center">
                                 <p class="m-0">Accrual basis <?=date("l, F j, Y h:i A eP")?></p>
                             </div>
@@ -481,4 +504,36 @@
     </div>
 </div>
 
+<?php include viewPath('accounting/reports/reports_assets/profit_and_loss_as_%_of_total_income_js'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
+
+<script>
+$(function(){
+    var isCollapsed = true;
+
+    $("#collapseButton").click(function() {
+        if (isCollapsed) {
+            $(".collapse").collapse('show');
+            $("#collapseButton span").text('Uncollapse');
+            updateCarets('show');
+        } else {
+            $(".collapse").collapse('hide');
+            $("#collapseButton span").text('Collapse');
+            updateCarets('hide');
+        }
+        isCollapsed = !isCollapsed;
+    });
+
+    function updateCarets(action) {
+        $(".collapse-row").each(function() {
+            var target = $(this).data("bs-target");
+            var icon = $(this).find("i");
+            if (action === 'show') {
+                icon.removeClass("bx-caret-right").addClass("bx-caret-down");
+            } else {
+                icon.removeClass("bx-caret-down").addClass("bx-caret-right");
+            }
+        });
+    }
+});
+</script>

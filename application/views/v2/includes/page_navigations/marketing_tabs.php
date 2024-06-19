@@ -30,12 +30,18 @@
                 <span>Email Blast</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Email Automation'): echo 'active'; endif; ?>">
+        <li class="<?php if($page->title == 'Email Broadcast'): echo 'active'; endif; ?>">
+            <a class="nsm-page-link" href="<?php echo base_url('email_broadcasts')?>">
+                <i class='bx bx-fw bx-box'></i>
+                <span>Email Broadcast</span>
+            </a>
+        </li>
+        <!-- <li class="<?php if($page->title == 'Email Automation'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('email_automation')?>">
                 <i class='bx bx-fw bx-box'></i>
                 <span>Email Automation</span>
             </a>
-        </li>
+        </li> -->
         <li class="<?php if($page->title == 'Deals & Steals'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('promote/deals')?>">
                 <i class='bx bx-fw bx-box'></i>

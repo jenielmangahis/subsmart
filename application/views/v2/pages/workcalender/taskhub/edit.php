@@ -42,7 +42,7 @@ if (isset($selected_participants)) {
 ?>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/calendar_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/taskhub_tabs'); ?>
     </div>
     <div class="col-12">
         <div class="nsm-page">

@@ -178,7 +178,7 @@ include viewPath('v2/includes/header');
                             <td>
                                 <div class="payrollTax__actions" style="margin-left: -8px;">
                                     <button class="nsm-button payrollTax__actionsBtn payrollTax__actionsBtn--disabled">File</button>
-                                    <button class="nsm-button payrollTax__actionsBtn payrollTax__actionsBtn--disabled">Preview</button>
+                                    <button class="nsm-button primary payrollTax__actionsBtn payrollTax__actionsBtn--disabled">Preview</button>
                                 </div>
                             </td>
                         </tr>
@@ -195,9 +195,22 @@ include viewPath('v2/includes/header');
                     </thead>
                     <tbody id="taxRowContainer">
                         <tr class="payrollTax__loaderRow">
-                            <td colspan="5">Loading...</td>
+                            <td colspan="6">Loading...</td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="nsm-pagination" colspan="6">
+                                <nav class="nsm-table-pagination">
+                                    <ul class="pagination">
+                                        <li class="page-item"><a class="page-link prev disabled" href="javascript:void(0);">Prev</a></li>
+                                        <li class="page-item"><a class="page-link active" href="">1</a></li>
+                                        <li class="page-item"><a class="page-link next disabled" href="javascript:void(0);">Next</a></li>
+                                    </ul>
+                                </nav>
+                            </td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
@@ -206,38 +219,35 @@ include viewPath('v2/includes/header');
 
 <?php include viewPath('v2/includes/footer'); ?>
 
-<style>
-    .nsm-table-pagination{
-        margin-right: -90rem;
-    }
-</style>
-
 <script>
-    // Pagination
-    $(document).ready(function() {
-        $(".payrollTaxFillings").nsmPagination({
-            itemsPerPage: 10,
-        });
-    });
-
+    // JavaScript for search functionality
     $(document).ready(function() {
         function performSearch() {
             var searchValue = $('#search_field').val().toLowerCase();
             var hasResults = false;
 
-            $('.nsm-table.table-hover tbody tr').each(function() {
-                if (!$(this).hasClass('no-results')) {
-                    var text = $(this).text().toLowerCase();
-                    if (text.indexOf(searchValue) === -1) {
-                        $(this).hide();
-                    } else {
-                        $(this).show();
-                        hasResults = true;
-                    }
+            $('#taxRowContainer .payrollTax__row').each(function() {
+                var formType = $(this).find('[data-type="form_type"]').text().toLowerCase();
+                var status = $(this).find('[data-type="status"]').text().toLowerCase();
+                var periodQuarter = $(this).find('[data-type="period.quarter"]').text().toLowerCase();
+                var periodDateRange = $(this).find('[data-type="period.date_range"]').text().toLowerCase();
+                var duePrimary = $(this).find('[data-type="due.primary_text"]').text().toLowerCase();
+                var dueSecondary = $(this).find('[data-type="due.secondary_text"]').text().toLowerCase();
+
+                if (formType.indexOf(searchValue) === -1 &&
+                    status.indexOf(searchValue) === -1 &&
+                    periodQuarter.indexOf(searchValue) === -1 &&
+                    periodDateRange.indexOf(searchValue) === -1 &&
+                    duePrimary.indexOf(searchValue) === -1 &&
+                    dueSecondary.indexOf(searchValue) === -1) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                    hasResults = true;
                 }
             });
 
-            $('.nsm-table.table-hover tbody .no-results').remove();
+            $('.no-results').remove();
 
             if (!hasResults) {
                 var noResultsRow = '<tr class="no-results">' +
@@ -247,7 +257,7 @@ include viewPath('v2/includes/header');
                     '</div>' +
                     '</td>' +
                     '</tr>';
-                $('.nsm-table.table-hover tbody').append(noResultsRow);
+                $('#taxRowContainer').append(noResultsRow);
             }
         }
 
