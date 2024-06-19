@@ -1,7 +1,8 @@
 <script type="text/javascript">
-    var REPORT_ID = 2;
-    var REPORT_CATEGORY = "balance_sheet_comparison";
-    var theadTotalColumn = $("#balance-sheet-comparison").find('tr:first th').length;
+    var REPORT_ID = 7;
+    var REPORT_CATEGORY = "profit_and_loss_income";
+    var TABLE_NAME = 'profit-and-loss-income';
+    var theadTotalColumn = $(`#${TABLE_NAME}`).find('tr:first th').length;
     var businessLogoURL = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
     var businessName = $('input[name="company_name"]').val();
     var reportName = $('input[name="report_name"]').val();
@@ -111,7 +112,7 @@
         })
         .then(response => response.text())
         .then(data => {
-            document.querySelector('.addNotes').textContent = (data !== "") ? 'Edit Notes' : 'Add Notes';
+            document.querySelector('.addNotes').textContent = (data !== "") ? 'Edit notes' : 'Add notes';
             document.getElementById('notesContent').innerHTML = data;
             document.getElementById("NOTES").value = data;
         });
@@ -278,10 +279,10 @@
 
     // Render Report Data Script
     function renderReportList() {
-        theadColumnNames = $(`#balance-sheet-comparison th`).map(function() {
+        theadColumnNames = $(`#${TABLE_NAME} th`).map(function() {
             return $(this).text();
         }).get();
-        theadTotalColumn = $("#balance-sheet-comparison").find('tr:first th').length;
+        theadTotalColumn = $(`#${TABLE_NAME}`).find('tr:first th').length;
         businessLogoURL = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
         businessName = $('input[name="company_name"]').val();
         reportName = $('input[name="report_name"]').val();
@@ -393,7 +394,7 @@
         // =========================
         $.ajax({
             type: "POST",
-            url:  base_url + "/accounting_controllers/Reports/getReportData/" + REPORT_CATEGORY,
+            url:  base_url + "accounting_controllers/Reports/getReportData/" + REPORT_CATEGORY,
             data: {
                 theadColumnNames: theadColumnNames,
                 theadTotalColumn: theadTotalColumn,

@@ -233,7 +233,7 @@
                                 <div class="row">
                                     <div class="col-12 col-md-6 grid-mb">
                                         <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button">
+                                            <button type="button" class="nsm-button" id="collapseButton">
                                                 <span>Collapse</span>
                                             </button>
                                             <button type="button" class="nsm-button" data-bs-toggle="dropdown">
@@ -253,11 +253,11 @@
                                                     <label for="sort-desc" class="form-check-label">Total in descending order</label>
                                                 </div>
                                             </ul>
-                                            <button type="button" class="nsm-button">
+                                            <button type="button" class="nsm-button addNotes">
                                                 <span>Add notes</span>
                                             </button>
-                                            <button type="button" class="nsm-button">
-                                                <span>Edit titles</span>
+                                            <button type="button" class="nsm-button" id="editButton">
+                                                <span>Edit title</span>
                                             </button>
                                         </div>
                                     </div>
@@ -292,7 +292,9 @@
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?=$clients->business_name?></span></h4>
+                                        <h4 class="text-center fw-bold" id="businessName">                                            
+                                            <span class="company-name"><?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : $clients->business_name; ?></span>
+                                        </h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
                                         <p class="m-0 fw-bold">Profit and Loss % of Total Income</p>
@@ -301,7 +303,7 @@
                                 </div>
                             </div>
                             <div class="nsm-card-content h-auto grid-mb">
-                                <table class="nsm-table">
+                                <table class="nsm-table" id="profit-and-loss-income">
                                     <thead>
                                         <tr>
                                             <td data-name="Name" rowspan="2"></td>
@@ -332,12 +334,7 @@
                                             <td>&emsp;&emsp;&emsp;Checking</td>
                                             <td>305,061.93</td>
                                             <td>10.00 %</td>
-                                        </tr>
-                                        <tr id="accordion2" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion3">
-                                            <td>&emsp;&emsp;&emsp;<i class="bx bx-fw bx-caret-right"> Test Bank (Cash on hand)</td>
-                                            <td>990.77</td>
-                                            <td>10.00 %</td>
-                                        </tr>
+                                        </tr>                                        
                                         <tr id="accordion3" class="collapse clickable collapse-row">
                                             <td>&emsp;&emsp;&emsp;&emsp; Sub-bank (Cash on hand)</td>
                                             <td>990.00</td>
@@ -466,6 +463,31 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div class="row mb-3">
+                                <div class="col-lg-12">
+                                    <span id="notesContent" class="text-muted">Loading Notes...</span>
+                                    <form id="addNotesForm" method="POST" style="display: none;">
+                                        <div class="row">
+                                            <div class="col-sm-12 mt-1 mb-3">
+                                                <div class="form-group">
+                                                    <textarea id="NOTES" class="form-control" maxlength="4000"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="float-start noteCharMax">
+                                                    4000 characters max
+                                                </div>
+                                                <div class="float-end">
+                                                    <button type="button" id="cancelNotes" class="nsm-button">Cancel</button>
+                                                    <button type="submit" class="nsm-button primary noteSaveButton">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                             <div class="nsm-card-footer text-center">
                                 <p class="m-0">Accrual basis <?=date("l, F j, Y h:i A eP")?></p>
                             </div>
@@ -477,4 +499,36 @@
     </div>
 </div>
 
+<?php include viewPath('accounting/reports/reports_assets/profit_and_loss_as_%_of_total_income_js'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
+
+<script>
+$(function(){
+    var isCollapsed = true;
+
+    $("#collapseButton").click(function() {
+        if (isCollapsed) {
+            $(".collapse").collapse('show');
+            $("#collapseButton span").text('Uncollapse');
+            updateCarets('show');
+        } else {
+            $(".collapse").collapse('hide');
+            $("#collapseButton span").text('Collapse');
+            updateCarets('hide');
+        }
+        isCollapsed = !isCollapsed;
+    });
+
+    function updateCarets(action) {
+        $(".collapse-row").each(function() {
+            var target = $(this).data("bs-target");
+            var icon = $(this).find("i");
+            if (action === 'show') {
+                icon.removeClass("bx-caret-right").addClass("bx-caret-down");
+            } else {
+                icon.removeClass("bx-caret-down").addClass("bx-caret-right");
+            }
+        });
+    }
+});
+</script>

@@ -239,10 +239,10 @@
                                     </div>
                                     <div class="col-12 col-md-6 grid-mb text-end">
                                         <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
+                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#emailReportModal">
                                                 <i class='bx bx-fw bx-envelope'></i>
                                             </button>
-                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
+                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#printPreviewModal" onclick="previewPDF()">
                                                 <i class='bx bx-fw bx-printer'></i>
                                             </button>
                                             <button type="button" class="nsm-button" data-bs-toggle="dropdown">
@@ -279,7 +279,7 @@
                                 </div>
                             </div>
                             <div class="nsm-card-content h-auto grid-mb">
-                                <table class="nsm-table">
+                                <table class="nsm-table" id="balance-sheet-comparison">
                                     <thead>
                                         <tr>
                                             <td data-name="Name" rowspan="2"></td>
@@ -624,14 +624,14 @@
                         <div class="form-group mb-2">
                             <label>Orientation</label>
                             <select id="pageOrientation" name="pageOrientation" class="form-select">
-                                <option value="P" selected>Portrait</option>
-                                <option value="L">Landscape</option>
+                                <option value="p" selected>Portrait</option>
+                                <option value="l">Landscape</option>
                             </select>
                         </div>
-                        <div class="form-check">
+                        <!-- <div class="form-check">
                             <input id="pageHeaderRepeat" name="pageHeaderRepeat" class="form-check-input" type="checkbox">
                             <label class="form-check-label" for="pageHeaderRepeat">Repeat Page Header</label>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-sm-9">
                         <iframe id="pdfPreview" class="border-0" width="100%" height="450px"></iframe>
@@ -656,7 +656,7 @@
 <!-- END: PRINT/SAVE MODAL -->
 <!-- START: EMAIL REPORT MODAL -->
 <div class="modal" id="emailReportModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Email Report</span>
@@ -680,14 +680,14 @@
                         <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>Subject</h6>
-                                <input id="emailSubject" class="form-control" type="text" required>
+                                <!-- <input id="emailSubject" class="form-control" type="text" value="<?php echo $companyInfo ? strtoupper($companyInfo->business_name) : ''; ?>: <?php echo $page->title; ?>" required> -->
+                                <input id="emailSubject" class="form-control" type="text" value="<?php echo $page->title; ?>" required>
                             </div>
                         </div>
 
                         <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>Body</h6>
-                                <!-- <textarea id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title ?> from <?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?></textarea> -->
                                 <div id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title ?> from <?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?></div>
                             </div>
                         </div>
@@ -762,3 +762,6 @@ $(function(){
     }
 });
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>

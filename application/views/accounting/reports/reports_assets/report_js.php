@@ -173,7 +173,7 @@
         // =========================
         $.ajax({
             type: "POST",
-            url: BASE_URL + "/accounting_controllers/Reports/getReportData/" + REPORT_CATEGORY,
+            url: base_url + "/accounting_controllers/Reports/getReportData/" + REPORT_CATEGORY,
             data: {
                 theadColumnNames: theadColumnNames,
                 theadTotalColumn: theadTotalColumn,
