@@ -821,7 +821,7 @@ table.dataTable thead th, table.dataTable thead td{
     .tableUpdaterDiv {
         width: max-content;
         max-width: 100%;
-        height: 550px;
+        /* height: 550px; */
         overflow: auto;
         position: relative;
 
@@ -861,12 +861,58 @@ table.dataTable thead th, table.dataTable thead td{
     }
 
     .customerManagementTable~.dataTables_paginate {
-        position: fixed;
-    }
+        /* position: fixed; */
+        /* float: left !important; */
+        margin-bottom: 35px;
+    } 
 
     .customerProfileBanner {
         font-family: sans-serif;
         margin: 0;
+    }
+
+    .searchSalesAreaDiv {
+        width: 185px;
+    }
+
+    .searchCustomerTypeDiv {
+        width: 200px;
+    }
+
+    .searchGroupDiv {
+        width: 230px;
+    }
+
+    .searchPaymentTypeDiv {
+        width: 230px;
+    }
+
+    .searchPlanDiv {
+        width: 230px;
+    }
+
+    .searchCustomerListInput {
+        width: 60% !important;
+    }
+
+    .custom-loader {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #d3d3d3;
+        z-index: 9999; 
+    }
+
+    .custom-loader p {
+        margin: 0;
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
     }
 </style>
 
@@ -892,20 +938,25 @@ table.dataTable thead th, table.dataTable thead td{
                             <div class="row">
                                 <div class="col-xl-3 mb-3">
                                     <lebel class="text-muted">Customer / Business Filter</lebel>
-                                    <input class="searchCustomerListInput form-control mt-2" type="text" placeholder="Search specific customer or business to update...">
+                                    <div class="input-group">
+                                        <input class="searchCustomerListInput form-control mt-2" type="text" placeholder="Search entry here...">
+                                        <select class="form-select displayCustomerList mt-2">
+                                            <option selected value="10">10</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                            <option value="500">500</option>
+                                        </select>
+                                    </div>
                                 </div>
-                                <div class="col-xl-1 mb-3" style="width: 185px;">
-                                    <lebel class="text-muted">Status filter</lebel>
-                                    <select class="form-select searchStatus mt-2">
+                                <div class="col-xl-2 mb-3 searchCustomerTypeDiv">
+                                    <lebel class="text-muted">Customer Type</lebel>
+                                    <select class="form-select searchCustomerType mt-2">
                                         <option value="">None</option>
-                                        <?php
-                                            foreach ($customer_status as $status) {
-                                                echo "<option value='$status->name'>$status->name</option>";
-                                            }
-                                        ?>
+                                        <option value="Residential">Residential</option>
+                                        <option value="Commercial">Commercial</option>
                                     </select>
                                 </div>
-                                <div class="col-xl-2 mb-3" style="width: 230px;">
+                                <div class="col-xl-2 mb-3 searchGroupDiv">
                                     <lebel class="text-muted">Customer Group filter</lebel>
                                     <select class="form-select searchGroup mt-2">
                                         <option value="">None</option>
@@ -916,7 +967,29 @@ table.dataTable thead th, table.dataTable thead td{
                                         ?>
                                     </select>
                                 </div>
-                                <div class="col-xl-2 mb-3" style="width: 230px;">
+                                <div class="col-xl-1 mb-3 searchSalesAreaDiv">
+                                    <lebel class="text-muted">Sales Area filter</lebel>
+                                    <select class="form-select searchSalesArea mt-2">
+                                        <option value="">None</option>
+                                        <?php
+                                            foreach ($sales_area as $salesarea) {
+                                                echo "<option value='$salesarea->sa_id'>$salesarea->sa_name</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                </div>                         
+                                <div class="col-xl-2 mb-3 searchPlanDiv">
+                                    <lebel class="text-muted">Rate Plan filter</lebel>
+                                    <select class="form-select searchPlan mt-2">
+                                        <option value="">None</option>
+                                        <?php
+                                            foreach ($rate_plan as $plan) {
+                                                echo "<option value='$plan->amount'>$plan->plan_name ($$plan->amount)</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-xl-2 mb-3 searchPaymentTypeDiv">
                                     <lebel class="text-muted">Payment Type filter</lebel>
                                     <select class="form-select searchPaymentType mt-2">
                                         <option value="">None</option>
@@ -936,64 +1009,59 @@ table.dataTable thead th, table.dataTable thead td{
                                         <option value="OPT">Other Payment Type</option>
                                     </select>
                                 </div>
-                                <div class="col-xl-2 mb-3" style="width: 230px;">
-                                    <lebel class="text-muted">Rate Plan filter</lebel>
-                                    <select class="form-select searchPlan mt-2">
-                                        <option value="">None</option>
-                                        <?php
-                                            foreach ($rate_plan as $plan) {
-                                                echo "<option value='$plan->amount'>$plan->plan_name ($$plan->amount)</option>";
-                                            }
-                                        ?>
-                                    </select>
+                                <div class="col-xl-2 mb-3">
+                                    <lebel class="text-muted">Scroll</lebel>
+                                    <div class="input-group mt-2">
+                                        <button class="btn btn-dark scrollToStart"><i class="fas fa-angle-double-left"></i></button>
+                                        <button class="btn btn-secondary scrollToLeft"><i class="fas fa-angle-left"></i></button>
+                                        <button class="btn btn-secondary scrollToRight"><i class="fas fa-angle-right"></i></button>
+                                        <button class="btn btn-dark scrollToEnd"><i class="fas fa-angle-double-right"></i></button>
+                                    </div>
                                 </div>
                                 <div class="col-xl-12 mb-3">
                                     <div class="table-responsive tableUpdaterDiv">
                                         <table class="table table-hover customerManagementTable">
                                             <thead>
-                                                <!-- <tr>
-                                                    <th colspan="24" style="background: #00802e1f !important;"><h5 class="fw-bold customerProfileBanner">C U S T O M E R&emsp;P R O F I L E</h5></th>
-                                                    <th colspan="14" style="background: #0f00801f !important"><h5 class="fw-bold customerBillingInfoBanner">B I L L I N G&emsp;I N F O R M A T I O N</h5></th>
-                                                </tr> -->
                                                 <tr>
                                                     <th>Firstname</th>
                                                     <th>Lastname</th>
-                                                    <th>Middle Initial</th>
                                                     <th>Business Name</th>
-                                                    <th>Status</th>
                                                     <th>Customer Type</th>
-                                                    <th>Customer Group</th> 
-                                                    <th>Industry Type</th> 
                                                     <th>Sales Area</th>
-                                                    <th>Prefix</th>
-                                                    <th>Suffix</th>
-                                                    <th>Country</th>
                                                     <th>Address</th>
                                                     <th>City</th>
-                                                    <th>County</th>
                                                     <th>State</th>
                                                     <th>Zip Code</th>
-                                                    <th>Cross Street</th>
-                                                    <th>Subdivision</th>
                                                     <th>Social Security No. </th>
                                                     <th>Birthdate</th>
                                                     <th>Email</th>
-                                                    <th>Phone (H)</th>
                                                     <th>Phone (M)</th>
-                                                    <th>Card Firstname</th>
-                                                    <th>Card Lastname</th>
-                                                    <th>Card Address</th>
-                                                    <th>City</th>
-                                                    <th>State</th>
-                                                    <th>Zip</th>
-                                                    <th>Equipment</th>
-                                                    <th>Initial Deposit</th>
+                                                    <th>Sales Rep</th>
+                                                    <th>Install Date</th>
+                                                    <th>Monitoring Company</th>
+                                                    <th>Monitoring ID</th>
+                                                    <th>Account Type</th>
+                                                    <th>Abort Code/Password</th>
+                                                    <th>Panel Type</th>
+                                                    <th>System Package Type</th>
+                                                    <th>Warranty Type</th>
+                                                    <th>Communication Type</th>
+                                                    <th>Monthly Monitorinng Rate</th>
+                                                    <th>Account Cost</th>
+                                                    <th>Pass Thru Cost</th>
                                                     <th>Rate Plan</th>
                                                     <th>Billing Frequency</th>
+                                                    <th>Billing Day of Month</th>
                                                     <th>Contract Term</th>
                                                     <th>Billing Start Date</th>
                                                     <th>Billing End Date</th>
-                                                    <th>Billing Day of Month</th>
+                                                    <th>Billing Method</th>
+                                                    <th>Check No.</th>
+                                                    <th>Routing No.</th>
+                                                    <th>Account No.</th>
+                                                    <th>Credit Card No.</th>
+                                                    <th>Credit Card Expiration</th>
+                                                    <th>Profit</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -1016,11 +1084,16 @@ table.dataTable thead th, table.dataTable thead td{
     </div>
 </div>
 
+<style>
+    
+
+</style>
 
 <script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
 <script type="text/javascript">
     const URL_ORIGIN = window.origin;
-    var customerManagementTable
+    var customerManagementTable;
+    let horizontalScroll = 0;
     $(document).ready(function() {
         customerManagementTable = $('.customerManagementTable').DataTable({
             "ordering": false,
@@ -1030,35 +1103,128 @@ table.dataTable thead th, table.dataTable thead td{
             "ajax": {
                 "url": "<?= base_url('customer/customerServersideLoad'); ?>",
                 "type": "POST",
+            },
+            "language": {
+                "processing": "<div class='custom-loader'><p>Processing, please wait...</p></div>"
             }
         });
         $('.batchCustomerUpdaterButton').toggle();
-
-        $('.searchStatus').change(function(e) {
+        $('.searchCustomerType').change(function(e) {
             var filterData = $(this).val();
-            customerManagementTable.columns(6).search(filterData).draw();
+            customerManagementTable.columns(3).search(filterData).draw();
         });
-
         $('.searchGroup').change(function(e) {
             var filterData = $(this).val();
-            customerManagementTable.columns(7).search(filterData).draw();
+            customerManagementTable.columns(38).search(filterData).draw();
         });
-
-        $('.searchPaymentType').change(function(e) {
+        $('.searchSalesArea').change(function(e) {
             var filterData = $(this).val();
-            customerManagementTable.columns(8).search(filterData).draw();
+            customerManagementTable.columns(4).search(filterData).draw();
         });
-
         $('.searchPlan').change(function(e) {
             var filterData = $(this).val();
-            customerManagementTable.columns(9).search(filterData).draw();
+            customerManagementTable.columns(26).search(filterData).draw();
         });
-
+        $('.searchPaymentType').change(function(e) {
+            var filterData = $(this).val();
+            customerManagementTable.columns(32).search(filterData).draw();
+        });
         $('.searchCustomerListInput').keyup(function(e) {
             var searchInput = $(this).val();
             customerManagementTable.search(searchInput).draw();
         });
     });
+
+    $(document).on('change', '.displayCustomerList', function () {
+        const value = $(this).val();
+        if (value == '500') {
+            Swal.fire({
+                icon: "warning",
+                title: "Show All Entries",
+                html: "Are you sure you want to show 500 entries?<br><small class='text-muted'>(Displaying more than 100 entries may cause slow response.)</small>",
+                showCancelButton: true,
+                confirmButtonText: "Proceed",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        icon: "info",
+                        title: "Showing 500 Entries",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                    customerManagementTable.page.len(value).draw().on('draw', function() {
+                        Swal.close();
+                    });
+                } else {
+                    $('.displayCustomerList').val(10).change();
+                }
+            });
+        } else if (value == '100') {
+            Swal.fire({
+                        icon: "info",
+                        title: "Showing 100 Entries",
+                        html: "Please wait while the process is running...",
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        },
+                    });
+                    customerManagementTable.page.len(value).draw().on('draw', function() {
+                        Swal.close();
+                    });
+        } else {
+            customerManagementTable.page.len(value).draw();
+        }
+    });
+
+    $(document).on('click', '.scrollToLeft', function() {
+        if (horizontalScroll > 0) {
+            horizontalScroll -= 300;
+            $('.tableUpdaterDiv').animate({
+                scrollLeft: horizontalScroll
+            }, 200);
+        }
+    });
+
+    $(document).on('click', '.scrollToRight', function() {
+        const container = $('.tableUpdaterDiv');
+        const maxScrollLeft = container[0].scrollWidth - container.outerWidth();
+
+        if (horizontalScroll < maxScrollLeft) {
+            horizontalScroll += 300;
+            if (horizontalScroll > maxScrollLeft) {
+                horizontalScroll = maxScrollLeft;
+            }
+            container.animate({
+                scrollLeft: horizontalScroll
+            }, 200);
+        }
+    });
+
+
+    $(document).on('click', '.scrollToStart', function() {
+        horizontalScroll = 0;
+        $('.tableUpdaterDiv').animate({
+            scrollLeft: horizontalScroll
+        }, 200);
+    });
+
+    $(document).on('click', '.scrollToEnd', function() {
+        const container = $('.tableUpdaterDiv');
+        const maxScrollLeft = container[0].scrollWidth - container.outerWidth();
+        horizontalScroll = maxScrollLeft;
+        container.animate({
+            scrollLeft: horizontalScroll
+        }, 200);
+    });
+
+    
+
 
 
     $(document).on('click', '.textPreview', function() {
