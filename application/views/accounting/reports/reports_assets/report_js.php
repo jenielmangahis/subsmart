@@ -234,7 +234,7 @@
     // Load .pdf Report Script
     function loadReportPreview() {
         $('#pdfPreview').hide();
-        $('#pdfPreview').attr('src', BASE_URL + "/assets/pdf/accounting/" + filename + ".pdf?" + Math.round(Math.random() * 1000000)).on('load', function() {
+        $('#pdfPreview').attr('src', base_url + "/assets/pdf/accounting/" + filename + ".pdf?" + Math.round(Math.random() * 1000000)).on('load', function() {
             $('.dataLoader').remove();
             $('#pdfPreview').show();
         });
@@ -259,7 +259,7 @@
     // Fetch Report Notes On Page Load
     $.ajax({
         type: "POST",
-        url: BASE_URL + "/accounting_controllers/reports/getNotes",
+        url: base_url + "/accounting_controllers/reports/getNotes",
         data: {
             reportID: REPORT_ID,
         },
@@ -280,7 +280,7 @@
         // =========
         $.ajax({
             type: "POST",
-            url: BASE_URL + "/accounting_controllers/reports/saveNotes",
+            url: base_url + "/accounting_controllers/reports/saveNotes",
             data: {
                 reportID: REPORT_ID,
                 reportNotes: $("#NOTES").val(),

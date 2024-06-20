@@ -175,10 +175,25 @@ include viewPath('v2/includes/header');
                                     <div data-type="due.secondary_text" class="payrollTax__text400"></div>
                                 </div>
                             </td>
-                            <td>
+                            <!-- <td>
                                 <div class="payrollTax__actions" style="margin-left: -8px;">
                                     <button class="nsm-button payrollTax__actionsBtn payrollTax__actionsBtn--disabled">File</button>
                                     <button class="nsm-button primary payrollTax__actionsBtn payrollTax__actionsBtn--disabled">Preview</button>
+                                </div>
+                            </td> -->
+                            <td>
+                                <div class="dropdown float-start">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item payrollTax__actionsBtn payrollTax__actionsBtn--disabled" href="#">File</a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item payrollTax__actionsBtn payrollTax__actionsBtn--disabled" href="#">Preview</a>
+                                        </li>
+                                    </ul>
                                 </div>
                             </td>
                         </tr>
