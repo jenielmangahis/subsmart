@@ -91,7 +91,7 @@
     });
 
     // Fetch Report Notes On Page Load
-    fetch(BASE_URL + "/accounting_controllers/reports/getNotes", {
+    fetch(base_url + "/accounting_controllers/reports/getNotes", {
             method: "POST",
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -115,7 +115,7 @@
         document.getElementById('notesContent').innerHTML = document.getElementById("NOTES").value;
         document.querySelector('.addNotes').textContent = (document.getElementById("NOTES").value !== "") ? 'Edit Notes' : 'Add Notes';
 
-        fetch(BASE_URL + "/accounting_controllers/reports/saveNotes", {
+        fetch(base_url + "/accounting_controllers/reports/saveNotes", {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
