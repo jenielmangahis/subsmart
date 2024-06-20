@@ -426,27 +426,34 @@ echo 'active';
                 <i class='bx bx-fw bx-list-check'></i> Survey
             </a>
         </li>
-        <li class="<?php if ($page->title == 'SMS Automation') {
+        <!-- <li class="<?php if ($page->title == 'SMS Automation') {
             echo 'selected';
         } ?>">
             <a href="<?php echo base_url('sms_automation'); ?>">
                 <i class='bx bx-fw bx-message-dots'></i> SMS Automation
             </a>
-        </li>
-        <li class="<?php if ($page->title == 'Email Blast') {
+        </li> -->
+        <!-- <li class="<?php if ($page->title == 'Email Blast') {
             echo 'selected';
         } ?>">
             <a href="<?php echo base_url('email_campaigns'); ?>">
                 <i class='bx bx-fw bx-envelope'></i> Email Blast
             </a>
+        </li> -->
+        <li class="<?php if ($page->title == 'Email Broadcast') {
+                    echo 'selected';
+                } ?>">
+            <a href="<?php echo base_url('email_broadcasts'); ?>">
+                <i class='bx bx-fw bx-envelope'></i> Email Broadcast
+            </a>
         </li>
-        <li class="<?php if ($page->title == 'Email Automation') {
+        <!-- <li class="<?php if ($page->title == 'Email Automation') {
             echo 'selected';
         } ?>">
             <a href="<?php echo base_url('email_automation'); ?>">
                 <i class='bx bx-fw bx-mail-send'></i> Email Automation
             </a>
-        </li>
+        </li> -->
         <li class="<?php if ($page->title == 'Deals & Steals') {
             echo 'selected';
         } ?>">
