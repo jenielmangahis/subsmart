@@ -938,7 +938,7 @@ class Taskhub extends MY_Controller {
 					$update_text = "Updated task title";
 				}
 	
-				if(trim($task->description) != trim($this->input->post('description'))){
+				if(trim($post['notes']) != trim($post['ContentFromEditor'])){
 					if(!empty($update_text)){
 						$update_text .= ' and task notes.';
 					} else {
@@ -957,6 +957,36 @@ class Taskhub extends MY_Controller {
 					} else {
 						$update_text = "Changed task status from " . $task->status . ' to ' . $status . '.';
 					}
+				}
+
+				$exist_assigned = json_decode($task->assigned_employee_ids);
+				$re_assigned_text = "";
+				foreach($assigned_to_arr as $assigned_to) {
+					if($exist_assigned) {
+						if(is_array($exist_assigned)) {
+							if (!in_array($assigned_to, $exist_assigned)) {
+								$reassign = $this->users_model->getUser($assigned_to);
+								if($reassign) {
+									$re_assigned_text .= $reassign->FName . " " . $reassign->LName . ", ";
+								}
+							}	
+						} else {
+							if($assigned_to != $$exist_assigned) {
+								$reassign = $this->users_model->getUser($assigned_to);
+								if($reassign) {
+									$re_assigned_text .= $reassign->FName . " " . $reassign->LName . ", ";
+								}
+							}
+						}
+					}
+				}
+
+				if($re_assigned_text != "") {
+					if(!empty($update_text)){
+						$update_text .= ' and reassigned task to ' . substr($re_assigned_text, 0, -2);
+					} else {
+						$update_text = "Reassigned task to " . substr($re_assigned_text, 0, -2);
+					}							
 				}
 	
 				$actual_date_complete = null;
