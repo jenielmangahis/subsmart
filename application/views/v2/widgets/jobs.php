@@ -42,50 +42,11 @@
     </div>
 </div>
 <script>
-$(function(){
-    var jobs = $('#jobs_chart');
-    var jobsChart = new Chart(jobs, {
-        type: 'bar',        
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                },
-            },
-            aspectRatio: 1,
-            scales: {
-                A: {
-                    type: 'linear',
-                    position: 'left',
-                    title: {
-                        display: true,
-                        text: 'No of Jobs'
-                    },
-                    ticks: {
-                        beginAtZero: true,
-                        stepSize: 1                        
-                    }
-                },
-                B: {
-                    type: 'linear',
-                    position: 'right',
-                    ticks: {
-                        beginAtZero: true,
-                        callback: function(value, index, values) {
-                            if (parseInt(value) >= 1000) {
-                                return '$' + value.toString().replace(
-                                    /\B(?=(\d{3})+(?!\d))/g, ",");
-                            } else {
-                                return '$' + value;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    });
+$(document).ready(function(){
+    initializeJobChart();
+});
 
+function initializeJobChart(){
     $(".widget-job-datepicker").datepicker( {
         format: "mm/yyyy",
         viewMode: "months", 
@@ -150,76 +111,124 @@ $(function(){
     });
 
     loadJobChart();
+}
 
-    function loadJobChart(){
-        var filter_date_from = $('#widget-job-filter-from').val();
-        var filter_date_to   = $('#widget-job-filter-to').val();
+function loadJobChart(){
+    var chartInstance = Chart.getChart("jobs_chart");  
+    if (chartInstance) {
+        chartInstance.destroy();
+    } 
 
-        $.ajax({
-            url: base_url + 'widgets/_load_job_chart_data',
-            method: 'post',
-            data: {filter_date_from:filter_date_from,filter_date_to:filter_date_to},
-            dataType: 'json',
-            success: function (data) {              
-                const jobs_labels = data.chart_labels;
-                const jobs_data = {
-                    labels: jobs_labels,
-                    datasets: [{
-                        label: 'Job Count',                        
-                        data: data.total_jobs_number_data,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
-                        borderWidth: 1,
-                        stack: 'combined',
-                        type: 'bar',
-                        yAxisID: "A",
+    var jobs = $('#jobs_chart');
+    var jobsChart = new Chart(jobs, {
+        type: 'bar',        
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+            },
+            aspectRatio: 1,
+            scales: {
+                A: {
+                    type: 'linear',
+                    position: 'left',
+                    title: {
+                        display: true,
+                        text: 'No of Jobs'
                     },
-                    {
-                        label: 'Job Value',
-                        data: data.total_jobs_amount_data,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                            'rgba(191, 191, 191, 0.5)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
-                        borderWidth: 1,
-                        stack: 'combined',
-                        yAxisID: "B",
+                    ticks: {
+                        beginAtZero: true,
+                        stepSize: 1                        
                     }
-                    ]
-                };
-
-                jobsChart.data = jobs_data;
-                jobsChart.update();
+                },
+                B: {
+                    type: 'linear',
+                    position: 'right',
+                    ticks: {
+                        beginAtZero: true,
+                        callback: function(value, index, values) {
+                            if (parseInt(value) >= 1000) {
+                                return '$' + value.toString().replace(
+                                    /\B(?=(\d{3})+(?!\d))/g, ",");
+                            } else {
+                                return '$' + value;
+                            }
+                        }
+                    }
+                }
             }
-        });
-    }
-});
+        }
+    });
+
+    var filter_date_from = $('#widget-job-filter-from').val();
+    var filter_date_to   = $('#widget-job-filter-to').val();
+
+    $.ajax({
+        url: base_url + 'widgets/_load_job_chart_data',
+        method: 'post',
+        data: {filter_date_from:filter_date_from,filter_date_to:filter_date_to},
+        dataType: 'json',
+        success: function (data) {              
+            const jobs_labels = data.chart_labels;
+            const jobs_data = {
+                labels: jobs_labels,
+                datasets: [{
+                    label: 'Job Count',                        
+                    data: data.total_jobs_number_data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1,
+                    stack: 'combined',
+                    type: 'bar',
+                    yAxisID: "A",
+                },
+                {
+                    label: 'Job Value',
+                    data: data.total_jobs_amount_data,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(191, 191, 191, 0.5)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1,
+                    stack: 'combined',
+                    yAxisID: "B",
+                }
+                ]
+            };
+
+            jobsChart.data = jobs_data;
+            jobsChart.update();
+        }
+    });
+}
 </script>
 
 <?php

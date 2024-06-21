@@ -38,46 +38,49 @@
 
 
 <script type="text/javascript">
-    $(function(){
-        var customerGroup      = $('#customer_groups_chart');
-        var customerGroupChart = new Chart(customerGroup, {
-            type: 'doughnut',        
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: {
-                        position: 'right',
-                    },
+$(function(){
+    loadCustomerGroupChart();
+});
+function loadCustomerGroupChart(){   
+    var chartInstance = Chart.getChart("customer_groups_chart");  
+    if (chartInstance) {
+        chartInstance.destroy();
+    }   
+    var customerGroup      = $('#customer_groups_chart');
+    var customerGroupChart = new Chart(customerGroup, {
+        type: 'doughnut',        
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'right',
                 },
-                aspectRatio: 1.5,
             },
-        });
+            aspectRatio: 1.5,
+        },
+    }); 
 
-        loadCustomerGroupChart();
+    $.ajax({
+        url: base_url + 'widgets/_load_customer_group_chart',
+        method: 'post',
+        dataType: 'json',
+        success: function (data) {        
+            const chart_labels = data.chart_labels;
+            const chart_data = {
+                labels: chart_labels,
+                datasets: [{
+                    data: data.chart_data,
+                    backgroundColor: data.chart_colors,
+                    borderColor: data.chart_colors,
+                    borderWidth: 0.5                            
+                },]
+            };
 
-        function loadCustomerGroupChart(){    
-            $.ajax({
-                url: base_url + 'widgets/_load_customer_group_chart',
-                method: 'post',
-                dataType: 'json',
-                success: function (data) {        
-                    const chart_labels = data.chart_labels;
-                    const chart_data = {
-                        labels: chart_labels,
-                        datasets: [{
-                            data: data.chart_data,
-                            backgroundColor: data.chart_colors,
-                            borderColor: data.chart_colors,
-                            borderWidth: 0.5                            
-                        },]
-                    };
-
-                    customerGroupChart.data = chart_data;
-                    customerGroupChart.update();
-                }
-            });
+            customerGroupChart.data = chart_data;
+            customerGroupChart.update();
         }
     });
+}
 </script>
 
 <?php

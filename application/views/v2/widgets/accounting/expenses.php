@@ -38,7 +38,7 @@
     function initializeExpensesChart(){
         var estimates = $("#expenses_chart");
 
-        new Chart(estimates, {
+        const expensesChart = new Chart(estimates, {
           type: 'doughnut',
           data: {
             labels: <?=$account_names?>,
