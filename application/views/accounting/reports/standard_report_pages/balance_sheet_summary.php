@@ -286,8 +286,9 @@
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
-                                        <input type="hidden" id="client_id" name="client_id" value="<?= $clients->id ?>">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?= $clients->business_name ?></span></h4>
+                                        <h4 class="text-center fw-bold" id="businessName">
+                                            <span class="company-name"><?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : $clients->business_name; ?></span>
+                                        </h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
                                         <p class="m-0 fw-bold">Balance Sheet Summary</p>

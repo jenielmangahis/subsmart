@@ -1,5 +1,11 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
-
+<style>
+.compact-table td,
+.compact-table th {
+    padding: 4px 8px;
+    font-size: 12px;
+}
+</style>
 <div class="row page-content g-0">
     <div class="col-12">
         <div class="nsm-page">
@@ -233,7 +239,7 @@
                                 <div class="row">
                                     <div class="col-12 col-md-6 grid-mb">
                                         <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button">
+                                            <button type="button" class="nsm-button" id="collapseButton">
                                                 <span>Collapse</span>
                                             </button>
                                             <button type="button" class="nsm-button" data-bs-toggle="dropdown">
@@ -254,10 +260,10 @@
                                                 </div>
                                             </ul>
                                             <button type="button" class="nsm-button">
-                                                <span>Add notes</span>
+                                                <span>Add Notes</span>
                                             </button>
-                                            <button type="button" class="nsm-button">
-                                                <span>Edit titles</span>
+                                            <button type="button" class="nsm-button" id="editButton">
+                                                <span>Edit Title</span>
                                             </button>
                                         </div>
                                     </div>
@@ -282,7 +288,7 @@
                                             <ul class="dropdown-menu dropdown-menu-end p-3">
                                                 <p class="m-0">Display density</p>
                                                 <div class="form-check">
-                                                    <input type="checkbox" checked id="compact-display" class="form-check-input">
+                                                    <input type="checkbox" id="compact-display" class="form-check-input">
                                                     <label for="compact-display" class="form-check-label">Compact</label>
                                                 </div>
                                             </ul>
@@ -292,7 +298,9 @@
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?=$clients->business_name?></span></h4>
+                                        <h4 class="text-center fw-bold" id="businessName">                                            
+                                            <span class="company-name"><?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : $companyInfo->business_name; ?></span>
+                                        </h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
                                         <p class="m-0 fw-bold">Profit and Loss</p>
@@ -308,7 +316,7 @@
                                             <td data-name="Total">TOTAL</td>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="reportTable">
                                         <tr data-bs-toggle="collapse" data-bs-target="#accordion" class="clickable collapse-row collapsed">
                                             <td><i class="bx bx-fw bx-caret-right"></i> INCOME</td>
                                             <td>$571,265.66</td>
@@ -324,11 +332,7 @@
                                         <tr id="accordion2" class="collapse">
                                             <td>&emsp;&emsp;&emsp;Checking</td>
                                             <td>305,061.93</td>
-                                        </tr>
-                                        <tr id="accordion2" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion3">
-                                            <td>&emsp;&emsp;&emsp;<i class="bx bx-fw bx-caret-right"> Test Bank (Cash on hand)</td>
-                                            <td>990.77</td>
-                                        </tr>
+                                        </tr>                                        
                                         <tr id="accordion3" class="collapse clickable collapse-row">
                                             <td>&emsp;&emsp;&emsp;&emsp; Sub-bank (Cash on hand)</td>
                                             <td>990.00</td>
@@ -444,3 +448,48 @@
 </div>
 
 <?php include viewPath('v2/includes/footer'); ?>
+<?php include viewPath('accounting/reports/reports_assets/profit_and_loss_js'); ?>
+<script>
+$(function(){
+    var isCollapsed = true;
+
+    $("#collapseButton").click(function() {
+        if (isCollapsed) {
+            $(".collapse").collapse('show');
+            $("#collapseButton span").text('Uncollapse');
+            updateCarets('show');
+        } else {
+            $(".collapse").collapse('hide');
+            $("#collapseButton span").text('Collapse');
+            updateCarets('hide');
+        }
+        isCollapsed = !isCollapsed;
+    });
+
+    $(".collapse-row").click(function() {
+        var target = $(this).data("bs-target");
+        $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
+        $(target).collapse('toggle');
+    });
+
+    function updateCarets(action) {
+        $(".collapse-row").each(function() {
+            var target = $(this).data("bs-target");
+            var icon = $(this).find("i");
+            if (action === 'show') {
+                icon.removeClass("bx-caret-right").addClass("bx-caret-down");
+            } else {
+                icon.removeClass("bx-caret-down").addClass("bx-caret-right");
+            }
+        });
+    }
+
+    $("#compact-display").change(function() {
+        if ($(this).is(":checked")) {
+            $("#reportTable").addClass("compact-table");
+        } else {
+            $("#reportTable").removeClass("compact-table");
+        }
+    });
+});
+</script>

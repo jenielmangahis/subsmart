@@ -938,7 +938,7 @@ class Taskhub extends MY_Controller {
 					$update_text = "Updated task title";
 				}
 	
-				if(trim($task->description) != trim($this->input->post('description'))){
+				if(trim($post['notes']) != trim($post['ContentFromEditor'])){
 					if(!empty($update_text)){
 						$update_text .= ' and task notes.';
 					} else {
@@ -958,6 +958,36 @@ class Taskhub extends MY_Controller {
 						$update_text = "Changed task status from " . $task->status . ' to ' . $status . '.';
 					}
 				}
+
+				$exist_assigned = json_decode($task->assigned_employee_ids);
+				$re_assigned_text = "";
+				foreach($assigned_to_arr as $assigned_to) {
+					if($exist_assigned) {
+						if(is_array($exist_assigned)) {
+							if (!in_array($assigned_to, $exist_assigned)) {
+								$reassign = $this->users_model->getUser($assigned_to);
+								if($reassign) {
+									$re_assigned_text .= $reassign->FName . " " . $reassign->LName . ", ";
+								}
+							}	
+						} else {
+							if($assigned_to != $$exist_assigned) {
+								$reassign = $this->users_model->getUser($assigned_to);
+								if($reassign) {
+									$re_assigned_text .= $reassign->FName . " " . $reassign->LName . ", ";
+								}
+							}
+						}
+					}
+				}
+
+				if($re_assigned_text != "") {
+					if(!empty($update_text)){
+						$update_text .= ' and reassigned task to ' . substr($re_assigned_text, 0, -2);
+					} else {
+						$update_text = "Reassigned task to " . substr($re_assigned_text, 0, -2);
+					}							
+				}
 	
 				$actual_date_complete = null;
 				if($status == 'Closed') {
@@ -974,23 +1004,20 @@ class Taskhub extends MY_Controller {
 					$list_id = 0;
 				}					
 	
-				//$taskStatus = $this->Taskhub_status_model->getById($post['status']);
 				$data = [
 					'prof_id' => $prof_id,
 					'title'   => isset($post['title']) ? $post['title'] : $post['subject'],
 					'subject' => isset($post['subject']) ? $post['subject'] : $post['title'],
 					'description' => $post['ContentFromEditor'],
-					'notes' => $post['ContentFromEditor'], //isset($post['notes']) ? $post['notes'] : $post['ContentFromEditor'],
-					'date_started' => null, //date("Y-m-d",strtotime($this->input->post('date_started'))),
+					'notes' => $post['ContentFromEditor'], 
+					'date_started' => null,
 					'estimated_date_complete' => date('Y-m-d', strtotime($post['estimated_date_complete'])),
 					'date_completed' => isset($post['date_completed']) ? $post['date_completed'] : $actual_date_complete,
 					'actual_date_complete' => $actual_date_complete,
-					'color' => 'NA', //isset($post['color']) ? $post['color'] : $taskStatus->status_color,
-					'task_color' => null, //$taskStatus->status_color,
-					//'status_id' => $taskStatus->status_id,
+					'color' => 'NA', 
+					'task_color' => null, 
 					'priority' => $post['priority'],
-					'company_id' => $company_id,
-					//'assigned_employee_ids' => !empty($post['a_to_multiple']) ? $post['a_to_multiple'] : $assigned_to, 
+					'company_id' => $company_id, 
 					'assigned_employee_ids' => !empty($post_encode_assigned_to) ? $post_encode_assigned_to : $assigned_to,
 					'list_id' => $list_id,
 					'status'=> $post['status']
@@ -1057,29 +1084,30 @@ class Taskhub extends MY_Controller {
 			if($assigned_to == ''){
 				$list_id = 0;
 			}				
-            
+            $title = isset($post['title']) ? $post['title'] : $post['subject'];
             $task_data = [
-                'prof_id' => $prof_id,
-				'title'   => isset($post['title']) ? $post['title'] : $post['subject'],
-                'subject' => isset($post['subject']) ? $post['subject'] : $post['title'],
-                'description' => $post['ContentFromEditor'],
-				'notes' => $post['ContentFromEditor'], //isset($post['notes']) ? $post['notes'] : $post['ContentFromEditor'],
+				'title'   => $title,
+				'notes' => $post['ContentFromEditor'], 
                 'created_by' => $uid,
                 'date_created' => date('Y-m-d h:i:s'),
 				'date_started' => null,
 				'date_due'     => isset($post['date_due']) ? date("Y-m-d",strtotime($post['date_due'])) : null,
-                'estimated_date_complete' => !empty($post['estimated_date_complete']) ? date('Y-m-d', strtotime($post['estimated_date_complete'])) : null,
 				'date_completed' => isset($post['date_completed']) ? $post['date_completed'] : null,
-                'actual_date_complete' => null,
-				'color' => 'NA', //isset($post['color']) ? $post['color'] : $taskStatus->status_color,
-                'task_color' => null, //$taskStatus->status_color
-                'status_id' => null, //$taskStatus->status_id,
+				'color' => 'NA', 
                 'priority' => $post['priority'],
                 'company_id' => $cid,
                 'view_count' => 0,
 				'assigned_employee_ids' => !empty($post_encode_assigned_to) ? $post_encode_assigned_to : $assigned_to,
 				'list_id' => $list_id,
-				'status' => $post['status']
+				'status' => $post['status'],
+
+				'subject' => isset($post['subject']) ? $post['subject'] : $post['title'],
+				'description' => $post['ContentFromEditor'],
+				'estimated_date_complete' => !empty($post['estimated_date_complete']) ? date('Y-m-d', strtotime($post['estimated_date_complete'])) : null,
+				'actual_date_complete' => null,
+				'task_color' => null,
+				'status_id' => null, 
+				'prof_id' => $prof_id,
             ];
 
             $taskId = $this->Taskhub_model->create($task_data);
@@ -1100,7 +1128,12 @@ class Taskhub extends MY_Controller {
 				'performed_by' => $uid
 			);
 
-			$this->taskhub_updates_model->trans_create($activity_data);			
+			$this->taskhub_updates_model->trans_create($activity_data);		
+			
+			//Activity Logs
+			$task = $this->taskhub_model->getById($id);
+			$activity_name = 'Taskhub : Created task ' . $title;
+			createActivityLog($activity_name);			
 
             $is_success = 1;
             $msg = 'Save Successful!';

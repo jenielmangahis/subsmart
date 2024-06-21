@@ -334,12 +334,7 @@
                                             <td>&emsp;&emsp;&emsp;Checking</td>
                                             <td>305,061.93</td>
                                             <td>10.00 %</td>
-                                        </tr>
-                                        <tr id="accordion2" class="collapse clickable collapse-row" data-bs-toggle="collapse" data-bs-target="#accordion3">
-                                            <td>&emsp;&emsp;&emsp;<i class="bx bx-fw bx-caret-right"> Test Bank (Cash on hand)</td>
-                                            <td>990.77</td>
-                                            <td>10.00 %</td>
-                                        </tr>
+                                        </tr>                                        
                                         <tr id="accordion3" class="collapse clickable collapse-row">
                                             <td>&emsp;&emsp;&emsp;&emsp; Sub-bank (Cash on hand)</td>
                                             <td>990.00</td>
@@ -522,6 +517,12 @@ $(function(){
             updateCarets('hide');
         }
         isCollapsed = !isCollapsed;
+    });
+
+    $(".collapse-row").click(function() {
+        var target = $(this).data("bs-target");
+        $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
+        $(target).collapse('toggle');
     });
 
     function updateCarets(action) {

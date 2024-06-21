@@ -1784,3 +1784,7 @@ $route['email_broadcasts'] = 'EmailBroadcast/index';
 $route['email_broadcasts/_customer_list'] = 'EmailBroadcast/ajax_customer_list';
 $route['email_broadcasts/_save_email_broadcast'] = 'EmailBroadcast/ajax_save_email_broadcast';
 $route['email_broadcasts/_send_test_email_broadcast'] = 'EmailBroadcast/ajax_send_test_email_broadcast';
+$route['email_broadcasts/_preview'] = 'EmailBroadcast/ajax_preview';
+$route['email_broadcasts/_pause_sending'] = 'EmailBroadcast/ajax_pause_sending';
+$route['email_broadcasts/_resume_sending'] = 'EmailBroadcast/ajax_resume_sending';
+$route['email_broadcasts/_delete_broadcast'] = 'EmailBroadcast/ajax_delete_broadcast';

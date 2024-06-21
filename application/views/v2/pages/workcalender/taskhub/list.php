@@ -268,53 +268,34 @@
                                             <?php echo $row->subject; ?>
                                         </td>   
                                         <td>
-                                            <?php if($row->assigned_employee_ids != null) { ?>
-                                                    <ul class="list-group list-group-flush">
-                                                    <?php 
+                                            <div class="d-flex align-items-center">           
+                                            
+                                                <?php 
+                                                    if($row->assigned_employee_ids != null) {
                                                         $assignees_json_decode = json_decode($row->assigned_employee_ids);
-                                                        if($assignees_json_decode && is_array($assignees_json_decode)) {
+                                                        if($assignees_json_decode && is_array($assignees_json_decode)) {      
                                                             foreach($assignees_json_decode as $uid) {
                                                                 $user_id = (int) $uid;
                                                                 $image = userProfilePicture($user_id);
                                                                 $assignee = $this->users_model->getUser($user_id);
                                                                 if($assignee) {
-
-                                                                    echo '<li class="list-group-item">';
-                                                                        echo '<span class="nsm-profile-name d-flex align-items-center">';
-                                                                            echo '<div class="nsm-profile" style="background-image: url(' . $image . '); width: 15px; float: left;"></div>';
-                                                                            echo $assignee->FName . ' ' . $assignee->LName;
-                                                                        echo '</span>';
-                                                                    echo '</li>';                                                                    
-
+                                                                    echo '<div class="nsm-profile" style="background-image: url('. $image . '); width: 40px; margin-right: -10px !important;"></div>';
                                                                 } else {
-                                                                    echo '<li class="list-group-item">';
-                                                                        echo '<span class="nsm-profile-name d-flex align-items-center">';
-                                                                            echo '<div class="nsm-profile" style="background-image: url(' . url('uploads/users/default.png') . '); width: 15px; float: left;"></div>';
-                                                                            echo 'No Assigned User';
-                                                                        echo '</span>';
-                                                                    echo '</li>';
-                                                                }
+                                                                    echo '<div class="nsm-profile" style="background-image: url('. url('uploads/users/default.png') . '); width: 40px; margin-right: -10px !important;"></div>';
+                                                                } 
                                                             }
                                                         } else {
-                                                            echo '<li class="list-group-item">';
-                                                                echo '<span class="nsm-profile-name d-flex align-items-center">';
-                                                                    echo '<div class="nsm-profile" style="background-image: url(' . url('uploads/users/default.png') . '); width: 15px; float: left;"></div>';
-                                                                    echo 'No Assigned User';
-                                                                echo '</span>';
-                                                            echo '</li>';
+                                                            echo '<div class="nsm-profile" style="background-image: url('. url('uploads/users/default.png') . '); width: 40px; margin-right: -10px !important;"></div>';
                                                         }
-                                                    ?>                                                
-                                                    </ul>
-                                            <?php }else{?>
-                                                <ul class="list-group list-group-flush">
-                                                    <li class="list-group-item">
-                                                        <span class="nsm-profile-name d-flex align-items-center">
-                                                            <div class="nsm-profile" style="background-image: url(<?php echo url('uploads/users/default.png'); ?>); width: 15px; float: left;"></div> 
-                                                            No Assigned User
-                                                        </span>
-                                                    </li>
-                                                </ul>                                                  
-                                            <?php } ?>                                       
+                                                    } else {
+                                                        echo '<div class="nsm-profile" style="background-image: url('. url('uploads/users/default.png') . '); width: 40px; margin-right: -10px !important;"></div>';
+                                                    }
+                                                ?>                                       
+                                            
+                                                
+                                                <!-- <div class="nsm-profile" style="background-image: url('http://localhost:8013/ci/locals/subsmart/uploads/users/user-profile/nikhil-shetty-eo06KqUISE0-unsplash.jpg?1718778194'); width: 40px; margin-right: -9px !important;"></div>
+                                                <div class="nsm-profile" style="background-image: url('http://localhost:8013/ci/locals/subsmart/uploads/users/default.png'); width: 40px; margin-right: -9px !important;"></div> -->
+                                            </div>                                            
                                         </td>                                       
                                         <td>
                                             <?php

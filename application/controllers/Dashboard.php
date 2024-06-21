@@ -1450,10 +1450,25 @@ class Dashboard extends Widgets
         exit(json_encode($data_arr));
     }
 
+    public function business_snapshot_income_thumbnail_graph()
+    {
+        $income = $this->invoice_model->get_company_payments_business_snapshot(logged('company_id'));
+        $data_arr = ['Success' => true, 'income' => $income];
+        exit(json_encode($data_arr));
+    }
+
     public function income_thumbnail_graph()
     {
         $income = $this->invoice_model->get_company_payments(logged('company_id'));
         $data_arr = ['Success' => true, 'income' => $income];
+        exit(json_encode($data_arr));
+    }
+
+    public function income_thumbnail_comparison_graph()
+    {
+        $income = $this->invoice_model->get_company_payments_business_snapshot(logged('company_id'));
+        $prev_income = $this->invoice_model->get_company_payments_business_snapshot_prev(logged('company_id'));
+        $data_arr = ['Success' => true, 'income' => $income, 'prev_income' => $prev_income];
         exit(json_encode($data_arr));
     }
 

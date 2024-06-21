@@ -1,5 +1,12 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('accounting/reports/reports_assets/report_css'); ?>
+<style>
+.compact-table td,
+.compact-table th {
+    padding: 4px 8px;
+    font-size: 12px;
+}
+</style>
 <div class="row page-content g-0">
     <div class="col-12">
         <div class="nsm-page">
@@ -258,7 +265,7 @@
                                             <ul class="dropdown-menu dropdown-menu-end p-3">
                                                 <p class="m-0">Display density</p>
                                                 <div class="form-check">
-                                                    <input type="checkbox" checked id="compact-display" class="form-check-input">
+                                                    <input type="checkbox" id="compact-display" class="form-check-input">
                                                     <label for="compact-display" class="form-check-label">Compact</label>
                                                 </div>
                                             </ul>
@@ -290,7 +297,7 @@
                                             <td>AS OF <?=date("F d, Y", strtotime("-1 year"))?>(PY)</td>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="reportTable">
                                         <tr data-bs-toggle="collapse" data-bs-target="#accordion" class="clickable collapse-row collapsed">
                                             <td><i class="bx bx-fw bx-caret-right"></i> ASSETS</td>
                                             <td>$571,265.66</td>
@@ -747,6 +754,20 @@ $(function(){
             updateCarets('hide');
         }
         isCollapsed = !isCollapsed;
+    });
+
+    $(".collapse-row").click(function() {
+        var target = $(this).data("bs-target");
+        $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
+        $(target).collapse('toggle');
+    });
+
+    $("#compact-display").change(function() {
+        if ($(this).is(":checked")) {
+            $("#reportTable").addClass("compact-table");
+        } else {
+            $("#reportTable").removeClass("compact-table");
+        }
     });
 
     function updateCarets(action) {
