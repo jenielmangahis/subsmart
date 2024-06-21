@@ -519,6 +519,12 @@ $(function(){
         isCollapsed = !isCollapsed;
     });
 
+    $(".collapse-row").click(function() {
+        var target = $(this).data("bs-target");
+        $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
+        $(target).collapse('toggle');
+    });
+
     function updateCarets(action) {
         $(".collapse-row").each(function() {
             var target = $(this).data("bs-target");
