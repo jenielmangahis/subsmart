@@ -612,8 +612,8 @@ class Vendors_model extends MY_Model {
 			$this->db->where('company_id', $companyId);
 		}
 		$this->db->where('id', $expenseId);
-		$this->db->where('DATE(created_at) >=', $startDate);
-		$this->db->where('DATE(created_at) <=', $endDate);
+		$this->db->where('DATE(created_at) >=', date('Y-m-d', strtotime($startDate)));
+		$this->db->where('DATE(created_at) <=', date('Y-m-d', strtotime($endDate)));
 		$query = $this->db->get('accounting_expense');
 		return $query->row();
 	}
@@ -643,6 +643,22 @@ class Vendors_model extends MY_Model {
 		$this->db->where('status', 1);
 		$this->db->where_not_in('check_no', ['', null]);
 		$this->db->order_by('created_at', 'desc');
+		$query = $this->db->get('accounting_check');
+		return $query->row();
+	}
+
+	public function get_check_by_id_business_snapshot($checkId, $companyId = null)
+	{
+		$currentYear = date('Y');
+		$startDate = "$currentYear-01-01";
+		$endDate = "$currentYear-12-31";
+
+		if($companyId) {
+			$this->db->where('company_id', $companyId);
+		}
+		$this->db->where('id', $checkId);
+		$this->db->where('DATE(created_at) >=', date('Y-m-d', strtotime($startDate)));
+		$this->db->where('DATE(created_at) <=', date('Y-m-d', strtotime($endDate)));
 		$query = $this->db->get('accounting_check');
 		return $query->row();
 	}
@@ -681,6 +697,24 @@ class Vendors_model extends MY_Model {
 		$query = $this->db->get('accounting_bill');
 		return $query->row();
 	}
+
+
+	public function get_bill_by_id_business_snapshot($billId, $companyId = null)
+	{
+		$currentYear = date('Y');
+		$startDate = "$currentYear-01-01";
+		$endDate = "$currentYear-12-31";
+
+		if($companyId) {
+			$this->db->where('company_id', $companyId);
+		}
+		$this->db->where('id', $billId);
+		$this->db->where('DATE(bill_date) >=', date('Y-m-d', strtotime($startDate)));
+		$this->db->where('DATE(due_date) <=', date('Y-m-d', strtotime($endDate)));
+		$query = $this->db->get('accounting_bill');
+		return $query->row();
+	}
+
 
 	public function get_bill_by_id($billId, $companyId = null)
 	{
@@ -749,6 +783,22 @@ class Vendors_model extends MY_Model {
 		return $update;
 	}
 
+	public function get_purchase_order_by_id_business_snapshot($purchaseOrderId, $companyId = null)
+	{
+		$currentYear = date('Y');
+		$startDate = "$currentYear-01-01";
+		$endDate = "$currentYear-12-31";
+
+		if($companyId) {
+			$this->db->where('company_id', $companyId);
+		}
+		$this->db->where('id', $purchaseOrderId);
+		$this->db->where('DATE(purchase_order_date) >=', date('Y-m-d', strtotime($startDate)));
+		$this->db->where('DATE(purchase_order_date) <=', date('Y-m-d', strtotime($endDate)));
+		$query = $this->db->get('accounting_purchase_order');
+		return $query->row();
+	}
+
 	public function get_purchase_order_by_id($purchaseOrderId, $companyId = null)
 	{
 		if($companyId) {
@@ -777,6 +827,22 @@ class Vendors_model extends MY_Model {
 		return $query->row();
 	}
 
+	public function get_vendor_credit_by_id_business_snapshot($vendorCreditId, $companyId = null)
+	{
+		$currentYear = date('Y');
+		$startDate = "$currentYear-01-01";
+		$endDate = "$currentYear-12-31";
+
+		if($companyId) {
+			$this->db->where('company_id', $companyId);
+		}
+		$this->db->where('id', $vendorCreditId);
+		$this->db->where('DATE(payment_date) >=', date('Y-m-d', strtotime($startDate)));
+		$this->db->where('DATE(payment_date) <=', date('Y-m-d', strtotime($endDate)));
+		$query = $this->db->get('accounting_vendor_credit');
+		return $query->row();
+	}
+
 	public function update_vendor_credit($vendorCreditId, $data)
 	{
 		$this->db->where('company_id', logged('company_id'));
@@ -800,6 +866,23 @@ class Vendors_model extends MY_Model {
 		$update = $this->db->update('accounting_pay_down_credit_card', $data);
 		return $update;
 	}
+
+	public function get_credit_card_credit_by_id_business_snapshot($ccCreditId, $companyId = null)
+	{
+		$currentYear = date('Y');
+		$startDate = "$currentYear-01-01";
+		$endDate = "$currentYear-12-31";
+
+		if($companyId) {
+			$this->db->where('company_id', $companyId);
+		}
+		$this->db->where('id', $ccCreditId);
+		$this->db->where('DATE(payment_date) >=', date('Y-m-d', strtotime($startDate)));
+		$this->db->where('DATE(payment_date) <=', date('Y-m-d', strtotime($endDate)));
+		$query = $this->db->get('accounting_credit_card_credits');
+		return $query->row();
+	}
+
 
 	public function get_credit_card_credit_by_id($ccCreditId, $companyId = null)
 	{

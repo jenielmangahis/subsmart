@@ -482,6 +482,35 @@ class Invoice_model extends MY_Model
         return $query->result();
     }
 
+    public function get_company_payments_business_snapshot($company_id)
+    {
+        $currentYear = date('Y');
+		$startDate = "$currentYear-01-01";
+		$endDate = "$currentYear-12-31";
+
+        $this->db->where('company_id', $company_id);
+        $this->db->order_by('payment_date', 'desc');
+        $this->db->where('DATE(payment_date) >=', date('Y-m-d', strtotime($startDate)));
+		$this->db->where('DATE(payment_date) <=', date('Y-m-d', strtotime($endDate)));
+        $query = $this->db->get('payment_records');
+        return $query->result();
+    }
+
+    public function get_company_payments_business_snapshot_prev($company_id)
+    {
+        $previousYear = date('Y') - 1;
+		$startDate = "$previousYear-01-01";
+		$endDate = "$previousYear-12-31";
+
+        $this->db->where('company_id', $company_id);
+        // $this->db->group_by('payment_date');
+        $this->db->order_by('payment_date', 'desc');
+        $this->db->where('DATE(payment_date) >=', date('Y-m-d', strtotime($startDate)));
+		$this->db->where('DATE(payment_date) <=', date('Y-m-d', strtotime($endDate)));
+        $query = $this->db->get('payment_records');
+        return $query->result();
+    }
+
     public function getPaidInv($company_id)
     {
         $where = array(
