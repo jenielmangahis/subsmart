@@ -276,11 +276,8 @@ include viewPath('v2/includes/header');
             }
         }
 
-        $('#search_field').on('keydown', function(event) {
-            if (event.keyCode === 13) {
-                event.preventDefault();
-                performSearch();
-            }
+        $('#search_field').on('keyup', function() {
+            performSearch();
         });
 
         $('.nsm-field-group.search').on('click', function() {

@@ -1,4 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath('accounting/reports/reports_assets/report_css'); ?>
 
 <div class="row page-content g-0">
     <div class="col-12">
@@ -277,7 +278,7 @@
                                 <div class="row">
                                     <div class="col-12 grid-mb">
                                         <h4 class="text-center fw-bold" id="businessName">
-                                            <span class="company-name"><?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?></span>
+                                            <span class="company-name"><?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : strtoupper($companyInfo->business_name); ?></span>
                                         </h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
@@ -754,142 +755,12 @@
         });
     });
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
-<script>
-    document.getElementById('export-to-excel').addEventListener('click', function() {
-        var table = document.querySelector('.nsm-table');
-        var wb = XLSX.utils.table_to_book(table, {
-            sheet: "Sheet1"
-        });
-        XLSX.writeFile(wb, 'table_data.xlsx');
-    });
-
-    document.getElementById('export-to-pdf').addEventListener('click', function() {
-        generatePDF(false);
-    });
-
-    document.getElementById('preview-pdf').addEventListener('click', function() {
-        generatePDF(true);
-    });
-
-    function generatePDF(preview = false) {
-        var table = document.querySelector('.nsm-table');
-        var companyName = document.querySelector('.company-name').textContent;
-        var reportTitle = "Balance Sheet";
-        var reportDate = "As of " + new Date().toLocaleDateString();
-
-        html2canvas(table, {
-            onrendered: function(canvas) {
-                var imgData = canvas.toDataURL('image/png');
-                var {
-                    jsPDF
-                } = window.jspdf;
-                var pdf = new jsPDF('p', 'pt', 'a4');
-
-                var imgWidth = 555;
-                var pageHeight = 792;
-                var imgHeight = canvas.height * imgWidth / canvas.width;
-                var heightLeft = imgHeight;
-
-                var margin = 20;
-                var yOffset = 80;
-
-                // Add header
-                pdf.setFontSize(18);
-                pdf.text(companyName, pdf.internal.pageSize.getWidth() / 2, margin, {
-                    align: 'center'
-                });
-
-                pdf.setFontSize(16);
-                pdf.text(reportTitle, pdf.internal.pageSize.getWidth() / 2, margin + 20, {
-                    align: 'center'
-                });
-
-                pdf.setFontSize(14);
-                pdf.text(reportDate, pdf.internal.pageSize.getWidth() / 2, margin + 40, {
-                    align: 'center'
-                });
-
-                pdf.setLineWidth(0.5);
-                pdf.line(margin, margin + 50, pdf.internal.pageSize.getWidth() - margin, margin + 50);
-
-                // Add table
-                pdf.addImage(imgData, 'PNG', margin, yOffset, imgWidth, imgHeight);
-                heightLeft -= pageHeight - yOffset;
-
-                var pageNumber = 1;
-                pdf.setFontSize(10);
-                pdf.text('Page ' + String(pageNumber), pdf.internal.pageSize.getWidth() - margin - 30, pageHeight - 30);
-
-                while (heightLeft >= 0) {
-                    pageNumber++;
-                    yOffset = heightLeft - imgHeight;
-                    pdf.addPage();
-                    // Re-add header
-                    pdf.setFontSize(18);
-                    pdf.text(companyName, pdf.internal.pageSize.getWidth() / 2, margin, {
-                        align: 'center'
-                    });
-
-                    pdf.setFontSize(16);
-                    pdf.text(reportTitle, pdf.internal.pageSize.getWidth() / 2, margin + 20, {
-                        align: 'center'
-                    });
-
-                    pdf.setFontSize(14);
-                    pdf.text(reportDate, pdf.internal.pageSize.getWidth() / 2, margin + 40, {
-                        align: 'center'
-                    });
-
-                    pdf.setLineWidth(0.5);
-                    pdf.line(margin, margin + 50, pdf.internal.pageSize.getWidth() - margin, margin + 50);
-
-                    pdf.addImage(imgData, 'PNG', margin, margin + 60, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
-                    pdf.setFontSize(10);
-                    pdf.text('Page ' + String(pageNumber), pdf.internal.pageSize.getWidth() - margin - 30, pageHeight - 30);
-                }
-
-                if (preview) {
-                    var pdfData = pdf.output('datauristring');
-                    document.getElementById('pdfPreview').src = pdfData;
-                    showPDFModal();
-                } else {
-                    pdf.save('Balance_Sheet.pdf');
-                }
-            }
-        });
-    }
-
-    function previewPDF() {
-        generatePDF(true);
-        closeModal();
-    }
-
-    function closeModal() {
-        var modalElement = document.getElementById('print_accounts_modal');
-        var modal = bootstrap.Modal.getInstance(modalElement);
-        modal.hide();
-    }
-
-
-    function showPDFModal() {
-        var modal = new bootstrap.Modal(document.getElementById('print_accounts_modal'));
-        modal.show();
-    }
-
-    document.getElementById('print_accounts_modal').addEventListener('hide.bs.modal', function() {
-        var modalBackdrop = document.querySelector('.modal-backdrop');
-        if (modalBackdrop) {
-            modalBackdrop.parentNode.removeChild(modalBackdrop);
-        }
-    });
-</script>
 <script>
     var currentDate = new Date().toISOString().split('T')[0];
 
     document.getElementById('from').value = currentDate;
     document.getElementById('to').value = currentDate;
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>

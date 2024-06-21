@@ -369,47 +369,82 @@
                                     <tbody>
                                         <tr data-toggle="collapse" data-target="#incomeDetails"
                                             class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i>MY INCOME</td>
+                                            <td><i class="bx bx-fw bx-caret-right"></i>My Income</td>
                                         </tr>
-                                        <tr>
+                                       
+                                        <tr  id="incomeDetails" class="clickable collapse-row collapse"  data-bs-toggle="collapse" >
                                             <td>
                                                 <div class="card text-center shadow">
                                                     <div class="card-header text-left"><b>My Income</b></div>
                                                     <div class="card-body">
                                                     <h1 id='myIncomeGraphLoader'> <span
                                                     class="bx bx-loader bx-spin"></span></h1>
-                                                        <div class="chart" style="height:200px !important;">
                                                             <canvas id="myIncomeGraph" style="max-height:100%;"
                                                                 class="nsm-chart" data-chart-type="sales"></canvas>
-                                                            <div id="pie_legend"
-                                                                class="py-3 text-left col-md-7 mx-auto"></div>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr data-toggle="collapse" data-target="#incomeDetails"
+                                        <tr data-toggle="collapse" data-target="#incomeDetailsComparison"
                                             class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i>MY EXPENSE</td>
+                                            <td><i class="bx bx-fw bx-caret-right"></i>Previous Year Income Comparison</td>
                                         </tr>
-                                        <tr>
+                                     
+                                        <tr id="incomeDetailsComparison" class="clickable collapse-row collapse"  data-bs-toggle="collapse" >
+                                            <td>
+                                                <div class="card text-center shadow">
+                                                    <div class="card-header text-left"><b>Previous Year Income Comparison</b></div>
+                                                    <div class="card-body">
+                                                    <h1 id='myIncomeComparisonGraphLoader'> <span
+                                                    class="bx bx-loader bx-spin"></span></h1>
+                                                            <canvas id="myIncomeComparisonGraph" style="max-height:100%;"
+                                                                class="nsm-chart" data-chart-type="sales"></canvas>
+                                                            
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                        <tr data-toggle="collapse" data-target="#expenseDetails"
+                                            class="clickable collapse-row collapsed">
+                                            <td><i class="bx bx-fw bx-caret-right"></i>My Expense</td>
+                                        </tr>
+                                        <tr id="expenseDetails"  class=" clickable collapse-row collapse"  data-bs-toggle="collapse">
                                             <td>
                                                 <div class="card text-center shadow">
                                                     <div class="card-header text-left"><b>My Expense</b></div>
                                                     <div class="card-body">
-                                                        <div class="chart" style="height:200px !important;">
                                                             <h1 id='MyExpenseGraphLoader'> <span
                                                                     class="bx bx-loader bx-spin"></span></h1>
 
                                                             <canvas id="MyExpenseGraph" style="max-height:100%;"
                                                                 class="nsm-chart" data-chart-type="sales"></canvas>
-                                                            <div id="pie_legend"
-                                                                class="py-3 text-left col-md-7 mx-auto"></div>
-                                                        </div>
+                                                         
                                                     </div>
                                                 </div>
                                             </td>
                                         </tr>
+
+                                        <tr data-toggle="collapse" data-target="#expenseDetailsComparison"
+                                            class="clickable collapse-row collapsed">
+                                            <td><i class="bx bx-fw bx-caret-right"></i>Previous Year Expense Comparison</td>
+                                        </tr>
+                                        <tr id="expenseDetailsComparison" class="clickable collapse-row collapse"  data-bs-toggle="collapse" >
+                                            <td>
+                                                <div class="card text-center shadow">
+                                                    <div class="card-header text-left"><b>Previous Year Expense Comparison</b></div>
+                                                    <div class="card-body">
+                                                    <h1 id='expenseComparisonGraphLoader'> <span
+                                                    class="bx bx-loader bx-spin"></span></h1>
+                                                            <canvas id="expenseComparisonGraph" 
+                                                                data-chart-type="sales"></canvas>
+                                                           
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+
+                                       
                                     </tbody>
                                 </table>
                             </div>
@@ -426,8 +461,145 @@
 
 <?php include viewPath('v2/includes/footer'); ?>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script>
+
 <script>
 fetch('<?php echo base_url('Dashboard/income_thumbnail_graph'); ?>', {}).then(response => response.json()).then(
+response => {
+    var monthlyAmounts = new Array(12).fill(0);
+
+    var {
+        success,
+        income,
+    } = response;
+
+
+    if (income) {
+        for (var x = 0; x < income.length; x++) {
+            var payment_date = income[x].payment_date;
+            if (payment_date) {
+                var due = new Date(payment_date);
+                var month = due.getMonth();
+                monthlyAmounts[month] += parseFloat(income[x].invoice_amount);
+            }
+        }
+    }
+
+    var expenseData = {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [{
+            label: 'Current Year',
+            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor:'rgba(75, 192, 192, 1)',
+            data: monthlyAmounts
+        },
+        {
+            label: 'Previous Year',
+            backgroundColor:   'rgba(54, 162, 235, 0.2)',
+             borderColor:  'rgba(54, 162, 235, 1)',
+            data: monthlyAmounts
+        }]
+    };
+    $('#expenseComparisonGraphLoader').hide()
+
+    const expenseComparisonGraph = new Chart($('#expenseComparisonGraph'), {
+        type: 'bar',
+        data: expenseData,
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    suggestedMax: 10
+                },
+            },
+            aspectRatio: 1.2,
+        },
+    });
+
+    window.expenseComparisonGraph = expenseComparisonGraph;
+}).catch((error) => {
+console.log(error);
+})
+
+fetch('<?php echo base_url('Dashboard/income_thumbnail_comparison_graph'); ?>', {}).then(response => response.json()).then(
+response => {
+    var monthlyAmounts = new Array(12).fill(0);
+    var monthlyAmountsPrev = new Array(12).fill(0);
+
+    var {
+        success,
+        income,
+        prev_income
+    } = response;
+
+
+    if (income) {
+        for (var x = 0; x < income.length; x++) {
+            var payment_date = income[x].payment_date;
+            if (payment_date) {
+                var due = new Date(payment_date);
+                var month = due.getMonth();
+                monthlyAmounts[month] += parseFloat(income[x].invoice_amount);
+            }
+        }
+    }
+
+    if (prev_income) {
+        for (var x = 0; x < prev_income.length; x++) {
+            var payment_date = prev_income[x].payment_date;
+            if (payment_date) {
+                var due = new Date(payment_date);
+                var month = due.getMonth();
+                monthlyAmountsPrev[month] += parseFloat(prev_income[x].invoice_amount);
+            }
+        }
+    }
+
+    var jobs_data = {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [{
+            label: 'Current Year',
+            backgroundColor: 'rgb(106,74,134)',
+            borderColor: 'rgb(106,74,134,0.79)',
+            data: monthlyAmounts
+        },
+        {
+            label: 'Previous Year',
+            backgroundColor: 'rgb(220, 53, 69 ,0.79)',
+            borderColor: 'rgb(220, 53, 69 ,0.79)',
+            data: monthlyAmountsPrev
+        }]
+    };
+    $('#myIncomeComparisonGraphLoader').hide()
+
+    const myIncomeComparisonGraph = new Chart($('#myIncomeComparisonGraph'), {
+        type: 'bar',
+        data: jobs_data,
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    suggestedMax: 10
+                },
+            },
+            aspectRatio: 1.2,
+        },
+    });
+
+    window.myIncomeComparisonGraph = myIncomeComparisonGraph;
+}).catch((error) => {
+console.log(error);
+})
+fetch('<?php echo base_url('Dashboard/business_snapshot_income_thumbnail_graph'); ?>', {}).then(response => response.json()).then(
     response => {
         var monthlyAmounts = new Array(12).fill(0);
 
@@ -452,8 +624,8 @@ fetch('<?php echo base_url('Dashboard/income_thumbnail_graph'); ?>', {}).then(re
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
             datasets: [{
                 label: 'Income',
-                backgroundColor: 'rgb(220, 53, 69 ,0.79)',
-                borderColor: 'rgb(220, 53, 69 ,0.79)',
+                backgroundColor: 'rgb(106,74,134)',
+                borderColor: 'rgb(106,74,134,0.79)',
                 data: monthlyAmounts
             }]
         };
@@ -500,7 +672,7 @@ fetch('<?php echo base_url('Dashboard/business_snapshot_expense'); ?>', {})
         $('#MyExpenseGraphLoader').hide();
 
         new Chart(estimates, {
-            type: 'doughnut',
+            type: 'bar',
             data: {
                 labels: accountNames,
                 datasets: [{
@@ -528,14 +700,19 @@ fetch('<?php echo base_url('Dashboard/business_snapshot_expense'); ?>', {})
                 }]
             },
             options: {
-                responsive: true,
                 plugins: {
                     legend: {
                         position: 'bottom',
                     },
                 },
-                aspectRatio: 1.5,
-            }
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
+                },
+                aspectRatio: 1.2,
+            },
         });
     })
     .catch((error) => {

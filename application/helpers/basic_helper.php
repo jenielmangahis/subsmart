@@ -4760,23 +4760,46 @@ if(!function_exists('set_expense_graph_data')) {
                         $date = date("m/d/Y", strtotime($transaction->payment_date));
                     break;
                     case 'Check' :
-                        $transaction = $CI->vendors_model->get_check_by_id($category->transaction_id);
+                        if($data['business_snapshot']){
+                            $transaction = $CI->vendors_model->get_check_by_id_business_snapshot($category->transaction_id);
+                        }else{
+                            $transaction = $CI->vendors_model->get_check_by_id($category->transaction_id);
+                        }
                         $date = date("m/d/Y", strtotime($transaction->payment_date));
                     break;
                     case 'Bill' :
-                        $transaction = $CI->vendors_model->get_bill_by_id($category->transaction_id);
+                        if($data['business_snapshot']){
+                            $transaction = $CI->vendors_model->get_bill_by_id_business_snapshot($category->transaction_id);
+                        }else{
+                             $transaction = $CI->vendors_model->get_bill_by_id($category->transaction_id);
+                        }
                         $date = date("m/d/Y", strtotime($transaction->bill_date));
                     break;
                     case 'Purchase Order' :
-                        $transaction = $CI->vendors_model->get_purchase_order_by_id($category->transaction_id);
+                        if($data['business_snapshot']){
+                            $transaction = $CI->vendors_model->get_purchase_order_by_id_business_snapshot($category->transaction_id);
+                        }else{
+                            $transaction = $CI->vendors_model->get_purchase_order_by_id($category->transaction_id);
+                        }
                         $date = date("m/d/Y", strtotime($transaction->purchase_order_date));
                     break;
                     case 'Vendor Credit' :
-                        $transaction = $CI->vendors_model->get_vendor_credit_by_id($category->transaction_id);
+                        if($data['business_snapshot']){
+                            $transaction = $CI->vendors_model->get_vendor_credit_by_id_business_snapshot($category->transaction_id);
+                        }else{
+                            $transaction = $CI->vendors_model->get_vendor_credit_by_id($category->transaction_id);
+
+                        }
+
                         $date = date("m/d/Y", strtotime($transaction->payment_date));
                     break;
                     case 'Credit Card Credit' :
-                        $transaction = $CI->vendors_model->get_credit_card_credit_by_id($category->transaction_id);
+                        if($data['business_snapshot']){
+                            $transaction = $CI->vendors_model->get_credit_card_credit_by_id_business_snapshot($category->transaction_id);
+                        }else{
+                            $transaction = $CI->vendors_model->get_credit_card_credit_by_id($category->transaction_id);
+                        }
+
                         $date = date("m/d/Y", strtotime($transaction->payment_date));
                     break;
                 }
