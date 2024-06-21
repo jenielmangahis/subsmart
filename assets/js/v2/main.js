@@ -180,8 +180,41 @@ function resizeSidebar() {
 	$(".nsm-sidebar-bg").css("height", $(".nsm-main").innerHeight() + "px");
 }
 
-function initializeChart(chartType = "all") {
-	switch (chartType) {
+function initializeChart(chartType = "all", id = null) {
+	switch (chartType) {		
+		case "widgets/income_counter":
+			fetchGraphs(chartType , id)
+			break;
+		case "widgets/customer_counter":
+			fetchGraphs(chartType , id)
+			break;
+		case "widgets/pastdue_invoices_counter":
+			fetchGraphs(chartType , id)
+			break;
+		case "widgets/estimate_counter":
+			fetchGraphs(chartType , id)
+			break;
+		case "widgets/jobs_counter":
+			fetchGraphs(chartType , id)
+			break;		
+		case "widgets/new_leads_counter":
+			fetchGraphs(chartType , id)
+			break;		
+		case "widgets/open_invoices_counter":
+			fetchGraphs(chartType , id)
+			break;
+		case "widgets/accounting_expense_counter":
+			fetchGraphs(chartType , id)
+			break;	
+		case "widgets/sales_counter":
+			fetchGraphs(chartType , id)
+			break;	
+		case "widgets/unpaid_invoices_counter":
+			fetchGraphs(chartType , id)
+			break;
+		case "widgets/collections_counter":
+			fetchGraphs(chartType , id)
+			break;
 		case "sales":
 			initializeSalesChart();
 			break;
@@ -189,21 +222,38 @@ function initializeChart(chartType = "all") {
 			initializeInvoiceChart();
 			break;
 		case "estimates":
-			initializeEstimatesChart();
+			initializeOpenEstimatesChart();
 			break;
 		case "expenses":
 			initializeExpensesChart();
+			break;
 		case "jobs":
-			initializeJobsChart();
+			//initializeJobsChart();
+			initializeJobChart();
+			break;
 		case "lead-source":
 			initializeLeadSourceChart();
+			break;
+		case "tags":
+			initializeTagsChart();				
+			break;
+		case "customer-groups":
+			loadCustomerGroupChart();
+			break;
+		case "service_tickets":
+			initializeServiceTicketChart();
+			break;
 		default:
 			initializeSalesChart();
 			initializeInvoiceChart();
-			initializeEstimatesChart();
+			initializeOpenEstimatesChart();
 			initializeExpensesChart();
-			initializeJobsChart();
+			//initializeJobsChart();
+			initializeJobChart();
 			initializeLeadSourceChart();
+			initializeTagsChart();
+			loadCustomerGroupChart();
+			initializeServiceTicketChart();
 			break;
 	}
 
