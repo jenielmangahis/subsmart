@@ -237,7 +237,7 @@
                         <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
                                 <div class="row">
-                                    <div class="col-12 col-md-6 grid-mb">
+                                    <div class="col-12 col-md-7 grid-mb">
                                         <div class="nsm-page-buttons page-button-container">
                                             <button type="button" class="nsm-button" id="collapseButton">
                                                 <span>Collapse</span>
@@ -259,7 +259,7 @@
                                                     <label for="sort-desc" class="form-check-label">Total in descending order</label>
                                                 </div>
                                             </ul>
-                                            <button type="button" class="nsm-button">
+                                            <button type="button" class="nsm-button addNotes">
                                                 <span>Add Notes</span>
                                             </button>
                                             <button type="button" class="nsm-button" id="editButton">
@@ -267,7 +267,7 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-6 grid-mb text-end">
+                                    <div class="col-12 col-md-5 grid-mb text-end">
                                         <div class="nsm-page-buttons page-button-container">
                                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
                                                 <i class='bx bx-fw bx-envelope'></i>
@@ -436,6 +436,31 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div class="row mb-3">
+                                <div class="col-lg-12">
+                                    <span id="notesContent" class="text-muted">Loading Notes...</span>
+                                    <form id="addNotesForm" method="POST" style="display: none;">
+                                        <div class="row">
+                                            <div class="col-sm-12 mt-1 mb-3">
+                                                <div class="form-group">
+                                                    <textarea id="NOTES" class="form-control" maxlength="4000"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="float-start noteCharMax">
+                                                    4000 characters max
+                                                </div>
+                                                <div class="float-end">
+                                                    <button type="button" id="cancelNotes" class="nsm-button">Cancel</button>
+                                                    <button type="submit" class="nsm-button primary noteSaveButton">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>                            
                             <div class="nsm-card-footer text-center">
                                 <p class="m-0">Accrual basis <?=date("l, F j, Y h:i A eP")?></p>
                             </div>

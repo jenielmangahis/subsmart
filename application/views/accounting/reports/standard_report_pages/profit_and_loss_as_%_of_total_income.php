@@ -231,7 +231,7 @@
                         <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
                                 <div class="row">
-                                    <div class="col-12 col-md-6 grid-mb">
+                                    <div class="col-12 col-md-7 grid-mb">
                                         <div class="nsm-page-buttons page-button-container">
                                             <button type="button" class="nsm-button" id="collapseButton">
                                                 <span>Collapse</span>
@@ -261,7 +261,7 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-6 grid-mb text-end">
+                                    <div class="col-12 col-md-5 grid-mb text-end">
                                         <div class="nsm-page-buttons page-button-container">
                                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
                                                 <i class='bx bx-fw bx-envelope'></i>
