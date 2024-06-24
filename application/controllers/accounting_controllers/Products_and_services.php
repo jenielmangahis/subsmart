@@ -106,7 +106,7 @@ class Products_and_services extends MY_Controller
     }
 
     public function index()
-    {
+    {        
         add_footer_js(array(
             "assets/js/v2/printThis.js",
             "assets/js/v2/accounting/sales/products_and_services/list.js"
@@ -267,7 +267,8 @@ class Products_and_services extends MY_Controller
                 }
 
                 if (isset($filters['search']) && $filters['search'] !== "") {
-                    if (stripos($item->title, $filters['search']) !== false) {
+                    $item_category = $this->items_model->getCategory($item->item_categories_id);
+                    if (stripos($item->title, $filters['search']) !== false || ( $item_category && stripos($item_category->name, $filters['search']) !== false )) {
                         $data[] = [
                             'id' => $item->id,
                             'name' => $item->title,

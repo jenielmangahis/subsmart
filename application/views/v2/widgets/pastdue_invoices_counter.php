@@ -61,8 +61,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         id="thumbnail_content_graph_<?php echo $id; ?>">
         <h1 id='PastDueGraphLoader'> <span class="bx bx-loader bx-spin"></span></h1>
 
-        <canvas id="PastDueGraph" style="max-height:100%;" data-open="<?php echo number_format($invoices_count); ?>"
-            data-total="<?php echo number_format($invoices_total_due); ?>"></canvas>
+        <canvas  id="PastDueGraph" style="max-height:100%;" class="nsm-chart"   data-chart-type="widgets/pastdue_invoices_counter" data-chart-id="<?php echo $id; ?>"></canvas>
     </div>
     <div class="nsm-card-content"
         style="height: calc(100% - 120px); display: <?php echo $isListView ? 'none' : 'block'; ?>"

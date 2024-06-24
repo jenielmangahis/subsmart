@@ -16,11 +16,11 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                 <div class="nsm-card-title summary-report-header">
                     <div class="summary-report-header-sub ">
                         <div class="icon-summary-customer">
-                        <i class="bx bx-fw bx-notepad"></i>
+                            <i class="bx bx-fw bx-notepad"></i>
                         </div>
                         <a role="button" class=" btn-sm m-0 me-2" href="accounting/expenses"
                             style="color:#6ba77ced !important ">
-                             Accounting Expense
+                            Accounting Expense
                         </a>
                     </div>
                 </div>
@@ -35,7 +35,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
 
-                    <li><a class="dropdown-item" href="#" onclick="removeWidget('<?php echo $id; ?>');">Remove
+                    <li><a class="dropdown-item" href="#" onclick="removeThumbnail('<?php echo $id; ?>');">Remove
                             Thumbnail</a></li>
                     <li>
 
@@ -67,12 +67,14 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         style="  height: calc(100% - 120px); display: <?php echo $isListView ? 'block' : 'none'; ?>"
         id="thumbnail_content_graph_<?php echo $id; ?>">
         <h3 style="font-size: 14px; text-align: center;font-weight: bolder;">WHERE YOUR MONEY WENT</h3>
-        <p style="margin: 0;font-size: 12px;text-align: center">You spent <span style="font-weight: bold;" id="total_expense_graph"></span> over the past year.</p>
-        <div style="position:relative;"> 
-        <p class="top-spending">Your top spending categories:</p>
+        <p style="margin: 0;font-size: 12px;text-align: center">You spent <span style="font-weight: bold;"
+                id="total_expense_graph"></span> over the past year.</p>
+        <div style="position:relative;">
+            <p class="top-spending">Your top spending categories:</p>
         </div>
         <h1 id='AccountingExpenseGraphLoader'> <span class="bx bx-loader bx-spin"></span></h1>
-        <canvas id="AccountingExpenseGraph"  style="max-height:80%;margin-top: 10px"  class="nsm-chart" data-chart-type="sales"></canvas>
+        <canvas id="AccountingExpenseGraph" style="max-height:80%;margin-top: 10px" class="nsm-chart"
+            data-chart-type="widgets/accounting_expense_counter" data-chart-id="<?php echo $id; ?>"></canvas>
     </div>
     <div class="nsm-card-content"
         style="  height: calc(100% - 120px);  display: <?php echo $isListView ? 'none' : 'block'; ?>"

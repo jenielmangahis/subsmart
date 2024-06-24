@@ -400,6 +400,13 @@ class Widgets extends MY_Controller
                     $data = set_expense_graph_data($data);
                 }
 
+                $payments = $this->invoice_model->get_company_payments(logged('company_id'));
+                $deposits = 0;
+                foreach ($payments as $payment) {
+                    $deposits += floatval($payment->invoice_amount);
+                }
+                $data['deposits'] = $deposits;
+
                 return $this->load->view("v2/" . $widget->w_view_link, $data);
             endif;
         endif;

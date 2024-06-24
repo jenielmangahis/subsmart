@@ -42,7 +42,7 @@
     let stat_tag_count = [];
     let badgeClasses = ["", "success", "error", "primary"];
     $(document).ready(function() {
-        loadTodayStats();
+        loadTagsStats();
     });
 
     function generateRandomColor() {
@@ -50,7 +50,7 @@
       return color;
     }
 
-    function loadTodayStats() {
+    function loadTagsStats() {
         $.ajax({
             async: false,
             url: '<?php echo base_url(); ?>widgets/getV2JobTags',
