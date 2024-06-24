@@ -68,7 +68,7 @@
     function generatePDF(preview = false, orientation, generate_pdf) {
         var table = document.querySelector('.nsm-table');
         var companyName = document.querySelector('.company-name').textContent;
-        var reportTitle = "Balance Sheet";
+        var reportTitle = "Balance Sheet Details";
         var reportDate = "As of " + new Date().toLocaleDateString();
 
         html2canvas(table, {

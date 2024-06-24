@@ -77,13 +77,14 @@
     }
 }
 
-.summary-report-header, .summary-report-header-sub {
+.summary-report-header,
+.summary-report-header-sub {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.summary-report-header  .summary-report-header-sub a {
+.summary-report-header .summary-report-header-sub a {
     text-decoration: none;
     font-weight: bold;
     font-size: 18px;
@@ -178,12 +179,13 @@
     height: 340px;
     max-height: 340px;
 }
-.top-spending{
-        font-weight: bold;
-        font-size: 12px;
-        position: absolute;
-        right: 0;
-        bottom: -35px;
+
+.top-spending {
+    font-weight: bold;
+    font-size: 12px;
+    position: absolute;
+    right: 0;
+    bottom: -35px;
 }
 
 @media screen and (max-width: 1500px) {
@@ -210,7 +212,7 @@
 @media screen and (max-width: 1200px) {
     .main-widget-container {
         width: 23%;
-     
+
     }
 
 }
@@ -223,10 +225,11 @@
 }
 
 @media screen and (max-width: 600px) {
-    .top-spending{
+    .top-spending {
         right: 0;
         bottom: -62px;
     }
+
     .main-widget-container {
         width: 100%;
         height: 400px;
@@ -376,12 +379,12 @@
 
 <div class="row page-content g-0">
     <div class="col-12">
-        <div class="row  g-3 grid-row-mb nsm-draggable-container" id="nsm_widgets">
+        <div class="row  g-3 grid-row-mb nsm-draggable-container2" id="nsm_widgets2">
             <div class="main-widget-row" id="nsm_thumbnail">
                 <?php
                 foreach ($widgets as $wids) {
                     if ($wids->w_main) {
-                        $data['class'] = 'nsm-card nsm-grid main-widget-container';
+                        $data['class'] = 'nsm-card nsm-grid2 main-widget-container';
                         $data['isMain'] = false;
                         $data['id'] = $wids->w_id;
                         $data['isListView'] = $wids->w_list_view;
@@ -400,7 +403,11 @@
                         $this->load->view('v2/' . $wids->w_view_link, $data);
                     }
                 }
-                ?> </div><?php
+                ?> </div>
+        </div>
+
+        <div class="row  g-3 grid-row-mb nsm-draggable-container" id="nsm_widgets">
+           <?php
                             if (count($main_widgets) > 0) {
                                 foreach ($main_widgets as $wids) {
                                     if ($wids->wu_is_main) {
@@ -798,7 +805,7 @@ load_plaid_accounts();
 
 function formatAmount(amount) {
     if (typeof amount !== 'number' || isNaN(amount)) {
-        return amount; 
+        return amount;
     }
 
     if (amount >= 1000000000) {

@@ -218,6 +218,39 @@ function initializeChart(chartType = "all", id = null) {
 		case "sales":
 			initializeSalesChart();
 			break;
+		case "widgets/income_counter":
+			fetchGraphs(chartType , id)
+			break;
+		case "widgets/customer_counter":
+			fetchGraphs(chartType , id)
+			break;
+		case "widgets/pastdue_invoices_counter":
+			fetchGraphs(chartType , id)
+			break;
+		case "widgets/estimate_counter":
+			fetchGraphs(chartType , id)
+			break;
+		case "widgets/jobs_counter":
+			fetchGraphs(chartType , id)
+			break;		
+		case "widgets/new_leads_counter":
+			fetchGraphs(chartType , id)
+			break;		
+		case "widgets/open_invoices_counter":
+			fetchGraphs(chartType , id)
+			break;
+		case "widgets/accounting_expense_counter":
+			fetchGraphs(chartType , id)
+			break;	
+		case "widgets/sales_counter":
+			fetchGraphs(chartType , id)
+			break;	
+		case "widgets/unpaid_invoices_counter":
+			fetchGraphs(chartType , id)
+			break;
+		case "widgets/collections_counter":
+			fetchGraphs(chartType , id)
+			break;
 		case "invoices":
 			initializeInvoiceChart();
 			break;
