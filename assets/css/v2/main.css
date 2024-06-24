@@ -1949,9 +1949,9 @@ div.workspace-list > ul > li .nsm-badge {
   background-color: unset !important;
 }
 
-/*.nsm-field.datepicker {
+/*.nsm-field.datepicker {  
   padding: 0.375rem 0.75rem !important;
-}*/
+}*/  
 
 .nsm-input-group {
   display: inline-block;

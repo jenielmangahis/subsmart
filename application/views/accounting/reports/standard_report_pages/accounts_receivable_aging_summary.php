@@ -17,7 +17,7 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12" style="margin-bottom: 10px;">
                                         <label for="filter-report-period">Report period</label>
                                         <select class="nsm-field form-select" name="filter_report_period" id="filter-report-period">
                                             <option value="all-dates">All Dates</option>
@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12" style="margin-bottom: 10px;">
                                         <label for="filter-as-of">As of</label>
                                         <div class="nsm-field-group calendar">
                                             <input type="text" class="nsm-field form-control datepicker" value="<?=date("m/d/Y")?>" id="filter-as-of">
@@ -63,7 +63,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12" style="margin-bottom: 10px;">
                                         <label for="filter-display-columns-by">Show non-zero or active only</label>
                                         <div class="dropdown">
                                             <button type="button" class="dropdown-toggle nsm-button w-100 m-0" data-bs-toggle="dropdown" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
@@ -103,7 +103,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12" style="margin-bottom: 10px;">
                                         <label for="" class="w-100">Aging method</label>
                                         <div class="form-check d-inline-block">
                                             <input type="radio" id="current-method" class="form-check-input" name="aging_method">
@@ -116,13 +116,13 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12" style="margin-bottom: 10px;">
                                         <label for="filter-days-per-aging-period">Days per aging period</label>
                                         <input type="text" class="nsm-field form-control datepicker" name="filter_days_per_aging_period" value="30" id="filter-days-per-aging-period">
                                     </div>
                                 </div>
                                 <div class="row grid-mb">
-                                    <div class="col-12">
+                                    <div class="col-12" style="margin-bottom: 10px;">
                                         <label for="filter-number-of-period">Number of periods</label>
                                         <input type="text" class="nsm-field form-control datepicker" name="filter_number_of_periods" value="4" id="filter-number-of-period">
                                     </div>
@@ -175,6 +175,9 @@
                                             <button type="button" class="nsm-button addNotes">
                                                 <span>Add Notes</span>
                                             </button>
+                                            <button type="button" class="nsm-button" id="editButton">
+                                                <span>Edit Title</span>
+                                            </button>                                            
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6 grid-mb text-end">
@@ -208,8 +211,13 @@
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?=$clients->business_name?></span></h4>
+                                        <!-- <h4 class="text-center fw-bold"><span class="company-name"><?php //echo $clients->business_name?></span></h4> -->
+                                        <h4 class="text-center fw-bold" id="businessName">                                            
+                                            <span class="company-name"><?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : $companyInfo->business_name; ?></span>
+                                        </h4>                                         
                                     </div>
+
+                                   
                                     <div class="col-12 grid-mb text-center">
                                         <p class="m-0 fw-bold">A/R Aging Summary</p>
                                         <p>As of <?=date("F d, Y")?></p>
