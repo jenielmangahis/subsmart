@@ -936,6 +936,7 @@ $route['settings/_get_google_enabled_calendars'] = 'Settings/ajax_get_google_ena
 $route['settings/calendar_unbind_account'] = 'Settings/calendar_unbind_account';
 $route['settings/_create_email_template'] = 'Settings/ajax_create_email_template';
 $route['settings/_update_email_template'] = 'Settings/ajax_update_email_template';
+$route['settings/_delete_email_template'] = 'Settings/ajax_delete_email_template';
 $route['settings/_create_sms_template'] = 'Settings/ajax_create_sms_template';
 $route['settings/edit_sms_template/(:any)'] = 'Settings/edit_sms_template/$1';
 $route['settings/_update_sms_template'] = 'Settings/ajax_update_sms_template';
@@ -1229,6 +1230,7 @@ $route['event_types'] = 'Event_Types/index';
 $route['event_types/index'] = 'Event_Types/index';
 $route['event_types/add_new'] = 'Event_Types/add_new_event_type';
 $route['event_types/save'] = 'Event_Types/create_event_type';
+$route['event_types/_save_event_type'] = 'Event_Types/ajax_save_event_type';
 $route['event_types/edit/(:num)'] = 'Event_Types/edit_event_type/$1';
 $route['event_types/update'] = 'Event_Types/update_event_type';
 $route['event_types/delete'] = 'Event_Types/delete_event_type';
@@ -1783,8 +1785,18 @@ $route['files_vault'] = 'Vault_v2/index_v2';
 $route['email_broadcasts'] = 'EmailBroadcast/index';
 $route['email_broadcasts/_customer_list'] = 'EmailBroadcast/ajax_customer_list';
 $route['email_broadcasts/_save_email_broadcast'] = 'EmailBroadcast/ajax_save_email_broadcast';
+$route['email_broadcasts/_update_email_broadcast'] = 'EmailBroadcast/ajax_update_email_broadcast';
 $route['email_broadcasts/_send_test_email_broadcast'] = 'EmailBroadcast/ajax_send_test_email_broadcast';
 $route['email_broadcasts/_preview'] = 'EmailBroadcast/ajax_preview';
 $route['email_broadcasts/_pause_sending'] = 'EmailBroadcast/ajax_pause_sending';
 $route['email_broadcasts/_resume_sending'] = 'EmailBroadcast/ajax_resume_sending';
 $route['email_broadcasts/_delete_broadcast'] = 'EmailBroadcast/ajax_delete_broadcast';
+$route['email_broadcasts/_email_template_list'] = 'EmailBroadcast/ajax_email_template_list';
+$route['email_broadcasts/_get_email_broadcast'] = 'EmailBroadcast/ajax_get_email_broadcast';
+
+//Email Broadcast Cron
+$route['cron_marketing/send_broadcast_email'] = 'Cron_Marketing/sendBroadcastEmail';
+
+//Email Template
+$route['settings/_get_email_template'] = 'Settings/ajax_get_email_template';
+$route['settings/_preview_email_template'] = 'Settings/ajax_preview_email_template';
