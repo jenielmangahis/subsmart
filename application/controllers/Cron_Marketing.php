@@ -356,4 +356,73 @@ class Cron_Marketing extends MY_Controller
         $data->result = $res;
         echo json_encode($data);
     }
+
+    public function sendBroadcastEmail()
+    {
+        $this->load->model('EmailBroadcast_model');
+        $this->load->model('EmailBroadcastRecipient_model');
+        $this->load->model('Business_model');
+
+        $total_updated = 0;
+        $total_sent    = 0;
+
+        $limit = 5;
+        $emailBroadcast = $this->EmailBroadcast_model->getAllOngoingBroadcast($limit);
+        if( $emailBroadcast ){
+            $mail = email__getInstance();
+            foreach($emailBroadcast as $eb){
+                $company = $this->Business_model->getByCompanyId($eb->company_id);
+
+                $limit = 5;
+                $emailBroadcastrecipients = $this->EmailBroadcastRecipient_model->getAllNotSentByEmailBroadCastId($eb->id, $limit);
+                if( $emailBroadcastrecipients ){                    
+                    foreach($emailBroadcastrecipients as $r ){
+                        if( $r->recipient_email != '' ){
+                            $preview_text = '';
+                            if( $eb->preview_text != '' ){
+                                $preview_text = '';
+                            }
+                            
+                            $subject = $company->business_name . ':' . $eb->content . $preview_text;
+                            $post['broadcast_content'] = $eb->content;
+
+                            $body = $this->emailBroadcastEmailHtml($post);                                                    
+                            $mail->FromName = $eb->sender_name;                            
+                            $mail->addAddress($r->recipient_email, $r->recipient_email);
+                            $mail->isHTML(true);
+                            $mail->Subject = $subject;
+                            $mail->Body = $body;
+                            
+                            
+                            if(!$mail->Send()){
+                                $email_broadcast_recipient_data = ['is_sent' => 0, 'is_with_error' => 1, 'error_message' => 'SMTP sending error'];
+                            }else{
+                                $total_sent++;
+                                $email_broadcast_recipient_data = ['is_sent' => 1, 'date_sent' => date("Y-m-d H:i:s"), 'is_with_error' => 0, 'error_message' => ''];
+                            } 
+                            
+                            $total_updated++;
+                            $this->EmailBroadcastRecipient_model->update($r->id, $email_broadcast_recipient_data);
+                        }
+                    }
+                }
+
+                //Update to complete if all is sent
+                $conditions[] = ['field' => 'is_with_error', 'value' => 0];
+                $emailBroadcastIsNotSent = $this->EmailBroadcastRecipient_model->getAllNotSentByEmailBroadCastId($eb->id, $conditions);                
+                if( count($emailBroadcastIsNotSent) == 0 ){
+                    $email_broadcast_data = ['status' => $this->EmailBroadcast_model->isCompleted()];
+                    $this->EmailBroadcast_model->update($eb->id, $email_broadcast_data);
+                }
+            }
+        }
+
+        echo "Total Sent {$total_sent} <br /> Total Updated {$total_updated}";
+    }
+
+    public function emailBroadcastEmailHtml($post)
+    {
+        $this->page_data['data'] = $post;
+        return $this->load->view('v2/pages/email_broadcasts/email_broadcast_email_template', $this->page_data, true);
+    }
 }

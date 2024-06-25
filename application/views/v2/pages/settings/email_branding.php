@@ -36,7 +36,7 @@
                                     <div class="nsm-card-content">
                                         <div class="row g-2">
                                             <div class="col-12">
-                                                <input type="text" placeholder="ADI" name="email_from_name" class="nsm-field form-control" value="<?= $setting_data['email_from_name']; ?>" autocomplete="off" />
+                                                <input type="text" placeholder="" name="email_from_name" class="nsm-field form-control" value="<?= $setting_data['email_from_name']; ?>" autocomplete="off" />
                                             </div>
                                         </div>
                                     </div>
@@ -53,7 +53,7 @@
                                     <div class="nsm-card-content">
                                         <div class="row g-2">
                                             <div class="col-12">
-                                                <input type="text" placeholder="Alarm Direct, Inc." name="email_template_footer_text" class="nsm-field form-control" value="<?= $setting_data['email_template_footer_text']; ?>" autocomplete="off" />
+                                                <input type="text" placeholder="" name="email_template_footer_text" class="nsm-field form-control" value="<?= $setting_data['email_template_footer_text']; ?>" autocomplete="off" />
                                             </div>
                                         </div>
                                     </div>

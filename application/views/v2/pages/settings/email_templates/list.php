@@ -131,22 +131,34 @@
                 if (result.value) {
                     $.ajax({
                         type: 'POST',
-                        url: "<?php echo base_url('settings/delete_email_template'); ?>",
-                        data: {
-                            tid: id
-                        },
+                        url: base_url + "settings/_delete_email_template",
+                        data: {tid: id},
+                        dataType:'json',
                         success: function(result) {
-                            Swal.fire({
-                                title: 'Good job!',
-                                text: "Data Deleted Successfully!",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            }).then((result) => {
-                                if (result.value) {
-                                    location.reload();
-                                }
-                            });
+                            if( result.is_success == 1 ){
+                                Swal.fire({
+                                    //title: 'Good job!',
+                                    text: "Email Template Deleted Successfully!",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    //if (result.value) {
+                                        location.reload();
+                                    //}
+                                });
+                            }else{
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: data.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    
+                                });
+                            }
+                            
                         },
                     });
                 }

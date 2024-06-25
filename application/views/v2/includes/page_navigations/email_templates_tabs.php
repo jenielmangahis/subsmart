@@ -31,12 +31,12 @@
                 <span>Notifications</span>
             </a>
         </li>
-        <li class="<?php if($page->title == 'Cards on File'): echo 'active'; endif; ?>">
+        <!-- <li class="<?php if($page->title == 'Cards on File'): echo 'active'; endif; ?>">
             <a class="nsm-page-link" href="<?php echo base_url('cards_file/list') ?>">
                 <i class='bx bx-fw bx-credit-card'></i>
                 <span>Cards on File</span>
             </a>
-        </li>
+        </li> -->
         <!-- Do not remove the last li -->
         <li><label></label></li>
     </ul>

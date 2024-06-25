@@ -37,7 +37,7 @@ class EmailTemplate_model extends MY_Model
         return $query;
     }
 
-    public function getAllByCompanyId($company_id)
+    public function getAllByCompanyId($company_id, $filters = [])
     {
         $this->db->select('*');
         $this->db->from($this->table);

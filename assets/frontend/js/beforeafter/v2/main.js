@@ -35,6 +35,27 @@ function readURL(input, id) {
   }
 }
 
+function readURLv2(input, id) {
+  var limit = 4;
+  if (input.files && input.files[0]) {
+      var filesize = input.files[0].size / Math.pow(1024,2); 
+      if( filesize > limit ){
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            html: 'Can only accept maximum filesize of ' + limit + 'MB'
+        });
+      }else{
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $("#" + id).attr("src", e.target.result);
+        };
+
+        reader.readAsDataURL(input.files[0]);
+      }            
+  }
+}
+
 function capitalizeFirstLetter(string) {
   return string.charAt(0).toUpperCase() + string.slice(1);
 }

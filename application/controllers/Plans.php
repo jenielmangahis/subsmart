@@ -14,27 +14,12 @@ class Plans extends MY_Controller {
 	}
 	 
 	public function index()
-	{ 	
+	{ 			
 		$this->page_data['page']->title = 'Plans';
         $this->page_data['page']->parent = 'Sales';
-        $role = logged('role');
-        /*if( $role == 1 || $role == 2 ){
-        	$this->page_data['plans'] = $this->plans_model->getByWhere([]);
-        }else{
-        	$company_id =  logged('company_id');
-			$this->page_data['plans'] = $this->plans_model->getByWhere(['company_id'=>$company_id]);
-        }*/
-        
+        $role = logged('role');        
         $company_id =  logged('company_id');
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id'=>$company_id]);
-
-		// ifPermissions('plan_list');
-
-		// $this->page_data['items'] = $this->items_model->get();
-		//$company_id =  logged('company_id');
-		// $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id'=>$company_id]);
-		//$this->page_data['plans'] = array();
-		/* echo "<pre>"; print_r($this->page_data['items']); die; */
 		$this->load->view('v2/pages/plans/list', $this->page_data);
 	}
 	

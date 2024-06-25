@@ -230,6 +230,67 @@ class Event_Types extends MY_Controller {
             return $name;
         }
     }
+
+    public function ajax_save_event_type(){
+        $this->load->model('Icons_model');
+
+        $is_success = 0;
+        $msg = 'Cannot save data';
+
+        $user_id    = logged('id');
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        if( $post['title'] != ''){
+            if( isset($post['is_default_icon']) ){
+                $icon = $this->Icons_model->getById($post['default_icon_id']);
+                $marker_icon = $icon->image;
+                $data_event_type = [
+                    'company_id' => $company_id,
+                    'user_id' => $user_id,
+                    'title' => $post['title'],
+                    'icon_marker' => $marker_icon,
+                    'is_marker_icon_default_list' => 1,
+                    'created' => date("Y-m-d H:i:s"),
+                    'modified' => date("Y-m-d H:i:s")
+                ];
+
+                $event_type_id = $this->EventType_model->create($data_event_type);
+                if( $event_type_id > 0 ){
+                    $is_success = 1;
+                    $msg = '';
+                }
+            }else{
+                if( !empty($_FILES['image']['name']) ){
+
+                    $marker_icon = $this->moveUploadedFile();
+                    $data_event_type = [
+                        'company_id' => $company_id,
+                        'user_id' => $user_id,
+                        'title' => $post['title'],
+                        'icon_marker' => $marker_icon,
+                        'is_marker_icon_default_list' => 0,
+                        'created' => date("Y-m-d H:i:s"),
+                        'modified' => date("Y-m-d H:i:s")
+                    ];
+
+                    $event_type_id = $this->EventType_model->create($data_event_type);
+                    if( $event_type_id > 0 ){
+                        $is_success = 1;
+                        $msg = '';
+                    }
+                }
+            }
+
+            //Activity Logs
+            $activity_name = 'Event Types : Created event type ' . $post['title']; 
+            createActivityLog($activity_name);
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+ 
+        echo json_encode($return);
+    }
 }
 
 
