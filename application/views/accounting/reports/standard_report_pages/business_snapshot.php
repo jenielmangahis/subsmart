@@ -367,12 +367,10 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr data-toggle="collapse" data-target="#incomeDetails"
-                                            class="clickable collapse-row collapsed">
+                                    <tr data-bs-toggle="collapse" data-bs-target="#incomeDetails" class="clickable collapse-row collapsed">
                                             <td><i class="bx bx-fw bx-caret-right"></i>My Income</td>
                                         </tr>
-                                       
-                                        <tr  id="incomeDetails" class="clickable collapse-row collapse"  data-bs-toggle="collapse" >
+                                        <tr data-bs-toggle="collapse" class="clickable collapse-row collapse" id="incomeDetails">
                                             <td>
                                                 <div class="card text-center shadow">
                                                     <div class="card-header text-left"><b>My Income</b></div>
@@ -385,7 +383,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr data-toggle="collapse" data-target="#incomeDetailsComparison"
+                                        <tr  data-bs-toggle="collapse" data-bs-target="#incomeDetailsComparison"
                                             class="clickable collapse-row collapsed">
                                             <td><i class="bx bx-fw bx-caret-right"></i>Previous Year Income Comparison</td>
                                         </tr>
@@ -405,7 +403,7 @@
                                             </td>
                                         </tr>
 
-                                        <tr data-toggle="collapse" data-target="#expenseDetails"
+                                        <tr data-bs-toggle="collapse" data-bs-target="#expenseDetails"
                                             class="clickable collapse-row collapsed">
                                             <td><i class="bx bx-fw bx-caret-right"></i>My Expense</td>
                                         </tr>
@@ -425,7 +423,7 @@
                                             </td>
                                         </tr>
 
-                                        <tr data-toggle="collapse" data-target="#expenseDetailsComparison"
+                                        <tr data-bs-toggle="collapse" data-bs-target="#expenseDetailsComparison"
                                             class="clickable collapse-row collapsed">
                                             <td><i class="bx bx-fw bx-caret-right"></i>Previous Year Expense Comparison</td>
                                         </tr>

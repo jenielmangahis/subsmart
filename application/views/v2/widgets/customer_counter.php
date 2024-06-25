@@ -13,7 +13,8 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                         <div class="icon-summary-customer">
                             <i class="bx bx-user-circle"></i>
                         </div>
-                        <a role="button" class=" btn-sm m-0 me-2" href="customer/group" style="color:#6ba77ced !important ">
+                        <a role="button" class=" btn-sm m-0 me-2" href="customer/group"
+                            style="color:#6ba77ced !important ">
                             Customer Groups
                         </a>
                     </div>
@@ -58,17 +59,19 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <option value="two-month">last 60 days </option>
         </select>
     </div>
-    <div class="nsm-card-content" style="height: calc(100% - 120px); position:'relative'; display: <?php echo $isListView ? 'block' : 'none'; ?>"
+    <div class="nsm-card-content"
+        style="height: calc(100% - 120px); position:'relative'; display: <?php echo $isListView ? 'block' : 'none'; ?>"
         id="thumbnail_content_graph_<?php echo $id; ?>">
         <h1 id='NewCustomerGraphLoader'> <span class="bx bx-loader bx-spin"></span></h1>
-        <canvas id="NewCustomerWidgetsGraph" style="max-height:100%;" class="nsm-chart" data-chart-type="sales"></canvas>
+        <canvas id="NewCustomerWidgetsGraph" style="max-height:100%;" class="nsm-chart"
+            data-chart-type="widgets/customer_counter" data-chart-id="<?php echo $id; ?>"></canvas>
         <h5 style="text-align: right;
-    margin-top: -32px;
-    font-size: 14px;
-    font-weight: bold;
-    margin-right: 15px;">Total : <span style="font-size: 16px;
-    color: #6ba77ced !important;
-    letter-spacing: 1.5px;" id="total_customer_graph"></span></h5>
+        margin-top: -32px;
+        font-size: 14px;
+        font-weight: bold;
+        margin-right: 15px;">Total : <span style="font-size: 16px;
+        color: #6ba77ced !important;
+        letter-spacing: 1.5px;" id="total_customer_graph"></span></h5>
     </div>
 
     <div class="nsm-card-content"
