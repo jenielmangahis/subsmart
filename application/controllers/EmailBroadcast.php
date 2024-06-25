@@ -144,7 +144,8 @@ class EmailBroadcast extends MY_Controller
                 $preview_text = '<!--[if !gte mso 9]><!----><span style="display:none; font-size:0px; line-height:0px; max-height:0px; max-width:0px; opacity:0; overflow:hidden; visibility:hidden; mso-hide:all;">' . $post['broadcast_preview_text'] . ' </span><!--<![endif]-->';
             }
 
-            $subject = $company->business_name . ':' . $post['broadcast_subject'] . $preview_text;
+            $subject = $company->business_name . ':' . $post['broadcast_subject'];
+            $post['preview_text'] = $preview_text;
 
             $body = $this->emailBroadcastEmailHtml($post);
             $mail = email__getInstance();
