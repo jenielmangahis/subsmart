@@ -6,7 +6,7 @@
     <title>nSmarTrac : Broadcast Email</title>
 </head>
 <body style="font-family: 'Poppins', Arial, sans-serif">
-    <?= $post['preview_text']; ?>
+    test<?= $post['preview_text']; ?>
     <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
             <td align="center">

@@ -259,7 +259,7 @@ div.tagsinput input {
     </div>
 
     <div class="modal fade" id="modal-preview" role="dialog">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <form>
                     <div class="modal-header">
