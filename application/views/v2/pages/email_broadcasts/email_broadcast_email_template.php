@@ -10,7 +10,7 @@
     <table width="100%" cellpadding="0" cellspacing="0" border="0">
         <tr>
             <td align="center">
-                <table width="600" cellpadding="0" cellspacing="0" border="0">
+                <table width="900" cellpadding="0" cellspacing="0" border="0">
                     <tr>
                         <td class="body" style="padding: 40px; text-align: left; font-size: 16px; line-height: 1.6;">
                             <?= $data['broadcast_content']; ?>
