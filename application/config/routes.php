@@ -1793,6 +1793,9 @@ $route['email_broadcasts/_resume_sending'] = 'EmailBroadcast/ajax_resume_sending
 $route['email_broadcasts/_delete_broadcast'] = 'EmailBroadcast/ajax_delete_broadcast';
 $route['email_broadcasts/_email_template_list'] = 'EmailBroadcast/ajax_email_template_list';
 $route['email_broadcasts/_get_email_broadcast'] = 'EmailBroadcast/ajax_get_email_broadcast';
+$route['email_broadcasts/_recipient_summary'] = 'EmailBroadcast/ajax_recipient_summary';
+$route['email_broadcasts/_delete_selected'] = 'EmailBroadcast/ajax_delete_selected_broadcast';
+$route['email_broadcasts/_update_status_selected'] = 'EmailBroadcast/ajax_update_status_selected';
 
 //Email Broadcast Cron
 $route['cron_marketing/send_broadcast_email'] = 'Cron_Marketing/sendBroadcastEmail';
