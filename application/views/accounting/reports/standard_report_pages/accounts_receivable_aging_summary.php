@@ -297,8 +297,8 @@
     </div>
 </div>
 
-<?php include viewPath('v2/includes/footer'); ?>
 <?php include viewPath('accounting/reports/reports_assets/accounting_receivable_aging_summary_js'); ?>
+<?php include viewPath('v2/includes/footer'); ?>
 
 <script>
 $(function(){
