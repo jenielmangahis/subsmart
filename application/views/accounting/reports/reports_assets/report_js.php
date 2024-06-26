@@ -80,6 +80,7 @@
         pageHeaderRepeat = ($('input[name="pageHeaderRepeat"]').prop('checked') == true) ? 1 : 0;
         date_from = $('input[name="date_from"]').val();
         date_to = $('input[name="date_to"]').val();
+        date = $('input[name="date"]').val();
         reportConfig = {
             businessLogoURL: businessLogoURL,
             showHideLogo: showHideLogo,
@@ -92,6 +93,7 @@
             pageHeaderRepeat: pageHeaderRepeat,
             date_from: date_from,
             date_to: date_to,
+            date: date,
         };
         // =========================
         (enableDisableBusinessName) ? $("#businessName").text(businessName): businessName = $("#businessName").html("&nbsp;").html();
@@ -173,7 +175,7 @@
         // =========================
         $.ajax({
             type: "POST",
-            url: base_url + "/accounting_controllers/Reports/getReportData/" + REPORT_CATEGORY,
+            url: BASE_URL + "/accounting_controllers/Reports/getReportData/" + REPORT_CATEGORY,
             data: {
                 theadColumnNames: theadColumnNames,
                 theadTotalColumn: theadTotalColumn,
@@ -185,6 +187,7 @@
                 reportConfig: reportConfig,
             },
             success: function(data) {
+                console.log("test", data);
                 loadReportPreview();
                 $("#<?php echo $tableID; ?> > tbody").html(data);
                 $(".settingsApplyButton").removeAttr('disabled').html('Apply');
@@ -205,8 +208,8 @@
             sortOrder: $('select[name="sort_order"]').val(),
             pageOrientation: $('select[name="pageOrientation"]').val(),
             pageHeaderRepeat: $('input[name="pageHeaderRepeat"]').prop('checked'),
-            dateFrom: $('input[name="date_from"]').val(),
-            dateTo: $('input[name="date_to"]').val()
+            // dateFrom: $('input[name="date_from"]').val(),
+            // dateTo: $('input[name="date_to"]').val()
         };
         localStorage.setItem('reportSettings', JSON.stringify(settings));
         renderReportList();
@@ -234,7 +237,7 @@
     // Load .pdf Report Script
     function loadReportPreview() {
         $('#pdfPreview').hide();
-        $('#pdfPreview').attr('src', base_url + "/assets/pdf/accounting/" + filename + ".pdf?" + Math.round(Math.random() * 1000000)).on('load', function() {
+        $('#pdfPreview').attr('src', BASE_URL + "/assets/pdf/accounting/" + filename + ".pdf?" + Math.round(Math.random() * 1000000)).on('load', function() {
             $('.dataLoader').remove();
             $('#pdfPreview').show();
         });
@@ -259,7 +262,7 @@
     // Fetch Report Notes On Page Load
     $.ajax({
         type: "POST",
-        url: base_url + "/accounting_controllers/reports/getNotes",
+        url: BASE_URL + "/accounting_controllers/reports/getNotes",
         data: {
             reportID: REPORT_ID,
         },
@@ -280,7 +283,7 @@
         // =========
         $.ajax({
             type: "POST",
-            url: base_url + "/accounting_controllers/reports/saveNotes",
+            url: BASE_URL + "/accounting_controllers/reports/saveNotes",
             data: {
                 reportID: REPORT_ID,
                 reportNotes: $("#NOTES").val(),
@@ -482,9 +485,9 @@
     // Date picker
     var currentDate = new Date().toISOString().split('T')[0];
 
-    document.getElementById('filter-date-from').value = currentDate;
-    document.getElementById('filter-date-to').value = currentDate;
-    document.getElementById('filter-date').value = currentDate;
+    // document.getElementById('filter-date-from').value = currentDate;
+    // document.getElementById('filter-date-to').value = currentDate;
+    // document.getElementById('filter-date').value = currentDate;
 
     // // Email Subject
     // document.addEventListener('DOMContentLoaded', function() {

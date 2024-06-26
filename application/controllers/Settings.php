@@ -905,7 +905,6 @@ class Settings extends MY_Controller {
         $post       = $this->input->post();
         $user_id    = logged('id');
         $company_id = logged('company_id');
-
         $post['user_id']      = $user_id;
         $post['company_id']   = $company_id;
         $post['date_created'] = date("d-m-Y h:i A");
@@ -913,10 +912,6 @@ class Settings extends MY_Controller {
 
         $is_success = 1;
         $json_data  = ['is_success' => $is_success];
-
-        //Activity Logs
-        $activity_name = 'Email Template : Created template ' . $post['title']; 
-        createActivityLog($activity_name);
 
         echo json_encode($json_data);
     }
@@ -1264,10 +1259,6 @@ class Settings extends MY_Controller {
 
             $is_success = 1;
             $msg = '';
-
-            //Activity Logs
-			$activity_name = 'Auto SMS Notification : Created new setting'; 
-			createActivityLog($activity_name);
         }
 
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
@@ -1299,10 +1290,6 @@ class Settings extends MY_Controller {
             'is_success' => $is_success,
             'msg' => $msg
         ];
-
-        //Activity Logs
-        $activity_name = 'Auto SMS Notification : Deleted setting'; 
-        createActivityLog($activity_name);
 
         echo json_encode($json_data);
     }
@@ -1442,10 +1429,6 @@ class Settings extends MY_Controller {
 
                 $is_success = 1;
                 $msg = '';
-
-                //Activity Logs
-                $activity_name = 'Auto SMS Notification : Updated setting'; 
-                createActivityLog($activity_name);
             }
         }
 

@@ -212,12 +212,12 @@
                                     </div>
                                 </div>
                             </ul>
-                            <button type="button" class="nsm-button">
+                            <!-- <button type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-customize'></i> Customize
                             </button>
                             <button type="button" class="nsm-button primary">
                                 <i class='bx bx-fw bx-save'></i> Save customization
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                 </div>
@@ -250,17 +250,17 @@
                                                 </div>
                                             </ul>
                                             <button class="nsm-button addNotes">Add Notes</button>
-                                            <button type="button" class="nsm-button" id="editButton">
+                                            <!-- <button type="button" class="nsm-button" id="editButton">
                                                 <span>Edit Title</span>
-                                            </button>
+                                            </button> -->
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6 grid-mb text-end">
                                         <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#emailReportModal">
+                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
                                                 <i class='bx bx-fw bx-envelope'></i>
                                             </button>
-                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#printPreviewModal" onclick="previewPDF()">
+                                            <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
                                                 <i class='bx bx-fw bx-printer'></i>
                                             </button>
                                             <button type="button" class="nsm-button" data-bs-toggle="dropdown">
@@ -270,9 +270,7 @@
                                                 <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-excel">Export to Excel</a></li>
                                                 <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-pdf">Export to PDF</a></li>
                                             </ul>
-                                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
-                                                <i class="bx bx-fw bx-cog"></i>
-                                            </button>
+                                            <button class="nsm-button border-0 primary top-button" data-bs-toggle="modal" data-bs-target="#reportSettings"><i class="bx bx-fw bx-cog icon-top"></i></button>
                                             <ul class="dropdown-menu dropdown-menu-end p-3">
                                                 <p class="m-0">Display density</p>
                                                 <div class="form-check">
@@ -287,7 +285,7 @@
                                 <div class="row">
                                     <div class="col-12 grid-mb">
                                         <h4 class="text-center fw-bold" id="businessName">
-                                            <span class="company-name"><?= $profiledata && $profiledata->title != '' ? $profiledata->title : $profiledata->business_name; ?></span>
+                                            <span class="company-name"><?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : $clients->business_name; ?></span>
                                         </h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
@@ -585,115 +583,118 @@
         </div>
     </div>
 </div>
-<!-- START: PRINT/SAVE MODAL -->
-<div class="modal" id="printPreviewModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Print or save as PDF</span>
-                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-3 mt-1 mb-3">
-                        <h6>Report print settings</h6>
-                        <hr>
-                        <div class="form-group mb-2">
-                            <label>Orientation</label>
-                            <select id="pageOrientation" name="pageOrientation" class="form-select">
-                                <option value="p" selected>Portrait</option>
-                                <option value="l">Landscape</option>
-                            </select>
-                        </div>
-                        <!-- <div class="form-check">
-                            <input id="pageHeaderRepeat" name="pageHeaderRepeat" class="form-check-input" type="checkbox">
-                            <label class="form-check-label" for="pageHeaderRepeat">Repeat Page Header</label>
-                        </div> -->
-                    </div>
-                    <div class="col-sm-9">
-                        <iframe id="pdfPreview" class="border-0" width="100%" height="450px"></iframe>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="float-start">
-                            <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
-                        </div>
-                        <div class="float-end">
-                            <button type="button" class="nsm-button primary savePDF">Save as PDF</button>
-                            <!-- <button type="button" class="nsm-button primary printPDF">Print</button> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- END: PRINT/SAVE MODAL -->
-<!-- START: EMAIL REPORT MODAL -->
-<div class="modal" id="emailReportModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+
+<!-- Modal for Report Settings -->
+<div class="modal" id="reportSettings" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" style="font-size: 17px;">Email Report</span>
+                <span class="modal-title content-title" style="font-size: 17px;">Report Settings</span>
                 <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
             </div>
             <div class="modal-body">
-                <form id="sendEmailForm">
+                <form id="reportSettingsForm" method="POST">
                     <div class="row">
-                        <div class="col-sm-12 mt-1">
-                            <div class="form-group">
-                                <h6>To</h6>
-                                <input id="emailTo" class="form-control" type="email" placeholder="Send to" required>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 mt-3">
-                            <div class="form-group">
-                                <h6>CC</h6>
-                                <input id="emailCC" class="form-control" type="email" placeholder="Carbon Copy">
-                            </div>
-                        </div>
-                        <div class="col-sm-12 mt-3">
-                            <div class="form-group">
-                                <h6>Subject</h6>
-                                <!-- <input id="emailSubject" class="form-control" type="text" value="<?php echo $companyInfo ? strtoupper($companyInfo->business_name) : ''; ?>: <?php echo $page->title; ?>" required> -->
-                                <input id="emailSubject" class="form-control" type="text" value="<?php echo $page->title; ?>" required>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-12 mt-3">
-                            <div class="form-group">
-                                <h6>Body</h6>
-                                <div id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title ?> from <?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?></div>
-                            </div>
-                        </div>
-                        <div class="col-sm-12 mt-3">
-                            <div class="form-group">
-                                <h6>Attachment</h6>
-                                <div class="row">
-                                    <div class="input-group borderRadius0 pdfAttachment">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 pdfAttachmentCheckbox" type="checkbox"></div>
-                                        <input id="pdfReportFilename" class="form-control" type="text" value="<?php echo $page->title ?>" required>
-                                        <input class="form-control" type="text" disabled readonly value=".pdf" style="max-width: 60px;">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-md-2 mb-3">
+                                    <label class="mb-1 fw-xnormal">Logo</label>
+                                    <select id="showHideLogo" name="showHideLogo" class="nsm-field form-select">
+                                        <option value="1" selected>Show</option>
+                                        <option value="0">Hide</option>
+                                    </select>
+                                </div>
+                                <!-- Date Picker -->
+                                <!-- <div class="col-md-3 mb-3">
+                                    <label for="filter-date-from">From</label>
+                                    <div class="">
+                                        <input type="date" id="filter-date-from" class="form-control nsm-field date" data-type="filter-date-from">
                                     </div>
-                                    <div class="input-group borderRadius0">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 xlsxAttachmentCheckbox" type="checkbox"></div>
-                                        <input id="xlsxReportFileName" class="form-control" type="text" value="<?php echo $page->title ?>" required>
-                                        <input class="form-control" type="text" disabled readonly value=".xlsx" style="max-width: 60px;">
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="filter-date-to">To</label>
+                                    <div class="">
+                                        <input type="date" id="filter-date-to" class="form-control nsm-field date" data-type="filter-date-to">
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="filter-date">Date</label>
+                                    <div class="">
+                                        <input type="date" id="filter-date" class="form-control nsm-field date" data-type="filter-date">
+                                    </div>
+                                </div> -->
+                                <div class="col-md-5 mb-3">
+                                    <label class="mb-1 fw-xnormal">Report Title</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
+                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 mb-3">
+                                    <label class="mb-1 fw-xnormal">Report Name</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" checked></div>
+                                        <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo $page->title ?>" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="mb-1 fw-xnormal">Header Align</label>
+                                    <select name="header_align" id="header-align" class="nsm-field form-select">
+                                        <option value="L">Left</option>
+                                        <option value="C" selected>Center</option>
+                                        <option value="R">Right</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="mb-1 fw-xnormal">Footer Align</label>
+                                    <select name="footer_align" id="footer-align" class="nsm-field form-select">
+                                        <option value="L">Left</option>
+                                        <option value="C" selected>Center</option>
+                                        <option value="R">Right</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label class="mb-1 fw-xnormal">Page Size</label>
+                                    <select name="page_size" id="page-size" class="nsm-field form-select">
+                                        <option value="10" selected>10</option>
+                                        <option value="25">25</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                        <option value="500">500</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="col-md-12">
+                                        <label class="mb-1 fw-xnormal">Sort By</label>
+                                        <div class="input-group">
+                                            <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                                <option value="id" selected>Default</option>
+                                                <option value="date_changed">Date Changed</option>
+                                                <option value="user">User</option>
+                                                <option value="event">Event</option>
+                                                <option value="name">Name</option>
+                                                <option value="date">Date</option>
+                                                <option value="amount">Amount</option>
+                                            </select>
+                                            <select name="sort_order" id="sort-order" class="nsm-field form-select">
+                                                <option value="ASC">ASC</option>
+                                                <option value="DESC" selected>DESC</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <hr>
+                    <hr class="mt-0">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="float-start">
-                                <button type="button" id="emailCloseModal" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
                             </div>
                             <div class="float-end">
-                                <button type="submit" class="nsm-button primary sendEmail"><span class="sendEmail_Loader"></span>Send</button>
+                                <button type="submit" class="nsm-button primary settingsApplyButton">Apply</button>
+                                <!-- <button type="button" class="nsm-button primary printPDF">Print</button> -->
                             </div>
                         </div>
                     </div>
@@ -702,7 +703,7 @@
         </div>
     </div>
 </div>
-<!-- END: EMAIL REPORT MODAL -->
+<!-- Modal for Report Settings -->
 
 <?php include viewPath('v2/includes/footer'); ?>
 <?php include viewPath('accounting/reports/reports_assets/balance_sheet_summary_js'); ?>
@@ -767,6 +768,3 @@
         });
     });
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
