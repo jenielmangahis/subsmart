@@ -1442,6 +1442,10 @@ class Taskhub extends MY_Controller {
         		$data = ['status_id' => 6, 'date_completed' => date('Y-m-d'), 'status' => 'Closed',];
 	        	$this->Taskhub_model->updateByTaskId($taskHub->task_id, $data);
 
+				//Activity Logs
+				$activity_name = 'Completed Task ' . $taskHub->subject; 
+				createActivityLog($activity_name);
+
 	        	//SMS Notification
 	        	$taskStatus   = $this->taskhub_status_model->getById(6);
 	        	$taskAssigned = $this->taskhub_participants_model->getIsAssignedByTaskId($taskHub->task_id);
@@ -1452,7 +1456,7 @@ class Taskhub extends MY_Controller {
 	        	}
 
 				//Activity Logs
-                $activity_name = 'Taskhub : ' . 'Completed Task ' . $taskHub->subject; 
+                $activity_name = 'Taskhub : ' . $activity_name; 
                 createActivityLog($activity_name);
 
 	        	$msg = '';

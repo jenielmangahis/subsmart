@@ -16,7 +16,7 @@
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
                         </div> -->
                     </div>
-                    <div class="col-12 col-md-8 grid-mb text-end">
+                    <!-- <div class="col-12 col-md-8 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
@@ -222,14 +222,8 @@
                                     </div>
                                 </div>
                             </ul>
-                            <button type="button" class="nsm-button">
-                                <i class='bx bx-fw bx-customize'></i> Customize
-                            </button>
-                            <button type="button" class="nsm-button primary">
-                                <i class='bx bx-fw bx-save'></i> Save customization
-                            </button>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="row g-3">
@@ -259,7 +253,7 @@
                                                     <label for="sort-desc" class="form-check-label">Total in descending order</label>
                                                 </div>
                                             </ul>
-                                            <button type="button" class="nsm-button addNotes">
+                                            <button type="button" class="nsm-button">
                                                 <span>Add Notes</span>
                                             </button>
                                             <button type="button" class="nsm-button" id="editButton">
@@ -292,6 +286,210 @@
                                                     <label for="compact-display" class="form-check-label">Compact</label>
                                                 </div>
                                             </ul>
+                                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                                <i class='bx bx-fw bx-filter'></i>&nbsp;
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
+                                                <div class="row">
+                                                    <div class="col-12 col-md-6">
+                                                        <label for="filter-report-period">Report period</label>
+                                                        <select class="nsm-field form-select" name="filter_report_period" id="filter-report-period">
+                                                            <option value="all-dates">All Dates</option>
+                                                            <option value="custom">Custom</option>
+                                                            <option value="today">Today</option>
+                                                            <option value="this-week">This Week</option>
+                                                            <option value="this-week-to-date">This Week-to-date</option>
+                                                            <option value="this-month">This Month</option>
+                                                            <option value="this-month-to-date">This Month-to-date</option>
+                                                            <option value="this-quarter">This Quarter</option>
+                                                            <option value="this-quarter-to-date">This Quarter-to-date</option>
+                                                            <option value="this-year">This Year</option>
+                                                            <option value="this-year-to-date" selected>This Year-to-date</option>
+                                                            <option value="this-year-to-last-month">This Year-to-last-month</option>
+                                                            <option value="yesterday">Yesterday</option>
+                                                            <option value="recent">Recent</option>
+                                                            <option value="last-week">Last Week</option>
+                                                            <option value="last-week-to-date">Last Week-to-date</option>
+                                                            <option value="last-month">Last Month</option>
+                                                            <option value="last-month-to-date">Last Month-to-date</option>
+                                                            <option value="last-quarter">Last Quarter</option>
+                                                            <option value="last-quarter-to-date">Last Quarter-to-date</option>
+                                                            <option value="last-year">Last Year</option>
+                                                            <option value="last-year-to-date">Last Year-to-date</option>
+                                                            <option value="since-30-days-ago">Since 30 Days Ago</option>
+                                                            <option value="since-60-days-ago">Since 60 Days Ago</option>
+                                                            <option value="since-90-days-ago">Since 90 Days Ago</option>
+                                                            <option value="since-365-days-ago">Since 365 Days Ago</option>
+                                                            <option value="next-week">Next Week</option>
+                                                            <option value="next-4-weeks">Next 4 Weeks</option>
+                                                            <option value="next-month">Next Month</option>
+                                                            <option value="next-quarter">Next Quarter</option>
+                                                            <option value="next-year">Next Year</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <label for="filter-display-columns-by">Display columns by</label>
+                                                        <select class="nsm-field form-select" name="filter_display_columns_by" id="filter-display-columns-by">
+                                                            <option value="total-only" selected>Total Only</option>
+                                                            <option value="days">Days</option>
+                                                            <option value="weeks">Weeks</option>
+                                                            <option value="months">Months</option>
+                                                            <option value="quarters">Quarters</option>
+                                                            <option value="years">Years</option>
+                                                            <option value="customers">Customers</option>
+                                                            <option value="vendors">Vendors</option>
+                                                            <option value="products-services">Products/Services</option>
+                                                        </select>
+                                                    </div>                                    
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12 col-md-6">
+                                                        <label for="filter-from">From</label>
+                                                        <div class="nsm-field-group calendar">
+                                                            <input type="text" style="" class="nsm-field form-control datepicker" value="<?=date("01/01/Y")?>" id="filter-from">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <label for="filter-to">To</label>
+                                                        <div class="nsm-field-group calendar">
+                                                            <input type="text" class="nsm-field form-control datepicker" value="<?=date("m/d/Y")?>" id="filter-to">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12 col-md-6">
+                                                        <label for="filter-display-columns-by">Show non-zero or active only</label>
+                                                        <div class="dropdown">
+                                                            <button type="button" class="dropdown-toggle nsm-button w-100 m-0" data-bs-toggle="dropdown" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
+                                                                <span>
+                                                                    Active rows/active columns
+                                                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-end p-3 w-100">
+                                                                <p class="m-0">Show rows</p>
+                                                                <div class="form-check">
+                                                                    <input type="radio" checked id="active-rows" name="show_rows" class="form-check-input">
+                                                                    <label for="active-rows" class="form-check-label">Active</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="radio" id="all-rows" name="show_rows" class="form-check-input">
+                                                                    <label for="all-rows" class="form-check-label">All</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="radio" id="non-zero-rows" name="show_rows" class="form-check-input">
+                                                                    <label for="non-zero-rows" class="form-check-label">Non-zero</label>
+                                                                </div>
+                                                                <p class="m-0">Show columns</p>
+                                                                <div class="form-check">
+                                                                    <input type="radio" checked id="active-columns" name="show_cols" class="form-check-input">
+                                                                    <label for="active-columns" class="form-check-label">Active</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="radio" id="all-columns" name="show_cols" class="form-check-input">
+                                                                    <label for="all-columns" class="form-check-label">All</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="radio" id="non-zero-columns" name="show_cols" class="form-check-input">
+                                                                    <label for="non-zero-columns" class="form-check-label">Non-zero</label>
+                                                                </div>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <label for="filter-display-columns-by">Compare another period</label>
+                                                        <div class="dropdown">
+                                                            <button type="button" class="dropdown-toggle nsm-button w-100 m-0" data-bs-toggle="dropdown">
+                                                                <span>
+                                                                    Select period
+                                                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                                            </button>
+                                                            <ul class="dropdown-menu dropdown-menu-end p-3 w-100">
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" id="previous-period" name="selected_period" class="form-check-input">
+                                                                    <label for="previous-period" class="form-check-label">Previous period (PP)</label>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <div class="form-check d-inline-block">
+                                                                            <input type="checkbox" id="previous-period-dollar-change" class="form-check-input" disabled>
+                                                                            <label for="previous-period-dollar-change" class="form-check-label">$ change</label>
+                                                                        </div>
+                                                                        <div class="form-check d-inline-block">
+                                                                            <input type="checkbox" id="previous-period-percent-change" class="form-check-input" disabled>
+                                                                            <label for="previous-period-percent-change" class="form-check-label">% change</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" id="previous-year" name="selected_period" class="form-check-input">
+                                                                    <label for="previous-year" class="form-check-label">Previous year (PY)</label>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <div class="form-check d-inline-block">
+                                                                            <input type="checkbox" id="previous-year-dollar-change" class="form-check-input" disabled>
+                                                                            <label for="previous-year-dollar-change" class="form-check-label">$ change</label>
+                                                                        </div>
+                                                                        <div class="form-check d-inline-block">
+                                                                            <input type="checkbox" id="previous-year-percent-change" class="form-check-input" disabled>
+                                                                            <label for="previous-year-percent-change" class="form-check-label">% change</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" id="year-to-date" name="selected_period" class="form-check-input">
+                                                                    <label for="year-to-date" class="form-check-label">Year-to-date (YTD)</label>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col">
+                                                                        <div class="form-check d-inline-block">
+                                                                            <input type="checkbox" id="ytd-percent" class="form-check-input" disabled>
+                                                                            <label for="ytd-percent" class="form-check-label">% of YTD</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" id="percent-of-row" name="selected_period" class="form-check-input">
+                                                                    <label for="percent-of-row" class="form-check-label">% of Row</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" id="percent-of-col" name="selected_period" class="form-check-input">
+                                                                    <label for="percent-of-col" class="form-check-label">% of Column</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" id="percent-of-income" name="selected_period" class="form-check-input">
+                                                                    <label for="percent-of-income" class="form-check-label">% of Income</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input type="checkbox" id="percent-of-expense" name="selected_period" class="form-check-input">
+                                                                    <label for="percent-of-expense" class="form-check-label">% of Expense</label>
+                                                                </div>
+                                                                <p class="m-0"><a href="#" style="text-decoration: none">Reorder columns</a></p>
+                                                            </ul>
+                                                        </div>
+                                                    </div>                                    
+                                                </div>
+                                                <div class="row" style="text-align: center; margin-top: 5px; margin-bottom: 5px;">
+                                                    <div class="col-12 col-md-12">
+                                                        <label for="" class="w-100">Accounting method</label>
+                                                        <div class="form-check d-inline-block">
+                                                            <input type="radio" id="cash-method" class="form-check-input" name="accounting_method">
+                                                            <label for="cash-method" class="form-check-label">Cash</label>
+                                                        </div>
+                                                        <div class="form-check d-inline-block">
+                                                            <input type="radio" id="accrual-method" class="form-check-input" name="accounting_method" checked>
+                                                            <label for="accrual-method" class="form-check-label">Accrual</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-12 d-flex justify-content-center">
+                                                        <button type="button" class="nsm-button primary">
+                                                            Run Report
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </ul>                                            
                                         </div>
                                     </div>
                                 </div>
@@ -436,31 +634,6 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-lg-12">
-                                    <span id="notesContent" class="text-muted">Loading Notes...</span>
-                                    <form id="addNotesForm" method="POST" style="display: none;">
-                                        <div class="row">
-                                            <div class="col-sm-12 mt-1 mb-3">
-                                                <div class="form-group">
-                                                    <textarea id="NOTES" class="form-control" maxlength="4000"></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-lg-12">
-                                                <div class="float-start noteCharMax">
-                                                    4000 characters max
-                                                </div>
-                                                <div class="float-end">
-                                                    <button type="button" id="cancelNotes" class="nsm-button">Cancel</button>
-                                                    <button type="submit" class="nsm-button primary noteSaveButton">Save</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>                            
                             <div class="nsm-card-footer text-center">
                                 <p class="m-0">Accrual basis <?=date("l, F j, Y h:i A eP")?></p>
                             </div>

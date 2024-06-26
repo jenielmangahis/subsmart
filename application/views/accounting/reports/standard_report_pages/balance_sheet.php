@@ -1,5 +1,6 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('accounting/reports/reports_assets/report_css'); ?>
+
 <div class="row page-content g-0">
     <div class="col-12">
         <div class="nsm-page">
@@ -241,7 +242,7 @@
                                             </ul>
                                             <button class="nsm-button addNotes">Add Notes</button>
                                             <button type="button" class="nsm-button" id="editButton">
-                                                <span>Edit Title</span>
+                                                <span>Edit titles</span>
                                             </button>
                                         </div>
                                     </div>
