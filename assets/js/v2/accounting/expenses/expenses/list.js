@@ -19,28 +19,6 @@ $('.dropdown-menu#table-rows a.dropdown-item').on('click', function() {
     });
 });
 
-$(".schedule-payment").on("click", function () {
-    $.get(
-        base_url + "accounting/get-other-modals/receive_payment_modal",
-        function (res) {
-        if ($("div#modal-container").length > 0) {
-            $("div#modal-container").html(res);
-        } else {
-            $("body").append(`
-                    <div id="modal-container"> 
-                        ${res}
-                    </div>
-                `);
-        }
-
-        modalName = "#receivePaymentModal";
-        initModalFields("receivePaymentModal");
-
-        $("#receivePaymentModal").modal("show");
-        }
-    );
-});
-
 $('#attach_file_modal select').select2({
     minimumResultsForSearch: -1,
     dropdownParent: $('#attach_file_modal')
