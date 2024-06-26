@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    var REPORT_ID = 18;
+    var REPORT_ID = 18;  
     var REPORT_CATEGORY = "accounts_receivable_aging_summary";
     var theadTotalColumn = $("#balance-sheet-comparison").find('tr:first th').length;
     var businessLogoURL = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
@@ -45,7 +45,7 @@
                 var newTitle = inputElem.value;
 
                 $.ajax({
-                    url: base_url + 'accounting/reports/_update_title',
+                    url: base_url + 'accounting/reports/_update_title', //for update title
                     type: 'POST',
                     data: {
                         report_id: REPORT_ID,
