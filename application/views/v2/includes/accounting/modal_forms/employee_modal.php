@@ -1,4 +1,4 @@
-<div class="modal fade nsm-modal fade" id="employee-modal" tabindex="-1" aria-hidden="true">
+<div class="modal fade nsm-modal fade" id="employee-modal" tabindex="-1" aria-hidden="true" style="z-index: 1050;">
     <div class="modal-dialog modal-lg">
         <form method="POST" id="add_employee_form">
             <div class="modal-content">

@@ -918,12 +918,15 @@ $(document).on('click', '.btn-add-new-commision', function(e){
             $("#commission-settings tbody tr:last-child select").each(function() {
                 $(this).select2({
                     minimumResultsForSearch: -1,
-                    dropdownParent: $("#add_employee_modal")
+                    dropdownParent: $("#employee-modal")
+                }).on('select2:open', function() {
+                    $('.select2-dropdown').css('z-index', 1000);
                 });
             });
         },
     });
-});
+}); 
+
 
 $(document).on("click", ".btn-delete-commission-setting-row", function(e){  
     var tableRow = $(this).closest('tr'); 

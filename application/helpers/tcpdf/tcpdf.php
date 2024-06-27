@@ -18249,7 +18249,12 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 						if ($rowspan > 1) {
 							$trsid = array_push($dom[$table_el]['rowspans'], array('trid' => $trid, 'rowspan' => $rowspan, 'mrowspan' => $rowspan, 'colspan' => $colspan, 'startpage' => $this->page, 'startcolumn' => $this->current_column, 'startx' => $this->x, 'starty' => $this->y));
 						}
+						if (!isset($dom[$trid]['cellpos']) || !is_array($dom[$trid]['cellpos'])) {
+							$dom[$trid]['cellpos'] = [];
+						}
+
 						$cellid = array_push($dom[$trid]['cellpos'], array('startx' => $this->x));
+						// $cellid = array_push($dom[$trid]['cellpos'], array('startx' => $this->x));
 						if ($rowspan > 1) {
 							$dom[$trid]['cellpos'][($cellid - 1)]['rowspanid'] = ($trsid - 1);
 						}
