@@ -17,7 +17,7 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12" style="margin-bottom: 10px;">
                                         <label for="filter-report-period">Report period</label>
                                         <select class="nsm-field form-select" name="filter_report_period" id="filter-report-period">
                                             <option value="all-dates">All Dates</option>
@@ -55,7 +55,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12" style="margin-bottom: 10px;">
                                         <label for="filter-as-of">As of</label>
                                         <div class="nsm-field-group calendar">
                                             <input type="text" class="nsm-field form-control datepicker" value="<?=date("m/d/Y")?>" id="filter-as-of">
@@ -63,7 +63,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12" style="margin-bottom: 10px;">
                                         <label for="filter-display-columns-by">Show non-zero or active only</label>
                                         <div class="dropdown">
                                             <button type="button" class="dropdown-toggle nsm-button w-100 m-0" data-bs-toggle="dropdown" style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
@@ -103,7 +103,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12" style="margin-bottom: 10px;">
                                         <label for="" class="w-100">Aging method</label>
                                         <div class="form-check d-inline-block">
                                             <input type="radio" id="current-method" class="form-check-input" name="aging_method">
@@ -116,13 +116,13 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-12" style="margin-bottom: 10px;">
                                         <label for="filter-days-per-aging-period">Days per aging period</label>
                                         <input type="text" class="nsm-field form-control datepicker" name="filter_days_per_aging_period" value="30" id="filter-days-per-aging-period">
                                     </div>
                                 </div>
                                 <div class="row grid-mb">
-                                    <div class="col-12">
+                                    <div class="col-12" style="margin-bottom: 10px;">
                                         <label for="filter-number-of-period">Number of periods</label>
                                         <input type="text" class="nsm-field form-control datepicker" name="filter_number_of_periods" value="4" id="filter-number-of-period">
                                     </div>
@@ -135,12 +135,14 @@
                                     </div>
                                 </div>
                             </ul>
+                            <!--
                             <button type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-customize'></i> Customize
                             </button>
                             <button type="button" class="nsm-button primary">
                                 <i class='bx bx-fw bx-save'></i> Save customization
                             </button>
+                            -->
                         </div>
                     </div>
                 </div>
@@ -150,9 +152,9 @@
                         <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
                                 <div class="row">
-                                    <div class="col-12 col-md-6 grid-mb">
+                                    <div class="col-12 col-md-7 grid-mb">
                                         <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button">
+                                            <button type="button" class="nsm-button" id="collapseButton">
                                                 <span>Collapse</span>
                                             </button>
                                             <button type="button" class="nsm-button" data-bs-toggle="dropdown">
@@ -172,12 +174,15 @@
                                                     <label for="sort-desc" class="form-check-label">Total in descending order</label>
                                                 </div>
                                             </ul>
-                                            <button type="button" class="nsm-button">
-                                                <span>Add notes</span>
+                                            <button type="button" class="nsm-button addNotes">
+                                                <span>Add Notes</span>
                                             </button>
+                                            <button type="button" class="nsm-button" id="editButton">
+                                                <span>Edit Title</span>
+                                            </button>                                            
                                         </div>
                                     </div>
-                                    <div class="col-12 col-md-6 grid-mb text-end">
+                                    <div class="col-12 col-md-5 grid-mb text-end">
                                         <div class="nsm-page-buttons page-button-container">
                                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#print_accounts_modal">
                                                 <i class='bx bx-fw bx-envelope'></i>
@@ -208,8 +213,13 @@
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?=$clients->business_name?></span></h4>
+                                        <!-- <h4 class="text-center fw-bold"><span class="company-name"><?php //echo $clients->business_name?></span></h4> -->
+                                        <h4 class="text-center fw-bold" id="businessName">                                            
+                                            <span class="company-name"><?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : $companyInfo->business_name; ?></span>
+                                        </h4>                                         
                                     </div>
+
+                                   
                                     <div class="col-12 grid-mb text-center">
                                         <p class="m-0 fw-bold">A/R Aging Summary</p>
                                         <p>As of <?=date("F d, Y")?></p>
@@ -251,6 +261,31 @@
                                     </tbody>
                                 </table>
                             </div>
+                            <div class="row mb-3">
+                                <div class="col-lg-12">
+                                    <span id="notesContent" class="text-muted">Loading Notes...</span>
+                                    <form id="addNotesForm" method="POST" style="display: none;">
+                                        <div class="row">
+                                            <div class="col-sm-12 mt-1 mb-3">
+                                                <div class="form-group">
+                                                    <textarea id="NOTES" class="form-control" maxlength="4000"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="float-start noteCharMax">
+                                                    4000 characters max
+                                                </div>
+                                                <div class="float-end">
+                                                    <button type="button" id="cancelNotes" class="nsm-button">Cancel</button>
+                                                    <button type="submit" class="nsm-button primary noteSaveButton">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>   
                             <div class="nsm-card-footer text-center">
                                 <p class="m-0"><?=date("l, F j, Y h:i A eP")?></p>
                             </div>
@@ -262,4 +297,51 @@
     </div>
 </div>
 
+<?php include viewPath('accounting/reports/reports_assets/accounting_receivable_aging_summary_js'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
+
+<script>
+$(function(){
+    var isCollapsed = true;
+
+    $("#collapseButton").click(function() {
+        if (isCollapsed) {
+            $(".collapse").collapse('show');
+            $("#collapseButton span").text('Uncollapse');
+            updateCarets('show');
+        } else {
+            $(".collapse").collapse('hide');
+            $("#collapseButton span").text('Collapse');
+            updateCarets('hide');
+        }
+        isCollapsed = !isCollapsed;
+    });
+
+    $(".collapse-row").click(function() {
+        var target = $(this).data("bs-target");
+        $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
+        $(target).collapse('toggle');
+    });
+
+    function updateCarets(action) {
+        $(".collapse-row").each(function() {
+            var target = $(this).data("bs-target");
+            var icon = $(this).find("i");
+            if (action === 'show') {
+                icon.removeClass("bx-caret-right").addClass("bx-caret-down");
+            } else {
+                icon.removeClass("bx-caret-down").addClass("bx-caret-right");
+            }
+        });
+    }
+
+    $("#compact-display").change(function() {
+        if ($(this).is(":checked")) {
+            $("#reportTable").addClass("compact-table");
+        } else {
+            $("#reportTable").removeClass("compact-table");
+        }
+    });
+
+});
+</script>

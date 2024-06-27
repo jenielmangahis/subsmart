@@ -290,7 +290,7 @@
                         <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>CC</h6>
-                                <input id="emailCC" class="form-control" type="email" placeholder="Carbon Copy" required>
+                                <input id="emailCC" class="form-control" type="email" placeholder="Carbon Copy">
                             </div>
                         </div>
                         <div class="col-sm-12 mt-3">

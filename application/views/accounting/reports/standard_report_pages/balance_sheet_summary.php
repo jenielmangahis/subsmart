@@ -597,91 +597,19 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="row">
-                                <div class="col-md-2 mb-3">
-                                    <label class="mb-1 fw-xnormal">Logo</label>
-                                    <select id="showHideLogo" name="showHideLogo" class="nsm-field form-select">
-                                        <option value="1" selected>Show</option>
-                                        <option value="0">Hide</option>
-                                    </select>
-                                </div>
-                                <!-- Date Picker -->
-                                <!-- <div class="col-md-3 mb-3">
-                                    <label for="filter-date-from">From</label>
-                                    <div class="">
-                                        <input type="date" id="filter-date-from" class="form-control nsm-field date" data-type="filter-date-from">
-                                    </div>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="filter-date-to">To</label>
-                                    <div class="">
-                                        <input type="date" id="filter-date-to" class="form-control nsm-field date" data-type="filter-date-to">
-                                    </div>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="filter-date">Date</label>
-                                    <div class="">
-                                        <input type="date" id="filter-date" class="form-control nsm-field date" data-type="filter-date">
-                                    </div>
-                                </div> -->
-                                <div class="col-md-5 mb-3">
+                                <div class="col-md-6 mb-3">
                                     <label class="mb-1 fw-xnormal">Report Title</label>
                                     <div class="input-group">
                                         <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
-                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>" required>
+                                        <input id="reportTitle" type="text" class="company-name nsm-field form-control" value="<?= $reportSettings && $reportSettings->title != '' ? htmlspecialchars($reportSettings->title, ENT_QUOTES, 'UTF-8') : htmlspecialchars($clients->business_name, ENT_QUOTES, 'UTF-8'); ?>">
                                     </div>
                                 </div>
-                                <div class="col-md-5 mb-3">
-                                    <label class="mb-1 fw-xnormal">Report Name</label>
-                                    <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" checked></div>
-                                        <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo $page->title ?>" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label class="mb-1 fw-xnormal">Header Align</label>
-                                    <select name="header_align" id="header-align" class="nsm-field form-select">
-                                        <option value="L">Left</option>
-                                        <option value="C" selected>Center</option>
-                                        <option value="R">Right</option>
+                                <div class="col-md-6 mb-3">
+                                    <label class="mb-1 fw-xnormal">Display Density</label>
+                                    <select id="displayDensity" name="displayDensity" class="nsm-field form-select">
+                                        <option value="1" selected>Normal</option>
+                                        <option value="0" id="compact-display">Compact</option>
                                     </select>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label class="mb-1 fw-xnormal">Footer Align</label>
-                                    <select name="footer_align" id="footer-align" class="nsm-field form-select">
-                                        <option value="L">Left</option>
-                                        <option value="C" selected>Center</option>
-                                        <option value="R">Right</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2 mb-3">
-                                    <label class="mb-1 fw-xnormal">Page Size</label>
-                                    <select name="page_size" id="page-size" class="nsm-field form-select">
-                                        <option value="10" selected>10</option>
-                                        <option value="25">25</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                        <option value="500">500</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="col-md-12">
-                                        <label class="mb-1 fw-xnormal">Sort By</label>
-                                        <div class="input-group">
-                                            <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="id" selected>Default</option>
-                                                <option value="date_changed">Date Changed</option>
-                                                <option value="user">User</option>
-                                                <option value="event">Event</option>
-                                                <option value="name">Name</option>
-                                                <option value="date">Date</option>
-                                                <option value="amount">Amount</option>
-                                            </select>
-                                            <select name="sort_order" id="sort-order" class="nsm-field form-select">
-                                                <option value="ASC">ASC</option>
-                                                <option value="DESC" selected>DESC</option>
-                                            </select>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -690,11 +618,10 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="float-start">
-                                <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
                             </div>
                             <div class="float-end">
                                 <button type="submit" class="nsm-button primary settingsApplyButton">Apply</button>
-                                <!-- <button type="button" class="nsm-button primary printPDF">Print</button> -->
                             </div>
                         </div>
                     </div>
@@ -707,14 +634,6 @@
 
 <?php include viewPath('v2/includes/footer'); ?>
 <?php include viewPath('accounting/reports/reports_assets/balance_sheet_summary_js'); ?>
-
-<style>
-    .compact-table td,
-    .compact-table th {
-        padding: 4px 8px;
-        font-size: 12px;
-    }
-</style>
 
 <script type="text/javascript">
     var baseUrl = '<?= base_url() ?>';
@@ -758,13 +677,5 @@
                 }
             });
         }
-
-        $("#compact-display").change(function() {
-            if ($(this).is(":checked")) {
-                $("#reportTable").addClass("compact-table");
-            } else {
-                $("#reportTable").removeClass("compact-table");
-            }
-        });
     });
 </script>

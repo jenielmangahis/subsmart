@@ -199,12 +199,6 @@
                                     </div>
                                 </div>
                             </ul>
-                            <button type="button" class="nsm-button">
-                                <i class='bx bx-fw bx-customize'></i> Customize
-                            </button>
-                            <button type="button" class="nsm-button primary">
-                                <i class='bx bx-fw bx-save'></i> Save customization
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -238,10 +232,7 @@
                                             </ul>
                                             <button type="button" class="nsm-button addNotes">
                                                 <span>Add notes</span>
-                                            </button>
-                                            <button type="button" class="nsm-button" id="editButton">
-                                                <span>Edit Title</span>
-                                            </button>
+                                            </button>                                           
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6 grid-mb text-end">
@@ -259,29 +250,19 @@
                                                 <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-excel">Export to Excel</a></li>
                                                 <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-pdf">Export to PDF</a></li>
                                             </ul>
-                                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
-                                                <i class="bx bx-fw bx-cog"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end p-3">
-                                                <p class="m-0">Display density</p>
-                                                <div class="form-check">
-                                                    <input type="checkbox" id="compact-display" class="form-check-input">
-                                                    <label for="compact-display" class="form-check-label">Compact</label>
-                                                </div>
-                                            </ul>
+                                            <button class="nsm-button border-0 primary" data-bs-toggle="modal" data-bs-target="#reportSettings"><i class="bx bx-fw bx-cog"></i></button>                                            
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="row">
-                                    <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold" id="businessName">                                            
-                                            <span class="company-name"><?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : $clients->business_name; ?></span>
-                                        </h4>
-                                    </div>
-                                    <div class="col-12 grid-mb text-center">
-                                        <p class="m-0 fw-bold">Balance Sheet Comparison</p>
-                                        <p>As of <?=date("F d, Y")?></p>
+                                <div class="row mb-4">
+                                    <div class="col-lg-12 headerInfo">
+                                        <img id="businessLogo" src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
+                                        <div class="reportTitleInfo">
+                                            <h3 id="businessName"><?= $reportSettings && $reportSettings->company_name != '' ? $reportSettings->company_name : $clients->business_name; ?></h3>
+                                            <h5><strong id="reportName"><?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : 'Balance Sheet Comparison'; ?></strong></h5>
+                                            <h5><small id="reportDate">As of <?php echo date('F d, Y'); ?></small></h5>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -493,48 +474,39 @@
             <div class="modal-body">
                 <form id="reportSettingsForm" method="POST">
                     <div class="row">
-                        <div class="col-lg-12">                            
+                        <div class="col-lg-12">
                             <div class="row">
-                                <div class="col-md-3 mb-3">
+                                                              
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Company Name</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
+                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?= $reportSettings && $reportSettings->company_name != '' ? $reportSettings->company_name : $clients->business_name; ?>" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Report Name</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" checked></div>
+                                        <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : 'Balance Sheet Comparison'; ?>" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="filter-date">Date</label>
+                                    <div class="">
+                                        <input type="date" id="filter-date" class="form-control nsm-field date" value="<?= $reportSettings && $reportSettings->report_date_text != '' ? date("Y-m-d",strtotime($reportSettings->report_date_text)) : date("Y-m-d"); ?>" data-type="filter-date">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
                                     <label class="mb-1 fw-xnormal">Logo</label>
                                     <select id="showHideLogo" name="showHideLogo" class="nsm-field form-select">
                                         <option value="1" selected>Show</option>
                                         <option value="0">Hide</option>
                                     </select>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="filter-date-from">From</label>
-                                    <div class="">
-                                        <input type="date" id="filter-date-from" class="form-control nsm-field date" data-type="filter-date-from">
-                                    </div>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="filter-date-to">To</label>
-                                    <div class="">
-                                        <input type="date" id="filter-date-to" class="form-control nsm-field date" data-type="filter-date-to">
-                                    </div>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="filter-date">Date</label>
-                                    <div class="">
-                                        <input type="date" id="filter-date" class="form-control nsm-field date" data-type="filter-date">
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="mb-1 fw-xnormal">Company Name</label>
-                                    <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
-                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="mb-1 fw-xnormal">Report Name</label>
-                                    <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" checked></div>
-                                        <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo $page->title ?>" required>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 mb-3">
+                                </div>  
+                                <div class="col-md-4 mb-3">
                                     <label class="mb-1 fw-xnormal">Header Align</label>
                                     <select name="header_align" id="header-align" class="nsm-field form-select">
                                         <option value="L">Left</option>
@@ -542,7 +514,7 @@
                                         <option value="R">Right</option>
                                     </select>
                                 </div>
-                                <div class="col-md-3 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="mb-1 fw-xnormal">Footer Align</label>
                                     <select name="footer_align" id="footer-align" class="nsm-field form-select">
                                         <option value="L">Left</option>
@@ -550,30 +522,14 @@
                                         <option value="R">Right</option>
                                     </select>
                                 </div>
-                                <div class="col-md-2 mb-3">
-                                    <label class="mb-1 fw-xnormal">Page Size</label>
-                                    <select name="page_size" id="page-size" class="nsm-field form-select">
-                                        <option value="10" selected>10</option>
-                                        <option value="25">25</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                        <option value="500">500</option>
-                                    </select>
-                                </div>
                                 <div class="col-md-4 mb-3">
                                     <div class="col-md-12">
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="id" selected>Default</option>
-                                                <option value="date_changed">Date Changed</option>
-                                                <option value="user">User</option>
-                                                <option value="event">Event</option>
-                                                <option value="name">Name</option>
-                                                <option value="date">Date</option>
-                                                <option value="amount">Amount</option>
+                                                <option value="prof_id" selected>Total</option>
                                             </select>
-                                            <select name="sort_order" id="sort-order" class="nsm-field form-select">
+                                            <select name="sort_order" id="sort-order" class="nsm-field form-select" style="margin-left:2px;">
                                                 <option value="ASC">ASC</option>
                                                 <option value="DESC" selected>DESC</option>
                                             </select>
@@ -734,7 +690,6 @@
 </div>
 <!-- END: EMAIL REPORT MODAL -->
 <!-- END: MODALS -->
-
 
 </div>
 <?php include viewPath('accounting/reports/reports_assets/balance_sheet_comparison_js'); ?>
