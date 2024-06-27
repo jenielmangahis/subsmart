@@ -1,74 +1,82 @@
 <script type="text/javascript">
     // balance_sheet_summary_js.php
     document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('editButton').addEventListener('click', function() {
-            var businessNameElem = document.getElementById('businessName');
-            var companyNameSpan = businessNameElem.querySelector('.company-name');
-            var originalName = companyNameSpan.textContent;
+        const reportTitleElem = document.getElementById('reportTitle');
+        const displayDensityElem = document.getElementById('displayDensity');
+        const reportTable = document.getElementById('reportTable');
+        const settingsApplyButton = document.querySelector('.settingsApplyButton');
 
-            var inputElem = document.createElement('input');
-            inputElem.type = 'text';
-            inputElem.value = originalName;
-            inputElem.className = 'company-name-input';
+        const saveDisplayDensitySetting = (value) => {
+            localStorage.setItem('displayDensity', value);
+        };
 
-            var saveButton = document.createElement('button');
-            saveButton.type = 'button';
-            saveButton.className = 'nsm-button primary';
-            saveButton.textContent = 'Save';
+        const loadDisplayDensitySetting = () => {
+            const savedDensity = localStorage.getItem('displayDensity');
+            if (savedDensity) {
+                displayDensityElem.value = savedDensity;
+                applyDisplayDensity(savedDensity);
+            }
+        };
 
-            var cancelButton = document.createElement('button');
-            cancelButton.type = 'button';
-            cancelButton.className = 'nsm-button';
-            cancelButton.textContent = 'Cancel';
+        const applyDisplayDensity = (density) => {
+            if (density === '0') {
+                reportTable.classList.add('compact-table');
+            } else {
+                reportTable.classList.remove('compact-table');
+            }
+        };
 
-            var buttonContainer = document.createElement('div');
-            buttonContainer.className = 'button-group';
-            buttonContainer.appendChild(saveButton);
-            buttonContainer.appendChild(cancelButton);
+        const saveTitle = () => {
+            const newTitle = reportTitleElem.value;
 
-            businessNameElem.innerHTML = '';
-            businessNameElem.appendChild(inputElem);
-            businessNameElem.appendChild(buttonContainer);
+            settingsApplyButton.disabled = true;
+            settingsApplyButton.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Applying changes...';
 
-            inputElem.focus();
-
-            saveButton.addEventListener('click', function() {
-                var newTitle = inputElem.value;
-
-                $.ajax({
-                    url: base_url + 'accounting/reports/_update_title',
-                    type: 'POST',
-                    data: {
-                        report_id: REPORT_ID,
-                        title: newTitle
-                    },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.is_success == 1) {
-                            businessNameElem.innerHTML = '<span class="company-name">' + newTitle + '</span>';
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                html: 'An unknown error occurred.'
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('AJAX Error:', status, error);
+            $.ajax({
+                url: base_url + 'accounting/reports/_update_title',
+                type: 'POST',
+                data: {
+                    report_id: REPORT_ID,
+                    title: newTitle
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.is_success === 1) {
+                        saveDisplayDensitySetting(displayDensityElem.value);
+                        location.reload();
+                    } else {
                         Swal.fire({
                             icon: 'error',
                             title: 'Error!',
-                            html: 'An error occurred while making the AJAX request. Please try again.'
+                            html: 'An unknown error occurred.'
                         });
                     }
-                });
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: 'An error occurred while making the AJAX request. Please try again.'
+                    });
+                },
+                complete: function() {
+                    settingsApplyButton.disabled = false;
+                    settingsApplyButton.innerHTML = 'Apply';
+                }
             });
+        };
 
-            cancelButton.addEventListener('click', function() {
-                businessNameElem.innerHTML = '<span class="company-name">' + originalName + '</span>';
-            });
+        document.getElementById('reportSettingsForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            saveTitle();
         });
+
+        displayDensityElem.addEventListener('change', function() {
+            applyDisplayDensity(this.value);
+        });
+
+        loadDisplayDensitySetting();
     });
 
     var BASE_URL = window.location.origin;
@@ -137,3 +145,10 @@
             });
     });
 </script>
+<style>
+    .compact-table td,
+    .compact-table th {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+</style>

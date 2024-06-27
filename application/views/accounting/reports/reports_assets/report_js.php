@@ -18,10 +18,12 @@
     var REPORT_CATEGORY = "<?php echo $reportCategory; ?>";
     var REPORT_ID = "<?php echo $reportTypeId; ?>";
     // =========================
-    var theadColumnNames = $(`#<?php echo $tableID; ?> th`).map(function() {
-        return $(this).text();
+    var theadColumnNames = $(`#<?php echo $tableID; ?> thead tr:first td`).map(function() {
+    return $(this).text();
     }).get();
-    var theadTotalColumn = $("#<?php echo $tableID; ?>").find('tr:first th').length;
+    var theadTotalColumn = $("#<?php echo $tableID; ?>").find('tr:first td').length;
+    // var theadTotalColumnLength = $("#<?php echo $tableID; ?>").find('thead tr:first td').length;
+    // var theadTotalColumn = [theadTotalColumnLength];
     var businessLogoURL = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
     var businessName = $('input[name="company_name"]').val();
     var reportName = $('input[name="report_name"]').val();
@@ -58,10 +60,12 @@
 
     // Render Report Data Script
     function renderReportList() {
-        theadColumnNames = $(`#<?php echo $tableID; ?> th`).map(function() {
-            return $(this).text();
-        }).get();
-        theadTotalColumn = $("#<?php echo $tableID; ?>").find('tr:first th').length;
+        var theadColumnNames = $(`#<?php echo $tableID; ?> thead tr:first td`).map(function() {
+    return $(this).text();
+    }).get()
+        theadTotalColumn = $("#<?php echo $tableID; ?>").find('tr:first td').length;
+        // theadTotalColumnLength = $("#<?php echo $tableID; ?>").find('thead tr:first td').length;
+        // theadTotalColumnArray = [theadTotalColumnLength];
         businessLogoURL = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
         businessName = $('input[name="company_name"]').val();
         reportName = $('input[name="report_name"]').val();

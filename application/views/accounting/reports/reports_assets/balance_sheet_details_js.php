@@ -405,4 +405,90 @@
             });
         });
     });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const reportTitleElem = document.getElementById('reportTitle');
+        const displayDensityElem = document.getElementById('displayDensity');
+        const reportTable = document.getElementById('reportTable');
+        const settingsApplyButton = document.querySelector('.settingsApplyButton');
+
+        const saveDisplayDensitySetting = (value) => {
+            localStorage.setItem('displayDensity', value);
+        };
+
+        const loadDisplayDensitySetting = () => {
+            const savedDensity = localStorage.getItem('displayDensity');
+            if (savedDensity) {
+                displayDensityElem.value = savedDensity;
+                applyDisplayDensity(savedDensity);
+            }
+        };
+
+        const applyDisplayDensity = (density) => {
+            if (density === '0') {
+                reportTable.classList.add('compact-table');
+            } else {
+                reportTable.classList.remove('compact-table');
+            }
+        };
+
+        const saveTitle = () => {
+            const newTitle = reportTitleElem.value;
+
+            settingsApplyButton.disabled = true;
+            settingsApplyButton.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Applying changes...';
+
+            $.ajax({
+                url: base_url + 'accounting/reports/_update_title',
+                type: 'POST',
+                data: {
+                    report_id: REPORT_ID,
+                    title: newTitle
+                },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.is_success === 1) {
+                        saveDisplayDensitySetting(displayDensityElem.value);
+                        location.reload();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: 'An unknown error occurred.'
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('AJAX Error:', status, error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: 'An error occurred while making the AJAX request. Please try again.'
+                    });
+                },
+                complete: function() {
+                    settingsApplyButton.disabled = false;
+                    settingsApplyButton.innerHTML = 'Apply';
+                }
+            });
+        };
+
+        document.getElementById('reportSettingsForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            saveTitle();
+        });
+
+        displayDensityElem.addEventListener('change', function() {
+            applyDisplayDensity(this.value);
+        });
+
+        loadDisplayDensitySetting();
+    });
 </script>
+<style>
+    .compact-table td,
+    .compact-table th {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+</style>

@@ -89,12 +89,12 @@
                                     </div>
                                 </div>
                             </ul>
-                            <button type="button" class="nsm-button">
+                            <!-- <button type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-customize'></i> Customize
                             </button>
                             <button type="button" class="nsm-button primary">
                                 <i class='bx bx-fw bx-save'></i> Save customization
-                            </button>
+                            </button> -->
                         </div>
                     </div>
                 </div>
@@ -153,9 +153,7 @@
                                                 <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-excel">Export to Excel</a></li>
                                                 <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-pdf">Export to PDF</a></li>
                                             </ul>
-                                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
-                                                <i class="bx bx-fw bx-cog"></i>
-                                            </button>
+                                            <button class="nsm-button border-0 primary top-button" data-bs-toggle="modal" data-bs-target="#reportSettings"><i class="bx bx-fw bx-cog icon-top"></i></button>
                                             <ul class="dropdown-menu dropdown-menu-end p-3 w-25">
                                                 <p class="m-0">Display density</p>
                                                 <div class="form-check">
@@ -267,7 +265,7 @@
 
                                 <div class="row">
                                     <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span class="company-name"><?= $clients->business_name ?></span></h4>
+                                        <h4 class="text-center fw-bold"><span class="company-name"><?= $reportSettings && $reportSettings->title != '' ? htmlspecialchars($reportSettings->title, ENT_QUOTES, 'UTF-8') : htmlspecialchars($clients->business_name, ENT_QUOTES, 'UTF-8'); ?></span></h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
                                         <p class="m-0 fw-bold">Balance Sheet Detail</p>
@@ -628,6 +626,76 @@
     </div>
 </div>
 <!-- END: EMAIL REPORT MODAL -->
+<!-- Modal for Report Settings -->
+<div class="modal" id="reportSettings" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Report Settings</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="reportSettingsForm" method="POST">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Report Title</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
+                                        <input id="reportTitle" type="text" class="company-name nsm-field form-control" value="<?= $reportSettings && $reportSettings->title != '' ? htmlspecialchars($reportSettings->title, ENT_QUOTES, 'UTF-8') : htmlspecialchars($clients->business_name, ENT_QUOTES, 'UTF-8'); ?>">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Display Density</label>
+                                    <select id="displayDensity" name="displayDensity" class="nsm-field form-select">
+                                        <option value="1" selected>Default</option>
+                                        <option value="0" id="compact-display">Compact</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Change Columns</label>
+                                    <select id="displayDensity" name="displayDensity" class="nsm-field form-select">
+                                        <option value="date" selected>Date</option>
+                                        <option value="transactionType">Transaction Type</option>
+                                        <option value="num">Num</option>
+                                        <option value="createDate">Create Date</option>
+                                        <option value="createdBy">Created By</option>
+                                        <option value="lastModified">Last Modified</option>
+                                        <option value="lastModifiedBy">Last Modified By</option>
+                                        <option value="name">Name</option>
+                                        <option value="memoDesc">Memo/Description</option>
+                                        <option value="split">Split</option>
+                                        <option value="debit">Debit</option>
+                                        <option value="credit">Credit</option>
+                                        <option value="paymentMethod">Payment Method</option>
+                                        <option value="amount">Amount</option>
+                                        <option value="balance">Balance</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <p class="m-0"><a href="#" style="text-decoration: none">Reorder columns</a></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="mt-0">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="float-start">
+                                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                            </div>
+                            <div class="float-end">
+                                <button type="submit" class="nsm-button primary settingsApplyButton">Apply</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal for Report Settings -->
 
 <?php include viewPath('v2/includes/footer'); ?>
 <?php include viewPath('accounting/reports/reports_assets/balance_sheet_details_js'); ?>
