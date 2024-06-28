@@ -406,43 +406,43 @@
                 ?> </div>
         </div>
 
-        <div class="row  g-3 grid-row-mb nsm-draggable-container" id="nsm_widgets">
+        <div class="row  g-3 grid-row-mb nsm-draggable-container-sortable-main" id="nsm_widgets">
            <?php
-                            if (count($main_widgets) > 0) {
-                                foreach ($main_widgets as $wids) {
-                                    if ($wids->wu_is_main) {
-                                        if ($wids->wu_widget_id == 26) {
-                                            echo '<div class="col-12 col-lg-4" id="droppable">';
-                                            $data['class'] = 'nsm-card nsm-grid large';
-                                        } else {
-                                            $data['class'] = 'nsm-card nsm-grid med primary';
-                                            echo '<div class="col-12 col-lg-4" id="droppable">';
-                                        }
-
-                                        $data['isMain'] = true;
-                                        $data['id'] = $wids->w_id;
-                                        $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
-
-                                        if ($wids->w_name === 'Expense') {
-                                            $data = set_expense_graph_data($data);
-                                        }
-
-                                        if ($wids->w_name === 'Bank') {
-                                            $data = set_bank_widget_data($data);
-                                        }
-
-                                        $this->load->view('v2/' . $wids->w_view_link, $data);
-
-                                        echo '</div>';
-                                    }
-                                }
+                if (count($main_widgets) > 0) {
+                    foreach ($main_widgets as $wids) {
+                        if ($wids->wu_is_main) {
+                            if ($wids->wu_widget_id == 26) {
+                                echo '<div class="col-12 col-lg-4" id="widget-'.$wids->wu_widget_id.'">';
+                                $data['class'] = 'nsm-card nsm-grid large';
+                            } else {                                            
+                                echo '<div class="col-12 col-lg-4" id="widget-'.$wids->wu_widget_id.'">';                                            
+                                $data['class'] = 'nsm-card nsm-grid med primary';
                             }
-                            ?>
+
+                            $data['isMain'] = true;
+                            $data['id'] = $wids->w_id;
+                            $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
+
+                            if ($wids->w_name === 'Expense') {
+                                $data = set_expense_graph_data($data);
+                            }
+
+                            if ($wids->w_name === 'Bank') {
+                                $data = set_bank_widget_data($data);
+                            }
+
+                            $this->load->view('v2/' . $wids->w_view_link, $data);
+
+                            echo '</div>';
+                        }
+                    }
+                }
+            ?>
 
             <?php
             foreach ($widgets as $wids) {
                 if (!$wids->wu_is_main && !$wids->w_main) {
-                    echo '<div class="col-12 col-lg-4">';
+                    echo '<div class="col-12 col-lg-4" data-order="'.$wids->wu_order.'" id="widget-'.$wids->wu_widget_id.'">';                           
                     $data['class'] = 'nsm-card nsm-grid';
                     $data['isMain'] = false;
                     $data['id'] = $wids->w_id;

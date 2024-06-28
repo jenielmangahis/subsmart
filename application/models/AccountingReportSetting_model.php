@@ -40,6 +40,12 @@ class AccountingReportSetting_model extends MY_Model
         return $this->db->update($this->table, $data);
     }
 
+    public function updateByReportTypeId($report_type_id, $data)
+    {
+        $this->db->where('report_type_id', $report_type_id);
+        return $this->db->update($this->table, $data);        
+    }
+
     public function create($data)
     {
         return $this->db->insert($this->table, $data);

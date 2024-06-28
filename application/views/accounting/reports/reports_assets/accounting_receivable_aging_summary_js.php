@@ -1,13 +1,13 @@
 <script type="text/javascript">
     var REPORT_ID = 18;  
-    var REPORT_CATEGORY = "accounts_receivable_aging_summary";
-    var theadTotalColumn = $("#balance-sheet-comparison").find('tr:first th').length;
-    var businessLogoURL = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
-    var businessName = $('input[name="company_name"]').val();
-    var reportName = $('input[name="report_name"]').val();
-    var reportDate = $("#reportDate").text();
-    var filename = (businessName + '_' + reportName).replace(/[^\p{L}\p{N}_-]+/gu, '_');
-    var notes = $("#notesContent").text();
+    var REPORT_CATEGORY  = "accounts_receivable_aging_summary";
+    var theadTotalColumn = $("#accounts-receivable-aging-summary").find('tr:first th').length;
+    var businessLogoURL  = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
+    var businessName     = $('input[name="company_name"]').val();
+    var reportName       = $('input[name="report_name"]').val();
+    var reportDate       = $("#report-date").text();
+    var filename         = (businessName + '_' + reportName).replace(/[^\p{L}\p{N}_-]+/gu, '_');
+    var notes            = $("#notesContent").text();
 
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('editButton').addEventListener('click', function() {
@@ -77,6 +77,55 @@
             cancelButton.addEventListener('click', function() {
                 businessNameElem.innerHTML = '<span class="company-name">' + originalName + '</span>';
             });
+        });
+
+        $(".settingsApplyButton").on( "click", function() {
+            var report_type_id   = REPORT_ID;
+            var report_category  = REPORT_CATEGORY;
+            var company_name     = $('#company-name').val();
+            var title            = $('#report-name').val();
+            var report_date_text = $('#report-date').val();
+            var show_logo        = $('#show-hide-logo').val();
+            var header_align     = $('#header-align').val();
+            var footer_align     = $('#footer-align').val();
+            var sort_by          = $('#sort-by').val();
+            var sort_asc_desc    = $('#sort-order').val();
+            var compact_display  = $('#compact-display').val();
+
+            $.ajax({
+                 type: "POST",
+                 url:  base_url + "accounting/reports/_update_report_settings",
+                 data: {
+                    report_type_id: report_type_id,
+                    company_name: company_name,
+                    title: title,
+                    report_date_text: report_date_text,
+                    show_logo: show_logo,
+                    header_align: header_align,
+                    footer_align: footer_align,
+                    sort_by: sort_by,
+                    sort_asc_desc: sort_asc_desc,
+                    compact_display:compact_display
+                 },
+                 success: function(is_success) {
+                    if(is_success == 1) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Successfully update report settings',
+                        }).then((result) => {
+                            $('#reportARASSettings').modal('hide');
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Successfully save report settings',
+                        });
+                    }                
+                 }
+            });            
         });
     });
 
@@ -278,10 +327,11 @@
 
     // Render Report Data Script
     function renderReportList() {
-        theadColumnNames = $(`#balance-sheet-comparison th`).map(function() {
+        
+        theadColumnNames = $(`#accounts-receivable-aging-summary th`).map(function() {
             return $(this).text();
         }).get();
-        theadTotalColumn = $("#balance-sheet-comparison").find('tr:first th').length;
+        theadTotalColumn = $("#accounts-receivable-aging-summary").find('tr:first th').length;
         businessLogoURL = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
         businessName = $('input[name="company_name"]').val();
         reportName = $('input[name="report_name"]').val();
@@ -406,12 +456,40 @@
             },
             success: function(data) {
                 loadReportPreview();
-                $("#balance-sheet-comparison > tbody").html(data);
+                $("#accounts-receivable-aging-summary > tbody").html(data);
                 $(".settingsApplyButton").removeAttr('disabled').html('Apply');
                 // $('#reportSettings').modal('hide');
             }
         });
+
+        // $("#<?php echo $tableID; ?> > tbody").html('<tr><td colspan="' + theadColumnNames.length + '"><center><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result... </center></td></tr>');
+        // =========================
+        // $.ajax({
+        //     type: "POST",
+        //     url:  base_url + "/accounting_controllers/Reports/getReportData/" + REPORT_CATEGORY,
+        //     data: {
+        //         businessName: businessName,
+        //         reportName: reportName,
+        //         reportDate: reportDate,
+        //         filename: filename,
+        //         reportConfig: reportConfig,
+        //     },
+        //     success: function(data) {
+        //         loadReportPreview();
+        //         $("#accounts-receivable-aging-summary > tbody").html(data);
+        //         $(".settingsApplyButton").removeAttr('disabled').html('Apply');
+        //         // $('#reportSettings').modal('hide');
+        //     }
+        // });
+
+        $(".settingsApplyButton").removeAttr('disabled').html('Apply');        
     }
+
+    // Report Config Script
+    $('#reportSettingsForm').submit(function(event) {
+        event.preventDefault();
+        renderReportList();
+    });      
 
     // Export Report to PDF Script
     $(".savePDF").click(function(event) {
@@ -483,4 +561,5 @@
             });
         });
     });
+
 </script>

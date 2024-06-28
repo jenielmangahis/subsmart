@@ -35,6 +35,17 @@ $(document).ready(function() {
         });
     }
 
+    $('.nsm-draggable-container-sortable-main').sortable({        
+        update: function (event, ui) {
+            var data = $(this).sortable('serialize');
+            $.ajax({
+                data: data,
+                type: 'POST',
+                url: base_url + 'widgets/_update_sort'
+            });
+        }
+    });
+
     $('#frm-feeds').on('submit', function(e) {
         e.preventDefault();
         $.ajax({

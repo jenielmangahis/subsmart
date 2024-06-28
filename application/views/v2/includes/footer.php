@@ -73,7 +73,6 @@
           <!-- Datetimepicker -->
           <script type="text/javascript" src="<?php echo base_url('assets/js/v2/moment.min.js'); ?>"></script>
           <script type="text/javascript" src="<?php echo base_url('assets/js/v2/bootstrap-datetimepicker.min.js'); ?>">
-console.log("datetimepicker");
           </script>
           <!-- Sidebar counbter -->
           <script type="text/javascript" src="<?php echo base_url('assets/js/v2/sidebar-counter.js'); ?>"></script>
