@@ -537,6 +537,31 @@ class Events extends MY_Controller
         }
     }
 
+    public function ajax_delete_event_tag() {
+        $this->load->model('EventTags_model');
+
+        $is_success = 0;
+        $msg = 'Record not found';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+        $eventTag = $this->EventTags_model->getById($post['tag_id']);
+        if( $eventTag && $eventTag->company_id == $cid  ){
+            $this->EventTags_model->delete($eventTag->id);
+
+            $is_success = 1;
+            $msg = '';
+
+            //Activity Logs
+            $activity_name = 'Event Tags : Deleted event tags ' . $eventTag->name; 
+            createActivityLog($activity_name);
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+ 
+        echo json_encode($return);
+    }
+
     public function delete_job_type() {
         $remove_jobtype = array(
             'where' => array(
@@ -1195,6 +1220,101 @@ class Events extends MY_Controller
         $this->session->set_flashdata('alert_class', 'alert-success');
 
         redirect('events/event_tags');
+    }
+
+    public function ajax_save_event_tag()
+    {
+        $this->load->model('EventTags_model');
+        $this->load->model('Icons_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        if( isset($post['is_default_icon']) ){
+            $icon = $this->Icons_model->getById($post['default_icon_id']);
+            $marker_icon = $icon->image;
+            $data = [
+                'name' => $post['event_tag_name'],
+                'company_id' => $company_id,
+                'marker_icon' => $marker_icon,
+                'is_marker_icon_default_list' => 1
+            ];
+
+            $this->EventTags_model->create($data);
+        }else{
+            $marker_icon = $this->moveUploadedFile();
+            if( $marker_icon != '' ){
+                $data = [
+                    'name' => $post['event_tag_name'],
+                    'company_id' => $company_id,
+                    'marker_icon' => $marker_icon,
+                    'is_marker_icon_default_list' => 0
+                ];
+
+                $this->EventTags_model->create($data);
+            }
+        }
+
+        $is_success = 1;
+        $msg = '';
+
+        //Activity Logs
+        $activity_name = 'Event Tags : Created event tags ' . $post['event_tag_name']; 
+        createActivityLog($activity_name);
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+ 
+        echo json_encode($return);
+    }
+
+    public function ajax_update_event_tag(){
+        $this->load->model('EventTags_model');
+        $this->load->model('Icons_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+        $eventTag = $this->EventTags_model->getById($post['tid']);
+        if( $eventTag ){
+            $marker_icon = $eventTag->marker_icon;
+            $is_marker_icon_default_list = $eventTag->is_marker_icon_default_list;
+            if( isset($post['is_default_icon']) ){
+                if( $post['default_icon_id'] > 0 ){
+                    $icon = $this->Icons_model->getById($post['default_icon_id']);
+                    $marker_icon = $icon->image;
+                    $is_marker_icon_default_list = 1;
+                }
+            }else{
+                if( $_FILES['image']['size'] > 0 ){
+                    $marker_icon = $this->moveUploadedFile();
+                    $is_marker_icon_default_list = 0;
+                }
+            }
+
+            $data = [
+                'name' => $post['event_tag_name'],
+                'marker_icon' => $marker_icon,
+                'is_marker_icon_default_list' => $is_marker_icon_default_list
+            ];
+            $this->EventTags_model->update($post['tid'],$data);
+
+            $is_success = 1;
+            $msg = '';
+
+            //Activity Logs
+            $activity_name = 'Event Tags : Updated event tags ' . $eventTag->name; 
+            createActivityLog($activity_name);
+            
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+ 
+        echo json_encode($return);
     }
 
     public function update_event_tag(){

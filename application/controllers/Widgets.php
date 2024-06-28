@@ -1275,4 +1275,21 @@ class Widgets extends MY_Controller
         $return = ['chart_labels' => $chart_labels, 'chart_data' => $chart_data, 'chart_colors' => $chart_colors];
         echo json_encode($return);
     }
+
+    public function ajax_update_sort()
+    {
+        $this->load->model('Widgets_model');
+
+        $cid   = logged('company_id');
+        $post  = $this->input->post();  
+        $order = 1;
+        foreach( $post['widget'] as $wid ){
+            $widgetUser = $this->Widgets_model->getWidgetByCompanyIdAndWidgetId($cid, $wid);
+            if( $widgetUser ){
+                $data = ['wu_order' => $order];
+                $this->Widgets_model->updateUserWidget($widgetUser->wu_id, $data);
+                $order++;
+            }
+        }
+    }
 }

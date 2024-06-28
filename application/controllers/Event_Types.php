@@ -291,6 +291,60 @@ class Event_Types extends MY_Controller {
  
         echo json_encode($return);
     }
+
+    public function ajax_update_event_type(){
+        $this->load->model('Icons_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        if( $post['title'] != ''){
+            $eventType = $this->EventType_model->getById($post['eid']);
+            if( $eventType ){
+                $marker_icon = $eventType->icon_marker;
+                $is_marker_icon_default_list = $eventType->is_marker_icon_default_list;
+                if( isset($post['is_default_icon']) ){
+                    if( $post['default_icon_id'] > 0 ){
+                        $icon = $this->Icons_model->getById($post['default_icon_id']);
+                        $marker_icon = $icon->image;
+                        $is_marker_icon_default_list = 1;
+                    }
+                }else{
+                    if( $_FILES['image']['size'] > 0 ){
+                        if( $_FILES['image']['size'] > 0 ){
+                            $marker_icon = $this->moveUploadedFile();
+                            $is_marker_icon_default_list = 0;
+                        }
+                    }
+                }
+
+                $data_event_type = [
+                    'title' => $post['title'],
+                    'icon_marker' => $marker_icon,
+                    'is_marker_icon_default_list' => 1,
+                    'is_marker_icon_default_list' => $is_marker_icon_default_list,
+                    'modified' => date("Y-m-d H:i:s")
+                ];
+
+                $this->EventType_model->updateEventTypeById($post['eid'], $data_event_type);
+
+                $is_success = 1;
+                $msg = '';
+
+                //Activity Logs
+                $activity_name = 'Event Types : Updated event type ' . $eventType->title; 
+                createActivityLog($activity_name);
+
+            }
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+ 
+        echo json_encode($return);
+    }
 }
 
 
