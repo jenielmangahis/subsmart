@@ -1,5 +1,13 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 
+<style>
+.compact-table td,
+.compact-table th {
+    padding: 4px 8px;
+    font-size: 12px;
+}
+</style>
+
 <div class="row page-content g-0">
     <div class="col-12">
         <div class="nsm-page">
@@ -199,6 +207,10 @@
                                                 <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-excel">Export to Excel</a></li>
                                                 <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-pdf">Export to PDF</a></li>
                                             </ul>
+
+                                            <button class="nsm-button border-0 primary" data-bs-toggle="modal" data-bs-target="#reportARASSettings"><i class="bx bx-fw bx-cog"></i></button>   
+
+                                            <!-- 
                                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
                                                 <i class="bx bx-fw bx-cog"></i>
                                             </button>
@@ -209,6 +221,8 @@
                                                     <label for="compact-display" class="form-check-label">Compact</label>
                                                 </div>
                                             </ul>
+                                            -->
+
                                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-filter'></i>&nbsp;
                                             </button>    
@@ -352,7 +366,7 @@
                                 </div>
                             </div>
                             <div class="nsm-card-content h-auto grid-mb">
-                                <table class="nsm-table">
+                                <table class="nsm-table compact-table" id="accounts-receivable-aging-summary">
                                     <thead>
                                         <tr>
                                             <td data-name="Name"></td>
@@ -422,6 +436,111 @@
     </div>
 </div>
 
+<!-- START: MODALS -->
+<!-- Modal for Report Settings -->
+<div class="modal" id="reportARASSettings" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Report Settings</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="reportSettingsForm" class="reportSettingsForm">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                                              
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Company Name</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
+                                        <input id="company-name" class="nsm-field form-control company-name" type="text" name="company_name" value="<?= $reportSettings && $reportSettings->company_name != '' ? $reportSettings->company_name : $clients->business_name; ?>" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Report Name</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" checked></div>
+                                        <input id="report-name" class="nsm-field form-control report-name" type="text" name="report_name" value="<?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : 'Accounts Receivable Aging Summary'; ?>" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="filter-date">Date</label>
+                                    <div class="">
+                                        <input type="date" id="report-date" name="report_date" class="form-control report-date nsm-field date" value="<?= $reportSettings && $reportSettings->report_date_text != '' ? date("Y-m-d",strtotime($reportSettings->report_date_text)) : date("Y-m-d"); ?>" data-type="filter-date">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Logo</label>
+                                    <select id="show-hide-logo" name="show_hide_logo" class="nsm-field form-select show-hide-logo">
+                                        <option value="1" selected>Show</option>
+                                        <option value="0">Hide</option>
+                                    </select>
+                                </div>  
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Header Align</label>
+                                    <select name="header_align" id="header-align" class="nsm-field form-select header-align">
+                                        <option value="L">Left</option>
+                                        <option value="C" selected>Center</option>
+                                        <option value="R">Right</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Footer Align</label>
+                                    <select name="footer_align" id="footer-align" class="nsm-field form-select footer-align">
+                                        <option value="L">Left</option>
+                                        <option value="C" selected>Center</option>
+                                        <option value="R">Right</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="col-md-12">
+                                        <label class="mb-1 fw-xnormal">Sort By</label>
+                                        <div class="input-group">
+                                            <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                                <option value="prof_id" selected>Total</option>
+                                            </select>
+                                            <select name="sort_order" id="sort-order" class="nsm-field form-select" style="margin-left:2px;">
+                                                <option value="ASC">ASC</option>
+                                                <option value="DESC" selected>DESC</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Display density</label>
+                                    <div class="form-check">
+                                        <input type="checkbox" checked id="compact-display" class="form-check-input compact-display">
+                                        <label for="compact-display" class="form-check-label">Compact</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="mt-0">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="float-start">
+                                <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                            </div>
+                            <div class="float-end">
+                                <button type="button" class="nsm-button primary settingsApplyButton">Apply</button>
+                                <!-- <button type="button" class="nsm-button primary printPDF">Print</button> -->
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal for Report Settings -->
+
 <?php include viewPath('accounting/reports/reports_assets/accounting_receivable_aging_summary_js'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
 
@@ -462,9 +581,9 @@ $(function(){
 
     $("#compact-display").change(function() {
         if ($(this).is(":checked")) {
-            $("#reportTable").addClass("compact-table");
+            $("#accounts-receivable-aging-summary").addClass("compact-table");
         } else {
-            $("#reportTable").removeClass("compact-table");
+            $("#accounts-receivable-aging-summary").removeClass("compact-table");
         }
     });
 
