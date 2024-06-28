@@ -298,9 +298,22 @@
             sort_by: sort_by,
             sort_order: sort_order
         };
+
+        if( $('.enableDisableBusinessName').is(':checked') ){
+            show_company_name = 1;
+        }else{
+            show_company_name = 0;
+        }
+
+        if( $('.enableDisableReportName').is(':checked') ){
+            show_report_name = 1;
+        }else{
+            show_report_name = 0;
+        }
+
         // =========================
-        (enableDisableBusinessName) ? $("#businessName").text(businessName): businessName = $("#businessName").html("&nbsp;").html();
-        (enableDisableReportName) ? $("#reportName").text(reportName): reportName = $("#reportName").html("&nbsp;").html();
+        (enableDisableBusinessName) ? $("#businessName").text(businessName): $("#businessName").html("&nbsp;").html();
+        (enableDisableReportName) ? $("#reportName").text(reportName): $("#reportName").html("&nbsp;").html();
         $('#reportDate').html(reportDate);
         if (showHideLogo == "1") {
             $('#businessLogo').attr('src', base_url + '/uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image?"; ?>' + Math.round(Math.random() * 1000000)).show();            
@@ -345,26 +358,44 @@
         $(".settingsApplyButton").attr('disabled', '').html('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Applying changes...');
         $('#pdfPreview').before('<span class="dataLoader"><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...</span>').hide();
         
-        // $("#<?php echo $tableID; ?> > tbody").html('<tr><td colspan="' + theadColumnNames.length + '"><center><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result... </center></td></tr>');
-        // =========================
-        // $.ajax({
-        //     type: "POST",
-        //     url:  base_url + "/accounting_controllers/Reports/getReportData/" + REPORT_CATEGORY,
-        //     data: {
-        //         businessName: businessName,
-        //         reportName: reportName,
-        //         reportDate: reportDate,
-        //         filename: filename,
-        //         reportConfig: reportConfig,
-        //     },
-        //     success: function(data) {
-        //         loadReportPreview();
-        //         $("#balance-sheet-comparison > tbody").html(data);
-        //         $(".settingsApplyButton").removeAttr('disabled').html('Apply');
-        //         // $('#reportSettings').modal('hide');
-        //     }
-        // });
-        $(".settingsApplyButton").removeAttr('disabled').html('Apply');
+        $.ajax({
+            type: "POST",
+            url:  base_url + "accounting/reports/_update_report_settings",
+            data: {
+            report_type_id: REPORT_ID,
+            company_name: businessName,
+            title: reportName,
+            show_company_name: show_company_name,
+            show_title: show_report_name,
+            report_date_text: $("#filter-date").val(),
+            show_logo: showHideLogo,
+            header_align: header_align,
+            footer_align: footer_align,
+            sort_by: sort_by,
+            sort_asc_desc: sort_order,
+            compact_display:0
+            },
+            dataType:'json',
+            success: function(response) {
+            $(".settingsApplyButton").removeAttr('disabled').html('Apply');
+            if(response.is_success == 1) {
+                $('#reportSettings').modal('hide');
+                // Swal.fire({
+                //     icon: 'success',
+                //     title: 'Success',
+                //     text: 'Successfully update report settings',
+                // }).then((result) => {
+                    
+                // });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: response.msg,
+                });
+            }                
+            }
+        });         
     }
 
     // Export Report to PDF Script
