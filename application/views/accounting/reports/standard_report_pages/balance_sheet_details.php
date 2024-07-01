@@ -643,38 +643,70 @@
                                     <label class="mb-1 fw-xnormal">Report Title</label>
                                     <div class="input-group">
                                         <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
+                                        <!-- <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>" required> -->
                                         <input id="reportTitle" type="text" class="company-name nsm-field form-control" value="<?= $reportSettings && $reportSettings->title != '' ? htmlspecialchars($reportSettings->title, ENT_QUOTES, 'UTF-8') : htmlspecialchars($clients->business_name, ENT_QUOTES, 'UTF-8'); ?>">
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label class="mb-1 fw-xnormal">Display Density</label>
-                                    <select id="displayDensity" name="displayDensity" class="nsm-field form-select">
-                                        <option value="1" selected>Default</option>
-                                        <option value="0" id="compact-display">Compact</option>
+                                    <label class="mb-1 fw-xnormal">Report Name</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" checked></div>
+                                        <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo $page->title ?>" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="filter-date">Date</label>
+                                    <div class="">
+                                        <input type="date" id="filter-date" class="form-control nsm-field date" data-type="filter-date">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Logo</label>
+                                    <select id="showHideLogo" name="showHideLogo" class="nsm-field form-select">
+                                        <option value="1" selected>Show</option>
+                                        <option value="0">Hide</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label class="mb-1 fw-xnormal">Change Columns</label>
-                                    <select id="displayDensity" name="displayDensity" class="nsm-field form-select">
-                                        <option value="date" selected>Date</option>
-                                        <option value="transactionType">Transaction Type</option>
-                                        <option value="num">Num</option>
-                                        <option value="createDate">Create Date</option>
-                                        <option value="createdBy">Created By</option>
-                                        <option value="lastModified">Last Modified</option>
-                                        <option value="lastModifiedBy">Last Modified By</option>
-                                        <option value="name">Name</option>
-                                        <option value="memoDesc">Memo/Description</option>
-                                        <option value="split">Split</option>
-                                        <option value="debit">Debit</option>
-                                        <option value="credit">Credit</option>
-                                        <option value="paymentMethod">Payment Method</option>
-                                        <option value="amount">Amount</option>
-                                        <option value="balance">Balance</option>
+                                    <label class="mb-1 fw-xnormal">Header Align</label>
+                                    <select name="header_align" id="header-align" class="nsm-field form-select">
+                                        <option value="L">Left</option>
+                                        <option value="C" selected>Center</option>
+                                        <option value="R">Right</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <p class="m-0"><a href="#" style="text-decoration: none">Reorder columns</a></p>
+                                    <label class="mb-1 fw-xnormal">Footer Align</label>
+                                    <select name="footer_align" id="footer-align" class="nsm-field form-select">
+                                        <option value="L">Left</option>
+                                        <option value="C" selected>Center</option>
+                                        <option value="R">Right</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="col-md-12">
+                                        <label class="mb-1 fw-xnormal">Sort By</label>
+                                        <div class="input-group">
+                                            <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                                <option value="id" selected>Default</option>
+                                                <option value="date_changed">Date Changed</option>
+                                                <option value="user">User</option>
+                                                <option value="event">Event</option>
+                                                <option value="name">Name</option>
+                                                <option value="date">Date</option>
+                                                <option value="amount">Amount</option>
+                                            </select>
+                                            <select name="sort_order" id="sort-order" class="nsm-field form-select">
+                                                <option value="ASC">ASC</option>
+                                                <option value="DESC" selected>DESC</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="mb-1 fw-xnormal">Display Density</label><br />
+                                    <input type="checkbox" id="display" class="form-check-input">
+                                    <label for="compact-display" class="form-check-label">Compact</label>
                                 </div>
                             </div>
                         </div>
@@ -683,7 +715,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="float-start">
-                                <button type="button" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                                <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
                             </div>
                             <div class="float-end">
                                 <button type="submit" class="nsm-button primary settingsApplyButton">Apply</button>

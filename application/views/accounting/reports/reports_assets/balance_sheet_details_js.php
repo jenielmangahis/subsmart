@@ -309,7 +309,8 @@
                 });
             }
         }
-        $(".settingsApplyButton").attr('disabled', '').html('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Applying changes...');
+        $("#balance-sheet-details > tbody").html(data);
+        $(".settingsApplyButton").removeAttr('disabled').html('Apply');
         $('#pdfPreview').before('<span class="dataLoader"><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...</span>').hide();
         // $("#<?php echo $tableID; ?> > tbody").html('<tr><td colspan="' + theadColumnNames.length + '"><center><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result... </center></td></tr>');
         // =========================
@@ -408,48 +409,65 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         const reportTitleElem = document.getElementById('reportTitle');
-        const displayDensityElem = document.getElementById('displayDensity');
         const reportTable = document.getElementById('reportTable');
-        const settingsApplyButton = document.querySelector('.settingsApplyButton');
+        const compactDisplayCheckbox = document.getElementById('display');
+        const applyButton = document.querySelector('.settingsApplyButton');
 
-        const saveDisplayDensitySetting = (value) => {
-            localStorage.setItem('displayDensity', value);
-        };
-
-        const loadDisplayDensitySetting = () => {
-            const savedDensity = localStorage.getItem('displayDensity');
-            if (savedDensity) {
-                displayDensityElem.value = savedDensity;
-                applyDisplayDensity(savedDensity);
+        const applyCompactStyle = () => {
+            if (compactDisplayCheckbox.checked) {
+                reportTable.classList.add('compact-table');
+                localStorage.setItem('compactState', 'true');
+            } else {
+                reportTable.classList.remove('compact-table');
+                localStorage.setItem('compactState', 'false');
             }
         };
 
-        const applyDisplayDensity = (density) => {
-            if (density === '0') {
+        const loadCompactState = () => {
+            const compactState = localStorage.getItem('compactState');
+            if (compactState === 'true') {
+                compactDisplayCheckbox.checked = true;
                 reportTable.classList.add('compact-table');
             } else {
+                compactDisplayCheckbox.checked = false;
                 reportTable.classList.remove('compact-table');
             }
         };
 
-        const saveTitle = () => {
-            const newTitle = reportTitleElem.value;
+        loadCompactState();
 
-            settingsApplyButton.disabled = true;
-            settingsApplyButton.innerHTML = '<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Applying changes...';
+        compactDisplayCheckbox.addEventListener('change', applyCompactStyle);
+
+        const setLoading = (isLoading) => {
+            if (isLoading) {
+                applyButton.textContent = 'Applying Changes...';
+                applyButton.disabled = true;
+            } else {
+                applyButton.textContent = 'Apply';
+                applyButton.disabled = false;
+            }
+        };
+
+        const saveSettings = () => {
+            setLoading(true);
+
+            const newTitle = reportTitleElem.value;
+            const isCompact = compactDisplayCheckbox.checked ? 1 : 0;
 
             $.ajax({
                 url: base_url + 'accounting/reports/_update_title',
                 type: 'POST',
                 data: {
                     report_id: REPORT_ID,
-                    title: newTitle
+                    title: newTitle,
+                    compact: isCompact
                 },
                 dataType: 'json',
                 success: function(response) {
+                    setLoading(false);
+
                     if (response.is_success === 1) {
-                        saveDisplayDensitySetting(displayDensityElem.value);
-                        location.reload();
+                        document.querySelector('.company-name').textContent = newTitle;
                     } else {
                         Swal.fire({
                             icon: 'error',
@@ -459,6 +477,8 @@
                     }
                 },
                 error: function(xhr, status, error) {
+                    setLoading(false);
+
                     console.error('AJAX Error:', status, error);
                     Swal.fire({
                         icon: 'error',
@@ -466,23 +486,13 @@
                         html: 'An error occurred while making the AJAX request. Please try again.'
                     });
                 },
-                complete: function() {
-                    settingsApplyButton.disabled = false;
-                    settingsApplyButton.innerHTML = 'Apply';
-                }
             });
         };
 
         document.getElementById('reportSettingsForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            saveTitle();
+            saveSettings();
         });
-
-        displayDensityElem.addEventListener('change', function() {
-            applyDisplayDensity(this.value);
-        });
-
-        loadDisplayDensitySetting();
     });
 </script>
 <style>
