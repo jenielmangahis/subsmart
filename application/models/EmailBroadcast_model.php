@@ -34,21 +34,39 @@ class EmailBroadcast_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllByCompanyId($cid)
+    public function getAllByCompanyId($cid, $conditions = [])
     {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $cid);
 
+        if( !empty($conditions) ){
+            $this->db->group_start();            
+            foreach( $conditions as $c ){
+                $this->db->or_like($c['field'], $c['value']);    
+            }
+            $this->db->group_end();
+        }
+
         $query = $this->db->get();
         return $query->result();
     }
     
-    public function getAllOngoingBroadcast($limit = 0)
+    public function getAllOngoingBroadcast($conditions = [], $limit = 0)
     {
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('status', self::isOngoing());
+
+        if( !empty($conditions) ){
+            foreach( $conditions as $c ){
+                if( $c['field'] == 'send_date' ){
+                    $this->db->where($c['field']. ' <=', $c['value']);                
+                }else{
+                    $this->db->where($c['field'], $c['value']);                
+                }
+            }
+        }
 
         if( $limit > 0 ){
             $this->db->limit($limit);  

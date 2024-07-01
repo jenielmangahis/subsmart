@@ -64,23 +64,14 @@
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 audit_log">
                                         <thead>
                                             <tr>
-                                                <td data-name="DateChanged">DATE CHANGED</td>
+                                                <td data-name="DateChanged">DATE</td>
                                                 <td data-name="UserTYpe">USER TYPE</td>
                                                 <td data-name="Event">EVENT</td>
                                                 <td data-name="UserName">NAME</td>
-                                                <td data-name="LogDate">DATE</td>
                                                 <td data-name="LogsDetailsProfile">Action</td>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td colspan="6">
-                                                    <center>
-                                                        <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
-                                                    </center>
-                                                </td>
-                                            </tr>
-                                        </tbody>
+                                        <tbody id="table-body"></tbody>
                                     </table>
                                 </div>
                             </div>
@@ -123,7 +114,7 @@
 
 <!-- START: MODALS -->
 <!-- Modal for Report Settings -->
-<div class="modal" id="reportSettings" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+<div class="modal fade" id="reportSettings" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -133,140 +124,75 @@
             <div class="modal-body">
                 <form id="reportSettingsForm" method="POST">
                     <div class="row">
-                        <div class="col-lg-12">
-                            <!-- FOR LATER UPDATES -->
-                            <!-- <div class="row mb-3">
-                                <div class="col-md-4">
-                                    <div class="col-md-12">
-                                        <label class="mb-1 fw-xnormal">User</label>
-                                        <select class="form-select">
-                                            <option value="all" selected>All</option>
-                                            <?php
-                                            foreach ($customerByCompanyID as $customerByCompanyIDs) {
-                                                echo "<option value='$customerByCompanyIDs->prof_id'>$customerByCompanyIDs->first_name $customerByCompanyIDs->last_name</option>";
-                                            }
-                                            ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="col-md-12">
-                                        <label class="mb-1 fw-xnormal">Date Changed</label>
-                                        <select class="form-select">
-                                            <option value="Today">Today</option>
-                                            <option value="Yesterday">Yesterday</option>
-                                            <option value="This Week">This Week</option>
-                                            <option value="This Month">This Month</option>
-                                            <option value="This Quarter">This Quarter</option>
-                                            <option value="This Year">This Year</option>
-                                            <option value="Last Week">Last Week</option>
-                                            <option value="Last Month">Last Month</option>
-                                            <option value="Last Quarter">Last Quarter</option>
-                                            <option value="Last Year">Last Year</option>
-                                            <option value="Last Seven Years">Last Seven Years</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="col-md-12">
-                                        <label class="mb-1 fw-xnormal">Event <small class="text-muted">(Module)</small></label>
-                                        <select class="form-select">
-                                            <option value="All">All</option>
-                                            <option value="Workorder">Workorder</option>
-                                            <option value="Invoice">Invoice</option>
-                                            <option value="Taskhub">Taskhub</option>
-                                            <option value="Customer">Customer</option>
-                                            <option value="Estimate">Estimate</option>
-                                            <option value="Event">Event</option>
-                                            <option value="Appointment">Appointment</option>
-                                            <option value="Jobs">Jobs</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div> -->
+                        <div class="col-lg-12">                            
                             <div class="row">
-                                <div class="col-md-3 mb-3">
-                                    <label class="mb-1 fw-xnormal">Logo</label>
-                                    <select id="showHideLogo" name="showHideLogo" class="nsm-field form-select">
-                                        <option value="1" selected>Show</option>
-                                        <option value="0">Hide</option>
-                                    </select>
-                                </div>
-                                <!-- Date Picker -->
-                                <div class="col-md-3 mb-3">
-                                    <label for="filter-date-from">From</label>
-                                    <div class="">
-                                        <input type="date" id="filter-date-from" class="form-control nsm-field date" data-type="filter-date-from">
-                                    </div>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="filter-date-to">To</label>
-                                    <div class="">
-                                        <input type="date" id="filter-date-to" class="form-control nsm-field date" data-type="filter-date-to">
-                                    </div>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="filter-date">Date</label>
-                                    <div class="">
-                                        <input type="date" id="filter-date" class="form-control nsm-field date" data-type="filter-date">
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="mb-1 fw-xnormal">Report Title</label>
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Company Name</label>
                                     <div class="input-group">
                                         <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
-                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>" required>
+                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?= $reportSettings && $reportSettings->company_name != '' ? $reportSettings->company_name : $clients->business_name; ?>" required>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="mb-1 fw-xnormal">Report Name</label>
                                     <div class="input-group">
                                         <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" checked></div>
-                                        <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo $page->title ?>" required>
+                                        <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : 'Balance Sheet Comparison'; ?>" required>
                                     </div>
                                 </div>
-                                <div class="col-md-3 mb-3">
+                                <div class="col-md-4 mb-3">
+                                    <label for="filter-date">Date</label>
+                                    <div class="">
+                                        <input type="date" id="filter-date" class="form-control nsm-field date" value="<?= $reportSettings && $reportSettings->report_date_text != '' ? date("Y-m-d",strtotime($reportSettings->report_date_text)) : date("Y-m-d"); ?>" data-type="filter-date">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Logo</label>
+                                    <select id="showHideLogo" name="showHideLogo" class="nsm-field form-select">
+                                        <option value="1" <?= $reportSettings && $reportSettings->show_logo == 1 ? 'selected="selected"' : ''; ?> selected>Show</option>
+                                        <option value="0" <?= $reportSettings && $reportSettings->show_logo == 0 ? 'selected="selected"' : ''; ?>>Hide</option>
+                                    </select>
+                                </div>  
+                                <div class="col-md-4 mb-3">
                                     <label class="mb-1 fw-xnormal">Header Align</label>
                                     <select name="header_align" id="header-align" class="nsm-field form-select">
-                                        <option value="L">Left</option>
-                                        <option value="C" selected>Center</option>
-                                        <option value="R">Right</option>
+                                        <option value="C" <?= $reportSettings && $reportSettings->header_align == 'C' ? 'selected="selected"' : ''; ?>>Center</option>
+                                        <option value="L" <?= $reportSettings && $reportSettings->header_align == 'L' ? 'selected="selected"' : ''; ?>>Left</option>           
+                                        <option value="L" <?= $reportSettings && $reportSettings->header_align == 'R' ? 'selected="selected"' : ''; ?>>Right</option>           
                                     </select>
                                 </div>
-                                <div class="col-md-3 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="mb-1 fw-xnormal">Footer Align</label>
                                     <select name="footer_align" id="footer-align" class="nsm-field form-select">
-                                        <option value="L">Left</option>
-                                        <option value="C" selected>Center</option>
-                                        <option value="R">Right</option>
+                                        <option value="C" <?= $reportSettings && $reportSettings->footer_align == 'C' ? 'selected="selected"' : ''; ?>>Center</option>
+                                        <option value="L" <?= $reportSettings && $reportSettings->footer_align == 'L' ? 'selected="selected"' : ''; ?>>Left</option>                                        
+                                        <option value="R" <?= $reportSettings && $reportSettings->footer_align == 'R' ? 'selected="selected"' : ''; ?>>Right</option>
                                     </select>
                                 </div>
-                                <div class="col-md-2 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label class="mb-1 fw-xnormal">Page Size</label>
                                     <select name="page_size" id="page-size" class="nsm-field form-select">
-                                        <option value="10" selected>10</option>
-                                        <option value="25">25</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                        <option value="500">500</option>
+                                        <option value="10" <?= $reportSettings && $reportSettings->page_size == 10 ? 'selected="selected"' : ''; ?>>10</option>
+                                        <option value="25" <?= $reportSettings && $reportSettings->page_size == 25 ? 'selected="selected"' : ''; ?>>25</option>
+                                        <option value="50" <?= $reportSettings && $reportSettings->page_size == 50 ? 'selected="selected"' : ''; ?>>50</option>
+                                        <option value="100" <?= $reportSettings && $reportSettings->page_size == 100 ? 'selected="selected"' : ''; ?>>100</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <div class="col-md-12">
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
-                                            <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="id" selected>Default</option>
-                                                <option value="date_changed">Date Changed</option>
-                                                <option value="user">User</option>
-                                                <option value="event">Event</option>
-                                                <option value="name">Name</option>
-                                                <option value="date">Date</option>
-                                                <option value="amount">Amount</option>
+                                            <select name="sort_by" id="sort-by" class="nsm-field form-select">                                                                                                
+                                                <option value="date" <?= $reportSettings && $reportSettings->sort_by == 'date' ? 'selected="selected"' : ''; ?>>Date</option>
+                                                <option value="user" <?= $reportSettings && $reportSettings->sort_by == 'user' ? 'selected="selected"' : ''; ?>>User</option>
+                                                <option value="event" <?= $reportSettings && $reportSettings->sort_by == 'event' ? 'selected="selected"' : ''; ?>>Event</option>
+                                                <option value="name" <?= $reportSettings && $reportSettings->sort_by == 'name' ? 'selected="selected"' : ''; ?>>Name</option>                                                
+                                                <option value="amount" <?= $reportSettings && $reportSettings->sort_by == 'amount' ? 'selected="selected"' : ''; ?>>Amount</option>
                                             </select>
-                                            <select name="sort_order" id="sort-order" class="nsm-field form-select">
-                                                <option value="ASC">ASC</option>
-                                                <option value="DESC" selected>DESC</option>
+                                            <select name="sort_order" id="sort-order" class="nsm-field form-select" style="margin-left:2px;">
+                                                <option value="ASC" <?= $reportSettings && $reportSettings->sort_asc_desc == 'ASC' ? 'selected="selected"' : ''; ?>>ASC</option>
+                                                <option value="DESC" <?= $reportSettings && $reportSettings->sort_asc_desc == 'DESC' ? 'selected="selected"' : ''; ?>>DESC</option>
                                             </select>
                                         </div>
                                     </div>
@@ -425,5 +351,13 @@
 </div>
 <!-- END: EMAIL REPORT MODAL -->
 <!-- END: MODALS -->
-<?php include viewPath('accounting/reports/reports_assets/report_js'); ?>
+<?php include viewPath('accounting/reports/reports_assets/audit_log_js'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
+<script>
+$(function(){
+    //$("#auditloglist_table").nsmPagination({itemsPerPage: '<?= $reportSettings ? $reportSettings->page_size : '10'; ?>'});
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.3.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>

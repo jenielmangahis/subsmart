@@ -134,7 +134,7 @@ class Accounting_model extends MY_Model
             $this->db->join('jobs AS j', 'j.id = cal.obj_id', 'left');
             $this->db->where('u.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
-            $this->db->limit($reportConfig['page_size']);
+            //$this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             $auditLogsData = $data->result();
 

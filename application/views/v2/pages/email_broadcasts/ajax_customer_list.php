@@ -38,7 +38,7 @@
     </table>
 <?php }else{ ?>
     <div class="nsm-empty">
-        <span>No results found.</span>
+        <span>No data found.</span>
     </div>
 <?php } ?>
 <script>
