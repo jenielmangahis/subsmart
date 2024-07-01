@@ -48,9 +48,34 @@
                             <div class="row mb-4">
                                 <div class="col-lg-12 headerInfo">
                                     <img id="businessLogo" src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
-                                    <div class="reportTitleInfo">
-                                        <h3 id="businessName"><?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?></h3>
-                                        <h5><strong id="reportName"><?php echo $page->title ?></strong></h5>
+                                    <?php 
+                                        $header_css = '';
+                                        if( $reportSettings ){
+                                            if( $reportSettings->header_align == 'C' ){
+                                                $header_css = 'text-align:center;';
+                                            }elseif( $reportSettings->header_align == 'L' ){
+                                                $header_css = 'text-align:left;margin-left:115px;';
+                                            }elseif( $reportSettings->header_align == 'R' ){
+                                                $header_css = 'text-align:right;';
+                                            }
+                                        }
+                                    ?>
+                                    <div class="reportTitleInfo" style="<?= $header_css; ?>">
+                                        <?php if( $reportSettings ){ ?>
+                                            <?php if( $reportSettings->show_company_name == 1 ){ ?>
+                                                <h3 id="businessName"><?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?></h3>
+                                            <?php } ?>
+                                        <?php }else{ ?>
+                                            <h3 id="businessName"><?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?></h3>
+                                        <?php } ?>
+
+                                        <?php if( $reportSettings ){ ?>
+                                            <?php if( $reportSettings->show_title == 1 ){ ?>
+                                                <h5><strong id="reportName"><?php echo $page->title ?></strong></h5>
+                                            <?php } ?>
+                                        <?php }else{ ?>
+                                            <h5><strong id="reportName"><?php echo $page->title ?></strong></h5>
+                                        <?php } ?>
                                         <h5><small id="reportDate">As of <?php echo date('F d, Y'); ?></small></h5>
                                     </div>
                                 </div>
@@ -100,7 +125,19 @@
                                     </form>
                                 </div>
                             </div>
-                            <div class="row footerInfo">
+                            <?php 
+                                $footer_css = '';
+                                if( $reportSettings ){
+                                    if( $reportSettings->footer_align == 'C' ){
+                                        $footer_css = 'text-align:center;';
+                                    }elseif( $reportSettings->footer_align == 'L' ){
+                                        $footer_css = 'text-align:left;';
+                                    }elseif( $reportSettings->footer_align == 'R' ){
+                                        $footer_css = 'text-align:right;';
+                                    }
+                                }
+                            ?>
+                            <div class="row footerInfo" style="<?= $footer_css; ?>">
                                 <span class=""><?php echo date("l, F j, Y h:i A eP") ?></span>
                             </div>
                         </div>
@@ -159,7 +196,7 @@
                                     <select name="header_align" id="header-align" class="nsm-field form-select">
                                         <option value="C" <?= $reportSettings && $reportSettings->header_align == 'C' ? 'selected="selected"' : ''; ?>>Center</option>
                                         <option value="L" <?= $reportSettings && $reportSettings->header_align == 'L' ? 'selected="selected"' : ''; ?>>Left</option>           
-                                        <option value="L" <?= $reportSettings && $reportSettings->header_align == 'R' ? 'selected="selected"' : ''; ?>>Right</option>           
+                                        <option value="R" <?= $reportSettings && $reportSettings->header_align == 'R' ? 'selected="selected"' : ''; ?>>Right</option>           
                                     </select>
                                 </div>
                                 <div class="col-md-4 mb-3">
