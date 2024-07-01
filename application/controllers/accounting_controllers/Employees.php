@@ -1292,7 +1292,7 @@ class Employees extends MY_Controller
         }, ARRAY_FILTER_USE_BOTH);
         $roles = $this->session->userdata('roles');
         $this->page_data['roles'] = $roles;
-        $this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
+        $this->page_data['payscale'] = $this->PayScale_model->getPayScale($cid);
         $this->page_data['bonusPayType'] = $bonusPayType;
         $this->page_data['accounts'] = $accounts;
         $this->page_data['payDetails'] = $this->users_model->getActiveEmployeePayDetails();
