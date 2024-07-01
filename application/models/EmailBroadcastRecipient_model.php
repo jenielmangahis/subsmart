@@ -55,6 +55,27 @@ class EmailBroadcastRecipient_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllWithErrorByEmailBroadCastId($email_broadcast_id, $conditions = [], $limit = 0)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('email_broadcast_id', $email_broadcast_id);
+        $this->db->where('is_with_error', 1);
+
+        if( !empty($conditions) ){
+            foreach( $conditions as $c ){
+                $this->db->where($c['field'], $c['value']);                
+            }
+        }
+
+        if( $limit > 0 ){
+            $this->db->limit($limit);  
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function deleteAllByEmailBroadcastId($email_broadcast_id)
     {
         $this->db->where('email_broadcast_id', $email_broadcast_id);

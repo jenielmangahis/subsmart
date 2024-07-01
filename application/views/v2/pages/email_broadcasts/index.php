@@ -33,6 +33,39 @@ div.tagsinput input {
 #btn-send-test-broadcast, #btn-send-broadcast{
     width:163px;
 }
+.btn-recipient-summary{
+    text-decoration:none;
+    color:inherit;
+}
+.badge-draft{
+    color: #ffffff;
+    background-color: #6c757d;
+}
+.badge-info{
+    color: #ffffff;
+    background-color: #17a2b8;
+}
+.badge-success{
+    color: #ffffff;
+    /* background-color: #6a4a86; */
+    background-color:#28a745;
+}
+#email-broadcast-list .nsm-badge{
+    width:100%;
+    display:block;
+    border-radius:5px;
+    text-align:center;
+}
+#btn-search-list{
+    margin:0px;
+}
+#btn-search-list i{
+    position:relative;
+    top:2px;
+}
+.nsm-field-group::before {
+ left:18px !important;
+}
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('email_campaigns/add_email_blast') ?>'">
@@ -54,16 +87,25 @@ div.tagsinput input {
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12 grid-mb text-end">
+                <div class="row mt-4">
+                    <div class="col-4 grid-mb text-end">
+                        <div class="nsm-field-group search form-group" style="display:block;max-width:600px;">
+                            <form id="frm-list-search">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search-list" value="<?= $search; ?>" placeholder="Search List..." style="width:92%; display:inline-block;" required>                            
+                                <button class="nsm-button primary" id="btn-search-list" type="submit"><i class='bx bx-search-alt-2'></i></button>
+                            </form>
+                        </div>                        
+                    </div>
+                    <div class="col-8 grid-mb text-end">
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                Filter by Status: <span>All</span> <i class='bx bx-fw bx-chevron-down'></i>
+                                Filter by Status: <span><?= $filter; ?></span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a name="btn_filter" class="dropdown-item" href="javascript:void(0);" data-id="all">All</a></li>
-                                <li><a name="btn_filter" class="dropdown-item" href="javascript:void(0);" data-id="pending">Draft</a></li>                                
-                                <li><a name="btn_filter" class="dropdown-item" href="javascript:void(0);" data-id="paused">Ongoing</a></li>                                
+                                <li><a class="dropdown-item btn-filter" href="javascript:void(0);" data-status="all">All</a></li>
+                                <li><a class="dropdown-item btn-filter" href="javascript:void(0);" data-status="draft">Draft</a></li>                                
+                                <li><a class="dropdown-item btn-filter" href="javascript:void(0);" data-status="ongoing">Ongoing</a></li>                                
+                                <li><a class="dropdown-item btn-filter" href="javascript:void(0);" data-status="completed">Completed</a></li>                                
                             </ul>
                         </div>
                         <div class="dropdown d-inline-block">
@@ -71,9 +113,9 @@ div.tagsinput input {
                                 With Selected  <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end select-filter">
-                                <li><a name="btn_filter" class="dropdown-item" href="javascript:void(0);" data-id="all">Pause</a></li>
-                                <li><a name="btn_filter" class="dropdown-item" href="javascript:void(0);" data-id="pending">Resume</a></li>                                
-                                <li><a name="btn_filter" class="dropdown-item" href="javascript:void(0);" data-id="paused">Delete</a></li>                                
+                                <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="pause">Pause</a></li>
+                                <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="resume">Resume</a></li>                                
+                                <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
@@ -81,7 +123,9 @@ div.tagsinput input {
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <form id="frm-with-selected">
+                <input type="hidden" name="with_selected_action" value="" id="with-selected-action" />
+                <table class="nsm-table" id="email-broadcast-list">
                     <thead>
                         <tr>
                             <td><input type="checkbox" class="form-check-input" id="chk-all-row" /></td>
@@ -89,7 +133,7 @@ div.tagsinput input {
                             <td data-name="BroadcastName" style="width:20%;">Broadcast Name</td>
                             <td data-name="BroadcastSubject" style="width:50%;">Subject</td>
                             <td data-name="BroadcastSendDate" style="width:10%;">Send Date</td>
-                            <td data-name="BroadcastStatus" style="width:10%;">Status</td>
+                            <td data-name="BroadcastStatus" style="width:5%;">Status</td>
                             <td data-name="BroadcastStatus" style="width:10%;">Total Sent</td>
                             <td data-name="Manage"></td>
                         </tr>
@@ -97,7 +141,7 @@ div.tagsinput input {
                     <tbody>
                         <?php foreach($emailBroadcasts as $eb){ ?>
                             <tr>
-                                <td><input type="checkbox" class="form-check-input chk-row" /></td>
+                                <td><input type="checkbox" name="row_selected[]" class="form-check-input chk-row" value="<?= $eb->id; ?>" /></td>
                                 <td>
                                     <div class="table-row-icon">
                                         <?php if( $eb->status == 'Completed' ){ ?>
@@ -117,11 +161,24 @@ div.tagsinput input {
                                     <?php } ?>
                                 </td>
                                 <td><?= date("Y-m-d",strtotime($eb->send_date)); ?></td>
-                                <td><?= $eb->status; ?></td>
                                 <td>
-                                    <?php $total_recipients = $emailBroadCastSummary[$eb->id]['total_sent'] + $emailBroadCastSummary[$eb->id]['total_not_sent']; ?>
-                                    <?= $total_recipients; ?>/<?= $emailBroadCastSummary[$eb->id]['total_sent']; ?>
+                                    <?php 
+                                        if( $eb->status == 'Draft' ){
+                                            $class_status = 'badge-draft';
+                                        }elseif( $eb->status == 'Ongoing' ){
+                                            $class_status = 'badge-info';
+                                        }else{
+                                            $class_status = 'badge-success';
+                                        }
+                                    ?>
+                                    <span class="nsm-badge <?= $class_status; ?>"><?= $eb->status; ?></span>
                                 </td>
+                                <td>                                    
+                                    <?php $total_recipients = $emailBroadCastSummary[$eb->id]['total_sent'] + $emailBroadCastSummary[$eb->id]['total_not_sent']; ?>
+                                    <a class="btn-recipient-summary" href="javascript:void(0);" data-id="<?= $eb->id; ?>" data-name="<?= $eb->broadcast_name; ?>">
+                                        <?= $total_recipients; ?>/<?= $emailBroadCastSummary[$eb->id]['total_sent']; ?>
+                                    </a>
+                                </td>                                
                                 <td>
                                     <div class="dropdown table-management">
                                         <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
@@ -142,6 +199,7 @@ div.tagsinput input {
                         <?php } ?>
                     </tbody>
                 </table>
+                </form>
             </div>
         </div>
     </div>
@@ -308,13 +366,31 @@ div.tagsinput input {
         </div>
     </div>
 
+    <div class="modal fade" id="modal-recipient-summary" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <span class="modal-title content-title" style="font-size: 17px;"><i class='bx bx-mail-send'></i> <span id="recipient-summary-broadcast-name"></span></span>
+                        <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                    </div>
+                    <div class="modal-body">                        
+                        <div id="recipient-summary-container"></div>
+                    </div>                  
+                </form>
+            </div>
+        </div>
+    </div>
+
 </div>
 
 <script src="<?= base_url('assets/js/v2/jquery.tagsinput.js'); ?>"></script>
 <link rel="stylesheet" href="<?= base_url('assets/css/v2/jquery.tagsinput.css'); ?>">
 
 <script type="text/javascript">
-$(function(){
+$(function(){    
+    $("#email-broadcast-list").nsmPagination({itemsPerPage:10});
+
     CKEDITOR.replace( 'ck-broadcast-content', {
         toolbarGroups: [
             { name: 'document',    groups: [ 'mode', 'document' ] },            // Displays document group with its two subgroups.
@@ -398,6 +474,64 @@ $(function(){
         } 
     }); 
 
+    $('.btn-with-selected').on('click', function(){
+        var action = $(this).attr('data-action');
+
+        var total_selected = $('input[name="row_selected[]"]:checked').length;
+        if( total_selected > 0 ){
+            if( action == 'delete' ){
+                var msg = 'Proceed with <b>deleting</b> selected rows?';
+                var url = base_url + 'email_broadcasts/_delete_selected';
+                $('#with-selected-action').val('delete');
+            }else{                
+                var msg = `Proceed with changing selected rows status to <b>${action}</b>?`
+                var url = base_url + 'email_broadcasts/_update_status_selected';
+                $('#with-selected-action').val(action);
+            }
+
+            Swal.fire({
+                title: 'With Selected Action',
+                html: msg,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: $('#frm-with-selected').serialize(),
+                        dataType:'json',
+                        success: function(result) {
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: result.msg,
+                                }).then((result) => {
+                                    window.location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        }else{
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select row',
+            });
+        }        
+    });
+
     $('#btn-create-email-broadcast').on('click', function(){
         $('#modal-header-label').html('Create Email Broadcast');
         $('#modal-create-email-broadcast').modal('show'); 
@@ -476,6 +610,25 @@ $(function(){
 
     $('#btn-send-test-broadcast').on('click', function(){
         $('#modal-send-test').modal('show');        
+    });
+
+    $('.btn-recipient-summary').on('click', function(){
+        var ebid = $(this).attr('data-id');
+        var ebname = $(this).attr('data-name');
+
+        $('#modal-recipient-summary').modal('show');
+        $.ajax({
+            url: base_url + 'email_broadcasts/_recipient_summary',
+            method: 'post', 
+            data: {ebid:ebid},   
+            success: function (html) {                
+                $('#recipient-summary-container').html(html);
+            },
+            beforeSend: function() {
+                $('#recipient-summary-broadcast-name').html(ebname);
+                $('#recipient-summary-container').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        }); 
     });
 
     $('#modal-customer-select').on('hidden.bs.modal', function () {
@@ -595,7 +748,7 @@ $(function(){
         var ebid = $(this).attr('data-id');
 
         Swal.fire({
-            //title: 'Delete',
+            title: 'Delete',
             html: `Proceed with deleting <b>${broadcast_name}</b>?`,
             icon: 'question',
             showCancelButton: true,
@@ -809,6 +962,25 @@ $(function(){
                 $('#btn-send-broadcast').html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
+    });
+
+    $('#frm-list-search').on('submit', function(e){
+        e.preventDefault();
+        var search_query = $('#search-list').val();
+        const params = new URLSearchParams({search: search_query});
+        const str = params.toString();
+        location.href = base_url + `email_broadcasts?${str}`;
+
+    });
+
+    $('.btn-filter').on('click', function(){
+        var status = $(this).attr('data-status');
+        if( status == 'all' ){
+            location.href = base_url + `email_broadcasts`;
+        }else{
+            location.href = base_url + `email_broadcasts?status=${status}`;
+        }
+        
     });
 });
 </script>
