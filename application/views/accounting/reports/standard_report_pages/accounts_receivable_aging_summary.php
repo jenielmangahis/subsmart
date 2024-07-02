@@ -199,18 +199,43 @@
                                 <div class="row mb-4">
                                     <div class="col-lg-12 headerInfo">
                                         <img id="businessLogo" src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
-                                        <div class="reportTitleInfo">
-                                            <h3 id="businessName"><?= $reportSettings && $reportSettings->company_name != '' ? $reportSettings->company_name : $clients->business_name; ?></h3>
-                                            <h5><strong id="reportName"><?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : 'Accounts Receivable Aging Summary'; ?></strong></h5>
+                                        <?php 
+                                            $header_css = '';
+                                            if( $reportSettings ){
+                                                if( $reportSettings->header_align == 'C' ){
+                                                    $header_css = 'text-align:center;';
+                                                }elseif( $reportSettings->header_align == 'L' ){
+                                                    $header_css = 'text-align:left;margin-left:115px;';
+                                                }elseif( $reportSettings->header_align == 'R' ){
+                                                    $header_css = 'text-align:right;';
+                                                }
+                                            }
+                                        ?>
+                                        <div class="reportTitleInfo" style="<?= $header_css; ?>">
+                                            <?php if( $reportSettings ){ ?>
+                                                <?php if( $reportSettings->show_company_name == 1 ){ ?>
+                                                    <h3 id="businessName"><?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?></h3>
+                                                <?php } ?>
+                                            <?php }else{ ?>
+                                                <h3 id="businessName"><?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?></h3>
+                                            <?php } ?>
+
+                                            <?php if( $reportSettings ){ ?>
+                                                <?php if( $reportSettings->show_title == 1 ){ ?>
+                                                    <h5><strong id="reportName"><?php echo $page->title ?></strong></h5>
+                                                <?php } ?>
+                                            <?php }else{ ?>
+                                                <h5><strong id="reportName"><?php echo $page->title ?></strong></h5>
+                                            <?php } ?>
                                             <h5><small id="reportDate">As of <?php echo date('F d, Y'); ?></small></h5>
                                         </div>
                                     </div>
                                 </div>
 
-
                             </div>
                             <div class="nsm-card-content h-auto grid-mb">
-                                <table class="nsm-table compact-table" id="accounts-receivable-aging-summary">
+                                <?php $is_compact_table = $reportSettings && $reportSettings->is_compact == 1 ? "compact-table" : ""; ?>
+                                <table class="nsm-table <?php echo $is_compact_table; ?>" id="accounts-receivable-aging-summary">
                                     <thead>
                                         <tr>
                                             <td data-name="Name"></td>
@@ -299,14 +324,14 @@
                                 <div class="col-md-4 mb-3">
                                     <label class="mb-1 fw-xnormal">Company Name</label>
                                     <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" <?= $reportSettings && $reportSettings->show_company_name == 1 ? 'checked' : ''; ?>></div>
                                         <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?= $reportSettings && $reportSettings->company_name != '' ? $reportSettings->company_name : $clients->business_name; ?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label class="mb-1 fw-xnormal">Report Name</label>
                                     <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" checked></div>
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" <?= $reportSettings && $reportSettings->show_title == 1 ? 'checked' : ''; ?>></div>
                                         <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : 'Accounts Receivable Aging Summary'; ?>" required>
                                     </div>
                                 </div>
@@ -322,7 +347,7 @@
                                         <option value="1" <?= $reportSettings && $reportSettings->show_logo == 1 ? 'selected="selected"' : ''; ?> selected>Show</option>
                                         <option value="0" <?= $reportSettings && $reportSettings->show_logo == 0 ? 'selected="selected"' : ''; ?>>Hide</option>
                                     </select>
-                                </div>  
+                                </div> 
                                 <div class="col-md-4 mb-3">
                                     <label class="mb-1 fw-xnormal">Header Align</label>
                                     <select name="header_align" id="header-align" class="nsm-field form-select">
@@ -356,7 +381,7 @@
                                 <div class="col-md-4 mb-3">
                                     <label class="mb-1 fw-xnormal">Display density</label>
                                     <div class="form-check">
-                                        <input type="checkbox" checked id="compact-display" class="form-check-input compact-display">
+                                        <input type="checkbox" <?php echo $reportSettings && $reportSettings->is_compact == 1 ? "checked" : ""; ?>  id="compact-display" name="compact_display" value=1 class="form-check-input compact-display">
                                         <label for="compact-display" class="form-check-label">Compact</label>
                                     </div>
                                 </div>
