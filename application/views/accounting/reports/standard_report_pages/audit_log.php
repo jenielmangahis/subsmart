@@ -48,7 +48,11 @@
                         <div class="nsm-card-content">
                             <div class="row mb-4">
                                 <div class="col-lg-12 headerInfo">
-                                    <?php if( $reportSettings->show_logo == 1 ){ ?>
+                                    <?php if( $reportSettings ){ ?>
+                                        <?php if( $reportSettings->show_logo == 1 ){ ?>
+                                            <img id="businessLogo" src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
+                                        <?php } ?>
+                                    <?php }else{ ?>
                                         <img id="businessLogo" src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
                                     <?php } ?>
                                     <?php 
