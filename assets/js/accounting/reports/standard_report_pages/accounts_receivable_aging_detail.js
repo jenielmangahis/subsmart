@@ -416,6 +416,12 @@ $('#save-custom-report').on('click', function(e) {
     });
 });
 
+$("#report-note").on('input', function() {
+    let textLength = $("#report-note").val().length;
+    $(".noteCharMax").text(textLength + " / 4000 characters max");
+});
+
+
 $('#add-notes').on('click', function(e) {
     e.preventDefault();
 

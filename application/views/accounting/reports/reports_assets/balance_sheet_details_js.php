@@ -412,6 +412,10 @@
         const reportTable = document.getElementById('reportTable');
         const compactDisplayCheckbox = document.getElementById('display');
         const applyButton = document.querySelector('.settingsApplyButton');
+        const filterDateElem = document.getElementById('filter-date');
+        const balanceSheetDateElem = document.getElementById('balance-sheet-date');
+        const balanceSheetTitleElem = document.getElementById('balance-sheet-title');
+        const reportNameInput = document.getElementById('report_name');
 
         const applyCompactStyle = () => {
             if (compactDisplayCheckbox.checked) {
@@ -434,10 +438,6 @@
             }
         };
 
-        loadCompactState();
-
-        compactDisplayCheckbox.addEventListener('change', applyCompactStyle);
-
         const setLoading = (isLoading) => {
             if (isLoading) {
                 applyButton.textContent = 'Applying Changes...';
@@ -446,6 +446,35 @@
                 applyButton.textContent = 'Apply';
                 applyButton.disabled = false;
             }
+        };
+
+        const saveDateToLocalStorage = () => {
+            const currentDate = filterDateElem.value;
+            localStorage.setItem('reportDate', currentDate);
+            updateBalanceSheetDate(currentDate);
+        };
+
+        const loadDateFromLocalStorage = () => {
+            const storedDate = localStorage.getItem('reportDate');
+            if (storedDate) {
+                filterDateElem.value = storedDate;
+                updateBalanceSheetDate(storedDate);
+            } else {
+                const currentDate = new Date().toISOString().split('T')[0];
+                filterDateElem.value = currentDate;
+                updateBalanceSheetDate(currentDate);
+            }
+        };
+
+        const updateBalanceSheetDate = (dateString) => {
+            const date = new Date(dateString);
+            const options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            const formattedDate = date.toLocaleDateString(undefined, options);
+            balanceSheetDateElem.textContent = `As of ${formattedDate}`;
         };
 
         const saveSettings = () => {
@@ -460,7 +489,8 @@
                 data: {
                     report_id: REPORT_ID,
                     title: newTitle,
-                    compact: isCompact
+                    compact: isCompact,
+                    date: filterDateElem.value
                 },
                 dataType: 'json',
                 success: function(response) {
@@ -468,6 +498,9 @@
 
                     if (response.is_success === 1) {
                         document.querySelector('.company-name').textContent = newTitle;
+                        applyCompactStyle();
+                        saveDateToLocalStorage();
+                        saveReportNameToLocalStorage();
                     } else {
                         Swal.fire({
                             icon: 'error',
@@ -489,11 +522,55 @@
             });
         };
 
+        const saveReportNameToLocalStorage = () => {
+            const reportName = reportNameInput.value;
+            localStorage.setItem('reportName', reportName);
+            updateBalanceSheetTitle(reportName);
+        };
+
+        const loadReportNameFromLocalStorage = () => {
+            const storedReportName = localStorage.getItem('reportName');
+            if (storedReportName) {
+                reportNameInput.value = storedReportName;
+                updateBalanceSheetTitle(storedReportName);
+            }
+        };
+
+        const updateBalanceSheetTitle = (title) => {
+            balanceSheetTitleElem.textContent = title || 'Balance Sheet Details';
+        };
+
         document.getElementById('reportSettingsForm').addEventListener('submit', function(event) {
             event.preventDefault();
             saveSettings();
         });
+
+        loadCompactState();
+        loadDateFromLocalStorage();
+        loadReportNameFromLocalStorage();
     });
+
+    var isCollapsed = true;
+
+    $("#collapseButton").click(function() {
+        if (isCollapsed) {
+            $(".collapse").collapse('show');
+            $("#collapseButton span").text('Uncollapse');
+        } else {
+            $(".collapse").collapse('hide');
+            $("#collapseButton span").text('Collapse');
+        }
+        isCollapsed = !isCollapsed;
+    });
+
+    $(".collapse-row").click(function() {
+        var target = $(this).data("bs-target");
+        $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
+        $(target).collapse('toggle');
+    });
+
+    var currentDate = new Date().toISOString().split('T')[0];
+    document.getElementById('filter-date').value = currentDate;
 </script>
 <style>
     .compact-table td,

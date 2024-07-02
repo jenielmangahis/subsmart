@@ -285,12 +285,12 @@
                                 <div class="row">
                                     <div class="col-12 grid-mb">
                                         <h4 class="text-center fw-bold" id="businessName">
-                                            <span class="company-name"><?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : $clients->business_name; ?></span>
+                                            <span class="company-name"><?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : strtoupper($companyInfo->business_name); ?></span>
                                         </h4>
                                     </div>
                                     <div class="col-12 grid-mb text-center">
-                                        <p class="m-0 fw-bold">Balance Sheet Summary</p>
-                                        <p>As of <?= date("F d, Y") ?></p>
+                                        <p id="balance-sheet-title" class="m-0 fw-bold">Balance Sheet Summary</p>
+                                        <p id="balance-sheet-date">As of <?= date("F d, Y") ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -602,7 +602,8 @@
                                     <div class="input-group">
                                         <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
                                         <!-- <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>" required> -->
-                                        <input id="reportTitle" type="text" class="company-name nsm-field form-control" value="<?= $reportSettings && $reportSettings->title != '' ? htmlspecialchars($reportSettings->title, ENT_QUOTES, 'UTF-8') : htmlspecialchars($clients->business_name, ENT_QUOTES, 'UTF-8'); ?>">
+                                        <input id="reportTitle" type="text" class="company-name nsm-field form-control" value="<?= $reportSettings && $reportSettings->title != '' ? htmlspecialchars($reportSettings->title, ENT_QUOTES, 'UTF-8') : htmlspecialchars($companyInfo->business_name, ENT_QUOTES, 'UTF-8'); ?>">
+
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
@@ -692,45 +693,4 @@
 
 <script type="text/javascript">
     var baseUrl = '<?= base_url() ?>';
-</script>
-<script>
-    var currentDate = new Date().toISOString().split('T')[0];
-
-    document.getElementById('filter-from').value = currentDate;
-    document.getElementById('filter-to').value = currentDate;
-
-    $(document).ready(function() {
-        var isCollapsed = true;
-
-        $("#collapseButton").click(function() {
-            if (isCollapsed) {
-                $(".collapse").collapse('show');
-                $("#collapseButton span").text('Uncollapse');
-                updateCarets('show');
-            } else {
-                $(".collapse").collapse('hide');
-                $("#collapseButton span").text('Collapse');
-                updateCarets('hide');
-            }
-            isCollapsed = !isCollapsed;
-        });
-
-        $(".collapse-row").click(function() {
-            var target = $(this).data("bs-target");
-            $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
-            $(target).collapse('toggle');
-        });
-
-        function updateCarets(action) {
-            $(".collapse-row").each(function() {
-                var target = $(this).data("bs-target");
-                var icon = $(this).find("i");
-                if (action === 'show') {
-                    icon.removeClass("bx-caret-right").addClass("bx-caret-down");
-                } else {
-                    icon.removeClass("bx-caret-down").addClass("bx-caret-right");
-                }
-            });
-        }
-    });
 </script>
