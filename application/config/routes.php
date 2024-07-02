@@ -784,6 +784,7 @@ $route['accounting/reports/generate-paychecks-pdf']['post'] = 'accounting_contro
 $route['accounting/reports/(:any)/email']['post'] = 'accounting_controllers/reports/email/$1';
 $route['accounting/reports/_update_title'] = 'accounting_controllers/reports/ajax_update_report_title';
 $route['accounting/reports/_update_report_settings'] = 'accounting_controllers/reports/ajax_update_report_settings';
+$route['accounting/reports/_total_customer_balance'] = 'accounting_controllers/Reports/ajax_total_customer_balance';
 
 $route['accounting/receipts/reviewed'] = 'accounting/reviewed_receipts';
 
