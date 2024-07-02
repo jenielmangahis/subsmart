@@ -227,6 +227,8 @@
             show_title: show_report_name,
             page_size:page_size,
             report_date_text: date,
+            report_date_from_text: date,
+            report_date_to_text:date,
             show_logo: showHideLogo,
             header_align: header_align,
             footer_align: footer_align,
