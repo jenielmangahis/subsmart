@@ -1216,6 +1216,7 @@ class Customer extends MY_Controller
                 $accountType = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $accountTypeDropdown = "<select class='form-select form-select-sm updateInputValue' data-id='$getDatas->prof_id' data-category='alarm' data-column='acct_type'>";
+                $accountTypeDropdown .= "<option value=''>Not Specified</option>";
                 for ($i = 0; $i < count($getAccountType); $i++) {
                     if ($getDatas->alarm_acct_type == $getAccountType[$i]) {
                         $accountType = "$getAccountType[$i]";
@@ -1374,7 +1375,13 @@ class Customer extends MY_Controller
                 // ===============
                 $creditCardExpiration = (!empty($getDatas->billing_credit_card_exp)) ? date('m/d/Y', strtotime($getDatas->billing_credit_card_exp)) : "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
-                $profit = '$' . number_format((floatval($getDatas->alarm_monthly_monitoring) - floatval($getDatas->alarm_account_cost) + floatval($getDatas->alarm_pass_thru_cost)), 2);
+                $mmr_profit = number_format((floatval($getDatas->alarm_monthly_monitoring) - floatval($getDatas->alarm_account_cost)), 2);
+
+                if ($mmr_profit < 0) {
+                    $mmr_profit = '-$' . number_format(abs($mmr_profit), 2);
+                } else {
+                    $mmr_profit = '$' . number_format($mmr_profit, 2);
+                }
 
                 $data[] = array(
                     "<span class='textPreview'>$firstName</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-id='$getDatas->prof_id' data-category='profile' data-column='first_name' type='text' value='$getDatas->profile_first_name'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
@@ -1415,7 +1422,7 @@ class Customer extends MY_Controller
                     "<span class='textPreview'>$accountNumber</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-id='$getDatas->prof_id' data-category='billing' data-column='acct_num' type='text' value='$getDatas->billing_acct_number'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<span class='textPreview'>$creditCardNumber</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-id='$getDatas->prof_id' data-category='billing' data-column='credit_card_num' type='text' value='$getDatas->billing_credit_card_num'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<span class='textPreview'>$creditCardExpiration</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-id='$getDatas->prof_id' data-category='billing' data-column='credit_card_exp' type='date' value='".date('Y-m-d', strtotime($getDatas->billing_credit_card_exp))."'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-                    "<span class='fw-bold'>$profit</span>",
+                    "<span class='fw-bold'>$mmr_profit</span>",
                 );
                 $i++;
             }
@@ -1444,16 +1451,22 @@ class Customer extends MY_Controller
 
         switch ($postData['category']) {
             case 'profile':
-                $updateProcess = $this->company->updateCustomerSpecificData('prof_id', $postData['id'], 'acs_profile', $updateData);
+                $updateProcess = $this->company->updateCustomerSpecificData('prof_id', $postData['id'], 'acs_profile', $updateData, 'specific_update');
                 break;
             case 'office':
-                $updateProcess = $this->company->updateCustomerSpecificData('fk_prof_id', $postData['id'], 'acs_office', $updateData);
+                $updateProcess = $this->company->updateCustomerSpecificData('fk_prof_id', $postData['id'], 'acs_office', $updateData, 'specific_update');
                 break;
             case 'alarm':
-                $updateProcess = $this->company->updateCustomerSpecificData('fk_prof_id', $postData['id'], 'acs_alarm', $updateData);
+                $updateProcess = $this->company->updateCustomerSpecificData('fk_prof_id', $postData['id'], 'acs_alarm', $updateData, 'specific_update');
                 break;
             case 'billing':
-                $updateProcess = $this->company->updateCustomerSpecificData('fk_prof_id', $postData['id'], 'acs_billing', $updateData);
+                $updateProcess = $this->company->updateCustomerSpecificData('fk_prof_id', $postData['id'], 'acs_billing', $updateData, 'specific_update');
+                break;
+            case 'all_rows':
+                $updateProcess = $this->company->updateCustomerSpecificData('fk_prof_id', $postData['id'], 'acs_alarm', $updateData, 'all_rows');
+                break;
+            case 'ten_rows':
+                $updateProcess = $this->company->updateCustomerSpecificData('fk_prof_id', json_encode($postData['id']), 'acs_alarm', $updateData, 'ten_rows');
                 break;
         }
         

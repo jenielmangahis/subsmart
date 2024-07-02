@@ -1061,7 +1061,7 @@ table.dataTable thead th, table.dataTable thead td{
                                                     <th>Account No.</th>
                                                     <th>Credit Card No.</th>
                                                     <th>Credit Card Expiration</th>
-                                                    <th>Profit</th>
+                                                    <th>MMR Profit</th>
                                                 </tr>
                                             </thead>
                                         </table>
@@ -1092,6 +1092,8 @@ table.dataTable thead th, table.dataTable thead td{
 <script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
 <script type="text/javascript">
     const URL_ORIGIN = window.origin;
+    var lastOptionInAccType = "";
+    var lastOptionInAccTypeCount = 0;
     var customerManagementTable;
     let horizontalScroll = 0;
     $(document).ready(function() {
@@ -1206,7 +1208,6 @@ table.dataTable thead th, table.dataTable thead td{
         }
     });
 
-
     $(document).on('click', '.scrollToStart', function() {
         horizontalScroll = 0;
         $('.tableUpdaterDiv').animate({
@@ -1222,10 +1223,6 @@ table.dataTable thead th, table.dataTable thead td{
             scrollLeft: horizontalScroll
         }, 200);
     });
-
-    
-
-
 
     $(document).on('click', '.textPreview', function() {
         $(this).hide();
@@ -1280,6 +1277,105 @@ table.dataTable thead th, table.dataTable thead td{
 
         saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue);
 
+        // If user repeats action with the same value 3 times, then prompt custom alert
+        if (updateColumn == "acct_type") {
+            if (updateValue === lastOptionInAccType) {
+                lastOptionInAccTypeCount += 1;
+            } else {
+                lastOptionInAccType = updateValue
+                lastOptionInAccTypeCount = 0;
+            }
+
+            if (lastOptionInAccTypeCount == 2) {
+                var dataIdInAccType = [];
+                $('select[data-category="alarm"][data-column="acct_type"]').each(function() {
+                    var dataId = $(this).attr('data-id');
+                    dataIdInAccType.push(dataId);
+                });
+
+                Swal.fire({
+                    icon: "warning",
+                    title: "Repetitive Action",
+                    html: "Do you want to apply <strong>" + updateValue + "</strong> value to the rest of the rows in Account Type Column?",
+                    showCancelButton: true,
+                    confirmButtonText: "All Rows",
+                    denyButtonText: "10 Rows Only",
+                    showDenyButton: true,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            icon: "info",
+                            title: "Updating All Rows",
+                            html: "Please wait while the update process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+
+                        $.ajax({
+                            type: "POST",
+                            url: URL_ORIGIN + "/Customer/customerServersideLoadSave",
+                            data: {
+                                id: updateID,
+                                category: "all_rows",
+                                column: updateColumn,
+                                value: updateValue
+                            },
+                            success: function(response) {
+                                customerManagementTable.ajax.reload(null, false);
+                                Swal.close();
+                                iziToast.success({
+                                    displayMode: 2,
+                                    message: 'Cell updated successfully!',
+                                    timeout: 3000,
+                                    position: 'topCenter',
+                                });
+                            },
+                        });
+
+                    } else if (result.isDenied) {
+                        Swal.fire({
+                            icon: "info",
+                            title: "Updating 10 Rows",
+                            html: "Please wait while the update process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+
+                        $.ajax({
+                            type: "POST",
+                            url: URL_ORIGIN + "/Customer/customerServersideLoadSave",
+                            data: {
+                                id: dataIdInAccType,
+                                category: "ten_rows",
+                                column: updateColumn,
+                                value: updateValue
+                            },
+                            success: function(response) {
+                                customerManagementTable.ajax.reload(null, false);
+                                Swal.close();
+                                iziToast.success({
+                                    displayMode: 2,
+                                    message: 'Cell updated successfully!',
+                                    timeout: 3000,
+                                    position: 'topCenter',
+                                });
+                            },
+                        });
+                    }
+                });
+
+                // alert('repeated 3 times');
+                lastOptionInAccTypeCount = -1;
+            }
+
+        }
+
         $(this).closest('td').find('.textPreview').show();
         $(this).closest('td').find('.inputMode').hide();
     });
@@ -1313,6 +1409,7 @@ table.dataTable thead th, table.dataTable thead td{
             },
             success: function(response) {
                 iziToast.success({
+                    displayMode: 2,
                     message: 'Cell updated successfully!',
                     timeout: 3000,
                     position: 'topCenter',

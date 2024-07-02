@@ -631,19 +631,27 @@ class Customer_model extends MY_Model
         $this->db->delete($this->table, array("prof_id" => $id));        
     }
 
-    public function updateCustomerSpecificData($primayKey, $id, $table, $data) 
+    public function updateCustomerSpecificData($primaryKey, $id, $table, $data, $updateType) 
     {
-        $this->db->where($primayKey, $id);
-        return $this->db->update($table, $data);
+        $company_id = logged('company_id');
+        $this->db->select('acs_profile.prof_id');
+        $this->db->from('acs_profile');
+        $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_profile.company_id', $company_id);
+        $allEntries = $this->db->get()->result_array();
+        
+        if ($updateType == "all_rows") {
+            $this->db->where_in($primaryKey, json_decode($allEntries, true));
+            return $this->db->update($table, $data);
+        } else if ($updateType == "ten_rows") {
+            $this->db->where_in($primaryKey, json_decode($id, true));
+            return $this->db->update($table, $data);
+        } else if ($updateType == "specific_update") {
+            $this->db->where($primaryKey, $id);
+            return $this->db->update($table, $data);
+        }
     }
 
-    // public function update_ibiz_phone($data)
-    // {
-    //     extract($data);
-    //     $this->db->where('id', $id);
-    //     $query = $this->db->update('user_ibiz_items', array('value' => $value));
-    //     return $query;
-    // }
 }
 
 /* End of file Customer_model.php */

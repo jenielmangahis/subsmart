@@ -299,4 +299,21 @@ class Widgets_model extends MY_Model
             'w_list_view' => $val,
         ]);
     }
+
+    public function getWidgetByCompanyIdAndWidgetId($cid, $wid)
+    {
+        $this->db->select('*');
+        $this->db->from('widgets_users');
+        $this->db->where('wu_company_id', $cid);
+        $this->db->where('wu_widget_id', $wid);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function updateUserWidget($wid, $data)
+    {
+        $this->db->where('wu_id', $wid);
+        return $this->db->update('widgets_users', $data);
+    }
 }
