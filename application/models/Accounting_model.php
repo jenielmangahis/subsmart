@@ -197,18 +197,33 @@ class Accounting_model extends MY_Model
 
         // Get Customer Balance Summary data in Database
         if ($reportType == "customer_balance_summary") {
-            $this->db->select('acs_profile.prof_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, SUM(invoices.total_due) AS balance');
-            $this->db->from('invoices');
-            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
-            $this->db->where('invoices.status', "Unpaid");
-            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
-            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
-            $this->db->where('invoices.company_id', $companyID);
-            $this->db->group_by('acs_profile.prof_id, customer');
-            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
-            $this->db->limit($reportConfig['page_size']);
-            $data = $this->db->get();
-            return $data->result();
+            // $this->db->select('acs_profile.prof_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, COALESCE(SUM(invoices.total_due),0) AS balance');
+            // $this->db->from('invoices');
+            // $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id');
+            // $this->db->where('invoices.status !=', "Paid");
+            // $this->db->where('invoices.status !=', "Draft");
+            // $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            // $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            // $this->db->where('acs_profile.company_id', $companyID);
+            // $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            //$this->db->limit($reportConfig['page_size']);
+
+            $query = $this->db->query('
+                SELECT 
+                    acs_profile.prof_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, (
+                        SELECT COALESCE(SUM(invoices.grand_total),0) AS balance
+                        FROM invoices 
+                        WHERE invoices.customer_id = acs_profile.prof_id 
+                            AND invoices.status != "Paid"
+                            AND invoices.status != "Draft"
+                            AND DATE_FORMAT(invoices.date_created,"%Y-%m-%d") >= "'.$reportConfig['date_from'].'"
+                            AND DATE_FORMAT(invoices.date_created,"%Y-%m-%d") <= "'.$reportConfig['date_to'].'"
+                    ) AS balance
+                FROM acs_profile
+                WHERE acs_profile.company_id = '.$companyID.'
+                ORDER BY '.$reportConfig['sort_by'].' '.$reportConfig['sort_order'].' 
+            ');
+            return $query->result();
         }
 
         // Get Physical Inventory Worksheet data in Database
