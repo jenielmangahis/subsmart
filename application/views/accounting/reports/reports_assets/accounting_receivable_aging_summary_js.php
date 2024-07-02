@@ -1,11 +1,11 @@
 <script type="text/javascript">
-    var REPORT_ID = 18;  
+    var REPORT_ID        = 18;
     var REPORT_CATEGORY  = "accounts_receivable_aging_summary";
     var theadTotalColumn = $("#accounts-receivable-aging-summary").find('tr:first th').length;
     var businessLogoURL  = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
     var businessName     = $('input[name="company_name"]').val();
     var reportName       = $('input[name="report_name"]').val();
-    var reportDate       = $("#report-date").text();
+    var reportDate       = $("#reportDate").text();
     var filename         = (businessName + '_' + reportName).replace(/[^\p{L}\p{N}_-]+/gu, '_');
     var notes            = $("#notesContent").text();
 
@@ -45,7 +45,7 @@
                 var newTitle = inputElem.value;
 
                 $.ajax({
-                    url: base_url + 'accounting/reports/_update_title', //for update title
+                    url: base_url + 'accounting/reports/_update_title',
                     type: 'POST',
                     data: {
                         report_id: REPORT_ID,
@@ -77,55 +77,6 @@
             cancelButton.addEventListener('click', function() {
                 businessNameElem.innerHTML = '<span class="company-name">' + originalName + '</span>';
             });
-        });
-
-        $(".settingsApplyButton").on( "click", function() {
-            var report_type_id   = REPORT_ID;
-            var report_category  = REPORT_CATEGORY;
-            var company_name     = $('#company-name').val();
-            var title            = $('#report-name').val();
-            var report_date_text = $('#report-date').val();
-            var show_logo        = $('#show-hide-logo').val();
-            var header_align     = $('#header-align').val();
-            var footer_align     = $('#footer-align').val();
-            var sort_by          = $('#sort-by').val();
-            var sort_asc_desc    = $('#sort-order').val();
-            var compact_display  = $('#compact-display').val();
-
-            $.ajax({
-                 type: "POST",
-                 url:  base_url + "accounting/reports/_update_report_settings",
-                 data: {
-                    report_type_id: report_type_id,
-                    company_name: company_name,
-                    title: title,
-                    report_date_text: report_date_text,
-                    show_logo: show_logo,
-                    header_align: header_align,
-                    footer_align: footer_align,
-                    sort_by: sort_by,
-                    sort_asc_desc: sort_asc_desc,
-                    compact_display:compact_display
-                 },
-                 success: function(is_success) {
-                    if(is_success == 1) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Successfully update report settings',
-                        }).then((result) => {
-                            $('#reportARASSettings').modal('hide');
-                            location.reload();
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Successfully save report settings',
-                        });
-                    }                
-                 }
-            });            
         });
     });
 
@@ -195,7 +146,7 @@
     function generatePDF(preview = false, orientation, generate_pdf) {
         var table = document.querySelector('.nsm-table');
         var companyName = document.querySelector('.company-name').textContent;
-        var reportTitle = "Balance Sheet";
+        var reportTitle = "Accounts Receivable Aging Summary";
         var reportDate = "As of " + new Date().toLocaleDateString();
 
         html2canvas(table, {
@@ -280,7 +231,7 @@
                 }
 
                 if( generate_pdf ){
-                    pdf.save('balance_sheet_comparison.pdf');
+                    pdf.save('account_receivable_aging_summary.pdf');
                 }
             }
         });
@@ -326,175 +277,137 @@
     });
 
     // Render Report Data Script
-    function renderReportList() {
-        
-        theadColumnNames = $(`#accounts-receivable-aging-summary th`).map(function() {
-            return $(this).text();
-        }).get();
-        theadTotalColumn = $("#accounts-receivable-aging-summary").find('tr:first th').length;
+    function renderReportList() {        
         businessLogoURL = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
-        businessName = $('input[name="company_name"]').val();
-        reportName = $('input[name="report_name"]').val();
-        reportDate = $("#reportDate").text();
-        filename = (businessName + '_' + reportName).replace(/[^\p{L}\p{N}_-]+/gu, '_');
-        notes = $("#notesContent").text();
-        showHideLogo = $('select[name="showHideLogo"]').val();
+        businessName    = $('input[name="company_name"]').val();
+        reportName      = $('input[name="report_name"]').val();
+        reportDate      = 'As of ' + moment($("#filter-date").val()).format('LL');
+        filename        = (businessName + '_' + reportName).replace(/[^\p{L}\p{N}_-]+/gu, '_');
+        showHideLogo    = $('select[name="showHideLogo"]').val();
         enableDisableBusinessName = $('.enableDisableBusinessName').prop('checked');
         enableDisableReportName = $('.enableDisableReportName').prop('checked');
-        header_align = $('select[name="header_align"]').val();
-        footer_align = $('select[name="footer_align"]').val();
-        sort_by = $('select[name="sort_by"]').val();
-        sort_order = $('select[name="sort_order"]').val();
-        page_size = $('select[name="page_size"]').val();
-        pageOrientation = $('select[name="pageOrientation"]').val();
-        pageHeaderRepeat = ($('input[name="pageHeaderRepeat"]').prop('checked') == true) ? 1 : 0;
-        date_from = $('input[name="date_from"]').val();
-        date_to = $('input[name="date_to"]').val();
+        header_align    = $('select[name="header_align"]').val();
+        footer_align    = $('select[name="footer_align"]').val();
+        sort_by         = $('select[name="sort_by"]').val();
+        sort_order      = $('select[name="sort_order"]').val();
         reportConfig = {
             businessLogoURL: businessLogoURL,
             showHideLogo: showHideLogo,
             header_align: header_align,
             footer_align: footer_align,
             sort_by: sort_by,
-            sort_order: sort_order,
-            page_size: page_size,
-            pageOrientation: pageOrientation,
-            pageHeaderRepeat: pageHeaderRepeat,
-            date_from: date_from,
-            date_to: date_to,
+            sort_order: sort_order
         };
-        // =========================
-        (enableDisableBusinessName) ? $("#businessName").text(businessName): businessName = $("#businessName").html("&nbsp;").html();
-        (enableDisableReportName) ? $("#reportName").text(reportName): reportName = $("#reportName").html("&nbsp;").html();
-        if (showHideLogo == "1") {
-            $('#businessLogo').attr('src', base_url + '/uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image?"; ?>' + Math.round(Math.random() * 1000000)).show();
-            if (header_align == "L") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'left',
-                    marginLeft: '115px'
-                });
-            }
-            if (header_align == "C") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'center',
-                    marginLeft: 'unset'
-                });
-            }
-            if (header_align == "R") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'right',
-                    marginLeft: 'unset'
-                });
-            }
-            if (footer_align == "L") {
-                $('.footerInfo').css({
-                    textAlign: 'left'
-                });
-            }
-            if (footer_align == "C") {
-                $('.footerInfo').css({
-                    textAlign: 'center'
-                });
-            }
-            if (footer_align == "R") {
-                $('.footerInfo').css({
-                    textAlign: 'right'
-                });
-            }
-        } else {
-            $('#businessLogo').hide();
-            if (header_align == "L") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'left',
-                    marginLeft: 'unset'
-                });
-            }
-            if (header_align == "C") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'center',
-                    marginLeft: 'unset'
-                });
-            }
-            if (header_align == "R") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'right',
-                    marginLeft: 'unset'
-                });
-            }
-            if (footer_align == "L") {
-                $('.footerInfo').css({
-                    textAlign: 'left'
-                });
-            }
-            if (footer_align == "C") {
-                $('.footerInfo').css({
-                    textAlign: 'center'
-                });
-            }
-            if (footer_align == "R") {
-                $('.footerInfo').css({
-                    textAlign: 'right'
-                });
-            }
+
+        if( $('.enableDisableBusinessName').is(':checked') ){
+            show_company_name = 1;
+        }else{
+            show_company_name = 0;
         }
+
+        if( $('.enableDisableReportName').is(':checked') ){
+            show_report_name = 1;
+        }else{
+            show_report_name = 0;
+        }
+
+        // =========================
+        (enableDisableBusinessName) ? $("#businessName").text(businessName): $("#businessName").html("&nbsp;").html();
+        (enableDisableReportName) ? $("#reportName").text(reportName): $("#reportName").html("&nbsp;").html();
+        $('#reportDate').html(reportDate);
+        if (showHideLogo == "1") {
+            $('#businessLogo').attr('src', base_url + '/uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image?"; ?>' + Math.round(Math.random() * 1000000)).show();            
+        } else {
+            $('#businessLogo').hide();            
+        }
+
+        if (header_align == "L") {
+            $('.reportTitleInfo').css({
+                textAlign: 'left',
+                marginLeft: '115px'
+            });
+        }
+        if (header_align == "C") {
+            $('.reportTitleInfo').css({
+                textAlign: 'center',
+                marginLeft: 'unset'
+            });
+        }
+        if (header_align == "R") {
+            $('.reportTitleInfo').css({
+                textAlign: 'right',
+                marginLeft: 'unset'
+            });
+        }
+        if (footer_align == "L") {
+            $('.footerInfo').css({
+                textAlign: 'left'
+            });
+        }
+        if (footer_align == "C") {
+            $('.footerInfo').css({
+                textAlign: 'center'
+            });
+        }
+        if (footer_align == "R") {
+            $('.footerInfo').css({
+                textAlign: 'right'
+            });
+        }
+
         $(".settingsApplyButton").attr('disabled', '').html('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Applying changes...');
         $('#pdfPreview').before('<span class="dataLoader"><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...</span>').hide();
-        // $("#<?php echo $tableID; ?> > tbody").html('<tr><td colspan="' + theadColumnNames.length + '"><center><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result... </center></td></tr>');
-        // =========================
+        
         $.ajax({
             type: "POST",
-            url:  base_url + "/accounting_controllers/Reports/getReportData/" + REPORT_CATEGORY,
+            url:  base_url + "accounting/reports/_update_report_settings",
             data: {
-                theadColumnNames: theadColumnNames,
-                theadTotalColumn: theadTotalColumn,
-                businessName: businessName,
-                reportName: reportName,
-                reportDate: reportDate,
-                filename: filename,
-                notes: notes,
-                reportConfig: reportConfig,
+            report_type_id: REPORT_ID,
+            company_name: businessName,
+            title: reportName,
+            show_company_name: show_company_name,
+            show_title: show_report_name,
+            report_date_text: $("#filter-date").val(),
+            show_logo: showHideLogo,
+            header_align: header_align,
+            footer_align: footer_align,
+            sort_by: sort_by,
+            sort_asc_desc: sort_order,
+            compact_display: 0
             },
-            success: function(data) {
-                loadReportPreview();
-                $("#accounts-receivable-aging-summary > tbody").html(data);
-                $(".settingsApplyButton").removeAttr('disabled').html('Apply');
-                // $('#reportSettings').modal('hide');
+            dataType:'json',
+            success: function(response) {
+            $(".settingsApplyButton").removeAttr('disabled').html('Apply');
+            if(response.is_success == 1) {
+                $('#reportSettings').modal('hide');
+                // Swal.fire({
+                //     icon: 'success',
+                //     title: 'Success',
+                //     text: 'Successfully update report settings',
+                // }).then((result) => {
+                    
+                // });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: response.msg,
+                });
+            }                
             }
-        });
-
-        // $("#<?php echo $tableID; ?> > tbody").html('<tr><td colspan="' + theadColumnNames.length + '"><center><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result... </center></td></tr>');
-        // =========================
-        // $.ajax({
-        //     type: "POST",
-        //     url:  base_url + "/accounting_controllers/Reports/getReportData/" + REPORT_CATEGORY,
-        //     data: {
-        //         businessName: businessName,
-        //         reportName: reportName,
-        //         reportDate: reportDate,
-        //         filename: filename,
-        //         reportConfig: reportConfig,
-        //     },
-        //     success: function(data) {
-        //         loadReportPreview();
-        //         $("#accounts-receivable-aging-summary > tbody").html(data);
-        //         $(".settingsApplyButton").removeAttr('disabled').html('Apply');
-        //         // $('#reportSettings').modal('hide');
-        //     }
-        // });
-
-        $(".settingsApplyButton").removeAttr('disabled').html('Apply');        
+        });         
     }
-
-    // Report Config Script
-    $('#reportSettingsForm').submit(function(event) {
-        event.preventDefault();
-        renderReportList();
-    });      
 
     // Export Report to PDF Script
     $(".savePDF").click(function(event) {
         var orientation = $('#pageOrientation').val();
         generatePDF(false, orientation, true);
+    });
+
+    // Report Config Script
+    $('#reportSettingsForm').submit(function(event) {
+        event.preventDefault();
+        renderReportList();
     });
 
     $(document).ready(function() {
@@ -561,5 +474,4 @@
             });
         });
     });
-
 </script>

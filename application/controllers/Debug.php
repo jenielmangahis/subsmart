@@ -2792,6 +2792,11 @@ class Debug extends MYF_Controller {
         echo "<pre>";
         print_r($err_data);        
     }
+
+    public function testPhpVersion(){
+        phpinfo();
+        exit;
+    }
 }
 /* End of file Debug.php */
 
