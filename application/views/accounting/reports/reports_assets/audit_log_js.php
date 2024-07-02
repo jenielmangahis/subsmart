@@ -21,7 +21,7 @@
 
     // Render Report Data Script
     function renderReportList() {
-        var theadColumnNames = $(`#${REPORT_ID} thead tr:first td`).map(function() {
+        var theadColumnNames = $(`#${TABLE_ID} thead tr:first td`).map(function() {
             return $(this).text();
             }).get()
         theadTotalColumn = $(`#${TABLE_ID}`).find('tr:first td').length;
@@ -340,7 +340,7 @@
             var emailTo = $("#emailTo").val();
             var emailCC = $("#emailCC").val();
             var emailSubject = $("#emailSubject").val();
-            var emailBody = $("#emailBody").html();
+            var emailBody = CKEDITOR.instances['emailBody'].getData();
             var customAttachmentNamePDF = ($('.pdfAttachmentCheckbox').is(":checked")) ? $("#pdfReportFilename").val() : "";
             var customAttachmentNameXLSX = ($('.xlsxAttachmentCheckbox').is(":checked")) ? $("#xlsxReportFileName").val() : "";
             var attachmentConfig = {
