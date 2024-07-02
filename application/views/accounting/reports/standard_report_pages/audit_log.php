@@ -39,6 +39,7 @@
                                         <li><a class="dropdown-item" href="javascript:void(0);" id="exportToXLSX">Export to Excel</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);" id="exportToPDF" download>Export to PDF</a></li>
                                     </ul>
+                                    <button data-bs-toggle="modal" data-bs-target="#printPreviewModal" class="nsm-button border-0 top-button"><i class="bx bx-fw bx-printer icon-top"></i></button>
                                     <button class="nsm-button border-0 primary top-button" data-bs-toggle="modal" data-bs-target="#reportSettings"><i class="bx bx-fw bx-cog icon-top"></i></button>
                                 </span>
                             </div>
@@ -63,20 +64,20 @@
                                     <div class="reportTitleInfo" style="<?= $header_css; ?>">
                                         <?php if( $reportSettings ){ ?>
                                             <?php if( $reportSettings->show_company_name == 1 ){ ?>
-                                                <h3 id="businessName"><?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?></h3>
+                                                <h3 id="businessName"><?= $reportSettings && $reportSettings->company_name != '' ? $reportSettings->company_name : $clients->business_name; ?></h3>
                                             <?php } ?>
                                         <?php }else{ ?>
-                                            <h3 id="businessName"><?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?></h3>
+                                            <h3 id="businessName"><?= $clients->business_name; ?></h3>
                                         <?php } ?>
 
                                         <?php if( $reportSettings ){ ?>
                                             <?php if( $reportSettings->show_title == 1 ){ ?>
-                                                <h5><strong id="reportName"><?php echo $page->title ?></strong></h5>
+                                                <h5><strong id="reportName"><?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : 'Audit Log'; ?></strong></h5>
                                             <?php } ?>
                                         <?php }else{ ?>
-                                            <h5><strong id="reportName"><?php echo $page->title ?></strong></h5>
+                                            <h5><strong id="reportName">Audit Log</strong></h5>
                                         <?php } ?>
-                                        <h5><small id="reportDate">As of <?php echo date('F d, Y'); ?></small></h5>
+                                        <h5><small id="reportDate">As of <?= $reportSettings && strtotime($reportSettings->report_date_text) > 0 ? date('F d, Y', strtotime($reportSettings->report_date_text)) : date('F d, Y'); ?></small></h5>
                                     </div>
                                 </div>
                             </div>
@@ -180,7 +181,7 @@
                                 <div class="col-md-4 mb-3">
                                     <label for="filter-date">Date</label>
                                     <div class="">
-                                        <input type="date" id="filter-date" class="form-control nsm-field date" value="<?= $reportSettings && $reportSettings->report_date_text != '' ? date("Y-m-d",strtotime($reportSettings->report_date_text)) : date("Y-m-d"); ?>" data-type="filter-date">
+                                        <input type="date" name="date" id="report-date" class="form-control nsm-field date" value="<?= $reportSettings && $reportSettings->report_date_text != '' ? date("Y-m-d",strtotime($reportSettings->report_date_text)) : date("Y-m-d"); ?>" data-type="filter-date">
                                     </div>
                                 </div>
 
@@ -289,10 +290,10 @@
                                 <option value="L">Landscape</option>
                             </select>
                         </div>
-                        <div class="form-check">
+                        <!-- <div class="form-check">
                             <input id="pageHeaderRepeat" name="pageHeaderRepeat" class="form-check-input" type="checkbox">
                             <label class="form-check-label" for="pageHeaderRepeat">Repeat Page Header</label>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-sm-9">
                         <iframe id="pdfPreview" class="border-0" width="100%" height="450px"></iframe>
@@ -392,7 +393,7 @@
 <?php include viewPath('v2/includes/footer'); ?>
 <script>
 $(function(){
-    //$("#auditloglist_table").nsmPagination({itemsPerPage: '<?= $reportSettings ? $reportSettings->page_size : '10'; ?>'});
+
 });
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
