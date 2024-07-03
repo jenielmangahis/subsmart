@@ -280,10 +280,10 @@
         <!-- <li onclick="location.href='<?php // echo base_url('customer/add_advance')
                                             ?>'"> -->
         <li class="<?php if ($page->title == '') {
-                        echo 'active';
-                    } ?>">
+            echo 'active';
+        } ?>">
             <a class="nsm-page-link" href="javascript:void(0);"
-                onclick="window.open('<?php echo base_url('job/new_job1?cus_id=' . $cus_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');">
+                onclick="window.open('<?php echo base_url('job/new_job1?cus_id='.$cus_id); ?>', '_blank','location=yes, height=650, width=1200, scrollbars=yes, status=yes');">
                 <i class='bx bx-fw bx-message-square-error'></i>
                 <span>Jobs</span>
             </a>
@@ -312,7 +312,7 @@
             </div>
             <span class="nsm-fab-label">News Feed</span>
         </li>
-        <?php if( logged('company_id') == 1 ){ ?>
+        <?php if (logged('company_id') == 1) { ?>
         <li data-bs-toggle="modal" data-bs-target="#news_letter_modal">
             <div class="nsm-fab-icon">
                 <i class="bx bx-news"></i>
@@ -363,7 +363,7 @@
             <i class='bx bx-fw bx-comment'></i> News Feed
         </button>
 
-        <?php if( logged('company_id') == 1 ){ ?>
+        <?php if (logged('company_id') == 1) { ?>
         <button name="button" type="button" class="nsm-button" data-bs-toggle="modal"
             data-bs-target="#news_letter_modal">
             <i class='bx bx-fw bx-news'></i> Add Newsletter
@@ -400,70 +400,70 @@
                         // if($wids->w_view_link != 'widgets/lead_source'){
                         //     $this->load->view("v2/" . $wids->w_view_link, $data);
                         // }
-                        $this->load->view('v2/' . $wids->w_view_link, $data);
+                        $this->load->view('v2/'.$wids->w_view_link, $data);
                     }
                 }
-                ?> </div>
+?> </div>
         </div>
 
         <div class="row  g-3 grid-row-mb nsm-draggable-container-sortable-main" id="nsm_widgets">
            <?php
-                if (count($main_widgets) > 0) {
-                    foreach ($main_widgets as $wids) {
-                        if ($wids->wu_is_main) {
-                            if ($wids->wu_widget_id == 26) {
-                                echo '<div class="col-12 col-lg-4" id="widget-'.$wids->wu_widget_id.'">';
-                                $data['class'] = 'nsm-card nsm-grid large';
-                            } else {                                            
-                                echo '<div class="col-12 col-lg-4" id="widget-'.$wids->wu_widget_id.'">';                                            
-                                $data['class'] = 'nsm-card nsm-grid med primary';
-                            }
+if (count($main_widgets) > 0) {
+    foreach ($main_widgets as $wids) {
+        if ($wids->wu_is_main) {
+            if ($wids->wu_widget_id == 26) {
+                echo '<div class="col-12 col-lg-4" id="widget-'.$wids->wu_widget_id.'">';
+                $data['class'] = 'nsm-card nsm-grid large';
+            } else {
+                echo '<div class="col-12 col-lg-4" id="widget-'.$wids->wu_widget_id.'">';
+                $data['class'] = 'nsm-card nsm-grid med primary';
+            }
 
-                            $data['isMain'] = true;
-                            $data['id'] = $wids->w_id;
-                            $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
+            $data['isMain'] = true;
+            $data['id'] = $wids->w_id;
+            $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
 
-                            if ($wids->w_name === 'Expense') {
-                                $data = set_expense_graph_data($data);
-                            }
+            if ($wids->w_name === 'Expense') {
+                $data = set_expense_graph_data($data);
+            }
 
-                            if ($wids->w_name === 'Bank') {
-                                $data = set_bank_widget_data($data);
-                            }
+            if ($wids->w_name === 'Bank') {
+                $data = set_bank_widget_data($data);
+            }
 
-                            $this->load->view('v2/' . $wids->w_view_link, $data);
+            $this->load->view('v2/'.$wids->w_view_link, $data);
 
-                            echo '</div>';
-                        }
-                    }
-                }
-            ?>
+            echo '</div>';
+        }
+    }
+}
+?>
 
             <?php
-            foreach ($widgets as $wids) {
-                if (!$wids->wu_is_main && !$wids->w_main) {
-                    echo '<div class="col-12 col-lg-4" data-order="'.$wids->wu_order.'" id="widget-'.$wids->wu_widget_id.'">';                           
-                    $data['class'] = 'nsm-card nsm-grid';
-                    $data['isMain'] = false;
-                    $data['id'] = $wids->w_id;
-                    $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
+foreach ($widgets as $wids) {
+    if (!$wids->wu_is_main && !$wids->w_main) {
+        echo '<div class="col-12 col-lg-4" data-order="'.$wids->wu_order.'" id="widget-'.$wids->wu_widget_id.'">';
+        $data['class'] = 'nsm-card nsm-grid';
+        $data['isMain'] = false;
+        $data['id'] = $wids->w_id;
+        $data['isGlobal'] = ($wids->wu_company_id == '0' ? false : true);
 
-                    if ($wids->w_name === 'Expense') {
-                        $data = set_expense_graph_data($data);
-                    }
+        if ($wids->w_name === 'Expense') {
+            $data = set_expense_graph_data($data);
+        }
 
-                    if ($wids->w_name === 'Bank') {
-                        $data = set_bank_widget_data($data);
-                    }
-                    // if($wids->w_view_link != 'widgets/lead_source'){
-                    //     $this->load->view("v2/" . $wids->w_view_link, $data);
-                    // }
-                    $this->load->view('v2/' . $wids->w_view_link, $data);
+        if ($wids->w_name === 'Bank') {
+            $data = set_bank_widget_data($data);
+        }
+        // if($wids->w_view_link != 'widgets/lead_source'){
+        //     $this->load->view("v2/" . $wids->w_view_link, $data);
+        // }
+        $this->load->view('v2/'.$wids->w_view_link, $data);
 
-                    echo '</div>';
-                }
-            }
-            ?>
+        echo '</div>';
+    }
+}
+?>
         </div>
     </div>
 </div>
@@ -923,6 +923,785 @@ function load_plaid_gauge_chart() {
         var gaugeChart = new Chart(document.getElementById(canvasId), gaugeConfig);
         gaugeCharts.push(gaugeChart);
     });
+}
+
+collectionGraphThumbnail();
+function collectionGraphThumbnail(){
+    
+fetch('<?php echo base_url('Dashboard/collections_graph'); ?>', {}).then(response => response.json())
+            .then(
+                response => {
+                    var monthlyAmounts = new Array(12).fill(0);
+
+                    var {
+                        success,
+                        collection
+                    } = response;
+                    var totalCollection = 0;
+
+                    if (collection) {
+                        for (var x = 0; x < collection.length; x++) {
+                            var dueDate = collection[x].created_at;
+                            var total_amount_paid = collection[x].total_amount_paid ? collection[x]
+                                .total_amount_paid : 0
+                            if (dueDate) {
+                                var due = new Date(dueDate);
+                                var month = due.getMonth();
+                                totalCollection += 1;
+                                monthlyAmounts[month] += 1;
+                            }
+                        }
+                    }
+
+                    var collection_data = {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct',
+                            'Nov', 'Dec'
+                        ],
+                        datasets: [{
+                            label: 'Collection',
+                            backgroundColor: 'rgb(199 149 28)',
+                            borderColor: 'rgb(199 149 28)',
+                            data: monthlyAmounts
+                        }]
+                    };
+
+                    $('#collectionGraphLoader').hide()
+
+                    const collectionGraph = new Chart($('#collectionGraph'), {
+                        type: 'line',
+                        data: collection_data,
+                        options: {
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                },
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    suggestedMax: 10
+                                },
+                            },
+                            aspectRatio: 1.2,
+                        },
+                    });
+
+                    window.collectionGraph = collectionGraph;
+                }).catch((error) => {
+                console.log(error);
+            })
+}
+
+openInvoicesGraphThumbnail();
+function openInvoicesGraphThumbnail(){
+    fetch('<?php echo base_url('Dashboard/open_invoices_graph'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
+
+        var {
+            success,
+            open_invoices
+        } = response;
+
+
+
+        if (open_invoices) {
+            for (var x = 0; x < open_invoices.length; x++) {
+                var dueDate = open_invoices[x].due_date;
+                if (dueDate) {
+                    var due = new Date(dueDate);
+                    var month = due.getMonth();
+
+                    monthlyAmounts[month] += 1;
+                }
+            }
+        }
+
+        var openinvoices_data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Open Invoices Count',
+                backgroundColor: 'rgb(220, 53, 69 ,0.79)',
+                borderColor: 'rgb(220, 53, 69 ,0.79)',
+                data: monthlyAmounts
+            }]
+        };
+        $('#OpenInvoicesGraphLoader').hide()
+
+        const OpenInvoicesGraph = new Chart($('#OpenInvoicesGraph'), {
+            type: 'bar',
+            data: openinvoices_data,
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
+                },
+                aspectRatio: 1.2,
+            },
+        });
+
+        window.OpenInvoicesGraph = OpenInvoicesGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+
+}
+
+accountingExpenseGraphThumbnail();
+function accountingExpenseGraphThumbnail(){
+    fetch('<?php echo base_url('Dashboard/accounting_expense'); ?>', {}).then(response => response.json()).then(
+    response => {
+
+        var {
+            success,
+            accounting_expense
+        } = response;
+
+        console.log('accounting_expense', accounting_expense)
+
+        let expenseCategory = [];
+        let dataTemp = [];
+        let total_expense = 0;
+
+
+        if (accounting_expense) {
+            for (var x = 0; x < accounting_expense.length; x++) {
+                if (accounting_expense[x].category) {
+                    expenseCategory.push(accounting_expense[x].category.name)
+                    dataTemp.push(accounting_expense[x].total)
+                    total_expense += parseInt(accounting_expense[x].total)
+                }
+            }
+        }
+
+
+        var new_leads_data = {
+            labels: expenseCategory,
+            datasets: [{
+                label: 'Total leads',
+                data: dataTemp,
+                backgroundColor: [
+                    'rgb(106 74 134)',
+                    'rgb(199 149 28)',
+                    'rgb(64 136 84)',
+                    'rgb(220 53 69)',
+                    'rgb(206, 128, 255)'
+                ],
+            }]
+        };
+
+        $('#AccountingExpenseGraphLoader').hide()
+
+
+        const AccountingExpenseGraph = new Chart($('#AccountingExpenseGraph'), {
+            type: 'doughnut',
+            data: new_leads_data,
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            boxWidth: 10,
+                        }
+                    },
+                },
+                layout: {
+                    padding: {
+                        left: 5,
+                        right: 5,
+                        top: 0,
+                    }
+                },
+            },
+        });
+
+        $(".total_expense_graph_total").html('$ ' + total_expense);
+        $("#total_expense_graph").html('$' + total_expense);
+
+
+        window.AccountingExpenseGraph = AccountingExpenseGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+
+}
+
+customerGroupsGraphThumbnail();
+function customerGroupsGraphThumbnail(){
+    fetch('<?php echo base_url('Dashboard/get_all_customer_group'); ?>', {}).then(response => response.json()).then(
+    response => {
+
+
+        var {
+            success,
+            customer
+        } = response;
+
+        let labelsTemp = [];
+        let dataTemp = [];
+        let totalCustomer = 0;
+
+        if (customer) {
+            for (var x = 0; x < customer.length; x++) {
+                labelsTemp.push(customer[x].title)
+                dataTemp.push(customer[x].total_customer)
+                totalCustomer += parseInt(customer[x].total_customer)
+            }
+        }
+
+        var customer_graph_data = {
+            labels: labelsTemp,
+            datasets: [{
+                label: 'Total Customer Groups',
+                data: dataTemp,
+                backgroundColor: [
+                    'rgb(106 74 134)',
+                    'rgb(64 136 84)',
+                    'rgb(220 53 69)',
+                    'rgb(206, 128, 255)'
+                ],
+            }]
+        };
+        $('#NewCustomerGraphLoader').hide()
+
+
+        const NewCustomerWidgetsGraph = new Chart($('#NewCustomerWidgetsGraph'), {
+            type: 'pie',
+            data: customer_graph_data,
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            boxWidth: 10,
+                        }
+                    },
+                },
+                layout: {
+                    padding: {
+                        left: 5,
+                        right: 5,
+                        top: 0,
+                    }
+                },
+            },
+        });
+        $(".recent-customer-container-count").html(totalCustomer);
+        $("#total_customer_graph").html(totalCustomer);
+
+
+        window.NewCustomerWidgetsGraph = NewCustomerWidgetsGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+
+}
+
+salesGraphThumbnail();
+function salesGraphThumbnail(){
+    fetch('<?php echo base_url('Dashboard/sales_graph'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
+
+        var {
+            success,
+            open_invoices
+        } = response;
+
+
+
+
+        if (open_invoices) {
+            for (var x = 0; x < open_invoices.length; x++) {
+                var dueDate = open_invoices[x].due_date;
+                if (dueDate) {
+                    var due = new Date(dueDate);
+                    var month = due.getMonth();
+
+                    monthlyAmounts[month] += parseFloat(open_invoices[x].grand_total);
+                }
+            }
+        }
+
+        var sales_graph_data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Sales',
+                backgroundColor: 'rgb(106, 74, 134)',
+                borderColor: 'rgb(106, 74, 134)',
+                data: monthlyAmounts
+            }]
+        };
+        $('#SalesGraphLoader').hide()
+
+        const SalesWidgetsGraph = new Chart($('#SalesWidgetsGraph'), {
+            type: 'line',
+            data: sales_graph_data,
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
+                },
+                aspectRatio: 1.2,
+            },
+        });
+
+        window.SalesWidgetsGraph = SalesWidgetsGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+}
+
+pastDueGraphThumbnail();
+function pastDueGraphThumbnail(){
+    
+fetch('<?php echo base_url('Dashboard/past_due_invoices'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
+
+        var {
+            success,
+            past_due
+        } = response;
+
+
+        if (past_due) {
+            for (var x = 0; x < past_due.length; x++) {
+                var dueDate = past_due[x].due_date;
+                if (dueDate) {
+                    var due = new Date(dueDate);
+                    var month = due.getMonth();
+
+                    monthlyAmounts[month] += parseFloat(past_due[x].balance);
+                }
+            }
+        }
+
+        var pastdue_data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Total Balance',
+                backgroundColor: 'rgb(220, 53, 69 ,0.79)',
+                borderColor: 'rgb(220, 53, 69 ,0.79)',
+                data: monthlyAmounts
+            }]
+        };
+        $('#PastDueGraphLoader').hide()
+
+        const pastDueGraph = new Chart($('#PastDueGraph'), {
+            type: 'bar',
+            data: pastdue_data,
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
+                },
+                aspectRatio: 1.2,
+            },
+        });
+
+        window.pastDueGraph = pastDueGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+}
+
+estimateGraphThumbnail();
+function estimateGraphThumbnail(){
+    fetch('<?php echo base_url('Dashboard/estimate_thumbnail'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
+
+        var {
+            success,
+            estimates,
+            expired_estimates
+        } = response;
+
+
+        var ctx = document.getElementById('estimate_chart').getContext('2d');
+        var gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(106,74,134, 1)');
+        gradient.addColorStop(1, 'rgba(142,43,227, 1)');
+
+        const gaugeChartText = {
+            id: 'gaugeChartText',
+            afterDatasetDraw(chart, args, pluginOptions) {
+                const {
+                    ctx,
+                    data,
+                    chartArea: {
+                        top,
+                        bottom,
+                        left,
+                        right,
+                        width,
+                        height
+                    },
+                    scales: {
+                        r
+                    }
+                } = chart;
+
+
+                ctx.save();
+
+                // Destructure the data array
+                const [totalEstimate, expiredEstimate] = chart.data.datasets[0].data;
+
+                const xCoor = chart.getDatasetMeta(0).data[0].x;
+                const yCoor = chart.getDatasetMeta(0).data[0].y;
+
+                ctx.font = '30px FontAwesome';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = '#6a4a86'; // Color of the icon
+                ctx.fillText('\uf681', xCoor, yCoor - 30);
+
+                ctx.font = '16px sans-serif';
+                ctx.fillStyle = "rgb(40, 40, 43)";
+                ctx.textBaseline = 'top';
+                ctx.textAlign = 'left';
+                ctx.fillText('Open', left + 80, yCoor + 5);
+                ctx.textAlign = 'right';
+                ctx.fillText('Expired', right - 70, yCoor + 5);
+
+                // Use the destructured variables
+                ctx.textAlign = 'left';
+                ctx.fillText(totalEstimate, left + 90, yCoor + 25);
+                ctx.textAlign = 'right';
+                ctx.fillText(expiredEstimate, right - 80, yCoor + 25);
+
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+            }
+        }
+
+
+
+        $('#GuageEstimateLoader').hide()
+
+        const estimateChart = new Chart($('#estimate_chart'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Open', 'Expired'],
+                datasets: [{
+                    data: [estimates, expired_estimates],
+                    backgroundColor: [
+                        gradient,
+                        'rgb(240,240,240)'
+                    ],
+                    borderColor: [
+                        gradient,
+                        'rgb(240,240,240)'
+                    ],
+                    borderWidth: 1,
+                    cutout: '80%',
+                    circumference: 300,
+                    rotation: 210
+                }]
+            },
+            options: {
+                aspectRatio: 1.5,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        enabled: false
+                    }
+                }
+            },
+            plugins: [gaugeChartText],
+        });
+
+        window.estimateChart = estimateChart;
+    }).catch((error) => {
+    console.log(error);
+})
+}
+
+incomeGraphThumbnail()
+function incomeGraphThumbnail(){
+    fetch('<?php echo base_url('Dashboard/income_thumbnail_graph'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
+
+        var {
+            success,
+            income,
+        } = response;
+
+
+        if (income) {
+            for (var x = 0; x < income.length; x++) {
+                var payment_date = income[x].payment_date;
+                if (payment_date) {
+                    var due = new Date(payment_date);
+                    var month = due.getMonth();
+                    monthlyAmounts[month] += parseFloat(income[x].invoice_amount);
+                }
+            }
+        }
+
+        var jobs_data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Income',
+                backgroundColor: 'rgb(220, 53, 69 ,0.79)',
+                borderColor: 'rgb(220, 53, 69 ,0.79)',
+                data: monthlyAmounts
+            }]
+        };
+        $('#IncomeGraphLoader').hide()
+
+        const IncomeThumbnailGraph = new Chart($('#IncomeThumbnailGraph'), {
+            type: 'bar',
+            data: jobs_data,
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
+                },
+                aspectRatio: 1.2,
+            },
+        });
+
+        window.IncomeThumbnailGraph = IncomeThumbnailGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+}
+
+jobsGraphThumbnail();
+function jobsGraphThumbnail(){
+    fetch('<?php echo base_url('Dashboard/jobs_thumbnail_graph'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
+
+        var {
+            success,
+            jobs,
+            total_jobs
+        } = response;
+
+
+        if (jobs) {
+            $('.jobs_count_thumbnail').html(total_jobs);
+
+            for (var x = 0; x < jobs.length; x++) {
+                var date_created = jobs[x].date_created;
+                if (date_created) {
+                    var due = new Date(date_created);
+                    var month = due.getMonth();
+
+                    monthlyAmounts[month] += 1;
+                }
+            }
+        }
+
+        var jobs_data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'jobs',
+                backgroundColor: 'rgb(220, 53, 69 ,0.79)',
+                borderColor: 'rgb(220, 53, 69 ,0.79)',
+                data: monthlyAmounts
+            }]
+        };
+        $('#JobsGraphLoader').hide()
+
+        const JobsThumbnailGraph = new Chart($('#JobsThumbnailGraph'), {
+            type: 'bar',
+            data: jobs_data,
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
+                },
+                aspectRatio: 1.2,
+            },
+        });
+
+        window.JobsThumbnailGraph = JobsThumbnailGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+
+}
+
+unpaidInvoicesGraphThumbnail();
+function unpaidInvoicesGraphThumbnail(){
+    fetch('<?php echo base_url('Dashboard/unpaid_invoices_graph'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
+
+        var {
+            success,
+            unpaid_invoices
+        } = response;
+
+        if (unpaid_invoices) {
+            for (var x = 0; x < unpaid_invoices.length; x++) {
+                var dueDate = unpaid_invoices[x].date_created;
+                var total_amount_paid = unpaid_invoices[x].total_amount_paid ? unpaid_invoices[x]
+                    .total_amount_paid : 0
+                if (dueDate) {
+                    var due = new Date(dueDate);
+                    var month = due.getMonth();
+                    monthlyAmounts[month] += parseFloat(unpaid_invoices[x].grand_total - total_amount_paid);
+                }
+            }
+        }
+
+        var unpaid_graph_data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Unpaid Invoices',
+                backgroundColor: 'rgb(106, 74, 134)',
+                borderColor: 'rgb(106, 74, 134)',
+                data: monthlyAmounts
+            }]
+        };
+        $('#UnpaidInvoicesGraphLoader').hide()
+
+        const UnpaidInvoicesWidgetsGraph = new Chart($('#UnpaidInvoicesWidgetsGraph'), {
+            type: 'line',
+            data: unpaid_graph_data,
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
+                },
+                aspectRatio: 1.2,
+            },
+        });
+
+        window.UnpaidInvoicesWidgetsGraph = UnpaidInvoicesWidgetsGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+}
+
+
+newLeadsGraphThumbnail();
+function newLeadsGraphThumbnail(){
+    
+fetch('<?php echo base_url('Dashboard/leads_graph'); ?>', {}).then(response => response.json()).then(
+    response => {
+
+        var {
+            success,
+            leads
+        } = response;
+
+        let labelsTemp = [];
+        let dataTemp = [];
+        let totalLeads = 0;
+
+
+        if (leads) {
+            for (var x = 0; x < leads.length; x++) {
+                labelsTemp.push(leads[x].lead_name)
+                dataTemp.push(leads[x].total_leads)
+                totalLeads += parseInt(leads[x].total_leads)
+            }
+        }
+
+
+        var new_leads_data = {
+            labels: labelsTemp,
+            datasets: [{
+                label: 'Total leads',
+                data: dataTemp,
+                backgroundColor: [
+                    'rgb(106 74 134)',
+                    'rgb(199 149 28)',
+                    'rgb(64 136 84)',
+                    'rgb(220 53 69)',
+                    'rgb(206, 128, 255)'
+                ],
+            }]
+        };
+
+        $('#NewLeadsGraphLoader').hide()
+
+
+        const NewLeadsWidgetsGraph = new Chart($('#NewLeadsWidgetsGraph'), {
+            type: 'doughnut',
+            data: new_leads_data,
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            boxWidth: 10,
+                        }
+                    },
+                },
+                layout: {
+                    padding: {
+                        left: 5,
+                        right: 5,
+                        top: 0,
+                    }
+                },
+            },
+        });
+
+        $(".total_leads_graph_total").html(totalLeads);
+        $("#total_leads_graph").html(totalLeads);
+
+
+
+
+        window.NewLeadsWidgetsGraph = NewLeadsWidgetsGraph;
+    }).catch((error) => {
+    console.log(error);
+})
+
 }
 
 
