@@ -784,6 +784,7 @@ $route['accounting/reports/generate-paychecks-pdf']['post'] = 'accounting_contro
 $route['accounting/reports/(:any)/email']['post'] = 'accounting_controllers/reports/email/$1';
 $route['accounting/reports/_update_title'] = 'accounting_controllers/reports/ajax_update_report_title';
 $route['accounting/reports/_update_report_settings'] = 'accounting_controllers/reports/ajax_update_report_settings';
+$route['accounting/reports/_total_customer_balance'] = 'accounting_controllers/Reports/ajax_total_customer_balance';
 
 $route['accounting/receipts/reviewed'] = 'accounting/reviewed_receipts';
 
@@ -1232,6 +1233,7 @@ $route['event_types/index'] = 'Event_Types/index';
 $route['event_types/add_new'] = 'Event_Types/add_new_event_type';
 $route['event_types/save'] = 'Event_Types/create_event_type';
 $route['event_types/_save_event_type'] = 'Event_Types/ajax_save_event_type';
+$route['event_types/_update_event_type'] = 'Event_Types/ajax_update_event_type';
 $route['event_types/edit/(:num)'] = 'Event_Types/edit_event_type/$1';
 $route['event_types/update'] = 'Event_Types/update_event_type';
 $route['event_types/delete'] = 'Event_Types/delete_event_type';
@@ -1251,6 +1253,9 @@ $route['events/add_new_event_tag'] = 'Events/add_new_event_tag';
 $route['events/save_event_tag'] = 'Events/create_new_event_tag';
 $route['events/edit_event_tags/(:any)'] = 'Events/edit_event_tags/$1';
 $route['events/update_event_tag'] = 'Events/update_event_tag';
+$route['events/_save_event_tag'] = 'Events/ajax_save_event_tag';
+$route['events/_update_event_tag'] = 'Events/ajax_update_event_tag';
+$route['events/_delete_event_tag'] = 'Events/ajax_delete_event_tag';
 
 // Event Settings
 $route['events/_update_settings'] = 'Events/ajax_update_settings';
@@ -1737,7 +1742,7 @@ $route['job/_list_workorder_import'] = 'Job/ajax_list_workorder_import';
 $route['job/_list_invoice_import'] = 'Job/ajax_list_invoice_import';
 $route['job/_list_estimate_import'] = 'Job/ajax_list_estimate_import';
 
-// Wdigets
+// Widgets
 $route['dashboard/_recent_customers'] = 'Dashboard/ajax_recent_customers';
 $route['dashboard/_recent_customers_thumbnail'] = 'Dashboard/ajax_recent_customers_thubnails';
 $route['dashboard/_recent_leads'] = 'Dashboard/ajax_recent_leads';
@@ -1753,6 +1758,7 @@ $route['widgets/_load_service_ticket_chart_data'] = 'Widgets/ajax_load_service_t
 $route['widgets/_load_job_chart_data'] = 'Widgets/ajax_load_job_chart_data';
 $route['widgets/_load_taskhub_summary'] = 'Widgets/ajax_load_taskhub_summary';
 $route['widgets/_load_customer_group_chart'] = 'Widgets/ajax_load_customer_group_chart';
+$route['widgets/_update_sort'] = 'Widgets/ajax_update_sort';
 
 // Esign
 $route['esign_v2/_tags_sections'] = 'Esign_v2/ajax_company_tags_sections';
@@ -1781,6 +1787,10 @@ $route['before_after_photos/_update_photos'] = 'Before_after_v2/ajax_update_phot
 
 //Files Vault
 $route['files_vault'] = 'Vault_v2/index_v2';
+$route['files_vault/_load_list'] = 'Vault_v2/ajax_load_list';
+$route['files_vault/_create_folder'] = 'Vault_v2/ajax_create_folder';
+$route['files_vault/_rename_folder'] = 'Vault_v2/ajax_rename_folder';
+$route['files_vault/testRecursive'] = 'Vault_v2/testRecursive';
 
 //Email Broadcast
 $route['email_broadcasts'] = 'EmailBroadcast/index';

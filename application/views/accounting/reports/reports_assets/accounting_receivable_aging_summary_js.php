@@ -1,4 +1,18 @@
 <script type="text/javascript">
+
+    CKEDITOR.replace('emailBody', {
+        toolbarGroups: [{
+                name: 'clipboard',
+                groups: ['clipboard', 'undo']
+            },
+            {
+                name: 'basicstyles',
+                groups: ['basicstyles', 'cleanup']
+            },
+        ],
+        height: '165px',
+    });
+
     var REPORT_ID        = 18;
     var REPORT_CATEGORY  = "accounts_receivable_aging_summary";
     var theadTotalColumn = $("#accounts-receivable-aging-summary").find('tr:first th').length;
@@ -290,6 +304,13 @@
         footer_align    = $('select[name="footer_align"]').val();
         sort_by         = $('select[name="sort_by"]').val();
         sort_order      = $('select[name="sort_order"]').val();
+        
+        if($('input[name="compact_display"]').is(':checked')) {
+            compact_display = 1;
+        } else {
+            compact_display = 0;
+        }        
+
         reportConfig = {
             businessLogoURL: businessLogoURL,
             showHideLogo: showHideLogo,
@@ -373,7 +394,7 @@
             footer_align: footer_align,
             sort_by: sort_by,
             sort_asc_desc: sort_order,
-            compact_display: 0
+            compact_display: compact_display
             },
             dataType:'json',
             success: function(response) {

@@ -21,7 +21,7 @@
 
     // Render Report Data Script
     function renderReportList() {
-        var theadColumnNames = $(`#${REPORT_ID} thead tr:first td`).map(function() {
+        var theadColumnNames = $(`#${TABLE_ID} thead tr:first td`).map(function() {
             return $(this).text();
             }).get()
         theadTotalColumn = $(`#${TABLE_ID}`).find('tr:first td').length;
@@ -109,10 +109,9 @@
         sort_order = $('select[name="sort_order"]').val();
         page_size = $('select[name="page_size"]').val();
         pageOrientation = $('select[name="pageOrientation"]').val();
-        pageHeaderRepeat = ($('input[name="pageHeaderRepeat"]').prop('checked') == true) ? 1 : 0;
-        date_from = $('input[name="date_from"]').val();
-        date_to = $('input[name="date_to"]').val();
+        pageHeaderRepeat = ($('input[name="pageHeaderRepeat"]').prop('checked') == true) ? 1 : 0;        
         date = $('input[name="date"]').val();
+        reportDate = 'As of ' + moment($("#report-date").val()).format('LL');
         reportConfig = {
             businessLogoURL: businessLogoURL,
             showHideLogo: showHideLogo,
@@ -123,11 +122,10 @@
             page_size: page_size,
             pageOrientation: pageOrientation,
             pageHeaderRepeat: pageHeaderRepeat,
-            date_from: date_from,
-            date_to: date_to,
             date: date,
         };
         // =========================
+        $("#reportDate").text(reportDate);
         (enableDisableBusinessName) ? $("#businessName").text(businessName): businessName = $("#businessName").html("&nbsp;").html();
         (enableDisableReportName) ? $("#reportName").text(reportName): reportName = $("#reportName").html("&nbsp;").html();
         if (showHideLogo == "1") {
@@ -228,7 +226,9 @@
             show_company_name: show_company_name,
             show_title: show_report_name,
             page_size:page_size,
-            report_date_text: $("#filter-date").val(),
+            report_date_text: date,
+            report_date_from_text: date,
+            report_date_to_text:date,
             show_logo: showHideLogo,
             header_align: header_align,
             footer_align: footer_align,
@@ -340,7 +340,7 @@
             var emailTo = $("#emailTo").val();
             var emailCC = $("#emailCC").val();
             var emailSubject = $("#emailSubject").val();
-            var emailBody = $("#emailBody").html();
+            var emailBody = CKEDITOR.instances['emailBody'].getData();
             var customAttachmentNamePDF = ($('.pdfAttachmentCheckbox').is(":checked")) ? $("#pdfReportFilename").val() : "";
             var customAttachmentNameXLSX = ($('.xlsxAttachmentCheckbox').is(":checked")) ? $("#xlsxReportFileName").val() : "";
             var attachmentConfig = {

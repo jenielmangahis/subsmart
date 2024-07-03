@@ -43,7 +43,6 @@ class AccountingMailer extends MY_Controller{
     }
 
     public function emailReport($reportType) {
-
         // List of valid reports to request
         $accountingValidReports = array(
             "sales_tax_liability",
@@ -81,7 +80,8 @@ class AccountingMailer extends MY_Controller{
             "invoices_and_payments",
             "account_list",
             "employee_details",
-            "balance_sheet_comparison"
+            "balance_sheet_comparison",
+            "accounts_receivable_aging_summary"
         );
 
         // Conditional Statements on the array
