@@ -476,9 +476,6 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="row">
-                                                              
-                            </div>
-                            <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label class="mb-1 fw-xnormal">Company Name</label>
                                     <div class="input-group">
