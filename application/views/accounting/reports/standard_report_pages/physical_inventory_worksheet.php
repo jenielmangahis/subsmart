@@ -53,7 +53,6 @@
                                         <thead>
                                             <tr>
                                                 <th>PRODUCT</th>
-                                                <th>DESCRIPTION</th>
                                                 <th style="text-align:right;">QTY ON HAND</th>
                                                 <th style="text-align:right;">REORDER POINT</th>
                                                 <th style="text-align:right;">QTY ON PO</th>
