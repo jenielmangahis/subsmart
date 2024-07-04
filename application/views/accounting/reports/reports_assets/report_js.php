@@ -12,7 +12,7 @@
     var setDataTable;
     var currentTable = '<?php echo $tableID; ?>';
     var reportTables = ['vendorcontactlist_table',];
-    var BASE_URL = window.location.origin;
+    var base_url = window.location.origin;
     var REPORT_CATEGORY = "<?php echo $reportCategory; ?>";
     var REPORT_ID = "<?php echo $reportTypeId; ?>";
     // =========================
@@ -96,7 +96,7 @@
         (enableDisableBusinessName) ? $("#businessName").text(businessName) : businessName = $("#businessName").html("&nbsp;").html() ;
         (enableDisableReportName) ? $("#reportName").text(reportName) : reportName = $("#reportName").html("&nbsp;").html() ;
         if (showHideLogo == "1") {
-            $('#businessLogo').attr('src', BASE_URL + '/uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image?"; ?>' + Math.round(Math.random() * 1000000)).show();
+            $('#businessLogo').attr('src', base_url + '/uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image?"; ?>' + Math.round(Math.random() * 1000000)).show();
             if (header_align == "L") { $('.reportTitleInfo').css({textAlign: 'left', marginLeft: '115px'}); }
             if (header_align == "C") { $('.reportTitleInfo').css({textAlign: 'center', marginLeft: 'unset'}); }
             if (header_align == "R") { $('.reportTitleInfo').css({textAlign: 'right', marginLeft: 'unset'}); }
@@ -118,7 +118,7 @@
         // =========================
         $.ajax({
             type: "POST",
-            url: BASE_URL + "/accounting_controllers/Reports/getReportData/" + REPORT_CATEGORY,
+            url: base_url + "/accounting_controllers/Reports/getReportData/" + REPORT_CATEGORY,
             data: { 
                 theadColumnNames: theadColumnNames,
                 theadTotalColumn: theadTotalColumn,
@@ -148,7 +148,7 @@
         // =========================
         $.ajax({
             type: "POST",
-            url: BASE_URL + "/accounting_controllers/reports/saveReportSettings/",
+            url: base_url + "/accounting_controllers/reports/saveReportSettings/",
             data: {
                 report_type_id: REPORT_ID,
                 company_name: businessName,
@@ -172,7 +172,7 @@
     // Load .pdf Report Script
     function loadReportPreview() {
         $('#pdfPreview').hide();
-        $('#pdfPreview').attr('src', BASE_URL + "/assets/pdf/accounting/" + filename + ".pdf?" + Math.round(Math.random() * 1000000) ).on('load', function() {
+        $('#pdfPreview').attr('src', base_url + "/assets/pdf/accounting/" + filename + ".pdf?" + Math.round(Math.random() * 1000000) ).on('load', function() {
             $('.dataLoader').remove();
             $('#pdfPreview').show();
         });
@@ -200,7 +200,7 @@
     // Fetch Report Notes On Page Load
     $.ajax({
         type: "POST",
-        url: BASE_URL + "/accounting_controllers/reports/getNotes",
+        url: base_url + "/accounting_controllers/reports/getNotes",
         data: { reportID: REPORT_ID, },
         success: function(data) {
             (data !== "") ? $('.addNotes').text('Edit Notes'): $('.addNotes').text('Add Notes');
@@ -219,7 +219,7 @@
         // =========
         $.ajax({
             type: "POST",
-            url: BASE_URL + "/accounting_controllers/reports/saveNotes",
+            url: base_url + "/accounting_controllers/reports/saveNotes",
             data: { 
                 reportID: REPORT_ID,
                 reportNotes: $("#NOTES").val(),
@@ -229,6 +229,7 @@
                 $("#notesContent").show();
                 $("#addNotesForm").hide();
                 renderReportList();
+                showTableLoader();
             }
         });
     });
@@ -240,7 +241,7 @@
         var emailTo = $("#emailTo").val();
         var emailCC = $("#emailCC").val();
         var emailSubject = $("#emailSubject").val();
-        var emailBody = $("#emailBody").html();
+        var emailBody = CKEDITOR.instances['emailBody'].getData();
         var customAttachmentNamePDF = ($('.pdfAttachmentCheckbox').is(":checked") == true) ? $("#pdfReportFilename").val() : "";
         var customAttachmentNameXLSX = ($('.xlsxAttachmentCheckbox').is(":checked") == true) ? $("#xlsxReportFileName").val() : "";
         var attachmentConfig = {
@@ -252,7 +253,7 @@
 
         $.ajax({
             type: "POST",
-            url: BASE_URL + "/AccountingMailer/emailReport/" + REPORT_CATEGORY,
+            url: base_url + "/AccountingMailer/emailReport/" + REPORT_CATEGORY,
             data: {
                 emailTo: emailTo,
                 emailCC: emailCC,
@@ -285,7 +286,7 @@
     // Export Report to PDF Script
     $("#exportToPDF, .savePDF").click(function(event) {
         event.preventDefault();
-        var filePath = BASE_URL + "/assets/pdf/accounting/" + filename + ".pdf";
+        var filePath = base_url + "/assets/pdf/accounting/" + filename + ".pdf";
         var link = $("<a>", {
             href: filePath,
             download: filename + ".pdf",
@@ -298,7 +299,7 @@
     // Export Report to XLSX Script
     $("#exportToXLSX").click(function(event) {
         event.preventDefault();
-        var filePath = BASE_URL + "/assets/pdf/accounting/" + filename + ".xlsx";
+        var filePath = base_url + "/assets/pdf/accounting/" + filename + ".xlsx";
         var link = $("<a>", {
             href: filePath,
             download: filename + ".xlsx",

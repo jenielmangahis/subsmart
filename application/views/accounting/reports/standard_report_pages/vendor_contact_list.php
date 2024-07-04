@@ -138,14 +138,14 @@
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Company Name</label>
                                     <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" <?php echo (isset($reportSettings->show_company_name) && $reportSettings->show_company_name == 1) ? "checked" : "" ?>></div>
                                         <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo (!empty($reportSettings->company_name)) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Report Name</label>
                                     <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" checked></div>
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" <?php echo (isset($reportSettings->show_title) && $reportSettings->show_title == 1) ? "checked" : "" ?>></div>
                                         <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo (!empty($reportSettings->title)) ? $reportSettings->title : $page->title ?>" required>
                                     </div>
                                 </div>
@@ -183,7 +183,7 @@
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
                                                 <option value="id" <?php echo ($reportSettings->sort_by == "id") ? "selected" : "" ?>>Default</option>
                                                 <option value="vendor" <?php echo ($reportSettings->sort_by == "vendor") ? "selected" : "" ?>>Vendor</option>
-                                                <option value="phone_numbers" <?php echo ($reportSettings->page_size == "phone_numbers") ? "selected" : "" ?>>Phone Numbers</option>
+                                                <option value="phone_numbers" <?php echo ($reportSettings->sort_by == "phone_numbers") ? "selected" : "" ?>>Phone Numbers</option>
                                                 <option value="email" <?php echo ($reportSettings->sort_by == "email") ? "selected" : "" ?>>Email</option>
                                                 <option value="fullname" <?php echo ($reportSettings->sort_by == "fullname") ? "selected" : "" ?>>Full Name</option>
                                                 <option value="address" <?php echo ($reportSettings->sort_by == "address") ? "selected" : "" ?>>Address</option>
@@ -236,10 +236,10 @@
                                 <option value="L">Landscape</option>
                             </select>
                         </div>
-                        <div class="form-check">
+                        <!-- <div class="form-check">
                             <input id="pageHeaderRepeat" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
                             <label class="form-check-label" for="flexCheckDefault">Repeat Page Header</label>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-sm-9">
                         <iframe id="pdfPreview" class="border-0" width="100%" height="450px"></iframe>
@@ -264,7 +264,7 @@
 <!-- END: PRINT/SAVE MODAL -->
 <!-- START: EMAIL REPORT MODAL -->
 <div class="modal" id="emailReportModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Email Report</span>
@@ -282,7 +282,7 @@
                         <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>CC</h6>
-                                <input id="emailCC" class="form-control" type="email" placeholder="Carbon Copy" required>
+                                <input id="emailCC" class="form-control" type="email" placeholder="Carbon Copy">
                             </div>
                         </div>
                         <div class="col-sm-12 mt-3">
