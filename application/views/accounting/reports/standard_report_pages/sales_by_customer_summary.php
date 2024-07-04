@@ -112,7 +112,7 @@
 
 <!-- START: MODALS -->
 <!-- Modal for Report Settings -->
-<div class="modal" id="reportSettings" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+<div class="modal fade" id="reportSettings" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -221,7 +221,7 @@
 </div>
 <!-- Modal for Report Settings -->
 <!-- START: PRINT/SAVE MODAL -->
-<div class="modal" id="printPreviewModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+<div class="modal fade" id="printPreviewModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -267,7 +267,7 @@
 </div>
 <!-- END: PRINT/SAVE MODAL -->
 <!-- START: EMAIL REPORT MODAL -->
-<div class="modal" id="emailReportModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+<div class="modal fade" id="emailReportModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
