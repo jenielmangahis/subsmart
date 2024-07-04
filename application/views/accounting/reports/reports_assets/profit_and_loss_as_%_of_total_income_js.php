@@ -13,6 +13,7 @@
         height: '165px',
     });
 
+    var BASE_URL         = base_url;
     var REPORT_ID        = 7;
     var REPORT_CATEGORY  = "profit_and_loss_income";
     var theadTotalColumn = $("#profit-and-loss-income").find('tr:first th').length;
@@ -292,6 +293,7 @@
 
     // Render Report Data Script
     function renderReportList() {        
+        /*
         businessLogoURL = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
         businessName    = $('input[name="company_name"]').val();
         reportName      = $('input[name="report_name"]').val();
@@ -304,12 +306,42 @@
         footer_align    = $('select[name="footer_align"]').val();
         sort_by         = $('select[name="sort_by"]').val();
         sort_order      = $('select[name="sort_order"]').val();
+        */
+
+        businessLogoURL = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
+        businessName = $('input[name="company_name"]').val();
+        reportName = $('input[name="report_name"]').val();
+        reportDate = $("#reportDate").text();
+        filename = (businessName + '_' + reportName).replace(/[^\p{L}\p{N}_-]+/gu, '_');
+        notes = $("#notesContent").text();
+        showHideLogo = $('select[name="showHideLogo"]').val();
+        enableDisableBusinessName = $('.enableDisableBusinessName').prop('checked');
+        enableDisableReportName = $('.enableDisableReportName').prop('checked');
+        header_align = $('select[name="header_align"]').val();
+        footer_align = $('select[name="footer_align"]').val();
+        sort_by = $('select[name="sort_by"]').val();
+        sort_order = $('select[name="sort_order"]').val();
+        page_size = $('select[name="page_size"]').val();
+        pageOrientation = $('select[name="pageOrientation"]').val();
+        pageHeaderRepeat = ($('input[name="pageHeaderRepeat"]').prop('checked') == true) ? 1 : 0;
+        date_from = $('input[name="date_from"]').val();
+        date_to = $('input[name="date_to"]').val();
+        date = $('input[name="date"]').val();
         
         if($('input[name="compact_display"]').is(':checked')) {
             compact_display = 1;
         } else {
             compact_display = 0;
-        }        
+        }
+        
+        /*reportConfig = {
+            businessLogoURL: businessLogoURL,
+            showHideLogo: showHideLogo,
+            header_align: header_align,
+            footer_align: footer_align,
+            sort_by: sort_by,
+            sort_order: sort_order
+        };*/        
 
         reportConfig = {
             businessLogoURL: businessLogoURL,
@@ -317,8 +349,15 @@
             header_align: header_align,
             footer_align: footer_align,
             sort_by: sort_by,
-            sort_order: sort_order
-        };
+            sort_order: sort_order,
+            page_size: page_size,
+            pageOrientation: pageOrientation,
+            pageHeaderRepeat: pageHeaderRepeat,
+            date_from: date_from,
+            date_to: date_to,
+            date: date,
+        };        
+        page_size = $('#page-size').val();        
 
         if( $('.enableDisableBusinessName').is(':checked') ){
             show_company_name = 1;
@@ -333,48 +372,97 @@
         }
 
         // =========================
-        (enableDisableBusinessName) ? $("#businessName").text(businessName): $("#businessName").html("&nbsp;").html();
-        (enableDisableReportName) ? $("#reportName").text(reportName): $("#reportName").html("&nbsp;").html();
-        $('#reportDate').html(reportDate);
+        $("#reportDate").text(reportDate);
+        (enableDisableBusinessName) ? $("#businessName").text(businessName): businessName = $("#businessName").html("&nbsp;").html();
+        (enableDisableReportName) ? $("#reportName").text(reportName): reportName = $("#reportName").html("&nbsp;").html();
         if (showHideLogo == "1") {
-            $('#businessLogo').attr('src', base_url + '/uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image?"; ?>' + Math.round(Math.random() * 1000000)).show();            
+            $('#businessLogo').attr('src', BASE_URL + '/uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image?"; ?>' + Math.round(Math.random() * 1000000)).show();
+            if (header_align == "L") {
+                $('.reportTitleInfo').css({
+                    textAlign: 'left',
+                    marginLeft: '115px'
+                });
+            }
+            if (header_align == "C") {
+                $('.reportTitleInfo').css({
+                    textAlign: 'center',
+                    marginLeft: 'unset'
+                });
+            }
+            if (header_align == "R") {
+                $('.reportTitleInfo').css({
+                    textAlign: 'right',
+                    marginLeft: 'unset'
+                });
+            }
+            if (footer_align == "L") {
+                $('.footerInfo').css({
+                    textAlign: 'left'
+                });
+            }
+            if (footer_align == "C") {
+                $('.footerInfo').css({
+                    textAlign: 'center'
+                });
+            }
+            if (footer_align == "R") {
+                $('.footerInfo').css({
+                    textAlign: 'right'
+                });
+            }
         } else {
-            $('#businessLogo').hide();            
+            $('#businessLogo').hide();
+            if (header_align == "L") {
+                $('.reportTitleInfo').css({
+                    textAlign: 'left',
+                    marginLeft: 'unset'
+                });
+            }
+            if (header_align == "C") {
+                $('.reportTitleInfo').css({
+                    textAlign: 'center',
+                    marginLeft: 'unset'
+                });
+            }
+            if (header_align == "R") {
+                $('.reportTitleInfo').css({
+                    textAlign: 'right',
+                    marginLeft: 'unset'
+                });
+            }
+            if (footer_align == "L") {
+                $('.footerInfo').css({
+                    textAlign: 'left'
+                });
+            }
+            if (footer_align == "C") {
+                $('.footerInfo').css({
+                    textAlign: 'center'
+                });
+            }
+            if (footer_align == "R") {
+                $('.footerInfo').css({
+                    textAlign: 'right'
+                });
+            }
         }
 
-        if (header_align == "L") {
-            $('.reportTitleInfo').css({
-                textAlign: 'left',
-                marginLeft: '115px'
-            });
+        if( $('.enableDisableBusinessName').is(':checked') ){
+            show_company_name = 1;
+        }else{
+            show_company_name = 0;
         }
-        if (header_align == "C") {
-            $('.reportTitleInfo').css({
-                textAlign: 'center',
-                marginLeft: 'unset'
-            });
+
+        if( $('.enableDisableReportName').is(':checked') ){
+            show_report_name = 1;
+        }else{
+            show_report_name = 0;
         }
-        if (header_align == "R") {
-            $('.reportTitleInfo').css({
-                textAlign: 'right',
-                marginLeft: 'unset'
-            });
-        }
-        if (footer_align == "L") {
-            $('.footerInfo').css({
-                textAlign: 'left'
-            });
-        }
-        if (footer_align == "C") {
-            $('.footerInfo').css({
-                textAlign: 'center'
-            });
-        }
-        if (footer_align == "R") {
-            $('.footerInfo').css({
-                textAlign: 'right'
-            });
-        }
+
+        //$(`#${TABLE_ID}`).nsmPagination({itemsPerPage: page_size});
+        //$(".settingsApplyButton").attr('disabled', '').html('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Applying changes...');
+
+        // =========================
 
         $(".settingsApplyButton").attr('disabled', '').html('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Applying changes...');
         $('#pdfPreview').before('<span class="dataLoader"><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...</span>').hide();

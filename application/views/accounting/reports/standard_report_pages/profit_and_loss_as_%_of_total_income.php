@@ -68,7 +68,7 @@
                                                 <li><a class="dropdown-item" href="javascript:void(0);" id="export-to-pdf">Export to PDF</a></li>
                                             </ul>
                                             <button class="nsm-button border-0 primary" data-bs-toggle="modal" data-bs-target="#reportSettings"><i class="bx bx-fw bx-cog"></i></button>           
-                                            
+                                            <!-- 
                                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-filter'></i>&nbsp;
                                             </button>    
@@ -191,21 +191,32 @@
                                                         </button>
                                                     </div>
                                                 </div>
-                                            </ul>                                             
+                                            </ul>     
+                                            -->                                        
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="row mb-4">
                                     <div class="col-lg-12 headerInfo">
-                                        <img id="businessLogo" src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
+                                        <?php if( $reportSettings ){ ?>
+                                            <?php if( $reportSettings->show_logo == 1 ){ ?>
+                                                <img id="businessLogo" src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
+                                            <?php } ?>
+                                        <?php }else{ ?>
+                                            <img id="businessLogo" src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
+                                        <?php } ?>
                                         <?php 
                                             $header_css = '';
                                             if( $reportSettings ){
                                                 if( $reportSettings->header_align == 'C' ){
                                                     $header_css = 'text-align:center;';
                                                 }elseif( $reportSettings->header_align == 'L' ){
-                                                    $header_css = 'text-align:left;margin-left:115px;';
+                                                    if( $reportSettings->show_logo == 1 ){
+                                                        $header_css = 'text-align:left;margin-left:115px;';
+                                                    } else {
+                                                        $header_css = 'text-align:left';
+                                                    }
                                                 }elseif( $reportSettings->header_align == 'R' ){
                                                     $header_css = 'text-align:right;';
                                                 }
@@ -214,30 +225,29 @@
                                         <div class="reportTitleInfo" style="<?= $header_css; ?>">
                                             <?php if( $reportSettings ){ ?>
                                                 <?php if( $reportSettings->show_company_name == 1 ){ ?>
-                                                    <h3 id="businessName"><?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?></h3>
+                                                    <h3 id="businessName"><?= $reportSettings && $reportSettings->company_name != '' ? $reportSettings->company_name : $clients->business_name; ?></h3>
                                                 <?php } ?>
                                             <?php }else{ ?>
-                                                <h3 id="businessName"><?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?></h3>
+                                                <h3 id="businessName"><?= $clients->business_name; ?></h3>
                                             <?php } ?>
 
                                             <?php if( $reportSettings ){ ?>
                                                 <?php if( $reportSettings->show_title == 1 ){ ?>
-                                                    <h5><strong id="reportName"><?php echo $page->title ?></strong></h5>
+                                                    <h5><strong id="reportName"><?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : 'Profit and Loss as % of total income'; ?></strong></h5>
                                                 <?php } ?>
                                             <?php }else{ ?>
-                                                <h5><strong id="reportName"><?php echo $page->title ?></strong></h5>
+                                                <h5><strong id="reportName">Profit and Loss as % of total income</strong></h5>
                                             <?php } ?>
-                                            <?php if($reportSettings->report_date_from_text != null && $reportSettings->report_date_to_text != null) { ?>
-                                                <h5><small id="reportDate"><?php echo date("F j, Y", strtotime($reportSettings->report_date_from_text)) ?> - <?php echo date("F j, Y", strtotime($reportSettings->report_date_to_text)) ?></small></h5>
-                                            <?php } ?>
+                                            <h5><small id="reportDate">As of <?= $reportSettings && strtotime($reportSettings->report_date_text) > 0 ? date('F d, Y', strtotime($reportSettings->report_date_text)) : date('F d, Y'); ?></small></h5>
                                         </div>
                                     </div>
                                 </div>
 
                             </div>
+
                             <div class="nsm-card-content h-auto grid-mb">
-                                <?php $is_compact_table = $reportSettings && $reportSettings->is_compact == 1 ? "compact-table" : ""; ?>
-                                <table class="nsm-table <?php echo $is_compact_table; ?>" id="profit-and-loss-income">
+                                <?php //$is_compact_table = $reportSettings && $reportSettings->is_compact == 1 ? "compact-table" : ""; ?>
+                                <table class="nsm-table <?php //echo $is_compact_table; ?>" id="profit-and-loss-income">
                                     <thead>
                                         <tr>
                                             <td data-name="Name" rowspan="2"></td>
@@ -422,7 +432,19 @@
                                     </form>
                                 </div>
                             </div>
-                            <div class="nsm-card-footer text-center">
+                            <?php 
+                                $footer_css = '';
+                                if( $reportSettings ){
+                                    if( $reportSettings->footer_align == 'C' ){
+                                        $footer_css = 'text-align:center;';
+                                    }elseif( $reportSettings->footer_align == 'L' ){
+                                        $footer_css = 'text-align:left;';
+                                    }elseif( $reportSettings->footer_align == 'R' ){
+                                        $footer_css = 'text-align:right;';
+                                    }
+                                }
+                            ?>                    
+                            <div class="row footerInfo" style="<?= $footer_css; ?>">
                                 <p class="m-0">Accrual basis <?=date("l, F j, Y h:i A eP")?></p>
                             </div>
                         </div>
@@ -487,7 +509,7 @@
                                     <select name="header_align" id="header-align" class="nsm-field form-select">
                                         <option value="C" <?= $reportSettings && $reportSettings->header_align == 'C' ? 'selected="selected"' : ''; ?>>Center</option>
                                         <option value="L" <?= $reportSettings && $reportSettings->header_align == 'L' ? 'selected="selected"' : ''; ?>>Left</option>           
-                                        <option value="L" <?= $reportSettings && $reportSettings->header_align == 'R' ? 'selected="selected"' : ''; ?>>Right</option>           
+                                        <option value="R" <?= $reportSettings && $reportSettings->header_align == 'R' ? 'selected="selected"' : ''; ?>>Right</option>           
                                     </select>
                                 </div>
                                 <div class="col-md-4 mb-3">
@@ -512,7 +534,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <!-- <div class="col-md-4 mb-3">
                                     <label class="mb-1 fw-xnormal">Display density</label>
                                     <div class="form-check">
                                         <input type="checkbox" <?php echo $reportSettings && $reportSettings->is_compact == 1 ? "checked" : ""; ?>  id="compact-display" name="compact_display" value=1 class="form-check-input compact-display">
@@ -520,7 +542,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                </div>                                
+                                </div> -->                             
                             </div>
                         </div>
                     </div>
