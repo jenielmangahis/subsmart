@@ -47,4 +47,20 @@
         position: absolute;
         left: 20px;
     }
+    .d-none-custom {
+        display: none;
+    }
+    table.dataTable thead th,
+    table.dataTable thead td,
+    table.dataTable tbody td {
+        padding: 6px;
+    }
+
+    table.dataTable>thead>tr>th {
+        border-bottom: 1px solid lightgray !important;
+    }
+/* 
+    table>tbody {
+        font-size: 16px;
+    } */
 </style>

@@ -1,4 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath('accounting/reports/reports_assets/report_css'); ?>
 
 <div class="container-fluid">
     <div class="row">
@@ -71,10 +72,10 @@
                                     <div class="reportTitleInfo" style="<?= $header_css; ?>">
                                         <?php if ($reportSettings) { ?>
                                             <?php if ($reportSettings->show_company_name == 1) { ?>
-                                                <h3 id="businessName"><?= $reportSettings && $reportSettings->company_name != '' ? $reportSettings->company_name : $clients->business_name; ?></h3>
+                                                <h3 id="businessName"><?= $reportSettings && $reportSettings->company_name != '' ? $reportSettings->company_name : $companyInfo->business_name; ?></h3>
                                             <?php } ?>
                                         <?php } else { ?>
-                                            <h3 id="businessName"><?= $clients->business_name; ?></h3>
+                                            <h3 id="businessName"><?= $companyInfo->business_name; ?></h3>
                                         <?php } ?>
 
                                         <?php if ($reportSettings) { ?>
@@ -532,7 +533,7 @@
                                     <label class="mb-1 fw-xnormal">Company Name</label>
                                     <div class="input-group">
                                         <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
-                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?= $reportSettings && $reportSettings->company_name != '' ? $reportSettings->company_name : $clients->business_name; ?>" required>
+                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?= $reportSettings && $reportSettings->company_name != '' ? $reportSettings->company_name : $companyInfo->business_name; ?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-3">

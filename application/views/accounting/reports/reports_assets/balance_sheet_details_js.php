@@ -238,7 +238,6 @@
                 footer_align: footer_align,
                 sort_by: sort_by,
                 sort_asc_desc: sort_order,
-                compact_display: 0
             },
             dataType: 'json',
             success: function(response) {
@@ -490,4 +489,34 @@
         $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
         $(target).collapse('toggle');
     });
+
+    $("#compact-display").change(function() {
+        if ($(this).is(":checked")) {
+            $("#reportTable").addClass("compact-table");
+        } else {
+            $("#reportTable").removeClass("compact-table");
+        }
+    });
 </script>
+<style>
+    .checkbox-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 2px;
+    }
+
+    .form-check {
+        display: flex;
+        align-items: center;
+    }
+
+    .form-check-input {
+        margin-right: 5px;
+    }
+
+    .compact-table td,
+    .compact-table th {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+</style>
