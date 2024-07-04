@@ -77,9 +77,12 @@ class MYPDF extends TCPDF {
 		        ($this->showLogo == true) ? $this->Image($this->LogoURL, 10, 8, 20, '', '', '', 'T', true, 500, '', false, false, 0, false, false, false) : '';
 			} 
 	    }
-	    if ($this->headerRepeat == false) {
-	    	$this->Image($this->LogoURL, 10, 8, 20, '', '', '', 'T', true, 500, '', false, false, 0, false, false, false);
-	    }
+
+		if ($this->page == 1) {
+			if ($this->headerRepeat == false) {
+				$this->Image($this->LogoURL, 10, 8, 20, '', '', '', 'T', true, 500, '', false, false, 0, false, false, false);
+			}
+		}
 	}
 
 	public function Footer() {

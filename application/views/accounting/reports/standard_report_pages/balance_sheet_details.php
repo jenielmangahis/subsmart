@@ -1,4 +1,5 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<?php include viewPath('accounting/reports/reports_assets/report_css'); ?>
 
 <div class="container-fluid">
     <div class="row">
@@ -51,10 +52,10 @@
                                     <div class="reportTitleInfo" style="<?= $header_css; ?>">
                                         <?php if ($reportSettings) { ?>
                                             <?php if ($reportSettings->show_company_name == 1) { ?>
-                                                <h3 id="businessName"><?= $reportSettings && $reportSettings->company_name != '' ? $reportSettings->company_name : $clients->business_name; ?></h3>
+                                                <h3 id="businessName"><?= $reportSettings && $reportSettings->company_name != '' ? $reportSettings->company_name : $companyInfo->business_name; ?></h3>
                                             <?php } ?>
                                         <?php } else { ?>
-                                            <h3 id="businessName"><?= $clients->business_name; ?></h3>
+                                            <h3 id="businessName"><?= $companyInfo->business_name; ?></h3>
                                         <?php } ?>
 
                                         <?php if ($reportSettings) { ?>
@@ -526,48 +527,75 @@
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label class="mb-1 fw-xnormal">Display Density</label><br />
-                                    <input type="checkbox" id="display" class="form-check-input">
+                                    <input type="checkbox" id="display" name="display" class="form-check-input display">
                                     <label for="compact-display" class="form-check-label">Compact</label>
                                 </div>
-                                <div class="col-md-11 mb-3">
-                                    <label class="mb-1 fw-xnormal">Change Columns</label><br />
-                                    <input type="checkbox" id="display" class="form-check-input">
-                                    <label for="compact-display" class="form-check-label">Date</label>
-                                    <input type="checkbox" id="display" class="form-check-input">
-                                    <label for="compact-display" class="form-check-label">Create Date</label>
-                                    <input type="checkbox" id="display" class="form-check-input">
-                                    <label for="compact-display" class="form-check-label">Last Modified By</label>
-                                    <input type="checkbox" id="display" class="form-check-input">
-                                    <label for="compact-display" class="form-check-label">Split</label>
-                                    <input type="checkbox" id="display" class="form-check-input">
-                                    <label for="compact-display" class="form-check-label">Payment Method</label>
-                                    <!-- </div>
-                                <div class="col-md-12 mb-3"> -->
-                                    <input type="checkbox" id="display" class="form-check-input">
-                                    <label for="compact-display" class="form-check-label">Transaction Type</label>
-                                    <input type="checkbox" id="display" class="form-check-input">
-                                    <label for="compact-display" class="form-check-label">Created By</label>
-                                    <input type="checkbox" id="display" class="form-check-input">
-                                    <label for="compact-display" class="form-check-label">Name</label>
-                                    <input type="checkbox" id="display" class="form-check-input">
-                                    <label for="compact-display" class="form-check-label">Debit</label>
-                                    <input type="checkbox" id="display" class="form-check-input">
-                                    <label for="compact-display" class="form-check-label">Amount</label>
-                                    <!-- </div>
-                                <div class="col-md-12 mb-3"> -->
-                                    <input type="checkbox" id="display" class="form-check-input">
-                                    <label for="compact-display" class="form-check-label">Num</label>
-                                    <input type="checkbox" id="display" class="form-check-input">
-                                    <label for="compact-display" class="form-check-label">Last Modified</label>
-                                    <input type="checkbox" id="display" class="form-check-input">
-                                    <label for="compact-display" class="form-check-label">Memo/Description</label>
-                                    <input type="checkbox" id="display" class="form-check-input">
-                                    <label for="compact-display" class="form-check-label">Credit</label>
-                                    <input type="checkbox" id="display" class="form-check-input">
-                                    <label for="compact-display" class="form-check-label">Balance</label>
-                                </div>
-                                <div class="col-md-12 mb-3">
-                                    <a href="" style="text-decoration: none;">Reorder Columns</a>
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <label class="mb-1 fw-xnormal">Change Columns</label><br />
+                                        <div class="checkbox-grid">
+                                            <div class="form-check">
+                                                <input type="checkbox" id="date" class="form-check-input">
+                                                <label for="date" class="form-check-label">Date</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="create-date" class="form-check-input">
+                                                <label for="create-date" class="form-check-label">Create Date</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="last-modified-by" class="form-check-input">
+                                                <label for="last-modified-by" class="form-check-label">Last Modified By</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="split" class="form-check-input">
+                                                <label for="split" class="form-check-label">Split</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="payment-method" class="form-check-input">
+                                                <label for="payment-method" class="form-check-label">Payment Method</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="transaction-type" class="form-check-input">
+                                                <label for="transaction-type" class="form-check-label">Transaction Type</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="created-by" class="form-check-input">
+                                                <label for="created-by" class="form-check-label">Created By</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="name" class="form-check-input">
+                                                <label for="name" class="form-check-label">Name</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="debit" class="form-check-input">
+                                                <label for="debit" class="form-check-label">Debit</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="amount" class="form-check-input">
+                                                <label for="amount" class="form-check-label">Amount</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="num" class="form-check-input">
+                                                <label for="num" class="form-check-label">Num</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="last-modified" class="form-check-input">
+                                                <label for="last-modified" class="form-check-label">Last Modified</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="memo-description" class="form-check-input">
+                                                <label for="memo-description" class="form-check-label">Memo/Description</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="credit" class="form-check-input">
+                                                <label for="credit" class="form-check-label">Credit</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" id="balance" class="form-check-input">
+                                                <label for="balance" class="form-check-label">Balance</label>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

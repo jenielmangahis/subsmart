@@ -3,6 +3,40 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Accounting_model extends MY_Model
 {
+    public function createReportSettings($settings)
+    {
+        $this->db->select('report_type_id');
+        $this->db->from('accounting_reports_settings');
+        $this->db->where('company_id', $settings['company_id']);
+        $this->db->where('report_type_id', $settings['report_type_id']);
+        $data = $this->db->get();
+
+        // If the row exists, update it
+        if ($data->num_rows() == 1) {
+            $this->db->where('company_id', $settings['company_id']);
+            $this->db->where('report_type_id', $settings['report_type_id']);
+            $result = $this->db->update('accounting_reports_settings', $settings);
+        } else {
+            // Otherwise, insert a new row
+            $result = $this->db->insert('accounting_reports_settings', $settings);
+        }
+
+        return $result;
+    }
+
+    public function getReportSettings($reportTypeId) 
+    {
+        $company_id = logged('company_id');
+        $this->db->select('report_type_id, company_name, title, notes, show_logo, show_company_name, show_title, header_align, footer_align, sort_by, sort_asc_desc, page_size, report_date_from_text, report_date_to_text');
+        $this->db->from('accounting_reports_settings');
+        $this->db->where('company_id', $company_id);
+        $this->db->where('report_type_id', $reportTypeId);
+        $data = $this->db->get();
+        return $data->row();
+
+        
+    }
+
 
     public function fetchReportData($reportType, $reportConfig = array())
     {
@@ -134,7 +168,7 @@ class Accounting_model extends MY_Model
             $this->db->join('jobs AS j', 'j.id = cal.obj_id', 'left');
             $this->db->where('u.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
-            //$this->db->limit($reportConfig['page_size']);
+            // $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             $auditLogsData = $data->result();
 
