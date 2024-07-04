@@ -204,8 +204,8 @@
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Date Range <small class="text-muted">(From &mdash; To)</small></label>
                                     <div class="input-group">
-                                        <input name="date_from" class="form-control mt-0" type="date" value="<?= $reportSettings && strtotime($reportSettings->report_date_from_text) > 0 ? date("Y-m-d",strtotime($reportSettings->report_date_from_text)) : date('Y').'-01-01'; ?>">
-                                        <input name="date_to" class="form-control mt-0" type="date" value="<?= $reportSettings && strtotime($reportSettings->report_date_to_text) > 0 ? date("Y-m-d",strtotime($reportSettings->report_date_to_text)) : date('Y').'-01-01'; ?>">
+                                        <input name="date_from" class="form-control mt-0" type="date" value="<?= $reportSettings && strtotime($reportSettings->report_date_from_text) > 0 ? date("Y-m-d",strtotime($reportSettings->report_date_from_text)) : date('Y-m-01'); ?>">
+                                        <input name="date_to" class="form-control mt-0" type="date" value="<?= $reportSettings && strtotime($reportSettings->report_date_to_text) > 0 ? date("Y-m-d",strtotime($reportSettings->report_date_to_text)) : date('Y-m-t'); ?>">
                                     </div>  
                                 </div>
                             </div>
