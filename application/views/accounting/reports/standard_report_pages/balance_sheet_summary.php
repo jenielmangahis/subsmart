@@ -95,7 +95,7 @@
                                     $tableID = "balanceSheetDetails_table";
                                     $reportCategory = "balance_sheet_details";
                                     ?>
-                                    <table class="nsm-table balance-sheet-summary-table">
+                                    <table class="nsm-table balance-sheet-summary-table" id="tableID">
                                         <thead>
                                             <tr>
                                                 <td data-name="Name"></td>
@@ -399,7 +399,7 @@
 </div>
 
 <!-- START: PRINT/SAVE MODAL -->
-<div class="modal" id="printPreviewModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+<div class="modal fade" id="printPreviewModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
@@ -445,7 +445,7 @@
 </div>
 <!-- END: PRINT/SAVE MODAL -->
 <!-- START: EMAIL REPORT MODAL -->
-<div class="modal" id="emailReportModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+<div class="modal fade" id="emailReportModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -602,7 +602,7 @@
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label class="mb-1 fw-xnormal">Display Density</label><br />
-                                    <input type="checkbox" id="display" class="form-check-input">
+                                    <input type="checkbox" id="compact_display" name="compact_display" class="form-check-input">
                                     <label for="compact-display" class="form-check-label">Compact</label>
                                 </div>
                             </div>

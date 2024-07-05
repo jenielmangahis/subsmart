@@ -11,7 +11,7 @@
     
     var setDataTable;
     var currentTable = '<?php echo $tableID; ?>';
-    var reportTables = ['vendorcontactlist_table',];
+    var reportTables = ['vendorcontactlist_table',  'salesbycustomersummary_table',  'customerbalancesummary_table', 'customercontactlist_table', 'expensesbyvendorsummary_table', 'incomebycustomerysummary_table', 'invoicelistbydate_table', 'openinvoices_table', 'paymentmethodlist_table', 'physicalinventoryworksheet_table', 'productservicelist_table', 'salesbyproductservicesummary_table', 'taxablesalessummary_table', 'vendorbalancesummary_table',];
     var base_url = window.location.origin;
     var REPORT_CATEGORY = "<?php echo $reportCategory; ?>";
     var REPORT_ID = "<?php echo $reportTypeId; ?>";
@@ -240,7 +240,7 @@
         $(".sendEmail").attr('disabled', '').empty().append('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Send');
         var emailTo = $("#emailTo").val();
         var emailCC = $("#emailCC").val();
-        var emailSubject = $("#emailSubject").val();
+        var emailSubject = "<?php echo $companyInfo->business_name ?> - " + $("#emailSubject").val();
         var emailBody = CKEDITOR.instances['emailBody'].getData();
         var customAttachmentNamePDF = ($('.pdfAttachmentCheckbox').is(":checked") == true) ? $("#pdfReportFilename").val() : "";
         var customAttachmentNameXLSX = ($('.xlsxAttachmentCheckbox').is(":checked") == true) ? $("#xlsxReportFileName").val() : "";
@@ -327,17 +327,9 @@
         $(".noteCharMax").text(textLength + " / 4000 characters max");
     });
 
-    $('input[name="date_from"]').on('input', function() {
-        let numericDate = $(this).val();
-        let wordDate = new Date(numericDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: '2-digit' });
-        $('#date_from_text').text(wordDate);
-    }).trigger('input');
-      
-    $('input[name="date_to"]').on('input', function() {
-        let numericDate = $(this).val();
-        let wordDate = new Date(numericDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: '2-digit' });
-        $('#date_to_text').text(wordDate);
-    }).trigger('input');
+    $('.settingsApplyButton').click(function (e) { 
+        applyTextRangeDate();
+    });
 
     function showTableLoader() {
         if (reportTables.includes(currentTable)) {
@@ -345,4 +337,19 @@
             $("#<?php echo $tableID; ?> > tbody").html('<tr><td colspan="' + theadColumnNames.length + '"><center><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result... </center></td></tr>');
         }
     }
+
+    function applyTextRangeDate() {
+        let dateFromNumeric = $('input[name="date_from"]').val();
+        let dateFromWordDate = new Date(dateFromNumeric).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: '2-digit' });
+        $('#date_from_text').text(dateFromWordDate);
+        // ==================
+        let dateToNumeric = $('input[name="date_to"]').val();
+        let dateToWordDate = new Date(dateToNumeric).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: '2-digit' });
+        $('#date_to_text').text(dateToWordDate);
+    } applyTextRangeDate();
+
+    $(document).on('click', '.collapse-row', function(){
+        var target = $(this).data("bs-target");
+        $(this).find("i").toggleClass("bx-caret-down bx-caret-right");
+    });
 </script>

@@ -49,7 +49,7 @@ class Accounting_model extends MY_Model
 
         // Get Customer Contact List Report data in Database
         if ($reportType == "customer_contact_list") {
-            $this->db->select('prof_id, CONCAT(first_name  , " ", last_name) AS customer, phone_h AS phoneNumber, email, mail_add AS billingAddress, CONCAT(city, " ", state, " ", zip_code) AS shippingAddress');
+            $this->db->select('prof_id, CONCAT(first_name  , " ", last_name) AS customer, phone_h AS phoneNumber, email, CONCAT(mail_add, " ", city, ", ", state, " ", zip_code) AS billingAddress, CONCAT(mail_add, " ", city, ", ", state, " ", zip_code) AS shippingAddress');
             $this->db->from('acs_profile');
             $this->db->where('company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
@@ -60,7 +60,7 @@ class Accounting_model extends MY_Model
 
         // Get Vendor Contact List data in Database
         if ($reportType == "vendor_contact_list") {
-            $this->db->select('id, display_name AS vendor, CONCAT(phone, "  ",  mobile) AS phone_numbers, email, display_name AS fullname, CONCAT(street, ", ", city, ", ", state, " ", zip, " ", country) AS address, account_number');
+            $this->db->select('id, display_name AS vendor, CONCAT(phone, "  ",  mobile) AS phone_numbers, email, display_name AS fullname, CONCAT(street, " ", city, ", ", state, " ", zip, " ", country) AS address, account_number');
             $this->db->from('accounting_vendors');
             $this->db->where('company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
@@ -71,7 +71,7 @@ class Accounting_model extends MY_Model
 
         // Get Expenses by Vendor Summary data in Database
         if ($reportType == "expenses_by_vendor_summary") {
-            $this->db->select('CONCAT(accounting_vendors.f_name, " ", accounting_vendors.l_name) AS vendor, accounting_bill.remaining_balance AS balance, accounting_bill.total_amount AS expense, accounting_bill.created_at AS date');
+            $this->db->select('accounting_vendors.display_name AS vendor, accounting_bill.remaining_balance AS balance, accounting_bill.total_amount AS expense, accounting_bill.created_at AS date');
             $this->db->from('accounting_vendors');
             $this->db->join('accounting_bill', 'accounting_bill.vendor_id = accounting_vendors.id', 'left');
             $this->db->where("DATE_FORMAT(accounting_vendors.created_at,'%Y-%m-%d') >= '$reportConfig[date_from]'");
@@ -372,7 +372,7 @@ class Accounting_model extends MY_Model
 
         // Get Vendor Balance Summary data in Database
         if ($reportType == "vendor_balance_summary") {
-            $this->db->select('accounting_vendors.id AS vendor_id, CONCAT(accounting_vendors.f_name, " ", accounting_vendors.l_name) AS vendor, accounting_bill.remaining_balance AS balance, accounting_bill.created_at AS date');
+            $this->db->select('accounting_vendors.id AS vendor_id, accounting_vendors.display_name AS vendor, accounting_bill.remaining_balance AS balance, accounting_bill.created_at AS date');
             $this->db->from('accounting_vendors');
             $this->db->join('accounting_bill', 'accounting_bill.vendor_id = accounting_vendors.id', 'left');
             $this->db->where('accounting_vendors.f_name !=', '');
@@ -389,7 +389,7 @@ class Accounting_model extends MY_Model
 
         // Get Vendor Balance Detail data in Database
         if ($reportType == "vendor_balance_detail") {
-            $this->db->select('accounting_vendors.id AS vendor_id, CONCAT(accounting_vendors.f_name, " ", accounting_vendors.l_name) AS vendor, accounting_bill.bill_date AS date, "Invoice" AS transaction_type, accounting_bill.id AS num, accounting_bill.due_date AS due_date, accounting_bill.total_amount AS amount, accounting_bill.remaining_balance AS open_balance,accounting_bill.remaining_balance AS balance');
+            $this->db->select('accounting_vendors.id AS vendor_id, accounting_vendors.display_name AS vendor, accounting_bill.bill_date AS date, "Invoice" AS transaction_type, accounting_bill.id AS num, accounting_bill.due_date AS due_date, accounting_bill.total_amount AS amount, accounting_bill.remaining_balance AS open_balance,accounting_bill.remaining_balance AS balance');
             $this->db->from('accounting_vendors');
             $this->db->join('accounting_bill', 'accounting_bill.vendor_id = accounting_vendors.id', 'left');
             $this->db->where('accounting_vendors.f_name !=', '');
@@ -406,7 +406,7 @@ class Accounting_model extends MY_Model
 
         // Get Purchases by Vendor Detail data in Database
         if ($reportType == "purchases_by_vendor_detail") {
-            $this->db->select('accounting_vendor_transaction.vendor_id AS vendor_id, CONCAT(accounting_vendors.f_name, " ", accounting_vendors.l_name) AS vendor, accounting_vendor_transaction.transaction_date AS date, accounting_vendor_transaction.transaction_type AS transaction_type, accounting_vendor_transaction.transaction_number AS num, items.type AS item_type, items.title AS description, accounting_vendor_transaction.quantity AS quantity, items.price AS rate, (accounting_vendor_transaction.quantity * items.price) AS amount, accounting_vendor_transaction.balance AS balance');
+            $this->db->select('accounting_vendor_transaction.vendor_id AS vendor_id, accounting_vendors.display_name AS vendor, accounting_vendor_transaction.transaction_date AS date, accounting_vendor_transaction.transaction_type AS transaction_type, accounting_vendor_transaction.transaction_number AS num, items.type AS item_type, items.title AS description, accounting_vendor_transaction.quantity AS quantity, items.price AS rate, (accounting_vendor_transaction.quantity * items.price) AS amount, accounting_vendor_transaction.balance AS balance');
             $this->db->from('accounting_vendor_transaction');
             $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_vendor_transaction.vendor_id', 'left');
             $this->db->join('items', 'items.id = accounting_vendor_transaction.item_id', 'left');
@@ -423,7 +423,7 @@ class Accounting_model extends MY_Model
 
         // Get Purchases by Product/Service Detail data in Database
         if ($reportType == "purchases_by_product_service_detail") {
-            $this->db->select('accounting_vendor_transaction.vendor_id AS vendor_id, items.type AS product_service, accounting_vendor_transaction.transaction_date AS date, accounting_vendor_transaction.transaction_type AS transaction_type, accounting_vendor_transaction.transaction_number AS num, CONCAT(accounting_vendors.f_name, " ", accounting_vendors.l_name) AS vendor, items.title AS memo_description, accounting_vendor_transaction.quantity AS qty, items.price AS rate, (accounting_vendor_transaction.quantity * items.price) AS amount, accounting_vendor_transaction.balance AS balance');
+            $this->db->select('accounting_vendor_transaction.vendor_id AS vendor_id, items.type AS product_service, accounting_vendor_transaction.transaction_date AS date, accounting_vendor_transaction.transaction_type AS transaction_type, accounting_vendor_transaction.transaction_number AS num, accounting_vendors.display_name AS vendor, items.title AS memo_description, accounting_vendor_transaction.quantity AS qty, items.price AS rate, (accounting_vendor_transaction.quantity * items.price) AS amount, accounting_vendor_transaction.balance AS balance');
             $this->db->from('accounting_vendor_transaction');
             $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_vendor_transaction.vendor_id', 'left');
             $this->db->join('items', 'items.id = accounting_vendor_transaction.item_id', 'left');

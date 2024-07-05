@@ -238,6 +238,7 @@
                 footer_align: footer_align,
                 sort_by: sort_by,
                 sort_asc_desc: sort_order,
+                compact_display: 0
             },
             dataType: 'json',
             success: function(response) {
