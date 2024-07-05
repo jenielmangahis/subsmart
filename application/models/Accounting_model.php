@@ -278,7 +278,9 @@ class Accounting_model extends MY_Model
             $this->db->from('invoices');
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->join('accounting_receive_payment_invoices', 'accounting_receive_payment_invoices.invoice_id = invoices.id', 'left');
-            $this->db->where('invoices.status', "Unpaid");
+            //$this->db->where('invoices.status', "Unpaid");
+            $this->db->where('invoices.status !=', "Draft");
+            $this->db->where('invoices.status !=', "Paid");
             $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
             $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('invoices.company_id', $companyID);
