@@ -59,9 +59,9 @@
                                                 <th>PRODUCT/SERVICE</th>
                                                 <th>MEMO/DESCRIPTION</th>
                                                 <th>QTY</th>
-                                                <th>SALES PRICE</th>
-                                                <th>AMOUNT</th>
-                                                <th>BALANCE</th>
+                                                <th style="text-align:right;">SALES PRICE</th>
+                                                <th style="text-align:right;">AMOUNT</th>
+                                                <th style="text-align:right;">BALANCE</th>
                                             </tr>
                                         </thead>
                                         <tbody>
