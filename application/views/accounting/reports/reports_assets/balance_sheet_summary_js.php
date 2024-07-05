@@ -90,179 +90,180 @@
     }
 
     function updateReportSettings() {
-        var theadColumnNames = $(`#${TABLE_ID} thead tr:first td`).map(function() {
-            return $(this).text();
-        }).get()
-        theadTotalColumn = $(`#${TABLE_ID}`).find('tr:first td').length;
-        // theadTotalColumnLength = $(`#${tableID}`).find('thead tr:first td').length;
-        // theadTotalColumnArray = [theadTotalColumnLength];
-        businessLogoURL = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
-        businessName = $('input[name="company_name"]').val();
-        reportName = $('input[name="report_name"]').val();
-        reportDate = $("#reportDate").text();
-        filename = (businessName + '_' + reportName).replace(/[^\p{L}\p{N}_-]+/gu, '_');
-        notes = $("#notesContent").text();
-        showHideLogo = $('select[name="showHideLogo"]').val();
-        enableDisableBusinessName = $('.enableDisableBusinessName').prop('checked');
-        enableDisableReportName = $('.enableDisableReportName').prop('checked');
-        header_align = $('select[name="header_align"]').val();
-        footer_align = $('select[name="footer_align"]').val();
-        sort_by = $('select[name="sort_by"]').val();
-        sort_order = $('select[name="sort_order"]').val();
-        page_size = $('select[name="page_size"]').val();
-        pageOrientation = $('select[name="pageOrientation"]').val();
-        pageHeaderRepeat = ($('input[name="pageHeaderRepeat"]').prop('checked') == true) ? 1 : 0;
-        date = $('input[name="date"]').val();
-        reportDate = 'As of ' + moment($("#report-date").val()).format('LL');
-        reportConfig = {
-            businessLogoURL: businessLogoURL,
-            showHideLogo: showHideLogo,
+    var theadColumnNames = $(`#${TABLE_ID} thead tr:first td`).map(function() {
+        return $(this).text();
+    }).get();
+    theadTotalColumn = $(`#${TABLE_ID}`).find('tr:first td').length;
+    businessLogoURL = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
+    businessName = $('input[name="company_name"]').val();
+    reportName = $('input[name="report_name"]').val();
+    reportDate = $("#reportDate").text();
+    filename = (businessName + '_' + reportName).replace(/[^\p{L}\p{N}_-]+/gu, '_');
+    notes = $("#notesContent").text();
+    showHideLogo = $('select[name="showHideLogo"]').val();
+    enableDisableBusinessName = $('.enableDisableBusinessName').prop('checked');
+    enableDisableReportName = $('.enableDisableReportName').prop('checked');
+    header_align = $('select[name="header_align"]').val();
+    footer_align = $('select[name="footer_align"]').val();
+    sort_by = $('select[name="sort_by"]').val();
+    sort_order = $('select[name="sort_order"]').val();
+    page_size = $('select[name="page_size"]').val();
+    pageOrientation = $('select[name="pageOrientation"]').val();
+    pageHeaderRepeat = ($('input[name="pageHeaderRepeat"]').prop('checked') == true) ? 1 : 0;
+    date = $('input[name="date"]').val();
+    reportDate = 'As of ' + moment($("#report-date").val()).format('LL');
+
+    // Capture compact display setting
+    var compact_display = $('#compact_display').prop('checked') ? 1 : 0;
+
+    reportConfig = {
+        businessLogoURL: businessLogoURL,
+        showHideLogo: showHideLogo,
+        header_align: header_align,
+        footer_align: footer_align,
+        sort_by: sort_by,
+        sort_order: sort_order,
+        page_size: page_size,
+        pageOrientation: pageOrientation,
+        pageHeaderRepeat: pageHeaderRepeat,
+        date: date,
+    };
+
+    $("#reportDate").text(reportDate);
+    (enableDisableBusinessName) ? $("#businessName").text(businessName): businessName = $("#businessName").html("&nbsp;").html();
+    (enableDisableReportName) ? $("#reportName").text(reportName): reportName = $("#reportName").html("&nbsp;").html();
+    if (showHideLogo == "1") {
+        $('#businessLogo').attr('src', BASE_URL + '/uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image?"; ?>' + Math.round(Math.random() * 1000000)).show();
+        if (header_align == "L") {
+            $('.reportTitleInfo').css({
+                textAlign: 'left',
+                marginLeft: '115px'
+            });
+        }
+        if (header_align == "C") {
+            $('.reportTitleInfo').css({
+                textAlign: 'center',
+                marginLeft: 'unset'
+            });
+        }
+        if (header_align == "R") {
+            $('.reportTitleInfo').css({
+                textAlign: 'right',
+                marginLeft: 'unset'
+            });
+        }
+        if (footer_align == "L") {
+            $('.footerInfo').css({
+                textAlign: 'left'
+            });
+        }
+        if (footer_align == "C") {
+            $('.footerInfo').css({
+                textAlign: 'center'
+            });
+        }
+        if (footer_align == "R") {
+            $('.footerInfo').css({
+                textAlign: 'right'
+            });
+        }
+    } else {
+        $('#businessLogo').hide();
+        if (header_align == "L") {
+            $('.reportTitleInfo').css({
+                textAlign: 'left',
+                marginLeft: 'unset'
+            });
+        }
+        if (header_align == "C") {
+            $('.reportTitleInfo').css({
+                textAlign: 'center',
+                marginLeft: 'unset'
+            });
+        }
+        if (header_align == "R") {
+            $('.reportTitleInfo').css({
+                textAlign: 'right',
+                marginLeft: 'unset'
+            });
+        }
+        if (footer_align == "L") {
+            $('.footerInfo').css({
+                textAlign: 'left'
+            });
+        }
+        if (footer_align == "C") {
+            $('.footerInfo').css({
+                textAlign: 'center'
+            });
+        }
+        if (footer_align == "R") {
+            $('.footerInfo').css({
+                textAlign: 'right'
+            });
+        }
+    }
+
+    if ($('.enableDisableBusinessName').is(':checked')) {
+        show_company_name = 1;
+    } else {
+        show_company_name = 0;
+    }
+
+    if ($('.enableDisableReportName').is(':checked')) {
+        show_report_name = 1;
+    } else {
+        show_report_name = 0;
+    }
+
+    if (compact_display) {
+        $('#tableID').addClass('compact-table');
+    } else {
+        $('#tableID').removeClass('compact-table');
+    }
+
+    $(`#${TABLE_ID}`).nsmPagination({
+        itemsPerPage: page_size
+    });
+    $(".settingsApplyButton").attr('disabled', '').html('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Applying changes...');
+
+    $.ajax({
+        type: "POST",
+        url: base_url + "accounting/reports/_update_report_settings",
+        data: {
+            report_type_id: REPORT_ID,
+            company_name: businessName,
+            title: reportName,
+            show_company_name: show_company_name,
+            show_title: show_report_name,
+            page_size: page_size,
+            report_date_text: date,
+            report_date_from_text: date,
+            report_date_to_text: date,
+            show_logo: showHideLogo,
             header_align: header_align,
             footer_align: footer_align,
             sort_by: sort_by,
-            sort_order: sort_order,
-            page_size: page_size,
-            pageOrientation: pageOrientation,
-            pageHeaderRepeat: pageHeaderRepeat,
-            date: date,
-        };
-        // =========================
-        $("#reportDate").text(reportDate);
-        (enableDisableBusinessName) ? $("#businessName").text(businessName): businessName = $("#businessName").html("&nbsp;").html();
-        (enableDisableReportName) ? $("#reportName").text(reportName): reportName = $("#reportName").html("&nbsp;").html();
-        if (showHideLogo == "1") {
-            $('#businessLogo').attr('src', BASE_URL + '/uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image?"; ?>' + Math.round(Math.random() * 1000000)).show();
-            if (header_align == "L") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'left',
-                    marginLeft: '115px'
-                });
-            }
-            if (header_align == "C") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'center',
-                    marginLeft: 'unset'
-                });
-            }
-            if (header_align == "R") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'right',
-                    marginLeft: 'unset'
-                });
-            }
-            if (footer_align == "L") {
-                $('.footerInfo').css({
-                    textAlign: 'left'
-                });
-            }
-            if (footer_align == "C") {
-                $('.footerInfo').css({
-                    textAlign: 'center'
-                });
-            }
-            if (footer_align == "R") {
-                $('.footerInfo').css({
-                    textAlign: 'right'
-                });
-            }
-        } else {
-            $('#businessLogo').hide();
-            if (header_align == "L") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'left',
-                    marginLeft: 'unset'
-                });
-            }
-            if (header_align == "C") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'center',
-                    marginLeft: 'unset'
-                });
-            }
-            if (header_align == "R") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'right',
-                    marginLeft: 'unset'
-                });
-            }
-            if (footer_align == "L") {
-                $('.footerInfo').css({
-                    textAlign: 'left'
-                });
-            }
-            if (footer_align == "C") {
-                $('.footerInfo').css({
-                    textAlign: 'center'
-                });
-            }
-            if (footer_align == "R") {
-                $('.footerInfo').css({
-                    textAlign: 'right'
+            sort_asc_desc: sort_order,
+            compact_display: compact_display
+        },
+        dataType: 'json',
+        success: function(response) {
+            $(".settingsApplyButton").removeAttr('disabled').html('Apply');
+            if (response.is_success == 1) {
+                $('#reportSettings').modal('hide');
+                renderReportList();
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: response.msg,
                 });
             }
         }
+    });
+}
 
-        if ($('.enableDisableBusinessName').is(':checked')) {
-            show_company_name = 1;
-        } else {
-            show_company_name = 0;
-        }
-
-        if ($('.enableDisableReportName').is(':checked')) {
-            show_report_name = 1;
-        } else {
-            show_report_name = 0;
-        }
-
-        $(`#${TABLE_ID}`).nsmPagination({
-            itemsPerPage: page_size
-        });
-        $(".settingsApplyButton").attr('disabled', '').html('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Applying changes...');
-
-        // =========================
-        $.ajax({
-            type: "POST",
-            url: base_url + "accounting/reports/_update_report_settings",
-            data: {
-                report_type_id: REPORT_ID,
-                company_name: businessName,
-                title: reportName,
-                show_company_name: show_company_name,
-                show_title: show_report_name,
-                page_size: page_size,
-                report_date_text: date,
-                report_date_from_text: date,
-                report_date_to_text: date,
-                show_logo: showHideLogo,
-                header_align: header_align,
-                footer_align: footer_align,
-                sort_by: sort_by,
-                sort_asc_desc: sort_order,
-                compact_display: 0
-            },
-            dataType: 'json',
-            success: function(response) {
-                $(".settingsApplyButton").removeAttr('disabled').html('Apply');
-                if (response.is_success == 1) {
-                    $('#reportSettings').modal('hide');
-                    renderReportList();
-                    // Swal.fire({
-                    //     icon: 'success',
-                    //     title: 'Success',
-                    //     text: 'Successfully update report settings',
-                    // }).then((result) => {
-
-                    // });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: response.msg,
-                    });
-                }
-            }
-        });
-    }
 
     document.querySelector('.settingsApplyButton').addEventListener('click', function() {
 
@@ -507,3 +508,10 @@
         }
     });
 </script>
+<style>
+    .compact-table td,
+    .compact-table th {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
+</style>

@@ -4,7 +4,9 @@
         width: 100% !important;
     }
     .pdfAttachmentCheckbox,
-    .xlsxAttachmentCheckbox {
+    .xlsxAttachmentCheckbox,
+    .enableDisableBusinessName,
+    .enableDisableReportName {
         width: 18px;
         height: 18px;
     }

@@ -180,7 +180,7 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="id" <?php echo ($reportSettings->sort_by == "id") ? "selected" : "" ?>>Default</option>
+                                                <option value="id" <?php echo ($reportSettings->sort_by == "id") ? "selected" : "" ?>>ID</option>
                                                 <option value="vendor" <?php echo ($reportSettings->sort_by == "vendor") ? "selected" : "" ?>>Vendor</option>
                                                 <option value="phone_numbers" <?php echo ($reportSettings->page_size == "phone_numbers") ? "selected" : "" ?>>Phone Numbers</option>
                                                 <option value="email" <?php echo ($reportSettings->sort_by == "email") ? "selected" : "" ?>>Email</option>

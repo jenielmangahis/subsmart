@@ -76,47 +76,55 @@
                 <div class="row">
                     <div class="col-12 col-md-4 grid-mb">
                     </div>
-                    <div class="col-12 col-md-8 grid-mb text-end">
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
-                                <div class="row grid-mb">
-                                    <div class="col-12">
-                                        <label for="filter-report-period">Report period</label>
-                                        <select class="nsm-field form-select" name="filter_report_period" id="filter-report-period">
-                                            <option value="all-dates" selected>All Dates</option>
-                                            <option value="custom">Custom</option>
-                                            <option value="today">Today</option>
-                                            <option value="this-week">This Week</option>
-                                            <option value="this-week-to-date">This Week-to-date</option>
-                                            <option value="this-month">This Month</option>
-                                            <option value="this-month-to-date">This Month-to-date</option>
-                                            <option value="this-quarter">This Quarter</option>
-                                            <option value="this-quarter-to-date">This Quarter-to-date</option>
-                                            <option value="this-year">This Year</option>
-                                            <option value="this-year-to-date">This Year-to-date</option>
-                                            <option value="this-year-to-last-month">This Year-to-last-month</option>
-                                            <option value="yesterday">Yesterday</option>
-                                            <option value="recent">Recent</option>
-                                            <option value="last-week">Last Week</option>
-                                            <option value="last-week-to-date">Last Week-to-date</option>
-                                            <option value="last-month">Last Month</option>
-                                            <option value="last-month-to-date">Last Month-to-date</option>
-                                            <option value="last-quarter">Last Quarter</option>
-                                            <option value="last-quarter-to-date">Last Quarter-to-date</option>
-                                            <option value="last-year">Last Year</option>
-                                            <option value="last-year-to-date">Last Year-to-date</option>
-                                            <option value="since-30-days-ago">Since 30 Days Ago</option>
-                                            <option value="since-60-days-ago">Since 60 Days Ago</option>
-                                            <option value="since-90-days-ago">Since 90 Days Ago</option>
-                                            <option value="since-365-days-ago">Since 365 Days Ago</option>
-                                            <option value="next-week">Next Week</option>
-                                            <option value="next-4-weeks">Next 4 Weeks</option>
-                                            <option value="next-month">Next Month</option>
-                                            <option value="next-quarter">Next Quarter</option>
-                                            <option value="next-year">Next Year</option>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-1"></div>
+    </div>
+</div>
+<!-- START: MODALS -->
+<!-- Modal for Report Settings -->
+<div class="modal fade" id="reportSettings" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Report Settings</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="reportSettingsForm" method="POST">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <!-- FOR LATER UPDATES -->
+                            <!-- <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <div class="col-md-12">
+                                        <label class="mb-1 fw-xnormal">User</label>
+                                        <select class="form-select">
+                                            <option value="all" selected>All</option>
+                                            <?php 
+                                                foreach ($customerByCompanyID as $customerByCompanyIDs) {
+                                                    echo "<option value='$customerByCompanyIDs->prof_id'>$customerByCompanyIDs->first_name $customerByCompanyIDs->last_name</option>";
+                                                }
+                                            ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="col-md-12">
+                                        <label class="mb-1 fw-xnormal">Date Changed</label>
+                                        <select class="form-select">
+                                            <option value="Today">Today</option>
+                                            <option value="Yesterday">Yesterday</option>
+                                            <option value="This Week">This Week</option>
+                                            <option value="This Month">This Month</option>
+                                            <option value="This Quarter">This Quarter</option>
+                                            <option value="This Year">This Year</option>
+                                            <option value="Last Week">Last Week</option>
+                                            <option value="Last Month">Last Month</option>
+                                            <option value="Last Quarter">Last Quarter</option>
+                                            <option value="Last Year">Last Year</option>
+                                            <option value="Last Seven Years">Last Seven Years</option>
                                         </select>
                                     </div>
                                 </div>
@@ -279,6 +287,90 @@
                                     </div>
                                 </div>
 
+<!-- START: PRINT/SAVE MODAL -->
+<div class="modal fade" id="printPreviewModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Print or save as PDF</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-3 mt-1 mb-3">
+                        <h6>Report print settings</h6>
+                        <hr>
+                        <div class="form-group mb-2">
+                            <label>Orientation</label>
+                            <select id="pageOrientation" name="pageOrientation" class="form-select">
+                                <option value="P" selected>Portrait</option>
+                                <option value="L">Landscape</option>
+                            </select>
+                        </div>
+                        <div class="form-check">
+                            <input id="pageHeaderRepeat" name="pageHeaderRepeat" class="form-check-input" type="checkbox">
+                            <label class="form-check-label" for="pageHeaderRepeat">Repeat Page Header</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <iframe id="pdfPreview" class="border-0" width="100%" height="450px"></iframe>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="float-start">
+                            <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        </div>
+                        <div class="float-end">
+                            <button type="button" class="nsm-button primary savePDF">Save as PDF</button>
+                            <!-- <button type="button" class="nsm-button primary printPDF">Print</button> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END: PRINT/SAVE MODAL -->
+<!-- START: EMAIL REPORT MODAL -->
+<div class="modal fade" id="emailReportModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Email Report</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="sendEmailForm">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1">
+                            <div class="form-group">
+                                <h6>To</h6>
+                                <input id="emailTo" class="form-control" type="email" placeholder="Send to" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <div class="form-group">
+                                <h6>CC</h6>
+                                <input id="emailCC" class="form-control" type="email" placeholder="Carbon Copy" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <div class="form-group">
+                                <h6>Subject</h6>
+                                <input id="emailSubject" class="form-control" type="text" value="<?php echo $page->title ?>" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <div class="form-group">
+                                <h6>Body</h6>
+                                <div id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title ?> from <?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?></div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <div class="form-group">
+                                <h6>Attachment</h6>
                                 <div class="row">
                                     <div class="col-12 grid-mb company">
                                         

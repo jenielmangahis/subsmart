@@ -221,18 +221,71 @@ $(document).on('change', '#bonus-payroll-modal #payroll-table thead .select-all'
 
 const updateTotalPay = () => {
     let total = 0.00;
-    $('#bonus-payroll-modal #payroll-table tbody [name="bonus[]"]').each(function() {
-        if (!$(this).is(':disabled')) {  
-            const bonusVal = $(this).val().replace(/,/g, ''); 
+    let employeeId = '';
+    let bonusVals = '';
+    let checkedRows = [];
+
+    $('#bonus-payroll-modal #payroll-table tbody tr').each(function() {
+        const $checkbox = $(this).find('.select-one');
+        const $bonusInput = $(this).find('input[name="bonus[]"]');
+        
+        const employeeId = $checkbox.val();
+        const bonusVal = $bonusInput.val().replace(/,/g, ''); // Assuming the value might contain commas
+    
+        // Retrieve status from data attribute
+        const status = $(this).data('status');
+    
+        if ($checkbox.prop('checked') && !$checkbox.is(':disabled')) {
+            // Remove any existing entry with the same employeeId
+            checkedRows = checkedRows.filter(row => row.employeeId !== employeeId);
+    
+            // Add new entry
+            const parsedBonusVal = parseFloat(bonusVal); // Parse bonusVal to float if necessary
+            checkedRows.push({
+                employeeId: employeeId,
+                bonusVal: parsedBonusVal,
+                status: status // Add status to the object
+            });
+        }
+    });
+    
+    // Calculate the total bonus value
+    let totalBonus = checkedRows.reduce((sum, row) => sum + row.bonusVal, 0);
+    
+    // // Logging the checked rows for verification
+    // console.log("Checked Rows:", checkedRows);
+    
+    // // Logging the total bonus value
+    // console.log("Total Bonus:", totalBonus);
+    
+    
+
+    
+    $('#bonus-payroll-modal #payroll-table tbody [name="bonus[]"]').each(function(index) {
+        
+        if (!$(this).is(':disabled')) {
+            const bonusVal = $(this).val().replace(/,/g, ''); // Assuming the value might contain commas
             console.log("test", bonusVal);
+            
             if (bonusVal !== "") {
                 const bonusAmount = parseFloat(bonusVal);
+                console.log("bonus amount", bonusAmount);
                 total += bonusAmount;
             }
         }
     });
-
-    const formattedTotal = formatter.format(total);
+   
+    const hasStatusOne = checkedRows.some(row => row.status === 1);
+    let formattedTotal = '';
+    if (hasStatusOne) {
+        const bonusTotal = total - totalBonus;
+        formattedTotal = formatter.format(bonusTotal);
+        console.log('1', formattedTotal);
+    } else {
+        formattedTotal = formatter.format(total);
+        console.log('2', formattedTotal);
+    }
+    
     $('#bonus-payroll-modal #payroll-table tfoot tr:first-child td:nth-child(4), #bonus-payroll-modal #payroll-table tfoot tr:first-child td:last-child').html(formattedTotal);
     $('#bonus-payroll-modal h2.total-pay').html(formattedTotal);
 };
@@ -580,32 +633,38 @@ $(document).on('click', '#bonus-payroll-modal #back-payroll-form', function() {
     // Track which employee IDs have been processed
     var processedEmployees = {};
 
-    // Loop through the employees to remove old values
     for (var i = 0; i < employees.length; i++) {
         var employeeId = employees[i];
         var bonusValue = bonus[i];
         var memoValue = memos[i];
-
+    
         if (!processedEmployees[employeeId]) {
             processedEmployees[employeeId] = true;
-
+    
             // Find the corresponding row in the table
             var $row = $(`#bonus-payroll-modal #payroll-table tr td .select-one[value="${employeeId}"]`).closest('tr');
-
+    
             // Set the new bonus and memo values
             $row.find('input[name="bonus[]"]').val(bonusValue);
             $row.find('input[name="memo[]"]').val(memoValue);
-
+    
+            // Set status value to 1 (or any desired value)
+            $row.data('status', 1); // Assuming you want to use jQuery's data() method
+    
+            // Log the status value of the current row
+            console.log(`Status for employee ID ${employeeId}:`, $row.data('status'));
+    
             // Remove the first occurrence of bonus and memo for this employee ID
             payrollFormData.delete('bonus[]');
             payrollFormData.delete('memo[]');
-
+    
             // Log the values of the current row
             console.log(`Row for employee ID: ${employeeId}`);
             console.log(`Bonus: ${bonusValue}`);
             console.log(`Memo: ${memoValue}`);
         }
     }
+    
 
     $(this).parent().html('<button type="button" class="nsm-button primary" id="bonus-pay-select">Back</button>');
     $('#bonus-payroll-modal .modal-footer button[type="submit"]').parent().prepend(`<button type="button" class="nsm-button success" id="preview-payroll">Preview payroll</button>`);

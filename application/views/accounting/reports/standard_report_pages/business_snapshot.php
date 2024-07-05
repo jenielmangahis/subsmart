@@ -1,290 +1,21 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
-
+<?php include viewPath('accounting/reports/reports_assets/report_css'); ?>
 
 <div class="row page-content g-0">
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
+
                 <div class="row">
-                    <div class="col-12 col-md-4 grid-mb">
-
-                        <!-- <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search">
-                        </div> -->
-                    </div>
-                    <div class="col-12 col-md-8 grid-mb text-end">
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
-                                <div class="row">
-                                    <div class="col-12 col-md-6">
-                                        <label for="filter-report-period">Report period</label>
-                                        <select class="nsm-field form-select" name="filter_report_period"
-                                            id="filter-report-period">
-                                            <option value="all-dates">All Dates</option>
-                                            <option value="custom">Custom</option>
-                                            <option value="today">Today</option>
-                                            <option value="this-week">This Week</option>
-                                            <option value="this-week-to-date">This Week-to-date</option>
-                                            <option value="this-month">This Month</option>
-                                            <option value="this-month-to-date">This Month-to-date</option>
-                                            <option value="this-quarter">This Quarter</option>
-                                            <option value="this-quarter-to-date">This Quarter-to-date</option>
-                                            <option value="this-year">This Year</option>
-                                            <option value="this-year-to-date" selected>This Year-to-date</option>
-                                            <option value="this-year-to-last-month">This Year-to-last-month</option>
-                                            <option value="yesterday">Yesterday</option>
-                                            <option value="recent">Recent</option>
-                                            <option value="last-week">Last Week</option>
-                                            <option value="last-week-to-date">Last Week-to-date</option>
-                                            <option value="last-month">Last Month</option>
-                                            <option value="last-month-to-date">Last Month-to-date</option>
-                                            <option value="last-quarter">Last Quarter</option>
-                                            <option value="last-quarter-to-date">Last Quarter-to-date</option>
-                                            <option value="last-year">Last Year</option>
-                                            <option value="last-year-to-date">Last Year-to-date</option>
-                                            <option value="since-30-days-ago">Since 30 Days Ago</option>
-                                            <option value="since-60-days-ago">Since 60 Days Ago</option>
-                                            <option value="since-90-days-ago">Since 90 Days Ago</option>
-                                            <option value="since-365-days-ago">Since 365 Days Ago</option>
-                                            <option value="next-week">Next Week</option>
-                                            <option value="next-4-weeks">Next 4 Weeks</option>
-                                            <option value="next-month">Next Month</option>
-                                            <option value="next-quarter">Next Quarter</option>
-                                            <option value="next-year">Next Year</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 col-md-6">
-                                        <label for="filter-from">From</label>
-                                        <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker"
-                                                value="<?php echo date('01/01/Y'); ?>" id="filter-from">
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6">
-                                        <label for="filter-to">To</label>
-                                        <div class="nsm-field-group calendar">
-                                            <input type="text" class="nsm-field form-control datepicker"
-                                                value="<?php echo date('m/d/Y'); ?>" id="filter-to">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 col-md-6">
-                                        <label for="filter-display-columns-by">Display columns by</label>
-                                        <select class="nsm-field form-select" name="filter_display_columns_by"
-                                            id="filter-display-columns-by">
-                                            <option value="total-only" selected>Total Only</option>
-                                            <option value="days">Days</option>
-                                            <option value="weeks">Weeks</option>
-                                            <option value="months">Months</option>
-                                            <option value="quarters">Quarters</option>
-                                            <option value="years">Years</option>
-                                            <option value="customers">Customers</option>
-                                            <option value="vendors">Vendors</option>
-                                            <option value="products-services">Products/Services</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 col-md-6">
-                                        <label for="filter-display-columns-by">Show non-zero or active only</label>
-                                        <div class="dropdown">
-                                            <button type="button" class="dropdown-toggle nsm-button w-100 m-0"
-                                                data-bs-toggle="dropdown"
-                                                style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
-                                                <span>
-                                                    Active rows/active columns
-                                                </span> <i class='bx bx-fw bx-chevron-down'></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end p-3 w-100">
-                                                <p class="m-0">Show rows</p>
-                                                <div class="form-check">
-                                                    <input type="radio" checked id="active-rows" name="show_rows"
-                                                        class="form-check-input">
-                                                    <label for="active-rows" class="form-check-label">Active</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" id="all-rows" name="show_rows"
-                                                        class="form-check-input">
-                                                    <label for="all-rows" class="form-check-label">All</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" id="non-zero-rows" name="show_rows"
-                                                        class="form-check-input">
-                                                    <label for="non-zero-rows" class="form-check-label">Non-zero</label>
-                                                </div>
-                                                <p class="m-0">Show columns</p>
-                                                <div class="form-check">
-                                                    <input type="radio" checked id="active-columns" name="show_cols"
-                                                        class="form-check-input">
-                                                    <label for="active-columns" class="form-check-label">Active</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" id="all-columns" name="show_cols"
-                                                        class="form-check-input">
-                                                    <label for="all-columns" class="form-check-label">All</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" id="non-zero-columns" name="show_cols"
-                                                        class="form-check-input">
-                                                    <label for="non-zero-columns"
-                                                        class="form-check-label">Non-zero</label>
-                                                </div>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 col-md-6">
-                                        <label for="filter-display-columns-by">Compare another period</label>
-                                        <div class="dropdown">
-                                            <button type="button" class="dropdown-toggle nsm-button w-100 m-0"
-                                                data-bs-toggle="dropdown">
-                                                <span>
-                                                    Select period
-                                                </span> <i class='bx bx-fw bx-chevron-down'></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end p-3 w-100">
-                                                <div class="form-check">
-                                                    <input type="checkbox" id="previous-period" name="selected_period"
-                                                        class="form-check-input">
-                                                    <label for="previous-period" class="form-check-label">Previous
-                                                        period (PP)</label>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <div class="form-check d-inline-block">
-                                                            <input type="checkbox" id="previous-period-dollar-change"
-                                                                class="form-check-input" disabled>
-                                                            <label for="previous-period-dollar-change"
-                                                                class="form-check-label">$ change</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block">
-                                                            <input type="checkbox" id="previous-period-percent-change"
-                                                                class="form-check-input" disabled>
-                                                            <label for="previous-period-percent-change"
-                                                                class="form-check-label">% change</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="checkbox" id="previous-year" name="selected_period"
-                                                        class="form-check-input">
-                                                    <label for="previous-year" class="form-check-label">Previous year
-                                                        (PY)</label>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <div class="form-check d-inline-block">
-                                                            <input type="checkbox" id="previous-year-dollar-change"
-                                                                class="form-check-input" disabled>
-                                                            <label for="previous-year-dollar-change"
-                                                                class="form-check-label">$ change</label>
-                                                        </div>
-                                                        <div class="form-check d-inline-block">
-                                                            <input type="checkbox" id="previous-year-percent-change"
-                                                                class="form-check-input" disabled>
-                                                            <label for="previous-year-percent-change"
-                                                                class="form-check-label">% change</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="checkbox" id="year-to-date" name="selected_period"
-                                                        class="form-check-input">
-                                                    <label for="year-to-date" class="form-check-label">Year-to-date
-                                                        (YTD)</label>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col">
-                                                        <div class="form-check d-inline-block">
-                                                            <input type="checkbox" id="ytd-percent"
-                                                                class="form-check-input" disabled>
-                                                            <label for="ytd-percent" class="form-check-label">% of
-                                                                YTD</label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="checkbox" id="percent-of-row" name="selected_period"
-                                                        class="form-check-input">
-                                                    <label for="percent-of-row" class="form-check-label">% of
-                                                        Row</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="checkbox" id="percent-of-col" name="selected_period"
-                                                        class="form-check-input">
-                                                    <label for="percent-of-col" class="form-check-label">% of
-                                                        Column</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="checkbox" id="percent-of-income" name="selected_period"
-                                                        class="form-check-input">
-                                                    <label for="percent-of-income" class="form-check-label">% of
-                                                        Income</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="checkbox" id="percent-of-expense"
-                                                        name="selected_period" class="form-check-input">
-                                                    <label for="percent-of-expense" class="form-check-label">% of
-                                                        Expense</label>
-                                                </div>
-                                                <p class="m-0"><a href="#" style="text-decoration: none">Reorder
-                                                        columns</a></p>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row grid-mb">
-                                    <div class="col-12 col-md-6">
-                                        <label for="" class="w-100">Accounting method</label>
-                                        <div class="form-check d-inline-block">
-                                            <input type="radio" id="cash-method" class="form-check-input"
-                                                name="accounting_method">
-                                            <label for="cash-method" class="form-check-label">Cash</label>
-                                        </div>
-                                        <div class="form-check d-inline-block">
-                                            <input type="radio" id="accrual-method" class="form-check-input"
-                                                name="accounting_method" checked>
-                                            <label for="accrual-method" class="form-check-label">Accrual</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-12 d-flex justify-content-center">
-                                        <button type="button" class="nsm-button primary">
-                                            Run Report
-                                        </button>
-                                    </div>
-                                </div>
-                            </ul>
-                            <button type="button" class="nsm-button">
-                                <i class='bx bx-fw bx-customize'></i> Customize
-                            </button>
-                            <button type="button" class="nsm-button primary">
-                                <i class='bx bx-fw bx-save'></i> Save customization
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row g-3">
-                    <div class="col-12 col-md-6 offset-md-3">
+                    <div class="col-lg-1"></div>
+                    <div class="col-10 ">
                         <div class="nsm-card primary">
                             <div class="nsm-card-header d-block">
                                 <div class="row">
                                     <div class="col-12 col-md-6 grid-mb">
                                         <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button">
+                                            <button type="button" class="nsm-button" id="collapseButton">
                                                 <span>Collapse</span>
-                                            </button>
-                                            <button type="button" class="nsm-button" data-bs-toggle="dropdown">
-                                                <span>Sort</span> <i class='bx bx-fw bx-chevron-down'></i>
                                             </button>
                                             <ul class="dropdown-menu p-3">
                                                 <div class="form-check">
@@ -305,25 +36,18 @@
                                                         order</label>
                                                 </div>
                                             </ul>
-                                            <button type="button" class="nsm-button">
-                                                <span>Add notes</span>
-                                            </button>
-                                            <button type="button" class="nsm-button">
-                                                <span>Edit titles</span>
-                                            </button>
+                                            <button class="nsm-button addNotes">Add Notes</button>
+
                                         </div>
                                     </div>
                                     <div class="col-12 col-md-6 grid-mb text-end">
                                         <div class="nsm-page-buttons page-button-container">
+                                            <button data-bs-toggle="modal" data-bs-target="#emailReportModal" class="nsm-button border-0"><i class="bx bx-fw bx-envelope"></i></button>
                                             <button type="button" class="nsm-button" data-bs-toggle="modal"
-                                                data-bs-target="#print_accounts_modal">
-                                                <i class='bx bx-fw bx-envelope'></i>
-                                            </button>
-                                            <button type="button" class="nsm-button" data-bs-toggle="modal"
-                                                data-bs-target="#print_accounts_modal">
+                                                data-bs-target="#printPreviewModal">
                                                 <i class='bx bx-fw bx-printer'></i>
                                             </button>
-                                            <button type="button" class="nsm-button" data-bs-toggle="dropdown">
+                                            <!-- <button type="button" class="nsm-button" data-bs-toggle="dropdown">
                                                 <i class="bx bx-fw bx-export"></i>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end export-dropdown">
@@ -331,9 +55,10 @@
                                                         id="export-to-excel">Export to Excel</a></li>
                                                 <li><a class="dropdown-item" href="javascript:void(0);"
                                                         id="export-to-pdf">Export to PDF</a></li>
-                                            </ul>
-                                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
-                                                <i class="bx bx-fw bx-cog"></i>
+                                            </ul> -->
+                                            <button class="nsm-button border-0 primary" data-bs-toggle="modal"
+                                                data-bs-target="#reportSettings"><i
+                                                    class="bx bx-fw bx-cog"></i></button>
                                             </button>
                                             <ul class="dropdown-menu dropdown-menu-end p-3">
                                                 <p class="m-0">Display density</p>
@@ -349,17 +74,31 @@
                                 </div>
 
                                 <div class="row">
-                                    <div class="col-12 grid-mb">
-                                        <h4 class="text-center fw-bold"><span
-                                                class="company-name"><?php echo $clients->business_name; ?></span></h4>
-                                    </div>
-                                    <div class="col-12 grid-mb text-center">
-                                        <p class="m-0 fw-bold">Business Snapshot</p>
-                                        <p>January 1-<?php echo date('F d, Y'); ?></p>
+                                    <div class="row mb-4">
+                                        <div class="col-lg-12 headerInfo">
+                                            <img id="businessLogo"
+                                                class="<?php echo ($reportSettings->show_logo == 0 || !isset($reportSettings->show_logo)) ? 'd-none-custom' : '';?>"
+                                                src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
+                                            <div class="reportTitleInfo">
+                                                <h3 id="businessName">
+                                                    <?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?>
+                                                </h3>
+                                                <h5><strong
+                                                        id="reportName"><?php echo $reportSettings->title ?></strong>
+                                                </h5>
+                                                <h5><small id="reportDate">As of <?php echo date('F d, Y'); ?></small>
+                                                </h5>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="nsm-card-content h-auto grid-mb">
+                                <?php 
+                                        $tableID = "business_snapshot_table"; 
+                                        $reportCategory = "business_snapshot_list"; 
+                                    ?>
+                                <table id="<?php echo $tableID; ?>" style="display:hidden"></table>
                                 <table class="nsm-table">
                                     <thead>
                                         <tr>
@@ -367,37 +106,42 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    <tr data-bs-toggle="collapse" data-bs-target="#incomeDetails" class="clickable collapse-row collapsed">
+                                        <tr data-bs-toggle="collapse" data-bs-target="#incomeDetails"
+                                            class="clickable collapse-row collapsed">
                                             <td><i class="bx bx-fw bx-caret-right"></i>My Income</td>
                                         </tr>
-                                        <tr data-bs-toggle="collapse" class="clickable collapse-row collapse" id="incomeDetails">
+                                        <tr data-bs-toggle="collapse" class="clickable collapse-row collapse"
+                                            id="incomeDetails">
                                             <td>
                                                 <div class="card text-center shadow">
                                                     <div class="card-header text-left"><b>My Income</b></div>
                                                     <div class="card-body">
-                                                    <h1 id='myIncomeGraphLoader'> <span
-                                                    class="bx bx-loader bx-spin"></span></h1>
-                                                            <canvas id="myIncomeGraph" style="max-height:100%;"
-                                                                class="nsm-chart" data-chart-type="sales"></canvas>
+                                                        <h1 id='myIncomeGraphLoader'> <span
+                                                                class="bx bx-loader bx-spin"></span></h1>
+                                                        <canvas id="myIncomeGraph" style="max-height:100%;"
+                                                            class="nsm-chart" data-chart-type="sales"></canvas>
                                                     </div>
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr  data-bs-toggle="collapse" data-bs-target="#incomeDetailsComparison"
+                                        <tr data-bs-toggle="collapse" data-bs-target="#incomeDetailsComparison"
                                             class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i>Previous Year Income Comparison</td>
+                                            <td><i class="bx bx-fw bx-caret-right"></i>Previous Year Income Comparison
+                                            </td>
                                         </tr>
-                                     
-                                        <tr id="incomeDetailsComparison" class="clickable collapse-row collapse"  data-bs-toggle="collapse" >
+
+                                        <tr id="incomeDetailsComparison" class="clickable collapse-row collapse"
+                                            data-bs-toggle="collapse">
                                             <td>
                                                 <div class="card text-center shadow">
-                                                    <div class="card-header text-left"><b>Previous Year Income Comparison</b></div>
+                                                    <div class="card-header text-left"><b>Previous Year Income
+                                                            Comparison</b></div>
                                                     <div class="card-body">
-                                                    <h1 id='myIncomeComparisonGraphLoader'> <span
-                                                    class="bx bx-loader bx-spin"></span></h1>
-                                                            <canvas id="myIncomeComparisonGraph" style="max-height:100%;"
-                                                                class="nsm-chart" data-chart-type="sales"></canvas>
-                                                            
+                                                        <h1 id='myIncomeComparisonGraphLoader'> <span
+                                                                class="bx bx-loader bx-spin"></span></h1>
+                                                        <canvas id="myIncomeComparisonGraph" style="max-height:100%;"
+                                                            class="nsm-chart" data-chart-type="sales"></canvas>
+
                                                     </div>
                                                 </div>
                                             </td>
@@ -407,17 +151,18 @@
                                             class="clickable collapse-row collapsed">
                                             <td><i class="bx bx-fw bx-caret-right"></i>My Expense</td>
                                         </tr>
-                                        <tr id="expenseDetails"  class=" clickable collapse-row collapse"  data-bs-toggle="collapse">
+                                        <tr id="expenseDetails" class=" clickable collapse-row collapse"
+                                            data-bs-toggle="collapse">
                                             <td>
                                                 <div class="card text-center shadow">
                                                     <div class="card-header text-left"><b>My Expense</b></div>
                                                     <div class="card-body">
-                                                            <h1 id='MyExpenseGraphLoader'> <span
-                                                                    class="bx bx-loader bx-spin"></span></h1>
+                                                        <h1 id='MyExpenseGraphLoader'> <span
+                                                                class="bx bx-loader bx-spin"></span></h1>
 
-                                                            <canvas id="MyExpenseGraph" style="max-height:100%;"
-                                                                class="nsm-chart" data-chart-type="sales"></canvas>
-                                                         
+                                                        <canvas id="MyExpenseGraph" style="max-height:100%;"
+                                                            class="nsm-chart" data-chart-type="sales"></canvas>
+
                                                     </div>
                                                 </div>
                                             </td>
@@ -425,30 +170,271 @@
 
                                         <tr data-bs-toggle="collapse" data-bs-target="#expenseDetailsComparison"
                                             class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i>Previous Year Expense Comparison</td>
+                                            <td><i class="bx bx-fw bx-caret-right"></i>Previous Year Expense Comparison
+                                            </td>
                                         </tr>
-                                        <tr id="expenseDetailsComparison" class="clickable collapse-row collapse"  data-bs-toggle="collapse" >
+                                        <tr id="expenseDetailsComparison" class="clickable collapse-row collapse"
+                                            data-bs-toggle="collapse">
                                             <td>
                                                 <div class="card text-center shadow">
-                                                    <div class="card-header text-left"><b>Previous Year Expense Comparison</b></div>
+                                                    <div class="card-header text-left"><b>Previous Year Expense
+                                                            Comparison</b></div>
                                                     <div class="card-body">
-                                                    <h1 id='expenseComparisonGraphLoader'> <span
-                                                    class="bx bx-loader bx-spin"></span></h1>
-                                                            <canvas id="expenseComparisonGraph" 
-                                                                data-chart-type="sales"></canvas>
-                                                           
+                                                        <h1 id='expenseComparisonGraphLoader'> <span
+                                                                class="bx bx-loader bx-spin"></span></h1>
+                                                        <canvas id="expenseComparisonGraph"
+                                                            data-chart-type="sales"></canvas>
+
                                                     </div>
                                                 </div>
                                             </td>
                                         </tr>
 
-                                       
+
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-lg-12">
+                                    <span id="notesContent" class="text-muted">Loading Notes...</span>
+                                    <form id="addNotesForm" method="POST" style="display: none;">
+                                        <div class="row">
+                                            <div class="col-sm-12 mt-1 mb-3">
+                                                <div class="form-group">
+                                                    <textarea id="NOTES" class="form-control"
+                                                        maxlength="4000"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="float-start noteCharMax">
+                                                    4000 characters max
+                                                </div>
+                                                <div class="float-end">
+                                                    <button type="button" id="cancelNotes"
+                                                        class="nsm-button">Cancel</button>
+                                                    <button type="submit"
+                                                        class="nsm-button primary noteSaveButton">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
                             <div class="nsm-card-footer text-center">
                                 <p class="m-0">Accrual basis <?php echo date('l, F j, Y h:i A eP'); ?></p>
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="reportSettings" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Report Settings</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button"
+                    name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="reportSettingsForm" method="POST">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-md-2 mb-3">
+                                    <label class="mb-1 fw-xnormal">Logo</label>
+                                    <select id="showHideLogo" name="showHideLogo" class="nsm-field form-select">
+                                        <?php if (isset($reportSettings->show_logo)) { ?>
+                                        <option value="1"
+                                            <?php echo (isset($reportSettings->show_logo) && $reportSettings->show_logo == 1) ? 'selected' : ''; ?>>
+                                            Show</option>
+                                        <option value="0"
+                                            <?php echo (isset($reportSettings->show_logo) && $reportSettings->show_logo == 0) ? 'selected' : ''; ?>>
+                                            Hide</option>
+                                        <?php } else { ?>
+                                        <option value="1" selected>Show</option>
+                                        <option value="0">Hide</option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-5 mb-3">
+                                    <label class="mb-1 fw-xnormal">Company Name</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><input
+                                                class="form-check-input mt-0 enableDisableBusinessName" type="checkbox"
+                                                <?php echo (isset($reportSettings->show_company_name) && $reportSettings->show_company_name == 1) ? 'checked' : ''; ?>>
+                                        </div>
+                                        <input id="company_name" class="nsm-field form-control" type="text"
+                                            name="company_name"
+                                            value="<?php echo (!empty($reportSettings->company_name)) ? $reportSettings->company_name : strtoupper($companyInfo->business_name); ?>"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 mb-3">
+                                    <label class="mb-1 fw-xnormal">Report Name</label>
+                                    <div class="input-group">
+                                        <div class="input-group-text"><input
+                                                class="form-check-input mt-0 enableDisableReportName" type="checkbox"
+                                                <?php echo (isset($reportSettings->show_title) && $reportSettings->show_title == 1) ? 'checked' : ''; ?>>
+                                        </div>
+                                        <input id="report_name" class="nsm-field form-control" type="text"
+                                            name="report_name"
+                                            value="<?php echo (!empty($reportSettings->title)) ? $reportSettings->title : $page->title; ?>"
+                                            required>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="mb-1 fw-xnormal">Header Align</label>
+                                    <select name="header_align" id="header-align" class="nsm-field form-select">
+                                        <option value="C"
+                                            <?php echo ($reportSettings->header_align == 'C') ? 'selected' : ''; ?>>
+                                            Center</option>
+                                        <option value="L"
+                                            <?php echo ($reportSettings->header_align == 'L') ? 'selected' : ''; ?>>Left
+                                        </option>
+                                        <option value="R"
+                                            <?php echo ($reportSettings->header_align == 'R') ? 'selected' : ''; ?>>
+                                            Right</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="mb-1 fw-xnormal">Footer Align</label>
+                                    <select name="footer_align" id="footer-align" class="nsm-field form-select">
+                                        <option value="C"
+                                            <?php echo ($reportSettings->footer_align == 'C') ? 'selected' : ''; ?>>
+                                            Center</option>
+                                        <option value="L"
+                                            <?php echo ($reportSettings->footer_align == 'L') ? 'selected' : ''; ?>>Left
+                                        </option>
+                                        <option value="R"
+                                            <?php echo ($reportSettings->footer_align == 'R') ? 'selected' : ''; ?>>
+                                            Right</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <label class="mb-1 fw-xnormal">Row Size</label>
+                                    <select name="page_size" id="page-size" class="nsm-field form-select">
+                                        <option value="9999"
+                                            <?php echo ($reportSettings->page_size == '9999') ? 'selected' : ''; ?>>All
+                                        </option>
+                                        <option value="10"
+                                            <?php echo ($reportSettings->page_size == '10') ? 'selected' : ''; ?>>10
+                                        </option>
+                                        <option value="25"
+                                            <?php echo ($reportSettings->page_size == '25') ? 'selected' : ''; ?>>25
+                                        </option>
+                                        <option value="50"
+                                            <?php echo ($reportSettings->page_size == '50') ? 'selected' : ''; ?>>50
+                                        </option>
+                                        <option value="100"
+                                            <?php echo ($reportSettings->page_size == '100') ? 'selected' : ''; ?>>100
+                                        </option>
+                                        <option value="500"
+                                            <?php echo ($reportSettings->page_size == '500') ? 'selected' : ''; ?>>500
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="col-md-12">
+                                        <label class="mb-1 fw-xnormal">Sort By</label>
+                                        <div class="input-group">
+                                            <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                                <option value="id"
+                                                    <?php echo ($reportSettings->sort_by == 'id') ? 'selected' : ''; ?>>
+                                                    Default</option>
+                                                <option value="vendor"
+                                                    <?php echo ($reportSettings->sort_by == 'vendor') ? 'selected' : ''; ?>>
+                                                    Vendor</option>
+                                                <option value="phone_numbers"
+                                                    <?php echo ($reportSettings->sort_by == 'phone_numbers') ? 'selected' : ''; ?>>
+                                                    Phone Numbers</option>
+                                                <option value="email"
+                                                    <?php echo ($reportSettings->sort_by == 'email') ? 'selected' : ''; ?>>
+                                                    Email</option>
+                                                <option value="fullname"
+                                                    <?php echo ($reportSettings->sort_by == 'fullname') ? 'selected' : ''; ?>>
+                                                    Full Name</option>
+                                                <option value="address"
+                                                    <?php echo ($reportSettings->sort_by == 'address') ? 'selected' : ''; ?>>
+                                                    Address</option>
+                                                <option value="account_number"
+                                                    <?php echo ($reportSettings->sort_by == 'account_number') ? 'selected' : ''; ?>>
+                                                    Account #</option>
+                                            </select>
+                                            <select name="sort_order" id="sort-order" class="nsm-field form-select">
+                                                <option value="DESC"
+                                                    <?php echo ($reportSettings->sort_order == 'DESC') ? 'selected' : ''; ?>>
+                                                    DESC</option>
+                                                <option value="ASC"
+                                                    <?php echo ($reportSettings->sort_order == 'ASC') ? 'selected' : ''; ?>>
+                                                    ASC</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="mt-0">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="float-start">
+                                <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                            </div>
+                            <div class="float-end">
+                                <button type="submit" class="nsm-button primary settingsApplyButton">Apply</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="printPreviewModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Print or save as PDF</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button"
+                    name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-3 mt-1 mb-3">
+                        <h6>Report print settings</h6>
+                        <hr>
+                        <div class="form-group mb-2">
+                            <label>Orientation</label>
+                            <select id="pageOrientation" name="pageOrientation" class="form-select">
+                                <option value="P" selected>Portrait</option>
+                                <option value="L">Landscape</option>
+                            </select>
+                        </div>
+                        <!-- <div class="form-check">
+                            <input id="pageHeaderRepeat" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">Repeat Page Header</label>
+                        </div> -->
+                    </div>
+                    <div class="col-sm-9">
+                        <iframe id="pdfPreview" class="border-0" width="100%" height="450px"></iframe>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="float-start">
+                            <button type="button" id="" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                        </div>
+                        <div class="float-end">
+                            <button type="button" class="nsm-button primary savePDF">Save as PDF</button>
+                            <!-- <button type="button" class="nsm-button primary printPDF">Print</button> -->
                         </div>
                     </div>
                 </div>
@@ -457,147 +443,279 @@
     </div>
 </div>
 
+<div class="modal fade" id="emailReportModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Email Report</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button"
+                    name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                <form id="sendEmailForm">
+                    <div class="row">
+                        <div class="col-sm-12 mt-1">
+                            <div class="form-group">
+                                <h6>To</h6>
+                                <input id="emailTo" class="form-control" type="email" placeholder="Send to" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <div class="form-group">
+                                <h6>CC</h6>
+                                <input id="emailCC" class="form-control" type="email" placeholder="Carbon Copy">
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <div class="form-group">
+                                <h6>Subject</h6>
+                                <input id="emailSubject" class="form-control" type="text"
+                                    value="<?php echo $page->title ?>" required>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <div class="form-group">
+                                <h6>Body</h6>
+                                <div id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title ?> from
+                                    <?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-12 mt-3">
+                            <div class="form-group">
+                                <h6>Attachment</h6>
+                                <div class="row">
+                                    <div class="input-group borderRadius0 pdfAttachment">
+                                        <div class="input-group-text"><input
+                                                class="form-check-input mt-0 pdfAttachmentCheckbox" type="checkbox">
+                                        </div>
+                                        <input id="pdfReportFilename" class="form-control" type="text"
+                                            value="<?php echo $page->title ?>" required>
+                                        <input class="form-control" type="text" disabled readonly value=".pdf"
+                                            style="max-width: 60px;">
+                                    </div>
+                                    <div class="input-group borderRadius0">
+                                        <div class="input-group-text"><input
+                                                class="form-check-input mt-0 xlsxAttachmentCheckbox" type="checkbox">
+                                        </div>
+                                        <input id="xlsxReportFileName" class="form-control" type="text"
+                                            value="<?php echo $page->title ?>" required>
+                                        <input class="form-control" type="text" disabled readonly value=".xlsx"
+                                            style="max-width: 60px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="float-start">
+                                <button type="button" id="emailCloseModal" class="nsm-button"
+                                    data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                            <div class="float-end">
+                                <button type="submit" class="nsm-button primary sendEmail"><span
+                                        class="sendEmail_Loader"></span>Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<?php include viewPath('accounting/reports/reports_assets/report_js'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
+
+<script>
+$(function() {
+    var isCollapsed = true;
+
+    $("#collapseButton").click(function() {
+        if (isCollapsed) {
+            $(".collapse").collapse('show');
+            $("#collapseButton span").text('Uncollapse');
+            updateCarets('show');
+        } else {
+            $(".collapse").collapse('hide');
+            $("#collapseButton span").text('Collapse');
+            updateCarets('hide');
+        }
+        isCollapsed = !isCollapsed;
+    });
+
+    $(".collapse-row").click(function() {
+        var target = $(this).data("bs-target");
+        $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
+        $(target).collapse('toggle');
+    });
+
+    function updateCarets(action) {
+        $(".collapse-row").each(function() {
+            var target = $(this).data("bs-target");
+            var icon = $(this).find("i");
+            if (action === 'show') {
+                icon.removeClass("bx-caret-right").addClass("bx-caret-down");
+            } else {
+                icon.removeClass("bx-caret-down").addClass("bx-caret-right");
+            }
+        });
+    }
+
+    $("#compact-display").change(function() {
+        if ($(this).is(":checked")) {
+            $("#reportTable").addClass("compact-table");
+        } else {
+            $("#reportTable").removeClass("compact-table");
+        }
+    });
+});
+</script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.1.4/Chart.bundle.min.js'></script>
 
 <script>
 fetch('<?php echo base_url('Dashboard/income_thumbnail_graph'); ?>', {}).then(response => response.json()).then(
-response => {
-    var monthlyAmounts = new Array(12).fill(0);
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
 
-    var {
-        success,
-        income,
-    } = response;
+        var {
+            success,
+            income,
+        } = response;
 
 
-    if (income) {
-        for (var x = 0; x < income.length; x++) {
-            var payment_date = income[x].payment_date;
-            if (payment_date) {
-                var due = new Date(payment_date);
-                var month = due.getMonth();
-                monthlyAmounts[month] += parseFloat(income[x].invoice_amount);
+        if (income) {
+            for (var x = 0; x < income.length; x++) {
+                var payment_date = income[x].payment_date;
+                if (payment_date) {
+                    var due = new Date(payment_date);
+                    var month = due.getMonth();
+                    monthlyAmounts[month] += parseFloat(income[x].invoice_amount);
+                }
             }
         }
-    }
 
-    var expenseData = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        datasets: [{
-            label: 'Current Year',
-            backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor:'rgba(75, 192, 192, 1)',
-            data: monthlyAmounts
-        },
-        {
-            label: 'Previous Year',
-            backgroundColor:   'rgba(54, 162, 235, 0.2)',
-             borderColor:  'rgba(54, 162, 235, 1)',
-            data: monthlyAmounts
-        }]
-    };
-    $('#expenseComparisonGraphLoader').hide()
-
-    const expenseComparisonGraph = new Chart($('#expenseComparisonGraph'), {
-        type: 'bar',
-        data: expenseData,
-        options: {
-            plugins: {
-                legend: {
-                    position: 'bottom',
+        var expenseData = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                    label: 'Current Year',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    data: monthlyAmounts
                 },
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    suggestedMax: 10
-                },
-            },
-            aspectRatio: 1.2,
-        },
-    });
+                {
+                    label: 'Previous Year',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    data: monthlyAmounts
+                }
+            ]
+        };
+        $('#expenseComparisonGraphLoader').hide()
 
-    window.expenseComparisonGraph = expenseComparisonGraph;
-}).catch((error) => {
-console.log(error);
+        const expenseComparisonGraph = new Chart($('#expenseComparisonGraph'), {
+            type: 'bar',
+            data: expenseData,
+            options: {
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10
+                    },
+                },
+                aspectRatio: 1.2,
+            },
+        });
+
+        window.expenseComparisonGraph = expenseComparisonGraph;
+    }).catch((error) => {
+    console.log(error);
 })
 
-fetch('<?php echo base_url('Dashboard/income_thumbnail_comparison_graph'); ?>', {}).then(response => response.json()).then(
-response => {
-    var monthlyAmounts = new Array(12).fill(0);
-    var monthlyAmountsPrev = new Array(12).fill(0);
+fetch('<?php echo base_url('Dashboard/income_thumbnail_comparison_graph'); ?>', {}).then(response => response.json())
+    .then(
+        response => {
+            var monthlyAmounts = new Array(12).fill(0);
+            var monthlyAmountsPrev = new Array(12).fill(0);
 
-    var {
-        success,
-        income,
-        prev_income
-    } = response;
+            var {
+                success,
+                income,
+                prev_income
+            } = response;
 
 
-    if (income) {
-        for (var x = 0; x < income.length; x++) {
-            var payment_date = income[x].payment_date;
-            if (payment_date) {
-                var due = new Date(payment_date);
-                var month = due.getMonth();
-                monthlyAmounts[month] += parseFloat(income[x].invoice_amount);
+            if (income) {
+                for (var x = 0; x < income.length; x++) {
+                    var payment_date = income[x].payment_date;
+                    if (payment_date) {
+                        var due = new Date(payment_date);
+                        var month = due.getMonth();
+                        monthlyAmounts[month] += parseFloat(income[x].invoice_amount);
+                    }
+                }
             }
-        }
-    }
 
-    if (prev_income) {
-        for (var x = 0; x < prev_income.length; x++) {
-            var payment_date = prev_income[x].payment_date;
-            if (payment_date) {
-                var due = new Date(payment_date);
-                var month = due.getMonth();
-                monthlyAmountsPrev[month] += parseFloat(prev_income[x].invoice_amount);
+            if (prev_income) {
+                for (var x = 0; x < prev_income.length; x++) {
+                    var payment_date = prev_income[x].payment_date;
+                    if (payment_date) {
+                        var due = new Date(payment_date);
+                        var month = due.getMonth();
+                        monthlyAmountsPrev[month] += parseFloat(prev_income[x].invoice_amount);
+                    }
+                }
             }
-        }
-    }
 
-    var jobs_data = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        datasets: [{
-            label: 'Current Year',
-            backgroundColor: 'rgb(106,74,134)',
-            borderColor: 'rgb(106,74,134,0.79)',
-            data: monthlyAmounts
-        },
-        {
-            label: 'Previous Year',
-            backgroundColor: 'rgb(220, 53, 69 ,0.79)',
-            borderColor: 'rgb(220, 53, 69 ,0.79)',
-            data: monthlyAmountsPrev
-        }]
-    };
-    $('#myIncomeComparisonGraphLoader').hide()
+            var jobs_data = {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                        label: 'Current Year',
+                        backgroundColor: 'rgb(106,74,134)',
+                        borderColor: 'rgb(106,74,134,0.79)',
+                        data: monthlyAmounts
+                    },
+                    {
+                        label: 'Previous Year',
+                        backgroundColor: 'rgb(220, 53, 69 ,0.79)',
+                        borderColor: 'rgb(220, 53, 69 ,0.79)',
+                        data: monthlyAmountsPrev
+                    }
+                ]
+            };
+            $('#myIncomeComparisonGraphLoader').hide()
 
-    const myIncomeComparisonGraph = new Chart($('#myIncomeComparisonGraph'), {
-        type: 'bar',
-        data: jobs_data,
-        options: {
-            plugins: {
-                legend: {
-                    position: 'bottom',
+            const myIncomeComparisonGraph = new Chart($('#myIncomeComparisonGraph'), {
+                type: 'bar',
+                data: jobs_data,
+                options: {
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            suggestedMax: 10
+                        },
+                    },
+                    aspectRatio: 1.2,
                 },
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    suggestedMax: 10
-                },
-            },
-            aspectRatio: 1.2,
-        },
-    });
+            });
 
-    window.myIncomeComparisonGraph = myIncomeComparisonGraph;
-}).catch((error) => {
-console.log(error);
-})
-fetch('<?php echo base_url('Dashboard/business_snapshot_income_thumbnail_graph'); ?>', {}).then(response => response.json()).then(
+            window.myIncomeComparisonGraph = myIncomeComparisonGraph;
+        }).catch((error) => {
+        console.log(error);
+    })
+fetch('<?php echo base_url('Dashboard/business_snapshot_income_thumbnail_graph'); ?>', {}).then(response => response
+    .json()).then(
     response => {
         var monthlyAmounts = new Array(12).fill(0);
 
@@ -656,7 +774,10 @@ fetch('<?php echo base_url('Dashboard/business_snapshot_income_thumbnail_graph')
 fetch('<?php echo base_url('Dashboard/business_snapshot_expense'); ?>', {})
     .then(response => response.json())
     .then(response => {
-        var { success, income } = response;
+        var {
+            success,
+            income
+        } = response;
 
         var estimates = $("#MyExpenseGraph");
 
@@ -664,8 +785,8 @@ fetch('<?php echo base_url('Dashboard/business_snapshot_expense'); ?>', {})
         var accountNames = JSON.parse(income.account_names);
         var accountExpenses = JSON.parse(income.account_expenses);
 
-        console.log('accountNames',accountNames)
-        console.log('accountExpenses',accountExpenses)
+        console.log('accountNames', accountNames)
+        console.log('accountExpenses', accountExpenses)
 
         $('#MyExpenseGraphLoader').hide();
 
@@ -716,5 +837,4 @@ fetch('<?php echo base_url('Dashboard/business_snapshot_expense'); ?>', {})
     .catch((error) => {
         console.log(error);
     });
-
 </script>
