@@ -765,5 +765,18 @@ class Accounting_model extends MY_Model
             $data = $this->db->get();
             return $data->result();
         }
+
+        // Get Account Receivable Againg Summary Data in Database
+        if ($reportType == "accounts_receivable_aging_summary") {
+            $this->db->select('invoices.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.id AS invoice_id, invoices.grand_total AS amount');
+            $this->db->from('invoices');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->where('invoices.company_id', $companyID);
+            //$this->db->group_by('invoices.customer_id, customer');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }        
     }
 }
