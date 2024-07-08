@@ -229,7 +229,7 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="num" selected>Default</option>
+                                                <option value="num" selected>Num</option>
                                                 <!-- <option value="date">Date</option>
                                                 <option value="customer">Customer</option>
                                                 <option value="transaction_type">Transaction Type</option>
