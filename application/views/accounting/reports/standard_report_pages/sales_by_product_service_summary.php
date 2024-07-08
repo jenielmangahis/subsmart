@@ -54,12 +54,12 @@
                                             <tr>
                                                 <th>PRODUCT/SERVICE</th>
                                                 <th>QTY</th>
-                                                <th>AMOUNT</th>
-                                                <th>SALES BY (%)</th>
-                                                <th>AVG PRICE</th>
-                                                <th>COGS</th>
-                                                <th>GROSS MARGIN</th>
-                                                <th>GROSS MARGIN BY (%)</th>
+                                                <th style="text-align:right;">AMOUNT</th>
+                                                <th style="text-align:right;">SALES BY (%)</th>
+                                                <th style="text-align:right;">AVG PRICE</th>
+                                                <th style="text-align:right;">COGS</th>
+                                                <th style="text-align:right;">GROSS MARGIN</th>
+                                                <th style="text-align:right;">GROSS MARGIN BY (%)</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -196,7 +196,15 @@
                                                 <option value="DESC" <?php echo ($reportSettings->sort_order == "DESC") ? "selected" : "" ?>>DESC</option>
                                                 <option value="ASC" <?php echo ($reportSettings->sort_order == "ASC") ? "selected" : "" ?>>ASC</option>
                                             </select>
-                                        </div>
+                                        </div>                                        
+                                    </div>                                    
+                                </div>
+                                <div class="col-md-12"><hr class="mt-0"></div>
+                                <div class="col-md-5 mb-3">
+                                    <label class="mb-1 fw-xnormal">Date Range <small class="text-muted">(From &mdash; To)</small></label>
+                                    <div class="input-group">
+                                        <input name="date_from" class="form-control mt-0" type="date" value="<?= $reportSettings ? date("Y-m-d", strtotime($reportSettings->report_date_from_text)) : date('Y').'-01-01'; ?>">
+                                        <input name="date_to" class="form-control mt-0" type="date" value="<?= $reportSettings ? date("Y-m-d", strtotime($reportSettings->report_date_to_text)) : date('Y-m-t'); ?>">
                                     </div>
                                 </div>
                             </div>
