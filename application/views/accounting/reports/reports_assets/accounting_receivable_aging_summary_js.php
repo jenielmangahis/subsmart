@@ -15,7 +15,7 @@
 
     var REPORT_ID        = 18;
     var REPORT_CATEGORY  = "accounts_receivable_aging_summary";
-    var theadTotalColumn = $("#accountsreceivableagingsummaryList_table").find('tr:first th').length;
+    var theadTotalColumn = $("#accountsreceivableagingsummarylist_table").find('tr:first th').length;
     var businessLogoURL  = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
     var businessName     = $('input[name="company_name"]').val();
     var reportName       = $('input[name="report_name"]').val();

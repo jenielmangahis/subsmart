@@ -46,7 +46,7 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <?php 
-                                        $tableID = "accountsreceivableagingsummaryList_table"; 
+                                        $tableID = "accountsreceivableagingsummarylist_table"; 
                                         $reportCategory = "accounts_receivable_aging_summary"; 
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
