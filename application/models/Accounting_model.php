@@ -471,14 +471,9 @@ class Accounting_model extends MY_Model
             $this->db->join('estimates_items', 'estimates_items.estimates_id = estimates.id', 'left');
             $this->db->join('acs_profile', 'acs_profile.prof_id = estimates.customer_id', 'left');
             $this->db->join('items', 'items.id = estimates_items.items_id', 'left');
-            $this->db->where('estimates.id !=', '');
-            $this->db->where('acs_profile.prof_id !=', '');
             $this->db->where('acs_profile.first_name !=', '');
             $this->db->where('estimates.estimate_date !=', '');
             $this->db->where('estimates.estimate_number !=', '');
-            $this->db->where('estimates.status !=', '');
-            $this->db->where('estimates.accepted_date !=', '');
-            $this->db->where('estimates.expiry_date !=', '');
             $this->db->where("DATE_FORMAT(estimates.created_at,'%Y-%m-%d') >= '$reportConfig[date_from]'");
             $this->db->where("DATE_FORMAT(estimates.created_at,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('estimates.company_id', $companyID);
