@@ -189,8 +189,8 @@
                                                 <option value="product_calculated_average" <?php echo ($reportSettings->sort_by == "product_calculated_average") ? "selected" : "" ?>>Product Calculated Average</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
-                                                <option value="DESC" <?php echo ($reportSettings->sort_order == "DESC") ? "selected" : "" ?>>DESC</option>
-                                                <option value="ASC" <?php echo ($reportSettings->sort_order == "ASC") ? "selected" : "" ?>>ASC</option>
+                                                <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
+                                                <option value="ASC" <?php echo ($reportSettings->sort_asc_desc== "ASC") ? "selected" : "" ?>>ASC</option>
                                             </select>
                                         </div>
                                     </div>
