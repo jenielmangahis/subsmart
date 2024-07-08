@@ -141,15 +141,15 @@
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Company Name</label>
                                     <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" <?php echo (isset($reportSettings->show_company_name) && $reportSettings->show_company_name == 1) ? "checked" : "" ?>></div>
-                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo (!empty($reportSettings->company_name)) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?>" required>
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" <?php echo (!isset($reportSettings->show_company_name) || $reportSettings->show_company_name == 1) ? "checked" : ""; ?>></div>
+                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo (trim(str_replace('&nbsp;', '', $reportSettings->company_name)) !== '') ? $reportSettings->company_name : strtoupper($companyInfo->business_name); ?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Report Name</label>
                                     <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" <?php echo (isset($reportSettings->show_title) && $reportSettings->show_title == 1) ? "checked" : "" ?>></div>
-                                        <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo (!empty($reportSettings->title)) ? $reportSettings->title : $page->title ?>" required>
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" <?php echo (!isset($reportSettings->show_title) || $reportSettings->show_title == 1) ? "checked" : ""; ?>></div>
+                                        <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo (trim(str_replace('&nbsp;', '', $reportSettings->title)) !== '') ? $reportSettings->title : $page->title; ?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-3 mb-3">
