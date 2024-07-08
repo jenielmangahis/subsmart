@@ -730,7 +730,6 @@ class Accounting_model extends MY_Model
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->where('acs_profile.first_name !=', '');
             $this->db->where('acs_profile.last_name !=', '');
-            $this->db->where('invoice_payments.invoice_id !=', '');
             $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
             $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('invoices.company_id', $companyID);
