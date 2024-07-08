@@ -53,7 +53,6 @@
                                         <thead>
                                             <tr>
                                                 <th data-name="Name">Name</th>
-                                                <th data-name="Current">CURRENT</th>
                                                 <th data-name="1-30">1-30</th>
                                                 <th data-name="31-60">31-60</th>
                                                 <th data-name="61-90">61-90</th>
@@ -63,7 +62,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="7">
+                                                <td colspan="6">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
