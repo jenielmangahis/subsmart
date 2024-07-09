@@ -222,8 +222,8 @@
                                     </form>
                                 </div>
                             </div>
-                            <div class="nsm-card-footer text-center">
-                                <p class="m-0">Accrual basis <?php echo date('l, F j, Y h:i A eP'); ?></p>
+                            <div class="row footerInfo">
+                                <span class=""><?php echo date("l, F j, Y h:i A eP") ?></span>
                             </div>
                         </div>
                     </div>

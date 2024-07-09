@@ -1,3 +1,4 @@
+
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('accounting/reports/reports_assets/report_css'); ?>
 <div class="container-fluid">
@@ -35,21 +36,21 @@
                         <div class="nsm-card-content">
                             <div class="row mb-4">
                                 <div class="col-lg-12 headerInfo">
-                                    <img id="businessLogo" src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
+                                    <img id="businessLogo" class="<?php echo ($reportSettings->show_logo == 0 || !isset($reportSettings->show_logo)) ? 'd-none-custom' : '';?>"  src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
                                     <div class="reportTitleInfo">
-                                        <h3 id="businessName"><?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?></h3>
-                                        <h5><strong id="reportName"><?php echo $page->title ?></strong></h5>
+                                        <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?></h3>
+                                        <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
                                         <h5><small id="reportDate"><span id="date_from_text"></span> &mdash; <span id="date_to_text"></span></small></h5>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <div class="col-lg-12">
+                                <div class="col-lg-12">                                   
                                     <?php 
                                         $tableID = "customerbalancedetail_table"; 
                                         $reportCategory = "customer_balance_detail"; 
                                     ?>
-                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 accordion">
+                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
                                                 <th>CUSTOMER</th>
@@ -57,14 +58,14 @@
                                                 <th>TRANSACTION</th>
                                                 <th>NUM</th>
                                                 <th>DUE DATE</th>
-                                                <th>AMOUNT</th>
-                                                <th>OPEN BALANCE</th>
-                                                <th>BALANCE</th>
+                                                <th style="text-align:right;">AMOUNT</th>
+                                                <th style="text-align:right;">OPEN BALANCE</th>
+                                                <th style="text-align:right;">BALANCE</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="8">
+                                                <td colspan="6">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
@@ -110,6 +111,7 @@
         <div class="col-lg-1"></div>
     </div>
 </div>
+
 <!-- START: MODALS -->
 <!-- Modal for Report Settings -->
 <div class="modal fade" id="reportSettings" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
@@ -127,49 +129,54 @@
                                 <div class="col-md-2 mb-3">
                                     <label class="mb-1 fw-xnormal">Logo</label>
                                     <select id="showHideLogo" name="showHideLogo" class="nsm-field form-select">
-                                        <option value="1" selected>Show</option>
-                                        <option value="0">Hide</option>
+                                        <?php if (isset($reportSettings->show_logo)) { ?>
+                                            <option value="1" <?php echo (isset($reportSettings->show_logo) && $reportSettings->show_logo == 1) ? "selected" : "" ?>>Show</option>
+                                            <option value="0" <?php echo (isset($reportSettings->show_logo) && $reportSettings->show_logo == 0) ? "selected" : "" ?>>Hide</option>
+                                        <?php } else { ?>
+                                            <option value="1" selected>Show</option>
+                                            <option value="0">Hide</option>
+                                        <?php } ?>
                                     </select>
                                 </div>
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Company Name</label>
                                     <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
-                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>" required>
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" <?php echo (!isset($reportSettings->show_company_name) || $reportSettings->show_company_name == 1) ? "checked" : ""; ?>></div>
+                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo (trim(str_replace('&nbsp;', '', $reportSettings->company_name)) !== '') ? $reportSettings->company_name : strtoupper($companyInfo->business_name); ?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Report Name</label>
                                     <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" checked></div>
-                                        <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo $page->title ?>" required>
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" <?php echo (!isset($reportSettings->show_title) || $reportSettings->show_title == 1) ? "checked" : ""; ?>></div>
+                                        <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo (trim(str_replace('&nbsp;', '', $reportSettings->title)) !== '') ? $reportSettings->title : $page->title; ?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label class="mb-1 fw-xnormal">Header Align</label>
                                     <select name="header_align" id="header-align" class="nsm-field form-select">
-                                        <option value="L">Left</option>
-                                        <option value="C" selected>Center</option>
-                                        <option value="R">Right</option>
+                                        <option value="C" <?php echo ($reportSettings->header_align == "C") ? "selected" : "" ?>>Center</option>
+                                        <option value="L" <?php echo ($reportSettings->header_align == "L") ? "selected" : "" ?>>Left</option>
+                                        <option value="R" <?php echo ($reportSettings->header_align == "R") ? "selected" : "" ?>>Right</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label class="mb-1 fw-xnormal">Footer Align</label>
                                     <select name="footer_align" id="footer-align" class="nsm-field form-select">
-                                        <option value="L">Left</option>
-                                        <option value="C" selected>Center</option>
-                                        <option value="R">Right</option>
+                                        <option value="C" <?php echo ($reportSettings->footer_align == "C") ? "selected" : "" ?>>Center</option>
+                                        <option value="L" <?php echo ($reportSettings->footer_align == "L") ? "selected" : "" ?>>Left</option>
+                                        <option value="R" <?php echo ($reportSettings->footer_align == "R") ? "selected" : "" ?>>Right</option>
                                     </select>
                                 </div>
                                 <div class="col-md-2 mb-3">
-                                    <label class="mb-1 fw-xnormal">Page Size</label>
+                                    <label class="mb-1 fw-xnormal">Row Size</label>
                                     <select name="page_size" id="page-size" class="nsm-field form-select">
-                                        <option value="9999" selected>All</option>
-                                        <option value="10">10</option>
-                                        <option value="25">25</option>
-                                        <option value="50">50</option>
-                                        <option value="100">100</option>
-                                        <option value="500">500</option>
+                                        <option value="9999" <?php echo ($reportSettings->page_size == "9999") ? "selected" : "" ?>>All</option>
+                                        <option value="10" <?php echo ($reportSettings->page_size == "10") ? "selected" : "" ?>>10</option>
+                                        <option value="25" <?php echo ($reportSettings->page_size == "25") ? "selected" : "" ?>>25</option>
+                                        <option value="50" <?php echo ($reportSettings->page_size == "50") ? "selected" : "" ?>>50</option>
+                                        <option value="100" <?php echo ($reportSettings->page_size == "100") ? "selected" : "" ?>>100</option>
+                                        <option value="500" <?php echo ($reportSettings->page_size == "500") ? "selected" : "" ?>>500</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4 mb-3">
@@ -177,19 +184,12 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="num" selected>Default</option>
-                                                <!-- <option value="date">Date</option>
-                                                <option value="customer">Customer</option>
-                                                <option value="transaction_type">Transaction Type</option>
-                                                <option value="num">Num</option>
-                                                <option value="due_date">Due Date</option>
-                                                <option value="amount">Amount</option>
-                                                <option value="open_balance">Open Balance</option>
-                                                <option value="balance">Balance</option> -->
+                                                <option value="customer" <?php echo ($reportSettings->sort_by == "customer") ? "selected" : "" ?>>Customer</option>
+                                                <option value="date" <?php echo ($reportSettings->sort_by == "date") ? "selected" : "" ?>>Date</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
-                                                <option value="ASC">ASC</option>
-                                                <option value="DESC" selected>DESC</option>
+                                                <option value="DESC" <?php echo ($reportSettings->sort_order == "DESC") ? "selected" : "" ?>>DESC</option>
+                                                <option value="ASC" <?php echo ($reportSettings->sort_order == "ASC") ? "selected" : "" ?>>ASC</option>
                                             </select>
                                         </div>
                                     </div>
@@ -198,9 +198,9 @@
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Date Range <small class="text-muted">(From &mdash; To)</small></label>
                                     <div class="input-group">
-                                        <input name="date_from" class="form-control mt-0" type="date" value="<?php echo date('Y').'-01-01'; ?>">
-                                        <input name="date_to" class="form-control mt-0" type="date" value="<?php echo date('Y-m-d'); ?>">
-                                    </div>  
+                                        <input name="date_from" class="form-control mt-0" type="date" value="<?= $reportSettings ? date("Y-m-d", strtotime($reportSettings->report_date_from_text)) : date('Y').'-01-01'; ?>">
+                                        <input name="date_to" class="form-control mt-0" type="date" value="<?= $reportSettings ? date("Y-m-d", strtotime($reportSettings->report_date_to_text)) : date('Y-m-t'); ?>">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -213,7 +213,6 @@
                             </div>
                             <div class="float-end">
                                 <button type="submit" class="nsm-button primary settingsApplyButton">Apply</button>
-                                <!-- <button type="button" class="nsm-button primary printPDF">Print</button> -->
                             </div>
                         </div>
                     </div>
@@ -223,7 +222,6 @@
     </div>
 </div>
 <!-- Modal for Report Settings -->
-
 <!-- START: PRINT/SAVE MODAL -->
 <div class="modal fade" id="printPreviewModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
     <div class="modal-dialog modal-xl">
@@ -244,10 +242,10 @@
                                 <option value="L">Landscape</option>
                             </select>
                         </div>
-                        <div class="form-check">
-                            <input id="pageHeaderRepeat" name="pageHeaderRepeat" class="form-check-input" type="checkbox">
-                            <label class="form-check-label" for="pageHeaderRepeat">Repeat Page Header</label>
-                        </div>
+                        <!-- <div class="form-check">
+                            <input id="pageHeaderRepeat" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">Repeat Page Header</label>
+                        </div> -->
                     </div>
                     <div class="col-sm-9">
                         <iframe id="pdfPreview" class="border-0" width="100%" height="450px"></iframe>
@@ -272,7 +270,7 @@
 <!-- END: PRINT/SAVE MODAL -->
 <!-- START: EMAIL REPORT MODAL -->
 <div class="modal fade" id="emailReportModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Email Report</span>

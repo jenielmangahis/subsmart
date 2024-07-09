@@ -42,7 +42,10 @@
                                 </span>
                                 <span class="float-end">
                                     <button data-bs-toggle="modal" data-bs-target="#emailReportModal" class="nsm-button border-0 top-button"><i class="bx bx-fw bx-envelope icon-top"></i></button>
-                                    <button data-bs-toggle="modal" data-bs-target="#printPreviewModal" class="nsm-button border-0 top-button"><i class="bx bx-fw bx-printer icon-top"></i></button>
+                                    <!-- <button data-bs-toggle="modal" data-bs-target="#printPreviewModal" class="nsm-button border-0 top-button"><i class="bx bx-fw bx-printer icon-top"></i></button> -->
+                                    <button type="button" class="nsm-button border-0" data-bs-toggle="modal" data-bs-target="#printPreviewModal" onclick="previewPDF()">
+                                        <i class='bx bx-fw bx-printer'></i>
+                                    </button>
                                     <button class="nsm-button border-0 top-button" data-bs-toggle="dropdown"><i class="bx bx-fw bx-export icon-top"></i></button>
                                     <ul class="dropdown-menu dropdown-menu-end export-dropdown" style="">
                                         <li><a class="dropdown-item" href="javascript:void(0);" id="exportToXLSX">Export to Excel</a></li>

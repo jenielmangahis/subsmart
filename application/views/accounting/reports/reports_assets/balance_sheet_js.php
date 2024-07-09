@@ -1,280 +1,30 @@
 <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('editButton').addEventListener('click', function() {
-            var businessNameElem = document.getElementById('businessName');
-            var companyNameSpan = businessNameElem.querySelector('.company-name');
-            var originalName = companyNameSpan.textContent;
+    // $(function() { $('select').select2('destroy'); });
 
-            var inputElem = document.createElement('input');
-            inputElem.type = 'text';
-            inputElem.value = originalName;
-            inputElem.className = 'company-name-input';
-
-            var saveButton = document.createElement('button');
-            saveButton.type = 'button';
-            saveButton.className = 'nsm-button primary';
-            saveButton.textContent = 'Save';
-
-            var cancelButton = document.createElement('button');
-            cancelButton.type = 'button';
-            cancelButton.className = 'nsm-button';
-            cancelButton.textContent = 'Cancel';
-
-            var buttonContainer = document.createElement('div');
-            buttonContainer.className = 'button-group';
-            buttonContainer.appendChild(saveButton);
-            buttonContainer.appendChild(cancelButton);
-
-            businessNameElem.innerHTML = '';
-            businessNameElem.appendChild(inputElem);
-            businessNameElem.appendChild(buttonContainer);
-
-            inputElem.focus();
-
-            saveButton.addEventListener('click', function() {
-                var newTitle = inputElem.value;
-
-                $.ajax({
-                    url: base_url + 'accounting/reports/_update_title',
-                    type: 'POST',
-                    data: {
-                        report_id: REPORT_ID,
-                        title: newTitle
-                    },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.is_success == 1) {
-                            businessNameElem.innerHTML = '<span class="company-name">' + newTitle + '</span>';
-                        } else {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error!',
-                                html: 'An unknown error occurred.'
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('AJAX Error:', status, error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            html: 'An error occurred while making the AJAX request. Please try again.'
-                        });
-                    }
-                });
-            });
-
-            cancelButton.addEventListener('click', function() {
-                businessNameElem.innerHTML = '<span class="company-name">' + originalName + '</span>';
-            });
-        });
-    });
-
-    var BASE_URL = window.location.origin;
-    var REPORT_ID = "<?php echo $reportTypeId; ?>";
-
-    // Show/hide script
-    document.querySelector('.addNotes').addEventListener('click', function(event) {
-        document.getElementById("notesContent").style.display = "none";
-        document.getElementById("addNotesForm").style.display = "block";
-        document.getElementById("NOTES").focus();
-    });
-
-    document.getElementById('cancelNotes').addEventListener('click', function(event) {
-        document.querySelector(".addNotes").focus();
-        document.getElementById("notesContent").style.display = "block";
-        document.getElementById("addNotesForm").style.display = "none";
-    });
-
-    // Realtime character counter on report notes.
-    document.getElementById("NOTES").addEventListener('input', function() {
-        let textLength = document.getElementById("NOTES").value.length;
-        document.querySelector(".noteCharMax").textContent = textLength + " / 4000 characters max";
-    });
-
-    // Fetch Report Notes On Page Load
-    fetch(base_url + "/accounting_controllers/reports/getNotes", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+    CKEDITOR.replace('emailBody', {
+        toolbarGroups: [{
+                name: 'clipboard',
+                groups: ['clipboard', 'undo']
             },
-            body: new URLSearchParams({
-                reportID: REPORT_ID
-            })
-        })
-        .then(response => response.text())
-        .then(data => {
-            document.querySelector('.addNotes').textContent = (data !== "") ? 'Edit Notes' : 'Add Notes';
-            document.getElementById('notesContent').innerHTML = data;
-            document.getElementById("NOTES").value = data;
-        });
-
-    // Add and Edit Notes Script
-    document.getElementById('addNotesForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        document.querySelector(".noteSaveButton").setAttribute('disabled', '');
-        document.querySelector(".noteSaveButton").innerHTML = '<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Saving notes...';
-        document.getElementById('notesContent').innerHTML = document.getElementById("NOTES").value;
-        document.querySelector('.addNotes').textContent = (document.getElementById("NOTES").value !== "") ? 'Edit Notes' : 'Add Notes';
-
-        fetch(base_url + "/accounting_controllers/reports/saveNotes", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    reportID: REPORT_ID,
-                    reportNotes: document.getElementById("NOTES").value
-                })
-            })
-            .then(response => response.text())
-            .then(data => {
-                document.querySelector(".noteSaveButton").removeAttribute('disabled');
-                document.querySelector(".noteSaveButton").innerHTML = 'Save';
-                document.getElementById("notesContent").style.display = "block";
-                document.getElementById("addNotesForm").style.display = "none";
-            });
+            {
+                name: 'basicstyles',
+                groups: ['basicstyles', 'cleanup']
+            },
+        ],
+        height: '165px',
     });
 
-    function generatePDF(preview = false, orientation, generate_pdf) {
-        var table = document.querySelector('.nsm-table');
-        var companyName = document.querySelector('.company-name').textContent;
-        var reportTitle = "Balance Sheet";
-        var reportDate = "As of " + new Date().toLocaleDateString();
-
-        html2canvas(table, {
-            onrendered: function(canvas) {
-                var imgData = canvas.toDataURL('image/png');
-                var {
-                    jsPDF
-                } = window.jspdf;
-                var pdf = new jsPDF(orientation, 'pt', 'a4');
-
-                var imgWidth = 555;
-                var pageHeight = 792;
-                var imgHeight = canvas.height * imgWidth / canvas.width;
-                var heightLeft = imgHeight;
-
-                var margin = 20;
-                var yOffset = 80;
-
-                // Add header
-                pdf.setFontSize(18);
-                pdf.text(companyName, pdf.internal.pageSize.getWidth() / 2, margin, {
-                    align: 'center'
-                });
-
-                pdf.setFontSize(16);
-                pdf.text(reportTitle, pdf.internal.pageSize.getWidth() / 2, margin + 20, {
-                    align: 'center'
-                });
-
-                pdf.setFontSize(14);
-                pdf.text(reportDate, pdf.internal.pageSize.getWidth() / 2, margin + 40, {
-                    align: 'center'
-                });
-
-                pdf.setLineWidth(0.5);
-                pdf.line(margin, margin + 50, pdf.internal.pageSize.getWidth() - margin, margin + 50);
-
-                // Add table
-                pdf.addImage(imgData, 'PNG', margin, yOffset, imgWidth, imgHeight);
-                heightLeft -= pageHeight - yOffset;
-
-                var pageNumber = 1;
-                pdf.setFontSize(10);
-                pdf.text('Page ' + String(pageNumber), pdf.internal.pageSize.getWidth() - margin - 30, pageHeight - 30);
-
-                while (heightLeft >= 0) {
-                    pageNumber++;
-                    yOffset = heightLeft - imgHeight;
-                    pdf.addPage();
-                    // Re-add header
-                    pdf.setFontSize(18);
-                    pdf.text(companyName, pdf.internal.pageSize.getWidth() / 2, margin, {
-                        align: 'center'
-                    });
-
-                    pdf.setFontSize(16);
-                    pdf.text(reportTitle, pdf.internal.pageSize.getWidth() / 2, margin + 20, {
-                        align: 'center'
-                    });
-
-                    pdf.setFontSize(14);
-                    pdf.text(reportDate, pdf.internal.pageSize.getWidth() / 2, margin + 40, {
-                        align: 'center'
-                    });
-
-                    pdf.setLineWidth(0.5);
-                    pdf.line(margin, margin + 50, pdf.internal.pageSize.getWidth() - margin, margin + 50);
-
-                    pdf.addImage(imgData, 'PNG', margin, margin + 60, imgWidth, imgHeight);
-                    heightLeft -= pageHeight;
-                    pdf.setFontSize(10);
-                    pdf.text('Page ' + String(pageNumber), pdf.internal.pageSize.getWidth() - margin - 30, pageHeight - 30);
-                }
-
-                if (preview) {
-                    var pdfData = pdf.output('datauristring');
-                    document.getElementById('pdfPreview').src = pdfData;
-                    showPDFModal();
-                } else {
-                    var pdfData = pdf.output('datauristring');
-                    document.getElementById('pdfPreview').src = pdfData;
-                }
-
-                if (generate_pdf) {
-                    pdf.save('balance_sheet_comparison.pdf');
-                }
-            }
-        });
-    }
-
-    function previewPDF() {
-        generatePDF(true, 'p', false);
-        closeModal();
-    }
-
-    function closeModal() {
-        var modalElement = document.getElementById('printPreviewModal');
-        var modal = bootstrap.Modal.getInstance(modalElement);
-        modal.hide();
-    }
-
-    function showPDFModal() {
-        var modal = new bootstrap.Modal(document.getElementById('printPreviewModal'));
-        modal.show();
-    }
-
-    // Load .pdf Report Script
-    function loadReportPreview() {
-        $('#pdfPreview').hide();
-        $('#pdfPreview').attr('src', base_url + "/assets/pdf/accounting/" + filename + ".pdf?" + Math.round(Math.random() * 1000000)).on('load', function() {
-            $('.dataLoader').remove();
-            $('#pdfPreview').show();
-        });
-    }
-
-    document.getElementById('printPreviewModal').addEventListener('hide.bs.modal', function() {
-        var modalBackdrop = document.querySelector('.modal-backdrop');
-        if (modalBackdrop) {
-            modalBackdrop.parentNode.removeChild(modalBackdrop);
-        }
-    });
-
-    // Page Orientation Config Script
-    $('#pageOrientation').change(function(event) {
-        var orientation = $(this).val();
-        generatePDF(false, orientation, false);
-        //renderReportList();
-    });
+    var BASE_URL = base_url;
+    var REPORT_CATEGORY = "balance_sheet";
+    var REPORT_ID = 5;
+    var TABLE_ID = "balanceSheet_table";
 
     // Render Report Data Script
     function renderReportList() {
-        theadColumnNames = $(`#balance-sheet th`).map(function() {
+        var theadColumnNames = $(`#${TABLE_ID} thead tr:first td`).map(function() {
             return $(this).text();
-        }).get();
-        theadTotalColumn = $("#balance-sheet").find('tr:first th').length;
+        }).get()
+        theadTotalColumn = $(`#${TABLE_ID}`).find('tr:first td').length;
         businessLogoURL = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
         businessName = $('input[name="company_name"]').val();
         reportName = $('input[name="report_name"]').val();
@@ -293,6 +43,7 @@
         pageHeaderRepeat = ($('input[name="pageHeaderRepeat"]').prop('checked') == true) ? 1 : 0;
         date_from = $('input[name="date_from"]').val();
         date_to = $('input[name="date_to"]').val();
+        date = $('input[name="date"]').val();
         reportConfig = {
             businessLogoURL: businessLogoURL,
             showHideLogo: showHideLogo,
@@ -305,12 +56,84 @@
             pageHeaderRepeat: pageHeaderRepeat,
             date_from: date_from,
             date_to: date_to,
+            date: date,
         };
+        page_size = $('#page-size').val();
+
         // =========================
+        $.ajax({
+            type: "POST",
+            url: BASE_URL + "/accounting_controllers/Reports/getReportData/" + REPORT_CATEGORY,
+            data: {
+                theadColumnNames: theadColumnNames,
+                theadTotalColumn: theadTotalColumn,
+                businessName: businessName,
+                reportName: reportName,
+                reportDate: reportDate,
+                filename: filename,
+                notes: notes,
+                reportConfig: reportConfig,
+            },
+            success: function(data) {
+                loadReportPreview();
+                $('#pdfPreview').before('<span class="dataLoader"><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...</span>').hide();
+                $(`#${TABLE_ID} > tbody`).html(data);
+                $(`#${TABLE_ID}`).nsmPagination({
+                    itemsPerPage: page_size
+                });
+                $(".settingsApplyButton").removeAttr('disabled').html('Apply');
+            },
+            beforeSend: function() {
+                $('#table-body').html('<span class="bx bx-loader bx-spin"></span> Fetching Result');
+            }
+        });
+    }
+
+    function updateReportSettings() {
+        var theadColumnNames = $(`#${TABLE_ID} thead tr:first td`).map(function() {
+            return $(this).text();
+        }).get();
+        theadTotalColumn = $(`#${TABLE_ID}`).find('tr:first td').length;
+        businessLogoURL = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
+        businessName = $('input[name="company_name"]').val();
+        reportName = $('input[name="report_name"]').val();
+        reportDate = $("#reportDate").text();
+        filename = (businessName + '_' + reportName).replace(/[^\p{L}\p{N}_-]+/gu, '_');
+        notes = $("#notesContent").text();
+        showHideLogo = $('select[name="showHideLogo"]').val();
+        enableDisableBusinessName = $('.enableDisableBusinessName').prop('checked');
+        enableDisableReportName = $('.enableDisableReportName').prop('checked');
+        header_align = $('select[name="header_align"]').val();
+        footer_align = $('select[name="footer_align"]').val();
+        sort_by = $('select[name="sort_by"]').val();
+        sort_order = $('select[name="sort_order"]').val();
+        page_size = $('select[name="page_size"]').val();
+        pageOrientation = $('select[name="pageOrientation"]').val();
+        pageHeaderRepeat = ($('input[name="pageHeaderRepeat"]').prop('checked') == true) ? 1 : 0;
+        date = $('input[name="date"]').val();
+        reportDate = 'As of ' + moment($("#report-date").val()).format('LL');
+
+        // Capture compact display setting
+        var compact_display = $('#compact_display').prop('checked') ? 1 : 0;
+
+        reportConfig = {
+            businessLogoURL: businessLogoURL,
+            showHideLogo: showHideLogo,
+            header_align: header_align,
+            footer_align: footer_align,
+            sort_by: sort_by,
+            sort_order: sort_order,
+            page_size: page_size,
+            pageOrientation: pageOrientation,
+            pageHeaderRepeat: pageHeaderRepeat,
+            date: date,
+        };
+
+        $("#reportDate").text(reportDate);
         (enableDisableBusinessName) ? $("#businessName").text(businessName): businessName = $("#businessName").html("&nbsp;").html();
         (enableDisableReportName) ? $("#reportName").text(reportName): reportName = $("#reportName").html("&nbsp;").html();
         if (showHideLogo == "1") {
-            $('#businessLogo').attr('src', base_url + '/uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image?"; ?>' + Math.round(Math.random() * 1000000)).show();
+            $('#businessLogo').attr('src', BASE_URL + '/uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image?"; ?>' + Math.round(Math.random() * 1000000)).show();
             if (header_align == "L") {
                 $('.reportTitleInfo').css({
                     textAlign: 'left',
@@ -380,36 +203,135 @@
                 });
             }
         }
+
+        if ($('.enableDisableBusinessName').is(':checked')) {
+            show_company_name = 1;
+        } else {
+            show_company_name = 0;
+        }
+
+        if ($('.enableDisableReportName').is(':checked')) {
+            show_report_name = 1;
+        } else {
+            show_report_name = 0;
+        }
+
+        if (compact_display) {
+            $('#tableID').addClass('compact-table');
+        } else {
+            $('#tableID').removeClass('compact-table');
+        }
+
+        $(`#${TABLE_ID}`).nsmPagination({
+            itemsPerPage: page_size
+        });
         $(".settingsApplyButton").attr('disabled', '').html('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Applying changes...');
-        $('#pdfPreview').before('<span class="dataLoader"><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...</span>').hide();
-        // $("#<?php echo $tableID; ?> > tbody").html('<tr><td colspan="' + theadColumnNames.length + '"><center><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result... </center></td></tr>');
-        // =========================
+
         $.ajax({
             type: "POST",
-            url: base_url + "/accounting_controllers/Reports/getReportData/" + REPORT_CATEGORY,
+            url: base_url + "accounting/reports/_update_report_settings",
             data: {
-                theadColumnNames: theadColumnNames,
-                theadTotalColumn: theadTotalColumn,
-                businessName: businessName,
-                reportName: reportName,
-                reportDate: reportDate,
-                filename: filename,
-                notes: notes,
-                reportConfig: reportConfig,
+                report_type_id: REPORT_ID,
+                company_name: businessName,
+                title: reportName,
+                show_company_name: show_company_name,
+                show_title: show_report_name,
+                page_size: page_size,
+                report_date_text: date,
+                report_date_from_text: date,
+                report_date_to_text: date,
+                show_logo: showHideLogo,
+                header_align: header_align,
+                footer_align: footer_align,
+                sort_by: sort_by,
+                sort_asc_desc: sort_order,
+                compact_display: compact_display
             },
-            success: function(data) {
-                loadReportPreview();
-                $("#balance-sheet > tbody").html(data);
+            dataType: 'json',
+            success: function(response) {
                 $(".settingsApplyButton").removeAttr('disabled').html('Apply');
-                // $('#reportSettings').modal('hide');
+                if (response.is_success == 1) {
+                    $('#reportSettings').modal('hide');
+                    renderReportList();
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.msg,
+                    });
+                }
             }
         });
     }
 
-    // Export Report to PDF Script
-    $(".savePDF").click(function(event) {
-        var orientation = $('#pageOrientation').val();
-        generatePDF(false, orientation, true);
+
+    document.querySelector('.settingsApplyButton').addEventListener('click', function() {
+
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        renderReportList();
+    });
+
+    // Load .pdf Report Script
+    function loadReportPreview() {
+        $('#pdfPreview').hide();
+        $('#pdfPreview').attr('src', BASE_URL + "/assets/pdf/accounting/" + filename + ".pdf?" + Math.round(Math.random() * 1000000)).on('load', function() {
+            $('.dataLoader').remove();
+            $('#pdfPreview').show();
+        });
+    }
+
+    // Report Config Script
+    $('#reportSettingsForm').submit(function(event) {
+        event.preventDefault();
+        updateReportSettings();
+    });
+
+    // Page Orientation Config Script
+    $('#pageOrientation').change(function(event) {
+        renderReportList();
+    });
+
+    // Header Repeat Config Script
+    $('#pageHeaderRepeat').change(function(event) {
+        renderReportList();
+    });
+
+    // Fetch Report Notes On Page Load
+    $.ajax({
+        type: "POST",
+        url: BASE_URL + "/accounting_controllers/reports/getNotes",
+        data: {
+            reportID: REPORT_ID,
+        },
+        success: function(data) {
+            (data !== "") ? $('.addNotes').text('Edit Notes'): $('.addNotes').text('Add Notes');
+            $('#notesContent').html(data);
+            $("#NOTES").val(data);
+        }
+    });
+
+    // Add and Edit Notes Script
+    $('#addNotesForm').submit(function(event) {
+        event.preventDefault();
+        $(".noteSaveButton").attr('disabled', '').html('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Saving notes...');
+        $('#notesContent').html($("#NOTES").val());
+        ($("#NOTES").val() !== "") ? $('.addNotes').text('Edit Notes'): $('.addNotes').text('Add Notes');
+        // =========
+        $.ajax({
+            type: "POST",
+            url: BASE_URL + "/accounting_controllers/reports/saveNotes",
+            data: {
+                reportID: REPORT_ID,
+                reportNotes: $("#NOTES").val(),
+            },
+            success: function(data) {
+                $(".noteSaveButton").removeAttr('disabled').html('Save');
+                $("#notesContent").show();
+                $("#addNotesForm").hide();
+            }
+        });
     });
 
     $(document).ready(function() {
@@ -423,7 +345,7 @@
             var emailTo = $("#emailTo").val();
             var emailCC = $("#emailCC").val();
             var emailSubject = $("#emailSubject").val();
-            var emailBody = $("#emailBody").html();
+            var emailBody = CKEDITOR.instances['emailBody'].getData();
             var customAttachmentNamePDF = ($('.pdfAttachmentCheckbox').is(":checked")) ? $("#pdfReportFilename").val() : "";
             var customAttachmentNameXLSX = ($('.xlsxAttachmentCheckbox').is(":checked")) ? $("#xlsxReportFileName").val() : "";
             var attachmentConfig = {
@@ -446,7 +368,7 @@
             // Make the AJAX request
             $.ajax({
                 type: "POST",
-                url: base_url + "AccountingMailer/emailReport/" + REPORT_CATEGORY,
+                url: BASE_URL + "/AccountingMailer/emailReport/" + REPORT_CATEGORY,
                 data: {
                     emailTo: emailTo,
                     emailCC: emailCC,
@@ -476,9 +398,152 @@
             });
         });
     });
+
+    // Export Report to PDF Script
+    $("#exportToPDF, .savePDF").click(function(event) {
+        event.preventDefault();
+        var filePath = BASE_URL + "/assets/pdf/accounting/" + filename + ".pdf";
+        var link = $("<a>", {
+            href: filePath,
+            download: filename + ".pdf",
+        });
+        $("body").append(link);
+        link[0].click();
+        link.remove();
+    });
+
+    // Export Report to XLSX Script
+    $("#exportToXLSX").click(function(event) {
+        event.preventDefault();
+        var filePath = BASE_URL + "/assets/pdf/accounting/" + filename + ".xlsx";
+        var link = $("<a>", {
+            href: filePath,
+            download: filename + ".xlsx",
+        });
+        $("body").append(link);
+        link[0].click();
+        link.remove();
+    });
+
+    // Show/hide script
+    $('.addNotes').on('click', function(event) {
+        $("#notesContent").hide();
+        $("#addNotesForm").show();
+        $("#NOTES").focus();
+    });
+    $('#cancelNotes').on('click', function(event) {
+        $(".addNotes").focus();
+        $("#notesContent").show();
+        $("#addNotesForm").hide();
+    });
+
+    // Realtime character counter on report notes.
+    $("#NOTES").on('input', function() {
+        let textLength = $("#NOTES").val().length;
+        $(".noteCharMax").text(textLength + " / 4000 characters max");
+    });
+
+    $('input[name="date_from"]').on('input', function() {
+        let numericDate = $(this).val();
+        let wordDate = new Date(numericDate).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: '2-digit'
+        });
+        $('#date_from_text').text(wordDate);
+    }).trigger('input');
+
+    $('input[name="date_to"]').on('input', function() {
+        let numericDate = $(this).val();
+        let wordDate = new Date(numericDate).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: '2-digit'
+        });
+        $('#date_to_text').text(wordDate);
+    }).trigger('input');
+
+    // Pagination
+    $(document).ready(function() {
+        $(".audit_log").nsmPagination({
+            itemsPerPage: 10,
+        });
+    });
+
+    // Date picker
+    var currentDate = new Date().toISOString().split('T')[0];
+
+    $(document).ready(function() {
+        var isCollapsed = true;
+
+        $("#collapseButton").click(function() {
+            if (isCollapsed) {
+                $(".collapse").collapse('show');
+                $("#collapseButton span").text('Uncollapse');
+                updateCarets('show');
+            } else {
+                $(".collapse").collapse('hide');
+                $("#collapseButton span").text('Collapse');
+                updateCarets('hide');
+            }
+            isCollapsed = !isCollapsed;
+        });
+
+        $(".collapse-row").click(function() {
+            var target = $(this).data("bs-target");
+            $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
+            $(target).collapse('toggle');
+        });
+
+        function updateCarets(action) {
+            $(".collapse-row").each(function() {
+                var target = $(this).data("bs-target");
+                var icon = $(this).find("i");
+                if (action === 'show') {
+                    icon.removeClass("bx-caret-right").addClass("bx-caret-down");
+                } else {
+                    icon.removeClass("bx-caret-down").addClass("bx-caret-right");
+                }
+            });
+        }
+    });
+
+    $(document).ready(function() {
+        function sortTable(order) {
+            var rows = $("#reportTable > tr").toArray();
+
+            if (order === 'sort-default') {
+                $("#reportTable").html(originalOrder);
+            } else {
+                rows.sort(function(a, b) {
+                    var aValue = parseFloat($(a).find("td").eq(1).text().replace(/[\$,]/g, '')) || 0;
+                    var bValue = parseFloat($(b).find("td").eq(1).text().replace(/[\$,]/g, '')) || 0;
+                    if (order === 'sort-asc') {
+                        return aValue - bValue;
+                    } else if (order === 'sort-desc') {
+                        return bValue - aValue;
+                    }
+                });
+                $("#reportTable").html(rows);
+            }
+        }
+    });
+
+    // $(document).ready(function() {
+    //     $.ajax({
+    //         type: "POST",
+    //         url: base_url + "/accounting_controllers/Reports/getReportData/balance_sheet",
+
+    //         success: function(data) {
+    //             alert(data);
+    //         }
+    //     });
+    // });
 </script>
 <style>
-    .button-group {
-        margin-top: 5px;
+    .compact-table td,
+    .compact-table th {
+        padding: 4px 8px;
+        font-size: 12px;
     }
 </style>
