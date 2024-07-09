@@ -24,7 +24,7 @@ class Accounting_model extends MY_Model
         return $result;
     }
 
-    public function getReportSettings($reportTypeId) 
+    public function getReportSettings($reportTypeId)
     {
         $company_id = logged('company_id');
         $this->db->select('report_type_id, company_name, title, notes, show_logo, show_company_name, show_title, header_align, footer_align, sort_by, sort_asc_desc, page_size, report_date_from_text, report_date_to_text');
@@ -33,8 +33,6 @@ class Accounting_model extends MY_Model
         $this->db->where('report_type_id', $reportTypeId);
         $data = $this->db->get();
         return $data->row();
-
-        
     }
 
 
@@ -250,12 +248,12 @@ class Accounting_model extends MY_Model
                         WHERE invoices.customer_id = acs_profile.prof_id 
                             AND invoices.status != "Paid"
                             AND invoices.status != "Draft"
-                            AND DATE_FORMAT(invoices.date_created,"%Y-%m-%d") >= "'.$reportConfig['date_from'].'"
-                            AND DATE_FORMAT(invoices.date_created,"%Y-%m-%d") <= "'.$reportConfig['date_to'].'"
+                            AND DATE_FORMAT(invoices.date_created,"%Y-%m-%d") >= "' . $reportConfig['date_from'] . '"
+                            AND DATE_FORMAT(invoices.date_created,"%Y-%m-%d") <= "' . $reportConfig['date_to'] . '"
                     ) AS balance
                 FROM acs_profile
-                WHERE acs_profile.company_id = '.$companyID.'
-                ORDER BY '.$reportConfig['sort_by'].' '.$reportConfig['sort_order'].' 
+                WHERE acs_profile.company_id = ' . $companyID . '
+                ORDER BY ' . $reportConfig['sort_by'] . ' ' . $reportConfig['sort_order'] . ' 
             ');
             return $query->result();
         }
@@ -685,7 +683,8 @@ class Accounting_model extends MY_Model
         if ($reportType == "bill_payment_list") {
             $this->db->select('accounting_bill.id AS bill_id, accounting_vendors.id AS vendor_id, accounting_bill.bill_date AS bill_date, accounting_bill.id AS num, accounting_vendors.display_name AS vendor, accounting_bill.total_amount AS amount');
             $this->db->from('accounting_bill');
-            $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_bill.qbid', 'left');
+            // $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_bill.qbid', 'left'); -- Temporary Removed
+            $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_bill.vendor_id', 'left');
             $this->db->where("DATE_FORMAT(accounting_bill.created_at,'%Y-%m-%d') >= '$reportConfig[date_from]'");
             $this->db->where("DATE_FORMAT(accounting_bill.created_at,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('accounting_bill.company_id', $companyID);
@@ -783,9 +782,8 @@ class Accounting_model extends MY_Model
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
-        }     
-        
-        // Get Account Receivable Againg Summary Data in Database
+        }
+
         if ($reportType == "profit_and_loss_percentage_income") {
             $this->db->select('
                 invoices.customer_id AS customer_id, 
@@ -803,5 +801,14 @@ class Accounting_model extends MY_Model
             $data = $this->db->get();
             return $data->result();
         }          
+
+        // Get Balance Sheet Data in Database
+        if ($reportType == "balance_sheet") {
+            $this->db->select('SUM(total_amount) AS total_amount');
+            $this->db->from('accounting_check');
+            $this->db->where('company_id', $companyID);
+            $data = $this->db->get();
+            return $data->result();
+        }
     }
 }
