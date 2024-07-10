@@ -52,9 +52,9 @@
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
-                                                <th>NUM</th>
+                                                <th style="width:5%;">NUM</th>
                                                 <th>CUSTOMER</th>
-                                                <th>STATEMENT DATE</th>
+                                                <th style="width:10%;">STATEMENT DATE</th>
                                             </tr>
                                         </thead>
                                         <tbody>
