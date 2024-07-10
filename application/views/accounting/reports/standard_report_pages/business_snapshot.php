@@ -1,198 +1,164 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('accounting/reports/reports_assets/report_css'); ?>
-
-<div class="row page-content g-0">
-    <div class="col-12">
-        <div class="nsm-page">
-            <div class="nsm-page-content">
-
-                <div class="row">
-                    <div class="col-lg-1"></div>
-                    <div class="col-10 ">
-                        <div class="nsm-card primary">
-                            <div class="nsm-card-header d-block">
-                                <div class="row">
-                                    <div class="col-12 col-md-6 grid-mb">
-                                        <div class="nsm-page-buttons page-button-container">
-                                            <button type="button" class="nsm-button" id="collapseButton">
-                                                <span>Collapse</span>
-                                            </button>
-                                            <ul class="dropdown-menu p-3">
-                                                <div class="form-check">
-                                                    <input type="radio" checked id="sort-default" name="sort_order"
-                                                        class="form-check-input">
-                                                    <label for="sort-default" class="form-check-label">Default</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" id="sort-asc" name="sort_order"
-                                                        class="form-check-input">
-                                                    <label for="sort-asc" class="form-check-label">Total in ascending
-                                                        order</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input type="radio" id="sort-desc" name="sort_order"
-                                                        class="form-check-input">
-                                                    <label for="sort-desc" class="form-check-label">Total in descending
-                                                        order</label>
-                                                </div>
-                                            </ul>
-                                            <button class="nsm-button addNotes">Add Notes</button>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-md-6 grid-mb text-end">
-                                        <div class="nsm-page-buttons page-button-container">
-                                            <button data-bs-toggle="modal" data-bs-target="#emailReportModal" class="nsm-button border-0"><i class="bx bx-fw bx-envelope"></i></button>
-                                            <button type="button" class="nsm-button" data-bs-toggle="modal"
-                                                data-bs-target="#printPreviewModal">
-                                                <i class='bx bx-fw bx-printer'></i>
-                                            </button>
-                                            <!-- <button type="button" class="nsm-button" data-bs-toggle="dropdown">
-                                                <i class="bx bx-fw bx-export"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end export-dropdown">
-                                                <li><a class="dropdown-item" href="javascript:void(0);"
-                                                        id="export-to-excel">Export to Excel</a></li>
-                                                <li><a class="dropdown-item" href="javascript:void(0);"
-                                                        id="export-to-pdf">Export to PDF</a></li>
-                                            </ul> -->
-                                            <button class="nsm-button border-0 primary" data-bs-toggle="modal"
-                                                data-bs-target="#reportSettings"><i
-                                                    class="bx bx-fw bx-cog"></i></button>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end p-3">
-                                                <p class="m-0">Display density</p>
-                                                <div class="form-check">
-                                                    <input type="checkbox" checked id="compact-display"
-                                                        class="form-check-input">
-                                                    <label for="compact-display"
-                                                        class="form-check-label">Compact</label>
-                                                </div>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="row mb-4">
-                                        <div class="col-lg-12 headerInfo">
-                                            <img id="businessLogo"
-                                                class="<?php echo ($reportSettings->show_logo == 0 || !isset($reportSettings->show_logo)) ? 'd-none-custom' : '';?>"
-                                                src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
-                                            <div class="reportTitleInfo">
-                                                <h3 id="businessName">
-                                                    <?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?>
-                                                </h3>
-                                                <h5><strong
-                                                        id="reportName"><?php echo $reportSettings->title ?></strong>
-                                                </h5>
-                                                <h5><small id="reportDate">As of <?php echo date('F d, Y'); ?></small>
-                                                </h5>
-                                            </div>
-                                        </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+            <div class="nsm-callout primary"><button><i class="bx bx-x"></i></button><?php echo $page->description; ?>
+            </div>
+        </div>
+        <div class="col-lg-1"></div>
+    </div>
+    <div class="row">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-10">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="nsm-card primary">
+                        <div class="nsm-card-header">
+                            <div class="col-lg-12">
+                                <span class="float-start">
+                                    <button class="nsm-button addNotes">Add Notes</button>
+                                </span>
+                                <span class="float-end">
+                                    <button data-bs-toggle="modal" data-bs-target="#emailReportModal"
+                                        class="nsm-button border-0"><i class="bx bx-fw bx-envelope"></i></button>
+                                    <button data-bs-toggle="modal" data-bs-target="#printPreviewModal"
+                                        class="nsm-button border-0"><i class="bx bx-fw bx-printer"></i></button>
+                                    <button class="nsm-button border-0" data-bs-toggle="dropdown"><i
+                                            class="bx bx-fw bx-export"></i></button>
+                                    <ul class="dropdown-menu dropdown-menu-end export-dropdown" style="">
+                                        <li><a class="dropdown-item" href="javascript:void(0);" id="exportToXLSX">Export
+                                                to Excel</a></li>
+                                        <li><a class="dropdown-item" href="javascript:void(0);" id="exportToPDF"
+                                                download>Export to PDF</a></li>
+                                    </ul>
+                                    <button class="nsm-button border-0 primary" data-bs-toggle="modal"
+                                        data-bs-target="#reportSettings"><i class="bx bx-fw bx-cog"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="nsm-card-content">
+                            <div class="row mb-4">
+                                <div class="col-lg-12 headerInfo">
+                                    <img id="businessLogo"
+                                        class="<?php echo ($reportSettings->show_logo == 0 || !isset($reportSettings->show_logo)) ? 'd-none-custom' : ''; ?>"
+                                        src="<?php echo base_url('uploads/users/business_profile/')."$companyInfo->id/$companyInfo->business_image"; ?>">
+                                    <div class="reportTitleInfo">
+                                        <h3 id="businessName">
+                                            <?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name); ?>
+                                        </h3>
+                                        <h5><strong id="reportName"><?php echo $reportSettings->title; ?></strong></h5>
+                                        <h5><small id="reportDate">As of <?php echo date('F d, Y'); ?></small></h5>
                                     </div>
                                 </div>
                             </div>
-                            <div class="nsm-card-content h-auto grid-mb">
-                                <?php 
-                                        $tableID = "business_snapshot_table"; 
-                                        $reportCategory = "business_snapshot_list"; 
-                                    ?>
-                                <table id="<?php echo $tableID; ?>" style="display:hidden"></table>
-                                <table class="nsm-table">
-                                    <thead>
-                                        <tr>
-                                            <td data-name="Name"></td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr data-bs-toggle="collapse" data-bs-target="#incomeDetails"
-                                            class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i>My Income</td>
-                                        </tr>
-                                        <tr data-bs-toggle="collapse" class="clickable collapse-row collapse"
-                                            id="incomeDetails">
-                                            <td>
-                                                <div class="card text-center shadow">
-                                                    <div class="card-header text-left"><b>My Income</b></div>
-                                                    <div class="card-body">
-                                                        <h1 id='myIncomeGraphLoader'> <span
-                                                                class="bx bx-loader bx-spin"></span></h1>
-                                                        <canvas id="myIncomeGraph" style="max-height:100%;"
-                                                            class="nsm-chart" data-chart-type="sales"></canvas>
+                            <div class="row mb-3">
+                                <div class="col-lg-12">
+                                    <?php
+                                        $tableID = 'business_snapshot_table';
+$reportCategory = 'business_snapshot_list';
+?>
+                                    <table id="<?php echo $tableID; ?>" style="display:hidden"></table>
+                                    <table class="nsm-table">
+                                        <thead>
+                                            <tr>
+                                                <td data-name="Name"></td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr data-bs-toggle="collapse" data-bs-target="#incomeDetails"
+                                                class="clickable collapse-row collapsed">
+                                                <td><i class="bx bx-fw bx-caret-right"></i>My Income</td>
+                                            </tr>
+                                            <tr data-bs-toggle="collapse" class="clickable collapse-row collapse"
+                                                id="incomeDetails">
+                                                <td>
+                                                    <div class="card text-center shadow">
+                                                        <div class="card-header text-left"><b>My Income</b></div>
+                                                        <div class="card-body">
+                                                            <h1 id='myIncomeGraphLoader'> <span
+                                                                    class="bx bx-loader bx-spin"></span></h1>
+                                                            <canvas id="myIncomeGraph" style="max-height:100%;"
+                                                                class="nsm-chart" data-chart-type="sales"></canvas>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr data-bs-toggle="collapse" data-bs-target="#incomeDetailsComparison"
-                                            class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i>Previous Year Income Comparison
-                                            </td>
-                                        </tr>
+                                                </td>
+                                            </tr>
+                                            <tr data-bs-toggle="collapse" data-bs-target="#incomeDetailsComparison"
+                                                class="clickable collapse-row collapsed">
+                                                <td><i class="bx bx-fw bx-caret-right"></i>Previous Year Income
+                                                    Comparison
+                                                </td>
+                                            </tr>
 
-                                        <tr id="incomeDetailsComparison" class="clickable collapse-row collapse"
-                                            data-bs-toggle="collapse">
-                                            <td>
-                                                <div class="card text-center shadow">
-                                                    <div class="card-header text-left"><b>Previous Year Income
-                                                            Comparison</b></div>
-                                                    <div class="card-body">
-                                                        <h1 id='myIncomeComparisonGraphLoader'> <span
-                                                                class="bx bx-loader bx-spin"></span></h1>
-                                                        <canvas id="myIncomeComparisonGraph" style="max-height:100%;"
-                                                            class="nsm-chart" data-chart-type="sales"></canvas>
+                                            <tr id="incomeDetailsComparison" class="clickable collapse-row collapse"
+                                                data-bs-toggle="collapse">
+                                                <td>
+                                                    <div class="card text-center shadow">
+                                                        <div class="card-header text-left"><b>Previous Year Income
+                                                                Comparison</b></div>
+                                                        <div class="card-body">
+                                                            <h1 id='myIncomeComparisonGraphLoader'> <span
+                                                                    class="bx bx-loader bx-spin"></span></h1>
+                                                            <canvas id="myIncomeComparisonGraph"
+                                                                style="max-height:100%;" class="nsm-chart"
+                                                                data-chart-type="sales"></canvas>
 
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                            </tr>
 
-                                        <tr data-bs-toggle="collapse" data-bs-target="#expenseDetails"
-                                            class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i>My Expense</td>
-                                        </tr>
-                                        <tr id="expenseDetails" class=" clickable collapse-row collapse"
-                                            data-bs-toggle="collapse">
-                                            <td>
-                                                <div class="card text-center shadow">
-                                                    <div class="card-header text-left"><b>My Expense</b></div>
-                                                    <div class="card-body">
-                                                        <h1 id='MyExpenseGraphLoader'> <span
-                                                                class="bx bx-loader bx-spin"></span></h1>
+                                            <tr data-bs-toggle="collapse" data-bs-target="#expenseDetails"
+                                                class="clickable collapse-row collapsed">
+                                                <td><i class="bx bx-fw bx-caret-right"></i>My Expense</td>
+                                            </tr>
+                                            <tr id="expenseDetails" class=" clickable collapse-row collapse"
+                                                data-bs-toggle="collapse">
+                                                <td>
+                                                    <div class="card text-center shadow">
+                                                        <div class="card-header text-left"><b>My Expense</b></div>
+                                                        <div class="card-body">
+                                                            <h1 id='MyExpenseGraphLoader'> <span
+                                                                    class="bx bx-loader bx-spin"></span></h1>
 
-                                                        <canvas id="MyExpenseGraph" style="max-height:100%;"
-                                                            class="nsm-chart" data-chart-type="sales"></canvas>
+                                                            <canvas id="MyExpenseGraph" style="max-height:100%;"
+                                                                class="nsm-chart" data-chart-type="sales"></canvas>
 
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                            </tr>
 
-                                        <tr data-bs-toggle="collapse" data-bs-target="#expenseDetailsComparison"
-                                            class="clickable collapse-row collapsed">
-                                            <td><i class="bx bx-fw bx-caret-right"></i>Previous Year Expense Comparison
-                                            </td>
-                                        </tr>
-                                        <tr id="expenseDetailsComparison" class="clickable collapse-row collapse"
-                                            data-bs-toggle="collapse">
-                                            <td>
-                                                <div class="card text-center shadow">
-                                                    <div class="card-header text-left"><b>Previous Year Expense
-                                                            Comparison</b></div>
-                                                    <div class="card-body">
-                                                        <h1 id='expenseComparisonGraphLoader'> <span
-                                                                class="bx bx-loader bx-spin"></span></h1>
-                                                        <canvas id="expenseComparisonGraph"
-                                                            data-chart-type="sales"></canvas>
+                                            <tr data-bs-toggle="collapse" data-bs-target="#expenseDetailsComparison"
+                                                class="clickable collapse-row collapsed">
+                                                <td><i class="bx bx-fw bx-caret-right"></i>Previous Year Expense
+                                                    Comparison
+                                                </td>
+                                            </tr>
+                                            <tr id="expenseDetailsComparison" class="clickable collapse-row collapse"
+                                                data-bs-toggle="collapse">
+                                                <td>
+                                                    <div class="card text-center shadow">
+                                                        <div class="card-header text-left"><b>Previous Year Expense
+                                                                Comparison</b></div>
+                                                        <div class="card-body">
+                                                            <h1 id='expenseComparisonGraphLoader'> <span
+                                                                    class="bx bx-loader bx-spin"></span></h1>
+                                                            <canvas id="expenseComparisonGraph"
+                                                                data-chart-type="sales"></canvas>
 
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </td>
-                                        </tr>
+                                                </td>
+                                            </tr>
 
 
-                                    </tbody>
-                                </table>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-lg-12">
@@ -223,16 +189,19 @@
                                 </div>
                             </div>
                             <div class="row footerInfo">
-                                <span class=""><?php echo date("l, F j, Y h:i A eP") ?></span>
+                                <span class=""><?php echo date('l, F j, Y h:i A eP'); ?></span>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-1"></div>
                 </div>
             </div>
         </div>
+        <div class="col-lg-1"></div>
     </div>
 </div>
+
+<!-- START: MODALS -->
+<!-- Modal for Report Settings -->
 <div class="modal fade" id="reportSettings" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -267,11 +236,11 @@
                                     <div class="input-group">
                                         <div class="input-group-text"><input
                                                 class="form-check-input mt-0 enableDisableBusinessName" type="checkbox"
-                                                <?php echo (isset($reportSettings->show_company_name) && $reportSettings->show_company_name == 1) ? 'checked' : ''; ?>>
+                                                <?php echo (!isset($reportSettings->show_company_name) || $reportSettings->show_company_name == 1) ? 'checked' : ''; ?>>
                                         </div>
                                         <input id="company_name" class="nsm-field form-control" type="text"
                                             name="company_name"
-                                            value="<?php echo (!empty($reportSettings->company_name)) ? $reportSettings->company_name : strtoupper($companyInfo->business_name); ?>"
+                                            value="<?php echo (trim(str_replace('&nbsp;', '', $reportSettings->company_name)) !== '') ? $reportSettings->company_name : strtoupper($companyInfo->business_name); ?>"
                                             required>
                                     </div>
                                 </div>
@@ -280,11 +249,11 @@
                                     <div class="input-group">
                                         <div class="input-group-text"><input
                                                 class="form-check-input mt-0 enableDisableReportName" type="checkbox"
-                                                <?php echo (isset($reportSettings->show_title) && $reportSettings->show_title == 1) ? 'checked' : ''; ?>>
+                                                <?php echo (!isset($reportSettings->show_title) || $reportSettings->show_title == 1) ? 'checked' : ''; ?>>
                                         </div>
                                         <input id="report_name" class="nsm-field form-control" type="text"
                                             name="report_name"
-                                            value="<?php echo (!empty($reportSettings->title)) ? $reportSettings->title : $page->title; ?>"
+                                            value="<?php echo (trim(str_replace('&nbsp;', '', $reportSettings->title)) !== '') ? $reportSettings->title : $page->title; ?>"
                                             required>
                                     </div>
                                 </div>
@@ -346,7 +315,7 @@
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
                                                 <option value="id"
                                                     <?php echo ($reportSettings->sort_by == 'id') ? 'selected' : ''; ?>>
-                                                    Default</option>
+                                                    ID</option>
                                                 <option value="vendor"
                                                     <?php echo ($reportSettings->sort_by == 'vendor') ? 'selected' : ''; ?>>
                                                     Vendor</option>
@@ -368,10 +337,10 @@
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="DESC"
-                                                    <?php echo ($reportSettings->sort_order == 'DESC') ? 'selected' : ''; ?>>
+                                                    <?php echo ($reportSettings->sort_asc_desc == 'DESC') ? 'selected' : ''; ?>>
                                                     DESC</option>
                                                 <option value="ASC"
-                                                    <?php echo ($reportSettings->sort_order == 'ASC') ? 'selected' : ''; ?>>
+                                                    <?php echo ($reportSettings->sort_asc_desc == 'ASC') ? 'selected' : ''; ?>>
                                                     ASC</option>
                                             </select>
                                         </div>
@@ -396,7 +365,8 @@
         </div>
     </div>
 </div>
-
+<!-- Modal for Report Settings -->
+<!-- START: PRINT/SAVE MODAL -->
 <div class="modal fade" id="printPreviewModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -442,7 +412,8 @@
         </div>
     </div>
 </div>
-
+<!-- END: PRINT/SAVE MODAL -->
+<!-- START: EMAIL REPORT MODAL -->
 <div class="modal fade" id="emailReportModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -470,14 +441,14 @@
                             <div class="form-group">
                                 <h6>Subject</h6>
                                 <input id="emailSubject" class="form-control" type="text"
-                                    value="<?php echo $page->title ?>" required>
+                                    value="<?php echo $page->title; ?>" required>
                             </div>
                         </div>
                         <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>Body</h6>
-                                <div id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title ?> from
-                                    <?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?>
+                                <div id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title; ?> from
+                                    <?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : ''; ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?>
                                 </div>
                             </div>
                         </div>
@@ -490,7 +461,7 @@
                                                 class="form-check-input mt-0 pdfAttachmentCheckbox" type="checkbox">
                                         </div>
                                         <input id="pdfReportFilename" class="form-control" type="text"
-                                            value="<?php echo $page->title ?>" required>
+                                            value="<?php echo $page->title; ?>" required>
                                         <input class="form-control" type="text" disabled readonly value=".pdf"
                                             style="max-width: 60px;">
                                     </div>
@@ -499,7 +470,7 @@
                                                 class="form-check-input mt-0 xlsxAttachmentCheckbox" type="checkbox">
                                         </div>
                                         <input id="xlsxReportFileName" class="form-control" type="text"
-                                            value="<?php echo $page->title ?>" required>
+                                            value="<?php echo $page->title; ?>" required>
                                         <input class="form-control" type="text" disabled readonly value=".xlsx"
                                             style="max-width: 60px;">
                                     </div>
@@ -525,8 +496,11 @@
         </div>
     </div>
 </div>
+<!-- END: EMAIL REPORT MODAL -->
+<!-- END: MODALS -->
 <?php include viewPath('accounting/reports/reports_assets/report_js'); ?>
 <?php include viewPath('v2/includes/footer'); ?>
+
 
 <script>
 $(function() {
