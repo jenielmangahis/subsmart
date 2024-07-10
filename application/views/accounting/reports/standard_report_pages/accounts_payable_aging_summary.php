@@ -39,7 +39,7 @@
                                     <div class="reportTitleInfo">
                                         <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?></h3>
                                         <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
-                                        <h5><small id="reportDate">As of <?php echo date('F d, Y'); ?></small></h5>
+                                        <h5><small id="reportDate">As of  <span id="date_from_text"></span></small></h5>
                                     </div>
                                 </div>
                             </div>
@@ -49,21 +49,20 @@
                                         $tableID = "accountspayableagingsummary_table"; 
                                         $reportCategory = "accounts_payable_aging_summary"; 
                                     ?>
-                                    <!-- 
+                                 
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
                                                 <th>&nbsp;</th>
-                                                <th>1-30</th>
-                                                <th>31-60</th>
-                                                <th>61-90</th>
-                                                <th>91 & Over</th>
-                                                <th>Total</th>
+                                                <?php foreach($columns as $column) : ?>
+                                                    <th><?=strtoupper($column['name'])?></th>
+                                                <?php endforeach; ?>
+                                                <th>TOTAL</th>                                                
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="6">
+                                                <td colspan="7">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
@@ -71,8 +70,9 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    -->
+                                  
 
+                                    <!-- 
                                     <table class="nsm-table grid-mb" id="reports-table">
                                         <thead>
                                             <tr>
@@ -112,6 +112,7 @@
                                             <?php endif; ?>
                                         </tbody>
                                     </table>     
+                                    -->
 
                                 </div>
                             </div>
@@ -219,6 +220,7 @@
                                         <option value="500" <?php echo ($reportSettings->page_size == "500") ? "selected" : "" ?>>500</option>
                                     </select>
                                 </div>
+                                <!-- 
                                 <div class="col-md-4 mb-3">
                                     <div class="col-md-12">
                                         <label class="mb-1 fw-xnormal">Sort By</label>
@@ -237,6 +239,13 @@
                                                 <option value="ASC" <?php echo ($reportSettings->sort_asc_desc== "ASC") ? "selected" : "" ?>>ASC</option>
                                             </select>
                                         </div>
+                                    </div>
+                                </div>
+                                -->
+                                <div class="col-md-4 mb-3">
+                                    <label for="filter-date">Date</label>
+                                    <div class="">
+                                        <input type="date" id="filter-date" name="date_from" class="form-control nsm-field" value="<?= $reportSettings && $reportSettings->report_date_from_text != '' ? date("Y-m-d",strtotime($reportSettings->report_date_from_text)) : date("Y-m-d"); ?>" data-type="filter-date">
                                     </div>
                                 </div>
                             </div>
