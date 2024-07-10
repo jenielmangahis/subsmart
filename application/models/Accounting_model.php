@@ -830,5 +830,9 @@ class Accounting_model extends MY_Model
             $data = $this->db->get();
             return $data->result();
         }
+
+        if ($reportType == "accounts_payable_aging_summary") {
+            return array();
+        }
     }
 }
