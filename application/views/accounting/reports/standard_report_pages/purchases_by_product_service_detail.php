@@ -185,6 +185,8 @@
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
                                                 <option value="num" <?php echo ($reportSettings->sort_by == "num") ? "selected" : "" ?>>Num</option>
+                                                <option value="product_service" <?php echo ($reportSettings->sort_by == "product_service") ? "selected" : "" ?>>Product / Service</option>
+                                                <option value="transaction_date" <?php echo ($reportSettings->sort_by == "transaction_date") ? "selected" : "" ?>>Date</option>
                                                     <!-- <option value="date">Date</option>
                                                     <option value="customer">Customer</option>
                                                     <option value="transaction_type">Transaction Type</option>
