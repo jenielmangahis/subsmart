@@ -57,11 +57,11 @@
                                                 <th>TRANSACTION</th>
                                                 <th>NUM</th>
                                                 <th>NAME</th>
-                                                <th>QTY</th>
-                                                <th>RATE</th>
-                                                <th>FIFO COST</th>
-                                                <th>QTY ON HAND</th>
-                                                <th>ASSET VALUE</th>
+                                                <th style="text-align:right;">QTY</th>
+                                                <th style="text-align:right;">RATE</th>
+                                                <th style="text-align:right;">FIFO COST</th>
+                                                <th style="text-align:right;">QTY ON HAND</th>
+                                                <th style="text-align:right;">ASSET VALUE</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -184,6 +184,9 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                                <option value="product_service" <?php echo ($reportSettings->sort_by == "product_service") ? "selected" : "" ?>>Product / Service</option>
+                                                <option value="date" <?php echo ($reportSettings->sort_by == "date") ? "selected" : "" ?>>Date</option>
+                                                <option value="transaction_type" <?php echo ($reportSettings->sort_by == "transaction_type") ? "selected" : "" ?>>Transaction Type</option>
                                                 <option value="num" <?php echo ($reportSettings->sort_by == "num") ? "selected" : "" ?>>Num</option>
                                                     <!-- <option value="date">Date</option>
                                                     <option value="customer">Customer</option>

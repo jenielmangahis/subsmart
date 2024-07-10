@@ -175,7 +175,6 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="payment_id" <?php echo ($reportSettings->sort_by == "payment_id") ? "selected" : "" ?>>ID</option>
                                                 <option value="payment_method" <?php echo ($reportSettings->sort_by == "payment_method") ? "selected" : "" ?>>Payment Method</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
