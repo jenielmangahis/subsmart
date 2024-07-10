@@ -59,36 +59,11 @@
                         <div class="nsm-card-content">
                             <div class="row mb-4">
                                 <div class="col-lg-12 headerInfo">
-                                    <img id="businessLogo" src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
-                                    <?php
-                                    $header_css = '';
-                                    if ($reportSettings) {
-                                        if ($reportSettings->header_align == 'C') {
-                                            $header_css = 'text-align:center;';
-                                        } elseif ($reportSettings->header_align == 'L') {
-                                            $header_css = 'text-align:left;margin-left:115px;';
-                                        } elseif ($reportSettings->header_align == 'R') {
-                                            $header_css = 'text-align:right;';
-                                        }
-                                    }
-                                    ?>
-                                    <div class="reportTitleInfo" style="<?= $header_css; ?>">
-                                        <?php if ($reportSettings) { ?>
-                                            <?php if ($reportSettings->show_company_name == 1) { ?>
-                                                <h3 id="businessName"><?= $reportSettings && $reportSettings->company_name != '' ? $reportSettings->company_name : $companyInfo->business_name; ?></h3>
-                                            <?php } ?>
-                                        <?php } else { ?>
-                                            <h3 id="businessName"><?= $companyInfo->business_name; ?></h3>
-                                        <?php } ?>
-
-                                        <?php if ($reportSettings) { ?>
-                                            <?php if ($reportSettings->show_title == 1) { ?>
-                                                <h5><strong id="reportName"><?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : 'Balance Sheet Summary'; ?></strong></h5>
-                                            <?php } ?>
-                                        <?php } else { ?>
-                                            <h5><strong id="reportName">Balance Sheet Summary</strong></h5>
-                                        <?php } ?>
-                                        <h5><small id="reportDate">As of <?= $reportSettings && strtotime($reportSettings->report_date_text) > 0 ? date('F d, Y', strtotime($reportSettings->report_date_text)) : date('F d, Y'); ?></small></h5>
+                                    <img id="businessLogo" class="<?php echo ($reportSettings->show_logo == 0 || !isset($reportSettings->show_logo)) ? 'd-none-custom' : ''; ?>" src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
+                                    <div class="reportTitleInfo">
+                                        <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name) ?></h3>
+                                        <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
+                                        <h5><small id="report_date_text">As of <?php echo date('F d, Y'); ?></small></h5>
                                     </div>
                                 </div>
                             </div>
@@ -546,10 +521,16 @@
                                         <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : 'Balance Sheet Summary'; ?>" required>
                                     </div>
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <!-- <div class="col-md-4 mb-3">
                                     <label for="filter-date">Date</label>
                                     <div class="">
                                         <input type="date" name="date" id="report-date" class="form-control nsm-field date" value="<?= $reportSettings && $reportSettings->report_date_text != '' ? date("Y-m-d", strtotime($reportSettings->report_date_text)) : date("Y-m-d"); ?>" data-type="filter-date">
+                                    </div>
+                                </div> -->
+                                <div class="col-md-4 mb-3">
+                                    <label for="filter-date">Date</label>
+                                    <div class="">
+                                        <input type="date" id="filter-date" class="form-control nsm-field date" value="<?= $reportSettings && $reportSettings->report_date_text != '' ? date("Y-m-d", strtotime($reportSettings->report_date_text)) : date("Y-m-d"); ?>" data-type="filter-date">
                                     </div>
                                 </div>
 

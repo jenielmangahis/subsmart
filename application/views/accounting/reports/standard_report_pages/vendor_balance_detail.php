@@ -57,9 +57,9 @@
                                                 <th>TRANSACTION</th>
                                                 <th>NUM</th>
                                                 <th>DUE DATE</th>
-                                                <th>AMOUNT</th>
-                                                <th>OPEN BALANCE</th>
-                                                <th>BALANCE</th>
+                                                <th style="text-align:right;">AMOUNT</th>
+                                                <th style="text-align:right;">OPEN BALANCE</th>
+                                                <th style="text-align:right;">BALANCE</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -182,6 +182,7 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                                <option value="vendor" <?php echo ($reportSettings->sort_by == "vendor") ? "selected" : "" ?>>Vendor</option>
                                                 <option value="num" <?php echo ($reportSettings->sort_by == "num") ? "selected" : "" ?>>Num</option>
                                                 <!-- <option value="date">Date</option>
                                                 <option value="customer">Customer</option>
