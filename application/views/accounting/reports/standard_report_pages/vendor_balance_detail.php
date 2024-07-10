@@ -57,9 +57,9 @@
                                                 <th>TRANSACTION</th>
                                                 <th>NUM</th>
                                                 <th>DUE DATE</th>
-                                                <th>AMOUNT</th>
-                                                <th>OPEN BALANCE</th>
-                                                <th>BALANCE</th>
+                                                <th style="text-align:right;">AMOUNT</th>
+                                                <th style="text-align:right;">OPEN BALANCE</th>
+                                                <th style="text-align:right;">BALANCE</th>
                                             </tr>
                                         </thead>
                                         <tbody>
