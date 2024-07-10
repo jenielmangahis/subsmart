@@ -82,7 +82,8 @@ class AccountingMailer extends MY_Controller{
             "employee_details",
             "balance_sheet_comparison",
             "accounts_receivable_aging_summary",
-            'business_snapshot_list'
+            'business_snapshot_list',
+            'accounts_receivable_aging_detail_list'
         );
 
         // Conditional Statements on the array
