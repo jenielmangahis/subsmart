@@ -183,7 +183,7 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                            <option value="num">Num</option>
+                                            <option value="num" <?php echo ($reportSettings->sort_by == "num") ? "selected" : "" ?>>Num</option>
                                                 <option value="date" <?php echo ($reportSettings->sort_by == "date") ? "selected" : "" ?>>Date</option>
                                                 <option value="name" <?php echo ($reportSettings->sort_by == "name") ? "selected" : "" ?>>Name</option>
                                                 <option value="due_date" <?php echo ($reportSettings->sort_by == "due_date") ? "selected" : "" ?>>Due Date</option>
