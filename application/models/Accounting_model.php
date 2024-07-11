@@ -254,6 +254,7 @@ class Accounting_model extends MY_Model
                 FROM acs_profile
                 WHERE acs_profile.company_id = ' . $companyID . '
                 ORDER BY ' . $reportConfig['sort_by'] . ' ' . $reportConfig['sort_order'] . ' 
+                LIMIT ' .$reportConfig['page_size'].'
             ');
             return $query->result();
         }
@@ -784,7 +785,7 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
 
-        if ($reportType == "profit_and_loss_percentage_income") {
+        if ($reportType == "profit_and_loss_percentage_income_backup") {
             $this->db->select('
                 invoices.customer_id AS customer_id, 
                 CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, 
@@ -802,6 +803,26 @@ class Accounting_model extends MY_Model
             return $data->result();
         }          
 
+        if ($reportType == "profit_and_loss_percentage_income") {
+            $this->db->select('
+                invoices.customer_id AS customer_id, 
+                CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, 
+                invoices.date_issued, 
+                invoices.grand_total AS amount
+            ');
+            $this->db->from('invoices');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->where('acs_profile.first_name !=', '');
+            $this->db->where("DATE_FORMAT(invoices.date_issued,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_issued,'%Y-%m-%d') <= '$reportConfig[date_to]'");            
+            //$this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->group_by('invoices.customer_id');
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        } 
+
         // Get Balance Sheet Data in Database
         if ($reportType == "balance_sheet") {
             $this->db->select('SUM(total_amount) AS total_amount');
@@ -809,6 +830,10 @@ class Accounting_model extends MY_Model
             $this->db->where('company_id', $companyID);
             $data = $this->db->get();
             return $data->result();
+        }
+
+        if ($reportType == "accounts_payable_aging_summary") {
+            return array();
         }
     }
 }
