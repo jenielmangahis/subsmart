@@ -1,36 +1,6 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('accounting/reports/reports_assets/report_css'); ?>
-<style>
-.table-wrapper {
-    overflow-x: auto;
-    max-width: 100%;
-    margin-bottom: 1rem;
-}
 
-.table-wrapper table thead tr th ,.table-wrapper table tbody tr td {
-    padding: 20px;
-}
-
-.nsm-table {
-    width: 100%;
-    white-space: nowrap;
-}
-
-.transaction-content {
-    max-height: 100px;
-    overflow-y: auto;
-}
-
-.transaction-content tr td {
-    text-align: center
-}
-
-.compact-table td,
-.compact-table th {
-    padding: 4px 8px;
-    font-size: 12px;
-}
-</style>
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-1"></div>
@@ -89,72 +59,27 @@
                                 <div class="table-wrapper">
                                     <?php
                                     $tableID = 'accounts_receivable_aging_detail_table';
-                                    $reportCategory = 'accounts_receivable_aging_detail_list';
-                                    ?>
-                                    <table id="<?php echo $tableID; ?>" class="nsm-table grid-mb">
+                                        $reportCategory = 'accounts_receivable_aging_detail_list';
+                                        ?>
+                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 accordion">
                                         <thead>
                                             <tr>
-                                                <th >
-                                                    DATE</th>
-                                                <th >
-                                                    TRANSACTION TYPE</th>
-                                                <th >
-                                                    NUM</th>
-                                                <th >
-                                                    CREATE DATE</th>
-                                                <th >
-                                                    CREATED BY</th>
-                                                <th >
-                                                    LAST MODIFIED</th>
-                                                <th >
-                                                    LAST MODIFIED BY</th>
-                                                <th >
-                                                    CUSTOMER</th>
-                                                <th>
-                                                    PHONE</th>
-                                                <th >
-                                                    PHONE NUMBERS</th>
-                                                <th >
-                                                    EMAIL</th>
-                                                <th >
-                                                    FULL NAME</th>
-                                                <th >
-                                                    BILLING ADDRESS</th>
-                                                <th >
-                                                    SHIPPING ADDRESS</th>
-                                                <th >
-                                                    COMPANY NAME</th>
-                                                <th >
-                                                    SALES REP</th>
-                                                <th >
-                                                    P.O. NUMBER</th>
-                                                <th>
-                                                    SHIP VIA</th>
-                                                <th >
-                                                    TERMS</th>
-                                                <th >
-                                                    CLIENT/VENDOR MESSAGE</th>
-                                                <th >
-                                                    DUE DATE</th>
-                                                <th >
-                                                    PAST DUE</th>
-                                                <th >
-                                                    SENT</th>
-                                                <th >
-                                                    DELIVERY ADDRESS</th>
-                                                <th >
-                                                    AMOUNT</th>
-                                                <th >
-                                                    OPEN BALANCE</th>
-                                                <th >
-                                                    MEMO/DESCRIPTION</th>
+                                                <th>DATE</th>
+                                                <th> TRANSACTION TYPE</th>
+                                                <th> NUM</th>
+                                                <th> CUSTOMER</th>
+                                                <th>DUE DATE</th>
+                                                <th> AMOUNT</th>
+                                                <th>OPEN BALANCE</th>
+                                          
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td colspan="24">
                                                     <center>
-                                                        <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
+                                                        <div class="spinner-border spinner-border-sm" role="status">
+                                                        </div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
                                                 </td>
                                             </tr>

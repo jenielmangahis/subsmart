@@ -58,7 +58,7 @@
                                                 <th>NUM</th>
                                                 <th>TERMS</th>
                                                 <th>DUE DATE</th>
-                                                <th>OPEN BALANCE</th>
+                                                <th style="text-align:right;">OPEN BALANCE</th>
                                             </tr>
                                         </thead>
                                         <tbody>

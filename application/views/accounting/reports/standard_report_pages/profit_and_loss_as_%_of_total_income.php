@@ -49,6 +49,27 @@
                                         $tableID = "profit_and_loss_at_percentage_table";
                                         $reportCategory = "profit_and_loss_percentage_income"; //profit_and_loss_income
                                     ?>
+
+                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
+                                        <thead>
+                                            <tr>
+                                                <th>&nbsp;</th>
+                                                <th style="text-align:right;">DATE</th>
+                                                <th style="text-align:right;">% OF INCOME</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="8">
+                                                    <center>
+                                                        <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
+                                                    </center>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>                                
+
+                                    <!--
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0" style="display: none;">
                                         <thead>
                                             <tr>
@@ -67,7 +88,9 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                    -->
                                    
+                                    <!-- 
                                     <table class="nsm-table w-100 border-0" id="" style="">
                                         <thead>
                                             <tr>
@@ -226,7 +249,8 @@
                                                 <td>$571,265.66</td>
                                             </tr>
                                         </tbody>
-                                    </table>     
+                                    </table>    
+                                    --> 
                                    
                                 </div>
                             </div>
@@ -323,7 +347,7 @@
                                         <option value="R" <?php echo ($reportSettings->footer_align == "R") ? "selected" : "" ?>>Right</option>
                                     </select>
                                 </div>
-                                <div class="col-md-2 mb-3">
+                                <!-- <div class="col-md-2 mb-3">
                                     <label class="mb-1 fw-xnormal">Row Size</label>
                                     <select name="page_size" id="page-size" class="nsm-field form-select">
                                         <option value="9999" <?php echo ($reportSettings->page_size == "9999") ? "selected" : "" ?>>All</option>
@@ -333,7 +357,7 @@
                                         <option value="100" <?php echo ($reportSettings->page_size == "100") ? "selected" : "" ?>>100</option>
                                         <option value="500" <?php echo ($reportSettings->page_size == "500") ? "selected" : "" ?>>500</option>
                                     </select>
-                                </div>
+                                </div> -->
                                 <!-- 
                                 <div class="col-md-4 mb-3">
                                     <div class="col-md-12">
@@ -351,13 +375,13 @@
                                 </div>
                                 -->
 
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-3 mb-3">
                                     <label for="from-date">From Date</label>
                                     <div class="">
                                         <input type="date" id="from-date" name="date_from" class="form-control nsm-field date" value="<?= $reportSettings && $reportSettings->report_date_from_text != '' ? date("Y-m-d",strtotime($reportSettings->report_date_from_text)) : date("Y-m-d"); ?>" data-type="filter-date">
                                     </div>
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-3 mb-3">
                                     <label for="to-date">To Date</label>
                                     <div class="">
                                         <input type="date" id="to-date" name="date_to" class="form-control nsm-field date" value="<?= $reportSettings && $reportSettings->report_date_to_text != '' ? date("Y-m-d",strtotime($reportSettings->report_date_to_text)) : date("Y-m-d"); ?>" data-type="filter-date">

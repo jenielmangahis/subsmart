@@ -55,7 +55,7 @@
                                                 <th>VENDOR</th>
                                                 <th>DATE</th>
                                                 <th>NUM</th>
-                                                <th>AMOUNT</th>
+                                                <th style="text-align:right;">AMOUNT</th>
                                             </tr>
                                         </thead>
                                         <tbody>
