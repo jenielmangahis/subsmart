@@ -70,7 +70,6 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                  
 
                                     <!-- 
                                     <table class="nsm-table grid-mb" id="reports-table">
