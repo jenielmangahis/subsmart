@@ -1,4 +1,3 @@
-
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('accounting/reports/reports_assets/report_css'); ?>
 <div class="container-fluid">
@@ -40,17 +39,17 @@
                                     <div class="reportTitleInfo">
                                         <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?></h3>
                                         <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
-                                        <h5><small id="reportDate"><span id="date_from_text"></span> &mdash; <span id="date_to_text"></span></small></h5>
+                                        <h5><small id="reportDate">As of <?php echo date('F d, Y'); ?></small></h5>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <div class="col-lg-12">                                   
+                                <div class="col-lg-12">
                                     <?php 
                                         $tableID = "taxablesalessummary_table"; 
                                         $reportCategory = "taxable_sales_summary"; 
                                     ?>
-                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
+                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 accordion">
                                         <thead>
                                             <tr>
                                                 <th class="PLACE_LEFT">TYPE</th>
@@ -59,7 +58,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="2">
+                                                <td colspan="10">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
@@ -105,7 +104,6 @@
         <div class="col-lg-1"></div>
     </div>
 </div>
-
 <!-- START: MODALS -->
 <!-- Modal for Report Settings -->
 <div class="modal fade" id="reportSettings" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
@@ -135,15 +133,15 @@
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Company Name</label>
                                     <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" <?php echo (isset($reportSettings->show_company_name) && $reportSettings->show_company_name == 1) ? "checked" : "" ?>></div>
-                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo (!empty($reportSettings->company_name)) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?>" required>
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" <?php echo (!isset($reportSettings->show_company_name) || $reportSettings->show_company_name == 1) ? "checked" : ""; ?>></div>
+                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo (trim(str_replace('&nbsp;', '', $reportSettings->company_name)) !== '') ? $reportSettings->company_name : strtoupper($companyInfo->business_name); ?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Report Name</label>
                                     <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" <?php echo (isset($reportSettings->show_title) && $reportSettings->show_title == 1) ? "checked" : "" ?>></div>
-                                        <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo (!empty($reportSettings->title)) ? $reportSettings->title : $page->title ?>" required>
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" <?php echo (!isset($reportSettings->show_title) || $reportSettings->show_title == 1) ? "checked" : ""; ?>></div>
+                                        <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo (trim(str_replace('&nbsp;', '', $reportSettings->title)) !== '') ? $reportSettings->title : $page->title; ?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-3 mb-3">
@@ -192,9 +190,9 @@
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Date Range <small class="text-muted">(From &mdash; To)</small></label>
                                     <div class="input-group">
-                                        <input name="date_from" class="form-control mt-0" type="date" value="<?= $reportSettings ? date("Y-m-d", strtotime($reportSettings->report_date_from_text)) : date('Y').'-01-01'; ?>">
-                                        <input name="date_to" class="form-control mt-0" type="date" value="<?= $reportSettings ? date("Y-m-d", strtotime($reportSettings->report_date_to_text)) : date('Y-m-t'); ?>">
-                                    </div>  
+                                        <input name="date_from" class="form-control mt-0" type="date" value="<?php echo (isset($reportSettings->report_date_from_text)) ? $reportSettings->report_date_from_text : date('Y').'-01-01'; ?>">
+                                        <input name="date_to" class="form-control mt-0" type="date" value="<?php echo (isset($reportSettings->report_date_to_text)) ? $reportSettings->report_date_to_text : date('Y-m-d'); ?>">
+                                    </div>   
                                 </div>
                             </div>
                         </div>
@@ -207,6 +205,7 @@
                             </div>
                             <div class="float-end">
                                 <button type="submit" class="nsm-button primary settingsApplyButton">Apply</button>
+                                <!-- <button type="button" class="nsm-button primary printPDF">Print</button> -->
                             </div>
                         </div>
                     </div>
@@ -216,6 +215,7 @@
     </div>
 </div>
 <!-- Modal for Report Settings -->
+
 <!-- START: PRINT/SAVE MODAL -->
 <div class="modal fade" id="printPreviewModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
     <div class="modal-dialog modal-xl">
@@ -237,8 +237,8 @@
                             </select>
                         </div>
                         <!-- <div class="form-check">
-                            <input id="pageHeaderRepeat" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                            <label class="form-check-label" for="flexCheckDefault">Repeat Page Header</label>
+                            <input id="pageHeaderRepeat" name="pageHeaderRepeat" class="form-check-input" type="checkbox">
+                            <label class="form-check-label" for="pageHeaderRepeat">Repeat Page Header</label>
                         </div> -->
                     </div>
                     <div class="col-sm-9">
