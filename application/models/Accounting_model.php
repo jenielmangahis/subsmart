@@ -689,7 +689,7 @@ class Accounting_model extends MY_Model
             $this->db->where("DATE_FORMAT(accounting_bill.created_at,'%Y-%m-%d') >= '$reportConfig[date_from]'");
             $this->db->where("DATE_FORMAT(accounting_bill.created_at,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('accounting_bill.company_id', $companyID);
-            $this->db->where('accounting_vendors.display_name !=', "");
+            //$this->db->where('accounting_vendors.display_name !=', "");
             $this->db->where('accounting_vendors.f_name !=', "");
             $this->db->where('accounting_vendors.l_name !=', "");
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
