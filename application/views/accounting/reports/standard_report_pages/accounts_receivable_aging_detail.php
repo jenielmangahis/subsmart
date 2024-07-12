@@ -59,8 +59,8 @@
                                 <div class="table-wrapper">
                                     <?php
                                     $tableID = 'accounts_receivable_aging_detail_table';
-                                        $reportCategory = 'accounts_receivable_aging_detail_list';
-                                        ?>
+$reportCategory = 'accounts_receivable_aging_detail_list';
+?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 accordion">
                                         <thead>
                                             <tr>
@@ -240,26 +240,26 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="id"
-                                                    <?php echo ($reportSettings->sort_by == 'id') ? 'selected' : ''; ?>>
+                                                <option value="date"
+                                                    <?php echo ($reportSettings->sort_by == 'date') ? 'selected' : ''; ?>>
                                                     ID</option>
-                                                <option value="vendor"
-                                                    <?php echo ($reportSettings->sort_by == 'vendor') ? 'selected' : ''; ?>>
+                                                <option value="transaction_type"
+                                                    <?php echo ($reportSettings->sort_by == 'transaction_type') ? 'selected' : ''; ?>>
                                                     Vendor</option>
-                                                <option value="phone_numbers"
-                                                    <?php echo ($reportSettings->sort_by == 'phone_numbers') ? 'selected' : ''; ?>>
+                                                <option value="num"
+                                                    <?php echo ($reportSettings->sort_by == 'num') ? 'selected' : ''; ?>>
                                                     Phone Numbers</option>
-                                                <option value="email"
-                                                    <?php echo ($reportSettings->sort_by == 'email') ? 'selected' : ''; ?>>
+                                                <option value="customer"
+                                                    <?php echo ($reportSettings->sort_by == 'customer') ? 'selected' : ''; ?>>
                                                     Email</option>
-                                                <option value="fullname"
-                                                    <?php echo ($reportSettings->sort_by == 'fullname') ? 'selected' : ''; ?>>
+                                                <option value="due_date"
+                                                    <?php echo ($reportSettings->sort_by == 'due_date') ? 'selected' : ''; ?>>
                                                     Full Name</option>
-                                                <option value="address"
-                                                    <?php echo ($reportSettings->sort_by == 'address') ? 'selected' : ''; ?>>
+                                                <option value="amount"
+                                                    <?php echo ($reportSettings->sort_by == 'amount') ? 'selected' : ''; ?>>
                                                     Address</option>
-                                                <option value="account_number"
-                                                    <?php echo ($reportSettings->sort_by == 'account_number') ? 'selected' : ''; ?>>
+                                                <option value="open_balance"
+                                                    <?php echo ($reportSettings->sort_by == 'open_balance') ? 'selected' : ''; ?>>
                                                     Account #</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
