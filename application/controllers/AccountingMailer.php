@@ -86,6 +86,8 @@ class AccountingMailer extends MY_Controller{
             'accounts_receivable_aging_detail_list',
             'profit_and_loss_percentage_income',
             'transaction_list_by_tag_group',
+            "deposit_detail",
+            "check_detail",
         );
 
         // Conditional Statements on the array

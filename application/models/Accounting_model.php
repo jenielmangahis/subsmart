@@ -835,5 +835,41 @@ class Accounting_model extends MY_Model
         if ($reportType == "accounts_payable_aging_summary") {
             return array();
         }
+
+        // Get Deposit Details data in Database
+        // Info: The Deposit Detail Report is a report that shows all the deposits made into your bank accounts over a specified period (this includes paid invoices). This report helps you track and review the details of each deposit transaction, providing a clear overview of your cash inflows.
+        if ($reportType == "deposit_detail") {
+            $this->db->select('invoices.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, DATE_FORMAT(invoices.date_created,"%Y-%m-%d") AS date, "Payment" AS transaction_type, invoices.id AS num, "" AS vendor, invoices.message_on_invoice AS memo_description, "" AS clr, invoices.grand_total AS amount');
+            $this->db->from('invoices');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->join('accounting_receive_payment_invoices', 'accounting_receive_payment_invoices.invoice_id = invoices.id', 'left');
+            $this->db->where('invoices.status =', "Paid");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->group_by('invoices.customer_id');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        //Get Check Details data in Database
+        // Info: The Check Detail Report provides detailed information about all the checks written by your business over a specified period.
+        if ($reportType == "check_detail") {
+            $this->db->select('accounting_check.payee_id AS payee_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer_name, accounting_vendors.display_name AS vendor_name, accounting_check.payment_date AS date, "Check" AS transaction_type, accounting_check.check_no AS num, accounting_check.memo AS memo_description, "" AS clr, accounting_check.total_amount AS amount');
+            $this->db->from('accounting_check');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = accounting_check.payee_id', 'left');
+            $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_check.payee_id', 'left');
+            $this->db->where('accounting_check.check_no !=', "");
+            $this->db->where("DATE_FORMAT(accounting_check.payment_date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_check.payment_date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_check.company_id', $companyID);
+            $this->db->group_by('accounting_check.payee_id');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
     }
 }
