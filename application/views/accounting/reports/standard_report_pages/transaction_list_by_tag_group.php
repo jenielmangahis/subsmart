@@ -49,7 +49,7 @@
                                         $tableID = "transactionlistbytaggroup_table"; 
                                         $reportCategory = "transaction_list_by_tag_group"; 
                                     ?>
-                                    <!-- 
+                                    
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
@@ -61,7 +61,7 @@
                                                 <th>MEMO/DESCRIPTION</th>
                                                 <th>ACCOUNT</th>
                                                 <th>SPLIT</th>
-                                                <th class="text-right">AMOUNT</th>                                                
+                                                <th class="text-right" style="text-align: right;">AMOUNT</th>                                                
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -74,8 +74,8 @@
                                             </tr>
                                         </tbody>
                                     </table>
-                                    -->
-                                    
+                                  
+                                    <!--
                                     <table class="table" style="width: 100%;" id="report-table">
                                         <thead>
                                             <tr>
@@ -123,7 +123,8 @@
                                                 <td class="text-right"><b>$22,544.77</b></td>
                                             </tr>
                                         </tbody>
-                                    </table>               
+                                    </table>
+                                    -->               
                                                         
                                 </div>
                             </div>
@@ -230,7 +231,7 @@
                                         <option value="100" <?php echo ($reportSettings->page_size == "100") ? "selected" : "" ?>>100</option>
                                         <option value="500" <?php echo ($reportSettings->page_size == "500") ? "selected" : "" ?>>500</option>
                                     </select>
-                                </div> -->
+                                </div> -->                             
                                 <!-- <div class="col-md-4 mb-3">
                                     <div class="col-md-12">
                                         <label class="mb-1 fw-xnormal">Sort By</label>
