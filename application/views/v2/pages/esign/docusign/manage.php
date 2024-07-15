@@ -141,7 +141,7 @@ table.dataTable.no-footer {
                             <button><i class='bx bx-x'></i></button>
                            An effective contract management system should include the ability to support electronic signatures.
                         </div>
-                        <div class="esignActionRequired alert alert-primary">
+                        <div class="esignActionRequired alert alert-primary" id="esign-notification-counter" style="display:none;">
                             <div class="esignActionRequired__inner">
                                 <i class='bx bxs-info-circle' ></i> 
                                 <a class="esignActionRequired__body" href="<?php echo base_url('eSign_v2/manage?view=action_required') ?>">
@@ -376,20 +376,23 @@ window.addEventListener('DOMContentLoaded', async (event) => {
   const urlParams = new URLSearchParams(window.location.search);
   const view = urlParams.get("view");
 
-  if (view === "action_required") {
-    return;
-  }
-
+  // if (view === "action_required") {
+  //   return;
+  // }
   const prefixURL = "";
   const response = await fetch(`${prefixURL}/DocuSign/apiGetActionRequired`);
   const { data } = await response.json();
 
-  if (data.length === 0) return;
-
-  const $alert = document.querySelector(".esignActionRequired");
-  const $count = $alert.querySelector(".esignActionRequired__count");
-  $count.textContent = data.length;
-  $alert.classList.add("esignActionRequired--show");
+  if( data.length === 0 ){
+    $('#esign-notification-counter').hide();
+    const $alert = document.querySelector(".esignActionRequired");
+  }else{
+    $('#esign-notification-counter').show();
+    const $alert = document.querySelector(".esignActionRequired");
+    const $count = $alert.querySelector(".esignActionRequired__count");
+    $count.textContent = data.length;
+    $alert.classList.add("esignActionRequired--show");
+  }
 });
 </script>
 <style>

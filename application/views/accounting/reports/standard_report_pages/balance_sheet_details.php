@@ -494,10 +494,16 @@
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
                                                 <option value="date" <?= $reportSettings && $reportSettings->sort_by == 'date' ? 'selected="selected"' : ''; ?>>Date</option>
-                                                <option value="user" <?= $reportSettings && $reportSettings->sort_by == 'user' ? 'selected="selected"' : ''; ?>>User</option>
-                                                <option value="event" <?= $reportSettings && $reportSettings->sort_by == 'event' ? 'selected="selected"' : ''; ?>>Event</option>
+                                                <option value="transaction-type" <?= $reportSettings && $reportSettings->sort_by == 'transaction-type' ? 'selected="selected"' : ''; ?>>Transaction Type</option>
+                                                <option value="num" <?= $reportSettings && $reportSettings->sort_by == 'num' ? 'selected="selected"' : ''; ?>>Num</option>
                                                 <option value="name" <?= $reportSettings && $reportSettings->sort_by == 'name' ? 'selected="selected"' : ''; ?>>Name</option>
+                                                <option value="memo-description" <?= $reportSettings && $reportSettings->sort_by == 'memo-description' ? 'selected="selected"' : ''; ?>>Memo/Description</option>
+                                                <option value="split" <?= $reportSettings && $reportSettings->sort_by == 'split' ? 'selected="selected"' : ''; ?>>Split</option>
+                                                <option value="debit" <?= $reportSettings && $reportSettings->sort_by == 'debit' ? 'selected="selected"' : ''; ?>>Debit</option>
+                                                <option value="credit" <?= $reportSettings && $reportSettings->sort_by == 'credit' ? 'selected="selected"' : ''; ?>>Credit</option>
                                                 <option value="amount" <?= $reportSettings && $reportSettings->sort_by == 'amount' ? 'selected="selected"' : ''; ?>>Amount</option>
+                                                <option value="balance" <?= $reportSettings && $reportSettings->sort_by == 'balance' ? 'selected="selected"' : ''; ?>>Balance</option>
+
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select" style="margin-left:2px;">
                                                 <option value="ASC" <?= $reportSettings && $reportSettings->sort_asc_desc == 'ASC' ? 'selected="selected"' : ''; ?>>ASC</option>
