@@ -924,5 +924,23 @@ class Accounting_model extends MY_Model
             $data = $this->db->get();
             return $data->result();
         }
+
+        // Get Sales by Customer Summary data in Database
+        if ($reportType == "recent_edited_time_activities") {
+            $this->db->select('accounting_single_time_activity.*, accounting_single_time_activity.date AS activity_date, CONCAT(users.FName, " ", users.LName)AS employee, CONCAT(acs_profile.first_name  , " ", acs_profile.last_name) AS customer, items.title AS product_service');
+            $this->db->from('accounting_single_time_activity');
+            $this->db->join('users', 'accounting_single_time_activity.name_id = users.id', 'left');
+            $this->db->join('acs_profile', 'accounting_single_time_activity.customer_id = acs_profile.prof_id', 'left');
+            $this->db->join('items', 'accounting_single_time_activity.service_id = items.id', 'left');
+            $this->db->where('accounting_single_time_activity.name_key', 'employee');
+            $this->db->where('acs_profile.last_name !=', '');
+            $this->db->where("accounting_single_time_activity.date >= '$reportConfig[date_from]'");
+            $this->db->where("accounting_single_time_activity.date <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_single_time_activity.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
     }
 }
