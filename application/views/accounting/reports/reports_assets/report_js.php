@@ -11,7 +11,7 @@
     
     var setDataTable;
     var currentTable = '<?php echo $tableID; ?>';
-    var reportTables = ['vendorcontactlist_table',  'salesbycustomersummary_table',  'customerbalancesummary_table', 'customercontactlist_table', 'expensesbyvendorsummary_table', 'incomebycustomerysummary_table', 'invoicelistbydate_table', 'openinvoices_table', 'paymentmethodlist_table', 'physicalinventoryworksheet_table', 'productservicelist_table', 'salesbyproductservicesummary_table', 'taxablesalessummary_table', 'vendorbalancesummary_table', 'statementlist_table', 'employeedetails_table', 'accountsreceivableagingsummarylist_table', 'accountlist_table', 'incomebycustomerysummary_table', ];
+    var reportTables = ['vendorcontactlist_table',  'salesbycustomersummary_table',  'customerbalancesummary_table', 'customercontactlist_table', 'expensesbyvendorsummary_table', 'incomebycustomerysummary_table', 'invoicelistbydate_table', 'openinvoices_table', 'paymentmethodlist_table', 'physicalinventoryworksheet_table', 'productservicelist_table', 'salesbyproductservicesummary_table', 'taxablesalessummary_table', 'vendorbalancesummary_table', 'statementlist_table', 'employeedetails_table', 'accountsreceivableagingsummarylist_table', 'accountlist_table', 'incomebycustomerysummary_table', 'contractorbalancesummary_table', ];
     var base_url = window.location.origin;
     var REPORT_CATEGORY = "<?php echo $reportCategory; ?>";
     var REPORT_ID = "<?php echo $reportTypeId; ?>";

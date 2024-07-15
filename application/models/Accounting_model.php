@@ -165,8 +165,10 @@ class Accounting_model extends MY_Model
             $this->db->join('appointments AS a', 'a.id = cal.obj_id', 'left');
             $this->db->join('jobs AS j', 'j.id = cal.obj_id', 'left');
             $this->db->where('u.company_id', $companyID);
+            $this->db->where("DATE_FORMAT(cal.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(cal.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
-            // $this->db->limit($reportConfig['page_size']);
+            $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             $auditLogsData = $data->result();
 
@@ -689,7 +691,7 @@ class Accounting_model extends MY_Model
             $this->db->where("DATE_FORMAT(accounting_bill.created_at,'%Y-%m-%d') >= '$reportConfig[date_from]'");
             $this->db->where("DATE_FORMAT(accounting_bill.created_at,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('accounting_bill.company_id', $companyID);
-            $this->db->where('accounting_vendors.display_name !=', "");
+            //$this->db->where('accounting_vendors.display_name !=', "");
             $this->db->where('accounting_vendors.f_name !=', "");
             $this->db->where('accounting_vendors.l_name !=', "");
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
@@ -866,6 +868,57 @@ class Accounting_model extends MY_Model
             $this->db->where("DATE_FORMAT(accounting_check.payment_date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('accounting_check.company_id', $companyID);
             $this->db->group_by('accounting_check.payee_id');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Vendor unpaid bills in Database
+        if ($reportType == "unpaid_bills_summary") {
+            $this->db->select('accounting_bill.*, CONCAT(accounting_vendors.f_name, " ", accounting_vendors.l_name) AS vendor');
+            $this->db->from('accounting_bill');
+            $this->db->join('accounting_vendors', 'accounting_bill.vendor_id = accounting_vendors.id', 'left');
+            $this->db->where('accounting_vendors.f_name !=', '');
+            $this->db->where('accounting_vendors.l_name !=', '');
+            $this->db->where('accounting_bill.status', 1);
+            $this->db->where("DATE_FORMAT(accounting_bill.bill_date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_bill.bill_date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_vendors.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+        }
+        
+        // Get 1099 Contractor Balance Detaill data in Database
+        // Info: The 1099 Contractor Balance Detail Report is a report that provides detailed information about payments made to independent contractors or vendors.
+        // Data is temporarily fetch on vendors only bcoz the contractor data is not yet implemented.
+        if ($reportType == "contractor_balance_detail") {
+            $this->db->select('accounting_vendors.id AS vendor_id, accounting_vendors.display_name AS vendor, accounting_bill.bill_date AS date, "Invoice" AS transaction_type, accounting_bill.id AS num, accounting_bill.due_date AS due_date, accounting_bill.total_amount AS amount, accounting_bill.remaining_balance AS open_balance,accounting_bill.remaining_balance AS balance');
+            $this->db->from('accounting_vendors');
+            $this->db->join('accounting_bill', 'accounting_bill.vendor_id = accounting_vendors.id', 'left');
+            $this->db->where('accounting_vendors.display_name !=', '');
+            $this->db->where('accounting_bill.remaining_balance !=', '');
+            $this->db->where("DATE_FORMAT(accounting_bill.bill_date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_bill.bill_date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_vendors.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get 1099 Contractor Balance Detaill data in Database
+        // Info: The 1099 Contractor Balance Summary Report is a report that provides summarized information about payments made to independent contractors or vendors.
+        // Data is temporarily fetch on vendors only bcoz the contractor data is not yet implemented.
+        if ($reportType == "contractor_balance_summary") {
+            $this->db->select('accounting_vendors.id AS vendor_id, accounting_vendors.display_name AS vendor, accounting_bill.remaining_balance AS balance, accounting_bill.created_at AS date');
+            $this->db->from('accounting_vendors');
+            $this->db->join('accounting_bill', 'accounting_bill.vendor_id = accounting_vendors.id', 'left');
+            $this->db->where('accounting_vendors.display_name !=', '');
+            $this->db->where('accounting_bill.remaining_balance !=', '');
+            $this->db->where("DATE_FORMAT(accounting_bill.bill_date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_bill.bill_date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_vendors.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
