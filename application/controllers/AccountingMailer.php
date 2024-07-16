@@ -96,6 +96,7 @@ class AccountingMailer extends MY_Controller{
             "unpaid_bills_summary",
             "contractor_balance_detail",
             "contractor_balance_summary",
+            "time_activities_by_customer_details"
         );
 
         // Conditional Statements on the array
