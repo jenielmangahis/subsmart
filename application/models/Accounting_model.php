@@ -504,6 +504,23 @@ class Accounting_model extends MY_Model
             return $query->result();
         }
 
+        if ($reportType == 'time_activities_by_customer_details') {
+            $this->db->select('CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer_name , accounting_single_time_activity.*',);
+            $this->db->from('accounting_single_time_activity');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = accounting_single_time_activity.customer_id', 'left');
+            $this->db->where('accounting_single_time_activity.status !=', 0);
+            $this->db->where('acs_profile.first_name !=', '');
+            $this->db->where('acs_profile.last_name !=', '');
+            $this->db->where("DATE_FORMAT(accounting_single_time_activity.date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_single_time_activity.date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_single_time_activity.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('acs_profile.prof_id');
+            $data = $this->db->get();
+            return $data->result();
+        }
+
         // Get Payment Method List data in Database
         if ($reportType == "payment_method_list") {
             $this->db->select('accounting_payment_methods.id AS payment_id, accounting_payment_methods.name AS payment_method');
@@ -919,6 +936,21 @@ class Accounting_model extends MY_Model
             $this->db->where("DATE_FORMAT(accounting_bill.bill_date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
             $this->db->where("DATE_FORMAT(accounting_bill.bill_date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('accounting_vendors.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        if ($reportType == "recent_edited_time_activities") {
+            $this->db->select('accounting_single_time_activity.*, accounting_single_time_activity.date AS activity_date, CONCAT(acs_profile.first_name  , " ", acs_profile.last_name) AS customer, items.title AS product_service');
+            $this->db->from('accounting_single_time_activity');            
+            $this->db->join('acs_profile', 'accounting_single_time_activity.customer_id = acs_profile.prof_id', 'left');
+            $this->db->join('items', 'accounting_single_time_activity.service_id = items.id', 'left');
+            $this->db->where('accounting_single_time_activity.name_key !=', '');            
+            $this->db->where("accounting_single_time_activity.date >= '$reportConfig[date_from]'");
+            $this->db->where("accounting_single_time_activity.date <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_single_time_activity.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();

@@ -109,31 +109,1661 @@
                                                                                 <td></td>
                                                                                 <td></td>
                                                                                 <td></td>
-                                                                                <td>1,081,409.39</td>
+                                                                                <td>2,764,285.27</td>
                                                                             </tr>
                                                                             <tr>
-                                                                                <td>06/01/2022</td>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Payment </td>
+                                                                                <td>6194 </td>
+                                                                                <td>Abrams, Christine</td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$79.99</td>
+                                                                                <td></td>
+                                                                                <td>79.99</td>
+                                                                                <td>2,764,365.26</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Brannon Nguyen </td>
+                                                                                <td></td>
+                                                                                <td>Commission </td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,763,865.26</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Kyle Nguyen</td>
+                                                                                <td>Reimburstment</td>
+                                                                                <td></td>
+                                                                                <td>$500.00 </td>
+                                                                                <td>-500.00</td>
+                                                                                <td></td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Tyler Nguyen</td>
+                                                                                <td></td>
+                                                                                <td>Commission</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,762,865.26</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
                                                                                 <td>Expense</td>
                                                                                 <td></td>
-                                                                                <td>QuickBooks Payment</td>
-                                                                                <td></td>
-                                                                                <td>QuickBooks Payment Fees-1</td>
+                                                                                <td>QuickBooks Payments </td>
+                                                                                <td>System-recorded fee for QuickBooks Payments. Fee-name: MonthlyServiceFee, fee-type: Card.</td>
+                                                                                <td>QuickBooks Payments Fees-1 </td>
                                                                                 <td></td>
                                                                                 <td>$19.95</td>
                                                                                 <td>-19.95</td>
-                                                                                <td>1,081,389.44</td>
+                                                                                <td>2,762,845.31</td>
                                                                             </tr>
                                                                             <tr>
-                                                                                <td>06/01/2022</td>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Expense</td>
+                                                                                <td></td>
+                                                                                <td>QuickBooks Payments </td>
+                                                                                <td> System-recorded fee for QuickBooks Payments. Fee-name: DiscountRateFee, fee-type: Daily.</td>
+                                                                                <td>QuickBooks Payments Fees-1</td>
+                                                                                <td></td>
+                                                                                <td>$103.80</td>
+                                                                                <td>103.80</td>
+                                                                                <td>2,762,741.51</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>System-recorded deposit for QuickBooks Payments</td>
+                                                                                <td>-Split-</td>
+                                                                                <td>$3,412.49</td>
+                                                                                <td></td>
+                                                                                <td>3,412.49</td>
+                                                                                <td>2,766,154.00</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
                                                                                 <td>Deposit</td>
                                                                                 <td></td>
                                                                                 <td></td>
                                                                                 <td></td>
-                                                                                <td>-Split-</td>
-                                                                                <td>$1,167.62</td>
+                                                                                <td>Sales</td>
+                                                                                <td>$575.98</td>
                                                                                 <td></td>
-                                                                                <td>1,167.62</td>
-                                                                                <td>1,082,557.06</td>
+                                                                                <td>575.98</td>
+                                                                                <td>2,766,729.98</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>ACH Settlement / NMI </td>
+                                                                                <td>$327.86 </td>
+                                                                                <td></td>
+                                                                                <td>327.86</td>
+                                                                                <td>2,767,057.84</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>ACH Settlement / NMI </td>
+                                                                                <td>$283.36</td>
+                                                                                <td></td>
+                                                                                <td>283.36</td>
+                                                                                <td>2,767,341.20</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Payment</td>
+                                                                                <td>1030</td>
+                                                                                <td>Robinson, Perry </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$1,128.72</td>
+                                                                                <td></td>
+                                                                                <td>1,128.72</td>
+                                                                                <td>2,768,469.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Mike Bell Jr</td>
+                                                                                <td></td>
+                                                                                <td>License </td>
+                                                                                <td></td>
+                                                                                <td>$300.00</td>
+                                                                                <td>-300.00 </td>
+                                                                                <td>2,768,169.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Kyle Nguyen</td>
+                                                                                <td></td>
+                                                                                <td>Reimburstment</td>
+                                                                                <td></td>
+                                                                                <td>$300.00</td>
+                                                                                <td>-300.00</td>
+                                                                                <td>2,767,869.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Sandra Nguyen </td>
+                                                                                <td></td>
+                                                                                <td>Rental Reimbursement</td>
+                                                                                <td></td>
+                                                                                <td>$2,000.00 </td>
+                                                                                <td>-2,000.00</td>
+                                                                                <td>2,765,869.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Sandra Nguyen</td>
+                                                                                <td></td>
+                                                                                <td>Reimburstment</td>
+                                                                                <td></td>
+                                                                                <td>$2,000.00</td>
+                                                                                <td>-2,000.00</td>
+                                                                                <td>2,763,869.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Check</td>
+                                                                                <td>5684</td>
+                                                                                <td>IP</td>
+                                                                                <td></td>
+                                                                                <td>Commission</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,763,369.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Josh Pemberton </td>
+                                                                                <td></td>
+                                                                                <td>License</td>
+                                                                                <td></td>
+                                                                                <td>$600.00 </td>
+                                                                                <td>-600.00</td>
+                                                                                <td>2,762,769.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Check</td>
+                                                                                <td>5685</td>
+                                                                                <td>IP</td>
+                                                                                <td></td>
+                                                                                <td>Commission</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00 </td>
+                                                                                <td>2,762,269.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Linda DeBolt</td>
+                                                                                <td></td>
+                                                                                <td>Reimburstment</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,761,769.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>TC Nguyen</td>
+                                                                                <td></td>
+                                                                                <td>Commission</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,761,269.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Linda DeBolt </td>
+                                                                                <td></td>
+                                                                                <td>Reimburstment</td>
+                                                                                <td>$0.00 </td>
+                                                                                <td></td>
+                                                                                <td>0.00</td>
+                                                                                <td>2,760,769.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Check</td>
+                                                                                <td>5686</td>
+                                                                                <td>IP </td>
+                                                                                <td></td>
+                                                                                <td>Commission</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,760,269.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Lauren Williams </td>
+                                                                                <td></td>
+                                                                                <td>Commission</td>
+                                                                                <td>$0.00</td>
+                                                                                <td></td>
+                                                                                <td>0.00</td>
+                                                                                <td>2,760,269.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Payment</td>
+                                                                                <td>19652306220</td>
+                                                                                <td>Jordan, Sonora</td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$49.99</td>
+                                                                                <td></td>
+                                                                                <td>49.99</td>
+                                                                                <td>2,760,319.91</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/01/2024 </td>
+                                                                                <td>Payment</td>
+                                                                                <td>2622</td>
+                                                                                <td>Welcome, Mamie</td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable </td>
+                                                                                <td>$56.91</td>
+                                                                                <td></td>
+                                                                                <td>56.91</td>
+                                                                                <td>2,760,376.82</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/02/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>ACH Settlement / NMI</td>
+                                                                                <td>$125.00</td>
+                                                                                <td></td>
+                                                                                <td>125.00</td>
+                                                                                <td>2,760,501.82</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/02/2024</td>
+                                                                                <td>Expense</td>
+                                                                                <td></td>
+                                                                                <td>QuickBooks Payments</td>
+                                                                                <td> System-recorded fee for QuickBooks Payments. Fee-name: DiscountRateFee, fee-type: Daily. </td>
+                                                                                <td>QuickBooks Payments Fees-1</td>
+                                                                                <td></td>
+                                                                                <td>$8.04</td>
+                                                                                <td>-8.04</td>
+                                                                                <td>2,760,493.78</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/02/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>ACH Settlement / NMI</td>
+                                                                                <td>$1,188.63</td>
+                                                                                <td></td>
+                                                                                <td>1,188.63</td>
+                                                                                <td>2,761,682.41</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/02/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>System-recorded deposit for QuickBooks Payments </td>
+                                                                                <td>-Split-</td>
+                                                                                <td>$239.35</td>
+                                                                                <td></td>
+                                                                                <td>239.35</td>
+                                                                                <td>2,761,921.76</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/02/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>13653</td>
+                                                                                <td> Lucio Orfanello e</td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivabl</td>
+                                                                                <td>$222.49</td>
+                                                                                <td></td>
+                                                                                <td>222.49</td>
+                                                                                <td>2,762,144.25</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/02/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>13653</td>
+                                                                                <td> Scott's Marine </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$206.67</td>
+                                                                                <td></td>
+                                                                                <td>206.67</td>
+                                                                                <td>2,762,350.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/02/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>13653</td>
+                                                                                <td> Orfanello, Lucio </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$161.22</td>
+                                                                                <td></td>
+                                                                                <td>161.22</td>
+                                                                                <td>2,762,512.14</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/02/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>996811</td>
+                                                                                <td> Alboniga, Mario </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$86.99</td>
+                                                                                <td></td>
+                                                                                <td>86.99</td>
+                                                                                <td>2,762,599.13</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/02/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>6728</td>
+                                                                                <td> Flintroy, Herman </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$53.99</td>
+                                                                                <td></td>
+                                                                                <td>53.99</td>
+                                                                                <td>2,762,653.12</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/02/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>995229</td>
+                                                                                <td> Citizens Moving Forward </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$49.99</td>
+                                                                                <td></td>
+                                                                                <td>49.99</td>
+                                                                                <td>2,762,703.11</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/02/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>52113004</td>
+                                                                                <td> Arnold, Sally </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$45.34</td>
+                                                                                <td></td>
+                                                                                <td>45.34</td>
+                                                                                <td>2,762,748.45</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/03/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$1,013.58</td>
+                                                                                <td></td>
+                                                                                <td>1,013.58</td>
+                                                                                <td>2,763,762.03</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/03/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>ACH Settlement / NMI</td>
+                                                                                <td>$2,803.89</td>
+                                                                                <td></td>
+                                                                                <td>2,803.89</td>
+                                                                                <td>2,766,565.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/03/2024</td>
+                                                                                <td>Expense</td>
+                                                                                <td></td>
+                                                                                <td>QuickBooks Payments</td>
+                                                                                <td> System-recorded fee for QuickBooks Payments. Fee-name: DiscountRateFee, fee-type: Daily. </td>
+                                                                                <td>QuickBooks Payments Fees-1</td>
+                                                                                <td></td>
+                                                                                <td>$8.63</td>
+                                                                                <td>-8.63</td>
+                                                                                <td>2,766,557.29</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/03/2024</td>
+                                                                                <td>Expense</td>
+                                                                                <td></td>
+                                                                                <td>CASH</td>
+                                                                                <td></td>
+                                                                                <td> Reimbursements/Bkcd Charge:ACH Settlement</td>
+                                                                                <td></td>
+                                                                                <td>$125.00</td>
+                                                                                <td>-125.00</td>
+                                                                                <td>2,766,432.29</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/03/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>System-recorded deposit for QuickBooks Payments </td>
+                                                                                <td>-Split-</td>
+                                                                                <td>$249.97</td>
+                                                                                <td></td>
+                                                                                <td>249.97</td>
+                                                                                <td>2,766,682.26</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/03/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$909.76</td>
+                                                                                <td></td>
+                                                                                <td>909.76</td>
+                                                                                <td>2,767,592.02</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/03/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td></td>
+                                                                                <td>Rivers, Claudia</td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$49.99</td>
+                                                                                <td></td>
+                                                                                <td>49.99</td>
+                                                                                <td>2,767,642.01</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/03/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>997550</td>
+                                                                                <td>Beavers, Sandra</td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$49.91</td>
+                                                                                <td></td>
+                                                                                <td>49.91</td>
+                                                                                <td>2,767,691.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/03/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>215623938</td>
+                                                                                <td>Simmons, Ronald</td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$59.91</td>
+                                                                                <td></td>
+                                                                                <td>59.91</td>
+                                                                                <td>2,767,751.83</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/04/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>System-recorded deposit for QuickBooks Payments </td>
+                                                                                <td>-Split-</td>
+                                                                                <td>$671.74</td>
+                                                                                <td></td>
+                                                                                <td>671.74</td>
+                                                                                <td>2,768,423.57</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/04/2024</td>
+                                                                                <td>Expense</td>
+                                                                                <td></td>
+                                                                                <td>QuickBooks Payments</td>
+                                                                                <td> System-recorded fee for QuickBooks Payments. Fee-name: DiscountRateFee, fee-type: Daily. </td>
+                                                                                <td>QuickBooks Payments Fees-1</td>
+                                                                                <td></td>
+                                                                                <td>$21.66</td>
+                                                                                <td>-21.66</td>
+                                                                                <td>2,768,401.91</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/05/2024</td>
+                                                                                <td>Expense</td>
+                                                                                <td></td>
+                                                                                <td>QuickBooks Payments</td>
+                                                                                <td> System-recorded fee for QuickBooks Payments. Fee-name: DiscountRateFee, fee-type: Daily. </td>
+                                                                                <td>QuickBooks Payments Fees-1</td>
+                                                                                <td></td>
+                                                                                <td>$25.47</td>
+                                                                                <td>-25.47</td>
+                                                                                <td>2,768,376.44</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/05/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>ACH Settlement / NMI</td>
+                                                                                <td>$2,433.35</td>
+                                                                                <td></td>
+                                                                                <td>2,433.35</td>
+                                                                                <td>2,770,809.79</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/05/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>System-recorded deposit for QuickBooks Payments </td>
+                                                                                <td>-Split-</td>
+                                                                                <td>$1,001.94</td>
+                                                                                <td></td>
+                                                                                <td>1,001.94</td>
+                                                                                <td>2,771,811.73</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/05/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$324.33</td>
+                                                                                <td></td>
+                                                                                <td>324.33</td>
+                                                                                <td>2,772,136.06</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/05/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$136.38</td>
+                                                                                <td></td>
+                                                                                <td>136.38</td>
+                                                                                <td>2,772,272.44</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/05/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td></td>
+                                                                                <td>Hammond, Emory </td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$53.49</td>
+                                                                                <td></td>
+                                                                                <td>53.49</td>
+                                                                                <td>2,772,325.93</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/05/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td></td>
+                                                                                <td>Goff, Dorothy</td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$49.99</td>
+                                                                                <td></td>
+                                                                                <td>49.99</td>
+                                                                                <td>2,772,375.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/05/2024</td>
+                                                                                <td>Expense</td>
+                                                                                <td></td>
+                                                                                <td>Regions</td>
+                                                                                <td></td>
+                                                                                <td> Reimbursements/Bkcd Charge:ACH Settlement</td>
+                                                                                <td></td>
+                                                                                <td>$3.00</td>
+                                                                                <td>-3.00</td>
+                                                                                <td>2,772,372.92</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/06/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>14261</td>
+                                                                                <td>90 Works (Panama City)</td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$53.99</td>
+                                                                                <td></td>
+                                                                                <td>53.99</td>
+                                                                                <td>2,772,426.91</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/06/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>14260</td>
+                                                                                <td> 90 Works (Pensacola)</td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$62.99</td>
+                                                                                <td></td>
+                                                                                <td>62.99</td>
+                                                                                <td>2,772,489.90</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/06/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>1047</td>
+                                                                                <td>Butler, Earlean</td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$102.11</td>
+                                                                                <td></td>
+                                                                                <td>102.11</td>
+                                                                                <td>2,772,592.01</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/06/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>4769</td>
+                                                                                <td>Fleming, Jane & Ed</td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$194.97</td>
+                                                                                <td></td>
+                                                                                <td>194.97</td>
+                                                                                <td>2,772,786.98</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/06/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>11714</td>
+                                                                                <td>First Assembly of God</td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$199.97</td>
+                                                                                <td></td>
+                                                                                <td>199.97</td>
+                                                                                <td>2,772,986.95</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/06/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>121128</td>
+                                                                                <td> Watson, Robbie:Watson, Robbie & Kim</td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$379.59</td>
+                                                                                <td></td>
+                                                                                <td>379.59</td>
+                                                                                <td>2,773,366.54</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/06/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>3333569</td>
+                                                                                <td>Fitcher, Robert </td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$49.99</td>
+                                                                                <td></td>
+                                                                                <td>49.99</td>
+                                                                                <td>2,773,416.53</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/06/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>6491</td>
+                                                                                <td>Ebel, Dennis</td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$53.92</td>
+                                                                                <td></td>
+                                                                                <td>53.92</td>
+                                                                                <td>2,773,470.45</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/06/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>1067</td>
+                                                                                <td>Lewis, Richard </td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$44.99</td>
+                                                                                <td></td>
+                                                                                <td>44.99</td>
+                                                                                <td>2,773,515.44</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/06/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>1283</td>
+                                                                                <td>Petroutson, Cindy</td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$49.91</td>
+                                                                                <td></td>
+                                                                                <td>49.91</td>
+                                                                                <td>2,773,565.35</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/06/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>7938</td>
+                                                                                <td> Sims, Joyce</td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$49.91</td>
+                                                                                <td></td>
+                                                                                <td>49.91</td>
+                                                                                <td>2,773,615.26</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/06/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>12108</td>
+                                                                                <td> Salter, Carl & Katie</td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$39.91</td>
+                                                                                <td></td>
+                                                                                <td>39.91</td>
+                                                                                <td>2,773,655.17</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/07/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>System-recorded deposit for QuickBooks Payments</td>
+                                                                                <td> -Split-</td>
+                                                                                <td>$116.98</td>
+                                                                                <td></td>
+                                                                                <td>116.98</td>
+                                                                                <td>2,773,772.15</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/07/2024</td>
+                                                                                <td>Expense</td>
+                                                                                <td></td>
+                                                                                <td>QuickBooks Payments</td>
+                                                                                <td> System-recorded fee for QuickBooks Payments. Fee-name: DiscountRateFee, fee-type: Daily.</td>
+                                                                                <td> QuickBooks Payments Fees-1</td>
+                                                                                <td></td>
+                                                                                <td>$2.22</td>
+                                                                                <td>-2.22</td>
+                                                                                <td>2,773,769.93</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td></td>
+                                                                                <td>Preston, Robert</td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$69.54</td>
+                                                                                <td></td>
+                                                                                <td>69.54</td>
+                                                                                <td>2,773,839.47</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td>5687</td>
+                                                                                <td> IP</td>
+                                                                                <td></td>
+                                                                                <td> Commission</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,773,339.47</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td>5688</td>
+                                                                                <td> IP</td>
+                                                                                <td></td>
+                                                                                <td> Commission</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,772,839.47</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td>5689</td>
+                                                                                <td> IP</td>
+                                                                                <td></td>
+                                                                                <td> Commission</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,772,339.47</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>TC Nguyen </td>
+                                                                                <td></td>
+                                                                                <td>Commission</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,771,839.47</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Brannon Nguyen</td>
+                                                                                <td></td>
+                                                                                <td> Commission</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,771,339.47</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Kyle Nguyen</td>
+                                                                                <td></td>
+                                                                                <td> Reimburstment</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,770,839.47</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Tyler Nguyen</td>
+                                                                                <td></td>
+                                                                                <td> Commission</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,770,339.47</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Kyle Nguyen</td>
+                                                                                <td></td>
+                                                                                <td> Reimburstment</td>
+                                                                                <td></td>
+                                                                                <td>$300.00</td>
+                                                                                <td>-300.00</td>
+                                                                                <td>2,770,039.47</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Lauren Williams</td>
+                                                                                <td></td>
+                                                                                <td> Commission</td>
+                                                                                <td>$0.00</td>
+                                                                                <td></td>
+                                                                                <td>0.00</td>
+                                                                                <td>2,770,039.47</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Lauren Williams</td>
+                                                                                <td></td>
+                                                                                <td> Commission</td>
+                                                                                <td></td>
+                                                                                <td>$0.00</td>
+                                                                                <td>0.00</td>
+                                                                                <td>2,770,039.47</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>9055</td>
+                                                                                <td> Parker, Shelby</td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$35.00</td>
+                                                                                <td></td>
+                                                                                <td>35.00</td>
+                                                                                <td>2,770,074.47</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>4847</td>
+                                                                                <td> Steudlein, Wanda</td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$37.41</td>
+                                                                                <td></td>
+                                                                                <td>37.41</td>
+                                                                                <td>2,770,111.88</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>22067937698</td>
+                                                                                <td> Byrd, Costella</td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$48.00</td>
+                                                                                <td></td>
+                                                                                <td>48.00</td>
+                                                                                <td>2,770,159.88</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>7461</td>
+                                                                                <td>Maddox, John </td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$49.97</td>
+                                                                                <td></td>
+                                                                                <td>49.97</td>
+                                                                                <td>2,770,209.85</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>40491 </td>
+                                                                                <td>Planet Fitness (Fairhope) </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$53.99</td>
+                                                                                <td></td>
+                                                                                <td>53.99</td>
+                                                                                <td>2,770,263.84</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>995809</td>
+                                                                                <td>Robinson, Perry </td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$60.00</td>
+                                                                                <td></td>
+                                                                                <td>60.00</td>
+                                                                                <td>2,770,323.84</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>5038 </td>
+                                                                                <td>Christian Service Center </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$149.97</td>
+                                                                                <td></td>
+                                                                                <td>149.97</td>
+                                                                                <td>2,770,473.81</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$54.93</td>
+                                                                                <td></td>
+                                                                                <td>54.93</td>
+                                                                                <td>2,770,528.74</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$99.47</td>
+                                                                                <td></td>
+                                                                                <td>99.47</td>
+                                                                                <td>2,770,628.21</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>ACH Settlement / NMI</td>
+                                                                                <td>$311.80</td>
+                                                                                <td></td>
+                                                                                <td>311.80</td>
+                                                                                <td>2,770,940.01</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$614.05</td>
+                                                                                <td></td>
+                                                                                <td>614.05</td>
+                                                                                <td>2,771,554.06</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>System-recorded deposit for QuickBooks Payments</td>
+                                                                                <td> -Split-</td>
+                                                                                <td>$888.56</td>
+                                                                                <td></td>
+                                                                                <td>888.56</td>
+                                                                                <td>2,772,442.62</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$1,282.14</td>
+                                                                                <td></td>
+                                                                                <td>1,282.14</td>
+                                                                                <td>2,773,724.76</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Expense</td>
+                                                                                <td></td>
+                                                                                <td>Gateway Services </td>
+                                                                                <td></td>
+                                                                                <td>QuickBooks Payments Fees</td>
+                                                                                <td></td>
+                                                                                <td>$70.32</td>
+                                                                                <td>-70.32</td>
+                                                                                <td>2,773,654.44</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Expense</td>
+                                                                                <td></td>
+                                                                                <td>QuickBooks Payments </td>
+                                                                                <td>System-recorded fee for QuickBooks Payments. Fee-name: DiscountRateFee, fee-type: Daily.</td>
+                                                                                <td> QuickBooks Payments Fees-1</td>
+                                                                                <td></td>
+                                                                                <td>$28.06</td>
+                                                                                <td>-28.06</td>
+                                                                                <td>2,773,626.38</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/08/2024</td>
+                                                                                <td>Expense</td>
+                                                                                <td></td>
+                                                                                <td>Regions </td>
+                                                                                <td></td>
+                                                                                <td>Reimbursements/Bkcd Charge:ACH Settlement</td>
+                                                                                <td>$3.00</td>
+                                                                                <td></td>
+                                                                                <td>-3.00</td>
+                                                                                <td>2,773,623.38</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/09/2024</td>
+                                                                                <td>Expense</td>
+                                                                                <td></td>
+                                                                                <td>QuickBooks Payments </td>
+                                                                                <td>System-recorded fee for QuickBooks Payments. Fee-name: DiscountRateFee, fee-type: Daily. </td>
+                                                                                <td>QuickBooks Payments Fees-1</td>
+                                                                                <td></td>
+                                                                                <td>$6.55</td>
+                                                                                <td>-6.55</td>
+                                                                                <td>2,773,616.83</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/09/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>ACH Settlement / NMI</td>
+                                                                                <td>$90,000.00</td>
+                                                                                <td></td>
+                                                                                <td>90,000.00</td>
+                                                                                <td>2,863,616.83</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/09/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td>George, Kay </td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$632.50</td>
+                                                                                <td></td>
+                                                                                <td>632.50</td>
+                                                                                <td>2,864,249.33</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/09/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>ACH Settlement / NMI</td>
+                                                                                <td>$484.25</td>
+                                                                                <td></td>
+                                                                                <td>484.25</td>
+                                                                                <td>2,864,733.58</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/09/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$259.28</td>
+                                                                                <td></td>
+                                                                                <td>259.28</td>
+                                                                                <td>2,864,992.86</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/09/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td>Grillot, Edwin</td>
+                                                                                <td> System-recorded deposit for QuickBooks Payments </td>
+                                                                                <td>Undeposited Funds</td>
+                                                                                <td>$199.96</td>
+                                                                                <td></td>
+                                                                                <td>199.96</td>
+                                                                                <td>2,865,192.82</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/09/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$74.37</td>
+                                                                                <td></td>
+                                                                                <td>74.37</td>
+                                                                                <td>2,865,267.19</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/10/2024</td>
+                                                                                <td>Expense</td>
+                                                                                <td></td>
+                                                                                <td>QuickBooks Payments</td>
+                                                                                <td> System-recorded fee for QuickBooks Payments. Fee-name: DiscountRateFee, fee-type: Daily.</td>
+                                                                                <td> QuickBooks Payments Fees-1</td>
+                                                                                <td></td>
+                                                                                <td>$44.61</td>
+                                                                                <td>-44.61</td>
+                                                                                <td>2,865,222.58</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/10/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$30.85</td>
+                                                                                <td></td>
+                                                                                <td>30.85</td>
+                                                                                <td>2,865,253.43</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/10/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$47.42</td>
+                                                                                <td></td>
+                                                                                <td>47.42</td>
+                                                                                <td>2,865,300.85</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/10/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$167.97</td>
+                                                                                <td></td>
+                                                                                <td>167.97</td>
+                                                                                <td>2,865,468.82</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/10/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>System-recorded deposit for QuickBooks Payments </td>
+                                                                                <td>-Split-</td>
+                                                                                <td>$1,494.32</td>
+                                                                                <td></td>
+                                                                                <td>1,494.32</td>
+                                                                                <td>2,866,963.14</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/10/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$2,872.76</td>
+                                                                                <td></td>
+                                                                                <td>2,872.76</td>
+                                                                                <td>2,869,835.90</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/10/2024</td>
+                                                                                <td>Expense</td>
+                                                                                <td></td>
+                                                                                <td>CASH </td>
+                                                                                <td></td>
+                                                                                <td>Reimbursements/Bkcd Charge:ACH Settlement</td>
+                                                                                <td></td>
+                                                                                <td>$51.99</td>
+                                                                                <td>-51.99</td>
+                                                                                <td>2,869,783.91</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/11/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$217.86</td>
+                                                                                <td></td>
+                                                                                <td>217.86</td>
+                                                                                <td>2,870,001.77</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/11/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$314.01</td>
+                                                                                <td></td>
+                                                                                <td>314.01</td>
+                                                                                <td>2,870,315.78</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/11/2024</td>
+                                                                                <td>Expense</td>
+                                                                                <td></td>
+                                                                                <td>CASH </td>
+                                                                                <td></td>
+                                                                                <td>Reimbursements/Bkcd Charge:ACH Settlement</td>
+                                                                                <td></td>
+                                                                                <td>$65.34</td>
+                                                                                <td>-65.34</td>
+                                                                                <td>2,870,250.44</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/11/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>6604</td>
+                                                                                <td> Sims, Annette </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$46.97</td>
+                                                                                <td></td>
+                                                                                <td>46.97</td>
+                                                                                <td>2,870,297.41</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/11/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>14477 </td>
+                                                                                <td>Johnson, Debra </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$49.91</td>
+                                                                                <td></td>
+                                                                                <td>49.91</td>
+                                                                                <td>2,870,347.32</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/11/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>422</td>
+                                                                                <td>Robert W Johnson </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$53.99</td>
+                                                                                <td></td>
+                                                                                <td>53.99</td>
+                                                                                <td>2,870,401.31</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/11/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>10712 </td>
+                                                                                <td>Riley, Bernadette & John </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$59.41</td>
+                                                                                <td></td>
+                                                                                <td>59.41</td>
+                                                                                <td>2,870,460.72</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/11/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>2325</td>
+                                                                                <td>Hall, Linconyer</td>
+                                                                                <td></td>
+                                                                                <td> Accounts Receivable</td>
+                                                                                <td>$103.73</td>
+                                                                                <td></td>
+                                                                                <td>103.73</td>
+                                                                                <td>2,870,564.45</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/11/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$82.55</td>
+                                                                                <td></td>
+                                                                                <td>82.55</td>
+                                                                                <td>2,870,647.00</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/12/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>System-recorded deposit for QuickBooks Payments </td>
+                                                                                <td>-Split-</td>
+                                                                                <td>$157.94</td>
+                                                                                <td></td>
+                                                                                <td>157.94</td>
+                                                                                <td>2,870,804.94</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/12/2024</td>
+                                                                                <td>Expense</td>
+                                                                                <td></td>
+                                                                                <td>Gateway Services </td>
+                                                                                <td></td>
+                                                                                <td>QuickBooks Payments Fees</td>
+                                                                                <td></td>
+                                                                                <td>$50.60</td>
+                                                                                <td>-50.60</td>
+                                                                                <td>2,870,754.34</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/12/2024</td>
+                                                                                <td>Expense</td>
+                                                                                <td></td>
+                                                                                <td>QuickBooks Payments </td>
+                                                                                <td>System-recorded fee for QuickBooks Payments. Fee-name: DiscountRateFee, fee-type: Daily.</td>
+                                                                                <td> QuickBooks Payments Fees-1</td>
+                                                                                <td></td>
+                                                                                <td>$5.72</td>
+                                                                                <td>-5.72</td>
+                                                                                <td>2,870,748.62</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/12/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>4447 </td>
+                                                                                <td>Smith, Tony </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$21.99</td>
+                                                                                <td></td>
+                                                                                <td>21.99</td>
+                                                                                <td>2,870,770.61</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/12/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>9084 </td>
+                                                                                <td>Northrup, Doris </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$44.91</td>
+                                                                                <td></td>
+                                                                                <td>44.91</td>
+                                                                                <td>2,870,815.52</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/12/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>52915664 </td>
+                                                                                <td>Leedy, Fredric </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$47.99</td>
+                                                                                <td></td>
+                                                                                <td>47.99</td>
+                                                                                <td>2,870,863.51</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/12/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>7833599 </td>
+                                                                                <td>Bolden, Tameka </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$49.91</td>
+                                                                                <td></td>
+                                                                                <td>49.91</td>
+                                                                                <td>2,870,913.42</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/12/2024</td>
+                                                                                <td>Payment</td>
+                                                                                <td>471 </td>
+                                                                                <td>Grosse, Ramona </td>
+                                                                                <td></td>
+                                                                                <td>Accounts Receivable</td>
+                                                                                <td>$80.34</td>
+                                                                                <td></td>
+                                                                                <td>80.34</td>
+                                                                                <td>2,870,993.76</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/12/2024</td>
+                                                                                <td>Deposit</td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td>Sales</td>
+                                                                                <td>$725.36</td>
+                                                                                <td></td>
+                                                                                <td>725.36</td>
+                                                                                <td>2,871,719.12</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/15/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Brannon Nguyen </td>
+                                                                                <td></td>
+                                                                                <td>Commission</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,871,219.12</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/15/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td>5690 </td>
+                                                                                <td>IP </td>
+                                                                                <td></td>
+                                                                                <td>Commission</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,870,719.12</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/15/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td>5691 </td>
+                                                                                <td>IP </td>
+                                                                                <td></td>
+                                                                                <td>Commission</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,870,719.12</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/15/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td>5692 </td>
+                                                                                <td>IP </td>
+                                                                                <td></td>
+                                                                                <td>Commission</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,870,719.12</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/15/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>TC Nguyen </td>
+                                                                                <td></td>
+                                                                                <td>Commission</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,869,219.12</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/15/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Kyle Nguyen </td>
+                                                                                <td></td>
+                                                                                <td>Reimbursement</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,868,719.12</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/15/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Tyler Nguyen </td>
+                                                                                <td></td>
+                                                                                <td>Commission</td>
+                                                                                <td></td>
+                                                                                <td>$500.00</td>
+                                                                                <td>-500.00</td>
+                                                                                <td>2,868,219.12
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/15/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Kyle Nguyen </td>
+                                                                                <td></td>
+                                                                                <td>Reimbursement</td>
+                                                                                <td></td>
+                                                                                <td>$300.00</td>
+                                                                                <td>-300.00</td>
+                                                                                <td>2,867,919.12</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td>07/15/2024</td>
+                                                                                <td>Check</td>
+                                                                                <td></td>
+                                                                                <td>Lauren Williams </td>
+                                                                                <td></td>
+                                                                                <td>Commission</td>
+                                                                                <td>$0.00</td>
+                                                                                <td></td>
+                                                                                <td>0.00</td>
+                                                                                <td>2,867,919.12</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td><b>Total for Checking</b></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td><b>$103,633.85</b></td>
+                                                                                <td></td>
                                                                             </tr>
                                                                         </tbody>
                                                                     </table>
