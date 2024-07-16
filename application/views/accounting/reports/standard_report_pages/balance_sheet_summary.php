@@ -70,8 +70,8 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <?php
-                                    $tableID = "balanceSheetDetails_table";
-                                    $reportCategory = "balance_sheet_details";
+                                    $tableID = "balanceSheetSummary_table";
+                                    $reportCategory = "balance_sheet_summary";
                                     ?>
                                     <table class="nsm-table balance-sheet-summary-table" id="tableID">
                                         <thead>
@@ -84,7 +84,7 @@
                                             <!-- ASSETS -->
                                             <tr data-bs-toggle="collapse" data-bs-target="#assets" class="clickable collapse-row collapsed">
                                                 <td><i class="bx bx-fw bx-caret-right"></i> ASSETS</td>
-                                                <td>$571,265.66</td>
+                                                <td>$3,504,644.44</td>
                                             </tr>
                                             <tr class="collapse" id="assets">
                                                 <td colspan="2">
@@ -99,120 +99,57 @@
                                                                     <table class="table mb-0">
                                                                         <tbody>
                                                                             <tr data-bs-toggle="collapse" data-bs-target="#bankAccounts" class="clickable collapse-row collapsed">
-                                                                                <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Bank Accounts</td>
-                                                                                <td></td>
+                                                                                <td>&emsp;&emsp;
+                                                                                    <!-- <i class="bx bx-fw bx-caret-right"></i> -->
+                                                                                    Bank Accounts
+                                                                                </td>
+                                                                                <td>$2,867,909.87</td>
                                                                             </tr>
-                                                                            <tr id="bankAccounts" class="collapse">
-                                                                                <td>&emsp;&emsp;&emsp;Checking</td>
-                                                                                <td>$305,061.93</td>
-                                                                            </tr>
-                                                                            <tr data-bs-toggle="collapse" data-bs-target="#testBank" class="clickable collapse-row collapsed">
-                                                                                <td>&emsp;&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Test Bank (Cash on hand)</td>
-                                                                                <td>$990.77</td>
-                                                                            </tr>
-                                                                            <tr id="testBank" class="collapse">
-                                                                                <td>&emsp;&emsp;&emsp;&emsp;Sub-bank (Cash on hand)</td>
-                                                                                <td>$990.00</td>
-                                                                            </tr>
-                                                                            <tr id="testBank" class="collapse">
-                                                                                <td>&emsp;&emsp;&emsp;&emsp;<b>Total Test Bank (Cash on hand)</b></td>
-                                                                                <td><b>$1,980.77</b></td>
-                                                                            </tr>
-                                                                            <tr id="bankAccounts" class="collapse">
-                                                                                <td>&emsp;&emsp;&emsp;Test Category</td>
-                                                                                <td>$10.00</td>
-                                                                            </tr>
-                                                                            <tr id="bankAccounts" class="collapse">
-                                                                                <td>&emsp;&emsp;&emsp;<b>Total Bank Accounts</b></td>
-                                                                                <td><b>$307,052.70</b></td>
-                                                                            </tr>
+
                                                                             <tr data-bs-toggle="collapse" data-bs-target="#accountsReceivable" class="clickable collapse-row collapsed">
-                                                                                <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Accounts Receivable</td>
-                                                                                <td></td>
+                                                                                <td>&emsp;&emsp;
+                                                                                    <!-- <i class="bx bx-fw bx-caret-right"></i> -->
+                                                                                    Accounts Receivable
+                                                                                </td>
+                                                                                <td>571,831.88</td>
                                                                             </tr>
-                                                                            <tr id="accountsReceivable" class="collapse">
-                                                                                <td>&emsp;&emsp;&emsp;Accounts Receivable</td>
-                                                                                <td>$205,324.93</td>
-                                                                            </tr>
-                                                                            <tr id="accountsReceivable" class="collapse">
-                                                                                <td>&emsp;&emsp;&emsp;<b>Total Accounts Receivable</b></td>
-                                                                                <td><b>$205,324.93</b></td>
-                                                                            </tr>
+
                                                                             <tr data-bs-toggle="collapse" data-bs-target="#otherCurrentAssets" class="clickable collapse-row collapsed">
-                                                                                <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Other Current Assets</td>
-                                                                                <td></td>
+                                                                                <td>&emsp;&emsp;
+                                                                                    <!-- <i class="bx bx-fw bx-caret-right"></i>  -->
+                                                                                    Other Current Assets
+                                                                                </td>
+                                                                                <td>58,520.69</td>
                                                                             </tr>
-                                                                            <tr id="otherCurrentAssets" class="collapse">
-                                                                                <td>&emsp;&emsp;&emsp;Credit Card Receivables</td>
-                                                                                <td>$207.95</td>
-                                                                            </tr>
-                                                                            <tr id="otherCurrentAssets" class="collapse">
-                                                                                <td>&emsp;&emsp;&emsp;Inventory</td>
-                                                                                <td>$25.00</td>
-                                                                            </tr>
-                                                                            <tr id="otherCurrentAssets" class="collapse">
-                                                                                <td>&emsp;&emsp;&emsp;Inventory Asset-1</td>
-                                                                                <td>$25,705.75</td>
-                                                                            </tr>
-                                                                            <tr id="otherCurrentAssets" class="collapse">
-                                                                                <td>&emsp;&emsp;&emsp;Test OCA</td>
-                                                                                <td>$1,000.00</td>
-                                                                            </tr>
-                                                                            <tr id="otherCurrentAssets" class="collapse">
-                                                                                <td>&emsp;&emsp;&emsp;Uncategorized Asset</td>
-                                                                                <td>$9,068.80</td>
-                                                                            </tr>
-                                                                            <tr id="otherCurrentAssets" class="collapse">
-                                                                                <td>&emsp;&emsp;&emsp;Undeposited Funds</td>
-                                                                                <td>$16,347.82</td>
-                                                                            </tr>
-                                                                            <tr id="otherCurrentAssets" class="collapse">
-                                                                                <td>&emsp;&emsp;&emsp;<b>Total Other Current Assets</b></td>
-                                                                                <td><b>$52,355.32</b></td>
-                                                                            </tr>
-                                                                            <tr id="currentAssets" class="collapse">
-                                                                                <td>&emsp;&emsp;<b>Total Current Assets</b></td>
-                                                                                <td><b>$564,732.95</b></td>
-                                                                            </tr>
+
+                                                                            <td>&emsp;&emsp;<b>Total Current Assets</b></td>
+                                                                            <td><b>$3,498,262.44</b></td>
                                                                         </tbody>
                                                                     </table>
                                                                 </td>
                                                             </tr>
                                                             <tr data-bs-toggle="collapse" data-bs-target="#fixedAssets" class="clickable collapse-row collapsed">
-                                                                <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Fixed Assets</td>
-                                                                <td></td>
-                                                            </tr>
-                                                            <tr id="fixedAssets" class="collapse">
                                                                 <td colspan="2">
                                                                     <table class="table mb-0">
                                                                         <tbody>
-                                                                            <tr id="fixedAssets" class="collapse">
-                                                                                <td>&emsp;&emsp;Accumulated Depreciation</td>
-                                                                                <td>$-26,176.00</td>
-                                                                            </tr>
-                                                                            <tr id="fixedAssets" class="collapse">
-                                                                                <td>&emsp;&emsp;Fixed Asset Computers</td>
-                                                                                <td>$6,069.00</td>
-                                                                            </tr>
-                                                                            <tr id="fixedAssets" class="collapse">
-                                                                                <td>&emsp;&emsp;Fixed Asset Furniture</td>
-                                                                                <td>$25,289.00</td>
-                                                                            </tr>
-                                                                            <tr id="fixedAssets" class="collapse">
-                                                                                <td>&emsp;&emsp;Fixed Asset Phone</td>
-                                                                                <td>$1,200.00</td>
-                                                                            </tr>
-                                                                            <tr id="fixedAssets" class="collapse">
-                                                                                <td>&emsp;&emsp;<b>Total Fixed Assets</b></td>
-                                                                                <td><b>$6,382.00</b></td>
-                                                                            </tr>
+                                                                            <td>&emsp;
+                                                                                <!-- <i class="bx bx-fw bx-caret-right"></i> -->
+                                                                                Fixed Assets
+                                                                            </td>
+                                                                            <td>6,382.00</td>
                                                                         </tbody>
                                                                     </table>
                                                                 </td>
                                                             </tr>
                                                             <tr id="assets" class="collapse">
-                                                                <td>&emsp;<b>TOTAL ASSETS</b></td>
-                                                                <td><b>$571,114.95</b></td>
+                                                                <td colspan="2">
+                                                                    <table class="table mb-0">
+                                                                        <tbody>
+                                                                            <td>&emsp;<b>TOTAL ASSETS</b></td>
+                                                                            <td><b>$3,504,644.44</b></td>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </td>
                                                             </tr>
                                                         </tbody>
                                                     </table>
@@ -245,75 +182,41 @@
                                                                                         <tbody>
                                                                                             <tr id="currentLiabilities" class="collapse">
                                                                                                 <td>&emsp;&emsp;&emsp;Accounts Payable</td>
-                                                                                                <td>$15,000.00</td>
+                                                                                                <td>0.00</td>
                                                                                             </tr>
                                                                                             <tr id="currentLiabilities" class="collapse">
-                                                                                                <td>&emsp;&emsp;&emsp;Credit Card</td>
-                                                                                                <td>$5,000.00</td>
+                                                                                                <td>&emsp;&emsp;&emsp;Other Current Liabilities</td>
+                                                                                                <td>44,104.27</td>
                                                                                             </tr>
                                                                                             <tr id="currentLiabilities" class="collapse">
                                                                                                 <td>&emsp;&emsp;&emsp;<b>Total Current Liabilities</b></td>
-                                                                                                <td><b>$20,000.00</b></td>
+                                                                                                <td><b>$44,104.27</b></td>
                                                                                             </tr>
                                                                                         </tbody>
                                                                                     </table>
                                                                                 </td>
                                                                             </tr>
                                                                             <tr data-bs-toggle="collapse" data-bs-target="#longTermLiabilities" class="clickable collapse-row collapsed">
-                                                                                <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Long-term Liabilities</td>
-                                                                                <td></td>
-                                                                            </tr>
-                                                                            <tr id="longTermLiabilities" class="collapse">
-                                                                                <td colspan="2">
-                                                                                    <table class="table mb-0">
-                                                                                        <tbody>
-                                                                                            <tr id="longTermLiabilities" class="collapse">
-                                                                                                <td>&emsp;&emsp;&emsp;Mortgage Payable</td>
-                                                                                                <td>$100,000.00</td>
-                                                                                            </tr>
-                                                                                            <tr id="longTermLiabilities" class="collapse">
-                                                                                                <td>&emsp;&emsp;&emsp;Car Loan</td>
-                                                                                                <td>$15,000.00</td>
-                                                                                            </tr>
-                                                                                            <tr id="longTermLiabilities" class="collapse">
-                                                                                                <td>&emsp;&emsp;&emsp;<b>Total Long-term Liabilities</b></td>
-                                                                                                <td><b>$115,000.00</b></td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    </table>
+                                                                                <td>&emsp;&emsp;
+                                                                                    <!-- <i class="bx bx-fw bx-caret-right"></i>  -->
+                                                                                    Long-term Liabilities
                                                                                 </td>
+                                                                                <td>-27,385.50 </td>
                                                                             </tr>
                                                                             <tr id="liabilities" class="collapse">
                                                                                 <td>&emsp;&emsp;<b>Total Liabilities</b></td>
-                                                                                <td><b>$135,000.00</b></td>
+                                                                                <td><b>$16,718.77</b></td>
                                                                             </tr>
                                                                         </tbody>
                                                                     </table>
                                                                 </td>
                                                             </tr>
                                                             <tr data-bs-toggle="collapse" data-bs-target="#equity" class="clickable collapse-row collapsed">
-                                                                <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Equity</td>
-                                                                <td></td>
-                                                            </tr>
-                                                            <tr id="equity" class="collapse">
-                                                                <td colspan="2">
-                                                                    <table class="table mb-0">
-                                                                        <tbody>
-                                                                            <tr id="equity" class="collapse">
-                                                                                <td>&emsp;&emsp;Owner's Equity</td>
-                                                                                <td>$400,000.00</td>
-                                                                            </tr>
-                                                                            <tr id="equity" class="collapse">
-                                                                                <td>&emsp;&emsp;Retained Earnings</td>
-                                                                                <td>$36,265.66</td>
-                                                                            </tr>
-                                                                            <tr id="equity" class="collapse">
-                                                                                <td>&emsp;&emsp;<b>Total Equity</b></td>
-                                                                                <td><b>$436,265.66</b></td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
+                                                                <td>&emsp;
+                                                                    <!-- <i class="bx bx-fw bx-caret-right"></i>  -->
+                                                                    Equity
                                                                 </td>
+                                                                <td>3,487,925.67</td>
                                                             </tr>
                                                             <tr id="liabilitiesEquity" class="collapse">
                                                                 <td>&emsp;<b>Total Liabilities and Equity</b></td>
