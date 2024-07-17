@@ -52,59 +52,25 @@
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
-                                                <!-- 
-                                                <th data-name="Date" <?=isset($columns) && !in_array('Date', $columns) ? 'style="display: none"' : ''?>>Date</th>
-                                                <th data-name="Transaction Type" <?=isset($columns) && !in_array('Transaction Type', $columns) ? 'style="display: none"' : ''?>>Trans. Type</th>
-                                                <th data-name="Memo/Description" <?=isset($columns) && !in_array('Memo/Description', $columns) ? 'style="display: none"' : ''?>>Memo/Desc</th>
-                                                <th data-name="Num" <?=isset($columns) && !in_array('Num', $columns) ? 'style="display: none"' : ''?>>Num</th>
-                                                <th data-name="Amount" <?=isset($columns) && !in_array('Amount', $columns) ? 'style="display: none"' : ''?>>Amount</th>
-                                                <th data-name="Open Balance" <?=isset($columns) && !in_array('Open Balance', $columns) ? 'style="display: none"' : ''?>>Open Balance</th>
-                                                <th data-name="Create Date" <?=isset($columns) && !in_array('Create Date', $columns) ? 'style="display: none"' : ''?>>Create Date</th>
-                                                <th data-name="Created By" <?=isset($columns) && !in_array('Created By', $columns) ? 'style="display: none"' : ''?>>Created By</th>
-                                                <th data-name="Last Modified" <?=isset($columns) && !in_array('Last Modified', $columns) ? 'style="display: none"' : ''?>>Last Mod.</th>
-                                                <th data-name="Last Modified By" <?=isset($columns) && !in_array('Last Modified By', $columns) ? 'style="display: none"' : ''?>>LAST Mod. BY</th>
-                                                <th data-name="Account" <?=isset($columns) && !in_array('Account', $columns) ? 'style="display: none"' : ''?>>Account</th>
-                                                <th data-name="Vendor" <?=isset($columns) && !in_array('Vendor', $columns) ? 'style="display: none"' : ''?>>Vendor</th>
-                                                <th data-name="Split" <?=isset($columns) && !in_array('Split', $columns) ? 'style="display: none"' : ''?>>Split</th>
-                                                <th data-name="Terms" <?=isset($columns) && !in_array('Terms', $columns) ? 'style="display: none"' : ''?>>Terms</th>
-                                                <th data-name="Payment Method" <?=isset($columns) && !in_array('Payment Method', $columns) ? 'style="display: none"' : ''?>>Pymt Method</th>
-                                                <th data-name="Due Date" <?=isset($columns) && !in_array('Due Date', $columns) ? 'style="display: none"' : ''?>>Due Date</th>
-                                                <th data-name="Client/Vendor Message" <?=isset($columns) && !in_array('Client/Vendor Message', $columns) ? 'style="display: none"' : ''?>>Client/Vendor Msg</th>
-                                                <th data-name="A/R Paid" <?=isset($columns) && !in_array('A/R Paid', $columns) ? 'style="display: none"' : ''?>>A/R Paid</th>
-                                                <th data-name="Sales Printed" <?=isset($columns) && !in_array('Sales Printed', $columns) ? 'style="display: none"' : ''?>>Sales Printed</th>
-                                                <th data-name="Check Printed" <?=isset($columns) && !in_array('Check Printed', $columns) ? 'style="display: none"' : ''?>>Check Printed</td>
-                                                <th data-name="Sent" <?=isset($columns) && !in_array('Sent', $columns) ? 'style="display: none"' : ''?>>Sent</th>
-                                                <th data-name="Delivery Address" <?=isset($columns) && !in_array('Delivery Address', $columns) ? 'style="display: none"' : ''?>>Delivery Addr.</th>    
-                                                -->                      
-                                                
                                                 <th>Date</th>
                                                 <th>Trans. Type</th>
                                                 <th>Memo/Desc</th>
                                                 <th>Num</th>
                                                 <th>Amount</th>
                                                 <th>Open Balance</th>
-                                                <th>Create Date</th>
-                                                <th>Created By</th>
-                                                <th>Last Mod.</th>
-                                                <th>Last Mod. By</th>
-                                                <th>Acct.</th>
                                                 <th>Vendor</th>
-                                                <th>Split</th>
                                                 <th>Terms</th>
                                                 <th>Pymt Method</th>
                                                 <th>Due Date</th>
                                                 <th>Client/Vendor Msg</th>
                                                 <th>A/R Paid</th>
-                                                <th>Sales Print</th>
-                                                <th>Check Print</td>
                                                 <th>Sent</th>
                                                 <th>Del. Addr.</th>  
-
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="21">
+                                                <td colspan="14">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>

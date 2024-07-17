@@ -998,7 +998,15 @@ class Accounting_model extends MY_Model
         }
 
         if ($reportType == "bills_and_applied_payments") {
-            return array();
+            $this->db->select('accounting_bill.*');
+            $this->db->from('accounting_bill');
+            $this->db->where('accounting_bill.company_id', $companyID);
+            $this->db->where("accounting_bill.bill_date >= '$reportConfig[date_from]'");
+            $this->db->where("accounting_bill.bill_date <= '$reportConfig[date_to]'");            
+            //$this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            //$this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
         }
 
         // Get Employee Directory data in Database
