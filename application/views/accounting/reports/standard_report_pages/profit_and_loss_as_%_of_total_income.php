@@ -54,8 +54,8 @@
                                         <thead>
                                             <tr>
                                                 <th>&nbsp;</th>
-                                                <th style="text-align:right;">DATE</th>
-                                                <th style="text-align:right;">% OF INCOME</th>
+                                                <th class="text-end">DATE</th>
+                                                <th class="text-end">% OF INCOME</th>
                                             </tr>
                                         </thead>
                                         <tbody>

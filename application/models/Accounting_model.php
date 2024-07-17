@@ -956,5 +956,46 @@ class Accounting_model extends MY_Model
             $data = $this->db->get();
             return $data->result();
         }
+
+        // Get Transaction List by Vendor data in Database
+        // Info: The Transaction List by Vendor report is a detailed report that provides a comprehensive list of all transactions associated with each vendor over a specific period.
+        if ($reportType == "transaction_list_by_vendor") {
+            $this->db->select('accounting_check.id AS transaction_id, accounting_check.payee_id AS vendor_id, accounting_vendors.display_name AS vendor, accounting_check.payment_date AS date, accounting_account_transactions.transaction_type AS transaction_type, accounting_check.id AS num, accounting_check.status AS posting, accounting_check.memo AS memo_description, accounting_chart_of_accounts.name AS account, accounting_check.total_amount AS amount');
+            $this->db->from('accounting_check');
+            $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_check.payee_id', 'left');
+            $this->db->join('accounting_account_transactions', 'accounting_account_transactions.account_id = accounting_check.bank_account_id', 'left');
+            $this->db->join('accounting_chart_of_accounts', 'accounting_chart_of_accounts.id = accounting_account_transactions.account_id', 'left');
+            $this->db->where('accounting_vendors.display_name !=', '');
+            $this->db->where('accounting_check.payee_type =', 'vendor');
+            $this->db->where("DATE_FORMAT(accounting_check.payment_date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_check.payment_date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_vendors.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('accounting_check.payee_id');
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get 1099 Transaction Detail Report data in Database
+        // Info: The 1099 Transaction Detail Report is a report that provides detailed information about payments made to vendors (or contractor) who require a 1099 form.
+        if ($reportType == "1099_transaction_detail") {
+            $this->db->select('accounting_check.id AS transaction_id,  accounting_check.payee_id AS vendor_id,  accounting_vendors.display_name AS vendor,  accounting_check.payment_date AS date,  accounting_account_transactions.transaction_type AS transaction_type,  accounting_check.id AS num,  accounting_check.memo AS memo_description,  "" AS _1099_box, accounting_chart_of_accounts.name AS account, "" AS split, accounting_check.total_amount AS amount, accounting_check.total_amount AS balance, "" AS tax_id');
+            $this->db->from('accounting_check');
+            $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_check.payee_id', 'left');
+            $this->db->join('accounting_account_transactions', 'accounting_account_transactions.account_id = accounting_check.bank_account_id', 'left');
+            $this->db->join('accounting_chart_of_accounts', 'accounting_chart_of_accounts.id = accounting_account_transactions.account_id', 'left');
+            $this->db->where('accounting_vendors.display_name !=', '');
+            $this->db->where('accounting_check.payee_type =', 'vendor');
+            $this->db->where("DATE_FORMAT(accounting_check.payment_date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_check.payment_date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_vendors.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('accounting_check.payee_id');
+            $data = $this->db->get();
+            return $data->result();
+        }
+
     }
 }

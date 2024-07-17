@@ -41,12 +41,9 @@
                                     <button class="nsm-button addNotes">Add Notes</button>
                                 </span>
                                 <span class="float-end">
-                                    <button data-bs-toggle="modal" data-bs-target="#emailReportModal" class="nsm-button border-0 top-button"><i class="bx bx-fw bx-envelope icon-top"></i></button>
-                                    <!-- <button data-bs-toggle="modal" data-bs-target="#printPreviewModal" class="nsm-button border-0 top-button"><i class="bx bx-fw bx-printer icon-top"></i></button> -->
-                                    <button type="button" class="nsm-button border-0" data-bs-toggle="modal" data-bs-target="#printPreviewModal" onclick="previewPDF()">
-                                        <i class='bx bx-fw bx-printer'></i>
-                                    </button>
-                                    <button class="nsm-button border-0 top-button" data-bs-toggle="dropdown"><i class="bx bx-fw bx-export icon-top"></i></button>
+                                    <button data-bs-toggle="modal" data-bs-target="#emailReportModal" class="nsm-button border-0"><i class="bx bx-fw bx-envelope"></i></button>
+                                    <button data-bs-toggle="modal" data-bs-target="#printPreviewModal" class="nsm-button border-0"><i class="bx bx-fw bx-printer"></i></button>
+                                    <button class="nsm-button border-0" data-bs-toggle="dropdown"><i class="bx bx-fw bx-export"></i></button>
                                     <ul class="dropdown-menu dropdown-menu-end export-dropdown" style="">
                                         <li><a class="dropdown-item" href="javascript:void(0);" id="exportToXLSX">Export to Excel</a></li>
                                         <li><a class="dropdown-item" href="javascript:void(0);" id="exportToPDF" download>Export to PDF</a></li>
@@ -295,13 +292,13 @@
                         <div class="form-group mb-2">
                             <label>Orientation</label>
                             <select id="pageOrientation" name="pageOrientation" class="form-select">
-                                <option value="p" selected>Portrait</option>
-                                <option value="l">Landscape</option>
+                                <option value="P" selected>Portrait</option>
+                                <option value="L">Landscape</option>
                             </select>
                         </div>
                         <!-- <div class="form-check">
-                            <input id="pageHeaderRepeat" name="pageHeaderRepeat" class="form-check-input" type="checkbox">
-                            <label class="form-check-label" for="pageHeaderRepeat">Repeat Page Header</label>
+                            <input id="pageHeaderRepeat" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">Repeat Page Header</label>
                         </div> -->
                     </div>
                     <div class="col-sm-9">

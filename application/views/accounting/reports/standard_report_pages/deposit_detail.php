@@ -60,7 +60,7 @@
                                                 <th>VENDOR</th>
                                                 <th>MEMO/DESCRIPTION</th>
                                                 <th>CLR</th>
-                                                <th style="text-align:right;">AMOUNT</th>
+                                                <th class="text-end">AMOUNT</th>
                                             </tr>
                                         </thead>
                                         <tbody>

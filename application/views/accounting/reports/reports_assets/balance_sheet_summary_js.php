@@ -18,7 +18,7 @@
 
     var setDataTable;
     var currentTable = '<?php echo $tableID; ?>';
-    // var reportTables = ['vendorcontactlist_table', 'salesbycustomersummary_table', 'customerbalancesummary_table', 'customercontactlist_table', 'expensesbyvendorsummary_table', 'incomebycustomerysummary_table', 'invoicelistbydate_table', 'openinvoices_table', 'paymentmethodlist_table', 'physicalinventoryworksheet_table', 'productservicelist_table', 'salesbyproductservicesummary_table', 'taxablesalessummary_table', 'vendorbalancesummary_table', 'statementlist_table', 'employeedetails_table', 'accountsreceivableagingsummarylist_table', 'accountlist_table', 'incomebycustomerysummary_table', ];
+    var reportTables = ['vendorcontactlist_table', 'salesbycustomersummary_table', 'customerbalancesummary_table', 'customercontactlist_table', 'expensesbyvendorsummary_table', 'incomebycustomerysummary_table', 'invoicelistbydate_table', 'openinvoices_table', 'paymentmethodlist_table', 'physicalinventoryworksheet_table', 'productservicelist_table', 'salesbyproductservicesummary_table', 'taxablesalessummary_table', 'vendorbalancesummary_table', 'statementlist_table', 'employeedetails_table', 'accountsreceivableagingsummarylist_table', 'accountlist_table', 'incomebycustomerysummary_table', ];
     var base_url = window.location.origin;
     var REPORT_CATEGORY = "<?php echo $reportCategory; ?>";
     var REPORT_ID = "<?php echo $reportTypeId; ?>";
@@ -114,75 +114,22 @@
         
         if (showHideLogo == "1") {
             $('#businessLogo').attr('src', base_url + '/uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image?"; ?>' + Math.round(Math.random() * 1000000)).show();
-            if (header_align == "L") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'left',
-                    marginLeft: '115px'
-                });
-            }
-            if (header_align == "C") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'center',
-                    marginLeft: 'unset'
-                });
-            }
-            if (header_align == "R") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'right',
-                    marginLeft: 'unset'
-                });
-            }
-            if (footer_align == "L") {
-                $('.footerInfo').css({
-                    textAlign: 'left'
-                });
-            }
-            if (footer_align == "C") {
-                $('.footerInfo').css({
-                    textAlign: 'center'
-                });
-            }
-            if (footer_align == "R") {
-                $('.footerInfo').css({
-                    textAlign: 'right'
-                });
-            }
+            if (header_align == "L") { $('.reportTitleInfo').css({textAlign: 'left', marginLeft: '115px'}); }
+            if (header_align == "C") { $('.reportTitleInfo').css({textAlign: 'center', marginLeft: 'unset'}); }
+            if (header_align == "R") { $('.reportTitleInfo').css({textAlign: 'right', marginLeft: 'unset'}); }
+            if (footer_align == "L") { $('.footerInfo').css({textAlign: 'left'}); }
+            if (footer_align == "C") { $('.footerInfo').css({textAlign: 'center'}); }
+            if (footer_align == "R") { $('.footerInfo').css({textAlign: 'right'}); }
         } else {
             $('#businessLogo').hide();
-            if (header_align == "L") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'left',
-                    marginLeft: 'unset'
-                });
-            }
-            if (header_align == "C") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'center',
-                    marginLeft: 'unset'
-                });
-            }
-            if (header_align == "R") {
-                $('.reportTitleInfo').css({
-                    textAlign: 'right',
-                    marginLeft: 'unset'
-                });
-            }
-            if (footer_align == "L") {
-                $('.footerInfo').css({
-                    textAlign: 'left'
-                });
-            }
-            if (footer_align == "C") {
-                $('.footerInfo').css({
-                    textAlign: 'center'
-                });
-            }
-            if (footer_align == "R") {
-                $('.footerInfo').css({
-                    textAlign: 'right'
-                });
-            }
+            if (header_align == "L") { $('.reportTitleInfo').css({textAlign: 'left', marginLeft: 'unset'}); }
+            if (header_align == "C") { $('.reportTitleInfo').css({textAlign: 'center', marginLeft: 'unset'}); }
+            if (header_align == "R") { $('.reportTitleInfo').css({textAlign: 'right', marginLeft: 'unset'}); }
+            if (footer_align == "L") { $('.footerInfo').css({textAlign: 'left'}); }
+            if (footer_align == "C") { $('.footerInfo').css({textAlign: 'center'}); }
+            if (footer_align == "R") { $('.footerInfo').css({textAlign: 'right'}); }
         }
+        
         $(".settingsApplyButton").attr('disabled', '').html('<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Applying changes...');
         $('#pdfPreview').before('<span class="dataLoader"><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...</span>').hide();
         $("#<?php echo $tableID; ?> > tbody").html('<tr><td colspan="' + theadColumnNames.length + '"><center><div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result... </center></td></tr>');

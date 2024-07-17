@@ -57,11 +57,11 @@
                                                 <th>TRANSACTION</th>
                                                 <th>NUM</th>
                                                 <th>NAME</th>
-                                                <th style="text-align:right;">QTY</th>
-                                                <th style="text-align:right;">RATE</th>
-                                                <th style="text-align:right;">FIFO COST</th>
-                                                <th style="text-align:right;">QTY ON HAND</th>
-                                                <th style="text-align:right;">ASSET VALUE</th>
+                                                <th class="text-end">QTY</th>
+                                                <th class="text-end">RATE</th>
+                                                <th class="text-end">FIFO COST</th>
+                                                <th class="text-end">QTY ON HAND</th>
+                                                <th class="text-end">ASSET VALUE</th>
                                             </tr>
                                         </thead>
                                         <tbody>

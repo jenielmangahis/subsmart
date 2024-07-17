@@ -56,7 +56,7 @@
                                                 <th>DATE</th>
                                                 <th>TRANSACTION TYPE</th>
                                                 <th>NUM</th>
-                                                <th style="text-align:right;">AMOUNT</th>
+                                                <th class="text-end">AMOUNT</th>
                                             </tr>
                                         </thead>
                                         <tbody>

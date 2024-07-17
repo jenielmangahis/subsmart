@@ -58,8 +58,8 @@
                                                 <th>NUM</th>
                                                 <th>CUSTOMER</th>
                                                 <th>DUE DATE</th>
-                                                <th style="text-align:right;">AMOUNT</th>
-                                                <th style="text-align:right;">OPEN BALANCE</th>
+                                                <th class="text-end">AMOUNT</th>
+                                                <th class="text-end">OPEN BALANCE</th>
                                             </tr>
                                         </thead>
                                         <tbody>

@@ -53,10 +53,10 @@
                                         <thead>
                                             <tr>
                                                 <th>PRODUCT</th>
-                                                <th style="text-align:right;">QTY ON HAND</th>
-                                                <th style="text-align:right;">REORDER POINT</th>
-                                                <th style="text-align:right;">QTY ON PO</th>
-                                                <th style="text-align:right;">PHYSICAL COUNT</th>
+                                                <th class="text-end">QTY ON HAND</th>
+                                                <th class="text-end">REORDER POINT</th>
+                                                <th class="text-end">QTY ON PO</th>
+                                                <th class="text-end">PHYSICAL COUNT</th>
                                             </tr>
                                         </thead>
                                         <tbody>

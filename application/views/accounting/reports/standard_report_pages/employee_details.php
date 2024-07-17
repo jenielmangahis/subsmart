@@ -58,7 +58,7 @@
                                                 <th>CONTACT</th>
                                                 <th>DATE HIRED</th>
                                                 <th>ROLE</th>
-                                                <th style="text-align:right;">PAY RATE</th>
+                                                <th class="text-end">PAY RATE</th>
                                             </tr>
                                         </thead>
                                         <tbody>

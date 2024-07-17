@@ -54,9 +54,9 @@
                                             <tr>
                                                 <th style="width:60%;">PRODUCT/SERVICE</th>
                                                 <th>TYPE</th>
-                                                <th style="text-align:right;">QTY ON HAND</th>
-                                                <th style="text-align:right;">PRICE</th>
-                                                <th style="text-align:right;">COST</th>                                                
+                                                <th class="text-end">QTY ON HAND</th>
+                                                <th class="text-end">PRICE</th>
+                                                <th class="text-end">COST</th>                                                
                                             </tr>
                                         </thead>
                                         <tbody>

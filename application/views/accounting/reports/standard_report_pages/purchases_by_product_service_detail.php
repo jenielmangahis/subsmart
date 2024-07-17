@@ -59,9 +59,9 @@
                                                 <th>VENDOR</th>
                                                 <th>DESCRIPTION</th>
                                                 <th>QTY</th>
-                                                <th style="text-align:right;">RATE</th>
-                                                <th style="text-align:right;">AMOUNT</th>
-                                                <th style="text-align:right;">BALANCE</th>
+                                                <th class="text-end">RATE</th>
+                                                <th class="text-end">AMOUNT</th>
+                                                <th class="text-end">BALANCE</th>
                                             </tr>
                                         </thead>
                                         <tbody>
