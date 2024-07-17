@@ -105,6 +105,7 @@ class AccountingMailer extends MY_Controller{
             "time_activities_by_customer_details",
             "transaction_list_by_vendor",
             "1099_transaction_detail",
+            "bills_and_applied_payments",
         );
 
         // Conditional Statements on the array
