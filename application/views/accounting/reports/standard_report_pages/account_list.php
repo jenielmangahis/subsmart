@@ -56,7 +56,7 @@
                                                 <th>TYPE</th>
                                                 <th>DETAIL</th>
                                                 <th>DESCRIPTION</th>
-                                                <th style="text-align:right;">BALANCE</th>
+                                                <th class="text-end">BALANCE</th>
                                             </tr>
                                         </thead>
                                         <tbody>

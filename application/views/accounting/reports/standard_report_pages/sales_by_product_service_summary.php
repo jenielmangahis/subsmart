@@ -54,12 +54,12 @@
                                             <tr>
                                                 <th>PRODUCT/SERVICE</th>
                                                 <th>QTY</th>
-                                                <th style="text-align:right;">AMOUNT</th>
-                                                <th style="text-align:right;">SALES BY (%)</th>
-                                                <th style="text-align:right;">AVG PRICE</th>
-                                                <th style="text-align:right;">COGS</th>
-                                                <th style="text-align:right;">GROSS MARGIN</th>
-                                                <th style="text-align:right;">GROSS MARGIN BY (%)</th>
+                                                <th class="text-end">AMOUNT</th>
+                                                <th class="text-end">SALES BY (%)</th>
+                                                <th class="text-end">AVG PRICE</th>
+                                                <th class="text-end">COGS</th>
+                                                <th class="text-end">GROSS MARGIN</th>
+                                                <th class="text-end">GROSS MARGIN BY (%)</th>
                                             </tr>
                                         </thead>
                                         <tbody>

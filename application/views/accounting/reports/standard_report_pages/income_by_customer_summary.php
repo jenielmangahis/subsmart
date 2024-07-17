@@ -54,9 +54,9 @@
                                         <thead>
                                             <tr>
                                                 <th>CUSTOMER</th>
-                                                <th style="text-align:right;">INCOME</th>
-                                                <th style="text-align:right;">EXPENSE</th>
-                                                <th style="text-align:right;">NET INCOME</th>
+                                                <th class="text-end">INCOME</th>
+                                                <th class="text-end">EXPENSE</th>
+                                                <th class="text-end">NET INCOME</th>
                                             </tr>
                                         </thead>
                                         <tbody>

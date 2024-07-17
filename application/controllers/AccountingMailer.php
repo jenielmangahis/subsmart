@@ -85,6 +85,8 @@ class AccountingMailer extends MY_Controller{
             'profit_and_loss_percentage_income',
             'transaction_list_by_tag_group',
             "balance_sheet",
+            "balance_sheet_summary",
+            "balance_sheet_details",
             "transaction_list_customer",
             "accounts_payable_aging_detail",
             "accounts_receivable_aging_detail_list",
@@ -94,9 +96,15 @@ class AccountingMailer extends MY_Controller{
             "deposit_detail",
             "check_detail",
             "unpaid_bills_summary",
+            'transaction_list_by_tag_group',
             "contractor_balance_detail",
             "contractor_balance_summary",
-            "time_activities_by_customer_details"
+            "recent_edited_time_activities",
+            "open_purchase_order_list",
+            "time_activities_by_employee_detail",
+            "time_activities_by_customer_details",
+            "transaction_list_by_vendor",
+            "1099_transaction_detail",
         );
 
         // Conditional Statements on the array

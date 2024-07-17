@@ -57,11 +57,11 @@
                                                 <th>DATE</th>
                                                 <th>NUM</th>
                                                 <th>STATUS</th>
-                                                <th style="text-align:right;">AMOUNT</th>
-                                                <th style="text-align:right;">BALANCE</th>
-                                                <th style="text-align:right;">INVOICED AMOUNT</th>
-                                                <th style="text-align:right;">(%) AMOUNT</th>
-                                                <th style="text-align:right;">REMAINING AMOUNT</th>
+                                                <th class="text-end">AMOUNT</th>
+                                                <th class="text-end">BALANCE</th>
+                                                <th class="text-end">INVOICED AMOUNT</th>
+                                                <th class="text-end">(%) AMOUNT</th>
+                                                <th class="text-end">REMAINING AMOUNT</th>
                                             </tr>
                                         </thead>
                                         <tbody>
