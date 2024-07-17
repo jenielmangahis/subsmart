@@ -998,8 +998,9 @@ class Accounting_model extends MY_Model
         }
 
         if ($reportType == "bills_and_applied_payments") {
-            $this->db->select('accounting_bill.*');
+            $this->db->select('accounting_bill.*, accounting_vendors.display_name as vendor_name');
             $this->db->from('accounting_bill');
+            $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_bill.vendor_id', 'left');
             $this->db->where('accounting_bill.company_id', $companyID);
             $this->db->where("accounting_bill.bill_date >= '$reportConfig[date_from]'");
             $this->db->where("accounting_bill.bill_date <= '$reportConfig[date_to]'");            
