@@ -773,7 +773,7 @@ class Accounting_model extends MY_Model
         }
 
         // Get Employee Details data in Database
-        if ($reportType == "employee_details" || $reportType == 'employee_directory') {
+        if ($reportType == "employee_details") {
             $this->db->select('users.id AS user_id, CONCAT(users.FName, " ", users.LName) AS name, users.birthdate AS birthdate, TIMESTAMPDIFF(YEAR, users.birthdate, CURDATE()) AS age, CONCAT(users.address, " ", users.city, ", ", users.state, ", ", users.postal_code) AS address, users.phone AS phone_number, users.mobile AS mobile_number, users.date_hired AS date_hired, users.email, roles.title AS role, users.pay_rate AS pay_rate');
             $this->db->from('users');
             $this->db->join('roles', 'roles.id = users.role', 'left');
@@ -999,6 +999,18 @@ class Accounting_model extends MY_Model
 
         if ($reportType == "bills_and_applied_payments") {
             return array();
+        }
+
+        // Get Employee Directory data in Database
+        if ($reportType == 'employee_directory') {
+            $this->db->select('users.id AS user_id, CONCAT(users.FName, " ", users.LName) AS name, users.birthdate AS birthdate, TIMESTAMPDIFF(YEAR, users.birthdate, CURDATE()) AS age, CONCAT(users.address, " ", users.city, ", ", users.state, ", ", users.postal_code) AS address, users.phone AS phone_number, users.mobile AS mobile_number, users.date_hired AS date_hired, users.email, roles.title AS role, users.pay_rate AS pay_rate');
+            $this->db->from('users');
+            $this->db->join('roles', 'roles.id = users.role', 'left');
+            $this->db->where('users.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
         }
 
     }
