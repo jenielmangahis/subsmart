@@ -997,5 +997,9 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
 
+        if ($reportType == "bills_and_applied_payments") {
+            return array();
+        }
+
     }
 }
