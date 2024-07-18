@@ -108,7 +108,8 @@ class AccountingMailer extends MY_Controller
             "transaction_list_by_vendor",
             "1099_transaction_detail",
             "bills_and_applied_payments",
-            "open_purchase_order_details"
+            "open_purchase_order_details",
+            "recent_transactions"
         );
 
         // Conditional Statements on the array
