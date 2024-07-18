@@ -774,7 +774,7 @@ class Accounting_model extends MY_Model
 
         // Get Employee Details data in Database
         if ($reportType == "employee_details") {
-            $this->db->select('users.id AS user_id, CONCAT(users.FName, " ", users.LName) AS name, users.birthdate AS birthdate, TIMESTAMPDIFF(YEAR, users.birthdate, CURDATE()) AS age, CONCAT(users.address, " ", users.city, ", ", users.state, ", ", users.postal_code) AS address, users.phone AS phone_number, users.mobile AS mobile_number, users.date_hired AS date_hired, roles.title AS role, users.pay_rate AS pay_rate');
+            $this->db->select('users.id AS user_id, CONCAT(users.FName, " ", users.LName) AS name, users.birthdate AS birthdate, TIMESTAMPDIFF(YEAR, users.birthdate, CURDATE()) AS age, CONCAT(users.address, " ", users.city, ", ", users.state, ", ", users.postal_code) AS address, users.phone AS phone_number, users.mobile AS mobile_number, users.date_hired AS date_hired, users.email, roles.title AS role, users.pay_rate AS pay_rate');
             $this->db->from('users');
             $this->db->join('roles', 'roles.id = users.role', 'left');
             $this->db->where('users.company_id', $companyID);
@@ -851,8 +851,17 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
 
-        if ($reportType == "accounts_payable_aging_summary") {
-            return array();
+        if ($reportType == 'balance_sheet_summary') {
+            $this->db->select('SUM(total_amount) AS total_amount');
+            $this->db->from('accounting_check');
+            $this->db->where('company_id', $companyID);
+            $data = $this->db->get();
+
+            return $data->result();
+        }
+
+        if ($reportType == 'accounts_payable_aging_summary') {
+            return [];
         }
 
         // Get Deposit Details data in Database
@@ -993,6 +1002,31 @@ class Accounting_model extends MY_Model
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $this->db->group_by('accounting_check.payee_id');
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        if ($reportType == "bills_and_applied_payments") {
+            $this->db->select('accounting_bill.*, accounting_vendors.display_name as vendor_name');
+            $this->db->from('accounting_bill');
+            $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_bill.vendor_id', 'left');
+            $this->db->where('accounting_bill.company_id', $companyID);
+            $this->db->where("accounting_bill.bill_date >= '$reportConfig[date_from]'");
+            $this->db->where("accounting_bill.bill_date <= '$reportConfig[date_to]'");            
+            //$this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            //$this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Employee Directory data in Database
+        if ($reportType == 'employee_directory') {
+            $this->db->select('users.id AS user_id, CONCAT(users.FName, " ", users.LName) AS name, users.birthdate AS birthdate, TIMESTAMPDIFF(YEAR, users.birthdate, CURDATE()) AS age, CONCAT(users.address, " ", users.city, ", ", users.state, ", ", users.postal_code) AS address, users.phone AS phone_number, users.mobile AS mobile_number, users.date_hired AS date_hired, users.email, roles.title AS role, users.pay_rate AS pay_rate');
+            $this->db->from('users');
+            $this->db->join('roles', 'roles.id = users.role', 'left');
+            $this->db->where('users.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
         }
