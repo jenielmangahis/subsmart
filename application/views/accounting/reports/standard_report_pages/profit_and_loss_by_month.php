@@ -53,7 +53,7 @@
                                         <thead>
                                             <tr>
                                                 <?php $total_cols = 1; ?>
-                                                <th class="PLACE_LEFT" style="width:30%;"></th>                                                
+                                                <th class="PLACE_LEFT" style="width:15%;"></th>                                                
                                                 <?php for( $x = 1; $x<=date("n"); $x++ ){ ?>
                                                     <?php 
                                                         $month = $x;
@@ -62,7 +62,7 @@
                                                         $col = date("M Y", strtotime($date));
                                                         $total_cols++;
                                                     ?>
-                                                    <th class="PLACE_LEFT"><?= strtoupper($col); ?></th>         
+                                                    <th class="PLACE_RIGHT"><?= strtoupper($col); ?></th>         
                                                 <?php } ?> 
                                                 <th class="PLACE_RIGHT">TOTAL</th>                                                                                    
                                             </tr>
@@ -171,7 +171,7 @@
                                         <option value="R" <?php echo ($reportSettings->footer_align == "R") ? "selected" : "" ?>>Right</option>
                                     </select>
                                 </div>
-                                <div class="col-md-2 mb-3">
+                                <div class="col-md-2 mb-3" style="display:none;">
                                     <label class="mb-1 fw-xnormal">Row Size</label>
                                     <select name="page_size" id="page-size" class="nsm-field form-select">
                                         <option value="9999" <?php echo ($reportSettings->page_size == "9999") ? "selected" : "" ?>>All</option>
@@ -182,15 +182,12 @@
                                         <option value="500" <?php echo ($reportSettings->page_size == "500") ? "selected" : "" ?>>500</option>
                                     </select>
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <div class="col-md-4 mb-3" style="display:none;">
                                     <div class="col-md-12">
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="name" <?php echo ($reportSettings->sort_by == "name") ? "selected" : "" ?>>Name</option>
-                                                <option value="email" <?php echo ($reportSettings->sort_by == "email") ? "selected" : "" ?>>Email</option>
-                                                <option value="birthdate" <?php echo ($reportSettings->sort_by == "birthdate") ? "selected" : "" ?>>Birthdate</option>
-                                                <option value="date_hired" <?php echo ($reportSettings->sort_by == "date_hired") ? "selected" : "" ?>>Date Hired</option>
+                                                <option value="total_amount" <?php echo ($reportSettings->sort_by == "total_amount") ? "selected" : "" ?>>Amount</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
