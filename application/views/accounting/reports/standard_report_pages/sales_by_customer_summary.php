@@ -53,6 +53,8 @@
                                     <?php 
                                         $tableID = "salesbycustomersummary_table"; 
                                         $reportCategory = "sales_by_customer_summary"; 
+                                        $enable_footer_tootal = 1;
+                                        $sum_col_num = 1;
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
@@ -70,6 +72,12 @@
                                                 </td>
                                             </tr>
                                         </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Total</th>
+                                                <th style="text-align:right;padding-right:8px;"></th>
+                                            </tr>
+                                        </tfoot>
                                     </table>
                                 </div>
                             </div>
