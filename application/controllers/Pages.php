@@ -1522,4 +1522,102 @@ class Pages extends MYF_Controller {
 		$data = ['msg' => $msg, 'is_success' => $is_success];
 		echo json_encode($data);
 	}
+
+	public function front_customer_invoice_pay_now($id)
+    {
+        include APPPATH . 'libraries/braintree/lib/Braintree.php'; 
+        
+        $this->load->model('Invoice_model', 'invoice_model');        
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Business_model');
+		$this->config->load('api_credentials');
+
+        if ($id > 0) {
+            $invoice = $this->invoice_model->getById($id);
+            if( $invoice ){
+                $company = $this->Business_model->getByCompanyId($invoice->company_id);
+                $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($invoice->company_id);                
+                if( $companyOnlinePaymentAccount && ($companyOnlinePaymentAccount->braintree_merchant_id != '' && $companyOnlinePaymentAccount->braintree_public_key != '' && $companyOnlinePaymentAccount->braintree_private_key != '') ){
+                    $gateway = new Braintree\Gateway([
+                        'environment' => BRAINTREE_ENVIRONMENT,
+                        'merchantId' => $companyOnlinePaymentAccount->braintree_merchant_id,
+                        'publicKey' => $companyOnlinePaymentAccount->braintree_public_key,
+                        'privateKey' => $companyOnlinePaymentAccount->braintree_private_key
+                    ]);
+    
+                    try {
+                        $braintree_token = $gateway->ClientToken()->generate();	
+                    } catch (Exception $e) {
+                        $braintree_token = '';
+                    }
+                }         
+                
+                $this->page_data['onlinePaymentAccount'] = $companyOnlinePaymentAccount;
+                $this->page_data['invoice_template']  = $this->generateInvoiceHTML($id, 2);
+                $this->page_data['braintree_token'] = $braintree_token;
+                $this->page_data['square_client_id'] = $this->config->item('square_client_id');
+                $this->page_data['company_info'] = $company;
+                $this->load->view('v2/pages/invoice/front_pay_now', $this->page_data);
+            }else{
+                redirect('/');
+            }            
+        }else{
+            redirect('/');
+        }
+    }
+
+	public function generateInvoiceHTML($id, $type = 1)
+    {
+		$this->load->model('Invoice_model', 'invoice_model');       
+        $this->load->model('general_model');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('CompanyOnlinePaymentAccount_model');
+
+        $invoice = get_invoice_by_id($id);
+
+        if (!empty($invoice)) {
+            foreach ($invoice as $key => $value) {
+                if (is_serialized($value)) {
+                    $invoice->{$key} = unserialize($value);
+                }
+            }
+            $this->page_data['invoice'] = $invoice;
+        }
+
+        $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
+
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => $invoice->company_id,
+            ),
+            'table' => 'business_profile',
+            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+        );
+
+        $this->page_data['company_info'] = $this->general_model->get_data_with_param($get_company_info, false);
+        $this->page_data['customer'] = $this->AcsProfile_model->getByProfId($invoice->customer_id);
+
+        if( $type == 1 ){
+            return $this->load->view('v2/pages/invoice/back-invoice-template', $this->page_data, true);
+        }else{
+            $companyOnlinePaymentAccount = $this->CompanyOnlinePaymentAccount_model->getByCompanyId($invoice->company_id);                
+            if( $companyOnlinePaymentAccount && ($companyOnlinePaymentAccount->braintree_merchant_id != '' && $companyOnlinePaymentAccount->braintree_public_key != '' && $companyOnlinePaymentAccount->braintree_private_key != '') ){
+                $gateway = new Braintree\Gateway([
+                    'environment' => BRAINTREE_ENVIRONMENT,
+                    'merchantId' => $companyOnlinePaymentAccount->braintree_merchant_id,
+                    'publicKey' => $companyOnlinePaymentAccount->braintree_public_key,
+                    'privateKey' => $companyOnlinePaymentAccount->braintree_private_key
+                ]);
+
+                try {
+                    $braintree_token = $gateway->ClientToken()->generate();	
+                } catch (Exception $e) {
+                    $braintree_token = '';
+                }
+            }   
+            $this->page_data['braintree_token'] = $braintree_token;
+            return $this->load->view('v2/pages/invoice/front-invoice-template', $this->page_data, true);
+        }        
+    }
 }

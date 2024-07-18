@@ -66,161 +66,23 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-lg-12">
-                                    <?php
-                                    $tableID = "balanceSheetSummary_table";
-                                    $reportCategory = "balance_sheet_summary";
+                                    <?php 
+                                        $tableID = "balancesheetsummary_table"; 
+                                        $reportCategory = "balance_sheet_summary"; 
                                     ?>
-                                    <table class="nsm-table balance-sheet-summary-table" id="tableID">
+                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 accordion">
                                         <thead>
                                             <tr>
-                                                <td data-name="Name"></td>
-                                                <td data-name="Total">TOTAL</td>
+                                                <th style="width:60%;"></th>
+                                                <th style="width:20%; text-align:right;">TOTAL</th>                                                
                                             </tr>
                                         </thead>
-                                        <tbody id="reportTable">
-                                            <!-- ASSETS -->
-                                            <tr data-bs-toggle="collapse" data-bs-target="#assets" class="clickable collapse-row collapsed">
-                                                <td><i class="bx bx-fw bx-caret-right"></i> ASSETS</td>
-                                                <td>$3,504,644.44</td>
-                                            </tr>
-                                            <tr class="collapse" id="assets">
+                                        <tbody>
+                                            <tr>
                                                 <td colspan="2">
-                                                    <table class="table mb-0">
-                                                        <tbody>
-                                                            <tr data-bs-toggle="collapse" data-bs-target="#currentAssets" class="clickable collapse-row collapsed">
-                                                                <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Current Assets</td>
-                                                                <td></td>
-                                                            </tr>
-                                                            <tr id="currentAssets" class="collapse">
-                                                                <td colspan="2">
-                                                                    <table class="table mb-0">
-                                                                        <tbody>
-                                                                            <tr data-bs-toggle="collapse" data-bs-target="#bankAccounts" class="clickable collapse-row collapsed">
-                                                                                <td>&emsp;&emsp;
-                                                                                    <!-- <i class="bx bx-fw bx-caret-right"></i> -->
-                                                                                    Bank Accounts
-                                                                                </td>
-                                                                                <td>$2,867,909.87</td>
-                                                                            </tr>
-
-                                                                            <tr data-bs-toggle="collapse" data-bs-target="#accountsReceivable" class="clickable collapse-row collapsed">
-                                                                                <td>&emsp;&emsp;
-                                                                                    <!-- <i class="bx bx-fw bx-caret-right"></i> -->
-                                                                                    Accounts Receivable
-                                                                                </td>
-                                                                                <td>571,831.88</td>
-                                                                            </tr>
-
-                                                                            <tr data-bs-toggle="collapse" data-bs-target="#otherCurrentAssets" class="clickable collapse-row collapsed">
-                                                                                <td>&emsp;&emsp;
-                                                                                    <!-- <i class="bx bx-fw bx-caret-right"></i>  -->
-                                                                                    Other Current Assets
-                                                                                </td>
-                                                                                <td>58,520.69</td>
-                                                                            </tr>
-
-                                                                            <td>&emsp;&emsp;<b>Total Current Assets</b></td>
-                                                                            <td><b>$3,498,262.44</b></td>
-                                                                        </tbody>
-                                                                    </table>
-                                                                </td>
-                                                            </tr>
-                                                            <tr data-bs-toggle="collapse" data-bs-target="#fixedAssets" class="clickable collapse-row collapsed">
-                                                                <td colspan="2">
-                                                                    <table class="table mb-0">
-                                                                        <tbody>
-                                                                            <td>&emsp;
-                                                                                <!-- <i class="bx bx-fw bx-caret-right"></i> -->
-                                                                                Fixed Assets
-                                                                            </td>
-                                                                            <td>6,382.00</td>
-                                                                        </tbody>
-                                                                    </table>
-                                                                </td>
-                                                            </tr>
-                                                            <tr id="assets" class="collapse">
-                                                                <td colspan="2">
-                                                                    <table class="table mb-0">
-                                                                        <tbody>
-                                                                            <td>&emsp;<b>TOTAL ASSETS</b></td>
-                                                                            <td><b>$3,504,644.44</b></td>
-                                                                        </tbody>
-                                                                    </table>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </td>
-                                            </tr>
-                                            <!-- LIABILITIES AND EQUITY -->
-                                            <tr data-bs-toggle="collapse" data-bs-target="#liabilitiesEquity" class="clickable collapse-row collapsed">
-                                                <td><i class="bx bx-fw bx-caret-right"></i> LIABILITIES AND EQUITY</td>
-                                                <td>$571,265.66</td>
-                                            </tr>
-                                            <tr class="collapse" id="liabilitiesEquity">
-                                                <td colspan="2">
-                                                    <table class="table mb-0">
-                                                        <tbody>
-                                                            <tr data-bs-toggle="collapse" data-bs-target="#liabilities" class="clickable collapse-row collapsed">
-                                                                <td>&emsp;<i class="bx bx-fw bx-caret-right"></i> Liabilities</td>
-                                                                <td></td>
-                                                            </tr>
-                                                            <tr id="liabilities" class="collapse">
-                                                                <td colspan="2">
-                                                                    <table class="table mb-0">
-                                                                        <tbody>
-                                                                            <tr data-bs-toggle="collapse" data-bs-target="#currentLiabilities" class="clickable collapse-row collapsed">
-                                                                                <td>&emsp;&emsp;<i class="bx bx-fw bx-caret-right"></i> Current Liabilities</td>
-                                                                                <td></td>
-                                                                            </tr>
-                                                                            <tr id="currentLiabilities" class="collapse">
-                                                                                <td colspan="2">
-                                                                                    <table class="table mb-0">
-                                                                                        <tbody>
-                                                                                            <tr id="currentLiabilities" class="collapse">
-                                                                                                <td>&emsp;&emsp;&emsp;Accounts Payable</td>
-                                                                                                <td>0.00</td>
-                                                                                            </tr>
-                                                                                            <tr id="currentLiabilities" class="collapse">
-                                                                                                <td>&emsp;&emsp;&emsp;Other Current Liabilities</td>
-                                                                                                <td>44,104.27</td>
-                                                                                            </tr>
-                                                                                            <tr id="currentLiabilities" class="collapse">
-                                                                                                <td>&emsp;&emsp;&emsp;<b>Total Current Liabilities</b></td>
-                                                                                                <td><b>$44,104.27</b></td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    </table>
-                                                                                </td>
-                                                                            </tr>
-                                                                            <tr data-bs-toggle="collapse" data-bs-target="#longTermLiabilities" class="clickable collapse-row collapsed">
-                                                                                <td>&emsp;&emsp;
-                                                                                    <!-- <i class="bx bx-fw bx-caret-right"></i>  -->
-                                                                                    Long-term Liabilities
-                                                                                </td>
-                                                                                <td>-27,385.50 </td>
-                                                                            </tr>
-                                                                            <tr id="liabilities" class="collapse">
-                                                                                <td>&emsp;&emsp;<b>Total Liabilities</b></td>
-                                                                                <td><b>$16,718.77</b></td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
-                                                                </td>
-                                                            </tr>
-                                                            <tr data-bs-toggle="collapse" data-bs-target="#equity" class="clickable collapse-row collapsed">
-                                                                <td>&emsp;
-                                                                    <!-- <i class="bx bx-fw bx-caret-right"></i>  -->
-                                                                    Equity
-                                                                </td>
-                                                                <td>3,487,925.67</td>
-                                                            </tr>
-                                                            <tr id="liabilitiesEquity" class="collapse">
-                                                                <td>&emsp;<b>Total Liabilities and Equity</b></td>
-                                                                <td><b>$571,265.66</b></td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
+                                                    <center>
+                                                        <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
+                                                    </center>
                                                 </td>
                                             </tr>
                                         </tbody>

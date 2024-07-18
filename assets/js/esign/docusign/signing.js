@@ -2516,7 +2516,8 @@ function Signing(hash) {
       if (data.has_user) {
         if (window.__esigndata.job_id) {
           // redirect to job and auto-open payment modal
-          window.location = `${prefixURL}/job/new_job1/${window.__esigndata.job_id}?modal=approved`;
+          //window.location = `${prefixURL}/job/new_job1/${window.__esigndata.job_id}?modal=approved`;
+          window.location = `${prefixURL}/invoice/customer_view/${window.__esigndata.inv_id}`;
           return;
         }
 

@@ -189,7 +189,7 @@ if ($invoice->due_date > date('Y-m-d')) {
                 <td colspan="2" style="padding: 8px; border: 1px solid;">
                     <b>ONE TIME (PROGRAM AND SETUP)</b>
                 </td>
-                <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->otp_setup, 2, '.', ','); ?></td>
+                <td style="padding: 8px; border: 1px solid;">$<?= number_format((float) $invoice->program_setup, 2, '.', ','); ?></td>
             </tr>
 
             <tr>

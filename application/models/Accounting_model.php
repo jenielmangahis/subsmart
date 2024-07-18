@@ -851,8 +851,17 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
 
-        if ($reportType == "accounts_payable_aging_summary") {
-            return array();
+        if ($reportType == 'balance_sheet_summary') {
+            $this->db->select('SUM(total_amount) AS total_amount');
+            $this->db->from('accounting_check');
+            $this->db->where('company_id', $companyID);
+            $data = $this->db->get();
+
+            return $data->result();
+        }
+
+        if ($reportType == 'accounts_payable_aging_summary') {
+            return [];
         }
 
         // Get Deposit Details data in Database

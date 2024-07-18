@@ -523,7 +523,7 @@ class DocuSign extends MYF_Controller
         }elseif( $document->ticket_id > 0 ){
             $this->db->select('monthly_monitoring AS inv_monthly_monitoring, program_setup AS inv_program_setup, installation_cost AS inv_installation_cost, taxes AS inv_taxes, sub_total AS inv_subtotal, (sub_total+taxes) AS inv_equipment_cost, grand_total AS inv_grand_total');
             $this->db->where('ticket_id', $document->ticket_id);
-            $invoces = $this->db->get('invoices')->row();
+            $invoices = $this->db->get('invoices')->row();
             if( $invoices ){
                 $invoices_accessKeys = [
                     'inv_monthly_monitoring',                
@@ -535,7 +535,7 @@ class DocuSign extends MYF_Controller
                     'inv_grand_total'
                 ];
                 
-                $filtered_invoice = array_filter( (array)$invoces , function($v) use ($invoices_accessKeys) {
+                $filtered_invoice = array_filter( (array)$invoices , function($v) use ($invoices_accessKeys) {
                     return in_array($v, $invoices_accessKeys);
                 }, ARRAY_FILTER_USE_KEY);
             }else{
@@ -812,6 +812,23 @@ class DocuSign extends MYF_Controller
         //         'name' => $document->name
         //     ));
         // }
+
+        $invoice_id = 0;
+        if( $document->job_id > 0 ){
+            $this->db->select('*');
+            $this->db->where('job_id', $document->job_id);
+            $invoice = $this->db->get('invoices')->row();
+            if( $invoice ){
+                $invoice_id = $invoice->id;
+            }
+        }elseif( $document->ticket_id > 0 ){
+            $this->db->select('*');
+            $this->db->where('ticket_id', $document->ticket_id);
+            $invoice = $this->db->get('invoices')->row();
+            if( $invoice ){
+                $invoice_id = $invoice->id;
+            }
+        }
         
 
         #end of changes
@@ -830,6 +847,7 @@ class DocuSign extends MYF_Controller
             'auto_populate_data' => $autoPopulateData,
             'recipient_ids' => $recipientIds,
             'job_id' =>  $jobId,
+            'inv_id' => $invoice_id,
             'job_data' => $jobData
         ]);
     }

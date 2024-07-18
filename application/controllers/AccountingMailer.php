@@ -1,48 +1,50 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
 
-class AccountingMailer extends MY_Controller{
-   
-    function  __construct(){
+defined('BASEPATH') or exit('No direct script access allowed');
+
+class AccountingMailer extends MY_Controller
+{
+    public function __construct()
+    {
         parent::__construct();
-    }    
+    }
 
-    private function sendEmail($emailTo, $emailCC, $emailSubject, $emailBody, $attachmentConfig = array()) {
-
+    private function sendEmail($emailTo, $emailCC, $emailSubject, $emailBody, $attachmentConfig = [])
+    {
         $emailer = email__getInstance(['subject' => $emailSubject]);
         $emailer->addAddress($emailTo, $emailTo);
         $emailer->isHTML(true);
         $emailer->Body = $emailBody;
         $emailer->addCC($emailCC);
         $emailer->addBCC($emailCC);
-        
+
         if ($attachmentConfig['customAttachmentNamePDF'] !== '') {
             if ($attachmentConfig['customAttachmentNamePDF'] !== '') {
-                $emailer->addAttachment(FCPATH . "assets/pdf/accounting/" . $attachmentConfig['reportFilePathPDF'], preg_replace("/[^A-Za-z0-9_\-]/", '', $attachmentConfig['customAttachmentNamePDF']));
+                $emailer->addAttachment(FCPATH.'assets/pdf/accounting/'.$attachmentConfig['reportFilePathPDF'], preg_replace("/[^A-Za-z0-9_\-]/", '', $attachmentConfig['customAttachmentNamePDF']));
             } else {
-                $emailer->addAttachment(FCPATH . "assets/pdf/accounting/" . $attachmentConfig['reportFilePathPDF']);
+                $emailer->addAttachment(FCPATH.'assets/pdf/accounting/'.$attachmentConfig['reportFilePathPDF']);
             }
         }
 
         if ($attachmentConfig['customAttachmentNameXLSX'] !== '') {
             if ($attachmentConfig['customAttachmentNameXLSX'] !== '') {
-                $emailer->addAttachment(FCPATH . "assets/pdf/accounting/" . $attachmentConfig['reportFilePathXLSX'], preg_replace("/[^A-Za-z0-9_\-]/", '', $attachmentConfig['customAttachmentNameXLSX']));
+                $emailer->addAttachment(FCPATH.'assets/pdf/accounting/'.$attachmentConfig['reportFilePathXLSX'], preg_replace("/[^A-Za-z0-9_\-]/", '', $attachmentConfig['customAttachmentNameXLSX']));
             } else {
-                $emailer->addAttachment(FCPATH . "assets/pdf/accounting/" . $attachmentConfig['reportFilePathXLSX']);
+                $emailer->addAttachment(FCPATH.'assets/pdf/accounting/'.$attachmentConfig['reportFilePathXLSX']);
             }
         }
 
         $sendStatus = $emailer->Send();
-        
+
         if ($sendStatus) {
-            echo "true";
+            echo 'true';
         } else {
-            echo "false";
+            echo 'false';
         }
-        
     }
 
-    public function emailReport($reportType) {
+    public function emailReport($reportType)
+    {
         // List of valid reports to request
         $accountingValidReports = array(
             "sales_tax_liability",
@@ -106,27 +108,22 @@ class AccountingMailer extends MY_Controller{
             "transaction_list_by_vendor",
             "1099_transaction_detail",
             "bills_and_applied_payments",
+            "open_purchase_order_details"
         );
 
         // Conditional Statements on the array
         if (in_array($reportType, $accountingValidReports)) {
-
             // Sending Report to email process
-            $emailTo = $this->input->post("emailTo");
-            $emailCC = $this->input->post("emailCC");
-            $emailSubject = $this->input->post("emailSubject");
-            $emailBody = $this->input->post("emailBody");
-            $reportFilePath = $this->input->post("reportFilePath");
-            $attachmentConfig = $this->input->post("attachmentConfig");
+            $emailTo = $this->input->post('emailTo');
+            $emailCC = $this->input->post('emailCC');
+            $emailSubject = $this->input->post('emailSubject');
+            $emailBody = $this->input->post('emailBody');
+            $reportFilePath = $this->input->post('reportFilePath');
+            $attachmentConfig = $this->input->post('attachmentConfig');
             $this->sendEmail($emailTo, $emailCC, $emailSubject, $emailBody, $attachmentConfig);
-
         } else {
-
             // If $reportType was not in the $accountingValidReports then return die() method
-            die("unable to send email report.");
-
+            exit('unable to send email report.');
         }
-
     }
-
 }

@@ -47,13 +47,10 @@
         }
 
         .companyimage {
-            width: 161px;
-            height: 70px;
-            min-width: 161px;
-            min-height: 70px;
-            background-color: #e2e2e2;
+            width: 85px;                 
+            background-color: #ffffff;
             display: block;
-            /* margin:auto; */
+            margin:10px 0px;
         }
 
         .companyimage.companyimage-big {
