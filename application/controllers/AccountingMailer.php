@@ -111,6 +111,8 @@ class AccountingMailer extends MY_Controller
             "open_purchase_order_details",
             "recent_transactions",
             "transaction_list_with_splits",
+            "profit_and_loss",
+            "employee_directory"
         );
 
         // Conditional Statements on the array
