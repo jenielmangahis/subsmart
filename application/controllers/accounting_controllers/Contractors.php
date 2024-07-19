@@ -714,7 +714,7 @@ class Contractors extends MY_Controller {
 
             $checkData = [
                 'company_id' => logged('company_id'),
-                'payee_type' => 'contrator',
+                'payee_type' => 'vendor',
                 'payee_id' => $contractorId,
                 'bank_account_id' => $post['corresponding_account'],
                 'mailing_address' => nl2br($address),
