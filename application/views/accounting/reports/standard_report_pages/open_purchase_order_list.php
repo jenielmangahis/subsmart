@@ -57,17 +57,16 @@
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
-                                                <th class="PLACE_LEFT"></th>
                                                 <th class="PLACE_LEFT">PO DATE</th>
                                                 <th class="PLACE_LEFT">PO STATUS</th>
                                                 <th class="PLACE_LEFT">DELIVERY ADDRESS</th>
-                                                <th class="PLACE_LEFT">AMOUNT</th>                                                
-                                                <th class="PLACE_LEFT">BALANCE</th>
+                                                <th class="PLACE_RIGHT">AMOUNT</th>                                                
+                                                <th class="PLACE_RIGHT">BALANCE</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="6">
+                                                <td colspan="5">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
