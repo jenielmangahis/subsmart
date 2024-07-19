@@ -316,7 +316,7 @@
                                         <option value="100" <?= $reportSettings && $reportSettings->page_size == 100 ? 'selected="selected"' : ''; ?>>100</option>
                                     </select>
                                 </div>
-                                <div class="col-md-4 mb-3">
+                                <!-- <div class="col-md-4 mb-3">
                                     <div class="col-md-12">
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
@@ -339,13 +339,13 @@
                                             </select>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-md-3 mb-3">
                                     <label class="mb-1 fw-xnormal">Display Density</label><br />
                                     <input type="checkbox" id="compact_display" name="compact_display" class="form-check-input">
                                     <label for="compact-display" class="form-check-label">Compact</label>
                                 </div>
-                                <div class="row">
+                                <!-- <div class="row">
                                     <div class="col-md-12 mb-3">
                                         <label class="mb-1 fw-xnormal">Change Columns</label><br />
                                         <div class="checkbox-grid">
@@ -411,7 +411,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>

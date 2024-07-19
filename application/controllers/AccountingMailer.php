@@ -106,7 +106,8 @@ class AccountingMailer extends MY_Controller
             "transaction_list_by_vendor",
             "1099_transaction_detail",
             "bills_and_applied_payments",
-            "open_purchase_order_details"
+            "open_purchase_order_details",
+            "transaction_list_with_splits",
         );
 
         // Conditional Statements on the array
