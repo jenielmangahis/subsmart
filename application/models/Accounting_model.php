@@ -1030,5 +1030,18 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
 
+        // Get Payroll Billing Summary in Database
+        if ($reportType == 'payroll_billing_summary') {
+            $this->db->select('*');
+            $this->db->from('accounting_paychecks');
+            $this->db->where('company_id', $companyID);
+            $this->db->where("pay_date >= '$reportConfig[date_from]'");
+            $this->db->where("pay_date <= '$reportConfig[date_to]'");            
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
     }
 }
