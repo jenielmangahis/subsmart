@@ -59,21 +59,21 @@
                                                 <th>CREATE DATE</th>
                                                 <th>NAME</th>
                                                 <th>MEMO/DESC</th>
-                                                <th>ACCOUNT</th>
+                                                <th>ACCT</th>
                                                 <th>SPLIT</th>
                                                 <th>REF#</th>
                                                 <th>SALES REP</th>
-                                                <th>PO NUMBER</th>
+                                                <th>PO NUM.</th>
                                                 <th>PO STATUS</th>
-                                                <th>PAYMENT METHOD</th>
+                                                <th>PYMT METHOD</th>
                                                 <th>TERMS</th>
                                                 <th>DUE DATE</th>
                                                 <th>INV. DATE</th>
-                                                <th>AMOUNT</th>
-                                                <th>OPEN BALANCE</th>
+                                                <th>OPEN BAL.</th>
                                                 <th>DEBIT</th>
                                                 <th>CREDIT</th>
                                                 <th>TAX AMT</th>
+                                                <th style="text-align: right;">AMT</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -343,6 +343,18 @@
                                         <option value="R" <?php echo ($reportSettings->footer_align == "R") ? "selected" : "" ?>>Right</option>
                                     </select>
                                 </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="from-date">From Date</label>
+                                    <div class="">
+                                        <input type="date" id="from-date" name="date_from" class="form-control nsm-field" value="<?= $reportSettings && $reportSettings->report_date_from_text != '' ? date("Y-m-d",strtotime($reportSettings->report_date_from_text)) : date("Y-m-d"); ?>" data-type="filter-date">
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="to-date">To Date</label>
+                                    <div class="">
+                                        <input type="date" id="to-date" name="date_to" class="form-control nsm-field" value="<?= $reportSettings && $reportSettings->report_date_to_text != '' ? date("Y-m-d",strtotime($reportSettings->report_date_to_text)) : date("Y-m-d"); ?>" data-type="filter-date">
+                                    </div>
+                                </div>                                
                                 <!-- <div class="col-md-2 mb-3">
                                     <label class="mb-1 fw-xnormal">Row Size</label>
                                     <select name="page_size" id="page-size" class="nsm-field form-select">
@@ -354,36 +366,49 @@
                                         <option value="500" <?php echo ($reportSettings->page_size == "500") ? "selected" : "" ?>>500</option>
                                     </select>
                                 </div> -->
-                                <!-- <div class="col-md-4 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <div class="col-md-12">
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
-                                            <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="id" <?php echo ($reportSettings->sort_by == "id") ? "selected" : "" ?>>ID</option>
-                                                <option value="vendor" <?php echo ($reportSettings->sort_by == "vendor") ? "selected" : "" ?>>Vendor</option>
-                                                <option value="phone_numbers" <?php echo ($reportSettings->sort_by == "phone_numbers") ? "selected" : "" ?>>Phone Numbers</option>
-                                                <option value="email" <?php echo ($reportSettings->sort_by == "email") ? "selected" : "" ?>>Email</option>
-                                                <option value="fullname" <?php echo ($reportSettings->sort_by == "fullname") ? "selected" : "" ?>>Full Name</option>
-                                                <option value="address" <?php echo ($reportSettings->sort_by == "address") ? "selected" : "" ?>>Address</option>
-                                                <option value="account_number" <?php echo ($reportSettings->sort_by == "account_number") ? "selected" : "" ?>>Account #</option>
+                                            <select name="sort_by" id="sort_by" class="nsm-field form-select">
+                                                <option value="default" <?=empty($reportSettings->sort_by) || $reportSettings->sort_by === 'default' ? 'selected' : ''?>>Default</option>
+                                                <option value="ap-paid" <?=$reportSettings->sort_by === 'ap-paid' ? 'selected' : ''?>>A/P Paid</option>
+                                                <option value="ar-paid" <?=$reportSettings->sort_by === 'ar-paid' ? 'selected' : ''?>>A/R Paid</option>
+                                                <option value="account" <?=$reportSettings->sort_by === 'account' ? 'selected' : ''?>>Account</option>
+                                                <option value="adj" <?=$reportSettings->sort_by === 'adj' ? 'selected' : ''?>>Adj</option>
+                                                <option value="check-printed" <?=$reportSettings->sort_by === 'check-printed' ? 'selected' : ''?>>Check Printed</option>
+                                                <option value="clr" <?=$reportSettings->sort_by === 'clr' ? 'selected' : ''?>>Clr</option>
+                                                <option value="create-date" <?=$reportSettings->sort_by === 'create-date' ? 'selected' : ''?>>Create Date</option>
+                                                <option value="created-by" <?=$reportSettings->sort_by === 'created-by' ? 'selected' : ''?>>Created By</option>
+                                                <option value="customer-vendor-message" <?=$reportSettings->sort_by === 'customer-vendor-message' ? 'selected' : ''?>>Customer/Vendor Message</option>
+                                                <option value="date" <?=$reportSettings->sort_by === 'date' ? 'selected' : ''?>>Date</option>
+                                                <option value="due-date" <?=$reportSettings->sort_by === 'due-date' ? 'selected' : ''?>>Due Date</option>
+                                                <option value="invoice-date" <?=$reportSettings->sort_by === 'invoice-date' ? 'selected' : ''?>>Invoice Date</option>
+                                                <option value="last-modified" <?=$reportSettings->sort_by === 'last-modified' ? 'selected' : ''?>>Last Modified</option>
+                                                <option value="last-modified-by" <?=$reportSettings->sort_by === 'last-modified-by' ? 'selected' : ''?>>Last Modified By</option>
+                                                <option value="memo-desc" <?=$reportSettings->sort_by === 'memo-desc' ? 'selected' : ''?>>Memo/Description</option>
+                                                <option value="name" <?=$reportSettings->sort_by === 'name' ? 'selected' : ''?>>Name</option>
+                                                <option value="num" <?=$reportSettings->sort_by === 'num' ? 'selected' : ''?>>Num</option>
+                                                <option value="online-banking" <?=$reportSettings->sort_by === 'online-banking' ? 'selected' : ''?>>Online Banking</option>
+                                                <option value="po-number" <?=$reportSettings->sort_by === 'po-number' ? 'selected' : ''?>>P.O. Number</option>
+                                                <option value="po-status" <?=$reportSettings->sort_by === 'po-status' ? 'selected' : ''?>>PO Status</option>
+                                                <option value="paid-by-mas" <?=$reportSettings->sort_by === 'paid-by-mas' ? 'selected' : ''?>>Paid by MAS</option>
+                                                <option value="payment-method" <?=$sort_by === 'payment-method' ? 'selected' : ''?>>Payment Method</option>
+                                                <option value="posting" <?=$reportSettings->sort_by === 'posting' ? 'selected' : ''?>>Posting</option>
+                                                <option value="ref-no" <?=$reportSettings->sort_by === 'ref-no' ? 'selected' : ''?>>Ref #</option>
+                                                <option value="sales-rep" <?=$reportSettings->sort_by === 'sales-rep' ? 'selected' : ''?>>Sales Rep</option>
+                                                <option value="ship-via" <?=$reportSettings->sort_by === 'ship-via' ? 'selected' : ''?>>Ship Via</option>
+                                                <option value="split" <?=$reportSettings->sort_by === 'split' ? 'selected' : ''?>>Split</option>
+                                                <option value="tax-amount" <?=$reportSettings->sort_by === 'tax-amount' ? 'selected' : ''?>>Tax Amount</option>
+                                                <option value="taxable-amount" <?=$reportSettings->sort_by === 'taxable-amount' ? 'selected' : ''?>>Taxable Amount</option>
+                                                <option value="terms" <?=$reportSettings->sort_by === 'terms' ? 'selected' : ''?>>Terms</option>
+                                                <option value="transaction-type" <?=$reportSettings->sort_by === 'transaction-type' ? 'selected' : ''?>>Transaction Type</option>
                                             </select>
-                                            <select name="sort_order" id="sort-order" class="nsm-field form-select">
+                                            <select name="sort_order" id="sort_order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
                                                 <option value="ASC" <?php echo ($reportSettings->sort_asc_desc== "ASC") ? "selected" : "" ?>>ASC</option>
                                             </select>
                                         </div>
-                                    </div>
-                                </div> -->
-                                <div class="col-md-3 mb-3">
-                                    <label for="from-date">From Date</label>
-                                    <div class="">
-                                        <input type="date" id="from-date" name="date_from" class="form-control nsm-field" value="<?= $reportSettings && $reportSettings->report_date_from_text != '' ? date("Y-m-d",strtotime($reportSettings->report_date_from_text)) : date("Y-m-d"); ?>" data-type="filter-date">
-                                    </div>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="to-date">To Date</label>
-                                    <div class="">
-                                        <input type="date" id="to-date" name="date_to" class="form-control nsm-field" value="<?= $reportSettings && $reportSettings->report_date_to_text != '' ? date("Y-m-d",strtotime($reportSettings->report_date_to_text)) : date("Y-m-d"); ?>" data-type="filter-date">
                                     </div>
                                 </div>
                             </div>
