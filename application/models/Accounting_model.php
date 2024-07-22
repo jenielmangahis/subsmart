@@ -67,6 +67,19 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
 
+        // Get Balance Sheet Details data in Database
+        if ($reportType == "balance_sheet_details") {
+            $this->db->select('ac.name, c.memo, c.payee_type');
+            $this->db->from('accounting_chart_of_accounts ac');
+            $this->db->join('accounting_check c', 'ac.id = c.id', 'left'); 
+            $this->db->where('ac.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+        
+
         // Get Expenses by Vendor Summary data in Database
         if ($reportType == "expenses_by_vendor_summary") {
             $this->db->select('accounting_vendors.display_name AS vendor, accounting_bill.remaining_balance AS balance, accounting_bill.total_amount AS expense, accounting_bill.created_at AS date');
@@ -1030,6 +1043,36 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
 
+        // Get Journal Report data in Database
+        // Info: The Journal Report is a detailed report that shows the individual accounting entries (journal entries) that make up a transaction.
+        if ($reportType == "journal") {
+            $this->db->select('journal_view.name_id AS name_id, journal_view.name AS name, journal_view.transaction_id AS transaction_id, journal_view.date AS date, journal_view.transaction_type AS transaction_type, journal_view.num AS num, journal_view.memo_description AS memo_description, journal_view.account AS account, journal_view.entry_type AS entry_type, journal_view.amount AS amount');
+            $this->db->from('journal_view');
+            $this->db->where('journal_view.company_id', $companyID);
+            $this->db->where("journal_view.date >= '$reportConfig[date_from]'");
+            $this->db->where("journal_view.date <= '$reportConfig[date_to]'");    
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('journal_view.name_id');
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Recent Automatic Transactions data in Database
+        // Info: The Recent Automatic Transactions Report is a that shows you a list of transactions that have been automatically recorded in your accounting.
+        if ($reportType == "recent_automatic_transactions") {
+            $this->db->select('journal_view.name_id AS name_id, journal_view.name AS name, journal_view.date AS date, journal_view.transaction_type AS transaction_type, journal_view.num AS num, "Yes" AS posting, journal_view.memo_description AS memo_description, journal_view.account AS account, "" AS split, "" AS paid_by_mas, journal_view.amount AS amount');
+            $this->db->from('journal_view');
+            $this->db->where('journal_view.company_id', $companyID);
+            $this->db->where("journal_view.date >= '$reportConfig[date_from]'");
+            $this->db->where("journal_view.date <= '$reportConfig[date_to]'");    
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('journal_view.name_id');
+            $data = $this->db->get();
+            return $data->result();
+        }
+
         // Get Payroll Billing Summary in Database
         if ($reportType == 'payroll_billing_summary') {
             $this->db->select('*');
@@ -1041,7 +1084,7 @@ class Accounting_model extends MY_Model
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
-        }
+        }        
 
     }
 }

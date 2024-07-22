@@ -112,7 +112,14 @@ class AccountingMailer extends MY_Controller
             "recent_transactions",
             "transaction_list_with_splits",
             "profit_and_loss",
-            "employee_directory"
+            "employee_directory",
+            "sales_tax_liability_reports",
+            "journal",
+            "recent_automatic_transactions",
+            "profit_and_loss_comparison",
+            "contractor_payments",
+            "profit_and_loss_by_month",
+            "transaction_list_by_date",
         );
 
         // Conditional Statements on the array
