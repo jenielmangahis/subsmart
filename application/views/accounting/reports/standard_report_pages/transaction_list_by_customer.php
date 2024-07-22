@@ -51,12 +51,12 @@
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
-                                            <tr>
-                                                <th>CUSTOMER</th>                                                
+                                            <tr>                                                
                                                 <th>DATE</th>
                                                 <th>TRANSACTION TYPE</th>
                                                 <th>NUM</th>
-                                                <th class="text-end">AMOUNT</th>
+                                                <th class="PLACE_RIGHT">AMOUNT</th>
+                                                <th class="PLACE_RIGHT">BALANCE</th>
                                             </tr>
                                         </thead>
                                         <tbody>

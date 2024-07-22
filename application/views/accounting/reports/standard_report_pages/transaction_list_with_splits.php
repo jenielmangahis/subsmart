@@ -40,7 +40,7 @@
                                     <div class="reportTitleInfo">
                                         <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name) ?></h3>
                                         <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
-                                        <h5><small id="reportDate">As of <?php echo date('F d, Y'); ?></small></h5>
+                                        <h5><small id="reportDate"><span id="date_from_text"></span> &mdash; <span id="date_to_text"></span></small></h5>
                                     </div>
                                 </div>
                             </div>
@@ -56,30 +56,10 @@
                                                 <th>DATE</th>
                                                 <th>TRANSACTION TYPE</th>
                                                 <th>NUM</th>
-                                                <!-- <th>ADJ</th> -->
-                                                <!-- <th>POSTING</th>
-                                                <th>CREATED</th>
-                                                <th>CREATED BY</th>
-                                                <th>LAST MODIFIED</th>
-                                                <th>LAST MODIFIED BY</th> -->
-                                                <!-- <th>NAME</th> -->
-                                                <!-- <th>CUSTOMER</th>
-                                                <th>VENDOR</th>
-                                                <th>EMPLOYEE</th>
-                                                <th>PRODUCT/SERVICE</th> -->
                                                 <th>MEMO/DESCRIPTION</th>
-                                                <!-- <th>QTY</th>
-                                                <th>RATE</th>
-                                                <th>ACCOUNT</th>
-                                                <th>PAYMENT METHOD</th>
-                                                <th>CLR</th> -->
-                                                <th style="text-align: center;">AMOUNT</th>
-                                                <!-- <th>OPEN BALANCE</th>
-                                                <th>TAXABLE</th>
-                                                <th>BILLABLE</th> -->
-                                                <th style="text-align: center;">DEBIT</th>
-                                                <th style="text-align: center;">CREDIT</th>
-                                                <!-- <th>ONLINE BANKING</th> -->
+                                                <th style="text-align: right;">AMOUNT</th>
+                                                <th style="text-align: right;">DEBIT</th>
+                                                <th style="text-align: right;">CREDIT</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -215,6 +195,13 @@
                                                 <option value="ASC" <?php echo ($reportSettings->sort_asc_desc == "ASC") ? "selected" : "" ?>>ASC</option>
                                             </select>
                                         </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-5 mb-3">
+                                    <label class="mb-1 fw-xnormal">Date Range <small class="text-muted">(From &mdash; To)</small></label>
+                                    <div class="input-group">
+                                        <input name="date_from" class="form-control mt-0" type="date" value="<?= $reportSettings ? date("Y-m-d", strtotime($reportSettings->report_date_from_text)) : date('Y') . '-01-01'; ?>">
+                                        <input name="date_to" class="form-control mt-0" type="date" value="<?= $reportSettings ? date("Y-m-d", strtotime($reportSettings->report_date_to_text)) : date('Y-m-t'); ?>">
                                     </div>
                                 </div>
                             </div>

@@ -59,10 +59,10 @@
                                                 <th>NAME</th>
                                                 <th>MEMO/DESCRIPTION</th>
                                                 <th>SPLIT</th>
-                                                <th>DEBIT</th>
-                                                <th>CREDIT</th>
-                                                <th>AMOUNT</th>
-                                                <th>BALANCE</th>                                               
+                                                <th style="text-align: right;">DEBIT</th>
+                                                <th style="text-align: right;">CREDIT</th>
+                                                <th style="text-align: right;">AMOUNT</th>
+                                                <th style="text-align: right;">BALANCE</th>                                               
                                             </tr>
                                         </thead>
                                         <tbody>
