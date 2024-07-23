@@ -474,6 +474,7 @@ $('#save-custom-report').on('click', function(e) {
     });
 });
 
+/*
 $('#sort-by, [name="sort_order"]').on('change', function() {
     var sortBy = $('#sort-by').val();
     var sortIn = $('input[name="sort_order"]:checked').val();
@@ -507,6 +508,7 @@ $('#sort-by, [name="sort_order"]').on('change', function() {
 
     location.href = url;
 });
+*/
 
 $('#add-notes').on('click', function(e) {
     e.preventDefault();
