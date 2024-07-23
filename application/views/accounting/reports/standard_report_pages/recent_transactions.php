@@ -371,38 +371,40 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort_by" class="nsm-field form-select">
+                                                <option value="date" <?=$reportSettings->sort_by === 'date' ? 'selected' : ''?>>Date</option>
+                                                <option value="transaction-type" <?=$reportSettings->sort_by === 'transaction-type' ? 'selected' : ''?>>Transaction Type</option>
+                                                <option value="num" <?=$reportSettings->sort_by === 'num' ? 'selected' : ''?>>Num</option>
+                                                <option value="create-date" <?=$reportSettings->sort_by === 'create-date' ? 'selected' : ''?>>Create Date</option>
+                                                <option value="name" <?=$reportSettings->sort_by === 'name' ? 'selected' : ''?>>Name</option>
+                                                <option value="memo-desc" <?=$reportSettings->sort_by === 'memo-desc' ? 'selected' : ''?>>Memo/Description</option>
+                                                <option value="account" <?=$reportSettings->sort_by === 'account' ? 'selected' : ''?>>Account</option>
+                                                <option value="split" <?=$reportSettings->sort_by === 'split' ? 'selected' : ''?>>Split</option>
+                                                <option value="ref-no" <?=$reportSettings->sort_by === 'ref-no' ? 'selected' : ''?>>Ref #</option>
+                                                <option value="sales-rep" <?=$reportSettings->sort_by === 'sales-rep' ? 'selected' : ''?>>Sales Rep</option>
+                                                <option value="po-number" <?=$reportSettings->sort_by === 'po-number' ? 'selected' : ''?>>P.O. Number</option>
+                                                <option value="po-status" <?=$reportSettings->sort_by === 'po-status' ? 'selected' : ''?>>PO Status</option>
+                                                <option value="payment-method" <?=$sort_by === 'payment-method' ? 'selected' : ''?>>Payment Method</option>
+                                                <option value="terms" <?=$reportSettings->sort_by === 'terms' ? 'selected' : ''?>>Terms</option>
+                                                <option value="due-date" <?=$reportSettings->sort_by === 'due-date' ? 'selected' : ''?>>Due Date</option>
+                                                <option value="tax-amount" <?=$reportSettings->sort_by === 'tax-amount' ? 'selected' : ''?>>Tax Amount</option>
+                                                <!--
                                                 <option value="default" <?=empty($reportSettings->sort_by) || $reportSettings->sort_by === 'default' ? 'selected' : ''?>>Default</option>
                                                 <option value="ap-paid" <?=$reportSettings->sort_by === 'ap-paid' ? 'selected' : ''?>>A/P Paid</option>
                                                 <option value="ar-paid" <?=$reportSettings->sort_by === 'ar-paid' ? 'selected' : ''?>>A/R Paid</option>
-                                                <option value="account" <?=$reportSettings->sort_by === 'account' ? 'selected' : ''?>>Account</option>
                                                 <option value="adj" <?=$reportSettings->sort_by === 'adj' ? 'selected' : ''?>>Adj</option>
                                                 <option value="check-printed" <?=$reportSettings->sort_by === 'check-printed' ? 'selected' : ''?>>Check Printed</option>
                                                 <option value="clr" <?=$reportSettings->sort_by === 'clr' ? 'selected' : ''?>>Clr</option>
-                                                <option value="create-date" <?=$reportSettings->sort_by === 'create-date' ? 'selected' : ''?>>Create Date</option>
                                                 <option value="created-by" <?=$reportSettings->sort_by === 'created-by' ? 'selected' : ''?>>Created By</option>
                                                 <option value="customer-vendor-message" <?=$reportSettings->sort_by === 'customer-vendor-message' ? 'selected' : ''?>>Customer/Vendor Message</option>
-                                                <option value="date" <?=$reportSettings->sort_by === 'date' ? 'selected' : ''?>>Date</option>
-                                                <option value="due-date" <?=$reportSettings->sort_by === 'due-date' ? 'selected' : ''?>>Due Date</option>
                                                 <option value="invoice-date" <?=$reportSettings->sort_by === 'invoice-date' ? 'selected' : ''?>>Invoice Date</option>
                                                 <option value="last-modified" <?=$reportSettings->sort_by === 'last-modified' ? 'selected' : ''?>>Last Modified</option>
                                                 <option value="last-modified-by" <?=$reportSettings->sort_by === 'last-modified-by' ? 'selected' : ''?>>Last Modified By</option>
-                                                <option value="memo-desc" <?=$reportSettings->sort_by === 'memo-desc' ? 'selected' : ''?>>Memo/Description</option>
-                                                <option value="name" <?=$reportSettings->sort_by === 'name' ? 'selected' : ''?>>Name</option>
-                                                <option value="num" <?=$reportSettings->sort_by === 'num' ? 'selected' : ''?>>Num</option>
                                                 <option value="online-banking" <?=$reportSettings->sort_by === 'online-banking' ? 'selected' : ''?>>Online Banking</option>
-                                                <option value="po-number" <?=$reportSettings->sort_by === 'po-number' ? 'selected' : ''?>>P.O. Number</option>
-                                                <option value="po-status" <?=$reportSettings->sort_by === 'po-status' ? 'selected' : ''?>>PO Status</option>
                                                 <option value="paid-by-mas" <?=$reportSettings->sort_by === 'paid-by-mas' ? 'selected' : ''?>>Paid by MAS</option>
-                                                <option value="payment-method" <?=$sort_by === 'payment-method' ? 'selected' : ''?>>Payment Method</option>
                                                 <option value="posting" <?=$reportSettings->sort_by === 'posting' ? 'selected' : ''?>>Posting</option>
-                                                <option value="ref-no" <?=$reportSettings->sort_by === 'ref-no' ? 'selected' : ''?>>Ref #</option>
-                                                <option value="sales-rep" <?=$reportSettings->sort_by === 'sales-rep' ? 'selected' : ''?>>Sales Rep</option>
                                                 <option value="ship-via" <?=$reportSettings->sort_by === 'ship-via' ? 'selected' : ''?>>Ship Via</option>
-                                                <option value="split" <?=$reportSettings->sort_by === 'split' ? 'selected' : ''?>>Split</option>
-                                                <option value="tax-amount" <?=$reportSettings->sort_by === 'tax-amount' ? 'selected' : ''?>>Tax Amount</option>
                                                 <option value="taxable-amount" <?=$reportSettings->sort_by === 'taxable-amount' ? 'selected' : ''?>>Taxable Amount</option>
-                                                <option value="terms" <?=$reportSettings->sort_by === 'terms' ? 'selected' : ''?>>Terms</option>
-                                                <option value="transaction-type" <?=$reportSettings->sort_by === 'transaction-type' ? 'selected' : ''?>>Transaction Type</option>
+                                                -->
                                             </select>
                                             <select name="sort_order" id="sort_order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
