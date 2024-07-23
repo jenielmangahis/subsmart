@@ -69,15 +69,32 @@ class Accounting_model extends MY_Model
 
         // Get Balance Sheet Details data in Database
         if ($reportType == "balance_sheet_details") {
-            $this->db->select('ac.name, c.memo, c.payee_type');
+            $this->db->select('
+                ac.name, 
+                c.memo, 
+                c.payee_type, 
+                c.total_amount, 
+                c.check_no, 
+                c.payment_date,
+                arp.payment_date AS arp_payment_date,
+                arp.payment_method AS arp_payment_method,
+                arp.memo AS arp_memo,
+                arp.amount_received AS arp_amount_received,
+                arp.amount_to_credit AS arp_amount_to_credit,
+                arp.amount_to_apply AS arp_amount_to_apply,
+                arp.credit_balance AS arp_credit_balance
+            ');
             $this->db->from('accounting_chart_of_accounts ac');
             $this->db->join('accounting_check c', 'ac.id = c.id', 'left'); 
+            $this->db->join('accounting_receive_payment arp', 'ac.id = arp.id', 'left');
             $this->db->where('ac.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
+        
             $data = $this->db->get();
             return $data->result();
         }
+        
         
 
         // Get Expenses by Vendor Summary data in Database
