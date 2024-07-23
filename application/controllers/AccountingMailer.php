@@ -120,6 +120,7 @@ class AccountingMailer extends MY_Controller
             "contractor_payments",
             "profit_and_loss_by_month",
             "transaction_list_by_date",
+            "trial_balance",
         );
 
         // Conditional Statements on the array
