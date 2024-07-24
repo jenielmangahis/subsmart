@@ -142,7 +142,7 @@ class AccountingMailer extends MY_Controller
             $this->sendEmail($emailTo, $emailCC, $emailSubject, $emailBody, $attachmentConfig);
         } else {
             // If $reportType was not in the $accountingValidReports then return die() method
-            exit('unable to send email report.');
+            exit('unable to send email report.'); 
         }
     }
 }
