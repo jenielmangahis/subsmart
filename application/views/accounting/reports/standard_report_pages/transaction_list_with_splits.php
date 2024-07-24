@@ -182,7 +182,7 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="date" <?php echo ($reportSettings->sort_by == "date") ? "selected" : "" ?>>DATE</option>
+                                                <option value="transaction_date" <?php echo ($reportSettings->sort_by == "transaction_date") ? "selected" : "" ?>>DATE</option>
                                                 <option value="transaction_type" <?php echo ($reportSettings->sort_by == "transaction_type") ? "selected" : "" ?>>TRANSACTION TYPE</option>
                                                 <option value="num" <?php echo ($reportSettings->sort_by == "num") ? "selected" : "" ?>>NUM</option>
                                                 <option value="memo_description" <?php echo ($reportSettings->sort_by == "memo_description") ? "selected" : "" ?>>MEMO/DESCRIPTION</option>

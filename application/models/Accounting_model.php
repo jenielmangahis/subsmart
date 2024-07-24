@@ -95,7 +95,15 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
         
-        
+        if ($reportType == "transaction_list_with_splits") {
+            $this->db->select('transaction_type, transaction_date, amount, transaction_id');
+            $this->db->from('accounting_account_transactions');
+            $this->db->where('company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
 
         // Get Expenses by Vendor Summary data in Database
         if ($reportType == "expenses_by_vendor_summary") {
@@ -550,6 +558,21 @@ class Accounting_model extends MY_Model
             $data = $this->db->get();
             return $data->result();
         }
+
+        if ($reportType == 'general_ledger_details') {
+            $this->db->select("accounting_account_transactions.*");
+            $this->db->from('accounting_chart_of_accounts');
+            $this->db->join('accounting_account_transactions', 'accounting_account_transactions.account_id = accounting_chart_of_accounts.id', 'left');
+            $this->db->where("DATE_FORMAT(accounting_account_transactions.transaction_date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_account_transactions.transaction_date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_chart_of_accounts.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('accounting_account_transactions.transaction_type');
+            $data = $this->db->get();
+            return $data->result();
+        }
+
 
         // Get Payment Method List data in Database
         if ($reportType == "payment_method_list") {
@@ -1139,6 +1162,23 @@ class Accounting_model extends MY_Model
             $this->db->where("accounting_paychecks.pay_date <= '$reportConfig[date_to]'");            
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        } 
+        
+        // Get Payroll Details data in Database
+        // Info: The Payroll Details is a report that shows you all the details of your employees' pay for a specific period of time.
+        if ($reportType == "payroll_details") {
+            $this->db->select('accounting_paychecks.id AS payroll_id, accounting_paychecks.employee_id AS employee_id, CONCAT(users.FName, " ", users.LName) AS employee, accounting_paychecks.pay_date AS pay_date, accounting_payroll_employees.employee_hours AS hrs, accounting_payroll_employees.employee_total_pay AS gross_pay, accounting_payroll_employees.employee_bonus AS other_pay, ((accounting_payroll_employees.employee_total_pay / 100) * 6.2) AS social_security, ((accounting_payroll_employees.employee_total_pay / 100) * 1.45) AS medicare, accounting_payroll_employees.employee_net_pay AS net_pay, accounting_payroll_employees.employee_total_pay AS total_payroll_cost');
+            $this->db->from('accounting_paychecks');
+            $this->db->join('accounting_payroll_employees', 'accounting_payroll_employees.payroll_id = accounting_paychecks.payroll_id', 'left');
+            $this->db->join('users', 'users.id = accounting_paychecks.employee_id', 'left');
+            $this->db->where('users.company_id', $companyID);
+            $this->db->where("accounting_paychecks.pay_date >= '$reportConfig[date_from]'");
+            $this->db->where("accounting_paychecks.pay_date <= '$reportConfig[date_to]'");    
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('accounting_paychecks.id');
             $data = $this->db->get();
             return $data->result();
         } 
