@@ -77,6 +77,10 @@
         display: none;
     }
 
+    .collapse-row:hover {
+        cursor: pointer;
+    }
+
     /* table.dataTable > tbody {
         font-size: 14px;
     } */
