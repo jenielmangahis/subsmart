@@ -1228,5 +1228,21 @@ class Accounting_model extends MY_Model
             $data = $this->db->get();
             return $data->result();
         }
+
+        // Get Vacation and Sick Leave data in Database        
+        if ($reportType == "vacation_and_sick_leave") {
+            $this->db->select('timesheet_leave.*,CONCAT(users.FName, " ", users.LName)AS employee, timesheet_pto.name AS leave_type,timesheet_leave_date.date AS leave_date,timesheet_leave_date.date_time AS date_filed');
+            $this->db->from('timesheet_leave');
+            $this->db->join('users', 'timesheet_leave.user_id = users.id', 'left');
+            $this->db->join('timesheet_leave_date', 'timesheet_leave.id = timesheet_leave_date.leave_id', 'left');
+            $this->db->join('timesheet_pto', 'timesheet_leave.pto_id = timesheet_pto.id', 'left');
+            $this->db->where('users.company_id', $companyID);
+            $this->db->where("timesheet_leave_date.date >= '$reportConfig[date_from]'");
+            $this->db->where("timesheet_leave_date.date <= '$reportConfig[date_to]'");    
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        } 
     }
 }
