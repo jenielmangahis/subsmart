@@ -1128,5 +1128,19 @@ class Accounting_model extends MY_Model
             $data = $this->db->get();
             return $data->result();
         } 
+
+        // Get Paycheck History in Database
+        if ($reportType == 'paycheck_history') {
+            $this->db->select('accounting_paychecks.*, CONCAT(users.FNane, " ", users.LName)AS employee');
+            $this->db->from('accounting_paychecks');
+            $this->db->join('users', 'accounting_paychecks.employee_id = users.id', 'left'); 
+            $this->db->where('company_id', $companyID);
+            $this->db->where("pay_date >= '$reportConfig[date_from]'");
+            $this->db->where("pay_date <= '$reportConfig[date_to]'");            
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        } 
     }
 }
