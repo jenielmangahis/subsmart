@@ -120,6 +120,7 @@ class AccountingMailer extends MY_Controller
             "contractor_payments",
             "profit_and_loss_by_month",
             "transaction_list_by_date",
+            "trial_balance",
             "paycheck_history",
             "payroll_summary_by_employee",
             "total_pay",
@@ -141,7 +142,7 @@ class AccountingMailer extends MY_Controller
             $this->sendEmail($emailTo, $emailCC, $emailSubject, $emailBody, $attachmentConfig);
         } else {
             // If $reportType was not in the $accountingValidReports then return die() method
-            exit('unable to send email report.');
+            exit('unable to send email report.'); 
         }
     }
 }
