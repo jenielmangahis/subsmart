@@ -66,6 +66,7 @@ class Accounting_modals extends MY_Controller
         $this->load->model('accounting_custom_reports_model');
         $this->load->model('accounting_paychecks_model');
         $this->load->model('timesheet_model');
+        $this->load->model('PayScale_model');
         $this->load->library('form_validation');
         
         $this->load->model('General_model', 'general');
@@ -132,8 +133,10 @@ class Accounting_modals extends MY_Controller
                     $lastAdjustmentNo = (int)$this->accounting_inventory_qty_adjustments_model->getLastAdjustmentNo();
                     $this->page_data['adjustment_no'] = $lastAdjustmentNo + 1;
                 break;
-                case 'payroll_modal':
-                    $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
+                case 'payroll_modal':                    
+                    $cid = logged('company_id');                    
+                    $this->page_data['payscales'] = $this->PayScale_model->getAllByCompanyId($cid);
+                    //$this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
                 break;
                 case 'weekly_timesheet_modal':
                     $this->page_data['timesheetSettings'] = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));

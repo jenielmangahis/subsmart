@@ -121,6 +121,13 @@ class AccountingMailer extends MY_Controller
             "profit_and_loss_by_month",
             "transaction_list_by_date",
             "trial_balance",
+            "paycheck_history",
+            "payroll_summary_by_employee",
+            "total_pay",
+            "payroll_summary",
+            "payroll_billing_summary",
+            "general_ledger_details",
+            "payroll_details",
         );
 
         // Conditional Statements on the array

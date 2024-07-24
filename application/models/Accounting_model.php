@@ -95,7 +95,15 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
         
-        
+        if ($reportType == "transaction_list_with_splits") {
+            $this->db->select('transaction_type, transaction_date, amount, transaction_id');
+            $this->db->from('accounting_account_transactions');
+            $this->db->where('company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
 
         // Get Expenses by Vendor Summary data in Database
         if ($reportType == "expenses_by_vendor_summary") {
@@ -550,6 +558,21 @@ class Accounting_model extends MY_Model
             $data = $this->db->get();
             return $data->result();
         }
+
+        if ($reportType == 'general_ledger_details') {
+            $this->db->select("accounting_account_transactions.*");
+            $this->db->from('accounting_chart_of_accounts');
+            $this->db->join('accounting_account_transactions', 'accounting_account_transactions.account_id = accounting_chart_of_accounts.id', 'left');
+            $this->db->where("DATE_FORMAT(accounting_account_transactions.transaction_date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_account_transactions.transaction_date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_chart_of_accounts.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('accounting_account_transactions.transaction_type');
+            $data = $this->db->get();
+            return $data->result();
+        }
+
 
         // Get Payment Method List data in Database
         if ($reportType == "payment_method_list") {
@@ -1123,6 +1146,99 @@ class Accounting_model extends MY_Model
             $this->db->where('company_id', $companyID);
             $this->db->where("pay_date >= '$reportConfig[date_from]'");
             $this->db->where("pay_date <= '$reportConfig[date_to]'");            
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        } 
+
+        // Get Paycheck History in Database
+        if ($reportType == 'paycheck_history') {
+            $this->db->select('accounting_paychecks.*, CONCAT(users.FName, " ", users.LName)AS employee');
+            $this->db->from('accounting_paychecks');
+            $this->db->join('users', 'accounting_paychecks.employee_id = users.id', 'left'); 
+            $this->db->where('accounting_paychecks.company_id', $companyID);
+            $this->db->where("accounting_paychecks.pay_date >= '$reportConfig[date_from]'");
+            $this->db->where("accounting_paychecks.pay_date <= '$reportConfig[date_to]'");            
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        } 
+        
+        // Get Payroll Details data in Database
+        // Info: The Payroll Details is a report that shows you all the details of your employees' pay for a specific period of time.
+        if ($reportType == "payroll_details") {
+            $this->db->select('accounting_paychecks.id AS payroll_id, accounting_paychecks.employee_id AS employee_id, CONCAT(users.FName, " ", users.LName) AS employee, accounting_paychecks.pay_date AS pay_date, accounting_payroll_employees.employee_hours AS hrs, accounting_payroll_employees.employee_total_pay AS gross_pay, accounting_payroll_employees.employee_bonus AS other_pay, ((accounting_payroll_employees.employee_total_pay / 100) * 6.2) AS social_security, ((accounting_payroll_employees.employee_total_pay / 100) * 1.45) AS medicare, accounting_payroll_employees.employee_net_pay AS net_pay, accounting_payroll_employees.employee_total_pay AS total_payroll_cost');
+            $this->db->from('accounting_paychecks');
+            $this->db->join('accounting_payroll_employees', 'accounting_payroll_employees.payroll_id = accounting_paychecks.payroll_id', 'left');
+            $this->db->join('users', 'users.id = accounting_paychecks.employee_id', 'left');
+            $this->db->where('users.company_id', $companyID);
+            $this->db->where("accounting_paychecks.pay_date >= '$reportConfig[date_from]'");
+            $this->db->where("accounting_paychecks.pay_date <= '$reportConfig[date_to]'");    
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('accounting_paychecks.id');
+            $data = $this->db->get();
+            return $data->result();
+        } 
+
+        if ($reportType == "sales_tax_liability_reports") {
+            $this->db->select('invoices.id AS invoice_id,
+                items.title AS product_service,
+                (SELECT SUM((items.price - invoices_items.discount) * invoices_items.qty + invoices_items.tax) 
+                    FROM invoices 
+                    LEFT JOIN invoices_items ON invoices_items.invoice_id = invoices.id 
+                        LEFT JOIN items ON items.id = invoices_items.items_id 
+                    WHERE invoices.company_id = ' . $companyID . ' 
+                        AND DATE_FORMAT(invoices.date_created, "%Y-%m-%d") >= "' . $reportConfig['date_from'] . '" 
+                        AND DATE_FORMAT(invoices.date_created, "%Y-%m-%d") <= "' . $reportConfig['date_to'] . '"
+                ) AS gross_total,
+                (SELECT SUM((items.price - invoices_items.discount) * invoices_items.qty) 
+                    FROM invoices 
+                    LEFT JOIN invoices_items ON invoices_items.invoice_id = invoices.id 
+                    LEFT JOIN items ON items.id = invoices_items.items_id 
+                    WHERE invoices.company_id = ' . $companyID . ' 
+                        AND invoices_items.tax > 0 
+                        AND DATE_FORMAT(invoices.date_created,"%Y-%m-%d") >= "' . $reportConfig['date_from'] . '" 
+                        AND DATE_FORMAT(invoices.date_created,"%Y-%m-%d") <= "' . $reportConfig['date_to'] . '"
+                ) AS taxable_amount,
+                (SELECT SUM((items.price - invoices_items.discount) * invoices_items.qty) 
+                    FROM invoices 
+                    LEFT JOIN invoices_items ON invoices_items.invoice_id = invoices.id 
+                    LEFT JOIN items ON items.id = invoices_items.items_id 
+                    WHERE invoices.company_id = ' . $companyID . ' 
+                    AND invoices_items.tax <= 0 
+                    AND DATE_FORMAT(invoices.date_created,"%Y-%m-%d") >= "' . $reportConfig['date_from'] . '" 
+                    AND DATE_FORMAT(invoices.date_created,"%Y-%m-%d") <= "' . $reportConfig['date_to'] . '"
+                ) AS non_taxable_amount,
+                SUM(invoices_items.tax) AS tax_amount
+            ');
+            $this->db->from('invoices');
+            $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
+            $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
+            $this->db->where('items.title !=', '');
+            $this->db->where('items.price !=', 0);
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->group_by('items.id');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Vacation and Sick Leave data in Database        
+        if ($reportType == "vacation_and_sick_leave") {
+            $this->db->select('timesheet_leave.*,CONCAT(users.FName, " ", users.LName)AS employee, timesheet_pto.name AS leave_type,timesheet_leave_date.date AS leave_date,timesheet_leave_date.date_time AS date_filed');
+            $this->db->from('timesheet_leave');
+            $this->db->join('users', 'timesheet_leave.user_id = users.id', 'left');
+            $this->db->join('timesheet_leave_date', 'timesheet_leave.id = timesheet_leave_date.leave_id', 'left');
+            $this->db->join('timesheet_pto', 'timesheet_leave.pto_id = timesheet_pto.id', 'left');
+            $this->db->where('users.company_id', $companyID);
+            $this->db->where("timesheet_leave_date.date >= '$reportConfig[date_from]'");
+            $this->db->where("timesheet_leave_date.date <= '$reportConfig[date_to]'");    
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
