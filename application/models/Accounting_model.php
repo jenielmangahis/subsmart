@@ -1142,5 +1142,51 @@ class Accounting_model extends MY_Model
             $data = $this->db->get();
             return $data->result();
         } 
+
+        if ($reportType == "sales_tax_liability_reports") {
+            $this->db->select('invoices.id AS invoice_id,
+                items.title AS product_service,
+                (SELECT SUM((items.price - invoices_items.discount) * invoices_items.qty + invoices_items.tax) 
+                    FROM invoices 
+                    LEFT JOIN invoices_items ON invoices_items.invoice_id = invoices.id 
+                        LEFT JOIN items ON items.id = invoices_items.items_id 
+                    WHERE invoices.company_id = ' . $companyID . ' 
+                        AND DATE_FORMAT(invoices.date_created, "%Y-%m-%d") >= "' . $reportConfig['date_from'] . '" 
+                        AND DATE_FORMAT(invoices.date_created, "%Y-%m-%d") <= "' . $reportConfig['date_to'] . '"
+                ) AS gross_total,
+                (SELECT SUM((items.price - invoices_items.discount) * invoices_items.qty) 
+                    FROM invoices 
+                    LEFT JOIN invoices_items ON invoices_items.invoice_id = invoices.id 
+                    LEFT JOIN items ON items.id = invoices_items.items_id 
+                    WHERE invoices.company_id = ' . $companyID . ' 
+                        AND invoices_items.tax > 0 
+                        AND DATE_FORMAT(invoices.date_created,"%Y-%m-%d") >= "' . $reportConfig['date_from'] . '" 
+                        AND DATE_FORMAT(invoices.date_created,"%Y-%m-%d") <= "' . $reportConfig['date_to'] . '"
+                ) AS taxable_amount,
+                (SELECT SUM((items.price - invoices_items.discount) * invoices_items.qty) 
+                    FROM invoices 
+                    LEFT JOIN invoices_items ON invoices_items.invoice_id = invoices.id 
+                    LEFT JOIN items ON items.id = invoices_items.items_id 
+                    WHERE invoices.company_id = ' . $companyID . ' 
+                    AND invoices_items.tax <= 0 
+                    AND DATE_FORMAT(invoices.date_created,"%Y-%m-%d") >= "' . $reportConfig['date_from'] . '" 
+                    AND DATE_FORMAT(invoices.date_created,"%Y-%m-%d") <= "' . $reportConfig['date_to'] . '"
+                ) AS non_taxable_amount,
+                SUM(invoices_items.tax) AS tax_amount
+            ');
+            $this->db->from('invoices');
+            $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
+            $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
+            $this->db->where('items.title !=', '');
+            $this->db->where('items.price !=', 0);
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->group_by('items.id');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
     }
 }
