@@ -56,15 +56,16 @@
                                                 <th>DATE</th>
                                                 <th>TRANSACTION TYPE</th>
                                                 <th>NUM</th>
+                                                <th>POSTING</th>
+                                                <th>NAME</th>
                                                 <th>MEMO/DESCRIPTION</th>
+                                                <th>ACCOUNT</th>
                                                 <th style="text-align: right;">AMOUNT</th>
-                                                <th style="text-align: right;">DEBIT</th>
-                                                <th style="text-align: right;">CREDIT</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="6">
+                                                <td colspan="8">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
