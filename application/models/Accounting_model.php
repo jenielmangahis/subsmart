@@ -96,14 +96,16 @@ class Accounting_model extends MY_Model
         }
         
         if ($reportType == "transaction_list_with_splits") {
-            $this->db->select('transaction_type, transaction_date, amount, transaction_id');
-            $this->db->from('accounting_account_transactions');
-            $this->db->where('company_id', $companyID);
+            $this->db->select('a.transaction_type, a.transaction_date, a.amount, a.transaction_id, c.name as name');
+            $this->db->from('accounting_account_transactions a');
+            $this->db->join('accounting_chart_of_accounts c', 'a.id = c.id');
+            $this->db->where('a.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
         }
+        
 
         // Get Expenses by Vendor Summary data in Database
         if ($reportType == "expenses_by_vendor_summary") {
