@@ -176,26 +176,20 @@
                                         <option value="500" <?php echo ($reportSettings->page_size == "500") ? "selected" : "" ?>>500</option>
                                     </select>
                                 </div>
-                                <!--<div class="col-md-4 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <div class="col-md-12">
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="id" <?php echo ($reportSettings->sort_by == "id") ? "selected" : "" ?>>ID</option>
-                                                <option value="vendor" <?php echo ($reportSettings->sort_by == "vendor") ? "selected" : "" ?>>Vendor</option>
-                                                <option value="phone_numbers" <?php echo ($reportSettings->sort_by == "phone_numbers") ? "selected" : "" ?>>Phone Numbers</option>
-                                                <option value="email" <?php echo ($reportSettings->sort_by == "email") ? "selected" : "" ?>>Email</option>
-                                                <option value="fullname" <?php echo ($reportSettings->sort_by == "fullname") ? "selected" : "" ?>>Full Name</option>
-                                                <option value="address" <?php echo ($reportSettings->sort_by == "address") ? "selected" : "" ?>>Address</option>
-                                                <option value="account_number" <?php echo ($reportSettings->sort_by == "account_number") ? "selected" : "" ?>>Account #</option>
+                                                <option value="customer" <?php echo ($reportSettings->sort_by == "customer") ? "selected" : "" ?>>Customer Name</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
-                                                <option value="DESC" <?php echo ($reportSettings->sort_order == "DESC") ? "selected" : "" ?>>DESC</option>
-                                                <option value="ASC" <?php echo ($reportSettings->sort_order == "ASC") ? "selected" : "" ?>>ASC</option>
+                                                <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
+                                                <option value="ASC" <?php echo ($reportSettings->sort_asc_desc== "ASC") ? "selected" : "" ?>>ASC</option>
                                             </select>
                                         </div>
                                     </div>
-                                </div>-->
+                                </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="filter-date">Date</label>
                                     <div class="">
