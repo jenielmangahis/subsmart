@@ -131,6 +131,7 @@ class AccountingMailer extends MY_Controller
             "transaction_detail_by_account",
             "payroll_tax_liability",
             "total_payroll_cost",
+            "workers_compensation",
         );
 
         // Conditional Statements on the array
