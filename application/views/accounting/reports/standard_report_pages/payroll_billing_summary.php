@@ -8,6 +8,7 @@
         </div>
         <div class="col-lg-1"></div>
     </div>
+
     <div class="row">
         <div class="col-lg-1"></div>
         <div class="col-lg-10">
@@ -49,6 +50,7 @@
                                         $tableID = "payrollbillingsummary_table"; 
                                         $reportCategory = "payroll_billing_summary"; 
                                     ?>
+                                    
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>                                                
