@@ -1246,5 +1246,37 @@ class Accounting_model extends MY_Model
             $data = $this->db->get();
             return $data->result();
         } 
+
+        // Get Workers Compensation data in Database        
+        if ($reportType == "workers_compensation") {
+            $this->db->select('accounting_paychecks.*, CONCAT(users.FName, " ", users.LName) AS employee, users.state AS state, COALESCE(accounting_payroll_employees.employee_total_pay,0) AS gross_pay, COALESCE(accounting_payroll_employees.employee_bonus,0) AS bonus_pay, COALESCE(accounting_payroll_employees.employee_taxes,0)AS employee_tax');
+            $this->db->from('accounting_paychecks');
+            $this->db->join('accounting_payroll_employees', 'accounting_payroll_employees.payroll_id = accounting_paychecks.payroll_id', 'left');
+            $this->db->join('users', 'users.id = accounting_paychecks.employee_id', 'left');
+            $this->db->where('users.company_id', $companyID);
+            $this->db->where("accounting_paychecks.pay_date >= '$reportConfig[date_from]'");
+            $this->db->where("accounting_paychecks.pay_date <= '$reportConfig[date_to]'");    
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('accounting_paychecks.id');
+            $data = $this->db->get();
+            return $data->result();
+        } 
+
+        // Get Payroll Tax Payments data in Database        
+        if ($reportType == "payroll_tax_payments") {
+            $this->db->select('accounting_paychecks.*, CONCAT(users.FName, " ", users.LName) AS employee, users.state AS state, COALESCE(accounting_payroll_employees.employee_total_pay,0) AS gross_pay, COALESCE(accounting_payroll_employees.employee_bonus,0) AS bonus_pay, COALESCE(accounting_payroll_employees.employee_taxes,0)AS employee_tax');
+            $this->db->from('accounting_paychecks');
+            $this->db->join('accounting_payroll_employees', 'accounting_payroll_employees.payroll_id = accounting_paychecks.payroll_id', 'left');
+            $this->db->join('users', 'users.id = accounting_paychecks.employee_id', 'left');
+            $this->db->where('users.company_id', $companyID);
+            $this->db->where("accounting_paychecks.pay_date >= '$reportConfig[date_from]'");
+            $this->db->where("accounting_paychecks.pay_date <= '$reportConfig[date_to]'");    
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('accounting_paychecks.id');
+            $data = $this->db->get();
+            return $data->result();
+        } 
     }
 }
