@@ -59,20 +59,20 @@
                                                 <th>NAME</th>
                                                 <th>CUST.</th>
                                                 <th>VENDOR</th>
-                                                <th>MEMO/DESC</th>
                                                 <th>ACCT</th>
                                                 <th>SPLIT</th>
                                                 <th>LAST MOD.</th>
                                                 <th>CHECK PRINT</th>
-                                                <th style="text-align: right;">AMOUNT</th>
+                                                <th style="text-align: right;">AMT</th>
                                                 <th style="text-align: right;">BALANCE</th>
                                                 <th style="text-align: right;">DEBIT</th>
                                                 <th style="text-align: right;">CREDIT</th>                                                
-                                                <th>TAX NAME</th>
-                                                <th style="text-align: right;">TAX AMOUNT</th>
-                                                <th style="text-align: right;">TAXABLE AMOUNT</th>
+                                                <th style="text-align: right;">TAX AMT</th>
+                                                <th style="text-align: right;">TAXABLE AMT</th>
 
                                                 <!--
+                                                <th>TAX NAME</th>
+                                                <th>MEMO/DESC</th>
                                                 <th>ONLINE BANKING</th>
                                                 <th>ADJ</th>
                                                 <th>CREATED BY</th>
@@ -93,7 +93,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="19">
+                                                <td colspan="17">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
