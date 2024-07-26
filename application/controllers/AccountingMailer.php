@@ -133,7 +133,10 @@ class AccountingMailer extends MY_Controller
             "total_payroll_cost",
             "workers_compensation",
             "profit_and_loss_by_tag_group",
-            "payroll_tax_payments"
+            "payroll_tax_payments",
+            "recurring_template_list_details",
+            "multiple_worksites",
+            "ffcra_cares_act",
         );
 
         // Conditional Statements on the array

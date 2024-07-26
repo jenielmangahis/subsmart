@@ -58,7 +58,7 @@
                                                 <th>NUM</th>
                                                 <th>POSTING</th>
                                                 <th>NAME</th>
-                                                <th>MEMO/DESCRIPTION</th>
+                                                <th>DESCRIPTION</th>
                                                 <th>ACCOUNT</th>
                                                 <th style="text-align: right;">AMOUNT</th>
                                             </tr>
@@ -185,11 +185,12 @@
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
                                                 <option value="transaction_date" <?php echo ($reportSettings->sort_by == "transaction_date") ? "selected" : "" ?>>DATE</option>
                                                 <option value="transaction_type" <?php echo ($reportSettings->sort_by == "transaction_type") ? "selected" : "" ?>>TRANSACTION TYPE</option>
-                                                <option value="num" <?php echo ($reportSettings->sort_by == "num") ? "selected" : "" ?>>NUM</option>
-                                                <option value="memo_description" <?php echo ($reportSettings->sort_by == "memo_description") ? "selected" : "" ?>>MEMO/DESCRIPTION</option>
+                                                <option value="transaction_id" <?php echo ($reportSettings->sort_by == "transaction_id") ? "selected" : "" ?>>NUM</option>
+                                                <option value="transaction_type" <?php echo ($reportSettings->sort_by == "transaction_type") ? "selected" : "" ?>>POSTING</option>
+                                                <option value="name" <?php echo ($reportSettings->sort_by == "name") ? "selected" : "" ?>>NAME</option>
+                                                <option value="transaction_type" <?php echo ($reportSettings->sort_by == "transaction_type") ? "selected" : "" ?>>DESCRIPTION</option>
+                                                <option value="transaction_type" <?php echo ($reportSettings->sort_by == "transaction_type") ? "selected" : "" ?>>ACCOUNT</option>
                                                 <option value="amount" <?php echo ($reportSettings->sort_by == "amount") ? "selected" : "" ?>>AMOUNT</option>
-                                                <option value="debit" <?php echo ($reportSettings->sort_by == "debit") ? "selected" : "" ?>>DEBIT</option>
-                                                <option value="credit" <?php echo ($reportSettings->sort_by == "credit") ? "selected" : "" ?>>CREDIT</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
