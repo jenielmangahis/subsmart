@@ -52,9 +52,6 @@
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
-                                                <?php if(isset($columns) && $total_index === 0 && $group_by !== 'none') : ?>
-                                                    <th data-name=""></th>
-                                                <?php endif; ?>
                                                 <th>DATE</th>
                                                 <th>TRANS TYPE</th>
                                                 <th>NUM</th>
@@ -67,17 +64,16 @@
                                                 <th>SPLIT</th>
                                                 <th>LAST MOD.</th>
                                                 <th>CHECK PRINT</th>
-                                                <th>AMOUNT</th>
-                                                <th>BALANCE</th>
-                                                <th>TAXABLE</th>
-                                                <th>DEBIT</th>
-                                                <th>CREDIT</th>                                                
-                                                <th>ONLINE BANKING</th>
+                                                <th style="text-align: right;">AMOUNT</th>
+                                                <th style="text-align: right;">BALANCE</th>
+                                                <th style="text-align: right;">DEBIT</th>
+                                                <th style="text-align: right;">CREDIT</th>                                                
                                                 <th>TAX NAME</th>
-                                                <th>TAX AMOUNT</th>
-                                                <th>TAXABLE AMOUNT</th>
+                                                <th style="text-align: right;">TAX AMOUNT</th>
+                                                <th style="text-align: right;">TAXABLE AMOUNT</th>
 
                                                 <!--
+                                                <th>ONLINE BANKING</th>
                                                 <th>ADJ</th>
                                                 <th>CREATED BY</th>
                                                 <th>LAST MODIFIED BY</th>
@@ -97,7 +93,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="22">
+                                                <td colspan="19">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>

@@ -574,7 +574,7 @@ class Tags_model extends MY_Model
         $this->db->where('company_id', $filters['company_id']);
         $this->db->where('view_flag', 0);
         $this->db->where('voided', 0);
-        $this->db->where('is_recurring', 0);
+        //$this->db->where('is_recurring', 0);
         if(isset($filters['from']) && !is_null($filters['from'])) {
             $this->db->where('date_issued >=', $filters['from']);
         }
