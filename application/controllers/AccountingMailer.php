@@ -138,6 +138,7 @@ class AccountingMailer extends MY_Controller
             "multiple_worksites",
             "ffcra_cares_act",
             "payroll_tax_and_wage_summary",
+            "quarterly_profit_and_loss_month",
         );
 
         // Conditional Statements on the array
