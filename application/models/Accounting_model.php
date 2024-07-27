@@ -968,6 +968,9 @@ class Accounting_model extends MY_Model
             $this->db->where('accounting_vendors.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
+
+            $data = $this->db->get();
+            return $data->result();
         }
         
         // Get 1099 Contractor Balance Detaill data in Database
