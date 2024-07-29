@@ -920,7 +920,7 @@ class Accounting_model extends MY_Model
         }
 
         // Get Deposit Details data in Database
-        // Info: The Deposit Detail Report is a report that shows all the deposits made into your bank accounts over a specified period (this includes paid invoices). This report helps you track and review the details of each deposit transaction, providing a clear overview of your cash inflows.
+        // Info: Deposit Detail Report is a report that shows all the deposits made into your bank accounts over a specified period (this includes paid invoices). This report helps you track and review the details of each deposit transaction, providing a clear overview of your cash inflows.
         if ($reportType == "deposit_detail") {
             $this->db->select('invoices.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, DATE_FORMAT(invoices.date_created,"%Y-%m-%d") AS date, "Payment" AS transaction_type, invoices.id AS num, "" AS vendor, invoices.message_on_invoice AS memo_description, "" AS clr, invoices.grand_total AS amount');
             $this->db->from('invoices');
@@ -938,7 +938,7 @@ class Accounting_model extends MY_Model
         }
 
         //Get Check Details data in Database
-        // Info: The Check Detail Report provides detailed information about all the checks written by your business over a specified period.
+        // Info: Check Detail Report provides detailed information about all the checks written by your business over a specified period.
         if ($reportType == "check_detail") {
             $this->db->select('accounting_check.payee_id AS payee_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer_name, accounting_vendors.display_name AS vendor_name, accounting_check.payment_date AS date, "Check" AS transaction_type, accounting_check.check_no AS num, accounting_check.memo AS memo_description, "" AS clr, accounting_check.total_amount AS amount');
             $this->db->from('accounting_check');
@@ -968,10 +968,13 @@ class Accounting_model extends MY_Model
             $this->db->where('accounting_vendors.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
+
+            $data = $this->db->get();
+            return $data->result();
         }
         
         // Get 1099 Contractor Balance Detaill data in Database
-        // Info: The 1099 Contractor Balance Detail Report is a report that provides detailed information about payments made to independent contractors or vendors.
+        // Info: 1099 Contractor Balance Detail Report is a report that provides detailed information about payments made to independent contractors or vendors.
         // Data is temporarily fetch on vendors only bcoz the contractor data is not yet implemented.
         if ($reportType == "contractor_balance_detail") {
             $this->db->select('accounting_vendors.id AS vendor_id, accounting_vendors.display_name AS vendor, accounting_bill.bill_date AS date, "Invoice" AS transaction_type, accounting_bill.id AS num, accounting_bill.due_date AS due_date, accounting_bill.total_amount AS amount, accounting_bill.remaining_balance AS open_balance,accounting_bill.remaining_balance AS balance');
@@ -989,7 +992,7 @@ class Accounting_model extends MY_Model
         }
 
         // Get 1099 Contractor Balance Detaill data in Database
-        // Info: The 1099 Contractor Balance Summary Report is a report that provides summarized information about payments made to independent contractors or vendors.
+        // Info: 1099 Contractor Balance Summary Report is a report that provides summarized information about payments made to independent contractors or vendors.
         // Data is temporarily fetch on vendors only bcoz the contractor data is not yet implemented.
         if ($reportType == "contractor_balance_summary") {
             $this->db->select('accounting_vendors.id AS vendor_id, accounting_vendors.display_name AS vendor, accounting_bill.remaining_balance AS balance, accounting_bill.created_at AS date');
@@ -1022,7 +1025,7 @@ class Accounting_model extends MY_Model
         }
 
         // Get Transaction List by Vendor data in Database
-        // Info: The Transaction List by Vendor report is a detailed report that provides a comprehensive list of all transactions associated with each vendor over a specific period.
+        // Info: Transaction List by Vendor report is a detailed report that provides a comprehensive list of all transactions associated with each vendor over a specific period.
         if ($reportType == "transaction_list_by_vendor") {
             $this->db->select('accounting_check.id AS transaction_id, accounting_check.payee_id AS vendor_id, accounting_vendors.display_name AS vendor, accounting_check.payment_date AS date, accounting_account_transactions.transaction_type AS transaction_type, accounting_check.id AS num, accounting_check.status AS posting, accounting_check.memo AS memo_description, accounting_chart_of_accounts.name AS account, accounting_check.total_amount AS amount');
             $this->db->from('accounting_check');
@@ -1042,7 +1045,7 @@ class Accounting_model extends MY_Model
         }
 
         // Get 1099 Transaction Detail Report data in Database
-        // Info: The 1099 Transaction Detail Report is a report that provides detailed information about payments made to vendors (or contractor) who require a 1099 form.
+        // Info: 1099 Transaction Detail Report is a report that provides detailed information about payments made to vendors (or contractor) who require a 1099 form.
         if ($reportType == "1099_transaction_detail") {
             $this->db->select('accounting_check.id AS transaction_id,  accounting_check.payee_id AS vendor_id,  accounting_vendors.display_name AS vendor,  accounting_check.payment_date AS date,  accounting_account_transactions.transaction_type AS transaction_type,  accounting_check.id AS num,  accounting_check.memo AS memo_description,  "" AS _1099_box, accounting_chart_of_accounts.name AS account, "" AS split, accounting_check.total_amount AS amount, accounting_check.total_amount AS balance, "" AS tax_id');
             $this->db->from('accounting_check');
@@ -1086,7 +1089,7 @@ class Accounting_model extends MY_Model
         }
 
         // Get Journal Report data in Database
-        // Info: The Journal Report is a detailed report that shows the individual accounting entries (journal entries) that make up a transaction.
+        // Info: Journal Report is a detailed report that shows the individual accounting entries (journal entries) that make up a transaction.
         if ($reportType == "journal") {
             $this->db->select('journal_view.name_id AS name_id, journal_view.name AS name, journal_view.transaction_id AS transaction_id, journal_view.date AS date, journal_view.transaction_type AS transaction_type, journal_view.num AS num, journal_view.memo_description AS memo_description, journal_view.account AS account, journal_view.entry_type AS entry_type, journal_view.amount AS amount');
             $this->db->from('journal_view');
@@ -1101,7 +1104,7 @@ class Accounting_model extends MY_Model
         }
 
         // Get Recent Automatic Transactions data in Database
-        // Info: The Recent Automatic Transactions Report is a that shows you a list of transactions that have been automatically recorded in your accounting.
+        // Info: Recent Automatic Transactions Report is a that shows you a list of transactions that have been automatically recorded in your accounting.
         if ($reportType == "recent_automatic_transactions") {
             $this->db->select('journal_view.name_id AS name_id, journal_view.name AS name, journal_view.date AS date, journal_view.transaction_type AS transaction_type, journal_view.num AS num, "Yes" AS posting, journal_view.memo_description AS memo_description, journal_view.account AS account, "" AS split, "" AS paid_by_mas, journal_view.amount AS amount');
             $this->db->from('journal_view');
@@ -1169,7 +1172,7 @@ class Accounting_model extends MY_Model
         } 
         
         // Get Payroll Details data in Database
-        // Info: The Payroll Details is a report that shows you all the details of your employees' pay for a specific period of time.
+        // Info: Payroll Details is a report that shows you all the details of your employees' pay for a specific period of time.
         if ($reportType == "payroll_details") {
             $this->db->select('accounting_paychecks.id AS payroll_id, accounting_paychecks.employee_id AS employee_id, CONCAT(users.FName, " ", users.LName) AS employee, accounting_paychecks.pay_date AS pay_date, accounting_payroll_employees.employee_hours AS hrs, accounting_payroll_employees.employee_total_pay AS gross_pay, accounting_payroll_employees.employee_bonus AS other_pay, ((accounting_payroll_employees.employee_total_pay / 100) * 6.2) AS social_security, ((accounting_payroll_employees.employee_total_pay / 100) * 1.45) AS medicare, accounting_payroll_employees.employee_net_pay AS net_pay, accounting_payroll_employees.employee_total_pay AS total_payroll_cost');
             $this->db->from('accounting_paychecks');
@@ -1278,5 +1281,40 @@ class Accounting_model extends MY_Model
             $data = $this->db->get();
             return $data->result();
         } 
+
+        // Get Unbilled Time in Database        
+        if ($reportType == "unbilled_time") {
+            $this->db->select('accounting_single_time_activity.*, accounting_single_time_activity.date AS unbilled_date, CONCAT(users.FName, " ", users.LName) AS employee, CONCAT(acs_profile.first_name, " ",acs_profile.last_name)AS customer, items.title AS product_service');
+            $this->db->from('accounting_single_time_activity');
+            $this->db->join('users', 'accounting_single_time_activity.name_id = users.id', 'left');
+            $this->db->join('acs_profile', 'accounting_single_time_activity.customer_id = acs_profile.prof_id', 'left');
+            $this->db->join('items', 'accounting_single_time_activity.service_id = items.id', 'left');
+            $this->db->where('accounting_single_time_activity.company_id', $companyID);
+            $this->db->where("accounting_single_time_activity.date >= '$reportConfig[date_from]'");
+            $this->db->where("accounting_single_time_activity.date <= '$reportConfig[date_to]'");    
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        } 
+
+        // Get Unbilled Charges data in Database
+        // Info: Unbilled Charges Report are transactions that have been recorded but not yet invoiced to customers. 
+        if ($reportType == "unbilled_charges") {
+            $this->db->select('invoices.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, DATE_FORMAT(invoices.date_created,"%Y-%m-%d") AS date, "Invoice" AS transaction_type, invoices.id AS num, "No" AS posting, invoices.message_to_customer AS memo_description, invoices.grand_total AS amount, invoices.total_due AS balance');
+            $this->db->from('invoices');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->join('accounting_receive_payment_invoices', 'accounting_receive_payment_invoices.invoice_id = invoices.id', 'left');
+            $this->db->where('invoices.status !=', "Paid");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->group_by('invoices.customer_id, customer');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
     }
 }

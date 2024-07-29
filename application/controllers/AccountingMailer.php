@@ -137,6 +137,10 @@ class AccountingMailer extends MY_Controller
             "recurring_template_list_details",
             "multiple_worksites",
             "ffcra_cares_act",
+            "payroll_tax_and_wage_summary",
+            "quarterly_profit_and_loss_month",
+            "statement_of_cash_flows",
+            "unbilled_charges",
         );
 
         // Conditional Statements on the array
