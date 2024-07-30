@@ -271,12 +271,6 @@
                                         <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?= $reportSettings && $reportSettings->title != '' ? $reportSettings->title : 'Balance Sheet Details'; ?>" required>
                                     </div>
                                 </div>
-                                <!-- <div class="col-md-4 mb-3">
-                                    <label for="filter-date">Date</label>
-                                    <div class="">
-                                        <input type="date" name="date" id="report-date" class="form-control nsm-field date" value="<?= $reportSettings && $reportSettings->report_date_text != '' ? date("Y-m-d", strtotime($reportSettings->report_date_text)) : date("Y-m-d"); ?>" data-type="filter-date">
-                                    </div>
-                                </div> -->
                                 <div class="col-md-4 mb-3">
                                     <label for="filter-date">Date</label>
                                     <div class="">
@@ -321,16 +315,16 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="date" <?= $reportSettings && $reportSettings->sort_by == 'date' ? 'selected="selected"' : ''; ?>>Date</option>
-                                                <option value="transaction-type" <?= $reportSettings && $reportSettings->sort_by == 'transaction-type' ? 'selected="selected"' : ''; ?>>Transaction Type</option>
-                                                <option value="num" <?= $reportSettings && $reportSettings->sort_by == 'num' ? 'selected="selected"' : ''; ?>>Num</option>
-                                                <option value="name" <?= $reportSettings && $reportSettings->sort_by == 'name' ? 'selected="selected"' : ''; ?>>Name</option>
-                                                <option value="memo-description" <?= $reportSettings && $reportSettings->sort_by == 'memo-description' ? 'selected="selected"' : ''; ?>>Memo/Description</option>
-                                                <option value="split" <?= $reportSettings && $reportSettings->sort_by == 'split' ? 'selected="selected"' : ''; ?>>Split</option>
-                                                <option value="debit" <?= $reportSettings && $reportSettings->sort_by == 'debit' ? 'selected="selected"' : ''; ?>>Debit</option>
-                                                <option value="credit" <?= $reportSettings && $reportSettings->sort_by == 'credit' ? 'selected="selected"' : ''; ?>>Credit</option>
-                                                <option value="amount" <?= $reportSettings && $reportSettings->sort_by == 'amount' ? 'selected="selected"' : ''; ?>>Amount</option>
-                                                <option value="balance" <?= $reportSettings && $reportSettings->sort_by == 'balance' ? 'selected="selected"' : ''; ?>>Balance</option>
+                                                <option value="arp_payment_date" <?= $reportSettings && $reportSettings->sort_by == 'arp_payment_date' ? 'selected="selected"' : ''; ?>>Date</option>
+                                                <option value="payment_method" <?= $reportSettings && $reportSettings->sort_by == 'payment_method' ? 'selected="selected"' : ''; ?>>Transaction Type</option>
+                                                <option value="ref_no" <?= $reportSettings && $reportSettings->sort_by == 'ref_no' ? 'selected="selected"' : ''; ?>>Num</option>
+                                                <option value="arp_payment_date" <?= $reportSettings && $reportSettings->sort_by == 'arp_payment_date' ? 'selected="selected"' : ''; ?>>Name</option>
+                                                <option value="arp_memo" <?= $reportSettings && $reportSettings->sort_by == 'arp_memo' ? 'selected="selected"' : ''; ?>>Memo/Description</option>
+                                                <option value="arp_payment_date" <?= $reportSettings && $reportSettings->sort_by == 'arp_payment_date' ? 'selected="selected"' : ''; ?>>Split</option>
+                                                <option value="amount_received" <?= $reportSettings && $reportSettings->sort_by == 'amount_received' ? 'selected="selected"' : ''; ?>>Debit</option>
+                                                <option value="amount_to_credit" <?= $reportSettings && $reportSettings->sort_by == 'amount_to_credit' ? 'selected="selected"' : ''; ?>>Credit</option>
+                                                <option value="amount_to_apply" <?= $reportSettings && $reportSettings->sort_by == 'amount_to_apply' ? 'selected="selected"' : ''; ?>>Amount</option>
+                                                <option value="arp_payment_date" <?= $reportSettings && $reportSettings->sort_by == 'arp_payment_date' ? 'selected="selected"' : ''; ?>>Balance</option>
 
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select" style="margin-left:2px;">
@@ -345,73 +339,6 @@
                                     <input type="checkbox" id="compact_display" name="compact_display" class="form-check-input">
                                     <label for="compact-display" class="form-check-label">Compact</label>
                                 </div>
-                                <!-- <div class="row">
-                                    <div class="col-md-12 mb-3">
-                                        <label class="mb-1 fw-xnormal">Change Columns</label><br />
-                                        <div class="checkbox-grid">
-                                            <div class="form-check">
-                                                <input type="checkbox" id="date" class="form-check-input">
-                                                <label for="date" class="form-check-label">Date</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="create-date" class="form-check-input">
-                                                <label for="create-date" class="form-check-label">Create Date</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="last-modified-by" class="form-check-input">
-                                                <label for="last-modified-by" class="form-check-label">Last Modified By</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="split" class="form-check-input">
-                                                <label for="split" class="form-check-label">Split</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="payment-method" class="form-check-input">
-                                                <label for="payment-method" class="form-check-label">Payment Method</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="transaction-type" class="form-check-input">
-                                                <label for="transaction-type" class="form-check-label">Transaction Type</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="created-by" class="form-check-input">
-                                                <label for="created-by" class="form-check-label">Created By</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="name" class="form-check-input">
-                                                <label for="name" class="form-check-label">Name</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="debit" class="form-check-input">
-                                                <label for="debit" class="form-check-label">Debit</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="amount" class="form-check-input">
-                                                <label for="amount" class="form-check-label">Amount</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="num" class="form-check-input">
-                                                <label for="num" class="form-check-label">Num</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="last-modified" class="form-check-input">
-                                                <label for="last-modified" class="form-check-label">Last Modified</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="memo-description" class="form-check-input">
-                                                <label for="memo-description" class="form-check-label">Memo/Description</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="credit" class="form-check-input">
-                                                <label for="credit" class="form-check-label">Credit</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="checkbox" id="balance" class="form-check-input">
-                                                <label for="balance" class="form-check-label">Balance</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> -->
                             </div>
                         </div>
                     </div>

@@ -67,34 +67,37 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
 
-        // Get Balance Sheet Details data in Database
         if ($reportType == "balance_sheet_details") {
-            $this->db->select('
-                ac.name, 
-                c.memo, 
-                c.payee_type, 
-                c.total_amount, 
-                c.check_no, 
-                c.payment_date,
-                arp.payment_date AS arp_payment_date,
-                arp.payment_method AS arp_payment_method,
-                arp.memo AS arp_memo,
-                arp.amount_received AS arp_amount_received,
-                arp.amount_to_credit AS arp_amount_to_credit,
-                arp.amount_to_apply AS arp_amount_to_apply,
-                arp.credit_balance AS arp_credit_balance
-            ');
-            $this->db->from('accounting_chart_of_accounts ac');
-            $this->db->join('accounting_check c', 'ac.id = c.id', 'left'); 
-            $this->db->join('accounting_receive_payment arp', 'ac.id = arp.id', 'left');
-            $this->db->where('ac.company_id', $companyID);
+            // Query 1: Fetch data from accounting_check
+            $this->db->select('payment_date, payee_type, check_no, memo, total_amount');
+            $this->db->from('accounting_check');
+            $this->db->where('company_id', $companyID);
+            if (!empty($report_date_text)) {
+                $this->db->where('payment_date', $report_date_text);
+            }
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
+            $checkData = $this->db->get()->result();
         
-            $data = $this->db->get();
-            return $data->result();
+            // Query 2: Fetch data from accounting_receive_payment
+            $this->db->select('payment_date AS arp_payment_date, payment_method, ref_no, amount_received, amount_to_credit, amount_to_apply, memo AS arp_memo');
+            $this->db->from('accounting_receive_payment');
+            $this->db->where('company_id', $companyID);
+            if (!empty($report_date_text)) {
+                $this->db->where('payment_date', $report_date_text);
+            }
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $receivePaymentData = $this->db->get()->result();
+        
+            // Return both result sets as an associative array
+            return array(
+                'accounting_check' => $checkData,
+                'accounting_receive_payment' => $receivePaymentData
+            );
         }
         
+
         if ($reportType == "transaction_list_with_splits") {
             $this->db->select('a.transaction_type, a.transaction_date, a.amount, a.transaction_id, c.name as name');
             $this->db->from('accounting_account_transactions a');
@@ -105,7 +108,7 @@ class Accounting_model extends MY_Model
             $data = $this->db->get();
             return $data->result();
         }
-        
+
 
         // Get Expenses by Vendor Summary data in Database
         if ($reportType == "expenses_by_vendor_summary") {
@@ -296,7 +299,7 @@ class Accounting_model extends MY_Model
                 FROM acs_profile
                 WHERE acs_profile.company_id = ' . $companyID . '
                 ORDER BY ' . $reportConfig['sort_by'] . ' ' . $reportConfig['sort_order'] . ' 
-                LIMIT ' .$reportConfig['page_size'].'
+                LIMIT ' . $reportConfig['page_size'] . '
             ');
             return $query->result();
         }
@@ -555,6 +558,40 @@ class Accounting_model extends MY_Model
             $this->db->where("DATE_FORMAT(accounting_single_time_activity.date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('accounting_single_time_activity.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('acs_profile.prof_id');
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        if ($reportType == 'payroll_deductions_contributions_details') {
+            $this->db->select('CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer_name , accounting_single_time_activity.*',);
+            $this->db->from('accounting_single_time_activity');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = accounting_single_time_activity.customer_id', 'left');
+            $this->db->where('accounting_single_time_activity.status !=', 0);
+            $this->db->where('acs_profile.first_name !=', '');
+            $this->db->where('acs_profile.last_name !=', '');
+            $this->db->where("DATE_FORMAT(accounting_single_time_activity.date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_single_time_activity.date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_single_time_activity.company_id', $companyID);
+            // $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('acs_profile.prof_id');
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        if ($reportType == 'retirements_detail') {
+            $this->db->select('CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer_name , accounting_single_time_activity.*',);
+            $this->db->from('accounting_single_time_activity');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = accounting_single_time_activity.customer_id', 'left');
+            $this->db->where('accounting_single_time_activity.status !=', 0);
+            $this->db->where('acs_profile.first_name !=', '');
+            $this->db->where('acs_profile.last_name !=', '');
+            $this->db->where("DATE_FORMAT(accounting_single_time_activity.date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_single_time_activity.date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_single_time_activity.company_id', $companyID);
+            // $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $this->db->group_by('acs_profile.prof_id');
             $data = $this->db->get();
@@ -875,7 +912,7 @@ class Accounting_model extends MY_Model
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
-        }          
+        }
 
         if ($reportType == "profit_and_loss_percentage_income") {
             $this->db->select('
@@ -889,13 +926,13 @@ class Accounting_model extends MY_Model
             $this->db->where('invoices.company_id', $companyID);
             $this->db->where('acs_profile.first_name !=', '');
             $this->db->where("DATE_FORMAT(invoices.date_issued,'%Y-%m-%d') >= '$reportConfig[date_from]'");
-            $this->db->where("DATE_FORMAT(invoices.date_issued,'%Y-%m-%d') <= '$reportConfig[date_to]'");            
+            $this->db->where("DATE_FORMAT(invoices.date_issued,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             //$this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->group_by('invoices.customer_id');
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
-        } 
+        }
 
         // Get Balance Sheet Data in Database
         if ($reportType == "balance_sheet") {
@@ -912,6 +949,18 @@ class Accounting_model extends MY_Model
             $this->db->where('company_id', $companyID);
             $data = $this->db->get();
 
+            return $data->result();
+        }
+
+        // Get Balance Sheet Data in Database
+        if ($reportType == "statement_of_cash_flows") {
+            $this->db->select('SUM(grand_total) AS total_amount');
+            $this->db->from('invoices');
+            $this->db->where('company_id', $companyID);
+            $this->db->where("date_issued >= '$reportConfig[date_from]'");
+            $this->db->where("date_issued <= '$reportConfig[date_to]'");
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $data = $this->db->get();
             return $data->result();
         }
 
@@ -972,7 +1021,7 @@ class Accounting_model extends MY_Model
             $data = $this->db->get();
             return $data->result();
         }
-        
+
         // Get 1099 Contractor Balance Detaill data in Database
         // Info: 1099 Contractor Balance Detail Report is a report that provides detailed information about payments made to independent contractors or vendors.
         // Data is temporarily fetch on vendors only bcoz the contractor data is not yet implemented.
@@ -1011,10 +1060,10 @@ class Accounting_model extends MY_Model
 
         if ($reportType == "recent_edited_time_activities") {
             $this->db->select('accounting_single_time_activity.*, accounting_single_time_activity.date AS activity_date, CONCAT(acs_profile.first_name  , " ", acs_profile.last_name) AS customer, items.title AS product_service');
-            $this->db->from('accounting_single_time_activity');            
+            $this->db->from('accounting_single_time_activity');
             $this->db->join('acs_profile', 'accounting_single_time_activity.customer_id = acs_profile.prof_id', 'left');
             $this->db->join('items', 'accounting_single_time_activity.service_id = items.id', 'left');
-            $this->db->where('accounting_single_time_activity.name_key !=', '');            
+            $this->db->where('accounting_single_time_activity.name_key !=', '');
             $this->db->where("accounting_single_time_activity.date >= '$reportConfig[date_from]'");
             $this->db->where("accounting_single_time_activity.date <= '$reportConfig[date_to]'");
             $this->db->where('accounting_single_time_activity.company_id', $companyID);
@@ -1070,7 +1119,7 @@ class Accounting_model extends MY_Model
             $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_bill.vendor_id', 'left');
             $this->db->where('accounting_bill.company_id', $companyID);
             $this->db->where("accounting_bill.bill_date >= '$reportConfig[date_from]'");
-            $this->db->where("accounting_bill.bill_date <= '$reportConfig[date_to]'");            
+            $this->db->where("accounting_bill.bill_date <= '$reportConfig[date_to]'");
             //$this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             //$this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
@@ -1095,7 +1144,7 @@ class Accounting_model extends MY_Model
             $this->db->from('journal_view');
             $this->db->where('journal_view.company_id', $companyID);
             $this->db->where("journal_view.date >= '$reportConfig[date_from]'");
-            $this->db->where("journal_view.date <= '$reportConfig[date_to]'");    
+            $this->db->where("journal_view.date <= '$reportConfig[date_to]'");
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $this->db->group_by('journal_view.name_id');
@@ -1110,7 +1159,7 @@ class Accounting_model extends MY_Model
             $this->db->from('journal_view');
             $this->db->where('journal_view.company_id', $companyID);
             $this->db->where("journal_view.date >= '$reportConfig[date_from]'");
-            $this->db->where("journal_view.date <= '$reportConfig[date_to]'");    
+            $this->db->where("journal_view.date <= '$reportConfig[date_to]'");
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $this->db->group_by('journal_view.name_id');
@@ -1124,12 +1173,12 @@ class Accounting_model extends MY_Model
             $this->db->from('accounting_paychecks');
             $this->db->where('company_id', $companyID);
             $this->db->where("pay_date >= '$reportConfig[date_from]'");
-            $this->db->where("pay_date <= '$reportConfig[date_to]'");            
+            $this->db->where("pay_date <= '$reportConfig[date_to]'");
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
-        }        
+        }
 
         // Get Payroll Summary in Database
         if ($reportType == 'payroll_summary') {
@@ -1137,40 +1186,40 @@ class Accounting_model extends MY_Model
             $this->db->from('accounting_payroll');
             $this->db->where('company_id', $companyID);
             $this->db->where("pay_period_start >= '$reportConfig[date_from]'");
-            $this->db->where("pay_period_end <= '$reportConfig[date_to]'");            
+            $this->db->where("pay_period_end <= '$reportConfig[date_to]'");
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
-        } 
-        
+        }
+
         // Get Total Pay in Database
         if ($reportType == 'total_pay') {
             $this->db->select('*');
             $this->db->from('accounting_payroll');
             $this->db->where('company_id', $companyID);
             $this->db->where("pay_date >= '$reportConfig[date_from]'");
-            $this->db->where("pay_date <= '$reportConfig[date_to]'");            
+            $this->db->where("pay_date <= '$reportConfig[date_to]'");
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
-        } 
+        }
 
         // Get Paycheck History in Database
         if ($reportType == 'paycheck_history') {
             $this->db->select('accounting_paychecks.*, CONCAT(users.FName, " ", users.LName)AS employee');
             $this->db->from('accounting_paychecks');
-            $this->db->join('users', 'accounting_paychecks.employee_id = users.id', 'left'); 
+            $this->db->join('users', 'accounting_paychecks.employee_id = users.id', 'left');
             $this->db->where('accounting_paychecks.company_id', $companyID);
             $this->db->where("accounting_paychecks.pay_date >= '$reportConfig[date_from]'");
-            $this->db->where("accounting_paychecks.pay_date <= '$reportConfig[date_to]'");            
+            $this->db->where("accounting_paychecks.pay_date <= '$reportConfig[date_to]'");
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
-        } 
-        
+        }
+
         // Get Payroll Details data in Database
         // Info: Payroll Details is a report that shows you all the details of your employees' pay for a specific period of time.
         if ($reportType == "payroll_details") {
@@ -1180,13 +1229,13 @@ class Accounting_model extends MY_Model
             $this->db->join('users', 'users.id = accounting_paychecks.employee_id', 'left');
             $this->db->where('users.company_id', $companyID);
             $this->db->where("accounting_paychecks.pay_date >= '$reportConfig[date_from]'");
-            $this->db->where("accounting_paychecks.pay_date <= '$reportConfig[date_to]'");    
+            $this->db->where("accounting_paychecks.pay_date <= '$reportConfig[date_to]'");
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $this->db->group_by('accounting_paychecks.id');
             $data = $this->db->get();
             return $data->result();
-        } 
+        }
 
         if ($reportType == "sales_tax_liability_reports") {
             $this->db->select('invoices.id AS invoice_id,
@@ -1243,12 +1292,12 @@ class Accounting_model extends MY_Model
             $this->db->join('timesheet_pto', 'timesheet_leave.pto_id = timesheet_pto.id', 'left');
             $this->db->where('users.company_id', $companyID);
             $this->db->where("timesheet_leave_date.date >= '$reportConfig[date_from]'");
-            $this->db->where("timesheet_leave_date.date <= '$reportConfig[date_to]'");    
+            $this->db->where("timesheet_leave_date.date <= '$reportConfig[date_to]'");
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
-        } 
+        }
 
         // Get Workers Compensation data in Database        
         if ($reportType == "workers_compensation") {
@@ -1258,13 +1307,13 @@ class Accounting_model extends MY_Model
             $this->db->join('users', 'users.id = accounting_paychecks.employee_id', 'left');
             $this->db->where('users.company_id', $companyID);
             $this->db->where("accounting_paychecks.pay_date >= '$reportConfig[date_from]'");
-            $this->db->where("accounting_paychecks.pay_date <= '$reportConfig[date_to]'");    
+            $this->db->where("accounting_paychecks.pay_date <= '$reportConfig[date_to]'");
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $this->db->group_by('accounting_paychecks.id');
             $data = $this->db->get();
             return $data->result();
-        } 
+        }
 
         // Get Payroll Tax Payments data in Database        
         if ($reportType == "payroll_tax_payments") {
@@ -1274,13 +1323,13 @@ class Accounting_model extends MY_Model
             $this->db->join('users', 'users.id = accounting_paychecks.employee_id', 'left');
             $this->db->where('users.company_id', $companyID);
             $this->db->where("accounting_paychecks.pay_date >= '$reportConfig[date_from]'");
-            $this->db->where("accounting_paychecks.pay_date <= '$reportConfig[date_to]'");    
+            $this->db->where("accounting_paychecks.pay_date <= '$reportConfig[date_to]'");
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $this->db->group_by('accounting_paychecks.id');
             $data = $this->db->get();
             return $data->result();
-        } 
+        }
 
         // Get Unbilled Time in Database        
         if ($reportType == "unbilled_time") {
@@ -1291,12 +1340,12 @@ class Accounting_model extends MY_Model
             $this->db->join('items', 'accounting_single_time_activity.service_id = items.id', 'left');
             $this->db->where('accounting_single_time_activity.company_id', $companyID);
             $this->db->where("accounting_single_time_activity.date >= '$reportConfig[date_from]'");
-            $this->db->where("accounting_single_time_activity.date <= '$reportConfig[date_to]'");    
+            $this->db->where("accounting_single_time_activity.date <= '$reportConfig[date_to]'");
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
-        } 
+        }
 
         // Get Unbilled Charges data in Database
         // Info: Unbilled Charges Report are transactions that have been recorded but not yet invoiced to customers. 
@@ -1315,6 +1364,5 @@ class Accounting_model extends MY_Model
             $data = $this->db->get();
             return $data->result();
         }
-
     }
 }
