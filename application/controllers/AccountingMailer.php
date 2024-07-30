@@ -143,6 +143,7 @@ class AccountingMailer extends MY_Controller
             "unbilled_charges",
             "state_mandated_retirement_plans",
             "profit_and_loss_detail",
+            "payroll_deductions_contributions_details",
         );
 
         // Conditional Statements on the array
