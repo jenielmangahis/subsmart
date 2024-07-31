@@ -147,6 +147,8 @@ class AccountingMailer extends MY_Controller
             "profit_loss_ytd_comparison",
             "sales_leader_board",
             "product_sales_report",
+            "activities_profit_and_loss",
+            "invoice_by_date",
         );
 
         // Conditional Statements on the array
