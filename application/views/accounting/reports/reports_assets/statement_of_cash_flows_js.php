@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    $(function() { $('select').select2('destroy'); });
+    // $(function() { $('select').select2('destroy'); });
 
     CKEDITOR.replace('emailBody', {
         toolbarGroups: [

@@ -247,6 +247,16 @@ class DocuSign extends MYF_Controller
             return $recipient['id'];
         }, $recipientIds);
 
+        $this->db->where('docfile_id', $documentId);
+        $this->db->where('completed_at', null);
+        $this->db->where('id !=', $recipientId);
+        $nextRecipients = $this->db->get('user_docfile_recipients')->result();
+
+        $is_finished = 1;
+        if( count($nextRecipients) > 0 ){
+            $is_finished = 0;
+        }      
+
         $this->db->select('job_id');
         $this->db->where_in('user_docfile_recipient_id', $recipientIds);
         $jobId = $this->db->get('user_docfile_job_recipients')->row();
@@ -846,6 +856,7 @@ class DocuSign extends MYF_Controller
             'generated_pdf' => $generatedPDF,
             'auto_populate_data' => $autoPopulateData,
             'recipient_ids' => $recipientIds,
+            'is_finished' => $is_finished,
             'job_id' =>  $jobId,
             'inv_id' => $invoice_id,
             'job_data' => $jobData

@@ -144,6 +144,7 @@ class AccountingMailer extends MY_Controller
             "state_mandated_retirement_plans",
             "profit_and_loss_detail",
             "payroll_deductions_contributions_details",
+            "profit_loss_ytd_comparison",
         );
 
         // Conditional Statements on the array

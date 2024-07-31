@@ -38,6 +38,10 @@ function Signing(hash) {
     const response = await fetch(endpoint);
     data = await response.json();
     window.__esigndata = data;
+
+    if( window.__esigndata.is_finished == 1 ){
+      $('.btn-finish-text').text('Finish');
+    }
   }
 
   async function renderPage({ canvas, page, document }) {

@@ -68,35 +68,31 @@ class Accounting_model extends MY_Model
         }
 
         if ($reportType == "balance_sheet_details") {
-            // Query 1: Fetch data from accounting_check
             $this->db->select('payment_date, payee_type, check_no, memo, total_amount');
             $this->db->from('accounting_check');
             $this->db->where('company_id', $companyID);
-            if (!empty($report_date_text)) {
-                $this->db->where('payment_date', $report_date_text);
+            if (!empty($reportConfig['report_date_text'])) {
+                $this->db->where('payment_date', $reportConfig['report_date_text']);
             }
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $checkData = $this->db->get()->result();
         
-            // Query 2: Fetch data from accounting_receive_payment
             $this->db->select('payment_date AS arp_payment_date, payment_method, ref_no, amount_received, amount_to_credit, amount_to_apply, memo AS arp_memo');
             $this->db->from('accounting_receive_payment');
             $this->db->where('company_id', $companyID);
-            if (!empty($report_date_text)) {
-                $this->db->where('payment_date', $report_date_text);
+            if (!empty($reportConfig['report_date_text'])) {
+                $this->db->where('payment_date', $reportConfig['report_date_text']);
             }
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $receivePaymentData = $this->db->get()->result();
         
-            // Return both result sets as an associative array
             return array(
                 'accounting_check' => $checkData,
                 'accounting_receive_payment' => $receivePaymentData
             );
         }
-        
 
         if ($reportType == "transaction_list_with_splits") {
             $this->db->select('a.transaction_type, a.transaction_date, a.amount, a.transaction_id, c.name as name');
@@ -108,7 +104,6 @@ class Accounting_model extends MY_Model
             $data = $this->db->get();
             return $data->result();
         }
-
 
         // Get Expenses by Vendor Summary data in Database
         if ($reportType == "expenses_by_vendor_summary") {
@@ -954,14 +949,68 @@ class Accounting_model extends MY_Model
 
         // Get Balance Sheet Data in Database
         if ($reportType == "statement_of_cash_flows") {
-            $this->db->select('SUM(grand_total) AS total_amount');
+            $this->db->select('COALESCE(SUM(grand_total), 0) AS total_amount');
             $this->db->from('invoices');
             $this->db->where('company_id', $companyID);
-            $this->db->where("date_issued >= '$reportConfig[date_from]'");
-            $this->db->where("date_issued <= '$reportConfig[date_to]'");
+            if (!empty($reportConfig['date_from']) && !empty($reportConfig['date_to'])) {
+                $this->db->where("invoices.date_issued >= '$reportConfig[date_from]'");
+                $this->db->where("invoices.date_issued <= '$reportConfig[date_to]'");
+            }
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
-            $data = $this->db->get();
-            return $data->result();
+            $this->db->limit($reportConfig['page_size']);
+            $checkData = $this->db->get()->result();
+        
+            $this->db->select('COALESCE(SUM(amount_received), 0) AS total_amount');
+            $this->db->from('accounting_receive_payment');
+            $this->db->where('company_id', $companyID);
+            if (!empty($reportConfig['date_from']) && !empty($reportConfig['date_to'])) {
+                $this->db->where("accounting_receive_payment.payment_date >= '$reportConfig[date_from]'");
+                $this->db->where("accounting_receive_payment.payment_date <= '$reportConfig[date_to]'");
+            }
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $receivePaymentData = $this->db->get()->result();
+
+            // Extract total_amount from the first object in each result array
+            $totalAmountFromCheckData = !empty($checkData) ? $checkData[0]->total_amount : 0;
+            $totalAmountFromReceivePaymentData = !empty($receivePaymentData) ? $receivePaymentData[0]->total_amount : 0;
+
+            // Calculate total accounts receivable
+            $totalAccountsReceivable = $totalAmountFromCheckData + $totalAmountFromReceivePaymentData;
+
+            // Bank Accounts
+            // Directly use the dates without escaping since they are already in proper format
+            $dateFrom = $reportConfig['date_from'];
+            $dateTo = $reportConfig['date_to'];
+
+            // Build the query
+            $this->db->select('COALESCE(SUM(balance), 0) AS total_amount');
+            $this->db->from('accounting_chart_of_accounts');
+            $this->db->where('company_id', $companyID);
+
+            if (!empty($dateFrom) && !empty($dateTo)) {
+                $this->db->where('DATE(created_at) >=', $dateFrom);
+                $this->db->where('DATE(created_at) <=', $dateTo);
+            }
+
+            // Remove unnecessary order_by and limit if you're only aggregating data
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+
+            $query = $this->db->get();
+            $result = $query->row(); // Use ->row() to get a single row object
+
+            // Handle potential empty result
+            $chartOfAccountData = !empty($result) ? $result->total_amount : 0;
+
+        
+            // return $totalAmount;
+            return array(
+                // 'invoices' => $checkData,
+                // 'accounting_receive_payment' => $receivePaymentData,
+                'accounting_chart_of_accounts' => $chartOfAccountData,
+                'totalAccountsReceivable' => $totalAccountsReceivable
+            );
         }
 
         if ($reportType == 'accounts_payable_aging_summary') {
