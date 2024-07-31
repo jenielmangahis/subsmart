@@ -14,4 +14,10 @@ class Accounting_report_groups_model extends MY_Model {
     {
         return $this->db->get($this->table)->result();
     }
+
+	public function get_report_groups_by_type($type)
+    {
+		$this->db->where('type', $type);
+        return $this->db->get($this->table)->result();
+    }
 }

@@ -132,7 +132,7 @@
                     <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
-                    Finish
+                    <span class="btn-finish-text">Next</span>
                 </button>
             </div>
         </div>
@@ -140,11 +140,11 @@
         <div class="signing__documentContainer"></div>
 
         <div class="d-flex justify-content-center">
-            <button class="btn btn-primary d-flex align-items-center mt-3" data-action="finish">
+            <button class="btn btn-primary d-flex align-items-center mt-3 btn-finish" data-action="finish">
                 <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
                     <span class="sr-only">Loading...</span>
                 </div>
-                Finish
+                <span class="btn-finish-text">Next</span>
             </button>
         </div>
     </div>

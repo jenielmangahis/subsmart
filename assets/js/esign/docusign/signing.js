@@ -38,6 +38,10 @@ function Signing(hash) {
     const response = await fetch(endpoint);
     data = await response.json();
     window.__esigndata = data;
+
+    if( window.__esigndata.is_finished == 1 ){
+      $('.btn-finish-text').text('Finish');
+    }
   }
 
   async function renderPage({ canvas, page, document }) {
@@ -102,7 +106,6 @@ function Signing(hash) {
     const {  job_account_number, job_number, job_name, job_type } = window.__esigndata.auto_populate_data.jobs;
 
     const {  second_recipient_name, second_recipient_email } = window.__esigndata.auto_populate_data.second_recipient;
-
     
     let text = recipient[field_name.toLowerCase()];
     let { pageTop: top, left } = JSON.parse(coordinates);
