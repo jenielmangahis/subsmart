@@ -46,8 +46,8 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <?php 
-                                        $tableID = "payrolltaxandwagesummary_table"; 
-                                        $reportCategory = "payroll_tax_and_wage_summary"; 
+                                        $tableID = "payrolltaxandwagesummary_table";  
+                                        $reportCategory = "payroll_tax_and_wage_summary";  
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
