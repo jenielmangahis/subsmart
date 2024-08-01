@@ -153,6 +153,7 @@ class AccountingMailer extends MY_Controller
             "reconciliation_reports",
             "monthly_closeout",
             "sales_by_items",
+            "service_sales_report",
         );
 
         // Conditional Statements on the array
