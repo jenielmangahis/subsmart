@@ -770,6 +770,7 @@ $route['accounting/reports/remove-from-favorites/(:any)'] = 'accounting_controll
 $route['accounting/reports/custom'] = 'accounting_controllers/reports/custom';
 $route['accounting/reports/management'] = 'accounting_controllers/reports/management';
 $route['accounting/reports/activities'] = 'accounting_controllers/reports/activities';
+$route['accounting/reports/activities_old'] = 'accounting_controllers/reports/activities_old';
 $route['accounting/reports/analytics'] = 'accounting_controllers/reports/analytics';
 $route['accounting/reports/payscale'] = 'accounting_controllers/reports/payscale';
 $route['accounting/reports/audit-log'] = 'accounting_controllers/reports/audit_log';

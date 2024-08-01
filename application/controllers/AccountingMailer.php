@@ -145,6 +145,13 @@ class AccountingMailer extends MY_Controller
             "profit_and_loss_detail",
             "payroll_deductions_contributions_details",
             "profit_loss_ytd_comparison",
+            "sales_leader_board",
+            "product_sales_report",
+            "activities_profit_and_loss",
+            "invoice_by_date",
+            "reconciliation_reports",
+            "monthly_closeout",
+            "sales_by_items",
         );
 
         // Conditional Statements on the array

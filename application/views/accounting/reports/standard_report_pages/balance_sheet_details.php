@@ -40,7 +40,7 @@
                                     <div class="reportTitleInfo">
                                         <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name) ?></h3>
                                         <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
-                                        <h5><small id="report_date_text">As of <?php echo date('F d, Y'); ?></small></h5>
+                                        <h5><small id="reportDate"><span id="date_from_text"></span> &mdash; <span id="date_to_text"></span></small></h5>
                                     </div>
                                 </div>
                             </div>
@@ -272,13 +272,6 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label for="filter-date">Date</label>
-                                    <div class="">
-                                        <input type="date" id="filter-date" class="form-control nsm-field date" value="<?= $reportSettings && $reportSettings->report_date_text != '' ? date("Y-m-d", strtotime($reportSettings->report_date_text)) : date("Y-m-d"); ?>" data-type="filter-date">
-                                    </div>
-                                </div>
-
-                                <div class="col-md-4 mb-3">
                                     <label class="mb-1 fw-xnormal">Logo</label>
                                     <select id="showHideLogo" name="showHideLogo" class="nsm-field form-select">
                                         <option value="1" <?= $reportSettings && $reportSettings->show_logo == 1 ? 'selected="selected"' : ''; ?> selected>Show</option>
@@ -310,35 +303,18 @@
                                         <option value="100" <?= $reportSettings && $reportSettings->page_size == 100 ? 'selected="selected"' : ''; ?>>100</option>
                                     </select>
                                 </div>
-                                <!-- <div class="col-md-4 mb-3">
-                                    <div class="col-md-12">
-                                        <label class="mb-1 fw-xnormal">Sort By</label>
-                                        <div class="input-group">
-                                            <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="arp_payment_date" <?= $reportSettings && $reportSettings->sort_by == 'arp_payment_date' ? 'selected="selected"' : ''; ?>>Date</option>
-                                                <option value="payment_method" <?= $reportSettings && $reportSettings->sort_by == 'payment_method' ? 'selected="selected"' : ''; ?>>Transaction Type</option>
-                                                <option value="ref_no" <?= $reportSettings && $reportSettings->sort_by == 'ref_no' ? 'selected="selected"' : ''; ?>>Num</option>
-                                                <option value="arp_payment_date" <?= $reportSettings && $reportSettings->sort_by == 'arp_payment_date' ? 'selected="selected"' : ''; ?>>Name</option>
-                                                <option value="arp_memo" <?= $reportSettings && $reportSettings->sort_by == 'arp_memo' ? 'selected="selected"' : ''; ?>>Memo/Description</option>
-                                                <option value="arp_payment_date" <?= $reportSettings && $reportSettings->sort_by == 'arp_payment_date' ? 'selected="selected"' : ''; ?>>Split</option>
-                                                <option value="amount_received" <?= $reportSettings && $reportSettings->sort_by == 'amount_received' ? 'selected="selected"' : ''; ?>>Debit</option>
-                                                <option value="amount_to_credit" <?= $reportSettings && $reportSettings->sort_by == 'amount_to_credit' ? 'selected="selected"' : ''; ?>>Credit</option>
-                                                <option value="amount_to_apply" <?= $reportSettings && $reportSettings->sort_by == 'amount_to_apply' ? 'selected="selected"' : ''; ?>>Amount</option>
-                                                <option value="arp_payment_date" <?= $reportSettings && $reportSettings->sort_by == 'arp_payment_date' ? 'selected="selected"' : ''; ?>>Balance</option>
-
-                                            </select>
-                                            <select name="sort_order" id="sort-order" class="nsm-field form-select" style="margin-left:2px;">
-                                                <option value="ASC" <?= $reportSettings && $reportSettings->sort_asc_desc == 'ASC' ? 'selected="selected"' : ''; ?>>ASC</option>
-                                                <option value="DESC" <?= $reportSettings && $reportSettings->sort_asc_desc == 'DESC' ? 'selected="selected"' : ''; ?>>DESC</option>
-                                            </select>
-                                        </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="mb-1 fw-xnormal">Date Range <small class="text-muted">(From &mdash; To)</small></label>
+                                    <div class="input-group">
+                                        <input name="date_from" class="form-control mt-0" type="date" value="<?= $reportSettings ? date("Y-m-d", strtotime($reportSettings->report_date_from_text)) : date('Y') . '-01-01'; ?>">
+                                        <input name="date_to" class="form-control mt-0" type="date" value="<?= $reportSettings ? date("Y-m-d", strtotime($reportSettings->report_date_to_text)) : date('Y-m-t'); ?>">
                                     </div>
-                                </div> -->
-                                <div class="col-md-3 mb-3">
+                                </div>
+                                <!-- <div class="col-md-3 mb-3">
                                     <label class="mb-1 fw-xnormal">Display Density</label><br />
                                     <input type="checkbox" id="compact_display" name="compact_display" class="form-check-input">
                                     <label for="compact-display" class="form-check-label">Compact</label>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
