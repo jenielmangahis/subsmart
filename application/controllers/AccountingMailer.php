@@ -157,6 +157,7 @@ class AccountingMailer extends MY_Controller
             "commercial_vs_residential",
             "expenses_by_workorder",
             "sales_summary_by_customer",
+            "expenses_by_customer",
         );
 
         // Conditional Statements on the array
