@@ -69,7 +69,7 @@ class Reports extends MY_Controller {
     }
 
     public function report($id)
-	{
+	{        
         $this->getUsers();    
         $company_id = logged('company_id');  
         $this->page_data['type'] = $id;           
