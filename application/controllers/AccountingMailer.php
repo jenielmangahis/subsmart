@@ -149,9 +149,12 @@ class AccountingMailer extends MY_Controller
             "product_sales_report",
             "activities_profit_and_loss",
             "invoice_by_date",
+            "payments_received",
             "reconciliation_reports",
             "monthly_closeout",
             "sales_by_items",
+            "service_sales_report",
+            "commercial_vs_residential",
         );
 
         // Conditional Statements on the array

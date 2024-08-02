@@ -111,7 +111,7 @@
         (enableDisableBusinessName) ? $("#businessName").text(businessName): businessName = $("#businessName").html("&nbsp;").html();
         (enableDisableReportName) ? $("#reportName").text(reportName): reportName = $("#reportName").html("&nbsp;").html();
         $('#report_date_text').html(report_date_text);
-        
+
         if (showHideLogo == "1") {
             $('#businessLogo').attr('src', base_url + '/uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image?"; ?>' + Math.round(Math.random() * 1000000)).show();
             if (header_align == "L") {
@@ -440,38 +440,42 @@
     applyTextRangeDate();
 
     $(document).ready(function() {
-        var isCollapsed = true;
+        // Initialize the state of the icons and rows based on current visibility
+        $('.collapse-row').each(function() {
+            var $row = $(this);
+            var targetClass = $row.data("target-class");
+            var isExpanded = $('.' + targetClass).is(':visible');
 
-        $("#collapseButton").click(function() {
-            if (isCollapsed) {
-                $(".collapse").collapse('show');
-                $("#collapseButton span").text('Uncollapse');
-                updateCarets('show');
-            } else {
-                $(".collapse").collapse('hide');
-                $("#collapseButton span").text('Collapse');
-                updateCarets('hide');
+            // Set the initial caret icon state
+            $row.find("i").toggleClass("bx-caret-down", isExpanded)
+                .toggleClass("bx-caret-right", !isExpanded);
+        });
+
+        // Handle click events
+        $(document).on('click', '.collapse-row', function() {
+            var $currentRow = $(this);
+            var targetClass = $currentRow.data("target-class");
+            var isExpanded = $currentRow.find("i").hasClass("bx-caret-down");
+
+            // Toggle the caret icon
+            $currentRow.find("i").toggleClass("bx-caret-down", !isExpanded)
+                .toggleClass("bx-caret-right", isExpanded);
+
+            // Toggle the visibility of related rows
+            $('.' + targetClass).toggle(!isExpanded);
+
+            // Determine related section classes
+            var relatedSectionClass = targetClass.startsWith('UNIQUE_ASSETS_') ?
+                'UNIQUE_CHECKING_' :
+                'UNIQUE_ASSETS_';
+            var relatedClass = relatedSectionClass + unique_assets_id;
+
+            // Collapse related section if current section is collapsed
+            if (!isExpanded) {
+                $('.' + relatedClass).hide();
+                $('.' + relatedClass).find("i").removeClass("bx-caret-down").addClass("bx-caret-right");
             }
-            isCollapsed = !isCollapsed;
         });
-
-        $(".collapse-row").click(function() {
-            var target = $(this).data("bs-target");
-            $(this).find("i").toggleClass("bx-caret-right bx-caret-down");
-            $(target).collapse('toggle');
-        });
-
-        function updateCarets(action) {
-            $(".collapse-row").each(function() {
-                var target = $(this).data("bs-target");
-                var icon = $(this).find("i");
-                if (action === 'show') {
-                    icon.removeClass("bx-caret-right").addClass("bx-caret-down");
-                } else {
-                    icon.removeClass("bx-caret-down").addClass("bx-caret-right");
-                }
-            });
-        }
     });
 </script>
 <style>
