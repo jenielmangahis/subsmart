@@ -1,4 +1,13 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
+<style>
+.row-report-name{
+    width:80%;
+    display:inline-block;
+}
+.accordion-body{
+    
+}
+</style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/subtabs/reports_subtabs'); ?>
@@ -17,10 +26,9 @@
                         </div>
                     </div>
                 </div>
-
-                <?php foreach ($reportGroups as $reportGroup) { ?>
                 <div class="row g-3 grid-mb favorites-item-container">
-                    <div class="col-12">
+                <?php foreach ($reportGroups as $reportGroup) { ?>                
+                    <div class="<?= $reportGroup->description == 'Favorites' ? 'col-12' : 'col-6'; ?>">
                         <div class="accordion">
                             <div class="accordion-item">
                                 <h2 class="accordion-header">
@@ -38,19 +46,20 @@
 
                                             <?php $reportTypesColumns = count($reportGroup->report_types) > 8 ? array_chunk($reportGroup->report_types, ceil(count($reportGroup->report_types) / 2)) : [$reportGroup->report_types]; ?>
                                             <?php foreach ($reportTypesColumns as $colRepTypes) { ?>
-                                            <div class="col-12 col-md-5">
+                                            <div class="col-12 col-md-6">
                                                 <ul class="list-unstyled m-0">
                                                     <?php foreach ($colRepTypes as $reportType) { ?>
                                                     <?php $favorite = $this->accounting_report_types_model->get_favorite_report_by_report_type_id($reportType->id, logged('company_id')); ?>
-                                                    <li class="border-bottom p-3 cursor-pointer">
-                                                        <span
-                                                            onclick="location.href='<?php echo is_null($reportType->url) ? base_url('/accounting/reports/view-report/'.$reportType->id) : base_url($reportType->url); ?>'"><?php echo $reportType->name; ?></span>
-                                                        <a href="#" style="color: #888888" data-bs-toggle="collapse"
-                                                            data-bs-target="#<?php echo str_replace(' ', '-', strtolower($reportGroup->description)); ?>-<?php echo $reportType->id; ?>-collapse"
-                                                            aria-expanded="false"
-                                                            aria-controls="<?php echo str_replace(' ', '-', strtolower($reportGroup->description)); ?>-<?php echo $reportType->id; ?>-collapse">
-                                                            <i class="bx bx-fw bx-help-circle"></i>
-                                                        </a>
+                                                    <li class="p-3 cursor-pointer">
+                                                        <span class="row-report-name" 
+                                                            onclick="location.href='<?php echo is_null($reportType->url) ? base_url('/accounting/reports/view-report/'.$reportType->id) : base_url($reportType->url); ?>'"><?php echo $reportType->name; ?>
+                                                            <a href="#" style="color: #888888" data-bs-toggle="collapse"
+                                                                data-bs-target="#<?php echo str_replace(' ', '-', strtolower($reportGroup->description)); ?>-<?php echo $reportType->id; ?>-collapse"
+                                                                aria-expanded="false"
+                                                                aria-controls="<?php echo str_replace(' ', '-', strtolower($reportGroup->description)); ?>-<?php echo $reportType->id; ?>-collapse">
+                                                                <i class="bx bx-fw bx-help-circle report-help-popover" data-toggle="popover" data-bs-content="<?= $reportType->description; ?>"></i>
+                                                            </a>
+                                                        </span>
 
                                                         <div class="dropdown float-end d-inline-block"
                                                             style="min-width: 23px; min-height: 1px">
@@ -86,12 +95,20 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
+                    </div>                
                 <?php } ?>
+                </div>
             </div>
         </div>
     </div>
 </div>
-
+<script>
+$(function(){
+    $('.report-help-popover').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus"
+    }); 
+});
+</script>
 <?php include viewPath('v2/includes/footer'); ?>
