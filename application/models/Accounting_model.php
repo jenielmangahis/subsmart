@@ -1424,5 +1424,64 @@ class Accounting_model extends MY_Model
             $query = $this->db->get();
             return $query->result();
         }
+
+        // Get Expenses by Workorder in Database
+        if ($reportType == "expenses_by_workorder") {
+            $this->db->select('work_orders.work_order_number AS num, work_orders.date_issued, work_orders.grand_total AS total_amount, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer');
+            $this->db->from('work_orders');
+            $this->db->join('acs_profile', 'work_orders.customer_id = acs_profile.prof_id', 'left');
+            //$this->db->where('acs_profile.first_name !=', '');
+            //$this->db->where('acs_profile.last_name !=', '');
+            $this->db->where("work_orders.date_issued >= '$reportConfig[date_from]'");
+            $this->db->where("work_orders.date_issued <= '$reportConfig[date_to]'");
+            $this->db->where('work_orders.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $query = $this->db->get();
+            return $query->result();
+        }
+
+        // Get Sales Summary by Customer in Database
+        if ($reportType == "sales_summary_by_customer") {
+            $this->db->select('COALESCE(SUM(invoices.grand_total),0) AS total_amount, COUNT(invoices.id)AS total_invoices, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer');
+            $this->db->from('invoices');
+            $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id', 'left');
+            //$this->db->where('acs_profile.first_name !=', '');
+            //$this->db->where('acs_profile.last_name !=', '');
+            $this->db->where("invoices.date_issued >= '$reportConfig[date_from]'");
+            $this->db->where("invoices.date_issued <= '$reportConfig[date_to]'");
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->group_by('invoices.customer_id');
+            $this->db->limit($reportConfig['page_size']);
+            $query = $this->db->get();
+            return $query->result();
+        }
+
+        // Get Customer Source in Database
+        if ($reportType == "customer_source") {
+            $query = $this->db->query('
+                SELECT ac_leadsource.*, 
+                (
+                    SELECT COUNT(acs_office.off_id)AS total
+                    FROM acs_office 
+                    JOIN acs_profile ON acs_office.fk_prof_id = acs_profile.prof_id 
+                    WHERE acs_profile.customer_type = "Residential"                        
+                        AND acs_office.lead_source = ac_leadsource.ls_name
+                )AS total_residential,
+                (
+                    SELECT COUNT(acs_office.off_id)AS total
+                    FROM acs_office 
+                    JOIN acs_profile ON acs_office.fk_prof_id = acs_profile.prof_id 
+                    WHERE acs_profile.customer_type = "Commercial"                        
+                        AND acs_office.lead_source = ac_leadsource.ls_name
+                )AS total_commercial
+                FROM ac_leadsource
+                WHERE ac_leadsource.fk_company_id = ' . $companyID . '
+                ORDER BY ' . $reportConfig['sort_by'] . ' ' . $reportConfig['sort_order'] . ' 
+                LIMIT ' . $reportConfig['page_size'] . '
+            ');
+            return $query->result();
+        }
     }
 }
