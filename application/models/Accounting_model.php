@@ -1585,5 +1585,21 @@ class Accounting_model extends MY_Model
             ');
             return $query->result();
         }
+
+        // Get Workorder Status Database
+        if ($reportType == "workorder_status") {
+            $this->db->select('work_orders.work_order_number AS num, work_orders.date_issued, work_orders.status AS workorder_status, COALESCE(work_orders.grand_total,0) AS total_amount, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer');
+            $this->db->from('work_orders');
+            $this->db->join('acs_profile', 'work_orders.customer_id = acs_profile.prof_id', 'left');
+            //$this->db->where('acs_profile.first_name !=', '');
+            //$this->db->where('acs_profile.last_name !=', '');
+            $this->db->where("work_orders.date_issued >= '$reportConfig[date_from]'");
+            $this->db->where("work_orders.date_issued <= '$reportConfig[date_to]'");
+            $this->db->where('work_orders.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $query = $this->db->get();
+            return $query->result();
+        }
     }
 }
