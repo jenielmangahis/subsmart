@@ -46,17 +46,23 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <?php
-                                        $tableID = 'yearly_closeout_table';
-$reportCategory = 'yearly_closeout_lists';
+                                        $tableID = 'repeated_business_table';
+$reportCategory = 'repeated_business_list';
 ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 accordion">
                                         <thead>
                                             <tr>
-                                            <th>CUSTOMER NAME</th>
-                                            <th>NUM</th>
-                                            <th>DATE</th>
-                                            <th style="text-align: right">BALANCE</th>
-                                            <th style="text-align: right">INVOICE AMOUNT</th>
+                                            <th>MONTH</th>
+                                            <th># OF ESTIMATES</th>
+                                            <th>ESTIMATED</th>
+                                            <th>ACCEPTED</th>
+                                            <th># OF INVOICES</th>
+                                            <th>INVOICED</th>
+                                            <th>PAID</th>
+                                            <th>DUE</th>
+                                            <th># OF EXPENSES</th>
+                                            <th>TOTAL EXPENSES</th>
+                                            <th>PROFIT</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -179,7 +185,8 @@ $reportCategory = 'yearly_closeout_lists';
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="date_created" <?php echo ($reportSettings->sort_by == 'date_created') ? 'selected' : ''; ?>>Date</option>
+                                                <option value="billable" <?php echo ($reportSettings->sort_by == 'billable') ? 'selected' : ''; ?>>Billable</option>
+                                                <option value="time" <?php echo ($reportSettings->sort_by == 'time') ? 'selected' : ''; ?>>Duration</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == 'DESC') ? 'selected' : ''; ?>>DESC</option>

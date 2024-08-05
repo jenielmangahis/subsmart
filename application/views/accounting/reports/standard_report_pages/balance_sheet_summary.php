@@ -17,26 +17,6 @@
                     <div class="nsm-card primary">
                         <div class="nsm-card-header">
                             <div class="col-lg-12">
-                                <button type="button" id="collapseButton" class="nsm-button">
-                                    <span>Collapse</span>
-                                </button>
-                                <button type="button" class="nsm-button" data-bs-toggle="dropdown">
-                                    <span>Sort</span> <i class='bx bx-fw bx-chevron-down'></i>
-                                </button>
-                                <ul class="dropdown-menu p-3">
-                                    <div class="form-check">
-                                        <input type="radio" checked id="sort-default" name="sort_order" class="form-check-input">
-                                        <label for="sort-default" class="form-check-label">Default</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input type="radio" id="sort-asc" name="sort_order" class="form-check-input">
-                                        <label for="sort-asc" class="form-check-label">Total in ascending order</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input type="radio" id="sort-desc" name="sort_order" class="form-check-input">
-                                        <label for="sort-desc" class="form-check-label">Total in descending order</label>
-                                    </div>
-                                </ul>
                                 <span class="float-start">
                                     <button class="nsm-button addNotes">Add Notes</button>
                                 </span>

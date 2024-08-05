@@ -160,6 +160,11 @@ class AccountingMailer extends MY_Controller
             "expenses_by_customer",
             "customer_source",
             "workorder_status",
+            "account_receivable",
+            "expenses_by_category_summary",
+            "estimates_summary",
+            "yearly_closeout_lists",
+            "repeated_business_list"
         );
 
         // Conditional Statements on the array

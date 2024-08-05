@@ -1,10 +1,11 @@
+
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('accounting/reports/reports_assets/report_css'); ?>
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-1"></div>
         <div class="col-lg-10">
-            <div class="nsm-callout primary"><button><i class="bx bx-x"></i></button><?php echo $page->description; ?></div>
+            <div class="nsm-callout primary"><button><i class="bx bx-x"></i></button><?php echo $page->description ?></div>
         </div>
         <div class="col-lg-1"></div>
     </div>
@@ -35,33 +36,34 @@
                         <div class="nsm-card-content">
                             <div class="row mb-4">
                                 <div class="col-lg-12 headerInfo">
-                                    <img id="businessLogo" class="<?php echo ($reportSettings->show_logo == 0 || !isset($reportSettings->show_logo)) ? 'd-none-custom' : ''; ?>"  src="<?php echo base_url('uploads/users/business_profile/')."$companyInfo->id/$companyInfo->business_image"; ?>">
+                                    <img id="businessLogo" class="<?php echo ($reportSettings->show_logo == 0 || !isset($reportSettings->show_logo)) ? 'd-none-custom' : '';?>"  src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
                                     <div class="reportTitleInfo">
-                                        <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name); ?></h3>
-                                        <h5><strong id="reportName"><?php echo $reportSettings->title; ?></strong></h5>
+                                        <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?></h3>
+                                        <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
                                         <h5><small id="reportDate"><span id="date_from_text"></span> &mdash; <span id="date_to_text"></span></small></h5>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <div class="col-lg-12">
-                                    <?php
-                                        $tableID = 'yearly_closeout_table';
-$reportCategory = 'yearly_closeout_lists';
-?>
-                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 accordion">
+                                <div class="col-lg-12">                                   
+                                    <?php 
+                                        $tableID = "expensesbycategorysummary_table"; 
+                                        $reportCategory = "expenses_by_category_summary"; 
+                                    ?>
+                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
-                                            <th>CUSTOMER NAME</th>
-                                            <th>NUM</th>
-                                            <th>DATE</th>
-                                            <th style="text-align: right">BALANCE</th>
-                                            <th style="text-align: right">INVOICE AMOUNT</th>
+                                                <th>CATEGORY</th>
+                                                <th>VENDOR</th>
+                                                <th>PAYMENT DATE</th>
+                                                <th>PAYMENT METHOD</th>
+                                                <th>REF. NO</th>
+                                                <th class="text-end">TOTAL</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="8">
+                                                <td colspan="6">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
@@ -97,7 +99,7 @@ $reportCategory = 'yearly_closeout_lists';
                                 </div>
                             </div>
                             <div class="row footerInfo">
-                                <span class=""><?php echo date('l, F j, Y h:i A eP'); ?></span>
+                                <span class=""><?php echo date("l, F j, Y h:i A eP") ?></span>
                             </div>
                         </div>
                     </div>
@@ -107,6 +109,7 @@ $reportCategory = 'yearly_closeout_lists';
         <div class="col-lg-1"></div>
     </div>
 </div>
+
 <!-- START: MODALS -->
 <!-- Modal for Report Settings -->
 <div class="modal fade" id="reportSettings" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
@@ -125,8 +128,8 @@ $reportCategory = 'yearly_closeout_lists';
                                     <label class="mb-1 fw-xnormal">Logo</label>
                                     <select id="showHideLogo" name="showHideLogo" class="nsm-field form-select">
                                         <?php if (isset($reportSettings->show_logo)) { ?>
-                                            <option value="1" <?php echo (isset($reportSettings->show_logo) && $reportSettings->show_logo == 1) ? 'selected' : ''; ?>>Show</option>
-                                            <option value="0" <?php echo (isset($reportSettings->show_logo) && $reportSettings->show_logo == 0) ? 'selected' : ''; ?>>Hide</option>
+                                            <option value="1" <?php echo (isset($reportSettings->show_logo) && $reportSettings->show_logo == 1) ? "selected" : "" ?>>Show</option>
+                                            <option value="0" <?php echo (isset($reportSettings->show_logo) && $reportSettings->show_logo == 0) ? "selected" : "" ?>>Hide</option>
                                         <?php } else { ?>
                                             <option value="1" selected>Show</option>
                                             <option value="0">Hide</option>
@@ -136,42 +139,42 @@ $reportCategory = 'yearly_closeout_lists';
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Company Name</label>
                                     <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" <?php echo (!isset($reportSettings->show_company_name) || $reportSettings->show_company_name == 1) ? 'checked' : ''; ?>></div>
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" <?php echo (!isset($reportSettings->show_company_name) || $reportSettings->show_company_name == 1) ? "checked" : ""; ?>></div>
                                         <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo (trim(str_replace('&nbsp;', '', $reportSettings->company_name)) !== '') ? $reportSettings->company_name : strtoupper($companyInfo->business_name); ?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Report Name</label>
                                     <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" <?php echo (!isset($reportSettings->show_title) || $reportSettings->show_title == 1) ? 'checked' : ''; ?>></div>
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" <?php echo (!isset($reportSettings->show_title) || $reportSettings->show_title == 1) ? "checked" : ""; ?>></div>
                                         <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo (trim(str_replace('&nbsp;', '', $reportSettings->title)) !== '') ? $reportSettings->title : $page->title; ?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label class="mb-1 fw-xnormal">Header Align</label>
                                     <select name="header_align" id="header-align" class="nsm-field form-select">
-                                        <option value="C" <?php echo ($reportSettings->header_align == 'C') ? 'selected' : ''; ?>>Center</option>
-                                        <option value="L" <?php echo ($reportSettings->header_align == 'L') ? 'selected' : ''; ?>>Left</option>
-                                        <option value="R" <?php echo ($reportSettings->header_align == 'R') ? 'selected' : ''; ?>>Right</option>
+                                        <option value="C" <?php echo ($reportSettings->header_align == "C") ? "selected" : "" ?>>Center</option>
+                                        <option value="L" <?php echo ($reportSettings->header_align == "L") ? "selected" : "" ?>>Left</option>
+                                        <option value="R" <?php echo ($reportSettings->header_align == "R") ? "selected" : "" ?>>Right</option>
                                     </select>
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label class="mb-1 fw-xnormal">Footer Align</label>
                                     <select name="footer_align" id="footer-align" class="nsm-field form-select">
-                                        <option value="C" <?php echo ($reportSettings->footer_align == 'C') ? 'selected' : ''; ?>>Center</option>
-                                        <option value="L" <?php echo ($reportSettings->footer_align == 'L') ? 'selected' : ''; ?>>Left</option>
-                                        <option value="R" <?php echo ($reportSettings->footer_align == 'R') ? 'selected' : ''; ?>>Right</option>
+                                        <option value="C" <?php echo ($reportSettings->footer_align == "C") ? "selected" : "" ?>>Center</option>
+                                        <option value="L" <?php echo ($reportSettings->footer_align == "L") ? "selected" : "" ?>>Left</option>
+                                        <option value="R" <?php echo ($reportSettings->footer_align == "R") ? "selected" : "" ?>>Right</option>
                                     </select>
                                 </div>
                                 <div class="col-md-2 mb-3">
                                     <label class="mb-1 fw-xnormal">Row Size</label>
                                     <select name="page_size" id="page-size" class="nsm-field form-select">
-                                        <option value="9999" <?php echo ($reportSettings->page_size == '9999') ? 'selected' : ''; ?>>All</option>
-                                        <option value="10" <?php echo ($reportSettings->page_size == '10') ? 'selected' : ''; ?>>10</option>
-                                        <option value="25" <?php echo ($reportSettings->page_size == '25') ? 'selected' : ''; ?>>25</option>
-                                        <option value="50" <?php echo ($reportSettings->page_size == '50') ? 'selected' : ''; ?>>50</option>
-                                        <option value="100" <?php echo ($reportSettings->page_size == '100') ? 'selected' : ''; ?>>100</option>
-                                        <option value="500" <?php echo ($reportSettings->page_size == '500') ? 'selected' : ''; ?>>500</option>
+                                        <option value="9999" <?php echo ($reportSettings->page_size == "9999") ? "selected" : "" ?>>All</option>
+                                        <option value="10" <?php echo ($reportSettings->page_size == "10") ? "selected" : "" ?>>10</option>
+                                        <option value="25" <?php echo ($reportSettings->page_size == "25") ? "selected" : "" ?>>25</option>
+                                        <option value="50" <?php echo ($reportSettings->page_size == "50") ? "selected" : "" ?>>50</option>
+                                        <option value="100" <?php echo ($reportSettings->page_size == "100") ? "selected" : "" ?>>100</option>
+                                        <option value="500" <?php echo ($reportSettings->page_size == "500") ? "selected" : "" ?>>500</option>
                                     </select>
                                 </div>
                                 <div class="col-md-4 mb-3">
@@ -179,11 +182,11 @@ $reportCategory = 'yearly_closeout_lists';
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="date_created" <?php echo ($reportSettings->sort_by == 'date_created') ? 'selected' : ''; ?>>Date</option>
+                                                <option value="category" <?php echo ($reportSettings->sort_by == "category") ? "selected" : "" ?>>Category</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
-                                                <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == 'DESC') ? 'selected' : ''; ?>>DESC</option>
-                                                <option value="ASC" <?php echo ($reportSettings->sort_asc_desc == 'ASC') ? 'selected' : ''; ?>>ASC</option>
+                                                <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
+                                                <option value="ASC" <?php echo ($reportSettings->sort_asc_desc == "ASC") ? "selected" : "" ?>>ASC</option>
                                             </select>
                                         </div>
                                     </div>
@@ -192,9 +195,9 @@ $reportCategory = 'yearly_closeout_lists';
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Date Range <small class="text-muted">(From &mdash; To)</small></label>
                                     <div class="input-group">
-                                        <input name="date_from" class="form-control mt-0" type="date" value="<?php echo (isset($reportSettings->report_date_from_text)) ? $reportSettings->report_date_from_text : date('Y').'-01-01'; ?>">
-                                        <input name="date_to" class="form-control mt-0" type="date" value="<?php echo (isset($reportSettings->report_date_to_text)) ? $reportSettings->report_date_to_text : date('Y-m-d'); ?>">
-                                    </div> 
+                                        <input name="date_from" class="form-control mt-0" type="date" value="<?= $reportSettings ? date("Y-m-d", strtotime($reportSettings->report_date_from_text)) : date('Y').'-01-01'; ?>">
+                                        <input name="date_to" class="form-control mt-0" type="date" value="<?= $reportSettings ? date("Y-m-d", strtotime($reportSettings->report_date_to_text)) : date('Y-m-t'); ?>">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -207,7 +210,6 @@ $reportCategory = 'yearly_closeout_lists';
                             </div>
                             <div class="float-end">
                                 <button type="submit" class="nsm-button primary settingsApplyButton">Apply</button>
-                                <!-- <button type="button" class="nsm-button primary printPDF">Print</button> -->
                             </div>
                         </div>
                     </div>
@@ -217,7 +219,6 @@ $reportCategory = 'yearly_closeout_lists';
     </div>
 </div>
 <!-- Modal for Report Settings -->
-
 <!-- START: PRINT/SAVE MODAL -->
 <div class="modal fade" id="printPreviewModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
     <div class="modal-dialog modal-xl">
@@ -239,8 +240,8 @@ $reportCategory = 'yearly_closeout_lists';
                             </select>
                         </div>
                         <!-- <div class="form-check">
-                            <input id="pageHeaderRepeat" name="pageHeaderRepeat" class="form-check-input" type="checkbox">
-                            <label class="form-check-label" for="pageHeaderRepeat">Repeat Page Header</label>
+                            <input id="pageHeaderRepeat" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">Repeat Page Header</label>
                         </div> -->
                     </div>
                     <div class="col-sm-9">
@@ -290,13 +291,13 @@ $reportCategory = 'yearly_closeout_lists';
                         <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>Subject</h6>
-                                <input id="emailSubject" class="form-control" type="text" value="<?php echo $page->title; ?>" required>
+                                <input id="emailSubject" class="form-control" type="text" value="<?php echo $page->title ?>" required>
                             </div>
                         </div>
                         <div class="col-sm-12 mt-3">
                             <div class="form-group">
                                 <h6>Body</h6>
-                                <div id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title; ?> from <?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : ''; ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?></div>
+                                <div id="emailBody">Hello,<br><br>Attached here is the <?php echo $page->title ?> from <?php echo ($companyInfo) ? strtoupper($companyInfo->business_name) : "" ?>.<br><br>Regards,<br><?php echo "$users->FName $users->LName"; ?></div>
                             </div>
                         </div>
                         <div class="col-sm-12 mt-3">
@@ -305,12 +306,12 @@ $reportCategory = 'yearly_closeout_lists';
                                 <div class="row">
                                     <div class="input-group borderRadius0 pdfAttachment">
                                         <div class="input-group-text"><input class="form-check-input mt-0 pdfAttachmentCheckbox" type="checkbox"></div>
-                                        <input id="pdfReportFilename" class="form-control" type="text" value="<?php echo $page->title; ?>" required>
+                                        <input id="pdfReportFilename" class="form-control" type="text" value="<?php echo $page->title ?>" required>
                                         <input class="form-control" type="text" disabled readonly value=".pdf" style="max-width: 60px;">
                                     </div>
                                     <div class="input-group borderRadius0">
                                         <div class="input-group-text"><input class="form-check-input mt-0 xlsxAttachmentCheckbox" type="checkbox"></div>
-                                        <input id="xlsxReportFileName" class="form-control" type="text" value="<?php echo $page->title; ?>" required>
+                                        <input id="xlsxReportFileName" class="form-control" type="text" value="<?php echo $page->title ?>" required>
                                         <input class="form-control" type="text" disabled readonly value=".xlsx" style="max-width: 60px;">
                                     </div>
                                 </div>
