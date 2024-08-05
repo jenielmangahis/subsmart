@@ -167,6 +167,7 @@ class AccountingMailer extends MY_Controller
             "repeated_business_list",
             "workorder_status",
             "sales_by_customer",
+            "expenses_by_vendor",
         );
 
         // Conditional Statements on the array
