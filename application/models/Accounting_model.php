@@ -1601,5 +1601,37 @@ class Accounting_model extends MY_Model
             $query = $this->db->get();
             return $query->result();
         }
+
+        // Get Activities Payroll Summary in Database
+        if ($reportType == 'activities_payroll_summary') {
+            $this->db->select('*');
+            $this->db->from('accounting_payroll');
+            $this->db->where('company_id', $companyID);
+            $this->db->where("pay_period_start >= '$reportConfig[date_from]'");
+            $this->db->where("pay_period_end <= '$reportConfig[date_to]'");
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+
+            return $data->result();
+        }
+
+        // Get Activities Timelog Summary in Database
+        if ($reportType == 'timelog_summary') {
+            $query = $this->db->query("
+                SELECT timesheet_attendance.id,timesheet_attendance.user_id,timesheet_attendance.date_created AS attendance_date,timesheet_attendance.shift_duration, timesheet_attendance.break_duration, timesheet_attendance.overtime, timesheet_attendance.overtime_status,timesheet_attendance.status,timesheet_attendance.notes,
+                CONCAT(users.FName, ' ', users.LName)AS employee_name, roles.title AS employee_role
+                FROM timesheet_attendance 
+                    JOIN users ON timesheet_attendance.user_id = users.id 
+                    JOIN roles ON users.role = roles.id 
+                WHERE timesheet_attendance.date_created >='" . $reportConfig['date_from'] . "' 
+                    AND timesheet_attendance.date_created <='" . $reportConfig['date_to'] . "' 
+                    AND users.company_id = " . $companyID . " 
+                ORDER BY " . $reportConfig['sort_by'] . " " . $reportConfig['sort_order'] . " 
+                LIMIT " . $reportConfig['page_size'] . "
+            ");
+
+            return $query->result();
+        }
     }
 }
