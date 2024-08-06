@@ -1634,6 +1634,20 @@ class Accounting_model extends MY_Model
             return $query->result();
         }
 
+        // Get Activities Payroll Logs Database
+        if ($reportType == 'payroll_log_details') {
+            $this->db->select('*');
+            $this->db->from('accounting_payroll');
+            $this->db->where('company_id', $companyID);
+            $this->db->where("pay_period_start >= '$reportConfig[date_from]'");
+            $this->db->where("pay_period_end <= '$reportConfig[date_to]'");
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+
+            return $data->result();
+        }
+
         // Get Activities Expense by Vendor
         if ($reportType == 'expenses_by_vendor') {
             $this->db->select('accounting_vendors.display_name AS vendor, accounting_bill.remaining_balance AS balance, accounting_bill.total_amount AS expense, accounting_bill.created_at AS payment_date, accounting_vendors.status as accounting_vendor_status');
@@ -1648,6 +1662,6 @@ class Accounting_model extends MY_Model
 
             return $data->result();
         }  
-
+                
     }
 }
