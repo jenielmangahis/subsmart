@@ -56,7 +56,7 @@
                                                 <th>PAID DATE</th>
                                                 <th>INVOICE NUMBER</th>
                                                 <th>PAYMENT METHOD</th>
-                                                <th style="text-align: right;">TOP SALES</th>
+                                                <th style="text-align: right;">TOTAL SALES</th>
                                             </tr>
                                         </thead>
                                         <tbody>

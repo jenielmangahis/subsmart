@@ -1585,5 +1585,53 @@ class Accounting_model extends MY_Model
             ');
             return $query->result();
         }
+
+        // Get Workorder Status Database
+        if ($reportType == "workorder_status") {
+            $this->db->select('work_orders.work_order_number AS num, work_orders.date_issued, work_orders.status AS workorder_status, COALESCE(work_orders.grand_total,0) AS total_amount, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer');
+            $this->db->from('work_orders');
+            $this->db->join('acs_profile', 'work_orders.customer_id = acs_profile.prof_id', 'left');
+            //$this->db->where('acs_profile.first_name !=', '');
+            //$this->db->where('acs_profile.last_name !=', '');
+            $this->db->where("work_orders.date_issued >= '$reportConfig[date_from]'");
+            $this->db->where("work_orders.date_issued <= '$reportConfig[date_to]'");
+            $this->db->where('work_orders.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $query = $this->db->get();
+            return $query->result();
+        }
+
+        // Get Activities Payroll Summary in Database
+        if ($reportType == 'activities_payroll_summary') {
+            $this->db->select('*');
+            $this->db->from('accounting_payroll');
+            $this->db->where('company_id', $companyID);
+            $this->db->where("pay_period_start >= '$reportConfig[date_from]'");
+            $this->db->where("pay_period_end <= '$reportConfig[date_to]'");
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+
+            return $data->result();
+        }
+
+        // Get Activities Timelog Summary in Database
+        if ($reportType == 'timelog_summary') {
+            $query = $this->db->query("
+                SELECT timesheet_attendance.id,timesheet_attendance.user_id,timesheet_attendance.date_created AS attendance_date,timesheet_attendance.shift_duration, timesheet_attendance.break_duration, timesheet_attendance.overtime, timesheet_attendance.overtime_status,timesheet_attendance.status,timesheet_attendance.notes,
+                CONCAT(users.FName, ' ', users.LName)AS employee_name, roles.title AS employee_role
+                FROM timesheet_attendance 
+                    JOIN users ON timesheet_attendance.user_id = users.id 
+                    JOIN roles ON users.role = roles.id 
+                WHERE timesheet_attendance.date_created >='" . $reportConfig['date_from'] . "' 
+                    AND timesheet_attendance.date_created <='" . $reportConfig['date_to'] . "' 
+                    AND users.company_id = " . $companyID . " 
+                ORDER BY " . $reportConfig['sort_by'] . " " . $reportConfig['sort_order'] . " 
+                LIMIT " . $reportConfig['page_size'] . "
+            ");
+
+            return $query->result();
+        }
     }
 }
