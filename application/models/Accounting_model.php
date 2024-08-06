@@ -1633,5 +1633,21 @@ class Accounting_model extends MY_Model
 
             return $query->result();
         }
+
+        // Get Activities Expense by Vendor
+        if ($reportType == 'expenses_by_vendor') {
+            $this->db->select('accounting_vendors.display_name AS vendor, accounting_bill.remaining_balance AS balance, accounting_bill.total_amount AS expense, accounting_bill.created_at AS payment_date, accounting_vendors.status as accounting_vendor_status');
+            $this->db->from('accounting_vendors');
+            $this->db->join('accounting_bill', 'accounting_bill.vendor_id = accounting_vendors.id', 'left');
+            $this->db->where("DATE_FORMAT(accounting_vendors.created_at,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_vendors.created_at,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_vendors.company_id', $companyID);
+            //$this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+
+            return $data->result();
+        }  
+
     }
 }
