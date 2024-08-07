@@ -1662,6 +1662,22 @@ class Accounting_model extends MY_Model
 
             return $data->result();
         }  
-                
+
+        if ($reportType == 'sales_tax') {
+            $this->db->select('invoices_items.*, items.type AS item_type, items.title AS item_name, invoices.invoice_number AS num, invoices.date_issued, CONCAT(first_name  , " ", last_name) AS customer, invoices_items.total AS total_amount');
+            $this->db->from('invoices_items');
+            $this->db->join('items', 'invoices_items.items_id = items.id', 'left');
+            $this->db->join('invoices', 'invoices_items.invoice_id = invoices.id', 'left');
+            $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id', 'left');
+            $this->db->where("invoices.date_issued >= '$reportConfig[date_from]'");
+            $this->db->where("invoices.date_issued <= '$reportConfig[date_to]'");
+            $this->db->where('items.type !=', '');
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+
+            return $data->result();
+        }       
     }
 }
