@@ -47,7 +47,7 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">                                   
                                     <?php 
-                                        $tableID = "account_receivable_table"; 
+                                        $tableID = "accountreceivable_table"; 
                                         $reportCategory = "account_receivable"; 
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
@@ -55,9 +55,9 @@
                                             <tr>
                                                 <th>MONTH</th>
                                                 <th>NO. OF INVOICES</th>
-                                                <th>INVOICED</th>
-                                                <th>PAID</th>
-                                                <th>DUE</th>
+                                                <th class="text-end">INVOICED</th>
+                                                <th class="text-end">PAID</th>
+                                                <th class="text-end">DUE</th>
                                                 <th class="text-end">TIP</th>
                                                 <th class="text-end">FEES</th>
                                             </tr>
@@ -184,6 +184,12 @@
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
                                                 <option value="month" <?php echo ($reportSettings->sort_by == "month") ? "selected" : "" ?>>Month</option>
+                                                <option value="total_invoices" <?php echo ($reportSettings->sort_by == "total_invoices") ? "selected" : "" ?>>Total Invoices</option>
+                                                <option value="invoiced" <?php echo ($reportSettings->sort_by == "invoiced") ? "selected" : "" ?>>Invoiced</option>
+                                                <option value="paid" <?php echo ($reportSettings->sort_by == "paid") ? "selected" : "" ?>>Paid</option>
+                                                <option value="due" <?php echo ($reportSettings->sort_by == "due") ? "selected" : "" ?>>Due</option>
+                                                <option value="tip" <?php echo ($reportSettings->sort_by == "tip") ? "selected" : "" ?>>Tip</option>
+                                                <option value="fee" <?php echo ($reportSettings->sort_by == "fee") ? "selected" : "" ?>>Fee</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
