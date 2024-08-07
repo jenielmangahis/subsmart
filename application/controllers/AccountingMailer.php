@@ -172,6 +172,7 @@ class AccountingMailer extends MY_Controller
             "payments_type_summary",
             "sales_by_customer_groups",
             "sales_by_customer_source",
+            "sales_tax",
         );
 
         // Conditional Statements on the array
