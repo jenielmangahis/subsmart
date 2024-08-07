@@ -54,13 +54,14 @@
                                         <thead>
                                             <tr>
                                                 <th>CUSTOMER SOURCE</th>
-                                                <th>NO. OF PAYMENTS</th>
+                                                <th>TRANSACTION</th>
+                                                <th>PAYMENTS NO.</th>
                                                 <th class="text-end">TOTAL SALES</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="3">
+                                                <td colspan="4">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
@@ -179,7 +180,7 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="customer_source" <?php echo ($reportSettings->sort_by == "customer_source") ? "selected" : "" ?>>Customer Source</option>
+                                                <option value="total_sales" <?php echo ($reportSettings->sort_by == "total_sales") ? "selected" : "" ?>>Total Sales</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>

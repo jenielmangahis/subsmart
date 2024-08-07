@@ -35,9 +35,9 @@
                         <div class="nsm-card-content">
                             <div class="row mb-4">
                                 <div class="col-lg-12 headerInfo">
-                                    <img id="businessLogo" class="<?php echo ($reportSettings->show_logo == 0 || !isset($reportSettings->show_logo)) ? 'd-none-custom' : '';?>"  src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
+                                    <img id="businessLogo" class="<?php echo ($reportSettings->show_logo == 0 || !isset($reportSettings->show_logo)) ? 'd-none-custom' : ''; ?>" src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
                                     <div class="reportTitleInfo">
-                                        <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?></h3>
+                                        <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name) ?></h3>
                                         <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
                                         <h5><small id="reportDate"><span id="date_from_text"></span> to <span id="date_to_text"></span></small></h5>
                                     </div>
@@ -45,19 +45,21 @@
                             </div>
                             <div class="row mb-3">
                                 <div class="col-lg-12">
-                                    <?php 
-                                        $tableID = "salesdemographics_table"; 
-                                        $reportCategory = "sales_demographics"; 
+                                    <?php
+                                    $tableID = "salesdemographics_table";
+                                    $reportCategory = "sales_demographics";
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
-                                                
+                                                <th>MONTH</th>
+                                                <th>LOCATION/PRODUCTS</th>
+                                                <th style="text-align: right;">TOTAL SALES</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="0">
+                                                <td colspan="3">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
@@ -176,11 +178,13 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <!-- No quickbooks -->
+                                                <option value="sales_receipt_date" <?php echo ($reportSettings->sort_by == "sales_receipt_date") ? "selected" : "" ?>>Month</option>
+                                                <option value="billing_address" <?php echo ($reportSettings->sort_by == "billing_address") ? "selected" : "" ?>>Location/Products</option>
+                                                <option value="total_amount" <?php echo ($reportSettings->sort_by == "total_amount") ? "selected" : "" ?>>Total Sales</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
-                                                <option value="ASC" <?php echo ($reportSettings->sort_asc_desc== "ASC") ? "selected" : "" ?>>ASC</option>
+                                                <option value="ASC" <?php echo ($reportSettings->sort_asc_desc == "ASC") ? "selected" : "" ?>>ASC</option>
                                             </select>
                                         </div>
                                     </div>

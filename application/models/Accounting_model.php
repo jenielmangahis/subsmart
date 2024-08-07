@@ -383,6 +383,28 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
 
+        if ($reportType == 'profit_and_loss_by_customer_list') {
+            $this->db->select('invoices.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer');
+            $this->db->from('invoices');
+            $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
+            $this->db->where('acs_profile.first_name !=', '');
+            $this->db->where('acs_profile.last_name !=', '');
+            $this->db->where('items.price !=', '');
+            $this->db->where('items.title !=', '');
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->group_by('invoices.customer_id, customer');
+            // $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            // $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+
+            return $data->result();
+        }
+
+
         // Get Sales by Customer Type Detail data in Database
         if ($reportType == 'sales_by_customer_type_detail') {
             $this->db->select('invoices.customer_id AS customer_id, acs_profile.customer_type AS customer_type, DATE_FORMAT(invoices.date_created,"%Y-%m-%d") AS date, "Invoice" AS transaction_type, invoices.id AS num, items.type AS product_service, items.title AS memo_description, invoices_items.qty AS qty, items.price AS sales_price, (((invoices_items.qty * items.price) - invoices_items.discount) + invoices_items.tax), invoices.total_due AS balance');
@@ -1031,7 +1053,37 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
 
-        // Get Balance Sheet Data in Database
+        if ($reportType == 'payments_type_summary') {
+            $this->db->select('date_issued, payment_methods, status, grand_total');
+            $this->db->from('invoices');
+            $this->db->where('company_id', $companyID);
+            $this->db->where('status', 'paid'); 
+            if (!empty($reportConfig['date_from']) && !empty($reportConfig['date_to'])) {
+                $this->db->where("invoices.date_issued >= '$reportConfig[date_from]'");
+                $this->db->where("invoices.date_issued <= '$reportConfig[date_to]'");
+            }
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+
+            return $data->result();
+        }
+
+        if ($reportType == 'sales_demographics') {
+            $this->db->select('sales_receipt_date, billing_address, total_amount');
+            $this->db->from('accounting_sales_receipt');
+            $this->db->where('company_id', $companyID);
+            if (!empty($reportConfig['date_from']) && !empty($reportConfig['date_to'])) {
+                $this->db->where("accounting_sales_receipt.sales_receipt_date >= '$reportConfig[date_from]'");
+                $this->db->where("accounting_sales_receipt.sales_receipt_date <= '$reportConfig[date_to]'");
+            }
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+
+            return $data->result();
+        }
+
         if ($reportType == 'statement_of_cash_flows') {
             $this->db->select('COALESCE(SUM(grand_total), 0) AS total_amount');
             $this->db->from('invoices');
@@ -1631,6 +1683,102 @@ class Accounting_model extends MY_Model
                 LIMIT " . $reportConfig['page_size'] . "
             ");
 
+            return $query->result();
+        }
+
+        // Get Activities Payroll Logs Database
+        if ($reportType == 'payroll_log_details') {
+            $this->db->select('*');
+            $this->db->from('accounting_payroll');
+            $this->db->where('company_id', $companyID);
+            $this->db->where("pay_period_start >= '$reportConfig[date_from]'");
+            $this->db->where("pay_period_end <= '$reportConfig[date_to]'");
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+
+            return $data->result();
+        }
+
+        // Get Activities Expense by Vendor
+        if ($reportType == 'expenses_by_vendor') {
+            $this->db->select('accounting_vendors.display_name AS vendor, accounting_bill.remaining_balance AS balance, accounting_bill.total_amount AS expense, accounting_bill.created_at AS payment_date, accounting_vendors.status as accounting_vendor_status');
+            $this->db->from('accounting_vendors');
+            $this->db->join('accounting_bill', 'accounting_bill.vendor_id = accounting_vendors.id', 'left');
+            $this->db->where("DATE_FORMAT(accounting_vendors.created_at,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_vendors.created_at,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_vendors.company_id', $companyID);
+            //$this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+
+            return $data->result();
+        }  
+
+        if ($reportType == 'sales_tax') {
+            $this->db->select('invoices_items.*, items.type AS item_type, items.title AS item_name, invoices.invoice_number AS num, invoices.date_issued, CONCAT(first_name  , " ", last_name) AS customer, invoices_items.total AS total_amount');
+            $this->db->from('invoices_items');
+            $this->db->join('items', 'invoices_items.items_id = items.id', 'left');
+            $this->db->join('invoices', 'invoices_items.invoice_id = invoices.id', 'left');
+            $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id', 'left');
+            $this->db->where("invoices.date_issued >= '$reportConfig[date_from]'");
+            $this->db->where("invoices.date_issued <= '$reportConfig[date_to]'");
+            $this->db->where('items.type !=', '');
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+
+            return $data->result();
+        }  
+             
+        // Get Account Receivable in Database
+        if ($reportType == "account_receivable") {
+            $this->db->select('DATE_FORMAT(invoices.date_issued, "%M %Y") AS month, COUNT(invoices.id) AS total_invoices, SUM(invoices.grand_total) AS invoiced, SUM(CASE WHEN invoices.status = "Paid" THEN invoices.grand_total ELSE 0 END) AS paid, SUM(invoices.total_due) AS due, SUM(invoices.tip) AS tip, SUM(invoices.late_fee) AS fee');
+            $this->db->from('invoices');
+            $this->db->where("invoices.date_issued >= '$reportConfig[date_from]'");
+            $this->db->where("invoices.date_issued <= '$reportConfig[date_to]'");
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('DATE_FORMAT(invoices.date_issued, "%M %Y")');
+            $query = $this->db->get();
+            return $query->result();
+        }
+
+        // Get Sales by Customer Groups in Database
+        if ($reportType == "sales_by_customer_groups") {
+            $this->db->select('customer_groups.title AS customer_group, invoices.invoice_number AS transaction, accounting_receive_payment_invoices.id AS payment_no, invoices.grand_total AS total_sales');
+            $this->db->from('invoices');
+            $this->db->join('accounting_receive_payment_invoices', 'accounting_receive_payment_invoices.invoice_id = invoices.id', 'left');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->join('customer_groups', 'customer_groups.id = acs_profile.customer_group_id', 'left');
+            $this->db->where('customer_groups.title !=', '');
+            $this->db->where("invoices.date_issued >= '$reportConfig[date_from]'");
+            $this->db->where("invoices.date_issued <= '$reportConfig[date_to]'");
+            $this->db->where('acs_profile.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('customer_groups.title');
+            $query = $this->db->get();
+            return $query->result();
+        }
+
+        // Get Sales by Customer Source in Database
+        if ($reportType == "sales_by_customer_source") {
+            $this->db->select('ac_leadsource.ls_name AS customer_source, invoices.invoice_number AS transaction, accounting_receive_payment_invoices.id AS payment_no, invoices.grand_total AS total_sales');
+            $this->db->from('invoices');
+            $this->db->join('accounting_receive_payment_invoices', 'accounting_receive_payment_invoices.invoice_id = invoices.id', 'left');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->join('ac_leadsource', 'ac_leadsource.ls_id = acs_profile.customer_source_id', 'left');
+            $this->db->where('ac_leadsource.ls_name !=', '');
+            $this->db->where("invoices.date_issued >= '$reportConfig[date_from]'");
+            $this->db->where("invoices.date_issued <= '$reportConfig[date_to]'");
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('ac_leadsource.ls_name');
+            $query = $this->db->get();
             return $query->result();
         }
     }

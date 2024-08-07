@@ -181,7 +181,11 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="items" <?php echo ($reportSettings->sort_by == "items") ? "selected" : "" ?>>Items</option>
+                                                <option value="invoice" <?php echo ($reportSettings->sort_by == "invoice") ? "selected" : "" ?>>Invoice</option>
+                                                <option value="item" <?php echo ($reportSettings->sort_by == "item") ? "selected" : "" ?>>Item</option>
+                                                <option value="date_issued" <?php echo ($reportSettings->sort_by == "date_issued") ? "selected" : "" ?>>Date Issued</option>
+                                                <option value="total_quantity" <?php echo ($reportSettings->sort_by == "total_quantity") ? "selected" : "" ?>>Total Quantity</option>
+                                                <option value="total_sales" <?php echo ($reportSettings->sort_by == "total_sales") ? "selected" : "" ?>>Total Sales</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
