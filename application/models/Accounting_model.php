@@ -1781,5 +1781,18 @@ class Accounting_model extends MY_Model
             $query = $this->db->get();
             return $query->result();
         }
+
+        if ($reportType == 'expenses_by_customer') {
+            $this->db->select('invoices.id AS invoices_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.date_issued AS invoice_date, invoices.invoice_number AS num, invoices.invoice_type as inv_type, invoices.due_date AS due_date, invoices.balance AS invoice_balance, invoices.grand_total AS invoice_total');
+            $this->db->from('invoices');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->where("invoices.date_issued >= '$reportConfig[date_from]'");
+            $this->db->where("invoices.date_issued <= '$reportConfig[date_to]'");
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $query = $this->db->get();
+            return $query->result();
+        }        
     }
 }

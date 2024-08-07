@@ -49,13 +49,13 @@
                                         $tableID = "expensesbycustomer_table"; 
                                         $reportCategory = "expenses_by_customer"; 
                                     ?>
-                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
+                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 accordion">
                                         <thead>
                                             <tr>
-                                                <th>CUSTOMER</th>
-                                                <th>DUE DATE</th>
-                                                <th>REF NO.</th>
-                                                <th style="text-align: right;">TOTAL</th>
+                                                <th class="PLACE_LEFT">DATE</th>
+                                                <th class="PLACE_LEFT">TRANSACTION TYPE</th>
+                                                <th class="PLACE_LEFT">NUM</th>
+                                                <th class="PLACE_RIGHT">TOTAL</th>
                                             </tr>
                                         </thead>
                                         <tbody>
