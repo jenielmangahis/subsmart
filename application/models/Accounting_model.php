@@ -1806,8 +1806,10 @@ class Accounting_model extends MY_Model
             $this->db->where('invoices.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('invoices.invoice_number');
             $query = $this->db->get();
             return $query->result();
+            
         }       
     }
 }
