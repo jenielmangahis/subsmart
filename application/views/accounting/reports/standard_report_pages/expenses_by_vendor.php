@@ -49,13 +49,13 @@
                                         $tableID = "expensesbyvendor_table"; 
                                         $reportCategory = "expenses_by_vendor"; 
                                     ?>
-                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
+                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 accordion">
                                         <thead>
                                             <tr>
-                                                <th>VENDOR NAME</th>
-                                                <th>PAYMENT DATE</th>
-                                                <th>STATUS</th>
-                                                <th style="text-align: right;">TOTAL</th>
+                                                <th class="PLACE_LEFT">DATE</th>
+                                                <th class="PLACE_LEFT">TYPE</th>
+                                                <th class="PLACE_LEFT">STATUS</th>
+                                                <th class="PLACE_RIGHT">TOTAL</th>
                                             </tr>
                                         </thead>
                                         <tbody>
