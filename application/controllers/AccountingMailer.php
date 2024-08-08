@@ -173,7 +173,9 @@ class AccountingMailer extends MY_Controller
             "sales_by_customer_groups",
             "sales_by_customer_source",
             "sales_tax",
-            "profit_and_loss_by_customer_list"
+            "profit_and_loss_by_customer_list",
+            "timelog_summary",
+            "timelog_details",
         );
 
         // Conditional Statements on the array
