@@ -1070,9 +1070,10 @@ class Accounting_model extends MY_Model
         }
 
         if ($reportType == 'sales_demographics') {
-            $this->db->select('sales_receipt_date, billing_address, total_amount');
+            $this->db->select('customer_id, sales_receipt_date, billing_address, total_amount');
             $this->db->from('accounting_sales_receipt');
             $this->db->where('company_id', $companyID);
+            $this->db->group_by('customer_id, billing_address');
             if (!empty($reportConfig['date_from']) && !empty($reportConfig['date_to'])) {
                 $this->db->where("accounting_sales_receipt.sales_receipt_date >= '$reportConfig[date_from]'");
                 $this->db->where("accounting_sales_receipt.sales_receipt_date <= '$reportConfig[date_to]'");
@@ -1766,7 +1767,7 @@ class Accounting_model extends MY_Model
 
         // Get Sales by Customer Groups in Database
         if ($reportType == "sales_by_customer_groups") {
-            $this->db->select('customer_groups.title AS customer_group, invoices.invoice_number AS transaction, accounting_receive_payment_invoices.id AS payment_no, invoices.grand_total AS total_sales');
+            $this->db->select('customer_groups.title AS customer_group, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.invoice_number AS transaction, accounting_receive_payment_invoices.id AS payment_no, invoices.grand_total AS total_sales');
             $this->db->from('invoices');
             $this->db->join('accounting_receive_payment_invoices', 'accounting_receive_payment_invoices.invoice_id = invoices.id', 'left');
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
@@ -1784,18 +1785,14 @@ class Accounting_model extends MY_Model
 
         // Get Sales by Customer Source in Database
         if ($reportType == "sales_by_customer_source") {
-            $this->db->select('ac_leadsource.ls_name AS customer_source, invoices.invoice_number AS transaction, accounting_receive_payment_invoices.id AS payment_no, invoices.grand_total AS total_sales');
-            $this->db->from('invoices');
-            $this->db->join('accounting_receive_payment_invoices', 'accounting_receive_payment_invoices.invoice_id = invoices.id', 'left');
-            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
-            $this->db->join('ac_leadsource', 'ac_leadsource.ls_id = acs_profile.customer_source_id', 'left');
-            $this->db->where('ac_leadsource.ls_name !=', '');
-            $this->db->where("invoices.date_issued >= '$reportConfig[date_from]'");
-            $this->db->where("invoices.date_issued <= '$reportConfig[date_to]'");
-            $this->db->where('invoices.company_id', $companyID);
+            $this->db->select('sales_by_customer_source_view.company_id AS company_id, sales_by_customer_source_view.customer_source AS customer_source, sales_by_customer_source_view.customer AS customer, sales_by_customer_source_view.transaction AS transaction, sales_by_customer_source_view.payment_no AS payment_no, sales_by_customer_source_view.total_sales AS total_sales');
+            $this->db->from('sales_by_customer_source_view');
+            $this->db->where("sales_by_customer_source_view.date >= '$reportConfig[date_from]'");
+            $this->db->where("sales_by_customer_source_view.date <= '$reportConfig[date_to]'");
+            $this->db->where('sales_by_customer_source_view.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
-            $this->db->group_by('ac_leadsource.ls_name');
+            $this->db->group_by('sales_by_customer_source_view.customer_source');
             $query = $this->db->get();
             return $query->result();
         }
@@ -1811,6 +1808,6 @@ class Accounting_model extends MY_Model
             $this->db->limit($reportConfig['page_size']);
             $query = $this->db->get();
             return $query->result();
-        }        
+        }       
     }
 }

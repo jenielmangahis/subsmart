@@ -54,6 +54,7 @@
                                         <thead>
                                             <tr>
                                                 <th>CUSTOMER SOURCE</th>
+                                                <th>CUSTOMER</th>
                                                 <th>TRANSACTION</th>
                                                 <th>PAYMENTS NO.</th>
                                                 <th class="text-end">TOTAL SALES</th>
@@ -61,7 +62,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="4">
+                                                <td colspan="5">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
