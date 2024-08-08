@@ -52,9 +52,8 @@
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>                                                
-                                                <th>EMPLOYEE</th>
-                                                <th>ROLE</th>                                       
-                                                <th>DATE</th>              
+                                                <th>EMPLOYEE</th>                                 
+                                                <th>DATE</th>            
                                                 <th>IN</th>              
                                                 <th>OUT</th>              
                                                 <th>DURATION</th>                                                              
@@ -62,7 +61,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="6">
+                                                <td colspan="5">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
