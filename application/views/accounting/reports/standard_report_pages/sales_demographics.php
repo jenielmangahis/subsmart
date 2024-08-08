@@ -52,8 +52,8 @@
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
-                                                <th>MONTH</th>
                                                 <th>LOCATION/PRODUCTS</th>
+                                                <th>DATE</th>
                                                 <th style="text-align: right;">TOTAL SALES</th>
                                             </tr>
                                         </thead>
