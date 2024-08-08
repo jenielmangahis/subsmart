@@ -1686,6 +1686,24 @@ class Accounting_model extends MY_Model
             return $query->result();
         }
 
+        // Get Activities Timelog Details in Database
+        if ($reportType == 'timelog_details') {
+            $query = $this->db->query("
+                SELECT timesheet_attendance.id,timesheet_attendance.user_id,timesheet_attendance.date_created AS attendance_date,timesheet_attendance.shift_duration, timesheet_attendance.break_duration, timesheet_attendance.overtime, timesheet_attendance.overtime_status,timesheet_attendance.status,timesheet_attendance.notes,
+                CONCAT(users.FName, ' ', users.LName)AS employee_name, roles.title AS employee_role
+                FROM timesheet_attendance 
+                    JOIN users ON timesheet_attendance.user_id = users.id 
+                    JOIN roles ON users.role = roles.id 
+                WHERE timesheet_attendance.date_created >='" . $reportConfig['date_from'] . "' 
+                    AND timesheet_attendance.date_created <='" . $reportConfig['date_to'] . "' 
+                    AND users.company_id = " . $companyID . " 
+                ORDER BY " . $reportConfig['sort_by'] . " " . $reportConfig['sort_order'] . " 
+                LIMIT " . $reportConfig['page_size'] . "
+            ");
+
+            return $query->result();
+        }
+
         // Get Activities Payroll Logs Database
         if ($reportType == 'payroll_log_details') {
             $this->db->select('*');
