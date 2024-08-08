@@ -47,7 +47,7 @@
                                 <div class="col-lg-12">
                                     <?php 
                                         $tableID = "expensesbycustomer_table"; 
-                                        $reportCategory = "expenses_by_customer"; 
+                                        $reportCategory = "expenses_by_customer";   
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 accordion">
                                         <thead>

@@ -17,7 +17,7 @@
                         <div class="nsm-card-header">
                             <div class="col-lg-12">
                                 <span class="float-start">
-                                    <button class="nsm-button addNotes">Add Notes</button>
+                                    <button class="nsm-button addNotes"> Add Notes </button>
                                 </span>
                                 <span class="float-end">
                                     <button data-bs-toggle="modal" data-bs-target="#emailReportModal" class="nsm-button border-0"><i class="bx bx-fw bx-envelope"></i></button>
@@ -46,7 +46,7 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <?php 
-                                        $tableID = "expensesbyvendor_table"; 
+                                        $tableID = "expensesbyvendor_table";   
                                         $reportCategory = "expenses_by_vendor"; 
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 accordion">
@@ -54,7 +54,7 @@
                                             <tr>
                                                 <th class="PLACE_LEFT">DATE</th>
                                                 <th class="PLACE_LEFT">TYPE</th>
-                                                <th class="PLACE_LEFT">STATUS</th>
+                                                <th class="PLACE_LEFT">STATUS</th> 
                                                 <th class="PLACE_RIGHT">TOTAL</th>
                                             </tr>
                                         </thead>
