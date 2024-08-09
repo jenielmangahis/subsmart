@@ -47,15 +47,15 @@
                                 <div class="col-lg-12">
                                     <?php 
                                         $tableID = "expensesbycustomer_table"; 
-                                        $reportCategory = "expenses_by_customer"; 
+                                        $reportCategory = "expenses_by_customer";   
                                     ?>
-                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
+                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 accordion">
                                         <thead>
                                             <tr>
-                                                <th>CUSTOMER</th>
-                                                <th>DUE DATE</th>
-                                                <th>REF NO.</th>
-                                                <th style="text-align: right;">TOTAL SALES</th>
+                                                <th class="PLACE_LEFT">DATE</th>
+                                                <th class="PLACE_LEFT">TRANSACTION TYPE</th>
+                                                <th class="PLACE_LEFT">NUM</th>
+                                                <th class="PLACE_RIGHT">TOTAL</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -163,6 +163,7 @@
                                         <option value="R" <?php echo ($reportSettings->footer_align == "R") ? "selected" : "" ?>>Right</option>
                                     </select>
                                 </div>
+                                <!-- 
                                 <div class="col-md-2 mb-3">
                                     <label class="mb-1 fw-xnormal">Row Size</label>
                                     <select name="page_size" id="page-size" class="nsm-field form-select">
@@ -194,6 +195,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                -->
                                 <div class="col-md-3 mb-3">
                                     <label for="from-date">From Date</label>
                                     <div class="">

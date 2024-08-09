@@ -1058,6 +1058,7 @@ class Accounting_model extends MY_Model
             $this->db->from('invoices');
             $this->db->where('company_id', $companyID);
             $this->db->where('status', 'paid'); 
+            $this->db->group_by('payment_methods');
             if (!empty($reportConfig['date_from']) && !empty($reportConfig['date_to'])) {
                 $this->db->where("invoices.date_issued >= '$reportConfig[date_from]'");
                 $this->db->where("invoices.date_issued <= '$reportConfig[date_to]'");
@@ -1806,8 +1807,10 @@ class Accounting_model extends MY_Model
             $this->db->where('invoices.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('invoices.invoice_number');
             $query = $this->db->get();
             return $query->result();
-        }        
+            
+        }       
     }
 }

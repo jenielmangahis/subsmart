@@ -178,8 +178,8 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="sales_receipt_date" <?php echo ($reportSettings->sort_by == "sales_receipt_date") ? "selected" : "" ?>>Month</option>
                                                 <option value="billing_address" <?php echo ($reportSettings->sort_by == "billing_address") ? "selected" : "" ?>>Location/Products</option>
+                                                <option value="sales_receipt_date" <?php echo ($reportSettings->sort_by == "sales_receipt_date") ? "selected" : "" ?>>Date</option>
                                                 <option value="total_amount" <?php echo ($reportSettings->sort_by == "total_amount") ? "selected" : "" ?>>Total Sales</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
