@@ -1,6 +1,15 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('v2/includes/accounting/view_employees_modals'); ?>
-
+<style>
+.select2-link{
+    padding: 10px 10px;
+    background: #cccccc;
+}
+.select2-link a{
+    text-decoration:none !important;
+    color:inherit !important;
+}
+</style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/payroll'); ?>
@@ -104,11 +113,7 @@
                                                                     <div class="col-12 col-md-4">
                                                                         <h6>Hire date</h6>
                                                                         <h5><?=date("m/d/Y", strtotime($employee->date_hired))?></h5>
-                                                                    </div>
-                                                                    <div class="col-12 col-md-4">
-                                                                        <h6>Work location</h6>
-                                                                        <h5><?=!is_null($empWorksite) ? $empWorksite : '-'?></h5>
-                                                                    </div>
+                                                                    </div>                                                                    
                                                                     <div class="col-12 col-md-4">
                                                                         <h6>Employee Number</h6>
                                                                         <h5><?=!in_array($employee->employee_number, ['', null]) ? $employee->employee_number : '-'?></h5>
@@ -120,6 +125,16 @@
                                                                     <div class="col-12 col-md-4">
                                                                         <h6>Workers' comp class</h6>
                                                                         <h5><?=!empty($employmentDetails->workers_comp_class) ? $employmentDetails->workers_comp_class : '-'?></h5>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <hr />
+                                                                    <div class="col-12 col-md-12">
+                                                                        <h6>Work locations</h6>
+                                                                        <?php foreach( $employmentDetails as $details ){ ?>
+                                                                            <h5><i class='bx bx-buildings'></i> <?= $details->worksite_address . ' ' . $details->worksite_city . ', ' . $details->worksite_state . ' ' . $details->worksite_zipcode; ?></h5>
+                                                                        <?php } ?>
+                                                                        <h5><?=!is_null($empWorksite) ? $empWorksite : '-'?></h5>
                                                                     </div>
                                                                 </div>
                                                             </div>
