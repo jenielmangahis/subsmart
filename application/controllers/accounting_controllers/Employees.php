@@ -406,18 +406,11 @@ class Employees extends MY_Controller
         $this->page_data['payscale'] = $this->PayScale_model->getAllByCompanyId($cid);
         // }
 
-        $employmentDetails = $this->employment_details_model->get_employment_details($id);
-        $empWorksite = $this->accounting_worksites_model->get_by_id($employmentDetails->work_location_id);
+        $employmentDetails = $this->employment_details_model->get_all_employment_details($id);        
         $this->page_data['employmentDetails'] = $employmentDetails;
         $this->page_data['worksites'] = $this->accounting_worksites_model->get_company_worksites(logged('company_id'));
 
         $address = '';
-        if (!empty($empWorksite)) {
-            $address .= !in_array($empWorksite->street, ['', null]) ? $empWorksite->street . "<br>" : '';
-            $address .= !in_array($empWorksite->city, ['', null]) ? $empWorksite->city . ', ' : '';
-            $address .= !in_array($empWorksite->state, ['', null]) ? $empWorksite->state . ' ' : '';
-            $address .= !in_array($empWorksite->zip_code, ['', null]) ? $empWorksite->zip_code : '';
-        }
 
         $usedPaySched = $this->users_model->getPayScheduleUsed();
         $nextPayDate = $this->get_next_pay_date($usedPaySched);
