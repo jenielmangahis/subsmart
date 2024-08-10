@@ -1816,3 +1816,13 @@ $route['cron_marketing/send_broadcast_email'] = 'Cron_Marketing/sendBroadcastEma
 //Email Template
 $route['settings/_get_email_template'] = 'Settings/ajax_get_email_template';
 $route['settings/_preview_email_template'] = 'Settings/ajax_preview_email_template';
+
+//Leave Types
+$route['leave_types'] = 'LeaveType/index';
+$route['leave_type/_save_leave_type'] = 'LeaveType/ajax_save_leave_type';
+$route['leave_type/_update_leave_type'] = 'LeaveType/ajax_update_leave_type';
+$route['leave_type/_delete_leave_type'] = 'LeaveType/ajax_delete_leave_type';
+$route['leave_type/_delete_selected'] = 'LeaveType/ajax_delete_selected';
+
+//Leave Requests
+$route['timesheet/leave_requests'] = 'Timesheet/leave_requests';
