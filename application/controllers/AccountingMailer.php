@@ -176,7 +176,9 @@ class AccountingMailer extends MY_Controller
             "profit_and_loss_by_customer_list",
             "timelog_summary",
             "timelog_details",
-            "customer_demographics_list"
+            "customer_demographics_list",
+            "tax_paid_by_customers",
+            "percent_sales_commission_list"
         );
 
         // Conditional Statements on the array
