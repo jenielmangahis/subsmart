@@ -404,6 +404,20 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
 
+        if ($reportType == 'customer_demographics_list') {
+            $this->db->select('*');
+            $this->db->from('customer_sources');
+            $this->db->where("DATE_FORMAT(created_at,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(created_at,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('company_id', $companyID);
+            $this->db->group_by('title');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+
+            return $data->result();
+        }
+
 
         // Get Sales by Customer Type Detail data in Database
         if ($reportType == 'sales_by_customer_type_detail') {
@@ -1054,7 +1068,7 @@ class Accounting_model extends MY_Model
         }
 
         if ($reportType == 'payments_type_summary') {
-            $this->db->select('date_issued, payment_methods, status, grand_total');
+            $this->db->select('date_issued, invoice_number, payment_methods, status, grand_total');
             $this->db->from('invoices');
             $this->db->where('company_id', $companyID);
             $this->db->where('status', 'paid'); 
@@ -1071,13 +1085,13 @@ class Accounting_model extends MY_Model
         }
 
         if ($reportType == 'sales_demographics') {
-            $this->db->select('customer_id, sales_receipt_date, billing_address, total_amount');
-            $this->db->from('accounting_sales_receipt');
+            $this->db->select('date_issued, invoice_number, payment_methods, status, grand_total');
+            $this->db->from('invoices');
             $this->db->where('company_id', $companyID);
-            $this->db->group_by('customer_id, billing_address');
+            $this->db->group_by('payment_methods');
             if (!empty($reportConfig['date_from']) && !empty($reportConfig['date_to'])) {
-                $this->db->where("accounting_sales_receipt.sales_receipt_date >= '$reportConfig[date_from]'");
-                $this->db->where("accounting_sales_receipt.sales_receipt_date <= '$reportConfig[date_to]'");
+                $this->db->where("invoices.date_issued >= '$reportConfig[date_from]'");
+                $this->db->where("invoices.date_issued <= '$reportConfig[date_to]'");
             }
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
