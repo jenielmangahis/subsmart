@@ -134,7 +134,7 @@
 
 <div class="modal fade nsm-modal fade" id="change_status_modal" tabindex="-1" aria-labelledby="change_status_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-sm">
-        <form method="POST" id="edit-employee-status-form" action="/accounting/employees/update/status/<?=$employee->id?>" enctype="multipart/form-data">
+        <form method="POST" id="edit-employee-status-form" action="<?php echo base_url(); ?>accounting/employees/update/status/<?=$employee->id?>" enctype="multipart/form-data">
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Edit Employee Status</span>
@@ -163,7 +163,7 @@
 
 <div class="modal fade nsm-modal" id="edit-employment-details-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form method="POST" id="edit-employment-details-form" action="/accounting/employees/update/employment-details/<?=$employee->id?>">
+        <form method="POST" id="edit-employment-details-form" action="<?php echo base_url(); ?>accounting/employees/update/employment-details/<?=$employee->id?>">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">Employment details</span>
@@ -199,12 +199,19 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <label class="content-subtitle fw-bold d-block mb-2">Work location</label>
-                                <select class="nsm-field form-select" id="work-location" name="work_location">
-                                    <option value="" disabled selected>Select work location</option>
-                                    <option value="add">&plus; Add new</option>
+                                <label class="content-subtitle fw-bold d-block mb-2">Work location <a href="javascript:void(0)" onclick="javascript:addLocationForm()">(Add)</a></label>
+                                <select class="nsm-field form-select" id="work-location" name="work_location[]" multiple>
+                                    <!-- <option value="" disabled selected>Select work location</option> -->
+                                    <!-- <option value="add">&plus; Add new</option> -->
                                     <?php foreach($worksites as $worksite) : ?>
-                                        <option value="<?= $worksite->id; ?>" <?= $employmentDetails->work_location_id == $worksite->id ? 'selected="selected"' : ''; ?>><?= $worksite->name; ?></option>
+                                        <?php 
+                                            $selected = "";
+                                            if (in_array($worksite->id, $workLocations_ids)) {
+                                                $selected = "selected";
+                                            }                                    
+                                        ?>              
+                                        <!-- <option value="<?= $worksite->id; ?>" <?= $employmentDetails->work_location_id == $worksite->id ? 'selected="selected"' : ''; ?>><?= $worksite->name; ?></option> -->                        
+                                        <option <?php echo $selected; ?> value="<?= $worksite->id; ?>"><?= $worksite->name; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -419,7 +426,7 @@
 
 <div class="modal fade nsm-modal" id="notes-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-    <form method="POST" id="edit-notes-form" action="/accounting/employees/update/notes/<?=$employee->id?>">
+    <form method="POST" id="edit-notes-form" action="<?php echo base_url(); ?>accounting/employees/update/notes/<?=$employee->id?>">
     <div class="modal-content">
         <div class="modal-header">
             <span class="modal-title content-title">Add notes</span>

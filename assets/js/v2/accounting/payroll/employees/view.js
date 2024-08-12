@@ -64,7 +64,7 @@ $('#add-worksite-form').on('submit', function(e) {
     var data = new FormData(this);
     
     $.ajax({
-        url: '/accounting/employees/add-work-location',
+        url: base_url + '/accounting/employees/add-work-location',
         data: data,
         type: 'post',
         processData: false,
@@ -465,4 +465,9 @@ function get_start_and_end_dates(val)
         start_date : startDate,
         end_date : endDate
     };
+}
+
+function addLocationForm() {
+    $('#edit-employment-details-modal').modal('hide');
+    $('#add-worksite-modal').modal('show');
 }
