@@ -54,12 +54,13 @@
                                             <tr>
                                                 <th>LOCATION/PRODUCTS</th>
                                                 <th>DATE</th>
+                                                <th>NUM</th>
                                                 <th style="text-align: right;">TOTAL SALES</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="3">
+                                                <td colspan="4">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
@@ -178,9 +179,10 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="billing_address" <?php echo ($reportSettings->sort_by == "billing_address") ? "selected" : "" ?>>Location/Products</option>
-                                                <option value="sales_receipt_date" <?php echo ($reportSettings->sort_by == "sales_receipt_date") ? "selected" : "" ?>>Date</option>
-                                                <option value="total_amount" <?php echo ($reportSettings->sort_by == "total_amount") ? "selected" : "" ?>>Total Sales</option>
+                                            <option value="payment_methods" <?php echo ($reportSettings->sort_by == "payment_methods") ? "selected" : "" ?>>Payment Method</option>
+                                                <option value="date_issued" <?php echo ($reportSettings->sort_by == "date_issued") ? "selected" : "" ?>>Date</option>
+                                                <option value="invoice_number" <?php echo ($reportSettings->sort_by == "invoice_number") ? "selected" : "" ?>>Num</option>
+                                                <option value="grand_total" <?php echo ($reportSettings->sort_by == "grand_total") ? "selected" : "" ?>>Total Sales</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>

@@ -35,32 +35,38 @@
                         <div class="nsm-card-content">
                             <div class="row mb-4">
                                 <div class="col-lg-12 headerInfo">
-                                    <img id="businessLogo" class="<?php echo ($reportSettings->show_logo == 0 || !isset($reportSettings->show_logo)) ? 'd-none-custom' : ''; ?>" src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
+                                    <img id="businessLogo" class="<?php echo ($reportSettings->show_logo == 0 || !isset($reportSettings->show_logo)) ? 'd-none-custom' : '';?>"  src="<?php echo base_url("uploads/users/business_profile/") . "$companyInfo->id/$companyInfo->business_image"; ?>">
                                     <div class="reportTitleInfo">
-                                        <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name) ?></h3>
+                                        <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?></h3>
                                         <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
-                                        <h5><small id="reportDate"><span id="date_from_text"></span> to <span id="date_to_text"></span></small></h5>
+                                        <h5>
+                                            <small id="reportDate">
+                                                <span id="date_from_text"><?= date("F d, Y", strtotime($reportSettings->report_date_from_text)); ?></span> &mdash; 
+                                                <span id="date_to_text"><?= date("F d, Y", strtotime($reportSettings->report_date_to_text)); ?></span>
+                                            </small>
+                                        </h5>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-lg-12">
-                                    <?php
-                                    $tableID = "paymentstypesummary_table";
-                                    $reportCategory = "payments_type_summary";
+                                    <?php 
+                                        $tableID = "customer_demographics_table"; 
+                                        $reportCategory = "customer_demographics_list"; 
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
-                                                <th>PAYMENT METHOD</th>
-                                                <th>DATE</th>
-                                                <th>NUM</th>
-                                                <th style="text-align: right;">TOTAL SALES</th>
+                                                <th>SOURCE</th>
+                                                <th style="text-align: right;">CUSTOMER COUNT (TOTAL)</th>
+                                                <th style="text-align: right;">RESIDENTIAL COUNT</th>
+                                                <th style="text-align: right;">COMMERCIAL COUNT</th>
+                                               
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="4">
+                                                <td colspan="6">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
@@ -136,15 +142,15 @@
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Company Name</label>
                                     <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" <?php echo (!isset($reportSettings->show_company_name) || $reportSettings->show_company_name == 1) ? "checked" : ""; ?>></div>
-                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo (trim(str_replace('&nbsp;', '', $reportSettings->company_name)) !== '') ? $reportSettings->company_name : strtoupper($companyInfo->business_name); ?>" required>
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableBusinessName" type="checkbox" checked></div>
+                                        <input id="company_name" class="nsm-field form-control" type="text" name="company_name" value="<?php echo (!empty($reportSettings->company_name)) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Report Name</label>
                                     <div class="input-group">
-                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" <?php echo (!isset($reportSettings->show_title) || $reportSettings->show_title == 1) ? "checked" : ""; ?>></div>
-                                        <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo (trim(str_replace('&nbsp;', '', $reportSettings->title)) !== '') ? $reportSettings->title : $page->title; ?>" required>
+                                        <div class="input-group-text"><input class="form-check-input mt-0 enableDisableReportName" type="checkbox" checked></div>
+                                        <input id="report_name" class="nsm-field form-control" type="text" name="report_name" value="<?php echo (!empty($reportSettings->title)) ? $reportSettings->title : $page->title ?>" required>
                                     </div>
                                 </div>
                                 <div class="col-md-3 mb-3">
@@ -179,24 +185,23 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="payment_methods" <?php echo ($reportSettings->sort_by == "payment_methods") ? "selected" : "" ?>>Payment Method</option>
-                                                <option value="date_issued" <?php echo ($reportSettings->sort_by == "date_issued") ? "selected" : "" ?>>Date</option>
-                                                <option value="invoice_number" <?php echo ($reportSettings->sort_by == "invoice_number") ? "selected" : "" ?>>Num</option>
-                                                <option value="grand_total" <?php echo ($reportSettings->sort_by == "grand_total") ? "selected" : "" ?>>Total Sales</option>
+                                                <option value="title" <?php echo ($reportSettings->sort_by == "title") ? "selected" : "" ?>>Source</option>
+                                                <option value="created_at" <?php echo ($reportSettings->sort_by == "created_at") ? "selected" : "" ?>>Date</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
-                                                <option value="ASC" <?php echo ($reportSettings->sort_asc_desc == "ASC") ? "selected" : "" ?>>ASC</option>
+                                                <option value="ASC" <?php echo ($reportSettings->sort_asc_desc== "ASC") ? "selected" : "" ?>>ASC</option>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-12"><hr class="mt-0"></div>
+                                <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Date Range <small class="text-muted">(From &mdash; To)</small></label>
                                     <div class="input-group">
-                                        <input name="date_from" class="form-control mt-0" type="date" value="<?= $reportSettings ? date("Y-m-d", strtotime($reportSettings->report_date_from_text)) : date('Y') . '-01-01'; ?>">
-                                        <input name="date_to" class="form-control mt-0" type="date" value="<?= $reportSettings ? date("Y-m-d", strtotime($reportSettings->report_date_to_text)) : date('Y-m-t'); ?>">
-                                    </div>
+                                        <input name="date_from" class="form-control mt-0" type="date" value="<?= $reportSettings && strtotime($reportSettings->report_date_from_text) > 0 ? date("Y-m-d",strtotime($reportSettings->report_date_from_text)) : date('Y-m-01'); ?>">
+                                        <input name="date_to" class="form-control mt-0" type="date" value="<?= $reportSettings && strtotime($reportSettings->report_date_to_text) > 0 ? date("Y-m-d",strtotime($reportSettings->report_date_to_text)) : date('Y-m-t'); ?>">
+                                    </div>  
                                 </div>
                             </div>
                         </div>
@@ -335,5 +340,7 @@
 </div>
 <!-- END: EMAIL REPORT MODAL -->
 <!-- END: MODALS -->
+<script>
+</script>
 <?php include viewPath('accounting/reports/reports_assets/report_js'); ?>
 <?php include viewPath('v2/includes/footer'); ?>

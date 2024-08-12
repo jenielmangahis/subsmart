@@ -168,7 +168,7 @@ class AccountingMailer extends MY_Controller
             "sales_by_customer",
             "expenses_by_vendor",
             "activities_payroll_summary",
-            "salesdemographics_table",
+            "sales_demographics",
             "payments_type_summary",
             "sales_by_customer_groups",
             "sales_by_customer_source",
@@ -176,6 +176,7 @@ class AccountingMailer extends MY_Controller
             "profit_and_loss_by_customer_list",
             "timelog_summary",
             "timelog_details",
+            "customer_demographics_list"
         );
 
         // Conditional Statements on the array
