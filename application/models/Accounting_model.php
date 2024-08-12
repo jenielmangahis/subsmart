@@ -397,7 +397,7 @@ class Accounting_model extends MY_Model
             $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('invoices.company_id', $companyID);
             $this->db->group_by('invoices.customer_id, customer');
-            // $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             // $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
 
@@ -411,6 +411,22 @@ class Accounting_model extends MY_Model
             $this->db->where("DATE_FORMAT(created_at,'%Y-%m-%d') <= '$reportConfig[date_to]'");
             $this->db->where('company_id', $companyID);
             $this->db->group_by('title');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+
+            return $data->result();
+        }
+
+        if ($reportType == 'percent_sales_commission_list') {
+            $this->db->select(' CONCAT(users.FName  , " ", users.LName) AS employee_name, accounting_payroll_employees.employee_commission AS comission_amount, accounting_payroll.* ');
+            $this->db->from('users');
+            $this->db->join('accounting_payroll_employees', 'accounting_payroll_employees.employee_id = users.id', 'left');
+            $this->db->join('accounting_payroll', 'accounting_payroll.id = accounting_payroll_employees.payroll_id', 'left');
+            $this->db->where("DATE_FORMAT(accounting_payroll.pay_period_start,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_payroll.pay_period_end,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('users.company_id', $companyID);
+            // $this->db->group_by('title');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
