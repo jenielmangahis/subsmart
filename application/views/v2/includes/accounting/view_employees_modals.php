@@ -198,7 +198,7 @@
                                     <input type="text" class="form-control nsm-field date" id="hire-date" name="hire_date" value="<?=date("m/d/Y", strtotime($employee->date_hired))?>">
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-12 work-location-grp">
                                 <label class="content-subtitle fw-bold d-block mb-2">Work location <a href="javascript:void(0)" onclick="javascript:addLocationForm()">(Add)</a></label>
                                 <select class="nsm-field form-select" id="work-location" name="work_location[]" multiple>
                                     <!-- <option value="" disabled selected>Select work location</option> -->
@@ -463,19 +463,19 @@
                     <label for="name">Name</label>
                     <input type="text" class="form-control nsm-field" id="name" name="name" required>
                 </div>
-                <div class="col-12">
+                <div class="col-12 mt-2">
                     <label for="street">Street</label>
                     <input type="text" class="form-control nsm-field" id="street" name="street" required>
                 </div>
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-6 mt-2">
                     <label for="city">City</label>
                     <input type="text" class="form-control nsm-field" id="city" name="city" required>
                 </div>
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-3 mt-2">
                     <label for="state">State</label>
                     <input type="text" class="form-control nsm-field" id="state" name="state" required>
                 </div>
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-3 mt-2">
                     <label for="zip-code">ZIP code</label>
                     <input type="text" class="form-control nsm-field" id="zip-code" name="zip_code" required>
                 </div>
