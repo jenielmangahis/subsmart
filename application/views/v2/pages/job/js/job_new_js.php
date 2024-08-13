@@ -1325,9 +1325,9 @@ $("#attachment-file").change(function() {
             }else{ //Create
                 Swal.fire({
                     title: 'Job has been added',
-                    text: 'An initial invoice has been created',
+                    text: 'An invoice has been created',
                     icon: 'success',
-                    confirmButtonText: 'View Initial Invoice',
+                    confirmButtonText: 'View Invoice',
                     confirmButtonColor: '#32243d',
                 }).then((result) => {
                     var redirect_calendar = $('#redirect-calendar').val();
