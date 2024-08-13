@@ -205,6 +205,29 @@ $reportCategory = 'profit_and_loss_by_customer_list';
                                         </option>
                                     </select>
                                 </div>
+                                <div class="col-md-2 mb-3">
+                                    <label class="mb-1 fw-xnormal">Row Size</label>
+                                    <select name="page_size" id="page-size" class="nsm-field form-select">
+                                        <option value="9999"
+                                            <?php echo ($reportSettings->page_size == "9999") ? "selected" : "" ?>>All
+                                        </option>
+                                        <option value="10"
+                                            <?php echo ($reportSettings->page_size == "10") ? "selected" : "" ?>>10
+                                        </option>
+                                        <option value="25"
+                                            <?php echo ($reportSettings->page_size == "25") ? "selected" : "" ?>>25
+                                        </option>
+                                        <option value="50"
+                                            <?php echo ($reportSettings->page_size == "50") ? "selected" : "" ?>>50
+                                        </option>
+                                        <option value="100"
+                                            <?php echo ($reportSettings->page_size == "100") ? "selected" : "" ?>>100
+                                        </option>
+                                        <option value="500"
+                                            <?php echo ($reportSettings->page_size == "500") ? "selected" : "" ?>>500
+                                        </option>
+                                    </select>
+                                </div>
                                 <div class="col-md-4 mb-3">
                                     <div class="col-md-12">
                                         <label class="mb-1 fw-xnormal">Sort By</label>
