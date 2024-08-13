@@ -134,7 +134,7 @@
 
 <div class="modal fade nsm-modal fade" id="change_status_modal" tabindex="-1" aria-labelledby="change_status_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-sm">
-        <form method="POST" id="edit-employee-status-form" action="/accounting/employees/update/status/<?=$employee->id?>" enctype="multipart/form-data">
+        <form method="POST" id="edit-employee-status-form" action="<?php echo base_url(); ?>accounting/employees/update/status/<?=$employee->id?>" enctype="multipart/form-data">
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Edit Employee Status</span>
@@ -163,7 +163,7 @@
 
 <div class="modal fade nsm-modal" id="edit-employment-details-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form method="POST" id="edit-employment-details-form" action="/accounting/employees/update/employment-details/<?=$employee->id?>">
+        <form method="POST" id="edit-employment-details-form" action="<?php echo base_url(); ?>accounting/employees/update/employment-details/<?=$employee->id?>">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">Employment details</span>
@@ -198,13 +198,20 @@
                                     <input type="text" class="form-control nsm-field date" id="hire-date" name="hire_date" value="<?=date("m/d/Y", strtotime($employee->date_hired))?>">
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <label class="content-subtitle fw-bold d-block mb-2">Work location</label>
-                                <select class="nsm-field form-select" id="work-location" name="work_location">
-                                    <option value="" disabled selected>Select work location</option>
-                                    <option value="add">&plus; Add new</option>
+                            <div class="col-12 work-location-grp">
+                                <label class="content-subtitle fw-bold d-block mb-2">Work location <a href="javascript:void(0)" onclick="javascript:addLocationForm()">(Add)</a></label>
+                                <select class="nsm-field form-select" id="work-location" name="work_location[]" multiple>
+                                    <!-- <option value="" disabled selected>Select work location</option> -->
+                                    <!-- <option value="add">&plus; Add new</option> -->
                                     <?php foreach($worksites as $worksite) : ?>
-                                        <option value="<?= $worksite->id; ?>" <?= $employmentDetails->work_location_id == $worksite->id ? 'selected="selected"' : ''; ?>><?= $worksite->name; ?></option>
+                                        <?php 
+                                            $selected = "";
+                                            if (in_array($worksite->id, $workLocations_ids)) {
+                                                $selected = "selected";
+                                            }                                    
+                                        ?>              
+                                        <!-- <option value="<?= $worksite->id; ?>" <?= $employmentDetails->work_location_id == $worksite->id ? 'selected="selected"' : ''; ?>><?= $worksite->name; ?></option> -->                        
+                                        <option <?php echo $selected; ?> value="<?= $worksite->id; ?>"><?= $worksite->name; ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -419,7 +426,7 @@
 
 <div class="modal fade nsm-modal" id="notes-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-    <form method="POST" id="edit-notes-form" action="/accounting/employees/update/notes/<?=$employee->id?>">
+    <form method="POST" id="edit-notes-form" action="<?php echo base_url(); ?>accounting/employees/update/notes/<?=$employee->id?>">
     <div class="modal-content">
         <div class="modal-header">
             <span class="modal-title content-title">Add notes</span>
@@ -456,19 +463,19 @@
                     <label for="name">Name</label>
                     <input type="text" class="form-control nsm-field" id="name" name="name" required>
                 </div>
-                <div class="col-12">
+                <div class="col-12 mt-2">
                     <label for="street">Street</label>
                     <input type="text" class="form-control nsm-field" id="street" name="street" required>
                 </div>
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-6 mt-2">
                     <label for="city">City</label>
                     <input type="text" class="form-control nsm-field" id="city" name="city" required>
                 </div>
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-3 mt-2">
                     <label for="state">State</label>
                     <input type="text" class="form-control nsm-field" id="state" name="state" required>
                 </div>
-                <div class="col-12 col-md-3">
+                <div class="col-12 col-md-3 mt-2">
                     <label for="zip-code">ZIP code</label>
                     <input type="text" class="form-control nsm-field" id="zip-code" name="zip_code" required>
                 </div>

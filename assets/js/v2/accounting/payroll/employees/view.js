@@ -51,9 +51,14 @@ $('#edit_employee_modal select').select2({
     dropdownParent: $('#edit_employee_modal')
 });
 
-$('#change_status_modal select').select2({
-    minimumResultsForSearch: -1,
-    dropdownParent: $('#change_status_modal')
+$('#work-location').select2({dropdownParent: $('.work-location-grp')}).on('select2:open', function () {
+    var a = $(this).data('select2');
+    if (!$('.select2-link').length) {
+        a.$results.parents('.select2-results').append('<div class="select2-link"><a href="javascript:void(0);">+ Add New</a></div>').on('click', function (b) {
+            $('#edit-employment-details-modal').modal('hide');
+            $('#add-worksite-modal').modal('show');
+        });
+    }
 });
 
 $('#work-location').on('change', function() {
@@ -69,7 +74,7 @@ $('#add-worksite-form').on('submit', function(e) {
     var data = new FormData(this);
     
     $.ajax({
-        url: '/accounting/employees/add-work-location',
+        url: base_url + '/accounting/employees/add-work-location',
         data: data,
         type: 'post',
         processData: false,
@@ -470,4 +475,9 @@ function get_start_and_end_dates(val)
         start_date : startDate,
         end_date : endDate
     };
+}
+
+function addLocationForm() {
+    $('#edit-employment-details-modal').modal('hide');
+    $('#add-worksite-modal').modal('show');
 }
