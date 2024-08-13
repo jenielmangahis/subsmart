@@ -51,6 +51,16 @@ $('#edit_employee_modal select').select2({
     dropdownParent: $('#edit_employee_modal')
 });
 
+$('#work-location').select2({dropdownParent: $('.work-location-grp')}).on('select2:open', function () {
+    var a = $(this).data('select2');
+    if (!$('.select2-link').length) {
+        a.$results.parents('.select2-results').append('<div class="select2-link"><a href="javascript:void(0);">+ Add New</a></div>').on('click', function (b) {
+            $('#edit-employment-details-modal').modal('hide');
+            $('#add-worksite-modal').modal('show');
+        });
+    }
+});
+
 $('#work-location').on('change', function() {
     if($(this).val() === 'add') {
         $('#edit-employment-details-modal').modal('hide');
