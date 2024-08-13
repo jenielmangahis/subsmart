@@ -61,7 +61,7 @@
                                     <div class="tab-content" id="nav-tabContent">
                                         <div class="tab-pane fade <?=$has_filter === false ? 'show active' : ''?>" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                                             <div class="row">
-                                                <div class="col-12 col-md-8">
+                                                <div class="col-8">
                                                     <div class="nsm-card primary">
                                                         <div class="row">
                                                             <div class="col-12">
@@ -101,7 +101,7 @@
                                                             <div class="nsm-card primary">
                                                                 <div class="row">
                                                                     <div class="col-12">
-                                                                        <h4 class="float-start">Employment details</h4>
+                                                                        <h4 class="float-start">Employment Details</h4>
                                                                         <button class="nsm-button float-end" data-bs-toggle="modal" data-bs-target="#edit-employment-details-modal">Edit</button>
                                                                     </div>
                                                                 </div>
@@ -131,9 +131,14 @@
                                                                     <hr />
                                                                     <div class="col-12 col-md-12">
                                                                         <h6>Work locations</h6>
-                                                                        <?php foreach( $employmentDetails as $details ){ ?>
-                                                                            <h5><i class='bx bx-buildings'></i> <?= $details->worksite_address . ' ' . $details->worksite_city . ', ' . $details->worksite_state . ' ' . $details->worksite_zipcode; ?></h5>
+                                                                        <?php //foreach( $employmentDetails as $details ){ ?>
+                                                                            <!-- <h5><i class='bx bx-buildings'></i> <?= $details->worksite_address . ' ' . $details->worksite_city . ', ' . $details->worksite_state . ' ' . $details->worksite_zipcode; ?></h5> -->
+                                                                        <?php //} ?>
+
+                                                                        <?php foreach( $workLocations as $workLocation ){ ?>
+                                                                            <h5><i class='bx bx-buildings'></i> <?= $workLocation->street . ' ' . $workLocation->city . ', ' . $workLocation->state . ' ' . $workLocation->zipcode; ?></h5>
                                                                         <?php } ?>
+
                                                                         <h5><?=!is_null($empWorksite) ? $empWorksite : '-'?></h5>
                                                                     </div>
                                                                 </div>
@@ -143,7 +148,7 @@
                                                             <div class="nsm-card primary">
                                                                 <div class="row">
                                                                     <div class="col-12">
-                                                                        <h4 class="float-start">Pay types</h4>
+                                                                        <h4 class="float-start">Pay Types</h4>
                                                                         <button class="nsm-button float-end" data-bs-toggle="modal" data-bs-target="#edit-pay-types-modal">Edit</button>
                                                                     </div>
                                                                 </div>
@@ -167,11 +172,11 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-md-8">
+                                                <div class="col-4">
                                                     <div class="nsm-card primary">
                                                         <div class="row">
                                                             <div class="col-12">
-                                                                <h4 class="float-start">Employment details</h4>
+                                                                <h4 class="float-start">Profile Photo</h4>
                                                                 <button class="nsm-button float-end" data-bs-toggle="modal" data-bs-target="#edit-employment-details-modal">Edit</button>
                                                             </div>
                                                         </div>

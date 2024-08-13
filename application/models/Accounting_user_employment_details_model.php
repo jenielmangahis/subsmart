@@ -32,9 +32,19 @@ class Accounting_user_employment_details_model extends MY_Model {
 
     public function update_employment_details($userId, $data)
     {
-        $this->db->where('user_id', $userId);
-        $update = $this->db->update($this->table, $data);
-        return $update;
+        if(isset($data['work_location_id']) && is_array($data['work_location_id'])) {
+            $converted_data['workers_comp_class'] = $data['workers_comp_class'];
+            $work_location_ids = implode(',', $data['work_location_id']); 
+            $converted_data['work_location_id'] = $work_location_ids;
+
+            $this->db->where('user_id', $userId);
+            $update = $this->db->update($this->table, $converted_data);
+            return $update;
+        } else {
+            $this->db->where('user_id', $userId);
+            $update = $this->db->update($this->table, $data);
+            return $update;
+        }
     }
 
     public function get_all_employment_details($userId)

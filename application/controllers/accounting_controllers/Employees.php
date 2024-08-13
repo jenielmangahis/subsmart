@@ -464,6 +464,16 @@ class Employees extends MY_Controller
 
         $this->page_data['has_filter'] = $hasFilter;
 
+        $this->page_data['workLocations'] = [];
+        $this->page_data['workLocations_ids'] = [];
+        if(isset($employmentDetails[0])) {
+            $empDetails = $employmentDetails[0];
+            $ids = explode(",", $empDetails->work_location_id);
+            $work_locations = $this->accounting_worksites_model->get_by_ids($ids);      
+            $this->page_data['workLocations'] = $work_locations;
+            $this->page_data['workLocations_ids'] = $ids;
+        }
+
         $this->page_data['commissionSettings'] = $this->CommissionSetting_model->getAllByCompanyId(logged('company_id'));
         $this->page_data['optionCommissionTypes'] = $this->CommissionSetting_model->optionCommissionTypes();
         $this->page_data['employeeCommissionSettings'] = $this->EmployeeCommissionSetting_model->getAllByUserId($id);
@@ -770,7 +780,6 @@ class Employees extends MY_Controller
                 $this->users_model->insertEmployeePayDetails($payDetails);
             }
         }
-
         if (isset($employmentDetails)) {
             if ($this->employment_details_model->get_employment_details($id)) {
                 $this->employment_details_model->update_employment_details($id, $employmentDetails);

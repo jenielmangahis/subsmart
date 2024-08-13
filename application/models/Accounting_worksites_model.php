@@ -17,6 +17,13 @@ class Accounting_worksites_model extends MY_Model {
         return $query->row();
     }
 
+    public function get_by_ids($ids)
+    {
+        $this->db->where_in('id', $ids);
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
+
     public function get_company_worksites($companyId)
     {
         $this->db->where('company_id', $companyId);
