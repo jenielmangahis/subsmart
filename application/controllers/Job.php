@@ -2806,6 +2806,10 @@ class Job extends MY_Controller
 
                     $this->JobSettings_model->create($job_settings_data);
                 }
+
+                //Create invoice
+                $invoice_id = $this->createInitialInvoice($jobs_id);
+
             } else {
                 $jobs_id = $isJob->id;
                 $this->jobs_model->deleteJobItemsByJobId($jobs_id);
@@ -5182,6 +5186,8 @@ class Job extends MY_Controller
             $this->db->select('*');
             $this->db->where('job_id', $job->id);
             $jobInvoice = $this->db->get('invoices')->row();
+        }else{
+            $invoice_id = $jobInvoice->id;
         }
  
         // if (!is_null($jobInvoice)) {
@@ -5233,7 +5239,12 @@ class Job extends MY_Controller
         $this->page_data['jobInvoice'] = $jobInvoice;
         $this->page_data['invoiceNumber'] = $invoiceNumber;
         $this->page_data['invoice_id']    = $invoice_id;
-        $this->page_data['page']->title   = 'Create Invoice';
+        if( $jobInvoice ){
+            $this->page_data['page']->title   = 'View Invoice';
+        }else{
+            $this->page_data['page']->title   = 'Create Invoice';
+        }
+        
         $this->load->view('v2/pages/job/create_invoice', $this->page_data);
     }
 
