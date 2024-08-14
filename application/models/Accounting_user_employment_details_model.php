@@ -12,9 +12,8 @@ class Accounting_user_employment_details_model extends MY_Model {
 
     public function get_employment_details_by_worksite($worksiteId)
     {
-        
-        $this->db->where('work_location_id', $worksiteId);
-
+        //$this->db->where('work_location_id', $worksiteId);
+        $this->db->like('work_location_id', $worksiteId);
         $query = $this->db->get($this->table);
         return $query->result();
     }
