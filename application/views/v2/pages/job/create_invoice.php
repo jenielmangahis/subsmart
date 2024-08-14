@@ -77,7 +77,7 @@
                     <div class="row form-group mb-3">
                         <div class="col-md-4">
                             <label>PO #</label>
-                            <input id="po_number" class="form-control" required="">
+                            <input id="po_number" class="form-control">
                         </div>
                         <div class="col-md-4">
                             <label>Date Issued</label>
@@ -635,26 +635,28 @@
             $button.textContent = "Saving...";
 
             try {
-                const response = await fetch(base_url + "/Invoice/addNewInvoice?json=1", {
-                    method: "POST",
-                    body: formData
-                });
-                const jsonData = await response.json();
-                console.log(jsonData);
+                // const response = await fetch(base_url + "/Invoice/addNewInvoice?json=1", {
+                //     method: "POST",
+                //     body: formData
+                // });
+                // const jsonData = await response.json();
+                // console.log(jsonData);
 
-                const swalResponse = await Swal.fire({
-                    title: 'Invoice Created',
-                    text: 'Invoice has been created for this job successfully.',
-                    icon: 'success',
-                    showConfirmButton: false,
-                    showCancelButton: true,
-                    // confirmButtonText: 'View Invoice',
-                    cancelButtonText: 'Close this Window',
-                });
+                // const swalResponse = await Swal.fire({
+                //     title: 'Invoice Created',
+                //     text: 'Invoice has been created for this job successfully.',
+                //     icon: 'success',
+                //     showConfirmButton: false,
+                //     showCancelButton: true,
+                //     // confirmButtonText: 'View Invoice',
+                //     cancelButtonText: 'Close this Window',
+                // });
 
-                if (swalResponse.isDismissed) {
-                    window.close();
-                }
+                // if (swalResponse.isDismissed) {
+                //     window.close();
+                // }
+                window.close();
+                
                 // if (swalResponse.isConfirmed) {
                 //     window.location.href = `/invoice/genview/${jsonData.id}`;
                 // } else {
