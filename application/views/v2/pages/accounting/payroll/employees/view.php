@@ -133,10 +133,10 @@
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Work location</strong>
-                                <p class="text_value"><?php echo ($empWorksite) ? $empWorksite : '<i>Not specified</i>'; ?></p>
                                 <?php 
                                     foreach( $workLocations as $workLocation ) {
-                                        echo "<p class='text_value'>$workLocation->street $workLocation->city, $workLocation->stat$workLocation->zipcode ></p>";
+                                        //echo "<p class='text_value'>$workLocation->street $workLocation->city, $workLocation->stat$workLocation->zipcode</p>";
+                                        echo "<p class='text_value'><i class='bx bx-buildings'></i>" . $workLocation->street . ' ' . $workLocation->city . ', ' . $workLocation->state . ' ' . $workLocation->zipcode . "</p>";
                                     } 
                                 ?>
                             </div>
