@@ -783,6 +783,11 @@ class Employees extends MY_Controller
         if (isset($employmentDetails)) {
             if ($this->employment_details_model->get_employment_details($id)) {
                 $this->employment_details_model->update_employment_details($id, $employmentDetails);
+
+                //Activity Logs
+                $activity_name = 'Employees : Update Employment Details'; 
+                createActivityLog($activity_name);                
+
             } else {
                 $employmentDetails['user_id'] = $id;
                 $this->employment_details_model->create($employmentDetails);
