@@ -1816,3 +1816,26 @@ $route['cron_marketing/send_broadcast_email'] = 'Cron_Marketing/sendBroadcastEma
 //Email Template
 $route['settings/_get_email_template'] = 'Settings/ajax_get_email_template';
 $route['settings/_preview_email_template'] = 'Settings/ajax_preview_email_template';
+
+//Leave Types
+$route['leave_types'] = 'LeaveType/index';
+$route['leave_type/_save_leave_type'] = 'LeaveType/ajax_save_leave_type';
+$route['leave_type/_update_leave_type'] = 'LeaveType/ajax_update_leave_type';
+$route['leave_type/_delete_leave_type'] = 'LeaveType/ajax_delete_leave_type';
+$route['leave_type/_delete_selected'] = 'LeaveType/ajax_delete_selected';
+
+//Leave Requests
+$route['timesheet/leave_requests'] = 'Timesheet/leave_requests';
+$route['timesheet/_create_leave_request'] = 'Timesheet/ajax_create_leave_request';
+$route['timesheet/_edit_leave_request'] = 'Timesheet/ajax_edit_leave_request';
+$route['timesheet/_update_leave_request'] = 'Timesheet/ajax_update_leave_request';
+$route['timesheet/_delete_leave_request'] = 'Timesheet/ajax_delete_leave_request';
+$route['timesheet/_approve_leave_request'] = 'Timesheet/ajax_approve_leave_request';
+$route['timesheet/_disapprove_leave_request'] = 'Timesheet/ajax_disapprove_leave_request';
+$route['timesheet/_delete_selected_leave_request'] = 'Timesheet/ajax_delete_selected_leave_request';
+$route['timesheet/_approve_selected_leave_request'] = 'Timesheet/ajax_approve_selected_leave_request';
+$route['timesheet/_disapprove_selected_leave_request'] = 'Timesheet/ajax_disapprove_selected_leave_request';
+$route['timesheet/_view_leave_request'] = 'Timesheet/ajax_view_leave_request';
+
+//Leave credits
+$route['accounting/employees/_update_leave_credits'] = 'accounting_controllers/Employees/ajax_update_leave_credits';
