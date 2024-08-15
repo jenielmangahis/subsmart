@@ -5410,6 +5410,608 @@ class Timesheet extends MY_Controller
         $this->timesheet_model->save_current_geo_location($table_name, $table_id, $update);
         echo json_encode("saved");
     }
+
+    public function leave_requests()
+    {
+        $this->load->model('LeaveRequest_model');
+        $this->load->model('LeaveType_model');
+        $this->load->model('EmployeeLeaveCredit_model');
+
+        $cid = logged('company_id');    
+        $uid = logged('id');
+        if( logged('user_type') == 7 ){
+            $leaveRequests = $this->LeaveRequest_model->getAllByCompanyId($cid,[]);       
+        }else{
+            $leaveRequests = $this->LeaveRequest_model->getAllByUserId($uid,[]);       
+        } 
+        
+        $leaveTypes    = $this->LeaveType_model->getAllByCompanyId($cid,$conditions);
+        
+        //Leave Credits  
+        $employeeLeaveCredits = [];
+        $leaveTypes = $this->LeaveType_model->getAllByCompanyId($cid,[]);
+        foreach( $leaveTypes as $l ){
+            $leaveCredits = $this->EmployeeLeaveCredit_model->getByUserIdAndPtoId($uid, $l->id);
+
+            $credits = 0;
+            if( $leaveCredits ){
+                $credits = $leaveCredits->leave_credits;
+            }
+
+            $employeeLeaveCredits[$l->id] = ['leave_type' => $l->name, 'leave_credits' => $credits];
+        }   
+
+        $this->page_data['page']->title   = 'Leave Requests';
+        $this->page_data['employeeLeaveCredits'] = $employeeLeaveCredits;
+        $this->page_data['leaveRequests'] = $leaveRequests;
+        $this->page_data['leaveTypes']    = $leaveTypes;
+        $this->load->view('v2/pages/users/leave_requests', $this->page_data);        
+    }
+
+    public function ajax_create_leave_request()
+    {
+        $this->load->model('LeaveRequest_model');
+        $this->load->model('LeaveType_model');
+        $this->load->model('EmployeeLeaveCredit_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post = $this->input->post();
+        
+        if( $post['leave_type'] == '' ){
+            $is_success = 0;
+            $msg = 'Please select leave type';
+        }
+
+        if( $post['request_date_from'] == '' || $post['request_date_to'] == '' ){
+            $is_success = 0;
+            $msg = 'Please specify leave date';
+        }
+
+        if( $post['request_reason'] == '' ){
+            $is_success = 0;
+            $msg = 'Please specify leave request reason';
+        }
+
+        $leaveCredits = $this->EmployeeLeaveCredit_model->getByUserIdAndPtoId($uid, $post['leave_type']);
+        if( !$leaveCredits || ($leaveCredits->leave_credits == 0) ){
+            $is_success = 0;
+            $msg = 'No available leave credits';
+        }    
+
+        $date_from = $post['request_date_from'] . ' 00:00:00';
+        $date_to   = $post['request_date_to'] . ' 23:59:59';
+        
+        $time1 = new \DateTime($date_from);
+        $time2 = new \DateTime($date_to);
+        $diff = $time1->diff($time2);
+        $days_diff = $diff->d;
+        $hrs_diff  = $diff->h;
+
+        if( $leaveCredits && ($leaveCredits->leave_credits < $days_diff ) ){
+            $is_success = 0;
+            $msg = 'Insufficient leave credits. You only have ' . $leaveCredits->leave_credits . ' ' . $leaveCredits->leave_type . ' credits';
+        }
+        
+        if( $is_success == 1 ){
+            $data = [
+                'user_id' => logged('id'),
+                'pto_id' => $post['leave_type'],
+                'date_from' => $post['request_date_from'],
+                'date_to' => $post['request_date_to'],
+                'reason' => $post['request_reason'],
+                'total_hours' => $hrs_diff,
+                'status' => $this->LeaveRequest_model->requestStatusPending(),
+                'date_created' => date("Y-m-d H:i:s"),
+            ];
+
+            $this->LeaveRequest_model->create($data);
+
+            //Deduct leave credits
+            $new_balance = $leaveCredits->leave_credits - $days_diff;
+            $data = ['leave_credits' => $new_balance];
+            $this->EmployeeLeaveCredit_model->update($leaveCredits->id, $data);
+
+            //Activity Logs
+            $leaveType = $this->LeaveType_model->getById($post['leave_type']);
+            $activity_name = 'Leave Request : Created leave request'; 
+            createActivityLog($activity_name);
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_edit_leave_request()
+    {
+        $this->load->model('LeaveRequest_model');
+        $this->load->model('LeaveType_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $leaveRequest = $this->LeaveRequest_model->getByIdAndCompanyId($post['rid'], $cid);
+        $leaveTypes   = $this->LeaveType_model->getAllByCompanyId($cid,$conditions);    
+        
+        if( $leaveRequest->status == $this->LeaveRequest_model->requestStatusPending() ){
+            $is_valid = 1;
+            $err_msg  = '';
+        }else{
+            $is_valid = 0;
+            if( $leaveRequest->status == $this->LeaveRequest_model->requestStatusApproved() ){
+                $err_msg = '<div class="alert alert-danger" role="alert">Cannot edit leave request. Leave request is already approved.</div>';
+            }else{
+                $err_msg = '<div class="alert alert-danger" role="alert">Cannot edit leave request. Leave request is already disapproved.</div>';
+            }
+        }
+
+        $this->page_data['is_valid'] = $is_valid;
+        $this->page_data['err_msg']  = $err_msg;
+        $this->page_data['leaveRequest'] = $leaveRequest;
+        $this->page_data['leaveTypes']    = $leaveTypes;
+        $this->load->view('v2/pages/users/ajax_edit_leave_request', $this->page_data);   
+    }
+
+    public function ajax_update_leave_request()
+    {
+        $this->load->model('LeaveRequest_model');
+        $this->load->model('LeaveType_model');
+        $this->load->model('EmployeeLeaveCredit_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post = $this->input->post();
+        
+        if( $post['leave_type'] == '' ){
+            $is_success = 0;
+            $msg = 'Please select leave type';
+        }
+
+        if( $post['request_date_from'] == '' || $post['request_date_to'] == '' ){
+            $is_success = 0;
+            $msg = 'Please specify leave date';
+        }
+
+        if( $post['request_reason'] == '' ){
+            $is_success = 0;
+            $msg = 'Please specify leave request reason';
+        }    
+
+        $date_from = $post['request_date_from'] . ' 00:00:00';
+        $date_to   = $post['request_date_to'] . ' 23:59:59';
+
+        $time1 = new \DateTime($date_from);
+        $time2 = new \DateTime($date_to);
+        $diff = $time1->diff($time2);
+        $days_diff = $diff->d;
+        $hrs_diff  = $diff->h;
+
+        $leaveRequest = $this->LeaveRequest_model->getByIdAndCompanyId($post['rid'], $cid);
+
+        if( $leaveRequest->status != $this->LeaveRequest_model->requestStatusPending() ){
+            $status = $leaveRequest->status == $this->LeaveRequest_model->requestStatusApproved() ? 'approved' : 'disapproved';
+
+            $is_success = 0;            
+            $msg = 'Leave request is lock from editing. Status is already ' . $status;
+        }
+
+        $leaveCredits = $this->EmployeeLeaveCredit_model->getByUserIdAndPtoId($uid, $post['leave_type']);
+        if( !$leaveCredits || ($leaveCredits->leave_credits == 0) ){
+            $is_success = 0;
+            $msg = 'No available leave credits';
+        }  
+
+        if( $leaveCredits && ($leaveCredits->leave_credits < $days_diff ) ){
+            $is_success = 0;
+            $msg = 'Insufficient leave credits. You only have ' . $leaveCredits->leave_credits . ' ' . $leaveCredits->leave_type . ' credits';
+        }
+
+        if( $is_success == 1 && $leaveRequest ){
+            //Return leave credits
+            $date_from_a = $leaveRequest->date_from . ' 00:00:00';
+            $date_to_a   = $leaveRequest->date_to . ' 23:59:59';
+            $time1_a = new \DateTime($date_from_a);
+            $time2_a = new \DateTime($date_to_a);
+            $diff = $time1_a->diff($time2_a);
+            $days_diff_a = $diff->d;
+            $hrs_diff_a  = $diff->h;
+            $prevLeaveCredits = $this->EmployeeLeaveCredit_model->getByUserIdAndPtoId($uid, $leaveRequest->pto_id);
+            if( $prevLeaveCredits ){
+                $new_balance = $prevLeaveCredits->leave_credits + $days_diff_a;
+                $new_data = ['leave_credits' => $new_balance];
+                $this->EmployeeLeaveCredit_model->update($prevLeaveCredits->id, $new_data);
+            }
+
+            $data = [
+                'pto_id' => $post['leave_type'],
+                'date_from' => $post['request_date_from'],
+                'date_to' => $post['request_date_to'],
+                'reason' => $post['request_reason'],
+                'total_hours' => $hrs_diff,
+                'date_updated' => date("Y-m-d H:i:s")
+            ];
+
+            $this->LeaveRequest_model->update($leaveRequest->id, $data);
+
+            //Deduct leave credits
+            $new_balance = $leaveCredits->leave_credits - $days_diff;
+            $data = ['leave_credits' => $new_balance];
+            $this->EmployeeLeaveCredit_model->update($leaveCredits->id, $data);
+
+            //Activity Logs
+            $leaveType = $this->LeaveType_model->getById($post['leave_type']);
+            $activity_name = 'Leave Request : Updated leave request'; 
+            createActivityLog($activity_name);
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_leave_request()
+    {
+        $this->load->model('LeaveRequest_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+        $leaveRequest = $this->LeaveRequest_model->getByIdAndCompanyId($post['rid'], $cid);
+        if( $leaveRequest ){
+            $this->LeaveRequest_model->delete($leaveRequest->id);
+
+            $msg = '';
+            $is_success = 1;
+
+            //Activity Logs
+            $activity_name = 'Leave Request : Deleted '.$leaveRequest->employee.' leave request ' . $leaveRequest->leave_type;             
+            createActivityLog($activity_name);
+            // if( $leaveRequest->status == $this->LeaveRequest_model->requestStatusPending() ){
+            //     $this->LeaveRequest_model->delete($leaveRequest->id);
+
+            //     $msg = '';
+            //     $is_success = 1;
+
+            //     //Activity Logs
+            //     $activity_name = 'Leave Request : Deleted leave request'; 
+            //     createActivityLog($activity_name);
+
+            // }else{
+            //     if( $leaveRequest->status == $this->LeaveRequest_model->requestStatusApproved() ){
+            //         $msg = 'Cannot delete leave request. Status is already approved';
+            //     }
+            // }
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_approve_leave_request()
+    {
+        $this->load->model('LeaveRequest_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $cid   = logged('company_id');
+        $uid   = logged('id');
+        $utype = logged('user_type');
+        $post  = $this->input->post();
+
+        if( $utype == 7 ){
+            $leaveRequest = $this->LeaveRequest_model->getByIdAndCompanyId($post['rid'], $cid);
+            if( $leaveRequest ){
+                $data = [
+                    'approver_id' => $uid,
+                    'status' => $this->LeaveRequest_model->requestStatusApproved(),
+                    'disapproved_reason' => '',
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+
+                $this->LeaveRequest_model->update($leaveRequest->id, $data);
+
+                $msg = '';
+                $is_success = 1;
+                
+                //Activity Logs
+                $activity_name = 'Leave Request : Approved '.$leaveRequest->employee.' leave request ' . $leaveRequest->leave_type;                 
+                createActivityLog($activity_name);
+
+                // if( $leaveRequest->status == $this->LeaveRequest_model->requestStatusPending() ){
+                //     $data = [
+                //         'approver_id' => $uid,
+                //         'status' => $this->LeaveRequest_model->requestStatusApproved(),
+                //         'date_updated' => date("Y-m-d H:i:s")
+                //     ];
+
+                //     $this->LeaveRequest_model->update($leaveRequest->id, $data);
+
+                //     $msg = '';
+                //     $is_success = 1;
+                    
+                //     //Activity Logs
+                //     $activity_name = 'Leave Request : Updated leave request status to approved'; 
+                //     createActivityLog($activity_name);
+
+                // }else{
+                //     if( $leaveRequest->status == $this->LeaveRequest_model->requestStatusApproved() ){
+                //         $msg = 'Cannot update leave request. Status is already approved';
+                //     }
+
+                //     if( $leaveRequest->status == $this->LeaveRequest_model->requestStatusDisApproved() ){
+                //         $msg = 'Cannot update leave request. Status is already disapproved';
+                //     }
+                // }
+            }
+        }else{
+            $msg = 'Only admin can approve request.';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_disapprove_leave_request()
+    {
+        $this->load->model('LeaveRequest_model');
+        $this->load->model('EmployeeLeaveCredit_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $cid   = logged('company_id');
+        $uid   = logged('id');
+        $utype = logged('user_type');
+        $post  = $this->input->post();
+
+        if( $utype == 7 ){
+            $leaveRequest = $this->LeaveRequest_model->getByIdAndCompanyId($post['rid'], $cid);
+            if( $leaveRequest ){
+                $data = [
+                    'approver_id' => $uid,
+                    'status' => $this->LeaveRequest_model->requestStatusDisApproved(),
+                    'disapproved_reason' => $post['disapprove_reason'],
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+
+                $this->LeaveRequest_model->update($leaveRequest->id, $data);
+
+                //Return leave credits            
+                $leaveCredits = $this->EmployeeLeaveCredit_model->getByUserIdAndPtoId($uid, $leaveRequest->pto_id);
+                if( $leaveCredits ){                    
+                    $date_from_a = $leaveRequest->date_from . ' 00:00:00';
+                    $date_to_a   = $leaveRequest->date_to . ' 23:59:59';
+                    $time1_a = new \DateTime($date_from_a);
+                    $time2_a = new \DateTime($date_to_a);
+                    $diff = $time1_a->diff($time2_a);
+                    $days_diff_a = $diff->d;
+                    $hrs_diff_a  = $diff->h;
+
+                    $new_balance = $leaveCredits->leave_credits + $days_diff_a;
+                    $data = ['leave_credits' => $new_balance];
+                    $this->EmployeeLeaveCredit_model->update($leaveCredits->id, $data);
+                }
+
+                $msg = '';
+                $is_success = 1;
+                
+                //Activity Logs
+                $activity_name = 'Leave Request : Disapproved '.$leaveRequest->employee.' leave request ' . $leaveRequest->leave_type; 
+                createActivityLog($activity_name);
+
+                // if( $leaveRequest->status == $this->LeaveRequest_model->requestStatusPending() ){
+                //     $data = [
+                //         'approver_id' => $uid,
+                //         'status' => $this->LeaveRequest_model->requestStatusDisApproved(),
+                //         'disapproved_reason' => $post['disapprove_reason'],
+                //         'date_updated' => date("Y-m-d H:i:s")
+                //     ];
+
+                //     $this->LeaveRequest_model->update($leaveRequest->id, $data);
+
+                //     $msg = '';
+                //     $is_success = 1;
+                    
+                //     //Activity Logs
+                //     $activity_name = 'Leave Request : Updated leave request status to disapproved'; 
+                //     createActivityLog($activity_name);
+
+                // }else{
+                //     if( $leaveRequest->status == $this->LeaveRequest_model->requestStatusApproved() ){
+                //         $msg = 'Cannot update leave request. Status is already approved';
+                //     }
+
+                //     if( $leaveRequest->status == $this->LeaveRequest_model->requestStatusDisApproved() ){
+                //         $msg = 'Cannot update leave request. Status is already disapproved';
+                //     }
+                // }
+            }
+        }else{
+            $msg = 'Only admin can approve request.';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_selected_leave_request()
+    {
+        $this->load->model('LeaveRequest_model');
+
+        $is_success = 0;
+        $msg = 'Nothing to delete';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        $total_deleted = 0;
+        $errors = [];
+        foreach($post['row_selected'] as $rid){
+            $leaveRequest =  $this->LeaveRequest_model->getByIdAndCompanyId($rid, $cid);
+            if( $leaveRequest ){
+                $this->LeaveRequest_model->delete($leaveRequest->id);
+
+                //Activity Logs                
+                $activity_name = 'Leave Request : Deleted '.$leaveRequest->employee.' leave request '.$leaveRequest->leave_type; 
+                createActivityLog($activity_name);
+
+                $total_deleted++;
+            }            
+        }
+
+        if( $total_deleted > 0 ){
+            $is_success = 1;
+            $msg = 'Selected leave requests was successfully deleted';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_approve_selected_leave_request()
+    {
+        $this->load->model('LeaveRequest_model');
+
+        $is_success = 0;
+        $msg = 'Nothing to update';
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post = $this->input->post();
+
+        $total_updated = 0;
+        $errors = [];
+        foreach($post['row_selected'] as $rid){
+            $leaveRequest =  $this->LeaveRequest_model->getByIdAndCompanyId($rid, $cid);
+            if( $leaveRequest ){
+                $data = [
+                    'approver_id' => $uid,
+                    'status' => $this->LeaveRequest_model->requestStatusApproved(),
+                    'disapproved_reason' => '',
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+                $this->LeaveRequest_model->update($leaveRequest->id, $data);
+
+                //Activity Logs
+                $activity_name = 'Leave Request : Approved '.$leaveRequest->employee.' leave request ' . $leaveRequest->leave_type; 
+                createActivityLog($activity_name);
+
+                $total_updated++;
+            }
+            
+        }
+
+        if( $total_updated > 0 ){
+            $is_success = 1;
+            $msg = 'Selected leave requests was successfully updated';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_disapprove_selected_leave_request()
+    {
+        $this->load->model('LeaveRequest_model');
+
+        $is_success = 0;
+        $msg = 'Nothing to update';
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post = $this->input->post();
+
+        $total_updated = 0;
+        $errors = [];
+        foreach($post['row_selected'] as $rid){
+            $leaveRequest =  $this->LeaveRequest_model->getByIdAndCompanyId($rid, $cid);
+            if( $leaveRequest ){
+                $data = [
+                    'approver_id' => $uid,
+                    'status' => $this->LeaveRequest_model->requestStatusDisApproved(),
+                    'disapproved_reason' => $post['disapprove_reason'],
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+                $this->LeaveRequest_model->update($leaveRequest->id, $data);
+
+                //Activity Logs
+                $activity_name = 'Leave Request : Disapproved '.$leaveRequest->employee.' leave request ' . $leaveRequest->leave_type; 
+                createActivityLog($activity_name);
+
+                $total_updated++;
+            }
+            
+        }
+
+        if( $total_updated > 0 ){
+            $is_success = 1;
+            $msg = 'Selected leave requests was successfully updated';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_view_leave_request()
+    {
+        $this->load->model('LeaveRequest_model');
+        $this->load->model('LeaveType_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $leaveRequest = $this->LeaveRequest_model->getByIdAndCompanyId($post['rid'], $cid);
+        
+        if( $leaveRequest ){
+            $is_valid = 1;
+            $err_msg  = '';
+        }else{
+            $err_msg = '<div class="alert alert-danger" role="alert">Cannot find data.</div>';
+        }
+
+        $this->page_data['is_valid'] = $is_valid;
+        $this->page_data['err_msg']  = $err_msg;
+        $this->page_data['leaveRequest'] = $leaveRequest;
+        $this->load->view('v2/pages/users/ajax_view_leave_request', $this->page_data);   
+    }
 }
 
 
