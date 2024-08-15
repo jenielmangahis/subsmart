@@ -490,6 +490,33 @@
     </div>
 </div>
 
+<div class="modal fade nsm-modal" id="leave-credits-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <form method="POST" id="leave-credits-form" action="">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Edit Leave Credits</span>
+                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <?php foreach( $employeeLeaveCredits as $key => $value ){ ?>
+                            <div class="col-12 mb-2">
+                                <label for=""><?= $value['leave_type']; ?></label>
+                                <input type="number" min=0 value="<?= $value['leave_credits']; ?>" class="form-control nsm-field" id="" name="leaveCredits[<?= $key; ?>]" required>
+                            </div>
+                        <?php } ?>                
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="btn_modal_save" id="btn-leave-credit" class="nsm-button primary">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <script>
 
 $(function() {
@@ -520,6 +547,46 @@ $(function() {
         }
         return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
     });    
+
+    $('#leave-credits-form').on('submit', function(e){
+        e.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            url: base_url + "accounting/employees/_update_leave_credits",
+            dataType: 'json',
+            data: $(this).serialize(),
+            success: function(data) {    
+                $('#btn-leave-credit').html('Save');                   
+                if (data.is_success) {
+                    $('#leave-credits-modal').modal('hide');
+                    Swal.fire({
+                        text: "Employee leave credits was successfully updated",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            location.reload();    
+                        //}
+                    });                    
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-leave-credit').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
 })
 
 
