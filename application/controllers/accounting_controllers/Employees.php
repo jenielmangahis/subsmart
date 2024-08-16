@@ -28,6 +28,7 @@ class Employees extends MY_Controller
         $this->load->model('CommissionSetting_model');
         $this->load->model('accounting_user_employment_details_model', 'employment_details_model');
         $this->load->model('accounting_paychecks_model');
+        $this->load->model('General_model', 'general_model');
 
         $this->page_data['page']->title = 'Employees';
         $this->page_data['page']->parent = 'Payroll';
@@ -303,6 +304,12 @@ class Employees extends MY_Controller
 
     public function view($id)
     {
+        $this->load->model('LeaveType_model');
+        $this->load->model('EmployeeLeaveCredit_model');
+        $company_id = logged('company_id');
+        $employee_id = logged('id');
+        $user_type = logged('user_type');
+
         add_footer_js(array(
             "assets/js/v2/accounting/payroll/employees/view.js"
         ));
@@ -474,6 +481,30 @@ class Employees extends MY_Controller
             $this->page_data['workLocations_ids'] = $ids;
         }
 
+        //Leave Credits  
+        $employeeLeaveCredits = [];
+        $leaveTypes = $this->LeaveType_model->getAllByCompanyId($cid,[]);
+        foreach( $leaveTypes as $l ){
+            $leaveCredits = $this->EmployeeLeaveCredit_model->getByUserIdAndPtoId($id, $l->id);
+
+            $credits = 0;
+            if( $leaveCredits ){
+                $credits = $leaveCredits->leave_credits;
+            }
+
+            $employeeLeaveCredits[$l->id] = ['leave_type' => $l->name, 'leave_credits' => $credits];
+        }       
+
+        $this->page_data['employeeLeaveCredits'] = $employeeLeaveCredits;
+
+        $getTaxWithholding = array(
+            'select' => '*',
+            'table' => 'accounting_tax_withholding',
+            'where' => array('company_id' => $company_id, 'employee_id' => $employee_id,),
+        );
+        
+        $this->page_data['taxWithholdingData'] = $this->general_model->get_data_with_param($getTaxWithholding, false);
+        $this->page_data['userType'] = $user_type;
         $this->page_data['commissionSettings'] = $this->CommissionSetting_model->getAllByCompanyId(logged('company_id'));
         $this->page_data['optionCommissionTypes'] = $this->CommissionSetting_model->optionCommissionTypes();
         $this->page_data['employeeCommissionSettings'] = $this->EmployeeCommissionSetting_model->getAllByUserId($id);
@@ -783,6 +814,11 @@ class Employees extends MY_Controller
         if (isset($employmentDetails)) {
             if ($this->employment_details_model->get_employment_details($id)) {
                 $this->employment_details_model->update_employment_details($id, $employmentDetails);
+
+                //Activity Logs
+                $activity_name = 'Employees : Update Employment Details'; 
+                createActivityLog($activity_name);                
+
             } else {
                 $employmentDetails['user_id'] = $id;
                 $this->employment_details_model->create($employmentDetails);
@@ -2572,5 +2608,68 @@ class Employees extends MY_Controller
 
     public function edit_paycheck($paycheckId)
     {
+
+    }
+
+    public function ajax_update_leave_credits()
+    {
+        $this->load->model('EmployeeLeaveCredit_model');
+        $this->load->model('Users_model');
+
+        $is_success = 0;
+        $msg = 'Record not found';
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post = $this->input->post();
+
+        $user = $this->Users_model->get_user_name($uid);
+
+        foreach($post['leaveCredits'] as $lid => $value){
+            $leaveCredits =  $this->EmployeeLeaveCredit_model->getByUserIdAndPtoId($uid, $lid);
+            if( $leaveCredits ){
+                $data = [
+                    'leave_credits' => $value,
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+                $this->EmployeeLeaveCredit_model->update($leaveCredits->id, $data);
+            }else{
+                $data = [
+                    'user_id' => $uid,
+                    'pto_id' => $lid,
+                    'leave_credits' => $value,
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+                $this->EmployeeLeaveCredit_model->create($data);
+            }
+
+            //Activity Logs
+            $name = $user->FName . ' ' . $user->LName;
+            $activity_name = 'Leave Credits : Updated '.$name.' leave credits'; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+            
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function saveTaxWithholding() {
+        $company_id = logged('company_id');
+        $employee_id = logged('id');
+
+        $postData = $this->input->post();
+        $postData['company_id'] = $company_id;
+        $postData['employee_id'] = $employee_id;
+
+        $saveTaxWithholdingDetails = $this->employment_details_model->createTaxWithholding($postData);
+        print_r($postData);
     }
 }
