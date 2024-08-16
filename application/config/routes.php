@@ -723,6 +723,8 @@ $route['accounting/contractors/(:any)/get-payments-total']['post'] = 'accounting
 $route['accounting/contractors/preview-contractor-payment']['post'] = 'accounting_controllers/contractors/preview_contractor_payment';
 $route['accounting/contractors/submit-contractor-payment']['post'] = 'accounting_controllers/contractors/submit_contractor_payment';
 
+$route['accounting/worksites'] = 'accounting_controllers/worksites/index';
+
 $route['accounting/vendors'] = 'accounting_controllers/vendors/index';
 $route['accounting/vendors/load']['post'] = 'accounting_controllers/vendors/load_vendors';
 $route['accounting/vendors/add']['post'] = 'accounting_controllers/vendors/add';

@@ -28,6 +28,7 @@ class Employees extends MY_Controller
         $this->load->model('CommissionSetting_model');
         $this->load->model('accounting_user_employment_details_model', 'employment_details_model');
         $this->load->model('accounting_paychecks_model');
+        $this->load->model('General_model', 'general_model');
 
         $this->page_data['page']->title = 'Employees';
         $this->page_data['page']->parent = 'Payroll';
@@ -305,6 +306,9 @@ class Employees extends MY_Controller
     {
         $this->load->model('LeaveType_model');
         $this->load->model('EmployeeLeaveCredit_model');
+        $company_id = logged('company_id');
+        $employee_id = logged('id');
+        $user_type = logged('user_type');
 
         add_footer_js(array(
             "assets/js/v2/accounting/payroll/employees/view.js"
@@ -492,6 +496,15 @@ class Employees extends MY_Controller
         }       
 
         $this->page_data['employeeLeaveCredits'] = $employeeLeaveCredits;
+
+        $getTaxWithholding = array(
+            'select' => '*',
+            'table' => 'accounting_tax_withholding',
+            'where' => array('company_id' => $company_id, 'employee_id' => $employee_id,),
+        );
+        
+        $this->page_data['taxWithholdingData'] = $this->general_model->get_data_with_param($getTaxWithholding, false);
+        $this->page_data['userType'] = $user_type;
         $this->page_data['commissionSettings'] = $this->CommissionSetting_model->getAllByCompanyId(logged('company_id'));
         $this->page_data['optionCommissionTypes'] = $this->CommissionSetting_model->optionCommissionTypes();
         $this->page_data['employeeCommissionSettings'] = $this->EmployeeCommissionSetting_model->getAllByUserId($id);
@@ -2646,5 +2659,17 @@ class Employees extends MY_Controller
         ];
 
         echo json_encode($return);
+    }
+
+    public function saveTaxWithholding() {
+        $company_id = logged('company_id');
+        $employee_id = logged('id');
+
+        $postData = $this->input->post();
+        $postData['company_id'] = $company_id;
+        $postData['employee_id'] = $employee_id;
+
+        $saveTaxWithholdingDetails = $this->employment_details_model->createTaxWithholding($postData);
+        print_r($postData);
     }
 }

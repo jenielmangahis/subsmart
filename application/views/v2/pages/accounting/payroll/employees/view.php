@@ -158,11 +158,21 @@
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Federal Filling Status</strong>
-                                <p class="text_value"><?php echo "<i>Not specified</i>"; ?></p>
+                                <p class="text_value filing_status_text"><?php echo ($taxWithholdingData->filing_status) ? $taxWithholdingData->filing_status : "<i>Not specified</i>"; ?></p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Tax exemptions</strong>
-                                <p class="text_value"><?php echo "<i>Not specified</i>";  ?></p>
+                                <?php
+                                    if (!empty($taxWithholdingData->futa_status) || !empty($taxWithholdingData->ssmedi_status) || !empty($taxWithholdingData->flsui_status)) {
+                                        echo "<p class='text_value tax_exemptions_text'>";
+                                        echo (!empty($taxWithholdingData->futa_status)) ? "FUTA<br>" : "";
+                                        echo (!empty($taxWithholdingData->ssmedi_status)) ? "Social Security and Medicare<br>" : "";
+                                        echo (!empty($taxWithholdingData->flsui_status)) ? "FL SUI" : "";
+                                        echo "</p>";
+                                    } else {
+                                        echo "<p class='text_value tax_exemptions_text'><i>Not specified</i></p>";
+                                    }
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -338,5 +348,5 @@
         </div>
     </div>
 </div>
-
+<script> <?php if ($userType != 7) { echo "$('.pointerCursor, .employee_image_profile_edit').remove();"; }?> </script>
 <?php include viewPath('v2/includes/footer'); ?>
