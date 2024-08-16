@@ -312,6 +312,145 @@
     </div>
 </div>
 
+
+<div class="modal fade nsm-modal" id="edit-tax-withholdings-modal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="saveTaxwithholdingForm">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Tax withholdings</span>
+                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <h4 class="fw-bold employee_name"><?php echo "What are $employee->FName's withholdings?"; ?></h4>
+                        </div>
+                        <div class="col-md-12">
+                            <p class="fs-5"><?php echo "When was $employee->FName hired?"; ?></p>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <div class="form-check">
+                                <input id="form_w4_2020" class="form-check-input" type="radio" name="withholding_certificate" value="form_2020" <?php echo ($taxWithholdingData->withholding_certificate == "form_2020") ? "checked" : "" ?>>
+                                <label class="form-check-label" for="form_w4_2020">2020 or later (Form W-4)</label>
+                            </div>
+                            <div class="form-check">
+                                <input id="form_w4_2019" class="form-check-input" type="radio" name="withholding_certificate" value="form_2019" <?php echo ($taxWithholdingData->withholding_certificate == "form_2019") ? "checked" : "" ?>>
+                                <label class="form-check-label" for="form_w4_2019">2019 or earlier (Form W-4)</label>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="accordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="federal_withholding_panel">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#federal_withholding_collapse" aria-expanded="true" aria-controls="federal_withholding_collapse"> <strong>Federal withholding</strong></button>
+                                    </h2>
+                                    <div id="federal_withholding_collapse" class="accordion-collapse collapse show" aria-labelledby="federal_withholding_panel">
+                                        <div class="accordion-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <p><?php echo "You can find the information for this section on $employee->FName's W-4 form."; ?> <a class="fw-bold text-decoration-none" href="https://drive.google.com/file/d/1Keip2AbW3V0jCGz0oZbCoz8DLU63CNZB/view?usp=sharing" target="_blank">Need a blank W-4 form?</a></p>
+                                                </div>
+                                                <div class="col-md-12 mb-3">
+                                                    <strong class="text-muted">Filing Status</strong>
+                                                    <select id="filing_status" class="form-select mt-1 w-auto" name="filing_status">
+                                                        <!-- 2020 Form Options -->
+                                                        <option <?php echo ($taxWithholdingData->filing_status == "Single or Married Filing Separately") ? "selected" : "" ?> value="Single or Married Filing Separately" data-custom="form_2020">Single or Married Filing Separately</option>
+                                                        <option <?php echo ($taxWithholdingData->filing_status == "Married Filing Jointly or Qualifying Widow(er)") ? "selected" : "" ?> value="Married Filing Jointly or Qualifying Widow(er)" data-custom="form_2020">Married Filing Jointly or Qualifying Widow(er)</option>
+                                                        <option <?php echo ($taxWithholdingData->filing_status == "Head of Household") ? "selected" : "" ?> value="Head of Household" data-custom="form_2020">Head of Household</option>
+                                                        <option <?php echo ($taxWithholdingData->filing_status == "Exempt") ? "selected" : "" ?> value="Exempt" data-custom="form_2020">Exempt</option>
+                                                        <!-- 2019 Form Options -->
+                                                        <option <?php echo ($taxWithholdingData->filing_status == "Single") ? "selected" : "" ?> value="Single" data-custom="form_2019">Single</option>
+                                                        <option <?php echo ($taxWithholdingData->filing_status == "Married") ? "selected" : "" ?> value="Married" data-custom="form_2019">Married</option>
+                                                        <option <?php echo ($taxWithholdingData->filing_status == "Married, but withhold at higher Single rate") ? "selected" : "" ?> value="Married, but withhold at higher Single rate" data-custom="form_2019">Married, but withhold at higher Single rate</option>
+                                                        <option <?php echo ($taxWithholdingData->filing_status == "Do not withhold (exempt)") ? "selected" : "" ?> value="Do not withhold (exempt)" data-custom="form_2019">Do not withhold (exempt)</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-12 mb-3 form_2020_input">
+                                                    <input id="mark_w4" class="form-check-input" type="checkbox" <?php echo ($taxWithholdingData->mark_w4 == 1) ? "checked" : ""; ?>>&nbsp;
+                                                    <label class="text-muted" for="mark_w4"><?php echo "Select yes if $employee->FName has marked this box on their W-4."; ?></label>
+                                                    <input type="hidden" name="mark_w4" value="<?php echo ($taxWithholdingData->mark_w4 == 1) ? 1 : 0; ?>">
+                                                </div>
+                                                <div class="col-md-12 mb-3 form_2020_input">
+                                                    <strong class="text-muted">Claim dependent's deduction</strong>
+                                                    <input class="form-control mt-1 w-auto" name="claim_dependents_deduction" type="number" placeholder="0.00" step="0.01" value="<?php echo $taxWithholdingData->claim_dependents_deduction; ?>">
+                                                </div>
+                                                <div class="col-md-12 mb-3 form_2020_input">
+                                                    <strong class="text-muted">Other adjustments</strong>
+                                                    <div class="row mt-2">
+                                                        <div class="col-md-3 form_2020_input">
+                                                            <label>Other income</label>
+                                                            <input class="form-control mt-1 w-auto" name="other_income" type="number" placeholder="0.00" step="0.01" value="<?php echo $taxWithholdingData->other_income; ?>">
+                                                        </div>
+                                                        <div class="col-md-3 form_2020_input">
+                                                            <label>Deductions</label>
+                                                            <input class="form-control mt-1 w-auto" name="deductions" type="number" placeholder="0.00" step="0.01" value="<?php echo $taxWithholdingData->deductions; ?>">
+                                                        </div>
+                                                        <div class="col-md-3 form_2020_input">
+                                                            <label>Extra withholding</label>
+                                                            <input class="form-control mt-1 w-auto" name="form2020_extra_withholding" type="number" placeholder="0.00" step="0.01" value="<?php echo $taxWithholdingData->form2020_extra_withholding; ?>">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12 mb-3 form_2019_input">
+                                                    <strong class="text-muted">Total number of allowances you are claiming</strong>
+                                                    <input class="form-control mt-1 w-auto" name="total_number_allowances" type="number" placeholder="0" value="<?php echo $taxWithholdingData->total_number_allowances; ?>">
+                                                </div>
+                                                <div class="col-md-12 mb-3 form_2019_input">
+                                                    <strong class="text-muted">Extra withholding</strong>
+                                                    <input class="form-control mt-1 w-auto" name="form2019_extra_withholding" type="number" placeholder="0.00" step="0.01" value="<?php echo $taxWithholdingData->form2019_extra_withholding; ?>">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="tax_exemptions_panel">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#tax_exemptions_collapse" aria-expanded="true" aria-controls="tax_exemptions_collapse"><strong>Tax exemptions</strong></button>
+                                    </h2>
+                                    <div id="tax_exemptions_collapse" class="accordion-collapse collapse show" aria-labelledby="tax_exemptions_panel">
+                                        <div class="accordion-body">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <p class="text-muted">These are not common. Certain government criteria must be met to take these exemptions.</p>
+                                                </div>
+
+                                                <div class="col-md-12 mb-3">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="futa_checkbox" <?php echo ($taxWithholdingData->futa_status == 1) ? "checked" : ""; ?>>
+                                                        <label class="form-check-label fw-bold" for="futa_checkbox">FUTA</label>
+                                                        <input type="hidden" name="futa_status" value="<?php echo ($taxWithholdingData->futa_status == 1) ? 1 : 0; ?>">
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="ssmedi_checkbox" <?php echo ($taxWithholdingData->ssmedi_status == 1) ? "checked" : ""; ?>>
+                                                        <label class="form-check-label fw-bold" for="ssmedi_checkbox">Social Security and Medicare</label>
+                                                        <input type="hidden" name="ssmedi_status" value="<?php echo ($taxWithholdingData->ssmedi_status == 1) ? 1 : 0; ?>">
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" id="flsui_checkbox" <?php echo ($taxWithholdingData->flsui_status == 1) ? "checked" : ""; ?>>
+                                                        <label class="form-check-label fw-bold" for="flsui_checkbox">FL SUI</label>
+                                                        <input type="hidden" name="flsui_status" value="<?php echo ($taxWithholdingData->flsui_status == 1) ? 1 : 0; ?>">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 <div class="modal fade nsm-modal" id="edit-payment-method-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
     <form method="POST" id="edit-payment-method-form" action="<?= base_url('/accounting/employees/update/payment-method/' . $employee->id) ?>">
@@ -518,8 +657,127 @@
 </div>
 
 <script>
+$('select > option[data-custom="form_2019"], .form_2019_input').hide();
+$('.form_2019_input > input').hide().attr('disabled', '');
+function formDisabler(selector, state) {
+    const element = $(selector);
+    const submitButton = element.find('button[type="submit"]');
+
+    if (state) {
+        if (!submitButton.data('original-content')) {
+            submitButton.data('original-content', submitButton.html());
+        }
+        submitButton.prop('disabled', true);
+        submitButton.text('Processing...');
+    } else {
+        const originalContent = submitButton.data('original-content');
+        if (originalContent) {
+            submitButton.prop('disabled', false).html(originalContent);
+        }
+    }
+}
+
+function updateContent() {
+        var text = [];
+        
+        if ($('#futa_checkbox').is(':checked')) {
+            text.push('FUTA');
+        }
+        if ($('#ssmedi_checkbox').is(':checked')) {
+            text.push('Social Security and Medicare');
+        }
+        if ($('#flsui_checkbox').is(':checked')) {
+            text.push('FL SUI');
+        }
+        $('.tax_exemptions_text').html(text.length ? text.join('<br>') : '<i>Not specified</i>');
+        $('.filing_status_text').text($('#filing_status').val());
+    }
 
 $(function() {
+    $('input[name="withholding_certificate"]').change(function (e) { 
+        const value = $(this).val();
+        if (value == "form_2020") {
+            $('select > option[data-custom="form_2020"]').fadeIn('fast');
+            $('select > option[data-custom="form_2019"]').hide();
+            $('#filing_status option').eq(0).prop('selected', true);
+            $('.form_2020_input').fadeIn('fast');
+            $('.form_2019_input').hide();
+            $('.form_2020_input > input').show().removeAttr('disabled');
+            $('.form_2019_input > input').hide().attr('disabled', '');
+        } else {
+            $('select > option[data-custom="form_2020"]').hide();
+            $('select > option[data-custom="form_2019"]').fadeIn('fast');
+            $('#filing_status option').eq(4).prop('selected', true);
+            $('.form_2020_input').hide();
+            $('.form_2019_input').fadeIn('fast');
+            $('.form_2020_input > input').hide().attr('disabled', ''); 
+            $('.form_2019_input > input').show().removeAttr('disabled');
+        }
+    });
+
+    $('#mark_w4').change(function (e) { 
+        e.preventDefault();
+        if ($(this).prop('checked') == true) {
+            $('input[name="mark_w4"]').val(1);
+        } else {
+            $('input[name="mark_w4"]').val(0);
+        }
+    });
+
+
+    $('#futa_checkbox').change(function (e) { 
+        e.preventDefault();
+        if ($(this).prop('checked') == true) {
+            $('input[name="futa_status"]').val(1);
+        } else {
+            $('input[name="futa_status"]').val(0);
+        }
+    });
+
+    $('#ssmedi_checkbox').change(function (e) { 
+        e.preventDefault();
+        if ($(this).prop('checked') == true) {
+            $('input[name="ssmedi_status"]').val(1);
+        } else {
+            $('input[name="ssmedi_status"]').val(0);
+        }
+    });
+
+    $('#flsui_checkbox').change(function (e) { 
+        e.preventDefault();
+        if ($(this).prop('checked') == true) {
+            $('input[name="flsui_status"]').val(1);
+        } else {
+            $('input[name="flsui_status"]').val(0);
+        }
+    });
+
+    $('#saveTaxwithholdingForm').submit(function (e) { 
+        e.preventDefault();
+        const form = $(this);
+
+        $.ajax({
+            type: "POST",
+            url: window.origin + "/accounting/employees/save_tax_withholding",
+            data: form.serialize(),
+            beforeSend: function() {
+                formDisabler(form, true);
+            },
+            success: function(response) {
+                formDisabler(form, false);
+                updateContent();
+            },
+            error: function(xhr, status, error) {
+                formDisabler(form, false);
+                console.error("Request failed:", status, error);
+            }
+        });
+    });
+
+
+
+
+
     $('.mobile-number').keydown(function(e) {
         var key = e.charCode || e.keyCode || 0;
         $text = $(this);
