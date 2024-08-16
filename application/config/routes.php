@@ -1839,3 +1839,15 @@ $route['timesheet/_view_leave_request'] = 'Timesheet/ajax_view_leave_request';
 
 //Leave credits
 $route['accounting/employees/_update_leave_credits'] = 'accounting_controllers/Employees/ajax_update_leave_credits';
+
+//Overtime Requests
+$route['timesheet/overtime_requests'] = 'Timesheet/overtime_requests';
+$route['timesheet/_create_overtime_request'] = 'Timesheet/ajax_create_overtime_request';
+$route['timesheet/_edit_overtime_request'] = 'Timesheet/ajax_edit_overtime_request';
+$route['timesheet/_update_overtime_request'] = 'Timesheet/ajax_update_overtime_request';
+$route['timesheet/_delete_overtime_request'] = 'Timesheet/ajax_delete_overtime_request';
+$route['timesheet/_approve_overtime_request'] = 'Timesheet/ajax_approve_overtime_request';
+$route['timesheet/_disapprove_overtime_request'] = 'Timesheet/ajax_disapprove_overtime_request';
+$route['timesheet/_delete_selected_overtime_request'] = 'Timesheet/ajax_delete_selected_overtime_request';
+$route['timesheet/_approve_selected_overtime_request'] = 'Timesheet/ajax_approve_selected_overtime_request';
+$route['timesheet/_disapprove_selected_overtime_request'] = 'Timesheet/ajax_disapprove_selected_overtime_request';
