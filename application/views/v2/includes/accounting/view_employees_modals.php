@@ -170,138 +170,154 @@
                 <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
+
+
                 <div class="row">
                     <div class="col-12">
                         <h3>Let's get down to <?=$employee->FName?>'s job specifics</h3>
                     </div>
                 </div>
-                <div class="row gy-3">
-                    <div class="col-12">
-                        <div class="row gy-3">
-                            <div class="col-12">
-                                <label class="content-title">Basic Details</label>
-                            </div>
-                            <div class="col-12">
-                                <label class="content-subtitle fw-bold d-block mb-2" for="employee_number">Employee Number</label>
-                                <input type="text" name="employee_number" class="nsm-field form-control" id="employee_number" value="<?= $employee->employee_number ? $employee->employee_number : '-'; ?>" />
+
+
+
+
+                <div class="accordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="federal_withholding_panel">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#basic_details" aria-expanded="true" aria-controls="basic_details"> <strong>Basic Details</strong></button>
+                        </h2>
+                        <div id="basic_details" class="accordion-collapse collapse show" aria-labelledby="employment_details_panel">
+                            <div class="accordion-body">
+                                <div class="col-12">
+                                    <label class="content-subtitle fw-bold d-block mb-2" for="employee_number">Employee Number</label>
+                                    <input type="text" name="employee_number" class="nsm-field form-control" id="employee_number" value="<?= $employee->employee_number ? $employee->employee_number : '-'; ?>" />
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        <div class="row gy-3">
-                            <div class="col-12">
-                                <label class="content-title">Employment Details</label>
-                            </div>
-                            <div class="col-12">
-                                <label class="content-subtitle fw-bold d-block mb-2">Hire date</label>
-                                <div class="nsm-field-group calendar">
-                                    <input type="text" class="form-control nsm-field date" id="hire-date" name="hire_date" value="<?=date("m/d/Y", strtotime($employee->date_hired))?>">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="federal_withholding_panel">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#employment_details" aria-expanded="true" aria-controls="employment_details"> <strong>Employment Details</strong></button>
+                        </h2>
+                        <div id="employment_details" class="accordion-collapse collapse show" aria-labelledby="employment_details_panel">
+                            <div class="accordion-body">
+
+                                <div class="col-12">
+                                    <label class="content-subtitle fw-bold d-block mb-2">Hire date</label>
+                                    <div class="nsm-field-group calendar">
+                                        <input type="text" class="form-control nsm-field date" id="hire-date" name="hire_date" value="<?=date("m/d/Y", strtotime($employee->date_hired))?>">
+                                    </div>
+                                </div><br />
+                                <div class="col-12 work-location-grp">
+                                    <label class="content-subtitle fw-bold d-block mb-2">Work location <!-- <a href="javascript:void(0)" onclick="javascript:addLocationForm()">(Add)</a></label> -->
+                                    <select class="nsm-field form-select" id="work-location" name="work_location[]" multiple>
+                                        <!-- <option value="" disabled selected>Select work location</option> -->
+                                        <!-- <option value="add">&plus; Add new</option> -->
+                                        <?php foreach($worksites as $worksite) : ?>
+                                            <?php 
+                                                $selected = "";
+                                                if (in_array($worksite->id, $workLocations_ids)) {
+                                                    $selected = "selected";
+                                                }                                    
+                                            ?>              
+                                            <!-- <option value="<?= $worksite->id; ?>" <?= $employmentDetails->work_location_id == $worksite->id ? 'selected="selected"' : ''; ?>><?= $worksite->name; ?></option> -->                        
+                                            <option <?php echo $selected; ?> value="<?= $worksite->id; ?>"><?= $worksite->name; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div><br />
+                                <div class="col-12">
+                                    <label class="content-subtitle fw-bold d-block mb-2">Title</label>
+                                    <select class="nsm-field form-select" name="role" id="employee_role" required>
+                                        <option value="" disabled>Select Title</option>
+                                        <?php foreach ($roles as $r) : ?>
+                                            <option value="<?= $r->id; ?>" <?= $r->id == $employee->role ? 'selected' : ''; ?>><?= $r->title; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div><br />
+                                <div class="col-12">
+                                    <label class="content-subtitle fw-bold d-block mb-2">Workers' comp class</label>
+                                    <input type="text" class="nsm-field form-control" id="workers-comp-class" name="workers_comp_class" value="<?=!empty($employmentDetails) ? $employmentDetails->workers_comp_class : ''?>">
                                 </div>
-                            </div>
-                            <div class="col-12 work-location-grp">
-                                <label class="content-subtitle fw-bold d-block mb-2">Work location <a href="javascript:void(0)" onclick="javascript:addLocationForm()">(Add)</a></label>
-                                <select class="nsm-field form-select" id="work-location" name="work_location[]" multiple>
-                                    <!-- <option value="" disabled selected>Select work location</option> -->
-                                    <!-- <option value="add">&plus; Add new</option> -->
-                                    <?php foreach($worksites as $worksite) : ?>
-                                        <?php 
-                                            $selected = "";
-                                            if (in_array($worksite->id, $workLocations_ids)) {
-                                                $selected = "selected";
-                                            }                                    
-                                        ?>              
-                                        <!-- <option value="<?= $worksite->id; ?>" <?= $employmentDetails->work_location_id == $worksite->id ? 'selected="selected"' : ''; ?>><?= $worksite->name; ?></option> -->                        
-                                        <option <?php echo $selected; ?> value="<?= $worksite->id; ?>"><?= $worksite->name; ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="col-12">
-                                <label class="content-subtitle fw-bold d-block mb-2">Title</label>
-                                <select class="nsm-field form-select" name="role" id="employee_role" required>
-                                    <option value="" disabled>Select Title</option>
-                                    <?php foreach ($roles as $r) : ?>
-                                        <option value="<?= $r->id; ?>" <?= $r->id == $employee->role ? 'selected' : ''; ?>><?= $r->title; ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                            <div class="col-12">
-                                <label class="content-subtitle fw-bold d-block mb-2">Workers' comp class</label>
-                                <input type="text" class="nsm-field form-control" id="workers-comp-class" name="workers_comp_class" value="<?=!empty($employmentDetails) ? $employmentDetails->workers_comp_class : ''?>">
+                            
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-md-6">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="content-title">Rights and Permissions</label>
-                                <label class="content-subtitle">Select employee role</label>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" id="role_7" value="7" name="user_type" <?= $employee->user_type == 7 ? 'checked="checked"' : ''; ?>>
-                                    <label class="form-check-label" for="role_7">
-                                        Admin
-                                        <span class="content-subtitle d-block fst-italic">ALL Access</span>
-                                    </label>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="tax_exemptions_panel">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#right_and_permissions_collapse" aria-expanded="true" aria-controls="right_and_permissions_collapse"><strong>Rights & Permissions (Select Employee Role)</strong></button>
+                        </h2>
+                        <div id="tax_exemptions_collapse" class="accordion-collapse collapse show" aria-labelledby="right_and_permissions_panel">
+                            <div class="accordion-body">
+
+                                <div class="col-12" style="margin-bottom: 10px !important;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" id="role_7" value="7" name="user_type" <?= $employee->user_type == 7 ? 'checked="checked"' : ''; ?>>
+                                        <label class="form-check-label" for="role_7">
+                                            Admin
+                                            <span class="content-subtitle d-block fst-italic">ALL Access</span>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" value="1" id="role_1" name="user_type" <?= $employee->user_type == 1 ? 'checked="checked"' : ''; ?>>
-                                    <label class="form-check-label" for="role_1">
-                                        Office Manager
-                                        <span class="content-subtitle d-block fst-italic">ALL except high security file vault</span>
-                                    </label>
+                                <div class="col-12" style="margin-bottom: 10px !important;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" value="1" id="role_1" name="user_type" <?= $employee->user_type == 1 ? 'checked="checked"' : ''; ?>>
+                                        <label class="form-check-label" for="role_1">
+                                            Office Manager
+                                            <span class="content-subtitle d-block fst-italic">ALL except high security file vault</span>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" value="2" id="role_2" name="user_type" <?= $employee->user_type == 2 ? 'checked="checked"' : ''; ?>>
-                                    <label class="form-check-label" for="role_2">
-                                        Partner
-                                        <span class="content-subtitle d-block fst-italic">ALL base on plan type</span>
-                                    </label>
+                                <div class="col-12" style="margin-bottom: 10px !important;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" value="2" id="role_2" name="user_type" <?= $employee->user_type == 2 ? 'checked="checked"' : ''; ?>>
+                                        <label class="form-check-label" for="role_2">
+                                            Partner
+                                            <span class="content-subtitle d-block fst-italic">ALL base on plan type</span>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" value="3" id="role_3" name="user_type" <?= $employee->user_type == 3 ? 'checked="checked"' : ''; ?>>
-                                    <label class="form-check-label" for="role_3">
-                                        Team Leader
-                                        <span class="content-subtitle d-block fst-italic">No accounting or any changes to company profile or deletion</span>
-                                    </label>
+                                <div class="col-12" style="margin-bottom: 10px !important;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" value="3" id="role_3" name="user_type" <?= $employee->user_type == 3 ? 'checked="checked"' : ''; ?>>
+                                        <label class="form-check-label" for="role_3">
+                                            Team Leader
+                                            <span class="content-subtitle d-block fst-italic">No accounting or any changes to company profile or deletion</span>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" value="4" id="role_4" name="user_type" <?= $employee->user_type == 4 ? 'checked="checked"' : ''; ?>>
-                                    <label class="form-check-label" for="role_4">
-                                        Standard User
-                                        <span class="content-subtitle d-block fst-italic">Cannot add or delete employees, can not manage subscriptions</span>
-                                    </label>
+                                <div class="col-12" style="margin-bottom: 10px !important;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" value="4" id="role_4" name="user_type" <?= $employee->user_type == 4 ? 'checked="checked"' : ''; ?>>
+                                        <label class="form-check-label" for="role_4">
+                                            Standard User
+                                            <span class="content-subtitle d-block fst-italic">Cannot add or delete employees, can not manage subscriptions</span>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" value="5" id="role_5" name="user_type" <?= $employee->user_type == 5 ? 'checked="checked"' : ''; ?>>
-                                    <label class="form-check-label" for="role_5">
-                                        Field Sales
-                                        <span class="content-subtitle d-block fst-italic">View only no input</span>
-                                    </label>
+                                <div class="col-12" style="margin-bottom: 10px !important;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" value="5" id="role_5" name="user_type" <?= $employee->user_type == 5 ? 'checked="checked"' : ''; ?>>
+                                        <label class="form-check-label" for="role_5">
+                                            Field Sales
+                                            <span class="content-subtitle d-block fst-italic">View only no input</span>
+                                        </label>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" value="6" id="role_6" name="user_type" <?= $employee->user_type == 6 ? 'checked="checked"' : ''; ?>>
-                                    <label class="form-check-label" for="role_6">
-                                        Field Tech
-                                        <span class="content-subtitle d-block fst-italic">App access only, no Web access</span>
-                                    </label>
-                                </div>
+                                <div class="col-12" style="margin-bottom: 10px !important;">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" value="6" id="role_6" name="user_type" <?= $employee->user_type == 6 ? 'checked="checked"' : ''; ?>>
+                                        <label class="form-check-label" for="role_6">
+                                            Field Tech
+                                            <span class="content-subtitle d-block fst-italic">App access only, no Web access</span>
+                                        </label>
+                                    </div>
+                                </div>                            
+
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
