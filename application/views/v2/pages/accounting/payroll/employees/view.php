@@ -201,6 +201,24 @@
                             </div>
                         </div>
                     </div>
+                    <div class="nsm-card mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="float-start fw-bold">Leave Credits</h4>
+                                <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal" data-bs-target="#leave-credits-modal">Edit</a>
+                            </div>      
+                            <div class="col-md-12">                      
+                                <div class="row">
+                                    <?php foreach( $employeeLeaveCredits as $key => $value ){ ?>
+                                        <div class="col-md-3 mt-4">
+                                            <strong class="text-muted"><?= $value['leave_type']; ?></strong>
+                                            <p class="text_value"><span id="leave-credits-<?= $key; ?>"><?= $value['leave_credits']; ?></span> credits</p>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="nav-paycheck-list" role="tabpanel">
                     <div class="nsm-card mb-3">
