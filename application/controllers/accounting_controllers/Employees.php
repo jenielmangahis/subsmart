@@ -23,6 +23,7 @@ class Employees extends MY_Controller
         $this->load->model('accounting_credit_memo_model');
         $this->load->model('accounting_statements_model');
         $this->load->model('accounting_worksites_model');
+        $this->load->model('deductions_and_contribution_model');
         $this->load->model('accounting_payroll_model');
         $this->load->model('EmployeeCommissionSetting_model');
         $this->load->model('CommissionSetting_model');
@@ -2035,6 +2036,16 @@ class Employees extends MY_Controller
 
         echo json_encode(['id' => $id, 'name' => $post['name']]);
     }
+
+    public function add_deductions_and_contributions(){
+        $post = $this->input->post();
+        $post['company_id'] = logged('company_id');
+
+        $id = $this->deductions_and_contribution_model->create($post);
+
+        echo json_encode(['success' => $post]);
+    }
+
 
     public function update_paycheck_num($paycheckId)
     {

@@ -201,6 +201,31 @@
                             </div>
                         </div>
                     </div>
+                    <div class="nsm-card mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="float-start fw-bold">Leave Credits</h4>
+                                <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal" data-bs-target="#leave-credits-modal">Edit</a>
+                            </div>      
+                            <div class="col-md-12">                      
+                                <div class="row">
+                                    <?php foreach( $employeeLeaveCredits as $key => $value ){ ?>
+                                        <div class="col-md-3 mt-4">
+                                            <strong class="text-muted"><?= $value['leave_type']; ?></strong>
+                                            <p class="text_value"><span id="leave-credits-<?= $key; ?>"><?= $value['leave_credits']; ?></span> credits</p>
+                                        </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
+                                <h4 class="float-start fw-bold">Deductions and Contributions</h4>
+                                <a class="nsm-button border-0 float-end pointerCursor edit-deductions-and-contributions" data-bs-toggle="modal" data-bs-target="#edit-deductions-and-contributions" data-bs-backdrop="false">Edit</a>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="text_value">Include paycheck deductions and company contributions for healthcare and retirement. Garnishments too.</p>
+                            </div>
+                         
+                        </div>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="nav-paycheck-list" role="tabpanel">
                     <div class="nsm-card mb-3">
@@ -348,5 +373,5 @@
         </div>
     </div>
 </div>
-<script> <?php if ($userType != 7) { echo "$('.pointerCursor, .employee_image_profile_edit').remove();"; }?> </script>
+<script> <?php if ($userType != 7) { echo "$('.pointerCursor, .employee_image_profile_edit , .edit-deductions-and-contributions').remove();"; }?> </script>
 <?php include viewPath('v2/includes/footer'); ?>

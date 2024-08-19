@@ -430,10 +430,10 @@ $(function(){
         var total_selected = $('input[name="row_selected[]"]:checked').length;
         if( total_selected > 0 ){
             if( action == 'delete' ){
-                var msg = 'Proceed with <b>deleting</b> selected rows?';
+                var msg = 'Proceed with <b>deleting</b> selected leave requests?';
                 var url = base_url + 'timesheet/_delete_selected_leave_request';
             }else if( action == 'approve' ){
-                var msg = 'Proceed with <b>approve</b> selected leave request(s)?';
+                var msg = 'Proceed with <b>approve</b> selected leave requests?';
                 var url = base_url + 'timesheet/_approve_selected_leave_request';
             }else if( action == 'disapprove' ){
                 $('#modal-with-selected-disapprove-leave-request').modal('show');

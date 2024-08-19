@@ -1172,7 +1172,7 @@ class Timesheet extends MY_Controller
         }
         echo json_encode(1);
     }
-    public function notification()
+    public function notificationOld()
     {
         add_css(array(
             "assets/css/timesheet/timesheet_notification_list.css"
@@ -1191,6 +1191,27 @@ class Timesheet extends MY_Controller
         // var_dump($this->page_data['allnotification']);
         $this->load->view('v2/pages/users/timesheet_notification_list', $this->page_data);
     }
+
+    public function notification()
+    {
+        $this->load->model('Activity_model');
+
+        $uid = logged('id');
+        $cid = logged('company_id');  
+        $user_type = logged('user_type');
+
+        if( $user_type == 7 ){
+            $activityLogs = $this->Activity_model->getActivityLogs($cid);
+        }else{
+            $activityLogs = $this->Activity_model->getActivityLogsByUserId($user_id);
+        }
+
+        $this->page_data['page']->title  = 'Notification';
+        $this->page_data['page']->parent = 'timesheet';        
+        $this->page_data['activityLogs'] = $activityLogs;
+        $this->load->view('v2/pages/users/timesheet_notification_list', $this->page_data);
+    }
+
     public function getseennotifications()
     {
         $seenednotifications = $this->timesheet_model->getseennotifications();
@@ -5419,13 +5440,14 @@ class Timesheet extends MY_Controller
 
         $cid = logged('company_id');    
         $uid = logged('id');
+        $conditions[] = ['field' => 'is_archived', 'value' => 0];
         if( logged('user_type') == 7 ){
-            $leaveRequests = $this->LeaveRequest_model->getAllByCompanyId($cid,[]);       
+            $leaveRequests = $this->LeaveRequest_model->getAllByCompanyId($cid,$conditions);       
         }else{
-            $leaveRequests = $this->LeaveRequest_model->getAllByUserId($uid,[]);       
+            $leaveRequests = $this->LeaveRequest_model->getAllByUserId($uid,$conditions);       
         } 
         
-        $leaveTypes    = $this->LeaveType_model->getAllByCompanyId($cid,$conditions);
+        $leaveTypes    = $this->LeaveType_model->getAllByCompanyId($cid,[]);
         
         //Leave Credits  
         $employeeLeaveCredits = [];
@@ -5498,13 +5520,14 @@ class Timesheet extends MY_Controller
         
         if( $is_success == 1 ){
             $data = [
-                'user_id' => logged('id'),
+                'user_id' => $uid,
                 'pto_id' => $post['leave_type'],
                 'date_from' => $post['request_date_from'],
                 'date_to' => $post['request_date_to'],
                 'reason' => $post['request_reason'],
                 'total_hours' => $hrs_diff,
                 'status' => $this->LeaveRequest_model->requestStatusPending(),
+                'is_archived' => 0,
                 'date_created' => date("Y-m-d H:i:s"),
             ];
 
@@ -5672,7 +5695,8 @@ class Timesheet extends MY_Controller
         $post = $this->input->post();
         $leaveRequest = $this->LeaveRequest_model->getByIdAndCompanyId($post['rid'], $cid);
         if( $leaveRequest ){
-            $this->LeaveRequest_model->delete($leaveRequest->id);
+            $data = ['is_archived' => 1];
+            $this->LeaveRequest_model->update($leaveRequest->id, $data);            
 
             $msg = '';
             $is_success = 1;
@@ -5876,7 +5900,9 @@ class Timesheet extends MY_Controller
         foreach($post['row_selected'] as $rid){
             $leaveRequest =  $this->LeaveRequest_model->getByIdAndCompanyId($rid, $cid);
             if( $leaveRequest ){
-                $this->LeaveRequest_model->delete($leaveRequest->id);
+                $data = ['is_archived' => 1];
+                $this->LeaveRequest_model->update($leaveRequest->id, $data);            
+                //$this->LeaveRequest_model->delete($leaveRequest->id);
 
                 //Activity Logs                
                 $activity_name = 'Leave Request : Deleted '.$leaveRequest->employee.' leave request '.$leaveRequest->leave_type; 
@@ -5948,6 +5974,7 @@ class Timesheet extends MY_Controller
     public function ajax_disapprove_selected_leave_request()
     {
         $this->load->model('LeaveRequest_model');
+        $this->load->model('EmployeeLeaveCredit_model');
 
         $is_success = 0;
         $msg = 'Nothing to update';
@@ -5968,6 +5995,22 @@ class Timesheet extends MY_Controller
                     'date_updated' => date("Y-m-d H:i:s")
                 ];
                 $this->LeaveRequest_model->update($leaveRequest->id, $data);
+
+                //Return leave credits            
+                $leaveCredits = $this->EmployeeLeaveCredit_model->getByUserIdAndPtoId($uid, $leaveRequest->pto_id);
+                if( $leaveCredits ){                    
+                    $date_from_a = $leaveRequest->date_from . ' 00:00:00';
+                    $date_to_a   = $leaveRequest->date_to . ' 23:59:59';
+                    $time1_a = new \DateTime($date_from_a);
+                    $time2_a = new \DateTime($date_to_a);
+                    $diff = $time1_a->diff($time2_a);
+                    $days_diff_a = $diff->d;
+                    $hrs_diff_a  = $diff->h;
+
+                    $new_balance = $leaveCredits->leave_credits + $days_diff_a;
+                    $data = ['leave_credits' => $new_balance];
+                    $this->EmployeeLeaveCredit_model->update($leaveCredits->id, $data);
+                }
 
                 //Activity Logs
                 $activity_name = 'Leave Request : Disapproved '.$leaveRequest->employee.' leave request ' . $leaveRequest->leave_type; 
@@ -6011,6 +6054,448 @@ class Timesheet extends MY_Controller
         $this->page_data['err_msg']  = $err_msg;
         $this->page_data['leaveRequest'] = $leaveRequest;
         $this->load->view('v2/pages/users/ajax_view_leave_request', $this->page_data);   
+    }
+
+    public function overtime_requests()
+    {
+        add_css(array(
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css'
+        ));
+
+        add_footer_js(array(
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
+            'assets/js/v2/bootstrap-datetimepicker.v2.min.js',
+        ));
+
+        $this->load->model('OvertimeRequest_model');
+
+        $cid = logged('company_id');    
+        $uid = logged('id');
+        $conditions[] = ['field' => 'is_archived', 'value' => 0];
+        if( logged('user_type') == 7 ){
+            $overtimeRequests = $this->OvertimeRequest_model->getAllByCompanyId($cid,$conditions);       
+        }else{
+            $overtimeRequests = $this->OvertimeRequest_model->getAllByUserId($uid,$conditions);       
+        } 
+
+        $this->page_data['page']->title   = 'Overtime Requests';
+        $this->page_data['overtimeRequests'] = $overtimeRequests;
+        $this->load->view('v2/pages/users/overtime_requests', $this->page_data); 
+    }
+
+    public function ajax_create_overtime_request()
+    {
+        $this->load->model('OvertimeRequest_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post = $this->input->post();
+
+        if( $post['request_date_from'] == '' || $post['request_date_to'] == '' ){
+            $is_success = 0;
+            $msg = 'Please specify overtime date and time';
+        }
+
+        if( $post['request_time_from'] == '' || $post['request_time_to'] == '' ){
+            $is_success = 0;
+            $msg = 'Please specify overtime date and time';
+        }
+
+        if( $post['request_reason'] == '' ){
+            $is_success = 0;
+            $msg = 'Please specify overtime request reason';
+        } 
+        
+        if( $is_success == 1 ){
+            $date_from = $post['request_date_from'] . ' ' . $post['request_time_from'];
+            $date_to   = $post['request_date_to'] . ' ' . $post['request_time_to'];
+            
+            $time1 = new \DateTime($date_from);
+            $time2 = new \DateTime($date_to);
+            $diff = $time1->diff($time2);
+            $hrs_diff  = $diff->h;
+            
+            $data = [
+                'user_id' => $uid,
+                'approver_id' => 0,
+                'date_from' => $post['request_date_from'],
+                'time_from' => $post['request_time_from'],
+                'date_to' => $post['request_date_to'],
+                'time_to' => $post['request_time_to'],
+                'total_hrs' => $hrs_diff,
+                'reason' => $post['request_reason'],
+                'disapproved_reason' => '',
+                'status' => $this->OvertimeRequest_model->requestStatusPending(),
+                'is_archived' => 0,
+                'date_created' => date("Y-m-d H:i:s"),
+            ];
+
+            $this->OvertimeRequest_model->create($data);
+
+            //Activity Logs            
+            $activity_name = 'Overtime Request : Created overtime request'; 
+            createActivityLog($activity_name);
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_edit_overtime_request()
+    {
+        $this->load->model('OvertimeRequest_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $overtimeRequest = $this->OvertimeRequest_model->getByIdAndCompanyId($post['rid'], $cid);
+        
+        if( $overtimeRequest->status == $this->OvertimeRequest_model->requestStatusPending() ){
+            $is_valid = 1;
+            $err_msg  = '';
+        }else{
+            $is_valid = 0;
+            if( $overtimeRequest->status == $this->OvertimeRequest_model->requestStatusApproved() ){
+                $err_msg = '<div class="alert alert-danger" role="alert">Cannot edit overtime request. Overtime request is already approved.</div>';
+            }else{
+                $err_msg = '<div class="alert alert-danger" role="alert">Cannot edit overtime request. Overtime request is already disapproved.</div>';
+            }
+        }
+
+        $this->page_data['is_valid'] = $is_valid;
+        $this->page_data['err_msg']  = $err_msg;
+        $this->page_data['overtimeRequest'] = $overtimeRequest;
+        $this->load->view('v2/pages/users/ajax_edit_overtime_request', $this->page_data);  
+    }
+
+    public function ajax_update_overtime_request()
+    {
+        $this->load->model('OvertimeRequest_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post = $this->input->post();
+
+        if( $post['request_date_from'] == '' || $post['request_date_to'] == '' ){
+            $is_success = 0;
+            $msg = 'Please specify overtime date and time';
+        }
+
+        if( $post['request_time_from'] == '' || $post['request_time_to'] == '' ){
+            $is_success = 0;
+            $msg = 'Please specify overtime date and time';
+        }
+
+        if( $post['request_reason'] == '' ){
+            $is_success = 0;
+            $msg = 'Please specify overtime request reason';
+        } 
+
+        $overtimeRequest = $this->OvertimeRequest_model->getByIdAndCompanyId($post['rid'], $cid);
+
+        if( $is_success == 1 && $overtimeRequest ){
+            $date_from = $post['request_date_from'] . ' ' . $post['request_time_from'];
+            $date_to   = $post['request_date_to'] . ' ' . $post['request_time_to'];
+            
+            $time1 = new \DateTime($date_from);
+            $time2 = new \DateTime($date_to);
+            $diff = $time1->diff($time2);
+            $hrs_diff  = $diff->h;
+
+            $data = [
+                'date_from' => $post['request_date_from'],
+                'time_from' => $post['request_time_from'],
+                'date_to' => $post['request_date_to'],
+                'time_to' => $post['request_time_to'],
+                'total_hrs' => $hrs_diff,
+                'reason' => $post['request_reason'],
+                'disapproved_reason' => '',
+                'date_updated' => date("Y-m-d H:i:s"),
+            ];
+
+            $this->OvertimeRequest_model->update($overtimeRequest->id, $data);
+
+            //Activity Logs
+            $activity_name = 'Overtime Request : Updated overtime request'; 
+            createActivityLog($activity_name);
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_overtime_request()
+    {
+        $this->load->model('OvertimeRequest_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+        $overtimeRequest = $this->OvertimeRequest_model->getByIdAndCompanyId($post['rid'], $cid);
+        if( $overtimeRequest ){
+            $data = ['is_archived' => 1];
+            $this->OvertimeRequest_model->update($overtimeRequest->id, $data);            
+
+            $msg = '';
+            $is_success = 1;
+
+            //Activity Logs
+            $activity_name = 'Overtime Request : Deleted overtime request';             
+            createActivityLog($activity_name);
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_approve_overtime_request()
+    {
+        $this->load->model('OvertimeRequest_model');
+        $this->load->model('Timesheet_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $cid   = logged('company_id');
+        $uid   = logged('id');
+        $utype = logged('user_type');
+        $post  = $this->input->post();
+
+        if( $utype == 7 ){
+            $overtimeRequest = $this->OvertimeRequest_model->getByIdAndCompanyId($post['rid'], $cid);
+            if( $overtimeRequest ){
+                $data = [
+                    'approver_id' => $uid,
+                    'status' => $this->OvertimeRequest_model->requestStatusApproved(),
+                    'disapproved_reason' => '',
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+
+                //$this->OvertimeRequest_model->update($overtimeRequest->id, $data);
+
+                //Add overtime in timesheet
+                $date_from = $overtimeRequest->date_from;
+                $date_to   = $overtimeRequest->date_to;
+                $timesheet = $this->Timesheet_model->get_employee_attendance_with_date_range($overtimeRequest->user_id, $date_from, $date_to);
+                if( $timesheet ){
+                    $data = [
+                        'overtime' => $overtimeRequest->total_hrs,
+                        'overtime_status' => 2,
+                    ];
+
+                    $this->Timesheet_model->updateTimesheetAttendance($timesheet[0]->id, $data);
+                }
+
+                $msg = '';
+                $is_success = 1;
+                
+                //Activity Logs
+                $activity_name = 'Overtime Request : Approved '.$overtimeRequest->employee.' overtime request';                 
+                createActivityLog($activity_name);
+            }
+        }else{
+            $msg = 'Only admin can approve request.';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_disapprove_overtime_request()
+    {
+        $this->load->model('OvertimeRequest_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $cid   = logged('company_id');
+        $uid   = logged('id');
+        $utype = logged('user_type');
+        $post  = $this->input->post();
+
+        if( $utype == 7 ){
+            $overtimeRequest = $this->OvertimeRequest_model->getByIdAndCompanyId($post['rid'], $cid);
+            if( $overtimeRequest ){
+                $data = [
+                    'approver_id' => $uid,
+                    'status' => $this->OvertimeRequest_model->requestStatusDisApproved(),
+                    'disapproved_reason' => $post['disapprove_reason'],
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+
+                $this->OvertimeRequest_model->update($overtimeRequest->id, $data);
+
+                $msg = '';
+                $is_success = 1;
+                
+                //Activity Logs
+                $activity_name = 'Overtime Request : Disapproved '.$overtimeRequest->employee.' overtime request'; 
+                createActivityLog($activity_name);
+            }
+        }else{
+            $msg = 'Only admin can approve request.';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_selected_overtime_request()
+    {
+        $this->load->model('OvertimeRequest_model');
+
+        $is_success = 0;
+        $msg = 'Nothing to delete';
+
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+
+        $total_deleted = 0;
+        $errors = [];
+        foreach($post['row_selected'] as $rid){
+            $overtimeRequest =  $this->OvertimeRequest_model->getByIdAndCompanyId($rid, $cid);
+            if( $overtimeRequest ){
+                $data = ['is_archived' => 1];
+                $this->OvertimeRequest_model->update($overtimeRequest->id, $data);  
+
+                //Activity Logs                
+                $activity_name = 'Overtime Request : Deleted '.$overtimeRequest->employee.' overtime request'; 
+                createActivityLog($activity_name);
+
+                $total_deleted++;
+            }            
+        }
+
+        if( $total_deleted > 0 ){
+            $is_success = 1;
+            $msg = 'Selected overtime requests was successfully deleted';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_approve_selected_overtime_request()
+    {
+        $this->load->model('OvertimeRequest_model');
+
+        $is_success = 0;
+        $msg = 'Nothing to update';
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post = $this->input->post();
+
+        $total_updated = 0;
+        $errors = [];
+        foreach($post['row_selected'] as $rid){
+            $overtimeRequest =  $this->OvertimeRequest_model->getByIdAndCompanyId($rid, $cid);
+            if( $overtimeRequest ){
+                $data = [
+                    'approver_id' => $uid,
+                    'status' => $this->OvertimeRequest_model->requestStatusApproved(),
+                    'disapproved_reason' => '',
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+                $this->OvertimeRequest_model->update($overtimeRequest->id, $data);
+
+                //Activity Logs
+                $activity_name = 'Overtime Request : Approved '.$overtimeRequest->employee.' overtime request'; 
+                createActivityLog($activity_name);
+
+                $total_updated++;
+            }
+            
+        }
+
+        if( $total_updated > 0 ){
+            $is_success = 1;
+            $msg = 'Selected overtime requests was successfully updated';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_disapprove_selected_overtime_request()
+    {
+        $this->load->model('OvertimeRequest_model');
+
+        $is_success = 0;
+        $msg = 'Nothing to update';
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post = $this->input->post();
+
+        $total_updated = 0;
+        $errors = [];
+        foreach($post['row_selected'] as $rid){
+            $overtimeRequest =  $this->OvertimeRequest_model->getByIdAndCompanyId($rid, $cid);
+            if( $overtimeRequest ){
+                $data = [
+                    'approver_id' => $uid,
+                    'status' => $this->OvertimeRequest_model->requestStatusDisApproved(),
+                    'disapproved_reason' => $post['disapprove_reason'],
+                    'date_updated' => date("Y-m-d H:i:s")
+                ];
+                $this->OvertimeRequest_model->update($overtimeRequest->id, $data);
+
+                //Activity Logs
+                $activity_name = 'Overtime Request : Disapproved '.$overtimeRequest->employee.' overtime request'; 
+                createActivityLog($activity_name);
+
+                $total_updated++;
+            }
+            
+        }
+
+        if( $total_updated > 0 ){
+            $is_success = 1;
+            $msg = 'Selected overtime requests was successfully updated';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
     }
 }
 

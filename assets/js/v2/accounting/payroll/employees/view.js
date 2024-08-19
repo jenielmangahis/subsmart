@@ -4,9 +4,9 @@ const employeeId = urlSplit[urlSplit.length - 1].replace('#', '');
 
 CKEDITOR.replace('notes');
 
-$(function() {
-    $('.date').each(function() {
-        if($(this).attr('id') === 'next-payday' || $(this).attr('id') === 'next-pay-period-end') {
+$(function () {
+    $('.date').each(function () {
+        if ($(this).attr('id') === 'next-payday' || $(this).attr('id') === 'next-pay-period-end') {
             $(this).datepicker({
                 startDate: new Date(),
                 format: 'mm/dd/yyyy',
@@ -23,7 +23,7 @@ $(function() {
     });
 });
 
-$('#table-filters').on('click', function(e) {
+$('#table-filters').on('click', function (e) {
     e.stopPropagation();
 });
 
@@ -51,7 +51,7 @@ $('#edit_employee_modal select').select2({
     dropdownParent: $('#edit_employee_modal')
 });
 
-$('#work-location').select2({dropdownParent: $('.work-location-grp')}).on('select2:open', function () {
+$('#work-location').select2({ dropdownParent: $('.work-location-grp') }).on('select2:open', function () {
     var a = $(this).data('select2');
     if (!$('.select2-link').length) {
         a.$results.parents('.select2-results').append('<div class="select2-link"><a href="javascript:void(0);">+ Add New</a></div>').on('click', function (b) {
@@ -61,25 +61,25 @@ $('#work-location').select2({dropdownParent: $('.work-location-grp')}).on('selec
     }
 });
 
-$('#work-location').on('change', function() {
-    if($(this).val() === 'add') {
+$('#work-location').on('change', function () {
+    if ($(this).val() === 'add') {
         $('#edit-employment-details-modal').modal('hide');
         $('#add-worksite-modal').modal('show');
     }
 });
 
-$('#add-worksite-form').on('submit', function(e) {
+$('#add-worksite-form').on('submit', function (e) {
     e.preventDefault();
 
     var data = new FormData(this);
-    
+
     $.ajax({
         url: base_url + '/accounting/employees/add-work-location',
         data: data,
         type: 'post',
         processData: false,
         contentType: false,
-        success: function(res) {
+        success: function (res) {
             var result = JSON.parse(res);
 
             $('#edit-employment-details-modal #work-location option:selected').removeAttr('selected');
@@ -92,34 +92,146 @@ $('#add-worksite-form').on('submit', function(e) {
     });
 });
 
-$('.edit-emp-payscale').change(function() {
+$('.edit-emp-payscale').change(function () {
     var psid = $(this).val();
-    var url  = base_url + 'payscale/_get_details'
+    var url = base_url + 'payscale/_get_details'
     $.ajax({
         type: 'POST',
         url: url,
-        data: {psid:psid},
+        data: { psid: psid },
         dataType: "json",
-        success: function(result) {
-            if( result.pay_type == 'Commission Only' ){
+        success: function (result) {
+            if (result.pay_type == 'Commission Only') {
                 $('.edit-pay-type-container').hide();
-            }else{
+            } else {
                 var rate_label = result.pay_type + ' Rate';
                 $('.edit-pay-type-container').show();
                 $('.edit-payscale-pay-type').html(rate_label);
-            }                
+            }
         },
     });
 });
 
-$(document).on('click', '.btn-edit-add-new-commision', function(e){
+function hide401contributions() {
+    $('.401_contribution_section').hide();
+}
+
+function show401contributions() {
+    $('.401_contribution_section').show();
+}
+
+function handleDeductionContributionType(type){
+    switch (type) {
+        case '401(k)':
+            show401contributions()
+            break;
+        case '401(k) Catch-up':
+            show401contributions()
+            break;
+        case '403(b)':
+            hide401contributions()
+            break;
+        case '403(b) Catch-up':
+            hide401contributions()
+            break;
+        case 'After-tax Roth 401(k)':
+            show401contributions()
+            break;
+        case 'After-tax Roth 401(k) Catch-up':
+            show401contributions()
+            break;
+        case 'After-tax Roth 403(b)':
+            hide401contributions()
+            break;
+        case 'Company-only plan':
+            $('.employee-deductions-section').hide();
+            hide401contributions()
+            break;
+        case 'SARSEP':
+            hide401contributions()
+            break;
+        case 'SARSEP Catch-up':
+            hide401contributions()
+            break;
+        case 'SIMPLE 401(k) Catch-up':
+            hide401contributions()
+            break;
+        case 'SIMPLE IRA':
+            break;
+        case 'SIMPLE IRA Catch-up':
+            show401contributions()
+            break;
+
+        default:
+            $('.deduction-type-section').hide();
+            break;
+    }
+}
+
+$('.edit-deductions-and-contributions-name').change(function(){
+    var type = $(this).val();
+
+    if(type ==''){
+        $('.deductions-contribution-section').hide();
+    }else{
+        $('.deductions-contribution-section').show();
+    }
+
+})
+
+$('.deduction_contribution_type').change(function(){
+    var type = $(this).val();
+
+    if(type =='Retirement plans'){
+        $('.edit-deduction-contribution-type-section').show()
+    }else{
+        $('.edit-deduction-contribution-type-section').hide()
+    }
+})
+
+$('.edit_deduction_contribution_type').change(function () {
+    var type = $(this).val();
+    $('.deduction-type-section').show();
+    $('.employee-deductions-section').show();
+    handleDeductionContributionType(type);
+});
+
+$('#deductions_contributions_form').on('submit',function(e){
+    e.preventDefault();
+
+    var data = new FormData(this);
+    $('.btn_modal_save_deductions').html(`<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Saving...`)
+
+    $.ajax({
+        url: base_url + '/accounting/employees/add-deductions-and-contributions',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function (res) {
+            $('.btn_modal_save_deductions').html("Save")
+            $('#edit-deductions-and-contributions').modal('hide')
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Deductions and Contributions Successfully Saved!',
+            }).then((result) => {
+                $('#deductions_contributions_form')[0].reset();
+            });
+        }
+    });
+    
+});
+
+
+$(document).on('click', '.btn-edit-add-new-commision', function (e) {
     let url = base_url + "user/_add_commission_form";
     $.ajax({
         type: 'POST',
         url: url,
-        success: function(o) {
+        success: function (o) {
             $("#edit-commission-settings tbody").append(o).children(':last').hide().fadeIn(400);
-            $("#edit-commission-settings tbody tr:last-child select").each(function() {
+            $("#edit-commission-settings tbody tr:last-child select").each(function () {
                 $(this).select2({
                     minimumResultsForSearch: -1,
                     dropdownParent: $("#edit-pay-types-modal")
@@ -129,16 +241,16 @@ $(document).on('click', '.btn-edit-add-new-commision', function(e){
     });
 });
 
-$(document).on("click", ".btn-delete-commission-setting-row", function(e){  
-    var tableRow = $(this).closest('tr'); 
-    tableRow.find('td').fadeOut('fast', 
-        function(){ 
-            tableRow.remove();                    
+$(document).on("click", ".btn-delete-commission-setting-row", function (e) {
+    var tableRow = $(this).closest('tr');
+    tableRow.find('td').fadeOut('fast',
+        function () {
+            tableRow.remove();
         }
     );
 });
 
-$('#user-profile-photo').on('change', function() {
+$('#user-profile-photo').on('change', function () {
     var data = new FormData();
 
     data.append('userfile', $(this)[0].files[0]);
@@ -149,7 +261,7 @@ $('#user-profile-photo').on('change', function() {
         type: 'post',
         processData: false,
         contentType: false,
-        success: function(result) {
+        success: function (result) {
             var res = JSON.parse(result);
 
             Swal.fire({
@@ -161,7 +273,7 @@ $('#user-profile-photo').on('change', function() {
                 confirmButtonColor: '#2ca01c',
                 confirmButtonText: 'Okay'
             }).then((result) => {
-                if(result.isConfirmed) {
+                if (result.isConfirmed) {
                     location.reload();
                 }
             });
@@ -169,7 +281,7 @@ $('#user-profile-photo').on('change', function() {
     });
 });
 
-$('#remove-photo').on('click', function() {
+$('#remove-photo').on('click', function () {
     Swal.fire({
         title: 'Are you sure you want remove the profile photo?',
         icon: 'warning',
@@ -180,11 +292,11 @@ $('#remove-photo').on('click', function() {
         cancelButtonText: 'No',
         cancelButtonColor: '#d33'
     }).then((result) => {
-        if(result.isConfirmed) {
+        if (result.isConfirmed) {
             $.ajax({
                 url: `/accounting/employees/remove-profile-photo/${employeeId}`,
                 type: 'DELETE',
-                success: function(res) {
+                success: function (res) {
                     var result = JSON.parse(res);
 
                     Swal.fire({
@@ -196,7 +308,7 @@ $('#remove-photo').on('click', function() {
                         confirmButtonColor: '#2ca01c',
                         confirmButtonText: 'Done'
                     }).then((r) => {
-                        if(r.isConfirmed) {
+                        if (r.isConfirmed) {
                             location.reload();
                         }
                     });
@@ -210,18 +322,18 @@ $('#filter-date-range').select2({
     minimumResultsForSearch: -1
 });
 
-$('#filter-date-range').on('change', function(e) {
+$('#filter-date-range').on('change', function (e) {
     var dates = get_start_and_end_dates($(this).val());
 
     $('#filter-from-date').val(dates.start_date);
     $('#filter-to-date').val(dates.end_date);
 });
 
-$('#filter-from-date, #filter-to-date').on('change', function(e) {
+$('#filter-from-date, #filter-to-date').on('change', function (e) {
     $('#filter-date-range').val('custom').trigger('change');
 });
 
-$('#apply-button').on('click', function(e) {
+$('#apply-button').on('click', function (e) {
     e.preventDefault();
 
     var filterDate = $('#filter-date-range').val();
@@ -230,21 +342,21 @@ $('#apply-button').on('click', function(e) {
     url += filterDate !== 'this-quarter' ? `date=${filterDate}&` : '';
     url += filterDate !== 'this-quarter' ? `from=${$('#filter-from-date').val().replaceAll('/', '-')}&to=${$('#filter-to-date').val().replaceAll('/', '-')}` : '';
 
-    if(url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
-        url = url.slice(0, -1); 
+    if (url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+        url = url.slice(0, -1);
     }
 
     location.href = url;
 });
 
-$('#transactions-table .select-all').on('change', function() {
+$('#transactions-table .select-all').on('change', function () {
     $('#transactions-table .select-one').prop('checked', $(this).prop('checked')).trigger('change');
 });
 
-$('#transactions-table .select-one').on('change', function() {
+$('#transactions-table .select-one').on('change', function () {
     $('#transactions-table .select-all').prop('checked', $('#transactions-table .select-one:checked').length === $('#transactions-table .select-one').length);
 
-    if($('#transactions-table .select-one:checked').length > 0) {
+    if ($('#transactions-table .select-one:checked').length > 0) {
         $('.print-paychecks-button').attr('id', 'print-paychecks');
         $('.print-paychecks-button').prop('disabled', false);
     } else {
@@ -253,14 +365,14 @@ $('#transactions-table .select-one').on('change', function() {
     }
 });
 
-$(document).on('click', '#print-paychecks', function(e) {
+$(document).on('click', '#print-paychecks', function (e) {
     e.preventDefault();
 
-    if($('#print-paycheck-form').length < 1) {
+    if ($('#print-paycheck-form').length < 1) {
         $('body').append(`<form action="/accounting/print-multiple" method="post" id="print-paycheck-form" target="_blank"></form>`);
     }
 
-    $('#transactions-table .select-one:checked').each(function() {
+    $('#transactions-table .select-one:checked').each(function () {
         var row = $(this).closest('tr');
         var id = row.find('.select-one').val();
 
@@ -271,7 +383,7 @@ $(document).on('click', '#print-paychecks', function(e) {
     $('#print-paycheck-form').remove();
 });
 
-$('#transactions-table [name="check_number[]"]').on('change', function() {
+$('#transactions-table [name="check_number[]"]').on('change', function () {
     var checkNum = $(this).val();
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
@@ -285,19 +397,19 @@ $('#transactions-table [name="check_number[]"]').on('change', function() {
         type: 'post',
         processData: false,
         contentType: false,
-        success: function(res) {
-            
+        success: function (res) {
+
         }
     });
 });
 
-$('#transactions-table .print-paycheck').on('click', function(e) {
+$('#transactions-table .print-paycheck').on('click', function (e) {
     e.preventDefault();
 
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
 
-    if($('#print-paycheck-form').length < 1) {
+    if ($('#print-paycheck-form').length < 1) {
         $('body').append(`<form action="/accounting/print-paycheck" method="post" id="print-paycheck-form" target="_blank"></form>`);
     }
 
@@ -307,13 +419,13 @@ $('#transactions-table .print-paycheck').on('click', function(e) {
     $('#print-paycheck-form').remove();
 });
 
-$('#transactions-table .delete-paycheck').on('click', function(e) {
+$('#transactions-table .delete-paycheck').on('click', function (e) {
     e.preventDefault();
 
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
 
-    $.get(`/accounting/delete-paycheck/${id}`, function(res) {
+    $.get(`/accounting/delete-paycheck/${id}`, function (res) {
         var result = JSON.parse(res);
         Swal.fire({
             title: result.success ? 'Delete Successful!' : 'Failed!',
@@ -322,8 +434,8 @@ $('#transactions-table .delete-paycheck').on('click', function(e) {
             showCancelButton: false,
             confirmButtonText: 'Okay'
         }).then((r) => {
-            if(r.value) {
-                if(result.success) {
+            if (r.value) {
+                if (result.success) {
                     location.reload();
                 }
             }
@@ -331,13 +443,13 @@ $('#transactions-table .delete-paycheck').on('click', function(e) {
     });
 });
 
-$('#transactions-table .void-paycheck').on('click', function(e) {
+$('#transactions-table .void-paycheck').on('click', function (e) {
     e.preventDefault();
 
     var row = $(this).closest('tr');
     var id = row.find('.select-one').val();
 
-    $.get(`/accounting/void-paycheck/${id}`, function(res) {
+    $.get(`/accounting/void-paycheck/${id}`, function (res) {
         var result = JSON.parse(res);
         Swal.fire({
             title: result.success ? 'Void Successful!' : 'Failed!',
@@ -346,8 +458,8 @@ $('#transactions-table .void-paycheck').on('click', function(e) {
             showCancelButton: false,
             confirmButtonText: 'Okay'
         }).then((r) => {
-            if(r.value) {
-                if(result.success) {
+            if (r.value) {
+                if (result.success) {
                     location.reload();
                 }
             }
@@ -355,125 +467,124 @@ $('#transactions-table .void-paycheck').on('click', function(e) {
     });
 });
 
-function get_start_and_end_dates(val)
-{
-    switch(val) {
-        case 'custom' :
+function get_start_and_end_dates(val) {
+    switch (val) {
+        case 'custom':
             startDate = $(`#filter-from-date`).val();
             endDate = $(`#filter-to-date`).val();
-        break;
-        case 'this-month' :
+            break;
+        case 'this-month':
             var date = new Date();
             var to_date = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
             startDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
             endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
-        break;
-        case 'this-quarter' :
+            break;
+        case 'this-quarter':
             var date = new Date();
             var currQuarter = Math.floor(date.getMonth() / 3 + 1);
-            
-            switch(currQuarter) {
-                case 1 :
+
+            switch (currQuarter) {
+                case 1:
                     startDate = '01/01/' + date.getFullYear();
-                    endDate = '03/31/'+ date.getFullYear();
-                break;
-                case 2 :
+                    endDate = '03/31/' + date.getFullYear();
+                    break;
+                case 2:
                     startDate = '04/01/' + date.getFullYear();
-                    endDate = '06/30/'+ date.getFullYear();
-                break;
-                case 3 :
+                    endDate = '06/30/' + date.getFullYear();
+                    break;
+                case 3:
                     startDate = '07/01/' + date.getFullYear();
-                    endDate = '09/30/'+ date.getFullYear();
-                break;
-                case 4 :
+                    endDate = '09/30/' + date.getFullYear();
+                    break;
+                case 4:
                     startDate = '10/01/' + date.getFullYear();
-                    endDate = '12/31/'+ date.getFullYear();
-                break;
+                    endDate = '12/31/' + date.getFullYear();
+                    break;
             }
-        break;
-        case 'this-year' :
+            break;
+        case 'this-year':
             var date = new Date();
 
             startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
             endDate = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
-        break;
-        case 'last-month' :
+            break;
+        case 'last-month':
             var date = new Date();
             var to_date = new Date(date.getFullYear(), date.getMonth(), 0);
 
             startDate = String(date.getMonth()).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
             endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
-        break;
-        case 'last-quarter' :
+            break;
+        case 'last-quarter':
             var date = new Date();
             var currQuarter = Math.floor(date.getMonth() / 3 + 1);
-            
-            switch(currQuarter) {
-                case 1 :
+
+            switch (currQuarter) {
+                case 1:
                     var from_date = new Date('01/01/' + date.getFullYear());
-                    var to_date = new Date('03/31/'+ date.getFullYear());
-                break;
-                case 2 :
+                    var to_date = new Date('03/31/' + date.getFullYear());
+                    break;
+                case 2:
                     var from_date = new Date('04/01/' + date.getFullYear());
-                    var to_date = new Date('06/30/'+ date.getFullYear());
-                break;
-                case 3 :
+                    var to_date = new Date('06/30/' + date.getFullYear());
+                    break;
+                case 3:
                     var from_date = new Date('07/01/' + date.getFullYear());
-                    var to_date = new Date('09/30/'+ date.getFullYear());
-                break;
-                case 4 :
+                    var to_date = new Date('09/30/' + date.getFullYear());
+                    break;
+                case 4:
                     var from_date = new Date('10/01/' + date.getFullYear());
-                    var to_date = new Date('12/31/'+ date.getFullYear());
-                break;
+                    var to_date = new Date('12/31/' + date.getFullYear());
+                    break;
             }
 
             from_date.setMonth(from_date.getMonth() - 3);
             to_date.setMonth(to_date.getMonth() - 3);
 
-            if(to_date.getDate() === 1) {
+            if (to_date.getDate() === 1) {
                 to_date.setDate(to_date.getDate() - 1);
             }
 
             startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
             endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
-        break;
-        case 'last-year' :
+            break;
+        case 'last-year':
             var date = new Date();
             date.setFullYear(date.getFullYear() - 1);
 
             startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
             endDate = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
-        break;
-        case 'first-quarter' :
+            break;
+        case 'first-quarter':
             var date = new Date();
 
             startDate = '01/01/' + date.getFullYear();
-            endDate = '03/31/'+ date.getFullYear();
-        break;
-        case 'second-quarter' :
+            endDate = '03/31/' + date.getFullYear();
+            break;
+        case 'second-quarter':
             var date = new Date();
 
             startDate = '04/01/' + date.getFullYear();
-            endDate = '06/30/'+ date.getFullYear();
-        break;
-        case 'third-quarter' :
+            endDate = '06/30/' + date.getFullYear();
+            break;
+        case 'third-quarter':
             var date = new Date();
 
             startDate = '07/01/' + date.getFullYear();
-            endDate = '09/30/'+ date.getFullYear();
-        break;
-        case 'fourth-quarter' :
+            endDate = '09/30/' + date.getFullYear();
+            break;
+        case 'fourth-quarter':
             var date = new Date();
 
             startDate = '10/01/' + date.getFullYear();
-            endDate = '12/31/'+ date.getFullYear();
-        break;
+            endDate = '12/31/' + date.getFullYear();
+            break;
     }
 
     return {
-        start_date : startDate,
-        end_date : endDate
+        start_date: startDate,
+        end_date: endDate
     };
 }
 

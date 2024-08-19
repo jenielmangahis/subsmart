@@ -57,6 +57,7 @@
                     <td data-name="Commission" class="text-end">COMMISSION</td>
                     <td data-name="Memo">MEMO</td>
                     <td data-name="Total Hours" class="text-end">TOTAL HOURS</td>
+                    <td data-name="Total Overtime Hours" class="text-end">TOTAL OVERTIME HOURS</td>
                     <td data-name="Per Hour Pay" class="text-end">PER HOUR PAY</td>
                     <td data-name="Total Hours Pay" class="text-end">TOTAL HOURS PAY</td>
                     <td data-name="Total Pay" class="text-end">TOTAL PAY</td>
@@ -82,6 +83,7 @@
                         <input type="text" name="memo[]" class="form-control nsm-field">
                     </td>
                     <td><p class="m-0 text-end"><?=number_format(floatval(str_replace(',', '', $employee->total_hrs)), 2)?></p></td>
+                    <td><p class="m-0 text-end"><?=number_format(floatval(str_replace(',', '', $employee->total_overtime)), 2)?></p></td>
                     <td><p class="m-0 text-end">$<?=number_format(floatval(str_replace(',', '', $employee->per_hour_pay)), 2)?></p></td>
                     <td><p class="m-0 text-end">$<?=number_format(floatval(str_replace(',', '', $employee->regular_hrs_pay_total)), 2)?></p></td>
                     <td><p class="m-0 text-end"><span class="total-pay">$<?=number_format(floatval(str_replace(',', '', $employee->total_pay)), 2)?></span></p></td>
@@ -97,6 +99,7 @@
                     <td>0.00</td>
                     <td>$0.00</td>
                     <td></td>
+                    <td>0.00</td>
                     <td>0.00</td>
                     <td>$0.00</td>
                     <td>$0.00</td>

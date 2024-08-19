@@ -39,7 +39,7 @@
                                     <div class="reportTitleInfo">
                                         <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?></h3>
                                         <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
-                                        <h5><small id="reportDate"><span id="date_from_text"></span> &mdash; <span id="date_to_text"></span></small></h5>
+                                        <!-- <h5><small id="reportDate"><span id="date_from_text"></span> &mdash; <span id="date_to_text"></span></small></h5> -->
                                     </div>
                                 </div>
                             </div>
@@ -53,9 +53,11 @@
                                         <thead>
                                             <tr>
                                                 <th>WORKSITE</th>
-                                                <th>NO. OF EMPLOYEES (<?php echo strtoupper(date('M', strtotime('+0 month'))) ?>)</th>
-                                                <th>NO. OF EMPLOYEES (<?php echo strtoupper(date('M', strtotime('+1 month'))) ?>)</th>
-                                                <th>NO. OF EMPLOYEES (<?php echo strtoupper(date('M', strtotime('+2 month'))) ?>)</th>
+                                                <?php foreach($months as $month) { ?>
+                                                    <th>NO. OF EMPLOYEES (<?php echo strtoupper($month) ?>)</th>
+                                                <?php } ?>
+                                                <!-- <th>NO. OF EMPLOYEES (<?php echo strtoupper(date('M', strtotime('+1 month'))) ?>)</th>
+                                                <th>NO. OF EMPLOYEES (<?php echo strtoupper(date('M', strtotime('+2 month'))) ?>)</th> -->
                                                 <th class="text-end">QUARTERLY WAGES</th>
                                             </tr>
                                         </thead>
@@ -174,6 +176,7 @@
                                         <option value="500" <?php echo ($reportSettings->page_size == "500") ? "selected" : "" ?>>500</option>
                                     </select>
                                 </div>
+                                <!-- 
                                 <div class="col-md-4 mb-3">
                                     <div class="col-md-12">
                                         <label class="mb-1 fw-xnormal">Sort By</label>
@@ -188,6 +191,8 @@
                                         </div>
                                     </div>
                                 </div>
+                                -->
+                                <!-- 
                                 <div class="col-md-12"><hr class="mt-0"></div>
                                 <div class="col-md-5 mb-3">
                                     <label class="mb-1 fw-xnormal">Date Range <small class="text-muted">(From &mdash; To)</small></label>
@@ -195,6 +200,13 @@
                                         <input name="date_from" class="form-control mt-0" type="date" value="<?php echo (isset($reportSettings->report_date_from_text)) ? $reportSettings->report_date_from_text : date('Y').'-01-01'; ?>">
                                         <input name="date_to" class="form-control mt-0" type="date" value="<?php echo (isset($reportSettings->report_date_to_text)) ? $reportSettings->report_date_to_text : date('Y-m-d'); ?>">
                                     </div> 
+                                </div>
+                                -->
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Date</label>
+                                    <div class="">
+                                        <input type="date" id="from-date" name="date_from" class="form-control nsm-field" value="<?= $reportSettings && $reportSettings->report_date_from_text != '' ? date("Y-m-d",strtotime($reportSettings->report_date_from_text)) : date("Y-m-d"); ?>" data-type="filter-date">
+                                    </div>
                                 </div>
                             </div>
                         </div>
