@@ -724,6 +724,10 @@ $route['accounting/contractors/preview-contractor-payment']['post'] = 'accountin
 $route['accounting/contractors/submit-contractor-payment']['post'] = 'accounting_controllers/contractors/submit_contractor_payment';
 
 $route['accounting/worksites'] = 'accounting_controllers/worksites/index';
+$route['accounting/worksites/add-work-location'] = 'accounting_controllers/worksites/add';
+$route['accounting/worksites/get-details/(:any)'] = 'accounting_controllers/worksites/get_details/$1';
+$route['accounting/worksites/(:any)/update-details']['post'] = 'accounting_controllers/worksites/update_details/$1';
+$route['accounting/worksites/delete/(:any)'] = 'accounting_controllers/worksites/delete/$1';
 
 $route['accounting/vendors'] = 'accounting_controllers/vendors/index';
 $route['accounting/vendors/load']['post'] = 'accounting_controllers/vendors/load_vendors';
