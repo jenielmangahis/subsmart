@@ -834,6 +834,15 @@ $(function() {
                 $('#btn-leave-credit').html('Save');                   
                 if (data.is_success) {
                     $('#leave-credits-modal').modal('hide');
+
+                    var leave_credits = data.leave_credits;
+                    $.each(leave_credits, function(index) {
+                        console.log(leave_credits[index]);
+                        var leave_id = leave_credits[index].lid;                        
+                        var leave_value = leave_credits[index].value;                   
+                        $(`#leave-credits-${leave_id}`).text(leave_value);                   
+                    });
+
                     Swal.fire({
                         text: "Employee leave credits was successfully updated",
                         icon: 'success',
@@ -841,7 +850,8 @@ $(function() {
                         confirmButtonText: 'Okay'
                     }).then((result) => {
                         //if (result.value) {
-                            location.reload();    
+                            //location.reload();    
+                            
                         //}
                     });                    
                 }else{
