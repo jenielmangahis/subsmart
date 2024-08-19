@@ -47,6 +47,7 @@ class Users extends MY_Controller
 		$this->load->model('Timesheet_model');
 		$this->load->model('ServiceCategory_model');
 		$this->load->model('PayScale_model');
+		$this->load->model('Deductions_and_contribution_model');
 
 		$this->load->model('General_model', 'general_model');
 	}
@@ -2243,6 +2244,17 @@ class Users extends MY_Controller
 
 	public function ajax_payscale_get_details(){
 		$this->load->model('PayScale_model');
+
+		$post = $this->input->post();
+		$payscale = $this->PayScale_model->getById($post['psid']);
+		$details = ['name' => $payscale->payscale_name, 'pay_type' => $payscale->pay_type];
+
+		echo json_encode($details);
+		
+	}
+
+	public function get_deductions_contribution(){
+		$this->load->model('Deductions_and_contribution_model');
 
 		$post = $this->input->post();
 		$payscale = $this->PayScale_model->getById($post['psid']);

@@ -217,6 +217,13 @@
                                     <?php } ?>
                                 </div>
                             </div>
+                                <h4 class="float-start fw-bold">Deductions and Contributions</h4>
+                                <a class="nsm-button border-0 float-end pointerCursor edit-deductions-and-contributions" data-bs-toggle="modal" data-bs-target="#edit-deductions-and-contributions" data-bs-backdrop="false">Edit</a>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="text_value">Include paycheck deductions and company contributions for healthcare and retirement. Garnishments too.</p>
+                            </div>
+                         
                         </div>
                     </div>
                 </div>
@@ -366,5 +373,5 @@
         </div>
     </div>
 </div>
-<script> <?php if ($userType != 7) { echo "$('.pointerCursor, .employee_image_profile_edit').remove();"; }?> </script>
+<script> <?php if ($userType != 7) { echo "$('.pointerCursor, .employee_image_profile_edit , .edit-deductions-and-contributions').remove();"; }?> </script>
 <?php include viewPath('v2/includes/footer'); ?>

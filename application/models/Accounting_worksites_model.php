@@ -30,4 +30,27 @@ class Accounting_worksites_model extends MY_Model {
         $query = $this->db->get($this->table);
         return $query->result();
     }
+
+	public function get_worksite_by_id($id)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $id);
+		return $this->db->get($this->table)->row();
+	}    
+
+	public function update($worksiteId, $data)
+	{
+		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('id', $worksiteId);
+		$update = $this->db->update($this->table, $data);
+
+		return $update;
+	}    
+
+    public function delete($id)
+    {
+        $qry = $this->db->delete($this->table, array('id' => $id));
+        return $qry;
+    }
+
 }

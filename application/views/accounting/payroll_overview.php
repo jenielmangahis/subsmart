@@ -249,6 +249,7 @@
         border: 2px solid #6a4a86;
         border-radius: 50%;
         padding: 25px;
+        font-size: 2rem;
         transition: color 0.3s ease, background-color 0.3s ease;
     }
 
