@@ -49,4 +49,10 @@ class Accounting_report_types_model extends MY_Model {
         $query = $this->db->get($this->table);
         return $query->row();
     }
+
+    public function get_management_reports()
+    {
+		$this->db->where('is_management_report', 1);
+        return $this->db->get($this->table)->result();
+    }
 }

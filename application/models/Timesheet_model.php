@@ -2009,6 +2009,13 @@ class Timesheet_model extends MY_Model
         $query = $this->db->get($this->attn_tbl);
         return $query->result();
     }
+
+    public function updateTimesheetAttendance($id, $data = array())
+    {
+        $this->db->where('id', $id);
+        $this->db->update($this->attn_tbl, $data);
+        return true;
+    }
 }
 
 
