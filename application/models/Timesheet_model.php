@@ -10,6 +10,7 @@ class Timesheet_model extends MY_Model
     private $db_table = 'timesheet_logs';
     private $attn_tbl = 'timesheet_attendance';
     private $tbl_ts_settings = 'timesheet_schedule';
+    private $tbl_shift_schedule = 'timesheet_shift_schedule';
 
     public function getNotifyCount()
     {
@@ -2016,12 +2017,18 @@ class Timesheet_model extends MY_Model
         $this->db->update($this->attn_tbl, $data);
         return true;
     }
+
+    public function getShiftScheduleByUserIdAndDate($uid, $date)
+    {
+        $this->db->select('*');
+        $this->db->from($this->tbl_shift_schedule);
+        $this->db->where('user_id', $uid);
+        $this->db->where('shift_date', $date);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
 }
-
-
-
-
-
 /* End of file Timesheet_model.php */
 
 /* Location: ./application/models/Timesheet_model.php */
