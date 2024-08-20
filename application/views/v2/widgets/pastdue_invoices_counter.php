@@ -13,7 +13,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                     <div class="icon-summary-income">
                         <i class="bx bx-box "></i>
                         </div>
-                        <a role="button" class=" btn-sm m-0 me-2" href="invoice" style="color:#dc3545c9 !important ">
+                        <a role="button" class=" btn-sm m-0 me-2" href="invoice" style="color:#df2605 !important ">
                             Past Due Invoices
                         </a>
                     </div>

@@ -53,15 +53,19 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             </div>
         </div>
     </div>
-    <div class="mb-2">
+    <div class="mb-2" >
         <select class="nsm-field form-select" style='width: 55%;
-    border: none;' onChange="filterThumbnail(this.value, '<?php echo $id; ?>', 'accounting_expense')">
+    border: none; margin-bottom: 5px' onChange="filterThumbnail(this.value, '<?php echo $id; ?>', 'accounting_expense')">
             <option value="all">All time</option>
             <option value="week">Last 7 days </option>
             <option value="two-week">last 14 days</option>
             <option value="month">last 30 days </option>
             <option value="two-month">last 60 days </option>
         </select>
+        <div  id="filter-customer-counter">
+
+        </div>
+        
     </div>
     <div class="nsm-card-content"
         style="  height: calc(100% - 120px); display: <?php echo $isListView ? 'block' : 'none'; ?>"

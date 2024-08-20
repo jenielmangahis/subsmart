@@ -463,7 +463,7 @@ class Dashboard extends Widgets
         if (isset($billPayments) && count($billPayments) > 0) {
             foreach ($billPayments as $billPayment) {
                 $transactions[] = [
-                    'category' => '',
+                    'category' => 'Bill payment',
                     'total' => $billPayment->total_amount,
                 ];
             }
@@ -492,7 +492,7 @@ class Dashboard extends Widgets
         if (isset($ccPayments) && count($ccPayments) > 0) {
             foreach ($ccPayments as $ccPayment) {
                 $transactions[] = [
-                    'category' => '',
+                    'category' => 'CC payment',
                     'total' => $ccPayment->amount,
                 ];
             }
@@ -521,7 +521,7 @@ class Dashboard extends Widgets
         if (isset($transfers) && count($transfers) > 0) {
             foreach ($transfers as $transfer) {
                 $transactions[] = [
-                    'category' => '',
+                    'category' => 'Transgfer fund',
                     'total' => $transfer->transfer_amount,
                 ];
             }
