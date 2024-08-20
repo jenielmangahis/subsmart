@@ -121,7 +121,7 @@
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Status</strong>
-                                <p class="text_value"><?php echo $employee->status_text; ?></p>
+                                <p class="text_value" id="emp-details-status"><?php echo $employee->status_text; ?></p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Hire date</strong>
@@ -129,7 +129,7 @@
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Employee Number</strong>
-                                <p class="text_value"><?php echo !in_array($employee->employee_number, ['', null]) ? $employee->employee_number : '<i>Not specified</i>'; ?></p>
+                                <p class="text_value" id="emp-details-employee-number"><?php echo !in_array($employee->employee_number, ['', null]) ? $employee->employee_number : '<i>Not specified</i>'; ?></p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Work location</strong>

@@ -184,10 +184,16 @@
     </div>
 </div>
 
+<?php 
+    /**
+     * Note: modal employee details
+     */
+?>
 <div class="modal fade nsm-modal" id="edit-employment-details-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form method="POST" id="edit-employment-details-form"
-            action="<?php echo base_url(); ?>accounting/employees/update/employment-details/<?= $employee->id ?>">
+        <!-- <form method="POST" id="edit-employment-details-form" action="<?php echo base_url(); ?>accounting/employees/update/employment-details/<?= $employee->id ?>"> -->
+            <form method="POST" id="edit-employment-details-form" action=""> 
+            <input type="hidden" name="employee_id" value="<?= $employee->id ?>" />
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Employment details</span>
@@ -196,36 +202,13 @@
                 </div>
                 <div class="modal-body">
 
-
                     <div class="row">
                         <div class="col-12">
                             <h3>Let's get down to <?= $employee->FName ?>'s job specifics</h3>
                         </div>
                     </div>
 
-
-
-
                     <div class="accordion">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header" id="federal_withholding_panel">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#basic_details" aria-expanded="true" aria-controls="basic_details">
-                                    <strong>Basic Details</strong></button>
-                            </h2>
-                            <div id="basic_details" class="accordion-collapse collapse show"
-                                aria-labelledby="employment_details_panel">
-                                <div class="accordion-body">
-                                    <div class="col-12">
-                                        <label class="content-subtitle fw-bold d-block mb-2"
-                                            for="employee_number">Employee Number</label>
-                                        <input type="text" name="employee_number" class="nsm-field form-control"
-                                            id="employee_number"
-                                            value="<?= $employee->employee_number ? $employee->employee_number : '-'; ?>" />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="accordion-item">
                             <h2 class="accordion-header" id="federal_withholding_panel">
                                 <button class="accordion-button" type="button" data-bs-toggle="collapse"
@@ -235,6 +218,14 @@
                             <div id="employment_details" class="accordion-collapse collapse show"
                                 aria-labelledby="employment_details_panel">
                                 <div class="accordion-body">
+
+                                    <div class="col-12">
+                                        <label class="content-subtitle fw-bold d-block mb-2"
+                                            for="employee_number">Employee Number</label>
+                                        <input type="text" name="employee_number" class="nsm-field form-control"
+                                            id="employee_number"
+                                            value="<?= $employee->employee_number ? $employee->employee_number : '-'; ?>" />
+                                    </div><br />                                
 
                                     <div class="col-12">
                                         <label class="content-subtitle fw-bold d-block mb-2">Hire date</label>
@@ -386,9 +377,9 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" name="btn_modal_close" class="nsm-button"
-                        data-bs-dismiss="modal">Close</button>
-                    <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button>
+                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <!-- <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button> -->
+                    <button type="submit" name="btn_modal_save" id="btn-modal-employment-details" class="nsm-button primary btn-modal-employment-details">Save</button>
                 </div>
 
             </div>
@@ -1144,10 +1135,6 @@ $(function() {
         });
     });
 
-
-
-
-
     $('.mobile-number').keydown(function(e) {
         var key = e.charCode || e.keyCode || 0;
         $text = $(this);
@@ -1226,5 +1213,57 @@ $(function() {
             }
         });
     });
+
+    $('#edit-employment-details-form').on('submit', function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            //url: base_url + "accounting/employees/_update_leave_credits",
+            url: base_url + "accounting/employees/_update_employment_details ",
+            dataType: 'json',
+            data: $(this).serialize(),
+            success: function(data) {
+                $('#btn-modal-employment-details').html('Save');
+                if (data.is_success) {
+                    $('#edit-employment-details-modal').modal('hide');
+
+                    var employee_details = data.employee_details;
+                    $.each(employee_details, function(index) {
+                        console.log(employee_details[index]);
+                        var employee_number = employee_details[index].employee_number;                        
+
+                        //$(`#emp-details-status`).text("");
+                        $(`#emp-details-employee-number`).text(employee_number);                   
+                    });
+
+                    Swal.fire({
+                        text: "Employee employment details was successfully updated",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            //location.reload();    
+                        //}
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-modal-employment-details').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });    
+
 })
 </script>

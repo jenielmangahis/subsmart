@@ -2676,6 +2676,64 @@ class Employees extends MY_Controller
         echo json_encode($return);
     }
 
+    public function ajax_update_employment_details() 
+    {
+
+        $is_success = 0;
+        $msg = 'Record not found';
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post = $this->input->post();
+
+        if(isset($post)) {
+            $employee_id = $post['employee_id'];
+    
+            $data = [
+                'employee_number' => $post['employee_number'],
+                'date_hired' => date("Y-m-d", strtotime($post['hire_date'])),
+                'user_type' => $post['user_type'],
+                'role' => $post['role'],
+            ];
+    
+            $employmentDetails = [
+                'work_location_id' => $post['work_location'],
+                'workers_comp_class' => $post['workers_comp_class']
+            ];        
+    
+            if (isset($employmentDetails)) {
+                if ($this->employment_details_model->get_employment_details($employee_id)) {
+                    $this->employment_details_model->update_employment_details($employee_id, $employmentDetails);
+    
+                    //Activity Logs
+                    $activity_name = 'Employees : Update Employment Details'; 
+                    createActivityLog($activity_name);                
+    
+                } else {
+                    $employmentDetails['user_id'] = $employee_id;
+                    $this->employment_details_model->create($employmentDetails);
+                }
+            }        
+    
+            $update = $this->users_model->update($employee_id, $data);
+    
+            if($update) {
+                $employee_details = ['employee_number' => $post['employee_number']];
+                $is_success = 1;
+                $msg        = 'Successfully updated';
+        
+                $return = [
+                    'is_success' => $is_success,
+                    'msg' => $msg,
+                    'employee_details' => $employee_details,
+                ];
+        
+                echo json_encode($return);
+            }
+        }
+
+    }
+
     public function saveTaxWithholding() {
         $company_id = logged('company_id');
         $employee_id = logged('id');

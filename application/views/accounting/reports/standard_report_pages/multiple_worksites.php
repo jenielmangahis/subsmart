@@ -54,7 +54,7 @@
                                             <tr>
                                                 <th>WORKSITE</th>
                                                 <?php foreach($months as $month) { ?>
-                                                    <th>NO. OF EMPLOYEES (<?php echo strtoupper($month) ?>)</th>
+                                                    <th>NO. OF EMPLOYEES (<?php echo strtoupper($month) ?> <?php echo $year; ?>)</th>
                                                 <?php } ?>
                                                 <!-- <th>NO. OF EMPLOYEES (<?php echo strtoupper(date('M', strtotime('+1 month'))) ?>)</th>
                                                 <th>NO. OF EMPLOYEES (<?php echo strtoupper(date('M', strtotime('+2 month'))) ?>)</th> -->
