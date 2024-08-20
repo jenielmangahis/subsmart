@@ -16,6 +16,7 @@ class Accounting_report_types_model extends MY_Model {
         $this->db->where('accounting_favorite_reports.company_id', $companyId);
         $this->db->from($this->table);
         $this->db->join('accounting_favorite_reports', 'accounting_favorite_reports.report_type_id = accounting_report_types.id');
+        $this->db->where('accounting_report_types.is_hidden', 0);
         $this->db->order_by('accounting_report_types.name', 'asc');
         $query = $this->db->get();
         return $query->result();
@@ -27,6 +28,7 @@ class Accounting_report_types_model extends MY_Model {
         $this->db->where('accounting_report_group_types.group_id', $groupId);
         $this->db->from($this->table);
         $this->db->join('accounting_report_group_types', 'accounting_report_group_types.report_type_id = accounting_report_types.id');
+        $this->db->where('accounting_report_types.is_hidden', 0);
         $this->db->order_by('accounting_report_types.name', 'asc');
         $query = $this->db->get();
         return $query->result();
@@ -48,5 +50,11 @@ class Accounting_report_types_model extends MY_Model {
         $this->db->where('id', $reportTypeId);
         $query = $this->db->get($this->table);
         return $query->row();
+    }
+
+    public function get_management_reports()
+    {
+		$this->db->where('is_management_report', 1);
+        return $this->db->get($this->table)->result();
     }
 }

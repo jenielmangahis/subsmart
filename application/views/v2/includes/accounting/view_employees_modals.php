@@ -292,8 +292,7 @@
                                     aria-controls="right_and_permissions_collapse"><strong>Rights & Permissions (Select
                                         Employee Role)</strong></button>
                             </h2>
-                            <div id="tax_exemptions_collapse" class="accordion-collapse collapse show"
-                                aria-labelledby="right_and_permissions_panel">
+                            <div id="right_and_permissions_collapse" class="accordion-collapse collapse show" aria-labelledby="right_and_permissions_panel">
                                 <div class="accordion-body">
 
                                     <div class="col-12" style="margin-bottom: 10px !important;">
@@ -381,16 +380,6 @@
                                     </div>
 
                                 </div>
-                                <div class="col-12" style="margin-bottom: 10px !important;">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" value="6" id="role_6" name="user_type" <?= $employee->user_type == 6 ? 'checked="checked"' : ''; ?>>
-                                        <label class="form-check-label" for="role_6">
-                                            Field Tech
-                                            <span class="content-subtitle d-block fst-italic">App access only, no Web access</span>
-                                        </label>
-                                    </div>
-                                </div>                            
-
                             </div>
                         </div>
                     </div>

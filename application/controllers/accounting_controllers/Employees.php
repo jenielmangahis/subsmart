@@ -2635,7 +2635,7 @@ class Employees extends MY_Controller
         $post = $this->input->post();
 
         $user = $this->Users_model->get_user_name($uid);
-
+        $leave_credits = [];
         foreach($post['leaveCredits'] as $lid => $value){
             $leaveCredits =  $this->EmployeeLeaveCredit_model->getByUserIdAndPtoId($uid, $lid);
             if( $leaveCredits ){
@@ -2643,7 +2643,8 @@ class Employees extends MY_Controller
                     'leave_credits' => $value,
                     'date_updated' => date("Y-m-d H:i:s")
                 ];
-                $this->EmployeeLeaveCredit_model->update($leaveCredits->id, $data);
+                $this->EmployeeLeaveCredit_model->update($leaveCredits->id, $data);                
+
             }else{
                 $data = [
                     'user_id' => $uid,
@@ -2651,22 +2652,25 @@ class Employees extends MY_Controller
                     'leave_credits' => $value,
                     'date_created' => date("Y-m-d H:i:s")
                 ];
-                $this->EmployeeLeaveCredit_model->create($data);
+                $this->EmployeeLeaveCredit_model->create($data);                
             }
+
+            $leave_credits[] = ['lid' => $lid, 'value' => $value];
 
             //Activity Logs
             $name = $user->FName . ' ' . $user->LName;
             $activity_name = 'Leave Credits : Updated '.$name.' leave credits'; 
             createActivityLog($activity_name);
-
-            $is_success = 1;
-            $msg = '';
             
         }
 
+        $is_success = 1;
+        $msg = '';
+
         $return = [
             'is_success' => $is_success,
-            'msg' => $msg
+            'msg' => $msg,
+            'leave_credits' => $leave_credits,
         ];
 
         echo json_encode($return);

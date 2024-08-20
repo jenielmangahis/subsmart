@@ -134,7 +134,7 @@
           <?php if (!$disable_clockjs) { ?>
           <script src="<?php echo $url->assets; ?>js/timesheet/clock.js"></script>
           <?php } ?>
-          
+
           <script type="text/javascript">
 var notification_badge_value = 0;
 var current_user_company_id = <?php echo logged('company_id'); ?>;
@@ -566,8 +566,8 @@ function manipulateShowGraph(dis, id) {
     }
 }
 
-function fetchGraphs(thumbnail){
-    switch(thumbnail){
+function fetchGraphs(thumbnail) {
+    switch (thumbnail) {
         case 'widgets/collections_counter':
             collectionGraphThumbnail()
             break
@@ -582,26 +582,26 @@ function fetchGraphs(thumbnail){
             break
         case 'widgets/sales_counter':
             salesGraphThumbnail()
-            break    
+            break
         case 'widgets/estimate_counter':
             estimateGraphThumbnail()
-        break    
+            break
         case 'widgets/jobs_counter':
             jobsGraphThumbnail()
-            break   
+            break
         case 'widgets/unpaid_invoices_counter':
             unpaidInvoicesGraphThumbnail()
-            break   
+            break
         case 'widgets/new_leads_counter':
             newLeadsGraphThumbnail()
-            break 
+            break
         case 'widgets/open_invoices_counter':
             openInvoicesGraphThumbnail()
-            break 
+            break
         case 'widgets/accounting_expense_counter':
             accountingExpenseGraphThumbnail()
-            break                 
-        default: 
+            break
+        default:
             return;
     }
 }
@@ -617,13 +617,94 @@ function updateListView(id, val) {
         },
         success: function(response) {
 
-            console.log('response',response)
+            console.log('response', response)
             // var data = JSON.parse(response);
             // $(`#first_content_${id}`).html(data['first']);
             // $(`#second_content_${id}`).html(data['second']);
         }
     });
 }
+
+function filterAccountingExpenseCategory(selectedCategory) {
+    fetch('<?php echo base_url('Dashboard/accounting_expense'); ?>', {}).then(response => response.json()).then(
+        response => {
+            var {
+                accounting_expense
+            } = response;
+            let filteredCategories = [];
+            let filteredData = [];
+            let filteredTotal = 0;
+
+            if (accounting_expense) {
+                for (var x = 0; x < accounting_expense.length; x++) {
+                    if (accounting_expense[x].category && accounting_expense[x].category.name) {
+                        if (selectedCategory == "" || accounting_expense[x].category.name ===
+                            selectedCategory) {
+                            filteredCategories.push(accounting_expense[x].category.name);
+                            filteredData.push(accounting_expense[x].total);
+                            filteredTotal += parseInt(accounting_expense[x].total);
+                        }
+                    }
+                }
+            }
+
+            // Update the chart with filtered data
+            renderAccountingExpenseGraph(filteredCategories, filteredData);
+
+            $(".total_expense_graph_total").html('$ ' + filteredTotal);
+            $("#total_expense_graph").html('$' + filteredTotal);
+        }
+    ).catch((error) => {
+        console.log(error);
+    });
+
+}
+
+function renderAccountingExpenseGraph(labels, data) {
+    var new_leads_data = {
+        labels: labels,
+        datasets: [{
+            label: 'Total leads',
+            data: data,
+            backgroundColor: [
+                'rgb(106 74 134)',
+                'rgb(199 149 28)',
+                'rgb(64 136 84)',
+                'rgb(220 53 69)',
+                'rgb(206, 128, 255)'
+            ],
+        }]
+    };
+
+    $('#AccountingExpenseGraphLoader').hide();
+
+    if (window.AccountingExpenseGraph) {
+        window.AccountingExpenseGraph.destroy(); // Destroy the previous chart instance
+    }
+
+    window.AccountingExpenseGraph = new Chart($('#AccountingExpenseGraph'), {
+        type: 'doughnut',
+        data: new_leads_data,
+        options: {
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: {
+                        boxWidth: 10,
+                    }
+                },
+            },
+            layout: {
+                padding: {
+                    left: 5,
+                    right: 5,
+                    top: 0,
+                }
+            },
+        },
+    });
+}
+
 
 function filterThumbnail(val, id, table) {
     var date = new Date();
@@ -633,11 +714,12 @@ function filterThumbnail(val, id, table) {
             var to_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date
                 .getDate()).slice(-2);
 
-                if (table == 'accounting_expense') {
-                    var pastDate = new Date();
-                    pastDate.setDate(pastDate.getDate() - 365);
-                    from_date = pastDate.getFullYear() + '-' + ('0' + (pastDate.getMonth() + 1)).slice(-2) + '-' + ('0' + pastDate.getDate()).slice(-2);
-                }
+            if (table == 'accounting_expense') {
+                var pastDate = new Date();
+                pastDate.setDate(pastDate.getDate() - 365);
+                from_date = pastDate.getFullYear() + '-' + ('0' + (pastDate.getMonth() + 1)).slice(-2) + '-' + ('0' +
+                    pastDate.getDate()).slice(-2);
+            }
 
             break;
         case 'week':
@@ -724,7 +806,7 @@ function loadDataFilter(from_date, to_date, table, id) {
             $(`#first_content_${id}`).html(data['first']);
             $(`#second_content_${id}`).html(data['second']);
 
-         
+
             if (table == 'acs_billing') {
                 // window.subscriptionChart.destroy();
                 filterSubsciptionThumbnailGraph(data['mmr'])
@@ -733,7 +815,7 @@ function loadDataFilter(from_date, to_date, table, id) {
                 filterEstimateThumbnailGraph(data['first'], data['second'])
             }
             if (table == 'invoices') {
-                $(`#second_content_${id}`).html("$ "+ data['second']);
+                $(`#second_content_${id}`).html("$ " + data['second']);
                 filterPastDueThumbnailGraph(data['past_due'])
             }
             if (table == 'open_invoices') {
@@ -750,7 +832,7 @@ function loadDataFilter(from_date, to_date, table, id) {
             if (table == 'accounting_expense') {
                 filterAccountingExpenseThumbnailGraph(data['accounting_expense'])
             }
-            
+
             if (table == 'acs_profile') {
                 filterCustomerThumbnailGraph(data['customer'])
             }
@@ -788,7 +870,7 @@ function loadDataFilter(from_date, to_date, table, id) {
                     totalIncome += parseFloat(income[x].invoice_amount);
                 }
 
-                $(`#first_content_${id}`).html('$ '+totalIncome.toFixed(2));
+                $(`#first_content_${id}`).html('$ ' + totalIncome.toFixed(2));
 
                 filterIncomeThumbnailGraph(data['income'])
             }
@@ -810,36 +892,37 @@ function filterEsignThumbnailGraph(esign) {
             $output += '</div>';
             $output += '<div class="col-3 col-center">';
             $output += '<div class="row">';
-            $output += '<div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">' + htmlspecialchars(data.status_count) + '</span></div>';
+            $output += '<div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">' +
+                htmlspecialchars(data.status_count) + '</span></div>';
             $output += '</div>';
             $output += '</div>';
             $output += '</div>';
         });
-    }else{
-        $output +='<div class="nsm-empty"><i class="bx bx-meh-blank"></i><span>Empty</span></div>'
+    } else {
+        $output += '<div class="nsm-empty"><i class="bx bx-meh-blank"></i><span>Empty</span></div>'
     }
     $('#esign-content').html($output);
 }
 
 function htmlspecialchars(str) {
     return str.replace(/&/g, '&amp;')
-              .replace(/</g, '&lt;')
-              .replace(/>/g, '&gt;')
-              .replace(/"/g, '&quot;')
-              .replace(/'/g, '&#039;');
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
 
 function filterIncomeThumbnailGraph(income) {
     var monthlyAmounts = new Array(12).fill(0);
 
     for (var x = 0; x < income.length; x++) {
-                var payment_date = income[x].payment_date;
-                if (payment_date) {
-                    var due = new Date(payment_date);
-                    var month = due.getMonth();
-                    monthlyAmounts[month] += parseFloat(income[x].invoice_amount);
-                }
-            }
+        var payment_date = income[x].payment_date;
+        if (payment_date) {
+            var due = new Date(payment_date);
+            var month = due.getMonth();
+            monthlyAmounts[month] += parseFloat(income[x].invoice_amount);
+        }
+    }
 
     IncomeThumbnailGraph.data.datasets[0].data = monthlyAmounts;
     IncomeThumbnailGraph.update();
@@ -928,22 +1011,22 @@ function filterCustomerThumbnailGraph(customer) {
 
 }
 
-function filterAccountingExpenseThumbnailGraph(accounting_expense){
+function filterAccountingExpenseThumbnailGraph(accounting_expense) {
 
     let expenseCategory = [];
     let dataTemp = [];
     let total_expense = 0;
 
     if (accounting_expense) {
-            for (var x = 0; x < accounting_expense.length; x++) {
-                if(accounting_expense[x].category){
-                    expenseCategory.push(accounting_expense[x].category.name)
-                    dataTemp.push(accounting_expense[x].total)
-                    total_expense += parseInt(accounting_expense[x].total)
-                }
+        for (var x = 0; x < accounting_expense.length; x++) {
+            if (accounting_expense[x].category) {
+                expenseCategory.push(accounting_expense[x].category.name)
+                dataTemp.push(accounting_expense[x].total)
+                total_expense += parseInt(accounting_expense[x].total)
             }
         }
-    
+    }
+
     $(".total_expense_graph_total").html('$ ' + total_expense);
     $("#total_expense_graph").html('$' + total_expense);
     $('#AccountingExpenseGraphLoader').hide();
@@ -951,7 +1034,7 @@ function filterAccountingExpenseThumbnailGraph(accounting_expense){
     AccountingExpenseGraph.data.datasets[0].data = dataTemp;
     AccountingExpenseGraph.update();
 
-    
+
 
 
 }
@@ -1054,12 +1137,12 @@ function filterSubsciptionThumbnailGraph(mmr) {
 
 
 function filterEstimateThumbnailGraph(first, second) {
-    estimateChart.data.datasets[0].data = [first,second];
+    estimateChart.data.datasets[0].data = [first, second];
     estimateChart.update();
 }
 
 
-function manipulateThumbnail(dis, id,link) {
+function manipulateThumbnail(dis, id, link) {
     var count = $('#check_count_thumbnails').val();
 
     if ($(dis).is(":checked")) {
@@ -1067,12 +1150,12 @@ function manipulateThumbnail(dis, id,link) {
         count++;
 
         if (count < 8) {
-            addThumbnail(id,link);
+            addThumbnail(id, link);
             $(dis).removeAttr('isnotselected');
 
         } else if (count == 8) {
 
-            addThumbnail(id,link);
+            addThumbnail(id, link);
             $(dis).removeAttr('isnotselected');
             $('.add_tumbnail_checkbox[isnotselected]').prop('disabled', true);
 
@@ -1120,7 +1203,7 @@ function fetchCollections() {
 
         if (success) {
             var collectedAcc = collectedAccounts == '' ? '0' : collectedAccounts[0]['total'];
-           
+
         }
     }).catch((error) => {
         console.log('Error:', error);
@@ -1193,7 +1276,7 @@ function fetchJobs() {
 }
 
 
-function addThumbnail(id,link) {
+function addThumbnail(id, link) {
     var isGlobal = $('#widgetGlobal_' + id).is(":checked") ? '1' : 0;
     var isMain = $('#widgetMain_' + id).is(":checked") ? '1' : 0;
     $("#nsm_thumbnail").append(

@@ -66,6 +66,8 @@ class Accounting_modals extends MY_Controller
         $this->load->model('accounting_custom_reports_model');
         $this->load->model('accounting_paychecks_model');
         $this->load->model('timesheet_model');
+        $this->load->model('PayScale_model');
+        $this->load->model('LeaveRequest_model');
         $this->load->library('form_validation');
         
         $this->load->model('General_model', 'general');
@@ -132,8 +134,10 @@ class Accounting_modals extends MY_Controller
                     $lastAdjustmentNo = (int)$this->accounting_inventory_qty_adjustments_model->getLastAdjustmentNo();
                     $this->page_data['adjustment_no'] = $lastAdjustmentNo + 1;
                 break;
-                case 'payroll_modal':
-                    $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
+                case 'payroll_modal':                    
+                    $cid = logged('company_id');                    
+                    $this->page_data['payscales'] = $this->PayScale_model->getAllByCompanyId($cid);
+                    //$this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
                 break;
                 case 'weekly_timesheet_modal':
                     $this->page_data['timesheetSettings'] = $this->accounting_timesheet_settings_model->get_by_company_id(logged('company_id'));
@@ -896,6 +900,9 @@ class Accounting_modals extends MY_Controller
             $payPeriodEnd = date("m/d/Y");
             $payDate = date("m/d/Y");
 
+            $selectedPayperiod['first_day'] = $payPeriodStart;
+            $selectedPayperiod['last_day'] = $payPeriodEnd;
+
             $this->page_data['payPeriodStart'] = $payPeriodStart;
             $this->page_data['payPeriodEnd'] = $payPeriodEnd;
         }
@@ -917,22 +924,41 @@ class Accounting_modals extends MY_Controller
             $employees[$index]->commission = $commission;
 
             $timeLogs = $this->timesheet_model->get_employee_attendance_with_date_range($employee->id, date("Y-m-d", strtotime($selectedPayperiod['first_day'])), date("Y-m-d", strtotime($selectedPayperiod['last_day'])));
-
+            
             $totalHrs = 0.00;
+            $totalOVertimeHrs = 0.00;
             foreach($timeLogs as $timeLog)
             {
                 $timeLogPaid = $this->accounting_payroll_model->check_if_attendance_paid($timeLog->id);
 
                 if(count($timeLogPaid) < 1) {
-                    $totalHrs += floatval($timeLog->shift_duration);
+                    if( $timeLog->shift_duration > 0 ){
+                        $totalHrs += floatval($timeLog->shift_duration);
+                    }else{
+                        $date = date("Y-m-d",strtotime($timeLog->date_created));
+                        $leaveRequest = $this->LeaveRequest_model->getAllLeaveByUserIdAndDate($timeLog->user_id, $date);
+                        if( $leaveRequest ){
+                            $shiftSchedule = $this->timesheet_model->getShiftScheduleByUserIdAndDate($timeLog->user_id, $date);
+                            if( $shiftSchedule ){
+                                foreach( $leaveRequest as $lr ){
+                                    if( $lr->status == $this->LeaveRequest_model->requestStatusApproved() ){
+                                        $totalHrs+=$shiftSchedule->duration;
+                                        break;
+                                    }
+                                }
+                            }                            
+                        }
+                    }                    
     
                     if($timeLog->overtime_status === '2') {
                         $totalHrs += floatval($timeLog->overtime);
+                        $totalOVertimeHrs += floatval($timeLog->overtime);
                     }
                 }
             }
 
             $employees[$index]->total_hrs = $totalHrs;
+            $employees[$index]->total_overtime = $totalOVertimeHrs;
 
             if($employees[$index]->pay_scale->pay_type === 'Hourly') {
                 $employees[$index]->pay_rate = '<span class="pay-rate">'.str_replace('$-', '-$', '$'.number_format(floatval(str_replace(',', '', $employee->base_hourly)), 2, '.', ',')).'</span>/hour';

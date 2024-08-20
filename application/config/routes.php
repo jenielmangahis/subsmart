@@ -723,6 +723,12 @@ $route['accounting/contractors/(:any)/get-payments-total']['post'] = 'accounting
 $route['accounting/contractors/preview-contractor-payment']['post'] = 'accounting_controllers/contractors/preview_contractor_payment';
 $route['accounting/contractors/submit-contractor-payment']['post'] = 'accounting_controllers/contractors/submit_contractor_payment';
 
+$route['accounting/worksites'] = 'accounting_controllers/worksites/index';
+$route['accounting/worksites/add-work-location'] = 'accounting_controllers/worksites/add';
+$route['accounting/worksites/get-details/(:any)'] = 'accounting_controllers/worksites/get_details/$1';
+$route['accounting/worksites/(:any)/update-details']['post'] = 'accounting_controllers/worksites/update_details/$1';
+$route['accounting/worksites/delete/(:any)'] = 'accounting_controllers/worksites/delete/$1';
+
 $route['accounting/vendors'] = 'accounting_controllers/vendors/index';
 $route['accounting/vendors/load']['post'] = 'accounting_controllers/vendors/load_vendors';
 $route['accounting/vendors/add']['post'] = 'accounting_controllers/vendors/add';
@@ -787,6 +793,7 @@ $route['accounting/reports/(:any)/email']['post'] = 'accounting_controllers/repo
 $route['accounting/reports/_update_title'] = 'accounting_controllers/reports/ajax_update_report_title';
 $route['accounting/reports/_update_report_settings'] = 'accounting_controllers/reports/ajax_update_report_settings';
 $route['accounting/reports/_total_customer_balance'] = 'accounting_controllers/Reports/ajax_total_customer_balance';
+$route['accounting/reports/_add_to_management_reports'] = 'accounting_controllers/Reports/ajax_add_to_management_reports';
 
 $route['accounting/receipts/reviewed'] = 'accounting/reviewed_receipts';
 
@@ -1839,3 +1846,15 @@ $route['timesheet/_view_leave_request'] = 'Timesheet/ajax_view_leave_request';
 
 //Leave credits
 $route['accounting/employees/_update_leave_credits'] = 'accounting_controllers/Employees/ajax_update_leave_credits';
+
+//Overtime Requests
+$route['timesheet/overtime_requests'] = 'Timesheet/overtime_requests';
+$route['timesheet/_create_overtime_request'] = 'Timesheet/ajax_create_overtime_request';
+$route['timesheet/_edit_overtime_request'] = 'Timesheet/ajax_edit_overtime_request';
+$route['timesheet/_update_overtime_request'] = 'Timesheet/ajax_update_overtime_request';
+$route['timesheet/_delete_overtime_request'] = 'Timesheet/ajax_delete_overtime_request';
+$route['timesheet/_approve_overtime_request'] = 'Timesheet/ajax_approve_overtime_request';
+$route['timesheet/_disapprove_overtime_request'] = 'Timesheet/ajax_disapprove_overtime_request';
+$route['timesheet/_delete_selected_overtime_request'] = 'Timesheet/ajax_delete_selected_overtime_request';
+$route['timesheet/_approve_selected_overtime_request'] = 'Timesheet/ajax_approve_selected_overtime_request';
+$route['timesheet/_disapprove_selected_overtime_request'] = 'Timesheet/ajax_disapprove_selected_overtime_request';

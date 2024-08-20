@@ -85,6 +85,20 @@ class LeaveRequest_model extends MY_Model
         return $query->result();
     }   
 
+    public function getAllLeaveByUserIdAndDate($uid, $date)
+    {
+        $this->db->select('timesheet_leave.*,CONCAT(users.FName, " ", users.LName)AS employee,timesheet_pto.name AS leave_type');
+        $this->db->from($this->table);
+        $this->db->join('users', 'timesheet_leave.user_id = users.id', 'left');
+        $this->db->join('timesheet_pto', 'timesheet_leave.pto_id = timesheet_pto.id', 'left');        
+        $this->db->where('users.id', $uid);
+        $this->db->where('timesheet_leave.date_from <=', $date);
+        $this->db->where('timesheet_leave.date_to >=', $date);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function requestStatusPending()
     {
         return $this->request_pending;
