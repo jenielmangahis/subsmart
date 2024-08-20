@@ -217,15 +217,21 @@
                                     <?php } ?>
                                 </div>
                             </div>
-                                <h4 class="float-start fw-bold">Deductions and Contributions</h4>
+                        </div>
+                    </div>
+
+                    <div class="nsm-card mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="float-start fw-bold"><h4 class="float-start fw-bold">Deductions and Contributions</h4></h4>
                                 <a class="nsm-button border-0 float-end pointerCursor edit-deductions-and-contributions" data-bs-toggle="modal" data-bs-target="#edit-deductions-and-contributions" data-bs-backdrop="false">Edit</a>
-                            </div>
+                            </div>      
                             <div class="col-md-12">
                                 <p class="text_value">Include paycheck deductions and company contributions for healthcare and retirement. Garnishments too.</p>
                             </div>
-                         
                         </div>
                     </div>
+
                 </div>
                 <div class="tab-pane fade" id="nav-paycheck-list" role="tabpanel">
                     <div class="nsm-card mb-3">
