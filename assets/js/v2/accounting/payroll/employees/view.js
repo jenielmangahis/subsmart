@@ -112,6 +112,26 @@ $('.edit-emp-payscale').change(function () {
     });
 });
 
+$('.update_deductions_contributions').on('click',function(e){
+    e.preventDefault();
+
+    var id = $(this).attr('data-val');
+
+
+
+    $.ajax({
+        url: base_url + '/accounting/employees/add-deductions-and-contributions',
+        data: {id: id},
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function (res) {
+          
+          
+        }
+    });
+})
+
 function hide401contributions() {
     $('.401_contribution_section').hide();
 }
