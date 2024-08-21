@@ -1358,9 +1358,16 @@ $(function() {
                     var employee_details = data.employee_details;
                     $.each(employee_details, function(index) {
                         console.log(employee_details[index]);
-                        var employee_number = employee_details[index].employee_number;                        
-
-                        //$(`#emp-details-status`).text("");
+                        var employee_number = employee_details[index].employee_number;      
+                        var hire_date = employee_details[index].hire_date;   
+                        var employee_status = employee_details[index].employee_status;
+                        var worker_company_class = employee_details[index].worker_company_class;
+                        var employee_title = employee_details[index].employee_title;
+                        
+                        $(`#emp-details-worker-company-class`).text(worker_company_class);
+                        $(`#emp-details-employee-title`).text(employee_title);
+                        $(`#emp-details-status`).text(employee_status);
+                        $(`#emp-hire-date`).text(hire_date);  
                         $(`#emp-details-employee-number`).text(employee_number);                   
                     });
 

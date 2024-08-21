@@ -2691,6 +2691,7 @@ class Employees extends MY_Controller
         $uid  = logged('id');
         $post = $this->input->post();
 
+        $employee_details = [];
         if(isset($post)) {
             $employee_id = $post['employee_id'];
     
@@ -2715,7 +2716,20 @@ class Employees extends MY_Controller
                     createActivityLog($activity_name);                
     
                 } else {
+
+                    $work_location_array = $post['work_location'];
+                    $work_location_string = "";
+                    if(!empty($work_location_array)) {
+                        $work_location_string = implode(",",$work_location_array);      
+                    }               
+
+                    $employmentDetails = [
+                        'work_location_id' => $work_location_string,
+                        'workers_comp_class' => $post['workers_comp_class']
+                    ];                     
+
                     $employmentDetails['user_id'] = $employee_id;
+
                     $this->employment_details_model->create($employmentDetails);
                 }
             }        
@@ -2723,7 +2737,28 @@ class Employees extends MY_Controller
             $update = $this->users_model->update($employee_id, $data);
     
             if($update) {
-                $employee_details = ['employee_number' => $post['employee_number']];
+
+                $employee = $this->users_model->getUser($employee_id);
+                $employee_status = "";
+                if($employee) {
+                    if ($employee->status !== '0') {
+                        $employee_status = "Active";
+                    } else {
+                        $employee_status = "Inactive";
+                    }
+                }
+
+                $employee_title = ($employee->role) ? ucfirst($this->roles_model->getById($employee->role)->title) : '-';
+                $worker_company_class = $post['workers_comp_class'];
+
+                $employee_details[] = [
+                    'employee_number' => $post['employee_number'], 
+                    'hire_date' => $post['hire_date'],
+                    'employee_status' => $employee_status,
+                    'employee_title' => $employee_title,
+                    'worker_company_class' => $worker_company_class
+                ];
+
                 $is_success = 1;
                 $msg        = 'Successfully updated';
         
