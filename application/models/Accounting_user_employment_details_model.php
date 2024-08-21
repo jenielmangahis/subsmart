@@ -57,7 +57,8 @@ class Accounting_user_employment_details_model extends MY_Model {
         return $query->result();
     }
 
-    public function createTaxWithholding($data) {
+    public function createTaxWithholding($data)
+    {
         $this->db->select('id');
         $this->db->from('accounting_tax_withholding');
         $this->db->where('employee_id', $data['employee_id']);
@@ -66,12 +67,35 @@ class Accounting_user_employment_details_model extends MY_Model {
         // Check if a record was found
         if ($query->num_rows() > 0) {
             // Record found, so perform an update
-            $this->db->update('accounting_tax_withholding', $data);
             $this->db->where('employee_id', $data['employee_id']);
             $this->db->where('company_id', $data['company_id']);
+            $query = $this->db->update('accounting_tax_withholding', $data);
+            return $query;
         } else {
             // No record found, so insert a new one
-            $this->db->insert('accounting_tax_withholding', $data);
+            $query = $this->db->insert('accounting_tax_withholding', $data);
+            return $query;
+        }
+    }
+
+    public function createNotes($data)
+    {
+        $this->db->select('id');
+        $this->db->from('employee_pay_details');
+        $this->db->where('user_id', $data['user_id']);
+        $query = $this->db->get();
+    
+        // Check if a record was found
+        if ($query->num_rows() > 0) {
+            // Record found, so perform an update
+            $this->db->where('user_id', $data['user_id']);
+            $this->db->where('company_id', $data['company_id']);
+            $query = $this->db->update('employee_pay_details', $data);
+            return $query;
+        } else {
+            // No record found, so insert a new one
+            $query = $this->db->insert('employee_pay_details', $data);
+            return $query;
         }
     }
     

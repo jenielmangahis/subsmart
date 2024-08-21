@@ -8,9 +8,9 @@
         padding: 10px;
     }
 
-    #ts_schedule_tbl .day {
+    /* #ts_schedule_tbl .day {
         background: #d6e6f3;
-    }
+    } */
 
     .week-day,
     .week-date,
@@ -41,9 +41,9 @@
     }
 
     /*Table loader*/
-    #ts_schedule_tbl_wrapper {
+    /* #ts_schedule_tbl_wrapper {
         display: none;
-    }
+    } */
 
     .table-ts-loader {
         display: block;
@@ -88,15 +88,14 @@
                     <div class="col-lg-5" style="margin-bottom: 12px"></div>
                     <div class="col-lg-4 eft">
                         <div class="action-btn-container" style="float: right;">
-                            <button id="schedule_save_btn" class="btn btn-success action-btn" id="schedule_save_btn" data-approved="100" disabled="true"><i class="fa fa-floppy-o" aria-hidden="true"></i> Save changes</button>
+                            <button id="schedule_save_btn" class="nsm-button primary action-btn" data-approved="100"> Save changes</button>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-lg-12 table-responsive">
                         <div class="table-wrapper-settings">
-                            <table id="ts_schedule_tbl" class="table table-hover table-striped dataTable no-footer" style="width: 100%;" role="grid" aria-describedby="ts_schedule_tbl_info">
-
+                            <table id="ts_schedule_tbl" class="nsm-table dataTable no-footer" style="width: 100%;" role="grid" aria-describedby="ts_schedule_tbl_info">
                             </table>
                             <div class="table-ts-loader" style="display:none;">
                                 <img class="ts-loader-img" src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg" alt="">
@@ -105,7 +104,6 @@
                     </div>
                 </div>
                 <!-- end row -->
-
             </div>
         </div>
     </div>

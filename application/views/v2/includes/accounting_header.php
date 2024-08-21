@@ -1118,7 +1118,7 @@ if ($this->session->userdata('usertimezone') == null) {
             }
         }
 
-        Pusher.logToConsole = true;
+        Pusher.logToConsole = false;
 
         var pusher = new Pusher('f3c73bc6ff54c5404cc8', {
             cluster: 'ap1'
