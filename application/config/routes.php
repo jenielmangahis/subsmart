@@ -1859,5 +1859,8 @@ $route['timesheet/_delete_selected_overtime_request'] = 'Timesheet/ajax_delete_s
 $route['timesheet/_approve_selected_overtime_request'] = 'Timesheet/ajax_approve_selected_overtime_request';
 $route['timesheet/_disapprove_selected_overtime_request'] = 'Timesheet/ajax_disapprove_selected_overtime_request';
 
+//Timesheet Settings
+$route['timesheet/_update_settings'] = 'Timesheet/ajax_update_settings';
+
 //Employment Details
 $route['accounting/employees/_update_employment_details'] = 'accounting_controllers/Employees/ajax_update_employment_details';
