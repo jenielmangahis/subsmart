@@ -5326,13 +5326,17 @@ class Timesheet extends MY_Controller
         $data->display = $display;
         echo json_encode($data);
     }
+    
     public function settings()
     {
         add_css(array(
+            'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css',
             "assets/css/timesheet/timesheet_settings.css"
         ));
 
         add_footer_js(array(
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',            
+            'assets/js/v2/bootstrap-datetimepicker.v2.min.js',
             "assets/js/timesheet/timesheet_settings.js"
 
         ));
@@ -5340,13 +5344,14 @@ class Timesheet extends MY_Controller
         $this->page_data['page']->parent = 'Timesheet';
 
         $this->load->model('timesheet_model');
-        $this->page_data['all_timezone_list'] = $this->timesheet_model->get_all_timezone_list();
+        
         $report_privacy = $this->timesheet_model->get_timesheet_report_privacy(logged("company_id"));
         $this->page_data['report_privacy'] = $report_privacy;
         $this->page_data['report_settings'] = $this->timesheet_model->get_saved_timezone(logged("id"));
         $this->page_data['report_privacy_updated'] = $this->datetime_zone_converter($report_privacy->datetime_updated, "UTC", $this->session->userdata("usertimezone"));
         $this->load->view('v2/pages/users/timesheet_settings', $this->page_data);
     }
+
     public function get_saved_timezone()
     {
         $current_saved = $this->timesheet_model->get_saved_timezone(logged('id'));
