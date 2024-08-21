@@ -1,6 +1,21 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('v2/includes/accounting/employees_modals'); ?>
+<style>
+    table.dataTable thead th, 
+    table.dataTable thead td {
+        padding: 10px 10px !important;
+        border-bottom: 1px solid #e8e8e8 !important;
+    }
 
+    table.dataTable.no-footer {
+        border-bottom: unset !important;
+    }
+
+    .dataTables_length,
+    .dataTables_filter {
+        display: none;
+    }
+</style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/payroll'); ?>
@@ -20,19 +35,28 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-md-4 grid-mb">
-                        <form action="<?php echo base_url('accounting/employees') ?>" method="get">
-                            <div class="nsm-field-group search">
-                                <input type="text" class="nsm-field nsm-search form-control mb-2" name="search" id="search_field" placeholder="Find an employee" value="<?php echo (!empty($search)) ? $search : '' ?>">
-                            </div>
-                        </form>
+                    <div class="col-md-6">
+                        <input type="text" class="nsm-field nsm-search form-control mb-2 w-25" id="search_field" placeholder="Search Employee...">
                     </div>
-                    <div class="col-12 col-md-8 grid-mb text-end">
-                        <div class="dropdown d-inline-block">
+                    <div class="col-md-6 text-end">
+                        <div class="d-inline-block me-2">
+                            <select id="status_filter" class="form-select w-auto">
+                                <option value="">All Employees</option>
+                                <option value="Active">Active</option>
+                                <option value="Disabled">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="d-inline-block me-2">
+                            <select id="pay_method_filter" class="form-select w-auto">
+                                <option value="">All Pay Method</option>
+                                <option value="direct-deposit">Direct deposit</option>
+                                <option value="paper-check">Check</option>
+                                <option value="Missing">Missing</option>
+                            </select>
+                        </div>
+                        <div class="d-inline-block me-2">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>
-                                    More actions
-                                </span> <i class='bx bx-fw bx-chevron-down'></i>
+                                <span>More actions</span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="run-payroll">Run payroll</a></li>
@@ -40,32 +64,12 @@
                                 <li><a class="dropdown-item" href="javascript:void(0);" id="commission-only">Commission only</a></li>
                             </ul>
                         </div>
-
-						<div class="dropdown d-inline-block">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span><?=empty($status) || $status === 'active' ? 'Active' : ucfirst($status)?> employees <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu" id="status-filter">
-                                <li><a class="dropdown-item <?=empty($status) || $status === 'active' ? 'active' : '' ?>" href="javascript:void(0);" id="active-employees">Active employees</a></li>
-                                <li><a class="dropdown-item <?=$status === 'inactive' ? 'active' : '' ?>" href="javascript:void(0);" id="inactive-employees">Inactive employees</a></li>
-                                <li><a class="dropdown-item <?=$status === 'all' ? 'active' : '' ?>" href="javascript:void(0);" id="all-employees">All employees</a></li>
-                            </ul>
-
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span><?=empty($pay_method) || $pay_method === 'all' ? 'All' : str_replace('-', ' ', ucfirst($pay_method))?> pay method <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu" id="pay-method-filter">
-                                <li><a class="dropdown-item <?=$pay_method === 'direct-deposit' ? 'active' : '' ?>" href="javascript:void(0);" id="direct-deposit-pay-method">Direct deposit pay method</a></li>
-                                <li><a class="dropdown-item <?=$pay_method === 'check' ? 'active' : '' ?>" href="javascript:void(0);" id="check-pay-method">Check pay method</a></li>
-                                <li><a class="dropdown-item <?=$pay_method === 'missing' ? 'active' : '' ?>" href="javascript:void(0);" id="missing-pay-method">Missing pay method</a></li>
-                                <li><a class="dropdown-item <?=empty($pay_method) || $pay_method === 'all' ? 'active' : '' ?>" href="javascript:void(0);" id="all-pay-method">All pay method</a></li>
-                            </ul>
-                        </div>
-
-                        <div class="nsm-page-buttons page-button-container">
+                        <div class="d-inline-block me-2">
                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add_employee_modal">
                                 <i class='bx bx-fw bx-list-plus'></i> Add an employee
                             </button>
+                        </div>
+                        <div class="d-inline-block">
                             <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
                                 <i class="bx bx-fw bx-cog"></i>
                             </button>
@@ -83,11 +87,11 @@
                                     <input type="checkbox" checked id="chk-status" name="col_chk" class="form-check-input">
                                     <label for="chk-status" class="form-check-label">Status</label>
                                 </div>
-								<div class="form-check">
+                                <div class="form-check">
                                     <input type="checkbox" checked id="chk-email-address" name="col_chk" class="form-check-input">
                                     <label for="chk-email-address" class="form-check-label">Email address</label>
                                 </div>
-								<div class="form-check">
+                                <div class="form-check">
                                     <input type="checkbox" checked id="chk-phone-num" name="col_chk" class="form-check-input">
                                     <label for="chk-phone-num" class="form-check-label">Phone number</label>
                                 </div>
@@ -99,60 +103,56 @@
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table" id="employees-table">
-                    <thead>
-                        <tr>
-                            <td data-name="Name">NAME</td>
-                            <td data-name="Pay rate">PAY RATE</td>
-                            <td data-name="Pay method">PAY METHOD</td>
-                            <td data-name="Status">Status</td>
-                            <td data-name="Email address">EMAIL ADDRESS</td>
-                            <td data-name="Phone number">PHONE NUMBER</td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if(count($employees) > 0) : ?>
-						<?php foreach($employees as $employee) : ?>
-                        <tr>
-                            <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/employees/view/' . $employee['id']) ?>'"><?=$employee['name']?></td>
-                            <td class="pay-rate" data-pay_rate="<?=$employee['pay_rate']?>"><?=$employee['pay_rate']?></td>
-                            <td><?=$employee['pay_method']?></td>
-                            <td><?=$employee['status']?></td>
-                            <td><?=$employee['email_address']?></td>
-                            <td>
-                                <?php 
-                                    if(!empty($employee['phone_number'])) {
-                                        if($employee['phone_number'] != "") {
-                                            if (ctype_space($employee['phone_number'])) {
-                                                echo 'Not Specified'; 
-                                            } else {
-                                                echo formatPhoneNumber($employee['phone_number']);
-                                            }
-                                        } else {
-                                            echo 'Not Specified'; 
-                                        }
-                                    } else {
-                                        echo 'Not Specified'; 
-                                    }
-                                ?>
-                                <?php //echo $employee['phone_number']; ?>
-                            </td>
-                        </tr>
-                        <?php endforeach; ?>
-						<?php else : ?>
-						<tr>
-							<td colspan="14">
-								<div class="nsm-empty">
-									<span>No results found.</span>
-								</div>
-							</td>
-						</tr>
-						<?php endif; ?>
-                    </tbody>
-                </table>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table id="employeeTable" class="nsm-table w-100">
+                                <thead>
+                                    <tr>
+                                        <th>NAME</th>
+                                        <th>PAY RATE</th>
+                                        <th>PAY METHOD</th>
+                                        <th>STATUS</th>
+                                        <th>EMAIL</th>
+                                        <th>PHONE NO.</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
 <?php include viewPath('v2/includes/footer'); ?>
+
+<script>
+    // DataTable Configuration ===============
+    var employee_table = $('#employeeTable').DataTable({
+        "processing": true,
+        "serverSide": true,
+        "ordering": false,
+        "ajax": {
+            "url": "<?php echo base_url('accounting_controllers/employees/getEmployeeServerside/'); ?>",
+            "type": "POST",
+        },
+        "language": {
+            "infoFiltered": "",
+        },
+        // "order": [[0, 'desc'] ],
+    });
+
+    $(document).on('keyup', '#search_field', function() {
+        employee_table.search($(this).val()).draw();
+    });
+
+    $(document).on('change', '#status_filter', function() {
+        employee_table.column(4).search($(this).val()).draw();
+    });
+
+    $(document).on('change', '#pay_method_filter', function() {
+        employee_table.column(3).search($(this).val()).draw();
+    });
+</script>

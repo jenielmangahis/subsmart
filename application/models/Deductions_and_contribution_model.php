@@ -16,5 +16,14 @@ class Deductions_and_contribution_model extends MY_Model
         return $query;
     }
 
+    public function getByUser($id){
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('employee_id', $id);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
 }
   

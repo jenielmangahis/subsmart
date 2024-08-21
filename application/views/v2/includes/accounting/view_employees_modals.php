@@ -292,7 +292,8 @@
                                     aria-controls="right_and_permissions_collapse"><strong>Rights & Permissions (Select
                                         Employee Role)</strong></button>
                             </h2>
-                            <div id="right_and_permissions_collapse" class="accordion-collapse collapse show" aria-labelledby="right_and_permissions_panel">
+                            <div id="right_and_permissions_collapse" class="accordion-collapse collapse show"
+                                aria-labelledby="right_and_permissions_panel">
                                 <div class="accordion-body">
 
                                     <div class="col-12" style="margin-bottom: 10px !important;">
@@ -746,11 +747,95 @@
     </div>
 </div>
 
+
+<div class="modal fade nsm-modal" id="deduction_contributions_lists" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <form method="POST" id="edit-employment-details-form"
+            action="<?php echo base_url(); ?>accounting/employees/update/employment-details/<?= $employee->id ?>">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Edit deductions and contributions</span>
+                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i
+                            class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12">
+                            <h3>What deductions, contributions, or garnishment does <?= $employee->FName ?>'s have?</h3>
+                        </div>
+                        <div class="col-md-12 mt-5">
+                            <h5><strong>Deductions and contributions</strong></h5>
+                            <p class="text_value">These may include health insurance, retirement plan, loan repayments,
+                                and more.</p>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="row">
+                                <?php 
+                                        foreach($dc_data as $dc){
+                                            ?>
+                                <div class="col-md-8 mb-3">
+                                    <div class="row">
+                                        <div class="col-md-9">
+                                            <p class="text_value">
+                                                <?= $dc->deduction_contribution_type.' - '.$dc->type?></p>
+                                            <strong class="text-muted"><?= $dc->description ?></strong>
+                                            <p class="text_value">
+                                                Deduction: $<?= number_format($dc->deductions_amount,0) ?>/paycheck ,
+                                                outsided
+                                                contribution: $<?= number_format($dc->contributions_amount,0) ?>,annual
+                                                maximum:
+                                                $<?= number_format($dc->annual_maximum,0) ?> </p>
+                                        </div>
+                                        <div class="col-md-3">
+
+                                            <a class="nsm-button border-0  pointerCursor edit-deductions-and-contributions" style="font-size: 20px"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#edit-deductions-and-contributions"
+                                                data-bs-backdrop="false"><i class="bx bx-fw bx-pencil"></i></a>
+
+                                                <a class="nsm-button border-0  pointerCursor edit-deductions-and-contributions" style="font-size: 20px"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#edit-deductions-and-contributions"
+                                                data-bs-backdrop="false"><i class="bx bx-fw bx-trash"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php
+
+                                        }
+                                    ?>
+
+                                <div class="col-md-12">
+
+                                    <div class="col-md-4">
+                                        <button type="button" class="nsm-button " data-bs-toggle="modal"
+                                            data-bs-target="#edit-deductions-and-contributions"><i
+                                                class="bx bx-fw bx-plus"></i> Add deductions/contribution</button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" name="btn_modal_close" class="nsm-button"
+                        data-bs-dismiss="modal">Close</button>
+                    <button type="button" name="btn_modal_save" data-bs-dismiss="modal"
+                        class="nsm-button success">Done</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 <div class="modal fade nsm-modal" id="edit-deductions-and-contributions" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <form id="deductions_contributions_form">
-        <input class="form-control" name="employee_id" type="hidden" value="<?= $employee->id; ?>"
-        >
+            <input class="form-control" name="employee_id" type="hidden" value="<?= $employee->id; ?>">
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Add deduction/contribution</span>
@@ -783,7 +868,8 @@
                                         <select class="nsm-field form-select deduction_contribution_type"
                                             name="deduction_contribution_type" required>
                                             <option value="">Select</option>
-                                            <option value="Flexible spending accounts">Flexible spending accounts</option>
+                                            <option value="Flexible spending accounts">Flexible spending accounts
+                                            </option>
                                             <option value="HSA plans">HSA plans</option>
                                             <option value="Other deductions">Other deductions</option>
                                             <option value="Health insurance">Health insurance</option>
@@ -830,7 +916,7 @@
                                             <div class="col-12 edit-pay-type-container mb-3">
                                                 <label>Description (appears on paycheck) *</label>
                                                 <input class="form-control" name="description" type="text" step="any"
-                                                     required>
+                                                    required>
                                             </div>
 
                                             <div class="employee-deductions-section" style="display:none">
@@ -854,7 +940,8 @@
                                                         <div class="col-6 edit-pay-type-container mb-3">
                                                             <label>Amount per paycheck *</label>
                                                             <input class="form-control" name="deductions_amount"
-                                                                placeholder="$0" type="number" step="any" min="0" required>
+                                                                placeholder="$0" type="number" step="any" min="0"
+                                                                required>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -914,7 +1001,8 @@
                 <div class="modal-footer">
                     <button type="button" name="btn_modal_close" class="nsm-button"
                         data-bs-dismiss="modal">Close</button>
-                    <button type="submit" name="btn_modal_save" class="nsm-button primary btn_modal_save_deductions">Save</button>
+                    <button type="submit" name="btn_modal_save"
+                        class="nsm-button primary btn_modal_save_deductions">Save</button>
                 </div>
             </div>
         </form>
@@ -924,20 +1012,17 @@
 
 <div class="modal fade nsm-modal" id="notes-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form method="POST" id="edit-notes-form"
-            action="<?php echo base_url(); ?>accounting/employees/update/notes/<?= $employee->id ?>">
+        <form id="saveNotesForm">
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Add notes</span>
-                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i
-                            class='bx bx-fw bx-x m-0'></i></button>
+                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-12">
-                            <label for="notes">Notes for <?= $employee->FName ?></label>
-                            <textarea name="notes" id="notes"
-                                class="form-control nsm-field"><?= $pay_details->notes ?></textarea>
+                            <label class="mb-2" for="notes">Notes for <?php echo "$employee->FName $employee->LName" ?></label>
+                            <textarea name="notes" id="notes" class="form-control nsm-field"><?php echo $pay_details->notes ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -1136,6 +1221,14 @@ $(function() {
             success: function(response) {
                 formDisabler(form, false);
                 updateContent();
+                Swal.fire({
+                    icon: "success",
+                    title: "Tax withholding",
+                    html: "Data has been saved successfully!",
+                    showConfirmButton: true,
+                    confirmButtonText: "Close",
+                    showCloseButton: false,
+                });
             },
             error: function(xhr, status, error) {
                 formDisabler(form, false);
@@ -1144,8 +1237,43 @@ $(function() {
         });
     });
 
+    $('#saveNotesForm').submit(function(e) {
+        e.preventDefault();
+        const form = $(this);
+        const notes = CKEDITOR.instances['notes'].getData()
 
+        $.ajax({
+            type: "POST",
+            url: window.origin + "/accounting/employees/save_notes",
+            data: form.serialize(),
+            data: {
+                notes: notes,
+                user_id: <?php echo $employee->id; ?>,
+            },
+            beforeSend: function() {
+                formDisabler(form, true);
+            },
+            success: function(response) {
+                $('.employeeNotes').html(notes);
+                formDisabler(form, false);
+                updateContent();
+                Swal.fire({
+                    icon: "success",
+                    title: "Notes",
+                    html: "Data has been saved successfully!",
+                    showConfirmButton: true,
+                    confirmButtonText: "Close",
+                    showCloseButton: false,
+                });
+            },
+            error: function(xhr, status, error) {
+                formDisabler(form, false);
+                console.error("Request failed:", status, error);
+            }
+        });
+    });
 
+    
 
 
     $('.mobile-number').keydown(function(e) {
@@ -1194,9 +1322,9 @@ $(function() {
                     var leave_credits = data.leave_credits;
                     $.each(leave_credits, function(index) {
                         console.log(leave_credits[index]);
-                        var leave_id = leave_credits[index].lid;                        
-                        var leave_value = leave_credits[index].value;                   
-                        $(`#leave-credits-${leave_id}`).text(leave_value);                   
+                        var leave_id = leave_credits[index].lid;
+                        var leave_value = leave_credits[index].value;
+                        $(`#leave-credits-${leave_id}`).text(leave_value);
                     });
 
                     Swal.fire({
@@ -1206,7 +1334,7 @@ $(function() {
                         confirmButtonText: 'Okay'
                     }).then((result) => {
                         //if (result.value) {
-                            //location.reload();    
+                        //location.reload();    
                         //}
                     });
                 } else {

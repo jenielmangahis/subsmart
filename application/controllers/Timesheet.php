@@ -3313,7 +3313,7 @@ class Timesheet extends MY_Controller
         $display .= '<thead>';
         $display .= '<tr>';
         $display .= '<td>Employee</td>';
-        $display .= '<td>Action</td>';
+        // $display .= '<td>Action</td>';
         $display .= '<td class="day"><span class="week-day">Mon</span><span class="week-date">' . $date_this_week['Monday'] . '</span></td>';
         $display .= '<td class="day"><span class="week-day">Tue</span><span class="week-date">' . $date_this_week['Tuesday'] . '</span></td>';
         $display .= '<td class="day"><span class="week-day">Wed</span><span class="week-date">' . $date_this_week['Wednesday'] . '</span></td>';
@@ -3339,9 +3339,9 @@ class Timesheet extends MY_Controller
             $employee_schedules = $this->timesheet_model->get_employee_shift_schedule($user->id, $date_this_check);
             if (count($employee_schedules) > 0) {
                 $display .= '<td><span class="employee-name">' . $user->FName . " " . $user->LName . '</span><span class="sub-text">' . $role_title . ' | ' . $status . '</span></td>';
-                $display .= '<td><a class="group-copy-btn" title="Copy" data-id="' . $user->id . '"><i class="fa fa-clone" aria-hidden="true"></i></a>';
-                $display .= '<a  class="group-paste-btn" title="Paste"><i class="fa fa-clipboard" aria-hidden="true"></i></a></div>';
-                $display .= '<label class="copy-alert group"  id="copy_all_' . $user->id . '" style="display:none;">Copied!</label></td>';
+                // $display .= '<td><a class="group-copy-btn" title="Copy" data-id="' . $user->id . '"><i class="fa fa-clone" aria-hidden="true"></i></a>';
+                // $display .= '<a  class="group-paste-btn" title="Paste"><i class="fa fa-clipboard" aria-hidden="true"></i></a></div>';
+                // $display .= '<label class="copy-alert group"  id="copy_all_' . $user->id . '" style="display:none;">Copied!</label></td>';
 
                 $mon = '';
                 $tue = '';
@@ -3411,9 +3411,9 @@ class Timesheet extends MY_Controller
                 $display .= '<td class="center"><label id="duration' . $user->id . '">' . round($duration, 2) . '</label></td>';
             } else {
                 $display .= '<td><span class="employee-name">' . $user->FName . " " . $user->LName . '</span><span class="sub-text">' . $role_title . ' | ' . $status . '</span></td>';
-                $display .= '<td><a class="group-copy-btn" style="display:none;" title="Copy" data-id="' . $user->id . '"><i class="fa fa-clone" aria-hidden="true"></i></a>';
-                $display .= '<a  class="group-paste-btn" title="Paste"><i class="fa fa-clipboard" aria-hidden="true"></i></a></div>';
-                $display .= '<label class="copy-alert"  id="copy_all_' . $user->id . '" style="display:none;">Copied!</label></td>';
+                // $display .= '<td><a class="group-copy-btn" style="display:none;" title="Copy" data-id="' . $user->id . '"><i class="fa fa-clone" aria-hidden="true"></i></a>';
+                // $display .= '<a  class="group-paste-btn" title="Paste"><i class="fa fa-clipboard" aria-hidden="true"></i></a></div>';
+                // $display .= '<label class="copy-alert"  id="copy_all_' . $user->id . '" style="display:none;">Copied!</label></td>';
                 for ($i = 0; $i < 7; $i++) {
                     $display .= '<td class="center">';
                     $display .= '<input type="time" data-date="' . $date_this_check[$i] . '" data-id="' . $user->id . '" data-column="' . ($i + 1) . '" class="shift-start-input blank" value="">';

@@ -1,13 +1,14 @@
 <?php include viewPath('v2/includes/accounting_header'); ?>
 <?php include viewPath('v2/includes/accounting/view_employees_modals'); ?>
 <style>
-.select2-link{
+.select2-link {
     padding: 10px 10px;
     background: #cccccc;
 }
-.select2-link a{
-    text-decoration:none !important;
-    color:inherit !important;
+
+.select2-link a {
+    text-decoration: none !important;
+    color: inherit !important;
 }
 
 .nav-link {
@@ -45,7 +46,7 @@
 }
 </style>
 <div class="row page-content g-0">
-<div class="col-12 mb-3">
+    <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/payroll'); ?>
     </div>
     <div class="col-12 mb-3">
@@ -59,28 +60,31 @@
                 <div class="row">
                     <div class="col">
                         <div class="position-relative">
-                            <img class="rounded-circle employee_image_profile" src="<?php echo !empty($employee->profile_img) ? userProfileImage($employee->id) : '/uploads/users/default.png' ?>">
-                            <button class="btn btn-secondary btn-sm border-0 employee_image_profile_edit"><i class="bx bxs-pencil"></i></button>
+                            <img class="rounded-circle employee_image_profile"
+                                src="<?php echo !empty($employee->profile_img) ? userProfileImage($employee->id) : '/uploads/users/default.png' ?>">
+                            <!-- <button class="btn btn-secondary btn-sm border-0 employee_image_profile_edit"><i class="bx bxs-pencil"></i></button> -->
                         </div>
                     </div>
                     <div class="col">
                         <div class="employee_name_section">
-                            <h2 class="m-0 fw-bold employee_name"><?php echo "$employee->FName $employee->LName"; ?></h2>
+                            <h2 class="m-0 fw-bold employee_name"><?php echo "$employee->FName $employee->LName"; ?>
+                            </h2>
                             <span><?php echo "$employee->status_text"; ?></span>
                         </div>
                     </div>
                 </div>
-                
-                
             </div>
             <div class="float-end"></div>
         </div>
         <div class="col-md-12 mb-3">
             <nav class="mb-3">
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" role="tab">Profile</button>
-                    <button class="nav-link" id="nav-paycheck-list-tab" data-bs-toggle="tab" data-bs-target="#nav-paycheck-list" role="tab">Paycheck list</button>
-                    <button class="nav-link" id="nav-notes-tab" data-bs-toggle="tab" data-bs-target="#nav-notes" role="tab">Notes</button>
+                    <button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab"
+                        data-bs-target="#nav-profile" role="tab">Profile</button>
+                    <button class="nav-link" id="nav-paycheck-list-tab" data-bs-toggle="tab"
+                        data-bs-target="#nav-paycheck-list" role="tab">Paycheck list</button>
+                    <button class="nav-link" id="nav-notes-tab" data-bs-toggle="tab" data-bs-target="#nav-notes"
+                        role="tab">Notes</button>
                 </div>
             </nav>
             <div class="tab-content" id="nav-tabContent">
@@ -89,7 +93,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h4 class="float-start fw-bold">Personal Information</h4>
-                                <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal" data-bs-target="#edit_employee_modal">Edit</a>
+                                <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal"
+                                    data-bs-target="#edit_employee_modal">Edit</a>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Name</strong>
@@ -97,19 +102,26 @@
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Email</strong>
-                                <p class="text_value"><?php echo !in_array($employee->email, ['', null]) ? $employee->email : '<i>Not specified</i>'; ?></p>
+                                <p class="text_value">
+                                    <?php echo !in_array($employee->email, ['', null]) ? $employee->email : '<i>Not specified</i>'; ?>
+                                </p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Birthdate</strong>
-                                <p class="text_value"><?php echo ($employee->birthdate != '0000-00-00' && $employee->birthdate != null) ? date("m/d/Y", strtotime($employee->birthdate)) : '<i>Not specified</i>'; ?></p>
+                                <p class="text_value">
+                                    <?php echo ($employee->birthdate != '0000-00-00' && $employee->birthdate != null) ? date("m/d/Y", strtotime($employee->birthdate)) : '<i>Not specified</i>'; ?>
+                                </p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Home Address</strong>
-                                <p class="text_value"><?php echo ($employee->complete_address) ? $employee->complete_address : '<i>Not specified</i>'; ?></p>
+                                <p class="text_value">
+                                    <?php echo ($employee->complete_address) ? $employee->complete_address : '<i>Not specified</i>'; ?>
+                                </p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Phone Number</strong>
-                                <p class="text_value"><?php echo ($employee->phone) ? $employee->phone : '<i>Not specified</i>'; ?></p>
+                                <p class="text_value">
+                                    <?php echo ($employee->phone) ? $employee->phone : '<i>Not specified</i>'; ?></p>
                             </div>
                         </div>
                     </div>
@@ -117,7 +129,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h4 class="float-start fw-bold">Employment details</h4>
-                                <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal" data-bs-target="#edit-employment-details-modal">Edit</a>
+                                <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal"
+                                    data-bs-target="#edit-employment-details-modal">Edit</a>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Status</strong>
@@ -129,7 +142,9 @@
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Employee Number</strong>
-                                <p class="text_value"><?php echo !in_array($employee->employee_number, ['', null]) ? $employee->employee_number : '<i>Not specified</i>'; ?></p>
+                                <p class="text_value">
+                                    <?php echo !in_array($employee->employee_number, ['', null]) ? $employee->employee_number : '<i>Not specified</i>'; ?>
+                                </p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Work location</strong>
@@ -142,11 +157,15 @@
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Title</strong>
-                                <p class="text_value"><?php echo ($employee->title && $employee->title != "-") ? $employee->title : '<i>Not specified</i>'; ?></p>
+                                <p class="text_value">
+                                    <?php echo ($employee->title && $employee->title != "-") ? $employee->title : '<i>Not specified</i>'; ?>
+                                </p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Worker's company class</strong>
-                                <p class="text_value"><?php echo !empty($employmentDetails->workers_comp_class) ? $employmentDetails->workers_comp_class : '<i>Not specified</i>'; ?></p>
+                                <p class="text_value">
+                                    <?php echo !empty($employmentDetails->workers_comp_class) ? $employmentDetails->workers_comp_class : '<i>Not specified</i>'; ?>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -158,7 +177,9 @@
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Federal Filling Status</strong>
-                                <p class="text_value filing_status_text"><?php echo ($taxWithholdingData->filing_status) ? $taxWithholdingData->filing_status : "<i>Not specified</i>"; ?></p>
+                                <p class="text_value filing_status_text">
+                                    <?php echo ($taxWithholdingData->filing_status) ? $taxWithholdingData->filing_status : "<i>Not specified</i>"; ?>
+                                </p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Tax exemptions</strong>
@@ -180,7 +201,8 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h4 class="float-start fw-bold">Pay Types</h4>
-                                <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal" data-bs-target="#edit-pay-types-modal">Edit</a>
+                                <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal"
+                                    data-bs-target="#edit-pay-types-modal">Edit</a>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Salary</strong>
@@ -197,7 +219,9 @@
                                         }
                                     }
                                 ?>
-                                <p class="text_value"><?php echo ($commission_settings && $cs->name) ? "$commission_settings $cs->name" : "<i>Not specified</i>"; ?></p>
+                                <p class="text_value">
+                                    <?php echo ($commission_settings && $cs->name) ? "$commission_settings $cs->name" : "<i>Not specified</i>"; ?>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -205,63 +229,127 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h4 class="float-start fw-bold">Leave Credits</h4>
-                                <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal" data-bs-target="#leave-credits-modal">Edit</a>
-                            </div>      
-                            <div class="col-md-12">                      
+                                <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal"
+                                    data-bs-target="#leave-credits-modal">Edit</a>
+                            </div>
+                            <div class="col-md-12">
                                 <div class="row">
                                     <?php foreach( $employeeLeaveCredits as $key => $value ){ ?>
-                                        <div class="col-md-3 mt-4">
-                                            <strong class="text-muted"><?= $value['leave_type']; ?></strong>
-                                            <p class="text_value"><span id="leave-credits-<?= $key; ?>"><?= $value['leave_credits']; ?></span> credits</p>
-                                        </div>
+                                    <div class="col-md-3 mt-4">
+                                        <strong class="text-muted"><?= $value['leave_type']; ?></strong>
+                                        <p class="text_value"><span
+                                                id="leave-credits-<?= $key; ?>"><?= $value['leave_credits']; ?></span>
+                                            credits</p>
+                                    </div>
                                     <?php } ?>
                                 </div>
                             </div>
-                                <h4 class="float-start fw-bold">Deductions and Contributions</h4>
-                                <a class="nsm-button border-0 float-end pointerCursor edit-deductions-and-contributions" data-bs-toggle="modal" data-bs-target="#edit-deductions-and-contributions" data-bs-backdrop="false">Edit</a>
-                            </div>
-                            <div class="col-md-12">
-                                <p class="text_value">Include paycheck deductions and company contributions for healthcare and retirement. Garnishments too.</p>
-                            </div>
-                         
                         </div>
                     </div>
+
+                    <div class="nsm-card mb-3">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="float-start fw-bold">
+                                    <h4 class="float-start fw-bold">Deductions and Contributions</h4>
+                                </h4>
+                                <!-- <a class="nsm-button border-0 float-end pointerCursor edit-deductions-and-contributions"
+                                    data-bs-toggle="modal" data-bs-target="#edit-deductions-and-contributions"
+                                    data-bs-backdrop="false">Edit</a> -->
+                                <a class="nsm-button border-0 float-end pointerCursor deduction_contributions_lists"
+                                    data-bs-toggle="modal" data-bs-target="#deduction_contributions_lists"
+                                    data-bs-backdrop="false">Edit</a>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="text_value">Include paycheck deductions and company contributions for
+                                    healthcare and retirement. Garnishments too.</p>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <?php 
+                                        foreach($dc_data as $dc){
+                                            ?>
+                                    <div class="col-md-4">
+                                        <strong class="text-muted"><?= $dc->type.'- '.$dc->description ?></strong>
+                                        <p class="text_value">
+                                            $<?= number_format($dc->deductions_amount,0) ?>/paycheck(Deduction)</p>
+                                    </div>
+                                    <?php
+
+                                        }
+                                    ?>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="tab-pane fade" id="nav-paycheck-list" role="tabpanel">
                     <div class="nsm-card mb-3">
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <span class="float-start">
-                                    <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown"><span>Filter <i class='bx bx-fw bx-chevron-down'></i></button>
-                                    <ul class="dropdown-menu dropdown-menu-end p-3" id="table-filters" style="width: max-content">
+                                    <button type="button" class="dropdown-toggle nsm-button"
+                                        data-bs-toggle="dropdown"><span>Filter <i
+                                                class='bx bx-fw bx-chevron-down'></i></button>
+                                    <ul class="dropdown-menu dropdown-menu-end p-3" id="table-filters"
+                                        style="width: max-content">
                                         <div class="row">
                                             <div class="col-12 col-md-4">
                                                 <label for="filter-date-range">Date range</label>
-                                                <select class="nsm-field form-select" name="filter_date" id="filter-date-range">
-                                                    <option value="last-pay-date" <?php echo $filter_date === 'last-pay-date' ? 'selected' : ''?>>Last pay date</option>
-                                                    <option value="this-month" <?php echo $filter_date === 'this-month' ? 'selected' : ''?>>This month</option>
-                                                    <option value="this-quarter" <?php echo empty($filter_date) || $filter_date === 'this-quarter' ? 'selected' : ''?>>This quarter</option>
-                                                    <option value="this-year" <?php echo $filter_date === 'this-year' ? 'selected' : ''?>>This year</option>
-                                                    <option value="last-month" <?php echo $filter_date === 'last-month' ? 'selected' : ''?>>Last month</option>
-                                                    <option value="last-quarter" <?php echo $filter_date === 'last-quarter' ? 'selected' : ''?>>Last quarter</option>
-                                                    <option value="last-year" <?php echo $filter_date === 'last-year' ? 'selected' : ''?>>Last year</option>
-                                                    <option value="first-quarter" <?php echo $filter_date === 'first-quarter' ? 'selected' : ''?>>First quarter</option>
-                                                    <option value="second-quarter" <?php echo $filter_date === 'second-quarter' ? 'selected' : ''?>>Second quarter</option>
-                                                    <option value="third-quarter" <?php echo $filter_date === 'third-quarter' ? 'selected' : ''?>>Third quarter</option>
-                                                    <option value="fourth-quarter" <?php echo $filter_date === 'fourth-quarter' ? 'selected' : ''?>>Fourth quarter</option>
-                                                    <option value="custom" <?php echo $filter_date === 'custom' ? 'selected' : ''?>>Custom</option>
+                                                <select class="nsm-field form-select" name="filter_date"
+                                                    id="filter-date-range">
+                                                    <option value="last-pay-date"
+                                                        <?php echo $filter_date === 'last-pay-date' ? 'selected' : ''?>>
+                                                        Last pay date</option>
+                                                    <option value="this-month"
+                                                        <?php echo $filter_date === 'this-month' ? 'selected' : ''?>>
+                                                        This month</option>
+                                                    <option value="this-quarter"
+                                                        <?php echo empty($filter_date) || $filter_date === 'this-quarter' ? 'selected' : ''?>>
+                                                        This quarter</option>
+                                                    <option value="this-year"
+                                                        <?php echo $filter_date === 'this-year' ? 'selected' : ''?>>This
+                                                        year</option>
+                                                    <option value="last-month"
+                                                        <?php echo $filter_date === 'last-month' ? 'selected' : ''?>>
+                                                        Last month</option>
+                                                    <option value="last-quarter"
+                                                        <?php echo $filter_date === 'last-quarter' ? 'selected' : ''?>>
+                                                        Last quarter</option>
+                                                    <option value="last-year"
+                                                        <?php echo $filter_date === 'last-year' ? 'selected' : ''?>>Last
+                                                        year</option>
+                                                    <option value="first-quarter"
+                                                        <?php echo $filter_date === 'first-quarter' ? 'selected' : ''?>>
+                                                        First quarter</option>
+                                                    <option value="second-quarter"
+                                                        <?php echo $filter_date === 'second-quarter' ? 'selected' : ''?>>
+                                                        Second quarter</option>
+                                                    <option value="third-quarter"
+                                                        <?php echo $filter_date === 'third-quarter' ? 'selected' : ''?>>
+                                                        Third quarter</option>
+                                                    <option value="fourth-quarter"
+                                                        <?php echo $filter_date === 'fourth-quarter' ? 'selected' : ''?>>
+                                                        Fourth quarter</option>
+                                                    <option value="custom"
+                                                        <?php echo $filter_date === 'custom' ? 'selected' : ''?>>Custom
+                                                    </option>
                                                 </select>
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label for="filter-from-date">From</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" class="form-control nsm-field date" id="filter-from-date" value="<?php echo $filter_from?>">
+                                                    <input type="text" class="form-control nsm-field date"
+                                                        id="filter-from-date" value="<?php echo $filter_from?>">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <label for="filter-to-date">To</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" class="form-control nsm-field date" id="filter-to-date" value="<?php echo $filter_to?>">
+                                                    <input type="text" class="form-control nsm-field date"
+                                                        id="filter-to-date" value="<?php echo $filter_to?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -272,7 +360,8 @@
                                                 </button>
                                             </div>
                                             <div class="col-6">
-                                                <button type="button" class="nsm-button primary float-end" id="apply-button">
+                                                <button type="button" class="nsm-button primary float-end"
+                                                    id="apply-button">
                                                     Apply
                                                 </button>
                                             </div>
@@ -280,7 +369,8 @@
                                     </ul>
                                 </span>
                                 <span class="float-end">
-                                    <button type="button" class="dropdown-toggle nsm-button print-paychecks-button" disabled>Print</button>
+                                    <button type="button" class="dropdown-toggle nsm-button print-paychecks-button"
+                                        disabled>Print</button>
                                 </span>
                             </div>
                             <div class="col-md-12">
@@ -307,7 +397,8 @@
                                         <tr>
                                             <td>
                                                 <div class="table-row-icon table-checkbox">
-                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?php echo $paycheck['id']?>">
+                                                    <input class="form-check-input select-one table-select"
+                                                        type="checkbox" value="<?php echo $paycheck['id']?>">
                                                 </div>
                                             </td>
                                             <td><?php echo $paycheck['pay_date']?></td>
@@ -315,7 +406,8 @@
                                             <td><?php echo str_replace('$-', '-$', '$'.$paycheck['total_pay'])?></td>
                                             <td><?php echo str_replace('$-', '-$', '$'.$paycheck['net_pay'])?></td>
                                             <td><?php echo $paycheck['pay_method']?></td>
-                                            <td><?php echo !in_array($paycheck['check_number'], ['-', 'Void']) ? '<input type="text" name="check_number[]" class="form-control nsm-field" value="'.$paycheck['check_number'].'">' : $paycheck['check_number'] ?></td>
+                                            <td><?php echo !in_array($paycheck['check_number'], ['-', 'Void']) ? '<input type="text" name="check_number[]" class="form-control nsm-field" value="'.$paycheck['check_number'].'">' : $paycheck['check_number'] ?>
+                                            </td>
                                             <td><?php echo $paycheck['status']?></td>
                                             <td>
                                                 <div class="dropdown float-end">
@@ -364,7 +456,7 @@
                                 <a class="nsm-button border-0 float-end pointerCursor" data-bs-toggle="modal" data-bs-target="#notes-modal">Edit</a>
                             </div>
                             <div class="col-md-12">
-                                <p class="text_value"><?php echo ($pay_details->notes) ? $pay_details->notes : '<i>Not specified</i>'; ?></p>
+                                <span class="text_value employeeNotes"><?php echo ($pay_details->notes) ? $pay_details->notes : '<i>Not specified</i>'; ?></span>
                             </div>
                         </div>
                     </div>
@@ -373,5 +465,7 @@
         </div>
     </div>
 </div>
-<script> <?php if ($userType != 7) { echo "$('.pointerCursor, .employee_image_profile_edit , .edit-deductions-and-contributions').remove();"; }?> </script>
+<script>
+<?php if ($userType != 7) { echo "$('.pointerCursor, .employee_image_profile_edit , .edit-deductions-and-contributions').remove();"; }?>
+</script>
 <?php include viewPath('v2/includes/footer'); ?>

@@ -1041,7 +1041,7 @@ if ($this->session->userdata('usertimezone') == null) {
             }
         }
 
-        Pusher.logToConsole = true;
+        Pusher.logToConsole = false;
 
         var pusher = new Pusher('f3c73bc6ff54c5404cc8', {
             cluster: 'ap1'
@@ -1050,7 +1050,7 @@ if ($this->session->userdata('usertimezone') == null) {
         var channel = pusher.subscribe('nsmarttrac');
         channel.bind('my-event', function(data) {
 
-            console.log(data.user_id);
+            // console.log(data.user_id);
             if (data.notif_action_made == "over8less9") {
                 if (data.user_id == user_id) {
                     notificationRing();

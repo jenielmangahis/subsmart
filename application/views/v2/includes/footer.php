@@ -368,7 +368,7 @@ $(document).ready(function() {
     var channel = pusher.subscribe('nsmarttrac');
     channel.bind('my-event', function(data) {
 
-        console.log(data.user_id);
+        // console.log(data.user_id);
         if (data.notif_action_made == "over8less9") {
             if (data.user_id == user_id) {
                 notificationRing();
