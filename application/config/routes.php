@@ -797,6 +797,7 @@ $route['accounting/reports/_update_title'] = 'accounting_controllers/reports/aja
 $route['accounting/reports/_update_report_settings'] = 'accounting_controllers/reports/ajax_update_report_settings';
 $route['accounting/reports/_total_customer_balance'] = 'accounting_controllers/Reports/ajax_total_customer_balance';
 $route['accounting/reports/_add_to_management_reports'] = 'accounting_controllers/Reports/ajax_add_to_management_reports';
+$route['accounting/reports/_remove_management_reports'] = 'accounting_controllers/Reports/ajax_delete_management_reports';
 
 $route['accounting/receipts/reviewed'] = 'accounting/reviewed_receipts';
 
