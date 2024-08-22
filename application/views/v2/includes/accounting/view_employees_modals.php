@@ -750,47 +750,45 @@
                             class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
+                    <div class="row" style="padding: 20px">
                         <div class="col-12">
                             <h3>What deductions, contributions, or garnishment does <?= $employee->FName ?>'s have?</h3>
                         </div>
-                        <div class="col-md-12 mt-5">
+                        <div class="col-md-12 mt-5 mb-5">
                             <h5><strong>Deductions and contributions</strong></h5>
                             <p class="text_value">These may include health insurance, retirement plan, loan repayments,
                                 and more.</p>
                         </div>
                         <div class="col-md-12">
-                            <div class="row">
+                            <div class="row" >
                                 <?php 
                                         foreach($dc_data as $dc){
                                             ?>
-                                <div class="col-md-8 mb-3">
-                                    <div class="row">
-                                        <div class="col-md-9">
-                                            <p class="text_value">
-                                                <?= $dc->deduction_contribution_type.' - '.$dc->type?></p>
-                                            <strong class="text-muted"><?= $dc->description ?></strong>
-                                            <p class="text_value">
-                                                Deduction: $<?= number_format($dc->deductions_amount,0) ?>/paycheck ,
-                                                outsided
-                                                contribution: $<?= number_format($dc->contributions_amount,0) ?>,annual
-                                                maximum:
-                                                $<?= number_format($dc->annual_maximum,0) ?> </p>
-                                        </div>
-                                        <div class="col-md-3">
+                                            <div class="col-md-8 mb-3">
+                                                <div class="row" style="align-items:center">
+                                                    <div class="col-md-9">
+                                                        <p class="text_value">
+                                                            <?= $dc->deduction_contribution_type.' - '.$dc->type?></p>
+                                                        <strong class="text-muted"><?= $dc->description ?></strong>
+                                                        <p class="text_value">
+                                                            Deduction: $<?= number_format($dc->deductions_amount,0) ?>/paycheck ,
+                                                            outsided
+                                                            contribution: $<?= number_format($dc->contributions_amount,0) ?>,annual
+                                                            maximum:
+                                                            $<?= number_format($dc->annual_maximum,0) ?> </p>
+                                                    </div>
+                                                    <div class="col-md-3">
 
-                                            <a class="nsm-button border-0  pointerCursor edit-deductions-and-contributions" style="font-size: 20px"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#edit-deductions-and-contributions"
-                                                data-bs-backdrop="false"><i class="bx bx-fw bx-pencil"></i></a>
+                                                        <a class="nsm-button border-0  pointerCursor update_deductions_contributions" style="font-size: 20px"
+                                                         data-val="<?= $dc->id ?>"><i class="bx bx-fw bx-pencil"></i></a>
 
-                                                <a class="nsm-button border-0  pointerCursor edit-deductions-and-contributions" style="font-size: 20px"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#edit-deductions-and-contributions"
-                                                data-bs-backdrop="false"><i class="bx bx-fw bx-trash"></i></a>
-                                        </div>
-                                    </div>
-                                </div>
+                                                            <a class="nsm-button border-0  pointerCursor edit-deductions-and-contributions" style="font-size: 20px"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#edit-deductions-and-contributions"
+                                                            data-bs-backdrop="false"><i class="bx bx-fw bx-trash"></i></a>
+                                                    </div>
+                                                </div>
+                                            </div>
                                 <?php
 
                                         }
@@ -1360,9 +1358,16 @@ $(function() {
                     var employee_details = data.employee_details;
                     $.each(employee_details, function(index) {
                         console.log(employee_details[index]);
-                        var employee_number = employee_details[index].employee_number;                        
-
-                        //$(`#emp-details-status`).text("");
+                        var employee_number = employee_details[index].employee_number;      
+                        var hire_date = employee_details[index].hire_date;   
+                        var employee_status = employee_details[index].employee_status;
+                        var worker_company_class = employee_details[index].worker_company_class;
+                        var employee_title = employee_details[index].employee_title;
+                        
+                        $(`#emp-details-worker-company-class`).text(worker_company_class);
+                        $(`#emp-details-employee-title`).text(employee_title);
+                        $(`#emp-details-status`).text(employee_status);
+                        $(`#emp-hire-date`).text(hire_date);  
                         $(`#emp-details-employee-number`).text(employee_number);                   
                     });
 

@@ -134,35 +134,43 @@
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Status</strong>
-                                <p class="text_value" id="emp-details-status"><?php echo $employee->status_text; ?></p>
+                                <p class="text_value">
+                                    <span id="emp-details-status"><?php echo $employee->status_text; ?></span>
+                                </p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Hire date</strong>
-                                <p class="text_value"><?php echo date("m/d/Y", strtotime($employee->date_hired)); ?></p>
+                                <p class="text_value">
+                                    <span id="emp-hire-date"><?php echo date("m/d/Y", strtotime($employee->date_hired)); ?></span>
+                                </p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Employee Number</strong>
-                                <p class="text_value" id="emp-details-employee-number"><?php echo !in_array($employee->employee_number, ['', null]) ? $employee->employee_number : '<i>Not specified</i>'; ?></p>
+                                <p class="text_value">
+                                    <span id="emp-details-employee-number"><?php echo !in_array($employee->employee_number, ['', null]) ? $employee->employee_number : '<i>Not specified</i>'; ?></span>
+                                </p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Work location</strong>
                                 <?php 
                                     foreach( $workLocations as $workLocation ) {
-                                        //echo "<p class='text_value'>$workLocation->street $workLocation->city, $workLocation->stat$workLocation->zipcode</p>";
-                                        echo "<p class='text_value'><i class='bx bx-buildings'></i>" . $workLocation->street . ' ' . $workLocation->city . ', ' . $workLocation->state . ' ' . $workLocation->zipcode . "</p>";
+                                        echo "<p class='text_value' style='margin-bottom: 0px !important'><i class='bx bx-buildings'></i>" . $workLocation->street . ' ' . $workLocation->city . ', ' . $workLocation->state . ' ' . $workLocation->zipcode . "</p>";
                                     } 
                                 ?>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Title</strong>
                                 <p class="text_value">
-                                    <?php echo ($employee->title && $employee->title != "-") ? $employee->title : '<i>Not specified</i>'; ?>
+                                    <span id="emp-details-employee-title"><?php echo ($employee->title && $employee->title != "-") ? $employee->title : '<i>Not specified</i>'; ?></span>
                                 </p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Worker's company class</strong>
                                 <p class="text_value">
-                                    <?php echo !empty($employmentDetails->workers_comp_class) ? $employmentDetails->workers_comp_class : '<i>Not specified</i>'; ?>
+                                    <?php 
+                                        $emp_details = isset($employmentDetails[0]) ? $employmentDetails[0] : $employmentDetails; 
+                                    ?>
+                                    <span id="emp-details-worker-company-class"><?php echo !empty($emp_details->workers_comp_class) ? $emp_details->workers_comp_class : '<i>Not specified</i>'; ?></span>
                                 </p>
                             </div>
                         </div>

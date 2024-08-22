@@ -2691,6 +2691,7 @@ class Employees extends MY_Controller
         $uid  = logged('id');
         $post = $this->input->post();
 
+        $employee_details = [];
         if(isset($post)) {
             $employee_id = $post['employee_id'];
     
@@ -2715,7 +2716,20 @@ class Employees extends MY_Controller
                     createActivityLog($activity_name);                
     
                 } else {
+
+                    $work_location_array = $post['work_location'];
+                    $work_location_string = "";
+                    if(!empty($work_location_array)) {
+                        $work_location_string = implode(",",$work_location_array);      
+                    }               
+
+                    $employmentDetails = [
+                        'work_location_id' => $work_location_string,
+                        'workers_comp_class' => $post['workers_comp_class']
+                    ];                     
+
                     $employmentDetails['user_id'] = $employee_id;
+
                     $this->employment_details_model->create($employmentDetails);
                 }
             }        
@@ -2723,7 +2737,28 @@ class Employees extends MY_Controller
             $update = $this->users_model->update($employee_id, $data);
     
             if($update) {
-                $employee_details = ['employee_number' => $post['employee_number']];
+
+                $employee = $this->users_model->getUser($employee_id);
+                $employee_status = "";
+                if($employee) {
+                    if ($employee->status !== '0') {
+                        $employee_status = "Active";
+                    } else {
+                        $employee_status = "Inactive";
+                    }
+                }
+
+                $employee_title = ($employee->role) ? ucfirst($this->roles_model->getById($employee->role)->title) : '-';
+                $worker_company_class = $post['workers_comp_class'];
+
+                $employee_details[] = [
+                    'employee_number' => $post['employee_number'], 
+                    'hire_date' => $post['hire_date'],
+                    'employee_status' => $employee_status,
+                    'employee_title' => $employee_title,
+                    'worker_company_class' => $worker_company_class
+                ];
+
                 $is_success = 1;
                 $msg        = 'Successfully updated';
         
@@ -2739,95 +2774,15 @@ class Employees extends MY_Controller
 
     }
 
-    public function saveTaxWithholding()
-    {
+    public function saveTaxWithholding() {
         $company_id = logged('company_id');
         $employee_id = logged('id');
+
         $postData = $this->input->post();
         $postData['company_id'] = $company_id;
         $postData['employee_id'] = $employee_id;
+
         $saveTaxWithholdingDetails = $this->employment_details_model->createTaxWithholding($postData);
-        echo json_encode($saveTaxWithholdingDetails);
-    }
-
-    public function getEmployeeServerside()
-    {
-        $company_id = logged('company_id');
-
-        // Initialize Table Information
-        $initializeTable = $this->serverside_table->initializeTable(
-            "accounting_employee_view", 
-            array('employee', 'email', 'phone', 'pay_method', 'status'),
-            array('employee', 'email', 'phone', 'pay_method', 'status'),
-            null,  
-            array(
-                'company_id' => $company_id,
-            ),
-        );
-
-        // Define the where condition
-        $whereCondition = array('company_id' => $company_id);
-        $getData = $this->serverside_table->getRows($this->input->post(), $whereCondition);
-
-        $data = $row = array();
-        $i = $this->input->post('start');
-        
-        foreach($getData as $getDatas){
-            if ($getDatas->company_id == $company_id) {
-
-                $employee_id = $getDatas->employee_id;
-                $employee = (!empty($getDatas->employee)) ? $getDatas->employee : "<i class='text-muted'>Not Specified</i>";
-
-                if (empty($getDatas->pay_type)) {
-                    $pay_rate = "$".number_format(0, 2, ".", ",");
-                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Daily") {
-                    $pay_rate = "$".number_format(0, 2, ".", ",")."/<small class='text-muted'>daily</small>";
-                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Hourly") {
-                    $pay_rate = "$".number_format($getDatas->base_hourly, 2, ".", ",")."/<small class='text-muted'>hour</small>";
-                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Weekly") {
-                    $pay_rate = "$".number_format($getDatas->base_weekly, 2, ".", ",")."/<small class='text-muted'>week</small>";
-                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Monthly") {
-                    $pay_rate = "$".number_format($getDatas->base_monthly, 2, ".", ",")."/<small class='text-muted'>month</small>";
-                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Yearly") {
-                    $pay_rate = "$".number_format($getDatas->base_yearly, 2, ".", ",")."/<small class='text-muted'>year</small>";
-                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Commission Only") {
-                    $pay_rate = "Commission Only";
-                }
-                $pay_method = (!empty($getDatas->pay_method)) ? $getDatas->pay_method : "Missing";
-                $status = ($getDatas->status == "Active") ? "Active" : "Inactive";
-                $email = (!empty($getDatas->email)) ? $getDatas->email : "<i class='text-muted'>Not Specified</i>";
-                $phone = (!empty($getDatas->phone)) ? $getDatas->phone : "<i class='text-muted'>Not Specified</i>";
-
-                $data[] = array(
-                    "<strong class='fw-bold nsm-text-primary nsm-link' onclick='location.href=`".base_url('accounting/employees/view/').$employee_id."`'>$employee</strong>",
-                    "$pay_rate",
-                    "$pay_method",
-                    "$status",
-                    "$email",
-                    "$phone",
-                );
-                $i++;
-            }
-        }
-
-        $output = array(
-            "draw" => $this->input->post('draw'),
-            "recordsTotal" => $this->serverside_table->countAll(),
-            "recordsFiltered" => $this->serverside_table->countFiltered($this->input->post()),
-            "data" => $data,
-        );
-        
-        // Output to JSON format
-        echo json_encode($output);
-
-    }
-
-    public function saveEmployeeNotes()
-    {
-        $company_id = logged('company_id');
-        $postData = $this->input->post();
-        $postData['company_id'] = $company_id;
-        $saveTaxWithholdingDetails = $this->employment_details_model->createNotes($postData);
-        echo json_encode($saveTaxWithholdingDetails);
+        print_r($postData);
     }
 }
