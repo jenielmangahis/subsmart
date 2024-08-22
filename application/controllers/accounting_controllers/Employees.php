@@ -2049,8 +2049,47 @@ class Employees extends MY_Controller
 
         $id = $this->deductions_and_contribution_model->create($post);
 
-        echo json_encode(['success' => $post]);
+        echo json_encode(['employee_id'=> $post['employee_id']]);
     }
+
+    public function edit_deductions_and_contributions(){
+        $this->load->model('Deductions_and_contribution_model');
+        $post = $this->input->post();
+
+        $dc_data =  $this->Deductions_and_contribution_model->getById($post['id']);
+
+
+        echo json_encode($dc_data);
+    }
+
+    public function update_deductions_and_contributions(){
+        $this->load->model('Deductions_and_contribution_model');
+        $post = $this->input->post();
+
+        $this->Deductions_and_contribution_model->updateDeductions($post['id'] ,$post);
+      
+        echo json_encode(['employee_id'=> $post['employee_id']]);
+    }
+
+    public function get_deductions_and_contributions(){
+        $this->load->model('Deductions_and_contribution_model');
+        $post = $this->input->post();
+        $data = $this->Deductions_and_contribution_model->getByUser($post['employee_id']);
+      
+        echo json_encode($data);
+    }
+
+    public function delete_deductions_and_contributions(){
+        $this->load->model('Deductions_and_contribution_model');
+        $post = $this->input->post();
+        $data = $this->Deductions_and_contribution_model->delete($post['id']);
+      
+        echo json_encode($data);
+    }
+
+
+    
+    
 
 
     public function update_paycheck_num($paycheckId)
@@ -2774,15 +2813,95 @@ class Employees extends MY_Controller
 
     }
 
-    public function saveTaxWithholding() {
+    public function saveTaxWithholding()
+    {
         $company_id = logged('company_id');
         $employee_id = logged('id');
-
         $postData = $this->input->post();
         $postData['company_id'] = $company_id;
         $postData['employee_id'] = $employee_id;
-
         $saveTaxWithholdingDetails = $this->employment_details_model->createTaxWithholding($postData);
-        print_r($postData);
+        echo json_encode($saveTaxWithholdingDetails);
+    }
+
+    public function getEmployeeServerside()
+    {
+        $company_id = logged('company_id');
+
+        // Initialize Table Information
+        $initializeTable = $this->serverside_table->initializeTable(
+            "accounting_employee_view", 
+            array('employee', 'email', 'phone', 'pay_method', 'status'),
+            array('employee', 'email', 'phone', 'pay_method', 'status'),
+            null,  
+            array(
+                'company_id' => $company_id,
+            ),
+        );
+
+        // Define the where condition
+        $whereCondition = array('company_id' => $company_id);
+        $getData = $this->serverside_table->getRows($this->input->post(), $whereCondition);
+
+        $data = $row = array();
+        $i = $this->input->post('start');
+        
+        foreach($getData as $getDatas){
+            if ($getDatas->company_id == $company_id) {
+
+                $employee_id = $getDatas->employee_id;
+                $employee = (!empty($getDatas->employee)) ? $getDatas->employee : "<i class='text-muted'>Not Specified</i>";
+
+                if (empty($getDatas->pay_type)) {
+                    $pay_rate = "$".number_format(0, 2, ".", ",");
+                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Daily") {
+                    $pay_rate = "$".number_format(0, 2, ".", ",")."/<small class='text-muted'>daily</small>";
+                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Hourly") {
+                    $pay_rate = "$".number_format($getDatas->base_hourly, 2, ".", ",")."/<small class='text-muted'>hour</small>";
+                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Weekly") {
+                    $pay_rate = "$".number_format($getDatas->base_weekly, 2, ".", ",")."/<small class='text-muted'>week</small>";
+                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Monthly") {
+                    $pay_rate = "$".number_format($getDatas->base_monthly, 2, ".", ",")."/<small class='text-muted'>month</small>";
+                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Yearly") {
+                    $pay_rate = "$".number_format($getDatas->base_yearly, 2, ".", ",")."/<small class='text-muted'>year</small>";
+                } else if (!empty($getDatas->pay_type) && $getDatas->pay_type == "Commission Only") {
+                    $pay_rate = "Commission Only";
+                }
+                $pay_method = (!empty($getDatas->pay_method)) ? $getDatas->pay_method : "Missing";
+                $status = ($getDatas->status == "Active") ? "Active" : "Inactive";
+                $email = (!empty($getDatas->email)) ? $getDatas->email : "<i class='text-muted'>Not Specified</i>";
+                $phone = (!empty($getDatas->phone)) ? $getDatas->phone : "<i class='text-muted'>Not Specified</i>";
+
+                $data[] = array(
+                    "<strong class='fw-bold nsm-text-primary nsm-link' onclick='location.href=`".base_url('accounting/employees/view/').$employee_id."`'>$employee</strong>",
+                    "$pay_rate",
+                    "$pay_method",
+                    "$status",
+                    "$email",
+                    "$phone",
+                );
+                $i++;
+            }
+        }
+
+        $output = array(
+            "draw" => $this->input->post('draw'),
+            "recordsTotal" => $this->serverside_table->countAll(),
+            "recordsFiltered" => $this->serverside_table->countFiltered($this->input->post()),
+            "data" => $data,
+        );
+        
+        // Output to JSON format
+        echo json_encode($output);
+
+    }
+
+    public function saveEmployeeNotes()
+    {
+        $company_id = logged('company_id');
+        $postData = $this->input->post();
+        $postData['company_id'] = $company_id;
+        $saveTaxWithholdingDetails = $this->employment_details_model->createNotes($postData);
+        echo json_encode($saveTaxWithholdingDetails);
     }
 }

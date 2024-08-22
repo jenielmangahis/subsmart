@@ -192,7 +192,7 @@
 <div class="modal fade nsm-modal" id="edit-employment-details-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <!-- <form method="POST" id="edit-employment-details-form" action="<?php echo base_url(); ?>accounting/employees/update/employment-details/<?= $employee->id ?>"> -->
-            <form method="POST" id="edit-employment-details-form" action=""> 
+        <form method="POST" id="edit-employment-details-form" action="">
             <input type="hidden" name="employee_id" value="<?= $employee->id ?>" />
             <div class="modal-content">
                 <div class="modal-header">
@@ -225,7 +225,7 @@
                                         <input type="text" name="employee_number" class="nsm-field form-control"
                                             id="employee_number"
                                             value="<?= $employee->employee_number ? $employee->employee_number : '-'; ?>" />
-                                    </div><br />                                
+                                    </div><br />
 
                                     <div class="col-12">
                                         <label class="content-subtitle fw-bold d-block mb-2">Hire date</label>
@@ -378,9 +378,11 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="button" name="btn_modal_close" class="nsm-button"
+                        data-bs-dismiss="modal">Close</button>
                     <!-- <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button> -->
-                    <button type="submit" name="btn_modal_save" id="btn-modal-employment-details" class="nsm-button primary btn-modal-employment-details">Save</button>
+                    <button type="submit" name="btn_modal_save" id="btn-modal-employment-details"
+                        class="nsm-button primary btn-modal-employment-details">Save</button>
                 </div>
 
             </div>
@@ -760,40 +762,43 @@
                                 and more.</p>
                         </div>
                         <div class="col-md-12">
-                            <div class="row" >
+                            <div class="row deductions_contributions_list_items">
                                 <?php 
                                         foreach($dc_data as $dc){
                                             ?>
-                                            <div class="col-md-8 mb-3">
-                                                <div class="row" style="align-items:center">
-                                                    <div class="col-md-9">
-                                                        <p class="text_value">
-                                                            <?= $dc->deduction_contribution_type.' - '.$dc->type?></p>
-                                                        <strong class="text-muted"><?= $dc->description ?></strong>
-                                                        <p class="text_value">
-                                                            Deduction: $<?= number_format($dc->deductions_amount,0) ?>/paycheck ,
-                                                            outsided
-                                                            contribution: $<?= number_format($dc->contributions_amount,0) ?>,annual
-                                                            maximum:
-                                                            $<?= number_format($dc->annual_maximum,0) ?> </p>
-                                                    </div>
-                                                    <div class="col-md-3">
+                                <div class="col-md-8 mb-3">
+                                    <div class="row" style="align-items:center">
+                                        <div class="col-md-9">
+                                            <p class="text_value">
+                                                <?= $dc->deduction_contribution_type.' - '.$dc->type?></p>
+                                            <strong class="text-muted"><?= $dc->description ?></strong>
+                                            <p class="text_value">
+                                                Deduction: $<?= number_format($dc->deductions_amount,0) ?>/paycheck ,
+                                                outsided
+                                                contribution: $<?= number_format($dc->contributions_amount,0) ?>,annual
+                                                maximum:
+                                                $<?= number_format($dc->annual_maximum,0) ?> </p>
+                                        </div>
+                                        <div class="col-md-3">
 
-                                                        <a class="nsm-button border-0  pointerCursor update_deductions_contributions" style="font-size: 20px"
-                                                         data-val="<?= $dc->id ?>"><i class="bx bx-fw bx-pencil"></i></a>
+                                            <a class="nsm-button border-0  pointerCursor update_deductions_contributions"
+                                                style="font-size: 20px" data-val="<?= $dc->id ?>"><i
+                                                    class="bx bx-fw bx-pencil"></i></a>
 
-                                                            <a class="nsm-button border-0  pointerCursor edit-deductions-and-contributions" style="font-size: 20px"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#edit-deductions-and-contributions"
-                                                            data-bs-backdrop="false"><i class="bx bx-fw bx-trash"></i></a>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                            <a class="nsm-button border-0  pointerCursor delete-deductions-and-contributions"
+                                                style="font-size: 20px" data-val="<?= $dc->id ?>" data-employee_id="<?= $dc->employee_id ?>"
+                                                ><i class="bx bx-fw bx-trash"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
                                 <?php
 
                                         }
                                     ?>
 
+
+                            </div>
+                            <div class="row">
                                 <div class="col-md-12">
 
                                     <div class="col-md-4">
@@ -802,7 +807,6 @@
                                                 class="bx bx-fw bx-plus"></i> Add deductions/contribution</button>
                                     </div>
                                 </div>
-
                             </div>
 
 
@@ -820,6 +824,175 @@
     </div>
 </div>
 
+<div class="modal fade nsm-modal" id="update-deductions-and-contributions" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form id="update_deductions_contributions_form">
+            <input class="form-control" name="employee_id" type="hidden" value="<?= $employee->id; ?>">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title ">Update deduction/contribution</span>
+                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i
+                            class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="deductions-contribution-section">
+                            <div class="col-12 col-md-6">
+                                <input type="hidden" name="id" class="update_deduction_id">
+                                <select class="nsm-field form-select edit-deductions-and-contributions-name"
+                                    name="deductions_contribution_name" style="visibility: hidden;" required>
+                                    <option value="deductions_contributions">Add Deductions/contributions</option>
+                                </select>
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <label>Deductions/contribution type</label>
+                                        <select
+                                            class="nsm-field form-select deduction_contribution_type update_deduction_contribution_type"
+                                            name="deduction_contribution_type" required>
+                                            <option value="">Select</option>
+                                            <option value="Flexible spending accounts">Flexible spending accounts
+                                            </option>
+                                            <option value="HSA plans">HSA plans</option>
+                                            <option value="Other deductions">Other deductions</option>
+                                            <option value="Health insurance">Health insurance</option>
+                                            <option value="Retirement plans">Retirement plans</option>
+
+                                        </select>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                            <div class="edit-deduction-contribution-type-section">
+                                <div class="col-12 col-md-6">
+                                    <div class="row">
+                                        <div class="col-12 mb-3">
+                                            <label>Type</label>
+                                            <select
+                                                class=" nsm-field form-select edit_deduction_contribution_type update_deduction_type"
+                                                name="type" placeholder="" required>
+                                                <option value="">Select one</option>
+                                                <option value="401(k)">401(k)</option>
+                                                <option value="401(k) Catch-up">401(k) Catch-up</option>
+                                                <option value="403(b)">403(b)</option>
+                                                <option value="403(b) Catch-up">403(b) Catch-up</option>
+                                                <option value="After-tax Roth 401(k)">After-tax Roth 401(k)</option>
+                                                <option value="After-tax Roth 401(k) Catch-up">After-tax Roth 401(k)
+                                                    Catch-up
+                                                </option>
+                                                <option value="After-tax Roth 403(b)">After-tax Roth 403(b)</option>
+                                                <option value="Company-only plan">Company-only plan</option>
+                                                <option value="SARSEP">SARSEP</option>
+                                                <option value="SARSEP Catch-up">SARSEP Catch-up</option>
+                                                <option value="SIMPLE 401(k) Catch-up">SIMPLE 401(k) Catch-up</option>
+                                                <option value="SIMPLE IRA">SIMPLE IRA</option>
+                                                <option value="SIMPLE IRA Catch-up">SIMPLE IRA Catch-up</option>
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="deduction-type-section " style="display:none">
+                                    <div class="col-md-12 ">
+                                        <div class="row">
+                                            <div class="col-12 edit-pay-type-container mb-3">
+                                                <label>Description (appears on paycheck) *</label>
+                                                <input class="form-control update_deduction_description"
+                                                    name="description" type="text" step="any" required>
+                                            </div>
+
+                                            <div class="employee-deductions-section" style="display:none">
+                                                <div class="col-12 edit-pay-type-container mb-3">
+                                                    <h6 class="fw-bold">Employee deductions</h6>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="row">
+                                                        <div class="col-6 edit-pay-type-container mb-3">
+                                                            <label>Calculated as *</label>
+                                                            <select
+                                                                class="nsm-field form-select edit-emp-payscale update_deductions_calculated_as"
+                                                                name="deductions_calculated_as" required>
+                                                                <option value="None">None</option>
+                                                                <option value="Flat amount">Flat amount</option>
+                                                                <option value="Percent of gross pay">Percent of gross
+                                                                    pay
+                                                                </option>
+                                                                <option value="Per hour worked">Per hour worked</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-6 edit-pay-type-container mb-3">
+                                                            <label>Amount per paycheck *</label>
+                                                            <input class="form-control update_deductions_amount"
+                                                                name="deductions_amount" placeholder="$0" type="number"
+                                                                step="any" min="0" required>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 edit-pay-type-container mb-3">
+                                                    <label>Annual maximum</label>
+                                                    <input class="form-control update_annual_maximum"
+                                                        name="annual_maximum" type="number" step="any" min="0">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="col-12 edit-pay-type-container mb-3">
+                                                <h6 class="fw-bold">Company contribution</h6>
+                                                <label for="">We'll track your contributions, but it's your
+                                                    responsibility
+                                                    to
+                                                    pay your provider.</label>
+                                            </div>
+                                            <div class="col-6 edit-pay-type-container mb-3">
+                                                <label>Calculated as *</label>
+                                                <select class="nsm-field form-select update_contribution_calculated_as"
+                                                    name="contribution_calculated_as" required>
+                                                    <option value="None">None</option>
+                                                    <option value="Flat amount">Flat amount</option>
+                                                    <option value="Percent of gross pay">Percent of gross pay</option>
+                                                    <option value="Per hour worked">Per hour worked</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 401_contribution_section" style="display:none">
+                                        <div class="row">
+                                            <div class="col-12 edit-pay-type-container mb-3">
+                                                <h6 class="fw-bold">401(K) contributions from other employment</h6>
+                                                <label for="">Enter an amount if the employee contributed to another
+                                                    company's
+                                                    401(k) plan during the current tax year.
+                                                    inlcude both Roth and traditional cocntributions, minus any employer
+                                                    matching
+                                                </label>
+                                            </div>
+                                            <div class="col-6 edit-pay-type-container mb-3">
+                                                <label>Amount</label>
+                                                <input class="form-control update_contributions_amount"
+                                                    name="contributions_amount" type="number" step="any" min="0">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" name="btn_modal_close" class="nsm-button"
+                        data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="btn_modal_save"
+                        class="nsm-button primary btn_modal_save_deductions">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 
 <div class="modal fade nsm-modal" id="edit-deductions-and-contributions" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -827,7 +1000,7 @@
             <input class="form-control" name="employee_id" type="hidden" value="<?= $employee->id; ?>">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="modal-title content-title">Add deduction/contribution</span>
+                    <span class="modal-title content-title ">Add deduction/contribution</span>
                     <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i
                             class='bx bx-fw bx-x m-0'></i></button>
                 </div>
@@ -1005,13 +1178,16 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Add notes</span>
-                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i
+                            class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-12">
-                            <label class="mb-2" for="notes">Notes for <?php echo "$employee->FName $employee->LName" ?></label>
-                            <textarea name="notes" id="notes" class="form-control nsm-field"><?php echo $pay_details->notes ?></textarea>
+                            <label class="mb-2" for="notes">Notes for
+                                <?php echo "$employee->FName $employee->LName" ?></label>
+                            <textarea name="notes" id="notes"
+                                class="form-control nsm-field"><?php echo $pay_details->notes ?></textarea>
                         </div>
                     </div>
                 </div>
@@ -1378,7 +1554,7 @@ $(function() {
                         confirmButtonText: 'Okay'
                     }).then((result) => {
                         //if (result.value) {
-                            //location.reload();    
+                        //location.reload();    
                         //}
                     });
                 } else {
@@ -1394,10 +1570,11 @@ $(function() {
                 }
             },
             beforeSend: function() {
-                $('#btn-modal-employment-details').html('<span class="bx bx-loader bx-spin"></span>');
+                $('#btn-modal-employment-details').html(
+                    '<span class="bx bx-loader bx-spin"></span>');
             }
         });
-    });    
+    });
 
 })
 </script>

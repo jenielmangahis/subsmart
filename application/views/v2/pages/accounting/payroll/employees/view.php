@@ -260,7 +260,7 @@
                                 <a class="nsm-button border-0 float-end pointerCursor edit-deductions-and-contributions" data-bs-toggle="modal" data-bs-target="#edit-deductions-and-contributions" data-bs-backdrop="false">Edit</a>
                             </div>      
                             <div class="col-md-12">
-                                <div class="row">
+                                <div class="row deductions_contributions_list_data" >
                                     <?php 
                                         foreach($dc_data as $dc){
                                             ?>
