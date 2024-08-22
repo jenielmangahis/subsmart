@@ -736,6 +736,9 @@ $route['accounting/worksites/get-details/(:any)'] = 'accounting_controllers/work
 $route['accounting/worksites/(:any)/update-details']['post'] = 'accounting_controllers/worksites/update_details/$1';
 $route['accounting/worksites/delete/(:any)'] = 'accounting_controllers/worksites/delete/$1';
 
+$route['accounting/worksites/_save_worksite'] = 'accounting_controllers/worksites/ajax_save_worksite';
+$route['accounting/worksites/_update_worksite'] = 'accounting_controllers/worksites/ajax_update_worksite';
+
 $route['accounting/vendors'] = 'accounting_controllers/vendors/index';
 $route['accounting/vendors/load']['post'] = 'accounting_controllers/vendors/load_vendors';
 $route['accounting/vendors/add']['post'] = 'accounting_controllers/vendors/add';

@@ -182,6 +182,7 @@ $(document).ready(function() {
         $.get(base_url + `accounting/worksites/get-details/${id}`, function(res) {
             var worksite = JSON.parse(res);
 
+            $('#edit-worksite-modal #worksite-id').val(worksite.id);
             $('#edit-worksite-modal #name').val(worksite.name);
             $('#edit-worksite-modal #street').val(worksite.street);
             $('#edit-worksite-modal #city').val(worksite.city);
