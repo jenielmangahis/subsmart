@@ -112,22 +112,37 @@ $('.edit-emp-payscale').change(function () {
     });
 });
 
-$('.update_deductions_contributions').on('click',function(e){
+$(document).on('click', '.update_deductions_contributions', function (e) {
     e.preventDefault();
 
     var id = $(this).attr('data-val');
 
-
-
     $.ajax({
-        url: base_url + '/accounting/employees/add-deductions-and-contributions',
-        data: {id: id},
+        url: base_url + '/accounting/employees/edit-deductions-and-contributions',
+        data: { id: id },
         type: 'post',
-        processData: false,
-        contentType: false,
+        dataType: "json",
         success: function (res) {
-          
-          
+            if (res) {
+                res.forEach(function (item, index) {
+                    // Process each item here
+                    // console.log("Index: " + index + ", Item: ", item);
+                    $('.update_deduction_id').val(item.id)
+                    $('.update_deduction_contribution_type').val(item.deduction_contribution_type)
+                    $('.update_deduction_type').val(item.type)
+                    $('.update_deduction_description').val(item.description)
+                    $('.update_deductions_calculated_as').val(item.deductions_calculated_as)
+                    $('.update_deductions_amount').val(parseFloat(item.deductions_amount).toFixed(2));
+                    $('.update_annual_maximum').val(parseFloat(item.annual_maximum).toFixed(2));
+                    $('.update_contribution_calculated_as').val(item.contribution_calculated_as)
+                    $('.update_contributions_amount').val(parseFloat(item.contributions_amount).toFixed(2));
+
+                    handleDeductionContributionType(item.type)
+                });
+
+                $('#update-deductions-and-contributions').modal('show')
+            }
+
         }
     });
 })
@@ -140,7 +155,9 @@ function show401contributions() {
     $('.401_contribution_section').show();
 }
 
-function handleDeductionContributionType(type){
+function handleDeductionContributionType(type) {
+    $('.deduction-type-section').show();
+    $('.employee-deductions-section').show();
     switch (type) {
         case '401(k)':
             show401contributions()
@@ -188,35 +205,34 @@ function handleDeductionContributionType(type){
     }
 }
 
-$('.edit-deductions-and-contributions-name').change(function(){
+$('.edit-deductions-and-contributions-name').change(function () {
     var type = $(this).val();
 
-    if(type ==''){
+    if (type == '') {
         $('.deductions-contribution-section').hide();
-    }else{
+    } else {
         $('.deductions-contribution-section').show();
     }
 
 })
 
-$('.deduction_contribution_type').change(function(){
+$('.deduction_contribution_type').change(function () {
     var type = $(this).val();
 
-    if(type =='Retirement plans'){
+    if (type == 'Retirement plans') {
         $('.edit-deduction-contribution-type-section').show()
-    }else{
+    } else {
         $('.edit-deduction-contribution-type-section').hide()
     }
 })
 
 $('.edit_deduction_contribution_type').change(function () {
     var type = $(this).val();
-    $('.deduction-type-section').show();
-    $('.employee-deductions-section').show();
+
     handleDeductionContributionType(type);
 });
 
-$('#deductions_contributions_form').on('submit',function(e){
+$('#deductions_contributions_form').on('submit', function (e) {
     e.preventDefault();
 
     var data = new FormData(this);
@@ -231,17 +247,140 @@ $('#deductions_contributions_form').on('submit',function(e){
         success: function (res) {
             $('.btn_modal_save_deductions').html("Save")
             $('#edit-deductions-and-contributions').modal('hide')
+            
             Swal.fire({
                 icon: 'success',
                 title: 'Success',
                 text: 'Deductions and Contributions Successfully Saved!',
             }).then((result) => {
                 $('#deductions_contributions_form')[0].reset();
+                var data = JSON.parse(res);
+                get_deductions_and_contributions_item(parseInt(data.employee_id, 10));
+
             });
         }
     });
-    
+
 });
+
+$(document).on('click', '.delete-deductions-and-contributions', function (e) {
+    e.preventDefault();
+
+    var id = $(this).attr('data-val');
+    var employee_id = $(this).attr('data-employee_id');
+
+
+    Swal.fire({
+        icon: 'warning',
+        title: 'Danger',
+        text: 'Are you sure you want to delete this item?',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: base_url + '/accounting/employees/delete-deductions-and-contributions',
+                data: { id: id },
+                type: 'post',
+                dataType: "json",
+                success: function (res) {
+                    get_deductions_and_contributions_item(parseInt(employee_id, 10));
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Deductions and Contributions Successfully Deleted!',
+                    })
+                }
+            });
+        }
+    });
+
+
+
+})
+
+
+$('#update_deductions_contributions_form').on('submit', function (e) {
+    e.preventDefault();
+
+    var data = new FormData(this);
+    $('.btn_modal_save_deductions').html(`<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Saving...`)
+
+    $.ajax({
+        url: base_url + '/accounting/employees/update-deductions-and-contributions',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function (res) {
+            $('.btn_modal_save_deductions').html("Save")
+            $('#edit-deductions-and-contributions').modal('hide')
+            var result = JSON.parse(res);
+            get_deductions_and_contributions_item(parseInt(result.employee_id, 10));
+            Swal.fire({
+                icon: 'success',
+                title: 'Success',
+                text: 'Deductions and Contributions Successfully Updated!',
+            }).then(() => {
+                $('#update-deductions-and-contributions').modal('hide')
+            })
+        }
+    });
+
+});
+
+function get_deductions_and_contributions_item(employee_id) {
+    $.ajax({
+        url: base_url + '/accounting/employees/get-deductions-and-contributions',
+        data: { employee_id: employee_id },
+        type: 'post',
+        dataType: "json",
+        success: function (res) {
+            $('.deductions_contributions_list_items').html('');
+            $('.deductions_contributions_list_data').html('');
+            res.forEach(function (item, index) {
+                $('.deductions_contributions_list_items').append(`
+                  <div class="col-md-8 mb-3">
+                    <div class="row" style="align-items:center">
+                        <div class="col-md-9">
+                            <p class="text_value">
+                                ${item.deduction_contribution_type} - ${item.type}</p>
+                            <strong class="text-muted">${item.description}</strong>
+                            <p class="text_value">
+                                Deduction: $${parseFloat(item.deductions_amount).toFixed(2)}/paycheck ,
+                                outside contribution: $${parseFloat(item.contributions_amount).toFixed(2)},
+                                annual maximum: $${parseFloat(item.annual_maximum).toFixed(2)}
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+
+                            <a class="nsm-button border-0  pointerCursor update_deductions_contributions"
+                                style="font-size: 20px" data-val="${item.id}"><i
+                                    class="bx bx-fw bx-pencil"></i></a>
+
+                            <a class="nsm-button border-0  pointerCursor delete-deductions-and-contributions"
+                                style="font-size: 20px" data-val="${item.id}" data-employee_id="${item.employee_id}"><i class="bx bx-fw bx-trash"></i></a>
+                        </div>
+                    </div>
+                 </div>
+                `);
+
+                $('.deductions_contributions_list_data').append(`
+                    <div class="col-md-4">
+                        <strong class="text-muted">${item.type}-${item.description}</strong>
+                        <p class="text_value">
+                            $${parseFloat(item.deductions_amount).toFixed(2)}/paycheck(Deduction)</p>
+                    </div>
+            `);
+
+
+            });
+
+
+        }
+    });
+}
 
 
 $(document).on('click', '.btn-edit-add-new-commision', function (e) {

@@ -725,6 +725,10 @@ $route['accounting/contractors/(:any)/get-payments-total']['post'] = 'accounting
 $route['accounting/contractors/preview-contractor-payment']['post'] = 'accounting_controllers/contractors/preview_contractor_payment';
 $route['accounting/contractors/submit-contractor-payment']['post'] = 'accounting_controllers/contractors/submit_contractor_payment';
 $route['accounting/employees/add-deductions-and-contributions'] = 'accounting_controllers/employees/add_deductions_and_contributions';
+$route['accounting/employees/edit-deductions-and-contributions'] = 'accounting_controllers/employees/edit_deductions_and_contributions';
+$route['accounting/employees/update-deductions-and-contributions'] = 'accounting_controllers/employees/update_deductions_and_contributions';
+$route['accounting/employees/get-deductions-and-contributions'] = 'accounting_controllers/employees/get_deductions_and_contributions';
+$route['accounting/employees/delete-deductions-and-contributions'] = 'accounting_controllers/employees/delete_deductions_and_contributions';
 
 $route['accounting/worksites'] = 'accounting_controllers/worksites/index';
 $route['accounting/worksites/add-work-location'] = 'accounting_controllers/worksites/add';
@@ -797,6 +801,7 @@ $route['accounting/reports/_update_title'] = 'accounting_controllers/reports/aja
 $route['accounting/reports/_update_report_settings'] = 'accounting_controllers/reports/ajax_update_report_settings';
 $route['accounting/reports/_total_customer_balance'] = 'accounting_controllers/Reports/ajax_total_customer_balance';
 $route['accounting/reports/_add_to_management_reports'] = 'accounting_controllers/Reports/ajax_add_to_management_reports';
+$route['accounting/reports/_remove_management_reports'] = 'accounting_controllers/Reports/ajax_delete_management_reports';
 
 $route['accounting/receipts/reviewed'] = 'accounting/reviewed_receipts';
 
@@ -1861,6 +1866,9 @@ $route['timesheet/_disapprove_overtime_request'] = 'Timesheet/ajax_disapprove_ov
 $route['timesheet/_delete_selected_overtime_request'] = 'Timesheet/ajax_delete_selected_overtime_request';
 $route['timesheet/_approve_selected_overtime_request'] = 'Timesheet/ajax_approve_selected_overtime_request';
 $route['timesheet/_disapprove_selected_overtime_request'] = 'Timesheet/ajax_disapprove_selected_overtime_request';
+
+//Timesheet Settings
+$route['timesheet/_update_settings'] = 'Timesheet/ajax_update_settings';
 
 //Employment Details
 $route['accounting/employees/_update_employment_details'] = 'accounting_controllers/Employees/ajax_update_employment_details';

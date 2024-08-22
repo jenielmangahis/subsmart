@@ -263,7 +263,7 @@
                                     healthcare and retirement. Garnishments too.</p>
                             </div>
                             <div class="col-md-12">
-                                <div class="row">
+                                <div class="row deductions_contributions_list_data" >
                                     <?php 
                                         foreach($dc_data as $dc){
                                             ?>
