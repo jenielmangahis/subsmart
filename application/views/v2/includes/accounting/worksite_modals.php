@@ -130,7 +130,7 @@ $(function() {
                         confirmButtonText: 'Okay'
                     }).then((result) => {
                         //if (result.value) {
-                        //location.reload();    
+                        location.reload();    
                         //}
                     });
                 } else {
@@ -189,7 +189,7 @@ $(function() {
                         confirmButtonText: 'Okay'
                     }).then((result) => {
                         //if (result.value) {
-                        //location.reload();    
+                        location.reload();    
                         //}
                     });
                 } else {
