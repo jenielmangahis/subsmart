@@ -211,4 +211,106 @@ class Worksites extends MY_Controller {
 
         redirect($_SERVER['HTTP_REFERER']);
     }
+
+    public function ajax_save_worksite() 
+    {
+        $is_success = 0;
+        $msg = 'Error saving worksite, please try again';
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post = $this->input->post();
+
+        $worksite_details = [];
+        if(isset($post)) {
+
+            $post_data['company_id'] = logged('company_id');
+            $post_data['name']       = $post['name'];
+            $post_data['street']     = $post['street'];
+            $post_data['city']       = $post['city'];
+            $post_data['state']      = $post['state'];
+            $post_data['zip_code']   = $post['zip_code'];
+    
+            $add_id = $this->accounting_worksites_model->create($post_data);
+            if($add_id) {
+                $worksite_id = $add_id;
+                $is_success  = 1;
+                $msg         = 'Worksite location added successfully!';    
+                
+                $worksite_details[] = [
+                    'id' => $worksite_id, 
+                    'company_id' => logged('company_id'),
+                    'name' => $post['name'],
+                    'street' => $post['street'],
+                    'city' => $post['city'],
+                    'state' => $post['state'],
+                    'zip_code' => $post['zip_code']
+                ];                
+                
+            } else {
+                $worksite_id = 0;
+                $is_success  = 0;
+                $msg         = 'Error saving worksite, please try again';                
+            }                
+    
+            $return = [
+                'is_success' => $is_success,
+                'msg' => $msg,
+                'worksite_details' => $worksite_details,
+            ];
+    
+            echo json_encode($return);
+        }
+    }    
+
+    public function ajax_update_worksite()
+    {
+        $is_success = 0;
+        $msg = 'Error updating worksite, please try again';
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post = $this->input->post();
+
+        $worksite_details = [];
+        if(isset($post)) {
+
+            $worksiteId = isset($post['worksite_id']) ? $post['worksite_id'] : 0;
+            $post_data['company_id'] = logged('company_id');
+            $post_data['name']       = $post['name'];
+            $post_data['street']     = $post['street'];
+            $post_data['city']       = $post['city'];
+            $post_data['state']      = $post['state'];
+            $post_data['zip_code']   = $post['zip_code'];
+    
+            $update = $this->accounting_worksites_model->update($worksiteId, $post_data);
+            if($update) {
+                $worksite_id = $worksiteId;
+                $is_success  = 1;
+                $msg         = 'Worksite location update successfully!';    
+                
+                $worksite_details[] = [
+                    'id' => $worksite_id, 
+                    'company_id' => logged('company_id'),
+                    'name' => $post['name'],
+                    'street' => $post['street'],
+                    'city' => $post['city'],
+                    'state' => $post['state'],
+                    'zip_code' => $post['zip_code']
+                ];                
+            } else {
+                $worksite_id = 0;
+                $is_success  = 0;
+                $msg         = 'Error updating worksite, please try again';                
+            }                
+    
+            $return = [
+                'is_success' => $is_success,
+                'msg' => $msg,
+                'worksite_details' => $worksite_details,
+            ];
+    
+            echo json_encode($return);
+        }
+    }
 }
