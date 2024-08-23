@@ -45,7 +45,7 @@
         display: none;
     } */
 
-    .table-ts-loader {
+    /* .table-ts-loader {
         display: block;
         margin: 0 auto;
         clear: both;
@@ -53,8 +53,8 @@
         z-index: 20;
         width: 100%;
         min-height: 100px;
-        background: rgb(128 128 128 / 18%);
-    }
+        /* background: rgb(128 128 128 / 18%); */
+    } */
 
     .table-ts-loader img {
         width: 80px;
@@ -98,7 +98,10 @@
                             <table id="ts_schedule_tbl" class="nsm-table dataTable no-footer" style="width: 100%;" role="grid" aria-describedby="ts_schedule_tbl_info">
                             </table>
                             <div class="table-ts-loader" style="display:none;">
-                                <img class="ts-loader-img" src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg" alt="">
+                                <!-- <img class="ts-loader-img" src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg" alt=""> -->
+                                <center>
+                                    <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
+                                </center>
                             </div>
                         </div>
                     </div>

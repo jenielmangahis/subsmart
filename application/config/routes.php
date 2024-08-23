@@ -725,12 +725,19 @@ $route['accounting/contractors/(:any)/get-payments-total']['post'] = 'accounting
 $route['accounting/contractors/preview-contractor-payment']['post'] = 'accounting_controllers/contractors/preview_contractor_payment';
 $route['accounting/contractors/submit-contractor-payment']['post'] = 'accounting_controllers/contractors/submit_contractor_payment';
 $route['accounting/employees/add-deductions-and-contributions'] = 'accounting_controllers/employees/add_deductions_and_contributions';
+$route['accounting/employees/edit-deductions-and-contributions'] = 'accounting_controllers/employees/edit_deductions_and_contributions';
+$route['accounting/employees/update-deductions-and-contributions'] = 'accounting_controllers/employees/update_deductions_and_contributions';
+$route['accounting/employees/get-deductions-and-contributions'] = 'accounting_controllers/employees/get_deductions_and_contributions';
+$route['accounting/employees/delete-deductions-and-contributions'] = 'accounting_controllers/employees/delete_deductions_and_contributions';
 
 $route['accounting/worksites'] = 'accounting_controllers/worksites/index';
 $route['accounting/worksites/add-work-location'] = 'accounting_controllers/worksites/add';
 $route['accounting/worksites/get-details/(:any)'] = 'accounting_controllers/worksites/get_details/$1';
 $route['accounting/worksites/(:any)/update-details']['post'] = 'accounting_controllers/worksites/update_details/$1';
 $route['accounting/worksites/delete/(:any)'] = 'accounting_controllers/worksites/delete/$1';
+
+$route['accounting/worksites/_save_worksite'] = 'accounting_controllers/worksites/ajax_save_worksite';
+$route['accounting/worksites/_update_worksite'] = 'accounting_controllers/worksites/ajax_update_worksite';
 
 $route['accounting/vendors'] = 'accounting_controllers/vendors/index';
 $route['accounting/vendors/load']['post'] = 'accounting_controllers/vendors/load_vendors';
