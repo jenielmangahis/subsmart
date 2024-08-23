@@ -9344,7 +9344,7 @@ class Accounting extends MY_Controller
     }
 
     public function payrollTax()
-    {
+    {        
         add_css('assets/css/accounting/payroll/payroll.css');
         add_footer_js('assets/js/accounting/tax/payroll/payroll.js');
         $this->page_data['page_uri_segment'] = $this->uri->segment(2, 0);

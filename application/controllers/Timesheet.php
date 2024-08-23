@@ -1251,6 +1251,9 @@ class Timesheet extends MY_Controller
     }
     public function attendance()
     {
+        $this->load->model('LeaveRequest_model');
+
+
         $this->page_data['page']->title = 'Attendance';
         $this->page_data['page']->parent = 'Company';
 
@@ -1280,9 +1283,13 @@ class Timesheet extends MY_Controller
         $this->load->model('timesheet_model');
         $this->load->model('users_model');
         $user_id = logged('id');
+        $cid  = logged('company_id');
+        $date = date("Y-m-d");
+        $leaveRequests = $this->LeaveRequest_model->getAllLeaveByCompanyIdAndDate($cid, $date);
+
         $this->page_data['notification'] = $this->timesheet_model->getNotification($user_id);
         $this->page_data['notify_count'] = $this->timesheet_model->getNotificationCount($user_id);
-
+        $this->page_data['leaveRequests'] = $leaveRequests;
         $this->page_data['users1'] = $this->users_model->getById(getLoggedUserID());
         $this->page_data['users'] = $this->users_model->getUsers();
         $this->page_data['user_roles'] = $this->users_model->getRoles();
@@ -1349,7 +1356,8 @@ class Timesheet extends MY_Controller
         //        $week_id = $this->input->post('week_id');
         $entry = $this->input->post('entry');
         $approved_by = $this->input->post('approved_by');
-        $current_status = $this->timesheet_model->checkingOutEmployee($user_id, $attn_id, "Manual", $approved_by, $company_id);
+        //$current_status = $this->timesheet_model->checkingOutEmployee($user_id, $attn_id, "Manual", $approved_by, $company_id);
+        $current_status = $this->timesheet_model->checkingOutEmployee($user_id, $attn_id, $entry, $approved_by, $company_id);
 
         // $ipInfo = file_get_contents("http://www.geoplugin.net/json.gp?ip=" . $_SERVER['HTTP_CLIENT_IP']);
         // $getTimeZone = json_decode($ipInfo);
@@ -5345,8 +5353,16 @@ class Timesheet extends MY_Controller
 
         $this->load->model('timesheet_model');
         
-        $report_privacy = $this->timesheet_model->get_timesheet_report_privacy(logged("company_id"));
+        $cid = logged("company_id");
+        $default_email = logged('email');
+        $default_time  = $this->timesheet_model->defaultTimeSendTimesheetReport();
+        $report_privacy = $this->timesheet_model->get_timesheet_report_privacy($cid);
+        $timesheetSettings = $this->timesheet_model->getSettingsByCompanyId($cid);
+
+        $this->page_data['timesheetSettings'] = $timesheetSettings;
         $this->page_data['report_privacy'] = $report_privacy;
+        $this->page_data['default_email']  = $default_email;
+        $this->page_data['default_time']  = $default_time;
         $this->page_data['report_settings'] = $this->timesheet_model->get_saved_timezone(logged("id"));
         $this->page_data['report_privacy_updated'] = $this->datetime_zone_converter($report_privacy->datetime_updated, "UTC", $this->session->userdata("usertimezone"));
         $this->load->view('v2/pages/users/timesheet_settings', $this->page_data);
@@ -6494,6 +6510,92 @@ class Timesheet extends MY_Controller
             $is_success = 1;
             $msg = 'Selected overtime requests was successfully updated';
         }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_update_settings()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+
+        $post = $this->input->post();
+        $cid = logged('company_id');
+        
+        $is_allow_email_report = isset($post['subcribe_weekly_report']) ? 1 : 0;
+        $with_estimated_wages  = isset($post['est_wage_privacy']) ? 1 : 0;
+        
+        $settings = $this->timesheet_model->getSettingsByCompanyId($cid);
+        if( $settings ){
+            $data = [
+                'workweek_start_day' => $post['week_start'],
+                'allow_email_report' => $is_allow_email_report,
+                'allow_email_timesheet_report_type' => $post['receive_timesheet_report'],
+                'allow_email_timesheet_report_days' => json_encode($post['schedDay']),
+                'send_time_timesheet_report' => $post['calendar_day_starts_on'],
+                'timesheet_report_with_estimated_wages' => $with_estimated_wages,
+                'timesheet_report_timezone' => $post['timesheet_report_timezone'],
+                'timesheet_report_recipient_email' => $post['email_report'],
+                'date_updated' => date("Y-m-d H:i:s") 
+            ];
+
+            $this->timesheet_model->updateTimesheetSettingsByCompanyId($cid, $data);
+
+            //Activity Logs
+            $activity_name = 'Timesheet Settings : Updated company timesheet settings'; 
+            createActivityLog($activity_name);
+
+        }else{
+            $data = [
+                'company_id' => $cid,
+                'date_created' => date("Y-m-d H:i:s"),
+                'status' => 1,
+                'allow_departments' => 1, 
+                'regular_hours_per_week' => '40h',
+                'regular_hours_per_day' => '8h',
+                'overtime' => 'Weekly Overtime',
+                'payroll_workweek_start_day' => 'Monday',
+                'payroll_schedule' => 'Weekly',
+                'allow_manual_entries' => 1,
+                'roles' => '',
+                'allow_fixed_timezone' => 0,
+                'allow_use_decimal_hours' => 0,
+                'round_clock_inout_times' => 0,
+                'round_increment' => 0,
+                'break_rule' => 'Manual',
+                'break_length' => '30m',
+                'break_type' => 'Unpaid',
+                'require_job_code' => 0,
+                'allow_location_tracking' => 0,
+                'allow_user_specific' => 0,
+                'allow_clock_in_restrictions' => 1,
+                'workweek_start_day' => $post['week_start'],
+                'allow_email_report' => $is_allow_email_report,
+                'allow_email_timesheet_report_type' => $post['receive_timesheet_report'],
+                'allow_email_timesheet_report_days' => json_encode($post['schedDay']),
+                'send_time_timesheet_report' => $post['calendar_day_starts_on'],
+                'timesheet_report_with_estimated_wages' => $with_estimated_wages,
+                'timesheet_report_timezone' => $post['timesheet_report_timezone'],
+                'timesheet_report_recipient_email' => $post['email_report'],
+                'date_updated' => date("Y-m-d H:i:s")
+            ];
+
+            $this->timesheet_model->createTimesheetSettings($data);
+
+            //Activity Logs
+            $activity_name = 'Timesheet Settings : Created company timesheet settings'; 
+            createActivityLog($activity_name);
+        }
+
+        $is_success = 1;
+        $msg = '';
+
 
         $return = [
             'is_success' => $is_success,
