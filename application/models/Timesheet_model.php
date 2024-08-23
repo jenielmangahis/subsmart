@@ -11,6 +11,7 @@ class Timesheet_model extends MY_Model
     private $attn_tbl = 'timesheet_attendance';
     private $tbl_ts_settings = 'timesheet_schedule';
     private $tbl_shift_schedule = 'timesheet_shift_schedule';
+    private $tbl_settings = 'timesheet_settings';
 
     public function getNotifyCount()
     {
@@ -552,20 +553,22 @@ class Timesheet_model extends MY_Model
         //Get timesheet_attendance id
         date_default_timezone_set('UTC');
         $attn_id = $this->db->get_where($this->attn_tbl, array('user_id' => $user_id, 'status' => 1))->row()->id;
-
-        $time = time();
-        $data = array(
-            'attendance_id' => $attn_id,
-            'user_id' => $user_id,
-            'action' => 'Break in',
-            'user_location' => $this->employeeCoordinates(),
-            'user_location_address' => $this->employeeAddress(),
-            'date_created' => date('Y-m-d H:i:s', $time),
-            'entry_type' => $entry,
-            'approved_by' => $approved_by,
-            'company_id' => $company_id
-        );
-        $this->db->insert($this->db_table, $data);
+        $time    = time();
+        if( $attn_id ){
+            $data = array(
+                'attendance_id' => $attn_id,
+                'user_id' => $user_id,
+                'action' => 'Break in',
+                'user_location' => $this->employeeCoordinates(),
+                'user_location_address' => $this->employeeAddress(),
+                'date_created' => date('Y-m-d H:i:s', $time),
+                'entry_type' => $entry,
+                'approved_by' => $approved_by,
+                'company_id' => $company_id
+            );
+            $this->db->insert($this->db_table, $data);
+        }
+        
         return $time;
     }
 
@@ -2027,6 +2030,35 @@ class Timesheet_model extends MY_Model
 
         $query = $this->db->get();
         return $query->row();
+    }
+
+    public function updateTimesheetSettingsByCompanyId($cid, $data)
+    {   
+        $this->db->where("company_id", $cid);
+        $this->db->update($this->tbl_settings, $data);
+    }
+
+    public function createTimesheetSettings()
+    {
+        $this->db->insert($this->tbl_settings, $insert);
+        $settings_id = $this->db->insert_id();
+
+        return $settings_id;
+    }
+
+    public function getSettingsByCompanyId($cid)
+    {
+        $this->db->select('*');
+        $this->db->from($this->tbl_settings);
+        $this->db->where('company_id', $cid);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function defaultTimeSendTimesheetReport()
+    {
+        return '10:00 AM';
     }
 }
 /* End of file Timesheet_model.php */
