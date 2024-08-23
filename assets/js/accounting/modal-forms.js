@@ -169,7 +169,7 @@ $(function () {
     $(document).on('click', 'div#payrollModal div.modal-footer button#continue-payroll', function () {
         payroll.paySchedule = $('#payrollModal [name="pay_schedule"]:checked').val();
         payroll.paySchedForm = $('div#payrollModal div.modal-body').html();
-        var paySchedName = $('#payrollModal [name="pay_schedule"]:checked').next().find('.pay_sched_name').html();
+        var paySchedName = $('#payrollModal [name="pay_schedule"]:checked').next().find('.payscale_name').html();
         if (payroll.paySchedule !== "" && payroll.paySchedule !== undefined) {
             $.get(base_url + 'accounting/get-payroll-form/' + payroll.paySchedule, function (res) {
                 $('div#payrollModal .modal-body').html(res);
@@ -9786,6 +9786,7 @@ const payrollTotal = () => {
     var totalHrsPay = 0.00;
     var perHourPay = 0.00;
     var commission = 0.00;
+    var totalOvertime = 0.00;
 
     $('div#payrollModal table#payroll-table tbody tr').each(function () {
         if ($(this).find('.select-one').prop('checked')) {
@@ -9796,8 +9797,9 @@ const payrollTotal = () => {
                 empTotalHours = 0.00;
             }
 
-            perHourPay += parseFloat($(this).find('td:nth-child(8)').text().replace('$', '').replace(',', ''));
-            totalHrsPay += parseFloat($(this).find('td:nth-child(9)').text().replace('$', '').replace(',', ''));
+            totalOvertime += parseFloat($(this).find('td:nth-child(8)').text().replace('$', '').replace(',', ''));
+            perHourPay += parseFloat($(this).find('td:nth-child(9)').text().replace('$', '').replace(',', ''));
+            totalHrsPay += parseFloat($(this).find('td:nth-child(10)').text().replace('$', '').replace(',', ''));            
 
             hours = parseFloat(parseFloat(hours) + empTotalHours);
 
@@ -9824,8 +9826,9 @@ const payrollTotal = () => {
 
     $('div#payrollModal table#payroll-table tfoot tr:first-child td:nth-child(4)').html(parseFloat(hours).toFixed(2));
     $('div#payrollModal table#payroll-table tfoot tr:first-child td:nth-child(7)').html(parseFloat(hours).toFixed(2));
-    $('div#payrollModal table#payroll-table tfoot tr:first-child td:nth-child(8)').html(formatter.format(parseFloat(perHourPay)));
-    $('div#payrollModal table#payroll-table tfoot tr:first-child td:nth-child(9)').html(formatter.format(parseFloat(totalHrsPay)));
+    $('div#payrollModal table#payroll-table tfoot tr:first-child td:nth-child(8)').html(parseFloat(totalOvertime).toFixed(2));
+    $('div#payrollModal table#payroll-table tfoot tr:first-child td:nth-child(9)').html(formatter.format(parseFloat(perHourPay)));
+    $('div#payrollModal table#payroll-table tfoot tr:first-child td:nth-child(10)').html(formatter.format(parseFloat(totalHrsPay)));
 
     $('table#payroll-table tfoot tr:first-child td:nth-child(5)').html(formatter.format(parseFloat(commission)));
 
