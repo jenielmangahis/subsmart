@@ -1082,10 +1082,10 @@ class Vendors_model extends MY_Model {
 	public function getEmployees($company_id)
 	{
 		$where = array(
-            'users.company_id'      => $company_id,
+            'users.company_id' => $company_id,
           );
 
-        $this->db->select('*, users.id AS uid');
+        $this->db->select('*, (SELECT payscale_name FROM payscale WHERE payscale.id = users.payscale_id) AS payscale_name, users.id AS uid');
 		$this->db->from('users');
 		$this->db->join('roles', 'users.role  = roles.id');
         $this->db->where($where);

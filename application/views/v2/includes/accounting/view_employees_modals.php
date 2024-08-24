@@ -203,8 +203,8 @@
                 <div class="modal-body">
 
                     <div class="row">
-                        <div class="col-12">
-                            <h3>Let's get down to <?= $employee->FName ?>'s job specifics</h3>
+                        <div class="col-md-12 mb-3">
+                            <h4 class="fw-bold employee_name">Let's get down to <?= $employee->FName ?>'s job specifics</h4>
                         </div>
                     </div>
 
@@ -657,9 +657,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-12">
-                            <h3>Please select a payscale for <?= $employee->FName ?>?</h3>
+
+                        <div class="col-md-12 mb-3">
+                            <h4 class="fw-bold employee_name">Please select a payscale for <?= $employee->FName ?>?</h4>
                         </div>
+
                         <div class="col-12 col-md-6">
                             <div class="row">
                                 <div class="col-12 mb-3">

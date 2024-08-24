@@ -313,4 +313,35 @@ class Worksites extends MY_Controller {
             echo json_encode($return);
         }
     }
+
+    public function ajax_delete_selected_worksite() 
+    {
+        $is_success = 0;
+        $msg = 'Error saving worksite, please try again';
+
+        $cid  = logged('company_id');
+        $uid  = logged('id');
+        $post_data = $this->input->post();
+
+		if(!empty($post_data)) {
+            $total_deleted = 0;
+            foreach($post_data['row_selected'] as $delete_id) {
+                $delete_id = $this->accounting_worksites_model->delete($delete_id);
+                $total_deleted++;
+            }
+    
+            if( $total_deleted > 0 ){
+                $msg = '';
+                $is_success = 1;
+            }else{
+                $msg = 'Credit note data not found';
+            }
+    
+            $json_data = ['is_success' => $is_success, 'msg' => $msg];
+            echo json_encode($json_data);
+        } else {
+            $json_data = ['is_success' => $is_success, 'msg' => $msg];
+            echo json_encode($json_data);
+        }
+    }   
 }
