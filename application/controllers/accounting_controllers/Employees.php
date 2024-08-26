@@ -310,7 +310,6 @@ class Employees extends MY_Controller
         $this->load->model('EmployeeLeaveCredit_model');
         $this->load->model('Deductions_and_contribution_model');
         $company_id = logged('company_id');
-        $employee_id = logged('id');
         $user_type = logged('user_type');
 
         add_footer_js(array(
@@ -507,7 +506,7 @@ class Employees extends MY_Controller
         $getTaxWithholding = array(
             'select' => '*',
             'table' => 'accounting_tax_withholding',
-            'where' => array('company_id' => $company_id, 'employee_id' => $employee_id,),
+            'where' => array('company_id' => $company_id, 'employee_id' => $id,),
         );
         
         $this->page_data['taxWithholdingData'] = $this->general_model->get_data_with_param($getTaxWithholding, false);
@@ -2813,15 +2812,11 @@ class Employees extends MY_Controller
 
     }
 
-    public function saveTaxWithholding()
+    public function updateEmployeeData($updateType)
     {
-        $company_id = logged('company_id');
-        $employee_id = logged('id');
         $postData = $this->input->post();
-        $postData['company_id'] = $company_id;
-        $postData['employee_id'] = $employee_id;
-        $saveTaxWithholdingDetails = $this->employment_details_model->createTaxWithholding($postData);
-        echo json_encode($saveTaxWithholdingDetails);
+        $saveDetails = $this->employment_details_model->saveEmployeeData($postData, $updateType);
+        echo json_encode($saveDetails);
     }
 
     public function getEmployeeServerside()
@@ -2896,12 +2891,4 @@ class Employees extends MY_Controller
 
     }
 
-    public function saveEmployeeNotes()
-    {
-        $company_id = logged('company_id');
-        $postData = $this->input->post();
-        $postData['company_id'] = $company_id;
-        $saveTaxWithholdingDetails = $this->employment_details_model->createNotes($postData);
-        echo json_encode($saveTaxWithholdingDetails);
-    }
 }

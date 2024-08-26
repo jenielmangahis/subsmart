@@ -67,9 +67,9 @@
                     </div>
                     <div class="col">
                         <div class="employee_name_section">
-                            <h2 class="m-0 fw-bold employee_name"><?php echo "$employee->FName $employee->LName"; ?>
+                            <h2 class="m-0 fw-bold employee_name name_text"><?php echo "$employee->FName $employee->LName"; ?>
                             </h2>
-                            <span><?php echo "$employee->status_text"; ?></span>
+                            <span class="status_text"><?php echo "$employee->status_text"; ?></span>
                         </div>
                     </div>
                 </div>
@@ -98,30 +98,23 @@
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Name</strong>
-                                <p class="text_value"><?php echo "$employee->FName $employee->LName"; ?></p>
+                                <p class="text_value name_text"><?php echo "$employee->FName $employee->LName"; ?></p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Email</strong>
-                                <p class="text_value">
-                                    <?php echo !in_array($employee->email, ['', null]) ? $employee->email : '<i>Not specified</i>'; ?>
-                                </p>
+                                <p class="text_value email_text"><?php echo !in_array($employee->email, ['', null]) ? $employee->email : '<i>Not specified</i>'; ?></p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Birthdate</strong>
-                                <p class="text_value">
-                                    <?php echo ($employee->birthdate != '0000-00-00' && $employee->birthdate != null) ? date("m/d/Y", strtotime($employee->birthdate)) : '<i>Not specified</i>'; ?>
-                                </p>
+                                <p class="text_value birthdate_text"><?php echo ($employee->birthdate != '0000-00-00' && $employee->birthdate != null) ? date("m/d/Y", strtotime($employee->birthdate)) : '<i>Not specified</i>'; ?></p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Home Address</strong>
-                                <p class="text_value">
-                                    <?php echo ($employee->complete_address) ? $employee->complete_address : '<i>Not specified</i>'; ?>
-                                </p>
+                                <p class="text_value address_text"><?php echo ($employee->complete_address) ? $employee->complete_address : '<i>Not specified</i>'; ?></p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Phone Number</strong>
-                                <p class="text_value">
-                                    <?php echo ($employee->phone) ? $employee->phone : '<i>Not specified</i>'; ?></p>
+                                <p class="text_value phone_text"><?php echo ($employee->phone) ? $employee->phone : '<i>Not specified</i>'; ?></p>
                             </div>
                         </div>
                     </div>
@@ -134,9 +127,7 @@
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Status</strong>
-                                <p class="text_value">
-                                    <span id="emp-details-status"><?php echo $employee->status_text; ?></span>
-                                </p>
+                                <p class="text_value status_text"><span id="emp-details-status"><?php echo $employee->status_text; ?></span></p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Hire date</strong>
@@ -472,6 +463,24 @@
     </div>
 </div>
 <script>
-<?php if ($userType != 7) { echo "$('.pointerCursor, .employee_image_profile_edit , .edit-deductions-and-contributions').remove();"; }?>
+<?php if ($userType != 7) { echo "$('.pointerCursor, .employee_image_profile_edit , .edit-deductions-and-contributions').remove();"; } ?>
+$('a[data-bs-target="#edit-tax-withholdings-modal"]').click(function (e) { 
+    const formType = "<?php echo "$taxWithholdingData->withholding_certificate" ?>";
+    if (formType == "form_2020") {
+        $('select > option[data-custom="form_2020"]').fadeIn('fast');
+        $('select > option[data-custom="form_2019"]').hide();
+        $('.form_2020_input').fadeIn('fast');
+        $('.form_2019_input').hide();
+        $('.form_2020_input > input').show().removeAttr('disabled');
+        $('.form_2019_input > input').hide().attr('disabled', '');
+    } else {
+        $('select > option[data-custom="form_2020"]').hide();
+        $('select > option[data-custom="form_2019"]').fadeIn('fast');
+        $('.form_2020_input').hide();
+        $('.form_2019_input').fadeIn('fast');
+        $('.form_2020_input > input').hide().attr('disabled', '');
+        $('.form_2019_input > input').show().removeAttr('disabled');
+    }
+});
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

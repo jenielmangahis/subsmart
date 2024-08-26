@@ -141,6 +141,7 @@ $(document).on('click', '.update_deductions_contributions', function (e) {
                 });
 
                 $('#update-deductions-and-contributions').modal('show')
+                $('#deduction_contributions_lists').modal('hide')
             }
 
         }
@@ -182,6 +183,7 @@ function handleDeductionContributionType(type) {
             break;
         case 'Company-only plan':
             $('.employee-deductions-section').hide();
+            $('input[name="deductions_amount"]').removeAttr('required');
             hide401contributions()
             break;
         case 'SARSEP':
@@ -247,13 +249,15 @@ $('#deductions_contributions_form').on('submit', function (e) {
         success: function (res) {
             $('.btn_modal_save_deductions').html("Save")
             $('#edit-deductions-and-contributions').modal('hide')
-            
+            $('#edit-deductions-and-contributions').find('form').trigger('reset');
+            $('.deductions-contribution-section-add').hide();
             Swal.fire({
                 icon: 'success',
                 title: 'Success',
                 text: 'Deductions and Contributions Successfully Saved!',
             }).then((result) => {
                 $('#deductions_contributions_form')[0].reset();
+                $('#deduction_contributions_lists').modal('show')
                 var data = JSON.parse(res);
                 get_deductions_and_contributions_item(parseInt(data.employee_id, 10));
 
@@ -272,7 +276,7 @@ $(document).on('click', '.delete-deductions-and-contributions', function (e) {
 
     Swal.fire({
         icon: 'warning',
-        title: 'Danger',
+        title: 'Confirmation',
         text: 'Are you sure you want to delete this item?',
         showCancelButton: true,
         confirmButtonText: 'Yes',
@@ -341,7 +345,7 @@ function get_deductions_and_contributions_item(employee_id) {
             $('.deductions_contributions_list_data').html('');
             res.forEach(function (item, index) {
                 $('.deductions_contributions_list_items').append(`
-                  <div class="col-md-8 mb-3">
+                  <div class="col-md-12 mb-3">
                     <div class="row" style="align-items:center">
                         <div class="col-md-9">
                             <p class="text_value">
@@ -399,6 +403,25 @@ $(document).on('click', '.btn-edit-add-new-commision', function (e) {
         },
     });
 });
+
+
+$(document).on('click','.update-deductions-and-contributions-close',function(e){
+    $('#update-deductions-and-contributions').modal('hide')
+    $('#deduction_contributions_lists').modal('show')
+})
+
+
+$(document).on('click','.add-deduction-and-contributions-modal',function(e){
+    $('#edit-deductions-and-contributions').modal('show')
+    $('#deduction_contributions_lists').modal('hide')
+})
+
+$(document).on('click','.edit-deductions-contributions-close-modal',function(e){
+    $('#edit-deductions-and-contributions').modal('hide')
+    $('#deduction_contributions_lists').modal('show')
+})
+
+
 
 $(document).on("click", ".btn-delete-commission-setting-row", function (e) {
     var tableRow = $(this).closest('tr');

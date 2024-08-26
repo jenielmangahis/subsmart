@@ -171,6 +171,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
         .chatbox_row {
             font-family: "Quicksand", sans-serif !important;
+            display: none !important;
         }
 
 		.typing_status {

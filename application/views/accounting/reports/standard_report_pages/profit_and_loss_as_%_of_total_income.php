@@ -60,14 +60,15 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="8">
+                                                <td class="fetchResultLoader">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
                                                 </td>
                                             </tr>
                                         </tbody>
-                                    </table>                                
+                                    </table>
+                                    <script> $('.fetchResultLoader').attr('colspan', $('#<?php echo $tableID ?> > thead > tr > th').length); </script>                                
 
                                     <!--
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0" style="display: none;">
@@ -80,7 +81,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="6">
+                                                <td class="fetchResultLoader">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
@@ -88,6 +89,7 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <script> $('.fetchResultLoader').attr('colspan', $('#<?php echo $tableID ?> > thead > tr > th').length); </script>
                                     -->
                                    
                                     <!-- 

@@ -57,45 +57,49 @@ class Accounting_user_employment_details_model extends MY_Model {
         return $query->result();
     }
 
-    public function createTaxWithholding($data)
+    public function saveEmployeeData($data, $category)
     {
-        $this->db->select('id');
-        $this->db->from('accounting_tax_withholding');
-        $this->db->where('employee_id', $data['employee_id']);
-        $query = $this->db->get();
-    
-        // Check if a record was found
-        if ($query->num_rows() > 0) {
-            // Record found, so perform an update
-            $this->db->where('employee_id', $data['employee_id']);
-            $this->db->where('company_id', $data['company_id']);
-            $query = $this->db->update('accounting_tax_withholding', $data);
-            return $query;
-        } else {
-            // No record found, so insert a new one
-            $query = $this->db->insert('accounting_tax_withholding', $data);
-            return $query;
-        }
-    }
-
-    public function createNotes($data)
-    {
-        $this->db->select('id');
-        $this->db->from('employee_pay_details');
-        $this->db->where('user_id', $data['user_id']);
-        $query = $this->db->get();
-    
-        // Check if a record was found
-        if ($query->num_rows() > 0) {
-            // Record found, so perform an update
-            $this->db->where('user_id', $data['user_id']);
-            $this->db->where('company_id', $data['company_id']);
-            $query = $this->db->update('employee_pay_details', $data);
-            return $query;
-        } else {
-            // No record found, so insert a new one
-            $query = $this->db->insert('employee_pay_details', $data);
-            return $query;
+        $company_id = logged('company_id');
+        
+        switch ($category) {
+            case 'personal_information':
+                $this->db->where('id', $data['id']);
+                $this->db->where('company_id', $company_id );
+                $query = $this->db->update('users', $data);
+                return $query;
+                break;
+            case 'tax_withholding':
+                $this->db->select('id');
+                $this->db->from('accounting_tax_withholding');
+                $this->db->where('employee_id', $data['employee_id']);
+                $query = $this->db->get();
+                if ($query->num_rows() > 0) {
+                    $this->db->where('employee_id', $data['employee_id']);
+                    $this->db->where('company_id', $company_id);
+                    $query = $this->db->update('accounting_tax_withholding', $data);
+                    return $query;
+                } else {
+                    $data['company_id'] = $company_id;
+                    $query = $this->db->insert('accounting_tax_withholding', $data);
+                    return $query;
+                }
+                break;
+            case 'employee_notes':
+                $this->db->select('id');
+                $this->db->from('employee_pay_details');
+                $this->db->where('user_id', $data['user_id']);
+                $query = $this->db->get();
+                if ($query->num_rows() > 0) {
+                    $this->db->where('user_id', $data['user_id']);
+                    $this->db->where('company_id', $company_id);
+                    $query = $this->db->update('employee_pay_details', $data);
+                    return $query;
+                } else {
+                    $data['company_id'] = $company_id;
+                    $query = $this->db->insert('employee_pay_details', $data);
+                    return $query;
+                }
+                break;
         }
     }
     

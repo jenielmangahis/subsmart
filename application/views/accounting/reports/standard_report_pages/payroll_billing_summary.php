@@ -61,7 +61,7 @@
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="3">
+                                                <td class="fetchResultLoader">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
                                                     </center>
@@ -69,6 +69,7 @@
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <script> $('.fetchResultLoader').attr('colspan', $('#<?php echo $tableID ?> > thead > tr > th').length); </script>
                                 </div>
                             </div>
                             <div class="row mb-3">
