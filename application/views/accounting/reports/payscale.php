@@ -16,20 +16,28 @@
                     </div>
                 </div>
 
-                <!-- <div class="row">
+                <div class="row">
                     <div class="col-12 col-md-4 grid-mb">
-                        <div class="nsm-field-group search">
+                        <!-- <div class="nsm-field-group search">
                             <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Filter by name">
-                        </div>
+                        </div> -->
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
-                        <div class="nsm-page-buttons page-button-container">
+                        <!-- <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-list-plus'></i> Add Role
                             </button>
-                        </div>
+                        </div> -->
+                        <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="nsm-button export-items" onClick="javascript:exportToXLSX()" id="exportToXLSX">
+                                <i class='bx bx-fw bx-export'></i> CSV Export
+                            </button>
+                            <button type="button" class="nsm-button export-items" onClick="javascript:exportToPDF()" id="exportToPDF">
+                                <i class='bx bx-fw bxs-file-pdf'></i> Get PDF
+                            </button>
+                        </div>                       
                     </div>
-                </div> -->
+                </div>
 
                 <table class="nsm-table" id="payscale-table">
                     <thead>
@@ -75,6 +83,19 @@
 $(document).ready(function() {
     $("#payscale-table").nsmPagination({itemsPerPage:10});
 });
+
+function exportToPDF() {
+    event.preventDefault();
+    var filePath = base_url + "/assets/pdf/accounting/" + "<?php echo $filename; ?>" + ".pdf";
+    window.open(filePath);
+}
+
+function exportToXLSX() {
+    event.preventDefault();
+    var filePath = base_url + "/assets/pdf/accounting/" + "<?php echo $filename; ?>" + ".xlsx";
+    window.open(filePath);
+}
+
 </script>
 
 <?php include viewPath('v2/includes/footer'); ?>
