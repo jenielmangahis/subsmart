@@ -42,9 +42,9 @@
         margin-bottom: 12px;
     }
 
-    #tsEmployeeDataTable .day {
+    /* #tsEmployeeDataTable .day {
         background: #53b84a;
-    }
+    } */
 
     #tsEmployeeDataTable .tbl-day,
     .tbl-date,
@@ -86,7 +86,7 @@
         width: 100%;
         height: 100%;
         min-height: 100px;
-        background: rgb(128 128 128 / 18%);
+        /* background: rgb(128 128 128 / 18%); */
     }
 
     .table-ts-loader img {
@@ -112,32 +112,35 @@
         <div class="nsm-page">
             <div class="nsm-page-content">
                 <div class="row">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body">
-                            <!-- Date Selector -->
-                            <div class="row">
-                                <div class="col-lg-3" style="">
-                                    <label for="tsEmployeeDatepicker" class="label-datepicker">Week of :</label>
-                                    <input type="text" class="form-control" id="tsEmployeeDatepicker" value="<?php echo date('m/d/Y', strtotime('monday this week')) ?>">
+                    <div class="col-xl-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <!-- Date Selector -->
+                                <div class="row">
+                                    <div class="col-lg-3" style="">
+                                        <label for="tsEmployeeDatepicker" class="label-datepicker">Week of :</label>
+                                        <input type="text" class="form-control" id="tsEmployeeDatepicker" value="<?php echo date('m/d/Y', strtotime('monday this week')) ?>">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-lg-12 table-responsive">
-                                    <div class="table-wrapper-settings">
-                                        <table id="tsEmployeeDataTable" class="table table-hover table-to-list"></table>
-                                        <div class="table-ts-loader">
-                                            <img class="ts-loader-img" src="<?= base_url(); ?>/assets/css/timesheet/images/ring-loader.svg" alt="">
+                                <div class="row">
+                                    <div class="col-lg-12 table-responsive">
+                                        <div class="table-wrapper-settings">
+                                            <table id="tsEmployeeDataTable" class="nsm-table table-to-list"></table>
+                                            <div class="table-ts-loader">
+                                                <!-- <img class="ts-loader-img" src="<?= base_url(); ?>/assets/css/timesheet/images/ring-loader.svg" alt=""> -->
+                                                <center>
+                                                    <div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Fetching Result...
+                                                </center>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <!-- end row -->
                             </div>
-                            <!-- end row -->
                         </div>
+                        <!-- end card -->
                     </div>
-                    <!-- end card -->
                 </div>
-            </div>
 
             </div>
         </div>

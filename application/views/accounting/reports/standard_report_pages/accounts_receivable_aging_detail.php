@@ -76,7 +76,7 @@ $reportCategory = 'accounts_receivable_aging_detail_list';
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="24">
+                                                <td class="fetchResultLoader">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status">
                                                         </div>&nbsp;&nbsp;Fetching Result...
@@ -85,6 +85,7 @@ $reportCategory = 'accounts_receivable_aging_detail_list';
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <script> $('.fetchResultLoader').attr('colspan', $('#<?php echo $tableID ?> > thead > tr > th').length); </script>
                                 </div>
                             </div>
                             <div class="row mb-3">

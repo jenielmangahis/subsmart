@@ -9,7 +9,7 @@
     }
 
     /* #ts_schedule_tbl .day {
-        background: #d6e6f3;
+    background: #d6e6f3;
     } */
 
     .week-day,
@@ -45,7 +45,7 @@
         display: none;
     } */
 
-    /* .table-ts-loader {
+    .table-ts-loader {
         display: block;
         margin: 0 auto;
         clear: both;
@@ -54,7 +54,7 @@
         width: 100%;
         min-height: 100px;
         /* background: rgb(128 128 128 / 18%); */
-    } */
+    }
 
     .table-ts-loader img {
         width: 80px;

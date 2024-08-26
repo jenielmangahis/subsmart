@@ -170,11 +170,10 @@ $(function () {
         payroll.paySchedule = $('#payrollModal [name="pay_schedule"]:checked').val();
         payroll.paySchedForm = $('div#payrollModal div.modal-body').html();
         var paySchedName = $('#payrollModal [name="pay_schedule"]:checked').next().find('.payscale_name').html();
-        if (payroll.paySchedule !== "" && payroll.paySchedule !== undefined) {
+        if (payroll.paySchedule !== "" && payroll.paySchedule !== undefined || true) {
             $.get(base_url + 'accounting/get-payroll-form/' + payroll.paySchedule, function (res) {
                 $('div#payrollModal .modal-body').html(res);
-
-                $('div#payrollModal .modal-header .modal-title').html('Run Payroll: ' + paySchedName);
+                $('div#payrollModal .modal-header .modal-title').html('Run Payroll');
                 $('div#payrollModal .modal-body select:not(#bank-account)').select2({
                     minimumResultsForSearch: -1,
                     dropdownParent: $('#payrollModal')
@@ -190,7 +189,6 @@ $(function () {
                                 field: 'bank-account',
                                 modal: 'payrollModal'
                             }
-
                             // Query parameters will be ?search=[term]&type=public&field=[type]
                             return query;
                         }

@@ -461,7 +461,7 @@ $(document).on("click", "#schedule_save_btn", function() {
                     html: "Changes has been saved",
                     icon: "success",
                 }).then((result) => {
-                    window.location.reload(true);
+                    // window.location.reload(true);
                 });
             },
         });

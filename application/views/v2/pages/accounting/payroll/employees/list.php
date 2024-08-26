@@ -76,29 +76,29 @@
                             <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
                                 <p class="m-0">Show columns</p>
                                 <div class="form-check">
-                                    <input type="checkbox" checked id="chk-pay-rate" name="col_chk" class="form-check-input">
-                                    <label for="chk-pay-rate" class="form-check-label">Pay rate</label>
+                                    <input type="checkbox" checked id="showHidePayRate" name="col_chk" class="form-check-input">
+                                    <label for="showHidePayRate" class="form-check-label">Pay rate</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked id="chk-pay-method" name="col_chk" class="form-check-input">
-                                    <label for="chk-pay-method" class="form-check-label">Pay method</label>
+                                    <input type="checkbox" checked id="showHidePayMethod" name="col_chk" class="form-check-input">
+                                    <label for="showHidePayMethod" class="form-check-label">Pay method</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked id="chk-status" name="col_chk" class="form-check-input">
-                                    <label for="chk-status" class="form-check-label">Status</label>
+                                    <input type="checkbox" checked id="showHideStatus" name="col_chk" class="form-check-input">
+                                    <label for="showHideStatus" class="form-check-label">Status</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked id="chk-email-address" name="col_chk" class="form-check-input">
-                                    <label for="chk-email-address" class="form-check-label">Email address</label>
+                                    <input type="checkbox" checked id="showHideEmailAddress" name="col_chk" class="form-check-input">
+                                    <label for="showHideEmailAddress" class="form-check-label">Email address</label>
                                 </div>
                                 <div class="form-check">
-                                    <input type="checkbox" checked id="chk-phone-num" name="col_chk" class="form-check-input">
-                                    <label for="chk-phone-num" class="form-check-label">Phone number</label>
+                                    <input type="checkbox" checked id="showHidePhoneNum" name="col_chk" class="form-check-input">
+                                    <label for="showHidePhoneNum" class="form-check-label">Phone number</label>
                                 </div>
-                                <div class="form-check form-switch nsm-switch">
+                                <!-- <div class="form-check form-switch nsm-switch">
                                     <label for="privacy" class="form-check-label">Privacy </label>
                                     <input type="checkbox" name="privacy" id="privacy" class="form-check-input">
-                                </div>
+                                </div> -->
                             </ul>
                         </div>
                     </div>
@@ -155,4 +155,51 @@
     $(document).on('change', '#pay_method_filter', function() {
         employee_table.column(3).search($(this).val()).draw();
     });
+
+    function showHideColumn(id) {
+        alert(id);
+    }
+
+    $('input[name="col_chk"]').change(function (e) { 
+        const checkbox = $(this);
+        const checkboxID = $(this).attr('id');
+        switch (checkboxID) {
+            case 'showHidePayRate':
+                if (checkbox.prop('checked') == true) {
+                    $('#employeeTable th:nth-child(2), #employeeTable td:nth-child(2)').fadeIn('fast');
+                } else {
+                    $('#employeeTable th:nth-child(2), #employeeTable td:nth-child(2)').hide();
+                }
+                break;
+            case 'showHidePayMethod':
+                if (checkbox.prop('checked') == true) {
+                    $('#employeeTable th:nth-child(3), #employeeTable td:nth-child(3)').fadeIn('fast');
+                } else {
+                    $('#employeeTable th:nth-child(3), #employeeTable td:nth-child(3)').hide();
+                }
+                break;
+            case 'showHideStatus':
+                if (checkbox.prop('checked') == true) {
+                    $('#employeeTable th:nth-child(4), #employeeTable td:nth-child(4)').fadeIn('fast');
+                } else {
+                    $('#employeeTable th:nth-child(4), #employeeTable td:nth-child(4)').hide();
+                }
+                break;
+            case 'showHideEmailAddress':
+                if (checkbox.prop('checked') == true) {
+                    $('#employeeTable th:nth-child(5), #employeeTable td:nth-child(5)').fadeIn('fast');
+                } else {
+                    $('#employeeTable th:nth-child(5), #employeeTable td:nth-child(5)').hide();
+                }
+                break;
+            case 'showHidePhoneNum':
+                if (checkbox.prop('checked') == true) {
+                    $('#employeeTable th:nth-child(6), #employeeTable td:nth-child(6)').fadeIn('fast');
+                } else {
+                    $('#employeeTable th:nth-child(6), #employeeTable td:nth-child(6)').hide();
+                }
+                break;
+        }
+    });
+
 </script>

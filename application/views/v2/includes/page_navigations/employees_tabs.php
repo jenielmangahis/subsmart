@@ -26,6 +26,8 @@
 
                         <?php if (logged("user_type") == 7): ?>
                             <li><a class="dropdown-item" href="<?php echo base_url('timesheet/schedule') ?>">Schedule</a></li>
+                        <?php else: ?>
+                            <li><a class="dropdown-item" href="<?php echo base_url('dashboard') ?>">Dashboard</a></li>
                         <?php endif; ?>
 
                         <li><a class="dropdown-item" href="<?php echo base_url('timesheet/leave_requests') ?>">Leave Requests</a></li>
@@ -45,7 +47,8 @@
                 <span>Track Location</span>
             </a>
         </li>
-        <?php if (logged('user_type') == 7) { //Admin only ?>
+        <?php if (logged('user_type') == 7) {
+        ?>
             <li class="<?php if ($page->title == 'Pay Scale'): echo 'active';
                         endif; ?>">
                 <a class="nsm-page-link" href="<?php echo base_url('users/pay_scale') ?>">
@@ -65,3 +68,16 @@
         <li><label></label></li>
     </ul>
 </div>
+<?php
+// Assuming logged("user_type") returns the user's type
+$user_type = logged("user_type");
+?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var userType = <?php echo $user_type; ?>; // Pass the user_type to JavaScript
+
+        if (window.location.pathname === '/timesheet/schedule' && userType !== 7) {
+            window.location.href = "<?php echo base_url('dashboard') ?>";
+        }
+    });
+</script>

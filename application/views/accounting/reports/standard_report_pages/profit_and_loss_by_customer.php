@@ -70,7 +70,7 @@ $reportCategory = 'profit_and_loss_by_customer_list';
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td colspan="8">
+                                                <td class="fetchResultLoader">
                                                     <center>
                                                         <div class="spinner-border spinner-border-sm" role="status">
                                                         </div>&nbsp;&nbsp;Fetching Result...
@@ -79,6 +79,7 @@ $reportCategory = 'profit_and_loss_by_customer_list';
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <script> $('.fetchResultLoader').attr('colspan', $('#<?php echo $tableID ?> > thead > tr > th').length); </script>
                                 </div>
                             </div>
                             <div class="row mb-3">

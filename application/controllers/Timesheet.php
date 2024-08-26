@@ -252,22 +252,23 @@ class Timesheet extends MY_Controller
     }
 
 
-    public function insert_cOut_cIn_Location(){
+    public function insert_cOut_cIn_Location()
+    {
         $data = $this->input->post();
         $cIn_cOut_exist = $this->timesheet_model->get_cOut_cIn_Location(logged('company_id'));
 
-        if($cIn_cOut_exist){
+        if ($cIn_cOut_exist) {
             $update = $this->timesheet_model->update_cOut_cIn_Location($data);
-            $this->timesheet_model->insert_logs_for_cIn_cOut(logged('company_id'),logged('id'));
-        }else{
+            $this->timesheet_model->insert_logs_for_cIn_cOut(logged('company_id'), logged('id'));
+        } else {
             $insert = $this->timesheet_model->insert_cOut_cIn_Location($data);
-            $this->timesheet_model->insert_logs_for_cIn_cOut(logged('company_id'),logged('id'));
+            $this->timesheet_model->insert_logs_for_cIn_cOut(logged('company_id'), logged('id'));
         }
 
         $query = $this->timesheet_model->get_user_according_cIncOut_logs();
-       
+
         $query2 = $this->timesheet_model->get_logs_cOut_cIn_location(logged('company_id'));
-        foreach($query2 as $q){
+        foreach ($query2 as $q) {
             $last_update = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($q->date_created, "UTC", $this->session->userdata('usertimezone'))));
         }
 
@@ -289,21 +290,19 @@ class Timesheet extends MY_Controller
         $user_payday = $this->timesheet_model->getUsersAccordingToLogs_payday();
         $user_allow = $this->timesheet_model->getUsersAccordingToLogs_allow();
 
-       
+
         $query6 = $this->timesheet_model->get_logs_cOut_cIn_location(logged('company_id'));
-        foreach($query as $q){
+        foreach ($query as $q) {
             $last_update_for_auto_view = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($q->date_updated, "UTC", $this->session->userdata('usertimezone'))));
         }
-        foreach($query6 as $q){
+        foreach ($query6 as $q) {
             $last_update4 = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($q->date_created, "UTC", $this->session->userdata('usertimezone'))));
         }
         foreach ($query2 as $res) {
             $last_update = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($res->date_created, "UTC", $this->session->userdata('usertimezone'))));
-            
         }
         foreach ($query4 as $res2) {
             $last_update2 = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($res2->date_created, "UTC", $this->session->userdata('usertimezone'))));
-            
         }
         foreach ($query5 as $res3) {
             $last_update3 = date("M d, Y h:i A", strtotime($this->datetime_zone_converter($res3->date_created, "UTC", $this->session->userdata('usertimezone'))));
@@ -606,7 +605,28 @@ class Timesheet extends MY_Controller
             //                }
             //            }
             $display .= '<tr>';
-            $display .= '<td><span class="tbl-emp-name">' . $name . '</span><span class="tbl-emp-role">' . $role . '</span></td>';
+            $image = userProfilePicture($user->id);
+            if (is_null($image)) {
+                $initials = getLoggedNameInitials($user->id);
+                $display .= '<td style="display: flex; align-items: center;">
+                    <div class="profile-img" style="background-image: none; background-color: #ccc; display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 40px; height: 40px;">
+                        <span style="color: #fff; font-size: 18px;">' . $initials . '</span>
+                    </div>
+                    <div style="margin-left: 10px;">
+                        <span class="tbl-emp-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $name . '</span>
+                        <span class="tbl-emp-role" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role . '</span>
+                    </div>
+                 </td>';
+            } else {
+                $display .= '<td style="display: flex; align-items: center;">
+                    <div class="profile-img" style="background-image: url(\'' . $image . '\'); background-size: cover; background-position: center; border-radius: 50%; width: 40px; height: 40px;">
+                    </div>
+                    <div style="margin-left: 10px;">
+                        <span class="tbl-emp-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $name . '</span>
+                        <span class="tbl-emp-role" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role . '</span>
+                    </div>
+                 </td>';
+            }
             // $display .= '<td class="center" style="background-color:' . $bg_color . '"><span class="tbl-emp-status">' . $status . '</span></td>';
             $display .= '<td class="center" ><span class="tbl-emp-status" style="' . $bg_color . '">' . $status . '</span></td>';
             $display .= '<td class="center">' . $mon_duration . '</td>';
@@ -1197,17 +1217,17 @@ class Timesheet extends MY_Controller
         $this->load->model('Activity_model');
 
         $uid = logged('id');
-        $cid = logged('company_id');  
+        $cid = logged('company_id');
         $user_type = logged('user_type');
 
-        if( $user_type == 7 ){
+        if ($user_type == 7) {
             $activityLogs = $this->Activity_model->getActivityLogs($cid);
-        }else{
+        } else {
             $activityLogs = $this->Activity_model->getActivityLogsByUserId($user_id);
         }
 
         $this->page_data['page']->title  = 'Notification';
-        $this->page_data['page']->parent = 'timesheet';        
+        $this->page_data['page']->parent = 'timesheet';
         $this->page_data['activityLogs'] = $activityLogs;
         $this->load->view('v2/pages/users/timesheet_notification_list', $this->page_data);
     }
@@ -3322,13 +3342,20 @@ class Timesheet extends MY_Controller
         $display .= '<tr>';
         $display .= '<td>Employee</td>';
         // $display .= '<td>Action</td>';
-        $display .= '<td class="day"><span class="week-day">Mon</span><span class="week-date">' . $date_this_week['Monday'] . '</span></td>';
-        $display .= '<td class="day"><span class="week-day">Tue</span><span class="week-date">' . $date_this_week['Tuesday'] . '</span></td>';
-        $display .= '<td class="day"><span class="week-day">Wed</span><span class="week-date">' . $date_this_week['Wednesday'] . '</span></td>';
-        $display .= '<td class="day"><span class="week-day">Thu</span><span class="week-date">' . $date_this_week['Thursday'] . '</span></td>';
-        $display .= '<td class="day"><span class="week-day">Fri</span><span class="week-date">' . $date_this_week['Friday'] . '</span></td>';
-        $display .= '<td class="day"><span class="week-day">Sat</span><span class="week-date">' . $date_this_week['Saturday'] . '</span></td>';
-        $display .= '<td class="day"><span class="week-day">Sun</span><span class="week-date">' . $date_this_week['Sunday'] . '</span></td>';
+        // $display .= '<td class="day"><span class="week-day">Mon</span><span class="week-date">' . $date_this_week['Monday'] . '</span></td>';
+        // $display .= '<td class="day"><span class="week-day">Tue</span><span class="week-date">' . $date_this_week['Tuesday'] . '</span></td>';
+        // $display .= '<td class="day"><span class="week-day">Wed</span><span class="week-date">' . $date_this_week['Wednesday'] . '</span></td>';
+        // $display .= '<td class="day"><span class="week-day">Thu</span><span class="week-date">' . $date_this_week['Thursday'] . '</span></td>';
+        // $display .= '<td class="day"><span class="week-day">Fri</span><span class="week-date">' . $date_this_week['Friday'] . '</span></td>';
+        // $display .= '<td class="day"><span class="week-day">Sat</span><span class="week-date">' . $date_this_week['Saturday'] . '</span></td>';
+        // $display .= '<td class="day"><span class="week-day">Sun</span><span class="week-date">' . $date_this_week['Sunday'] . '</span></td>';
+        $display .= '<td class="day"><span class="week-date">' . $date_this_week['Monday'] . '- Mon</span><span>Shift Start - Shift End</span></td>';
+        $display .= '<td class="day"><span class="week-date">' . $date_this_week['Tuesday'] . '- Tue</span><span>Shift Start - Shift End</span></td>';
+        $display .= '<td class="day"><span class="week-date">' . $date_this_week['Wednesday'] . '- Wed</span><span>Shift Start - Shift End</span></td>';
+        $display .= '<td class="day"><span class="week-date">' . $date_this_week['Thursday'] . '- Thu</span><span>Shift Start - Shift End</span></td>';
+        $display .= '<td class="day"><span class="week-date">' . $date_this_week['Friday'] . '- Fri</span><span>Shift Start - Shift End</span></td>';
+        $display .= '<td class="day"><span class="week-date">' . $date_this_week['Saturday'] . '- Sat</span><span>Shift Start - Shift End</span></td>';
+        $display .= '<td class="day"><span class="week-date">' . $date_this_week['Sunday'] . '- Sun</span><span>Shift Start - Shift End</span></td>';
         $display .= '<td>Hours</td>';
         $display .= '</tr>';
         $display .= '</thead>';
@@ -3346,7 +3373,29 @@ class Timesheet extends MY_Controller
             }
             $employee_schedules = $this->timesheet_model->get_employee_shift_schedule($user->id, $date_this_check);
             if (count($employee_schedules) > 0) {
-                $display .= '<td><span class="employee-name">' . $user->FName . " " . $user->LName . '</span><span class="sub-text">' . $role_title . ' | ' . $status . '</span></td>';
+                $image = userProfilePicture($user->id);
+                if (is_null($image)) {
+                    $initials = getLoggedNameInitials($user->id);
+                    $display .= '<td style="display: flex; align-items: center;">
+                                    <div class="profile-img" style="background-image: none; background-color: #ccc; display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 40px; height: 40px;">
+                                        <span style="color: #fff; font-size: 18px;">' . $initials . '</span>
+                                    </div>
+                                    <div style="margin-left: 10px;">
+                                        <span class="employee-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $user->FName . ' ' . $user->LName . '</span>
+                                        <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role_title . ' | ' . $status . '</span>
+                                    </div>
+                                 </td>';
+                } else {
+                    $display .= '<td style="display: flex; align-items: center;">
+                                    <div class="profile-img" style="background-image: url(\'' . $image . '\'); background-size: cover; background-position: center; border-radius: 50%; width: 40px; height: 40px;">
+                                    </div>
+                                    <div style="margin-left: 10px;">
+                                        <span class="employee-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $user->FName . ' ' . $user->LName . '</span>
+                                        <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role_title . ' | ' . $status . '</span>
+                                    </div>
+                                 </td>';
+                }
+                // $display .= '<td><span class="employee-name">' . $user->FName . " " . $user->LName . '</span><span class="sub-text">' . $role_title . ' | ' . $status . '</span></td>';
                 // $display .= '<td><a class="group-copy-btn" title="Copy" data-id="' . $user->id . '"><i class="fa fa-clone" aria-hidden="true"></i></a>';
                 // $display .= '<a  class="group-paste-btn" title="Paste"><i class="fa fa-clipboard" aria-hidden="true"></i></a></div>';
                 // $display .= '<label class="copy-alert group"  id="copy_all_' . $user->id . '" style="display:none;">Copied!</label></td>';
@@ -3418,7 +3467,29 @@ class Timesheet extends MY_Controller
                 $display .= $mon . $tue . $wed . $thur . $fri . $sat . $sun;
                 $display .= '<td class="center"><label id="duration' . $user->id . '">' . round($duration, 2) . '</label></td>';
             } else {
-                $display .= '<td><span class="employee-name">' . $user->FName . " " . $user->LName . '</span><span class="sub-text">' . $role_title . ' | ' . $status . '</span></td>';
+                $image = userProfilePicture($user->id);
+                if (is_null($image)) {
+                    $initials = getLoggedNameInitials($user->id);
+                    $display .= '<td style="display: flex; align-items: center;">
+                                    <div class="profile-img" style="background-image: none; background-color: #ccc; display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 40px; height: 40px;">
+                                        <span style="color: #fff; font-size: 18px;">' . $initials . '</span>
+                                    </div>
+                                    <div style="margin-left: 10px;">
+                                        <span class="employee-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $user->FName . ' ' . $user->LName . '</span>
+                                        <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role_title . ' | ' . $status . '</span>
+                                    </div>
+                                 </td>';
+                } else {
+                    $display .= '<td style="display: flex; align-items: center;">
+                                    <div class="profile-img" style="background-image: url(\'' . $image . '\'); background-size: cover; background-position: center; border-radius: 50%; width: 40px; height: 40px;">
+                                    </div>
+                                    <div style="margin-left: 10px;">
+                                        <span class="employee-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $user->FName . ' ' . $user->LName . '</span>
+                                        <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role_title . ' | ' . $status . '</span>
+                                    </div>
+                                 </td>';
+                }
+                // $display .= '<td><span class="employee-name">' . $user->FName . " " . $user->LName . '</span><span class="sub-text">' . $role_title . ' | ' . $status . '</span></td>';
                 // $display .= '<td><a class="group-copy-btn" style="display:none;" title="Copy" data-id="' . $user->id . '"><i class="fa fa-clone" aria-hidden="true"></i></a>';
                 // $display .= '<a  class="group-paste-btn" title="Paste"><i class="fa fa-clipboard" aria-hidden="true"></i></a></div>';
                 // $display .= '<label class="copy-alert"  id="copy_all_' . $user->id . '" style="display:none;">Copied!</label></td>';
@@ -3639,7 +3710,7 @@ class Timesheet extends MY_Controller
         // var_dump($this->page_data['allnotification']);
         $this->load->view('v2/pages/users/timesheet_attendance_logs', $this->page_data);
     }
-    
+
     public function show_attendance_logs_table()
     {
         $date_from = $this->input->post("date_from");
@@ -4020,7 +4091,8 @@ class Timesheet extends MY_Controller
         );
         $where = array(
             array(
-                "id", $form_timesheet_attendance_id
+                "id",
+                $form_timesheet_attendance_id
             )
         );
         $this->timesheet_model->attendance_logs_update($update, $where, "timesheet_attendance");
@@ -4502,7 +4574,7 @@ class Timesheet extends MY_Controller
                 }
             }
             $display .= '</td>';
-            
+
             $display .= '</tr>';
         }
         // $display .= '</tbody>';
@@ -4818,7 +4890,7 @@ class Timesheet extends MY_Controller
             "Wednesday" => '',
             "Thursday" => '',
             "Friday" => '',
-            "Saturday" =>'',
+            "Saturday" => '',
             "Sunday" => '',
         );
         if (count($data) > 0) {
@@ -4841,14 +4913,14 @@ class Timesheet extends MY_Controller
 
             $display = "";
 
-            $display_tbody= '<tbody>';
+            $display_tbody = '<tbody>';
             $display_tbody .= '<tr role="row">';
             $display_tbody .= '</tr>';
             $display_tbody .= '</tbody>';
 
             $display .= '<thead>';
             $display .= '<tr role="row">';
-            $week_ctr=0;
+            $week_ctr = 0;
             for ($ctr = $start_date_view; $ctr <=  $end_date_view;) {
                 $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">' . strtoupper(date('D', strtotime($ctr)))  . '<br>' . date('M d', strtotime($ctr)) . '</th>';
                 $week_dates[$week_ctr] = $week_check[$week_ctr] =  date('Y-m-d', strtotime($ctr));
@@ -4857,7 +4929,7 @@ class Timesheet extends MY_Controller
             }
             $week_check[$week_ctr] = date('Y-m-d', strtotime($ctr));
             $display .= '</tr>';
-            $display .= '</thead>'.$display_tbody;
+            $display .= '</thead>' . $display_tbody;
         } else {
             $date_this_week = array(
                 "Monday" => date("M d", strtotime('monday this week', strtotime($week_convert))),
@@ -4887,7 +4959,7 @@ class Timesheet extends MY_Controller
                 5 => date("Y-m-d", strtotime('saturday this week', strtotime($week_convert))),
                 6 => date("Y-m-d", strtotime('sunday this week', strtotime($week_convert))),
             );
-           
+
             $display = "";
             $display .= '<thead>';
             $display .= '<tr role="row">';
@@ -4902,10 +4974,9 @@ class Timesheet extends MY_Controller
             $display .= '<th class="sorting_disabled" rowspan="1" colspan="1" style="width: 0px;">Sunday<br>' . $date_this_week['Sunday'] . '</th>';
             $display .= '</tr>';
             $display .= '</thead>';
-            
         }
 
-        
+
         $remarks = array();
         $shift_dates = array();
         $dates_founds = array();
@@ -5334,7 +5405,6 @@ class Timesheet extends MY_Controller
         $data->display = $display;
         echo json_encode($data);
     }
-    
     public function settings()
     {
         add_css(array(
@@ -5343,7 +5413,7 @@ class Timesheet extends MY_Controller
         ));
 
         add_footer_js(array(
-            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',            
+            'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
             'assets/js/v2/bootstrap-datetimepicker.v2.min.js',
             "assets/js/timesheet/timesheet_settings.js"
 
@@ -5352,7 +5422,6 @@ class Timesheet extends MY_Controller
         $this->page_data['page']->parent = 'Timesheet';
 
         $this->load->model('timesheet_model');
-        
         $cid = logged("company_id");
         $default_email = logged('email');
         $default_time  = $this->timesheet_model->defaultTimeSendTimesheetReport();
@@ -5459,36 +5528,36 @@ class Timesheet extends MY_Controller
         $this->load->model('LeaveType_model');
         $this->load->model('EmployeeLeaveCredit_model');
 
-        $cid = logged('company_id');    
+        $cid = logged('company_id');
         $uid = logged('id');
         $conditions[] = ['field' => 'is_archived', 'value' => 0];
-        if( logged('user_type') == 7 ){
-            $leaveRequests = $this->LeaveRequest_model->getAllByCompanyId($cid,$conditions);       
-        }else{
-            $leaveRequests = $this->LeaveRequest_model->getAllByUserId($uid,$conditions);       
-        } 
-        
-        $leaveTypes    = $this->LeaveType_model->getAllByCompanyId($cid,[]);
-        
+        if (logged('user_type') == 7) {
+            $leaveRequests = $this->LeaveRequest_model->getAllByCompanyId($cid, $conditions);
+        } else {
+            $leaveRequests = $this->LeaveRequest_model->getAllByUserId($uid, $conditions);
+        }
+
+        $leaveTypes    = $this->LeaveType_model->getAllByCompanyId($cid, []);
+
         //Leave Credits  
         $employeeLeaveCredits = [];
-        $leaveTypes = $this->LeaveType_model->getAllByCompanyId($cid,[]);
-        foreach( $leaveTypes as $l ){
+        $leaveTypes = $this->LeaveType_model->getAllByCompanyId($cid, []);
+        foreach ($leaveTypes as $l) {
             $leaveCredits = $this->EmployeeLeaveCredit_model->getByUserIdAndPtoId($uid, $l->id);
 
             $credits = 0;
-            if( $leaveCredits ){
+            if ($leaveCredits) {
                 $credits = $leaveCredits->leave_credits;
             }
 
             $employeeLeaveCredits[$l->id] = ['leave_type' => $l->name, 'leave_credits' => $credits];
-        }   
+        }
 
         $this->page_data['page']->title   = 'Leave Requests';
         $this->page_data['employeeLeaveCredits'] = $employeeLeaveCredits;
         $this->page_data['leaveRequests'] = $leaveRequests;
         $this->page_data['leaveTypes']    = $leaveTypes;
-        $this->load->view('v2/pages/users/leave_requests', $this->page_data);        
+        $this->load->view('v2/pages/users/leave_requests', $this->page_data);
     }
 
     public function ajax_create_leave_request()
@@ -5503,43 +5572,43 @@ class Timesheet extends MY_Controller
         $cid  = logged('company_id');
         $uid  = logged('id');
         $post = $this->input->post();
-        
-        if( $post['leave_type'] == '' ){
+
+        if ($post['leave_type'] == '') {
             $is_success = 0;
             $msg = 'Please select leave type';
         }
 
-        if( $post['request_date_from'] == '' || $post['request_date_to'] == '' ){
+        if ($post['request_date_from'] == '' || $post['request_date_to'] == '') {
             $is_success = 0;
             $msg = 'Please specify leave date';
         }
 
-        if( $post['request_reason'] == '' ){
+        if ($post['request_reason'] == '') {
             $is_success = 0;
             $msg = 'Please specify leave request reason';
         }
 
         $leaveCredits = $this->EmployeeLeaveCredit_model->getByUserIdAndPtoId($uid, $post['leave_type']);
-        if( !$leaveCredits || ($leaveCredits->leave_credits == 0) ){
+        if (!$leaveCredits || ($leaveCredits->leave_credits == 0)) {
             $is_success = 0;
             $msg = 'No available leave credits';
-        }    
+        }
 
         $date_from = $post['request_date_from'] . ' 00:00:00';
         $date_to   = $post['request_date_to'] . ' 23:59:59';
-        
+
         $time1 = new \DateTime($date_from);
         $time2 = new \DateTime($date_to);
         $diff = $time1->diff($time2);
         $days_diff = $diff->d;
         $hrs_diff  = $diff->h;
 
-        if( $leaveCredits && ($leaveCredits->leave_credits < $days_diff ) ){
+        if ($leaveCredits && ($leaveCredits->leave_credits < $days_diff)) {
             $is_success = 0;
             $msg = 'Insufficient leave credits. You only have ' . $leaveCredits->leave_credits . ' ' . $leaveCredits->leave_type . ' credits';
         }
-        
-        if( $is_success == 1 ){
+
+        if ($is_success == 1) {
             $data = [
                 'user_id' => $uid,
                 'pto_id' => $post['leave_type'],
@@ -5561,7 +5630,7 @@ class Timesheet extends MY_Controller
 
             //Activity Logs
             $leaveType = $this->LeaveType_model->getById($post['leave_type']);
-            $activity_name = 'Leave Request : Created leave request'; 
+            $activity_name = 'Leave Request : Created leave request';
             createActivityLog($activity_name);
         }
 
@@ -5581,16 +5650,16 @@ class Timesheet extends MY_Controller
         $post = $this->input->post();
         $cid  = logged('company_id');
         $leaveRequest = $this->LeaveRequest_model->getByIdAndCompanyId($post['rid'], $cid);
-        $leaveTypes   = $this->LeaveType_model->getAllByCompanyId($cid,$conditions);    
-        
-        if( $leaveRequest->status == $this->LeaveRequest_model->requestStatusPending() ){
+        $leaveTypes   = $this->LeaveType_model->getAllByCompanyId($cid, $conditions);
+
+        if ($leaveRequest->status == $this->LeaveRequest_model->requestStatusPending()) {
             $is_valid = 1;
             $err_msg  = '';
-        }else{
+        } else {
             $is_valid = 0;
-            if( $leaveRequest->status == $this->LeaveRequest_model->requestStatusApproved() ){
+            if ($leaveRequest->status == $this->LeaveRequest_model->requestStatusApproved()) {
                 $err_msg = '<div class="alert alert-danger" role="alert">Cannot edit leave request. Leave request is already approved.</div>';
-            }else{
+            } else {
                 $err_msg = '<div class="alert alert-danger" role="alert">Cannot edit leave request. Leave request is already disapproved.</div>';
             }
         }
@@ -5599,7 +5668,7 @@ class Timesheet extends MY_Controller
         $this->page_data['err_msg']  = $err_msg;
         $this->page_data['leaveRequest'] = $leaveRequest;
         $this->page_data['leaveTypes']    = $leaveTypes;
-        $this->load->view('v2/pages/users/ajax_edit_leave_request', $this->page_data);   
+        $this->load->view('v2/pages/users/ajax_edit_leave_request', $this->page_data);
     }
 
     public function ajax_update_leave_request()
@@ -5614,21 +5683,21 @@ class Timesheet extends MY_Controller
         $cid  = logged('company_id');
         $uid  = logged('id');
         $post = $this->input->post();
-        
-        if( $post['leave_type'] == '' ){
+
+        if ($post['leave_type'] == '') {
             $is_success = 0;
             $msg = 'Please select leave type';
         }
 
-        if( $post['request_date_from'] == '' || $post['request_date_to'] == '' ){
+        if ($post['request_date_from'] == '' || $post['request_date_to'] == '') {
             $is_success = 0;
             $msg = 'Please specify leave date';
         }
 
-        if( $post['request_reason'] == '' ){
+        if ($post['request_reason'] == '') {
             $is_success = 0;
             $msg = 'Please specify leave request reason';
-        }    
+        }
 
         $date_from = $post['request_date_from'] . ' 00:00:00';
         $date_to   = $post['request_date_to'] . ' 23:59:59';
@@ -5641,25 +5710,25 @@ class Timesheet extends MY_Controller
 
         $leaveRequest = $this->LeaveRequest_model->getByIdAndCompanyId($post['rid'], $cid);
 
-        if( $leaveRequest->status != $this->LeaveRequest_model->requestStatusPending() ){
+        if ($leaveRequest->status != $this->LeaveRequest_model->requestStatusPending()) {
             $status = $leaveRequest->status == $this->LeaveRequest_model->requestStatusApproved() ? 'approved' : 'disapproved';
 
-            $is_success = 0;            
+            $is_success = 0;
             $msg = 'Leave request is lock from editing. Status is already ' . $status;
         }
 
         $leaveCredits = $this->EmployeeLeaveCredit_model->getByUserIdAndPtoId($uid, $post['leave_type']);
-        if( !$leaveCredits || ($leaveCredits->leave_credits == 0) ){
+        if (!$leaveCredits || ($leaveCredits->leave_credits == 0)) {
             $is_success = 0;
             $msg = 'No available leave credits';
-        }  
+        }
 
-        if( $leaveCredits && ($leaveCredits->leave_credits < $days_diff ) ){
+        if ($leaveCredits && ($leaveCredits->leave_credits < $days_diff)) {
             $is_success = 0;
             $msg = 'Insufficient leave credits. You only have ' . $leaveCredits->leave_credits . ' ' . $leaveCredits->leave_type . ' credits';
         }
 
-        if( $is_success == 1 && $leaveRequest ){
+        if ($is_success == 1 && $leaveRequest) {
             //Return leave credits
             $date_from_a = $leaveRequest->date_from . ' 00:00:00';
             $date_to_a   = $leaveRequest->date_to . ' 23:59:59';
@@ -5669,7 +5738,7 @@ class Timesheet extends MY_Controller
             $days_diff_a = $diff->d;
             $hrs_diff_a  = $diff->h;
             $prevLeaveCredits = $this->EmployeeLeaveCredit_model->getByUserIdAndPtoId($uid, $leaveRequest->pto_id);
-            if( $prevLeaveCredits ){
+            if ($prevLeaveCredits) {
                 $new_balance = $prevLeaveCredits->leave_credits + $days_diff_a;
                 $new_data = ['leave_credits' => $new_balance];
                 $this->EmployeeLeaveCredit_model->update($prevLeaveCredits->id, $new_data);
@@ -5693,7 +5762,7 @@ class Timesheet extends MY_Controller
 
             //Activity Logs
             $leaveType = $this->LeaveType_model->getById($post['leave_type']);
-            $activity_name = 'Leave Request : Updated leave request'; 
+            $activity_name = 'Leave Request : Updated leave request';
             createActivityLog($activity_name);
         }
 
@@ -5715,15 +5784,15 @@ class Timesheet extends MY_Controller
         $cid  = logged('company_id');
         $post = $this->input->post();
         $leaveRequest = $this->LeaveRequest_model->getByIdAndCompanyId($post['rid'], $cid);
-        if( $leaveRequest ){
+        if ($leaveRequest) {
             $data = ['is_archived' => 1];
-            $this->LeaveRequest_model->update($leaveRequest->id, $data);            
+            $this->LeaveRequest_model->update($leaveRequest->id, $data);
 
             $msg = '';
             $is_success = 1;
 
             //Activity Logs
-            $activity_name = 'Leave Request : Deleted '.$leaveRequest->employee.' leave request ' . $leaveRequest->leave_type;             
+            $activity_name = 'Leave Request : Deleted ' . $leaveRequest->employee . ' leave request ' . $leaveRequest->leave_type;
             createActivityLog($activity_name);
             // if( $leaveRequest->status == $this->LeaveRequest_model->requestStatusPending() ){
             //     $this->LeaveRequest_model->delete($leaveRequest->id);
@@ -5762,9 +5831,9 @@ class Timesheet extends MY_Controller
         $utype = logged('user_type');
         $post  = $this->input->post();
 
-        if( $utype == 7 ){
+        if ($utype == 7) {
             $leaveRequest = $this->LeaveRequest_model->getByIdAndCompanyId($post['rid'], $cid);
-            if( $leaveRequest ){
+            if ($leaveRequest) {
                 $data = [
                     'approver_id' => $uid,
                     'status' => $this->LeaveRequest_model->requestStatusApproved(),
@@ -5776,9 +5845,9 @@ class Timesheet extends MY_Controller
 
                 $msg = '';
                 $is_success = 1;
-                
+
                 //Activity Logs
-                $activity_name = 'Leave Request : Approved '.$leaveRequest->employee.' leave request ' . $leaveRequest->leave_type;                 
+                $activity_name = 'Leave Request : Approved ' . $leaveRequest->employee . ' leave request ' . $leaveRequest->leave_type;
                 createActivityLog($activity_name);
 
                 // if( $leaveRequest->status == $this->LeaveRequest_model->requestStatusPending() ){
@@ -5792,7 +5861,7 @@ class Timesheet extends MY_Controller
 
                 //     $msg = '';
                 //     $is_success = 1;
-                    
+
                 //     //Activity Logs
                 //     $activity_name = 'Leave Request : Updated leave request status to approved'; 
                 //     createActivityLog($activity_name);
@@ -5807,7 +5876,7 @@ class Timesheet extends MY_Controller
                 //     }
                 // }
             }
-        }else{
+        } else {
             $msg = 'Only admin can approve request.';
         }
 
@@ -5832,9 +5901,9 @@ class Timesheet extends MY_Controller
         $utype = logged('user_type');
         $post  = $this->input->post();
 
-        if( $utype == 7 ){
+        if ($utype == 7) {
             $leaveRequest = $this->LeaveRequest_model->getByIdAndCompanyId($post['rid'], $cid);
-            if( $leaveRequest ){
+            if ($leaveRequest) {
                 $data = [
                     'approver_id' => $uid,
                     'status' => $this->LeaveRequest_model->requestStatusDisApproved(),
@@ -5846,7 +5915,7 @@ class Timesheet extends MY_Controller
 
                 //Return leave credits            
                 $leaveCredits = $this->EmployeeLeaveCredit_model->getByUserIdAndPtoId($uid, $leaveRequest->pto_id);
-                if( $leaveCredits ){                    
+                if ($leaveCredits) {
                     $date_from_a = $leaveRequest->date_from . ' 00:00:00';
                     $date_to_a   = $leaveRequest->date_to . ' 23:59:59';
                     $time1_a = new \DateTime($date_from_a);
@@ -5862,9 +5931,9 @@ class Timesheet extends MY_Controller
 
                 $msg = '';
                 $is_success = 1;
-                
+
                 //Activity Logs
-                $activity_name = 'Leave Request : Disapproved '.$leaveRequest->employee.' leave request ' . $leaveRequest->leave_type; 
+                $activity_name = 'Leave Request : Disapproved ' . $leaveRequest->employee . ' leave request ' . $leaveRequest->leave_type;
                 createActivityLog($activity_name);
 
                 // if( $leaveRequest->status == $this->LeaveRequest_model->requestStatusPending() ){
@@ -5879,7 +5948,7 @@ class Timesheet extends MY_Controller
 
                 //     $msg = '';
                 //     $is_success = 1;
-                    
+
                 //     //Activity Logs
                 //     $activity_name = 'Leave Request : Updated leave request status to disapproved'; 
                 //     createActivityLog($activity_name);
@@ -5894,7 +5963,7 @@ class Timesheet extends MY_Controller
                 //     }
                 // }
             }
-        }else{
+        } else {
             $msg = 'Only admin can approve request.';
         }
 
@@ -5918,22 +5987,22 @@ class Timesheet extends MY_Controller
 
         $total_deleted = 0;
         $errors = [];
-        foreach($post['row_selected'] as $rid){
+        foreach ($post['row_selected'] as $rid) {
             $leaveRequest =  $this->LeaveRequest_model->getByIdAndCompanyId($rid, $cid);
-            if( $leaveRequest ){
+            if ($leaveRequest) {
                 $data = ['is_archived' => 1];
-                $this->LeaveRequest_model->update($leaveRequest->id, $data);            
+                $this->LeaveRequest_model->update($leaveRequest->id, $data);
                 //$this->LeaveRequest_model->delete($leaveRequest->id);
 
                 //Activity Logs                
-                $activity_name = 'Leave Request : Deleted '.$leaveRequest->employee.' leave request '.$leaveRequest->leave_type; 
+                $activity_name = 'Leave Request : Deleted ' . $leaveRequest->employee . ' leave request ' . $leaveRequest->leave_type;
                 createActivityLog($activity_name);
 
                 $total_deleted++;
-            }            
+            }
         }
 
-        if( $total_deleted > 0 ){
+        if ($total_deleted > 0) {
             $is_success = 1;
             $msg = 'Selected leave requests was successfully deleted';
         }
@@ -5959,9 +6028,9 @@ class Timesheet extends MY_Controller
 
         $total_updated = 0;
         $errors = [];
-        foreach($post['row_selected'] as $rid){
+        foreach ($post['row_selected'] as $rid) {
             $leaveRequest =  $this->LeaveRequest_model->getByIdAndCompanyId($rid, $cid);
-            if( $leaveRequest ){
+            if ($leaveRequest) {
                 $data = [
                     'approver_id' => $uid,
                     'status' => $this->LeaveRequest_model->requestStatusApproved(),
@@ -5971,15 +6040,14 @@ class Timesheet extends MY_Controller
                 $this->LeaveRequest_model->update($leaveRequest->id, $data);
 
                 //Activity Logs
-                $activity_name = 'Leave Request : Approved '.$leaveRequest->employee.' leave request ' . $leaveRequest->leave_type; 
+                $activity_name = 'Leave Request : Approved ' . $leaveRequest->employee . ' leave request ' . $leaveRequest->leave_type;
                 createActivityLog($activity_name);
 
                 $total_updated++;
             }
-            
         }
 
-        if( $total_updated > 0 ){
+        if ($total_updated > 0) {
             $is_success = 1;
             $msg = 'Selected leave requests was successfully updated';
         }
@@ -6006,9 +6074,9 @@ class Timesheet extends MY_Controller
 
         $total_updated = 0;
         $errors = [];
-        foreach($post['row_selected'] as $rid){
+        foreach ($post['row_selected'] as $rid) {
             $leaveRequest =  $this->LeaveRequest_model->getByIdAndCompanyId($rid, $cid);
-            if( $leaveRequest ){
+            if ($leaveRequest) {
                 $data = [
                     'approver_id' => $uid,
                     'status' => $this->LeaveRequest_model->requestStatusDisApproved(),
@@ -6019,7 +6087,7 @@ class Timesheet extends MY_Controller
 
                 //Return leave credits            
                 $leaveCredits = $this->EmployeeLeaveCredit_model->getByUserIdAndPtoId($uid, $leaveRequest->pto_id);
-                if( $leaveCredits ){                    
+                if ($leaveCredits) {
                     $date_from_a = $leaveRequest->date_from . ' 00:00:00';
                     $date_to_a   = $leaveRequest->date_to . ' 23:59:59';
                     $time1_a = new \DateTime($date_from_a);
@@ -6034,15 +6102,14 @@ class Timesheet extends MY_Controller
                 }
 
                 //Activity Logs
-                $activity_name = 'Leave Request : Disapproved '.$leaveRequest->employee.' leave request ' . $leaveRequest->leave_type; 
+                $activity_name = 'Leave Request : Disapproved ' . $leaveRequest->employee . ' leave request ' . $leaveRequest->leave_type;
                 createActivityLog($activity_name);
 
                 $total_updated++;
             }
-            
         }
 
-        if( $total_updated > 0 ){
+        if ($total_updated > 0) {
             $is_success = 1;
             $msg = 'Selected leave requests was successfully updated';
         }
@@ -6063,18 +6130,18 @@ class Timesheet extends MY_Controller
         $post = $this->input->post();
         $cid  = logged('company_id');
         $leaveRequest = $this->LeaveRequest_model->getByIdAndCompanyId($post['rid'], $cid);
-        
-        if( $leaveRequest ){
+
+        if ($leaveRequest) {
             $is_valid = 1;
             $err_msg  = '';
-        }else{
+        } else {
             $err_msg = '<div class="alert alert-danger" role="alert">Cannot find data.</div>';
         }
 
         $this->page_data['is_valid'] = $is_valid;
         $this->page_data['err_msg']  = $err_msg;
         $this->page_data['leaveRequest'] = $leaveRequest;
-        $this->load->view('v2/pages/users/ajax_view_leave_request', $this->page_data);   
+        $this->load->view('v2/pages/users/ajax_view_leave_request', $this->page_data);
     }
 
     public function overtime_requests()
@@ -6090,18 +6157,18 @@ class Timesheet extends MY_Controller
 
         $this->load->model('OvertimeRequest_model');
 
-        $cid = logged('company_id');    
+        $cid = logged('company_id');
         $uid = logged('id');
         $conditions[] = ['field' => 'is_archived', 'value' => 0];
-        if( logged('user_type') == 7 ){
-            $overtimeRequests = $this->OvertimeRequest_model->getAllByCompanyId($cid,$conditions);       
-        }else{
-            $overtimeRequests = $this->OvertimeRequest_model->getAllByUserId($uid,$conditions);       
-        } 
+        if (logged('user_type') == 7) {
+            $overtimeRequests = $this->OvertimeRequest_model->getAllByCompanyId($cid, $conditions);
+        } else {
+            $overtimeRequests = $this->OvertimeRequest_model->getAllByUserId($uid, $conditions);
+        }
 
         $this->page_data['page']->title   = 'Overtime Requests';
         $this->page_data['overtimeRequests'] = $overtimeRequests;
-        $this->load->view('v2/pages/users/overtime_requests', $this->page_data); 
+        $this->load->view('v2/pages/users/overtime_requests', $this->page_data);
     }
 
     public function ajax_create_overtime_request()
@@ -6115,30 +6182,30 @@ class Timesheet extends MY_Controller
         $uid  = logged('id');
         $post = $this->input->post();
 
-        if( $post['request_date_from'] == '' || $post['request_date_to'] == '' ){
+        if ($post['request_date_from'] == '' || $post['request_date_to'] == '') {
             $is_success = 0;
             $msg = 'Please specify overtime date and time';
         }
 
-        if( $post['request_time_from'] == '' || $post['request_time_to'] == '' ){
+        if ($post['request_time_from'] == '' || $post['request_time_to'] == '') {
             $is_success = 0;
             $msg = 'Please specify overtime date and time';
         }
 
-        if( $post['request_reason'] == '' ){
+        if ($post['request_reason'] == '') {
             $is_success = 0;
             $msg = 'Please specify overtime request reason';
-        } 
-        
-        if( $is_success == 1 ){
+        }
+
+        if ($is_success == 1) {
             $date_from = $post['request_date_from'] . ' ' . $post['request_time_from'];
             $date_to   = $post['request_date_to'] . ' ' . $post['request_time_to'];
-            
+
             $time1 = new \DateTime($date_from);
             $time2 = new \DateTime($date_to);
             $diff = $time1->diff($time2);
             $hrs_diff  = $diff->h;
-            
+
             $data = [
                 'user_id' => $uid,
                 'approver_id' => 0,
@@ -6157,7 +6224,7 @@ class Timesheet extends MY_Controller
             $this->OvertimeRequest_model->create($data);
 
             //Activity Logs            
-            $activity_name = 'Overtime Request : Created overtime request'; 
+            $activity_name = 'Overtime Request : Created overtime request';
             createActivityLog($activity_name);
         }
 
@@ -6176,15 +6243,15 @@ class Timesheet extends MY_Controller
         $post = $this->input->post();
         $cid  = logged('company_id');
         $overtimeRequest = $this->OvertimeRequest_model->getByIdAndCompanyId($post['rid'], $cid);
-        
-        if( $overtimeRequest->status == $this->OvertimeRequest_model->requestStatusPending() ){
+
+        if ($overtimeRequest->status == $this->OvertimeRequest_model->requestStatusPending()) {
             $is_valid = 1;
             $err_msg  = '';
-        }else{
+        } else {
             $is_valid = 0;
-            if( $overtimeRequest->status == $this->OvertimeRequest_model->requestStatusApproved() ){
+            if ($overtimeRequest->status == $this->OvertimeRequest_model->requestStatusApproved()) {
                 $err_msg = '<div class="alert alert-danger" role="alert">Cannot edit overtime request. Overtime request is already approved.</div>';
-            }else{
+            } else {
                 $err_msg = '<div class="alert alert-danger" role="alert">Cannot edit overtime request. Overtime request is already disapproved.</div>';
             }
         }
@@ -6192,7 +6259,7 @@ class Timesheet extends MY_Controller
         $this->page_data['is_valid'] = $is_valid;
         $this->page_data['err_msg']  = $err_msg;
         $this->page_data['overtimeRequest'] = $overtimeRequest;
-        $this->load->view('v2/pages/users/ajax_edit_overtime_request', $this->page_data);  
+        $this->load->view('v2/pages/users/ajax_edit_overtime_request', $this->page_data);
     }
 
     public function ajax_update_overtime_request()
@@ -6206,27 +6273,27 @@ class Timesheet extends MY_Controller
         $uid  = logged('id');
         $post = $this->input->post();
 
-        if( $post['request_date_from'] == '' || $post['request_date_to'] == '' ){
+        if ($post['request_date_from'] == '' || $post['request_date_to'] == '') {
             $is_success = 0;
             $msg = 'Please specify overtime date and time';
         }
 
-        if( $post['request_time_from'] == '' || $post['request_time_to'] == '' ){
+        if ($post['request_time_from'] == '' || $post['request_time_to'] == '') {
             $is_success = 0;
             $msg = 'Please specify overtime date and time';
         }
 
-        if( $post['request_reason'] == '' ){
+        if ($post['request_reason'] == '') {
             $is_success = 0;
             $msg = 'Please specify overtime request reason';
-        } 
+        }
 
         $overtimeRequest = $this->OvertimeRequest_model->getByIdAndCompanyId($post['rid'], $cid);
 
-        if( $is_success == 1 && $overtimeRequest ){
+        if ($is_success == 1 && $overtimeRequest) {
             $date_from = $post['request_date_from'] . ' ' . $post['request_time_from'];
             $date_to   = $post['request_date_to'] . ' ' . $post['request_time_to'];
-            
+
             $time1 = new \DateTime($date_from);
             $time2 = new \DateTime($date_to);
             $diff = $time1->diff($time2);
@@ -6246,7 +6313,7 @@ class Timesheet extends MY_Controller
             $this->OvertimeRequest_model->update($overtimeRequest->id, $data);
 
             //Activity Logs
-            $activity_name = 'Overtime Request : Updated overtime request'; 
+            $activity_name = 'Overtime Request : Updated overtime request';
             createActivityLog($activity_name);
         }
 
@@ -6268,15 +6335,15 @@ class Timesheet extends MY_Controller
         $cid  = logged('company_id');
         $post = $this->input->post();
         $overtimeRequest = $this->OvertimeRequest_model->getByIdAndCompanyId($post['rid'], $cid);
-        if( $overtimeRequest ){
+        if ($overtimeRequest) {
             $data = ['is_archived' => 1];
-            $this->OvertimeRequest_model->update($overtimeRequest->id, $data);            
+            $this->OvertimeRequest_model->update($overtimeRequest->id, $data);
 
             $msg = '';
             $is_success = 1;
 
             //Activity Logs
-            $activity_name = 'Overtime Request : Deleted overtime request';             
+            $activity_name = 'Overtime Request : Deleted overtime request';
             createActivityLog($activity_name);
         }
 
@@ -6301,9 +6368,9 @@ class Timesheet extends MY_Controller
         $utype = logged('user_type');
         $post  = $this->input->post();
 
-        if( $utype == 7 ){
+        if ($utype == 7) {
             $overtimeRequest = $this->OvertimeRequest_model->getByIdAndCompanyId($post['rid'], $cid);
-            if( $overtimeRequest ){
+            if ($overtimeRequest) {
                 $data = [
                     'approver_id' => $uid,
                     'status' => $this->OvertimeRequest_model->requestStatusApproved(),
@@ -6317,7 +6384,7 @@ class Timesheet extends MY_Controller
                 $date_from = $overtimeRequest->date_from;
                 $date_to   = $overtimeRequest->date_to;
                 $timesheet = $this->Timesheet_model->get_employee_attendance_with_date_range($overtimeRequest->user_id, $date_from, $date_to);
-                if( $timesheet ){
+                if ($timesheet) {
                     $data = [
                         'overtime' => $overtimeRequest->total_hrs,
                         'overtime_status' => 2,
@@ -6328,12 +6395,12 @@ class Timesheet extends MY_Controller
 
                 $msg = '';
                 $is_success = 1;
-                
+
                 //Activity Logs
-                $activity_name = 'Overtime Request : Approved '.$overtimeRequest->employee.' overtime request';                 
+                $activity_name = 'Overtime Request : Approved ' . $overtimeRequest->employee . ' overtime request';
                 createActivityLog($activity_name);
             }
-        }else{
+        } else {
             $msg = 'Only admin can approve request.';
         }
 
@@ -6357,9 +6424,9 @@ class Timesheet extends MY_Controller
         $utype = logged('user_type');
         $post  = $this->input->post();
 
-        if( $utype == 7 ){
+        if ($utype == 7) {
             $overtimeRequest = $this->OvertimeRequest_model->getByIdAndCompanyId($post['rid'], $cid);
-            if( $overtimeRequest ){
+            if ($overtimeRequest) {
                 $data = [
                     'approver_id' => $uid,
                     'status' => $this->OvertimeRequest_model->requestStatusDisApproved(),
@@ -6371,12 +6438,12 @@ class Timesheet extends MY_Controller
 
                 $msg = '';
                 $is_success = 1;
-                
+
                 //Activity Logs
-                $activity_name = 'Overtime Request : Disapproved '.$overtimeRequest->employee.' overtime request'; 
+                $activity_name = 'Overtime Request : Disapproved ' . $overtimeRequest->employee . ' overtime request';
                 createActivityLog($activity_name);
             }
-        }else{
+        } else {
             $msg = 'Only admin can approve request.';
         }
 
@@ -6400,21 +6467,21 @@ class Timesheet extends MY_Controller
 
         $total_deleted = 0;
         $errors = [];
-        foreach($post['row_selected'] as $rid){
+        foreach ($post['row_selected'] as $rid) {
             $overtimeRequest =  $this->OvertimeRequest_model->getByIdAndCompanyId($rid, $cid);
-            if( $overtimeRequest ){
+            if ($overtimeRequest) {
                 $data = ['is_archived' => 1];
-                $this->OvertimeRequest_model->update($overtimeRequest->id, $data);  
+                $this->OvertimeRequest_model->update($overtimeRequest->id, $data);
 
                 //Activity Logs                
-                $activity_name = 'Overtime Request : Deleted '.$overtimeRequest->employee.' overtime request'; 
+                $activity_name = 'Overtime Request : Deleted ' . $overtimeRequest->employee . ' overtime request';
                 createActivityLog($activity_name);
 
                 $total_deleted++;
-            }            
+            }
         }
 
-        if( $total_deleted > 0 ){
+        if ($total_deleted > 0) {
             $is_success = 1;
             $msg = 'Selected overtime requests was successfully deleted';
         }
@@ -6440,9 +6507,9 @@ class Timesheet extends MY_Controller
 
         $total_updated = 0;
         $errors = [];
-        foreach($post['row_selected'] as $rid){
+        foreach ($post['row_selected'] as $rid) {
             $overtimeRequest =  $this->OvertimeRequest_model->getByIdAndCompanyId($rid, $cid);
-            if( $overtimeRequest ){
+            if ($overtimeRequest) {
                 $data = [
                     'approver_id' => $uid,
                     'status' => $this->OvertimeRequest_model->requestStatusApproved(),
@@ -6452,15 +6519,14 @@ class Timesheet extends MY_Controller
                 $this->OvertimeRequest_model->update($overtimeRequest->id, $data);
 
                 //Activity Logs
-                $activity_name = 'Overtime Request : Approved '.$overtimeRequest->employee.' overtime request'; 
+                $activity_name = 'Overtime Request : Approved ' . $overtimeRequest->employee . ' overtime request';
                 createActivityLog($activity_name);
 
                 $total_updated++;
             }
-            
         }
 
-        if( $total_updated > 0 ){
+        if ($total_updated > 0) {
             $is_success = 1;
             $msg = 'Selected overtime requests was successfully updated';
         }
@@ -6486,9 +6552,9 @@ class Timesheet extends MY_Controller
 
         $total_updated = 0;
         $errors = [];
-        foreach($post['row_selected'] as $rid){
+        foreach ($post['row_selected'] as $rid) {
             $overtimeRequest =  $this->OvertimeRequest_model->getByIdAndCompanyId($rid, $cid);
-            if( $overtimeRequest ){
+            if ($overtimeRequest) {
                 $data = [
                     'approver_id' => $uid,
                     'status' => $this->OvertimeRequest_model->requestStatusDisApproved(),
@@ -6498,15 +6564,14 @@ class Timesheet extends MY_Controller
                 $this->OvertimeRequest_model->update($overtimeRequest->id, $data);
 
                 //Activity Logs
-                $activity_name = 'Overtime Request : Disapproved '.$overtimeRequest->employee.' overtime request'; 
+                $activity_name = 'Overtime Request : Disapproved ' . $overtimeRequest->employee . ' overtime request';
                 createActivityLog($activity_name);
 
                 $total_updated++;
             }
-            
         }
 
-        if( $total_updated > 0 ){
+        if ($total_updated > 0) {
             $is_success = 1;
             $msg = 'Selected overtime requests was successfully updated';
         }
@@ -6527,12 +6592,12 @@ class Timesheet extends MY_Controller
 
         $post = $this->input->post();
         $cid = logged('company_id');
-        
+
         $is_allow_email_report = isset($post['subcribe_weekly_report']) ? 1 : 0;
         $with_estimated_wages  = isset($post['est_wage_privacy']) ? 1 : 0;
-        
+
         $settings = $this->timesheet_model->getSettingsByCompanyId($cid);
-        if( $settings ){
+        if ($settings) {
             $data = [
                 'workweek_start_day' => $post['week_start'],
                 'allow_email_report' => $is_allow_email_report,
@@ -6542,21 +6607,20 @@ class Timesheet extends MY_Controller
                 'timesheet_report_with_estimated_wages' => $with_estimated_wages,
                 'timesheet_report_timezone' => $post['timesheet_report_timezone'],
                 'timesheet_report_recipient_email' => $post['email_report'],
-                'date_updated' => date("Y-m-d H:i:s") 
+                'date_updated' => date("Y-m-d H:i:s")
             ];
 
             $this->timesheet_model->updateTimesheetSettingsByCompanyId($cid, $data);
 
             //Activity Logs
-            $activity_name = 'Timesheet Settings : Updated company timesheet settings'; 
+            $activity_name = 'Timesheet Settings : Updated company timesheet settings';
             createActivityLog($activity_name);
-
-        }else{
+        } else {
             $data = [
                 'company_id' => $cid,
                 'date_created' => date("Y-m-d H:i:s"),
                 'status' => 1,
-                'allow_departments' => 1, 
+                'allow_departments' => 1,
                 'regular_hours_per_week' => '40h',
                 'regular_hours_per_day' => '8h',
                 'overtime' => 'Weekly Overtime',
@@ -6589,7 +6653,7 @@ class Timesheet extends MY_Controller
             $this->timesheet_model->createTimesheetSettings($data);
 
             //Activity Logs
-            $activity_name = 'Timesheet Settings : Created company timesheet settings'; 
+            $activity_name = 'Timesheet Settings : Created company timesheet settings';
             createActivityLog($activity_name);
         }
 

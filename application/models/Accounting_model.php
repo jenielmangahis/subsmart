@@ -652,18 +652,17 @@ class Accounting_model extends MY_Model
         }
 
         if ($reportType == 'retirements_detail') {
-            $this->db->select('CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer_name , accounting_single_time_activity.*');
-            $this->db->from('accounting_single_time_activity');
-            $this->db->join('acs_profile', 'acs_profile.prof_id = accounting_single_time_activity.customer_id', 'left');
-            $this->db->where('accounting_single_time_activity.status !=', 0);
-            $this->db->where('acs_profile.first_name !=', '');
-            $this->db->where('acs_profile.last_name !=', '');
-            $this->db->where("DATE_FORMAT(accounting_single_time_activity.date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
-            $this->db->where("DATE_FORMAT(accounting_single_time_activity.date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
-            $this->db->where('accounting_single_time_activity.company_id', $companyID);
-            // $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->select('users.id AS user_id, CONCAT(users.FName, " ", users.LName) AS name');
+            $this->db->from('users');
+            $this->db->join('accounting_deductions_and_contributions', 'accounting_deductions_and_contributions.employee_id = users.id', 'left');
+            $this->db->where('users.FName !=', '');
+            $this->db->where('users.LName !=', '');
+            $this->db->where("DATE_FORMAT(accounting_deductions_and_contributions.created_at,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_deductions_and_contributions.created_at,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_deductions_and_contributions.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
-            $this->db->group_by('acs_profile.prof_id');
+            $this->db->group_by('accounting_deductions_and_contributions.employee_id');
             $data = $this->db->get();
 
             return $data->result();
