@@ -15619,7 +15619,7 @@ class Accounting extends MY_Controller
         $this->page_data['users']    = $this->users_model->getUser(logged('id'));
         $this->page_data['roles']    = $this->vendors_model->getRoles(logged('company_id'));
         $this->page_data['employee'] = $this->vendors_model->getEmployeeByID($id);
-
+        $this->page_data['usr_id']   = $id;
 
         $this->page_data['page']->title = 'PayScale';
         $this->page_data['page']->parent = 'Reports';        
@@ -15644,6 +15644,22 @@ class Accounting extends MY_Controller
 
         echo json_encode($data);
     }
+
+    public function save_user_role()
+    {
+        $user_id      = $this->input->post("usrid");
+        $role_id      = $this->input->post("roleid");
+
+        $updateQuery = $this->users_model->updateUserRole($user_id, $role_id);
+
+        if($updateQuery) {
+            $data = 'Success';
+            echo json_encode($data);
+        } else {
+            $data = 'Fail';
+            echo json_encode($data);            
+        }
+    }    
 
     public function get_role_amount()
     {

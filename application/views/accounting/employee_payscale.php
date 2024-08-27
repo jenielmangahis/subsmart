@@ -73,7 +73,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <select class="form-control role_name" name="role_name">
+                                                <select class="form-control role_name" id="selected-role-name" name="role_name">
                                                     <option value="<?php echo $employee->id; ?>"><?php echo $employee->title; ?></option>
                                                     <option value="0">+ Add New</option>
                                                     <?php foreach($roles as $role): ?>
@@ -119,7 +119,7 @@
                                     </tbody>
                                 </table>      
                                 <div style="margin-top: 30px; text-align: center;">
-                                    <a href="#" class="btn btn-danger">Save Changes</a>
+                                    <a href="javascript:void(0)" id="btn-save-emp-payscale" class="btn btn-danger btn-save-emp-payscale">Save Changes</a>
                                 </div>                                                     
                             </div>
                         </div>
@@ -326,7 +326,32 @@
             },
 
         });
-    });    
+    }); 
+    
+    $(".btn-save-emp-payscale").click(function(){
+        var usrid    = <?php echo $usr_id; ?>;
+        var roleid   = $("#selected-role-name").val();
+
+        $.ajax({
+            type: 'POST',
+            url: "<?php echo base_url(); ?>accounting/save_user_role",
+            data: {
+                usrid: usrid,
+                roleid: roleid
+            },
+            success: function(result) {
+                //if(result == 'Success') {
+                    sucess("Update Successful!");
+                //} else {
+                //    alert("An error has occurred");
+                //}
+            },
+            error: function() {
+                alert("An error has occurred");
+            },
+
+        });
+    });     
 
     function sucess(information, $id) {
         Swal.fire({
