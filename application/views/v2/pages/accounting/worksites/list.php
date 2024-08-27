@@ -51,88 +51,69 @@
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
 
-                        <!-- 
+                        <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>Filter <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>           
-                            <ul class="dropdown-menu dropdown-menu-end p-3" style="width: max-content">
-                                <div class="row">
-                                    <div class="col">
-                                        <label for="filter-type">Status</label>
-                                        <select class="nsm-field form-select filter-contractor-status" name="filter_type" id="filter-contractor-status">  
-                                            <option value="all" <?=$status == 'all' ? 'selected' : ''?>>All</option>          
-                                            <option value="active" <?=$status == 'active' ? 'selected' : ''?>>Active</option>
-                                            <option value="inactive" <?=$status == 'inactive' ? 'selected' : ''?>>Inactive</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="row mt-3">
-                                    <div class="col-6">
-                                        <button type="button" class="nsm-button" id="reset-button">
-                                            Reset
-                                        </button>
-                                    </div>
-                                    <div class="col-6">
-                                        <button type="button" class="nsm-button primary float-end" id="apply-filter-contractor-button">
-                                            Apply
-                                        </button>
-                                    </div>
-                                </div>
+                                With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">                            
+                                <li><a class="dropdown-item btn-with-selected" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
                             </ul>
-                        -->
+                        </div>                        
 
                         <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button" data-bs-toggle="modal" data-bs-target="#add-worksite-modal">
                                 <i class='bx bx-fw bx-list-plus'></i> Add Worksite
                             </button>
-
                         </div>
                     </div>
                 </div>
-                <table class="nsm-table" id="worksite-table">
-                    <thead>
-                        <tr>
-                            <td><input type="checkbox" class="form-check-input" id="chk-all-row" /></td>
-                            <td data-name="Name">NAME</td>
-                            <td style="width: 70%;" data-name="Address">ADDRESS</td>
-                            <td data-name="Manage"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if(count($worksites) > 0) : ?>
-						<?php foreach($worksites as $worksite) : ?>
-                            <tr data-id="<?=$worksite->id?>" data-name="<?=$worksite->name?>">
-                                <td><input type="checkbox" name="row_selected[]" class="form-check-input chk-row" value="<?= $worksite->id; ?>" /></td>
-                                <td class=""><strong><?= $worksite->name ?></strong></td>
-                                <td><?php echo $worksite->street . ", " . $worksite->city . ", " . $worksite->state . ", " . $worksite->zip_code; ?></td>
-                                <td>
-                                    <div class="dropdown table-management">
-                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                            <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li>
-                                                <a class="dropdown-item edit-worksite" id="edit-worksite" data-bs-toggle="modal" data-bs-target="#edit-worksite-modal" href="#">Edit</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item delete-worksite" href="#">Delete</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-						<?php else : ?>
+                <form id="frm-with-selected">
+                    <input type="hidden" name="with_selected_action" value="" id="with-selected-action" />                
+                    <table class="nsm-table" id="worksite-table">
+                        <thead>
                             <tr>
-                                <td colspan="14">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
+                                <td><input type="checkbox" class="form-check-input" id="chk-all-row" /></td>
+                                <td data-name="Name">NAME</td>
+                                <td style="width: 70%;" data-name="Address">ADDRESS</td>
+                                <td data-name="Manage"></td>
                             </tr>
-						<?php endif; ?>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            <?php if(count($worksites) > 0) : ?>
+                            <?php foreach($worksites as $worksite) : ?>
+                                <tr data-id="<?=$worksite->id?>" data-name="<?=$worksite->name?>">
+                                    <td><input type="checkbox" name="row_selected[]" class="form-check-input chk-row" value="<?= $worksite->id; ?>" /></td>
+                                    <td class=""><strong><?= $worksite->name ?></strong></td>
+                                    <td><?php echo $worksite->street . ", " . $worksite->city . ", " . $worksite->state . ", " . $worksite->zip_code; ?></td>
+                                    <td>
+                                        <div class="dropdown table-management">
+                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <li>
+                                                    <a class="dropdown-item edit-worksite" id="edit-worksite" data-bs-toggle="modal" data-bs-target="#edit-worksite-modal" href="#">Edit</a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item delete-worksite" href="#">Delete</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            <?php else : ?>
+                                <tr>
+                                    <td colspan="14">
+                                        <div class="nsm-empty">
+                                            <span>No results found.</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </form>
             </div>
         </div>
     </div>
@@ -200,6 +181,60 @@ $(document).ready(function() {
         }else{
             $('.chk-row').prop('checked',false);
         }
+    });   
+    
+    $('.btn-with-selected').on('click', function(){
+        var action = $(this).attr('data-action');
+
+        var total_selected = $('input[name="row_selected[]"]:checked').length;
+        if( total_selected > 0 ){
+            if( action == 'delete' ){
+                var msg = 'Proceed with <b>deleting</b> selected rows?';
+                var url = base_url + 'accounting/worksites/_delete_selected';
+                $('#with-selected-action').val('delete');
+            }
+
+            Swal.fire({
+                title: 'With Selected Action',
+                html: msg,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: $('#frm-with-selected').serialize(),
+                        dataType:'json',
+                        success: function(result) {
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: result.msg,
+                                }).then((result) => {
+                                    window.location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        }else{
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Please select row',
+            });
+        }        
     });    
 
 })

@@ -23,22 +23,30 @@
                         </div> -->
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
-                        <div class="nsm-page-buttons page-button-container">
+                        <!-- <div class="nsm-page-buttons page-button-container">
                             <button type="button" class="nsm-button">
                                 <i class='bx bx-fw bx-list-plus'></i> Add Role
                             </button>
-                        </div>
+                        </div> -->
+                        <div class="nsm-page-buttons page-button-container">
+                            <button type="button" class="nsm-button export-items" onClick="javascript:exportToXLSX()" id="exportToXLSX">
+                                <i class='bx bx-fw bx-export'></i> CSV Export
+                            </button>
+                            <button type="button" class="nsm-button export-items" onClick="javascript:exportToPDF()" id="exportToPDF">
+                                <i class='bx bx-fw bxs-file-pdf'></i> Get PDF
+                            </button>
+                        </div>                       
                     </div>
                 </div>
 
-                <table class="nsm-table">
+                <table class="nsm-table" id="payscale-table">
                     <thead>
                         <tr>
                             <td data-name="Employee">EMPLOYEE</td>
                             <td data-name="Created By">ROLE</td>
                             <td data-name="Last Modified">START DATE</td>
-                            <td data-name="Report Period">LOCATION</td>
-                            <td data-name="Report Period">SALARY</td>
+                            <td data-name="Payscale">PAYSCALE</td>
+                            <td data-name="Salary">SALARY</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -48,7 +56,7 @@
                             <td><?=$employee->FName .' '. $employee->LName; ?></td>
                             <td><?=$employee->title; ?></td>
                             <td><?=$employee->date_hired; ?></td>
-                            <td><?=$employee->address; ?></td>
+                            <td><?= isset($employee->payscale_name) ? $employee->payscale_name : '-'; ?></td>
                             <td>$0.00</td>
                             <td>
                                 <div class="dropdown table-management">
@@ -70,5 +78,24 @@
         </div>
     </div>
 </div>
+
+<script>
+$(document).ready(function() {
+    $("#payscale-table").nsmPagination({itemsPerPage:10});
+});
+
+function exportToPDF() {
+    event.preventDefault();
+    var filePath = base_url + "/assets/pdf/accounting/" + "<?php echo $filename; ?>" + ".pdf";
+    window.open(filePath);
+}
+
+function exportToXLSX() {
+    event.preventDefault();
+    var filePath = base_url + "/assets/pdf/accounting/" + "<?php echo $filename; ?>" + ".xlsx";
+    window.open(filePath);
+}
+
+</script>
 
 <?php include viewPath('v2/includes/footer'); ?>
