@@ -266,7 +266,8 @@ $(document).ready(function() {
             })
         }
     });
-    set_current_timezone();
+    
+    //set_current_timezone();
 
     function set_current_timezone() {
         var current_tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -358,8 +359,12 @@ $(document).ready(function() {
     }
     $("#subcribe_weekly_report").change(function() {
         if ($("#subcribe_weekly_report").is(":checked")) {
+            $('.report-schedule-timesheet').show();
+            $('.report-schedule-time-email').show();
             $(".subscribed-fields").show();
         } else {
+            $('.report-schedule-timesheet').hide();
+            $('.report-schedule-time-email').hide();
             $(".subscribed-fields").hide();
         }
     });
@@ -380,7 +385,37 @@ $(document).ready(function() {
     $('#report_series_1').change(function() {
         report_series_1_changed();
     });
-    report_series_1_changed();
+
+    $('#receive-timesheet-report').on('change', function(){
+        var selected = $(this).val();
+        if( selected == 'daily' ){
+            $('#sched_sun').prop('checked', true);
+            $('#sched_m').prop('checked', true);
+            $('#sched_t').prop('checked', true);
+            $('#sched_w').prop('checked', true);
+            $('#sched_th').prop('checked', true);
+            $('#sched_f').prop('checked', true);
+            $('#sched_sat').prop('checked', true);
+        }else if( selected == 'biweekly' ){
+            $('#sched_sun').prop('checked', true);
+            $('#sched_m').prop('checked', false);
+            $('#sched_t').prop('checked', false);
+            $('#sched_w').prop('checked', true);
+            $('#sched_th').prop('checked', false);
+            $('#sched_f').prop('checked', false);
+            $('#sched_sat').prop('checked', false);
+        }else{
+            $('#sched_sun').prop('checked', true);
+            $('#sched_m').prop('checked', false);
+            $('#sched_t').prop('checked', false);
+            $('#sched_w').prop('checked', false);
+            $('#sched_th').prop('checked', false);
+            $('#sched_f').prop('checked', false);
+            $('#sched_sat').prop('checked', false);
+        }
+    });
+
+    //report_series_1_changed();
 
     function report_series_1_changed() {
         if ($('#report_series_1').is(':checked')) {
@@ -430,7 +465,8 @@ $(document).ready(function() {
     $('#report_series_3').change(function() {
         report_series_3_changed();
     });
-    report_series_3_changed();
+    
+    //report_series_3_changed();
 
     function report_series_3_changed() {
         if ($('#report_series_3').is(':checked')) {
