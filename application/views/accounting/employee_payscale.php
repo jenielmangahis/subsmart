@@ -1,142 +1,160 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed'); ?>
-<?php include viewPath('includes/header'); ?>
-<div class="wrapper" role="wrapper">
-    <!-- page wrapper start -->
-    <div wrapper__section>
-        <div class="container-fluid" style="padding:3%;">
+<?php include viewPath('v2/includes/accounting_header'); ?>
 
-            <h3>Gross annual Salary calculation</h3>
-            <a href="<?php echo url('/accounting/reports') ?>" style="color: blue;"> << Back to Reports</a>
-
-            <div class="row" style="padding:3%;">
-                <div class="col-md-12">
-
-                    <span><h6>Employee Name: <?php echo $employee->FName . ' '. $employee->LName; ?></h6><span>
-                    <span><h6>Role: <?php echo $employee->title; ?></h6><span>
-                    <span><h6>Start Date: <?php echo $employee->date_hired; ?></h6><span>
-                    <span><h6>Location: <?php echo $employee->address .', '. $employee->city .', '. $employee->state .', '. $employee->postal_code; ?></h6><span>
-                    <br><br>
-                        <!-- <div class="col-md-1">
-
-                        </div>
-                        <div class="col-md-1">
-
-                        </div>
-                        <div class="col-md-1">
-
-                        </div> -->
-                    <!-- </div> -->
-
-                    <table class="table employee_details">
-                        <thead style="background-color:#EEEEEE;font-weight:bold;">
-                            <th><b>ROLE</b></th>
-                            <th><b>AMOUNT</b></th>
-                            <th><b>EXPERIENCE</b></th>
-                            <th><b>COEFF.</b></th>
-                            <th><b>SENIORITY</b></th>
-                            <th><b>AMOUNT</b></th>
-                            <th><b>GROSS SALARY</b></th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <select class="form-control role_name" name="role_name">
-                                        <option value="<?php echo $employee->id; ?>"><?php echo $employee->title; ?></option>
-                                        <option value="0">+ Add New</option>
-                                        <!-- <option>Web Developer</option>
-                                        <option>Accountant</option>
-                                        <option>Marketing</option>
-                                        <option>Product</option>
-                                        <option>HR</option>
-                                        <option>Support</option>
-                                        <option>QA Tester</option> -->
-                                        <?php foreach($roles as $role): ?>
-                                            <option value="<?php echo $role->id; ?>" role-amount="<?php echo $role->role_amount; ?>"><?php echo $role->title; ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </td>
-                                <td><span id="rolevalue"></span></td>
-                                <td>
-                                    <select class="form-control expRoleDropdown">
-                                        <option value="X 1,00">Tier A</option>
-                                        <option value="X 1,10">Tier B</option>
-                                        <option value="X 1,20">Tier C</option>
-                                        <option value="X 1,30">Tier D</option>
-                                        <option value="X 1,40">Tier E</option>
-                                        <option value="X 1,50">Tier F</option>
-                                    </select>
-                                </td>
-                                <td style="width:180px;">
-                                    <input type="text"  class="form-control expRolevalue" value="X 1,00" readonly>
-                                    <!-- <select class="form-control" readonly>
-                                        <option>X 1,00</option>
-                                        <option>X 1,10</option>
-                                        <option>X 1,20</option>
-                                        <option>X 1,30</option>
-                                        <option>X 1,40</option>
-                                        <option>X 1,50</option>
-                                    </select> -->
-                                </td>
-                                <td>
-                                    <select class="form-control seniorityDropdown">
-                                        <option value="1000">Tier A</option>
-                                        <option value="2000">Tier B</option>
-                                        <option value="3000">Tier C</option>
-                                        <option value="4000">Tier D</option>
-                                        <option value="5000">Tier E</option>
-                                        <option value="6000">Tier F</option>
-                                    </select>
-                                </td>
-                                <td style="width:180px;"><input type="text"  class="form-control seniorityamount" value="1000" readonly></td>
-                                <td><span class="gross_salary">$31,000.00</span></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
-                    <br>
-                    <div style="float:right;">
-                        <a href="#" class="btn btn-danger">Save Changes</a>
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-            <!-- end row -->
+<div class="row page-content g-0">
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/accounting/subtabs/reports_subtabs'); ?>
     </div>
-        <!-- end container-fluid -->
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class='bx bx-x'></i></button>
+                            Gross Annual Salary Calculation
+                        </div>
+                    </div>
+                </div>
 
-
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="addrole" tabindex="-1" role="dialog" aria-labelledby="addroleLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="addroleLabel">Add Role</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <span>Role name</span>
-                                                    <input type="texy" class="form-control role_name_text" name="role_name_text" placeholder="e.g Developer">
-                                                    <br>
-                                                    <span>Amount</span>
-                                                    <input type="texy" class="form-control role_amount" name="role_amount" placeholder="$0.00">
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-primary save_role">Save role</button>
-                                                </div>
+                <div class="row grid-mb">
+                    <div class="col-12">
+                        <div class="nsm-card primary" style="height: 50% !important;">
+                            <div class="nsm-card-content">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="row g-1">
+                                            <div class="col-12 col-md-2">
+                                                <label class="content-subtitle fw-bold">Employee Name:</label>
                                             </div>
-                                        </div>
-                                    </div>
+                                            <div class="col-12 col-md-10">
+                                                <label class="content-subtitle"><?php echo $employee->FName . ' '. $employee->LName; ?></label>
+                                            </div>
 
-	<?php include viewPath('includes/sidebars/accounting/accounting'); ?>
-    <!-- page wrapper end -->
+                                            <div class="col-12 col-md-2">
+                                                <label class="content-subtitle fw-bold">Role:</label>
+                                            </div>
+                                            <div class="col-12 col-md-10">
+                                                <label class="content-subtitle"><?php echo $employee->title; ?></label>
+                                            </div>
+
+                                            <div class="col-12 col-md-2">
+                                                <label class="content-subtitle fw-bold">Start Date:</label>
+                                            </div>
+                                            <div class="col-12 col-md-10">
+                                                <label class="content-subtitle"><?php echo $employee->date_hired; ?></label>
+                                            </div>
+
+                                            <div class="col-12 col-md-2">
+                                                <label class="content-subtitle fw-bold">Location:</label>
+                                            </div>
+                                            <div class="col-12 col-md-10">
+                                                <label class="content-subtitle"><?php echo $employee->address .', '. $employee->city .', '. $employee->state .', '. $employee->postal_code; ?></label>
+                                            </div>
+                                        </div>                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="nsm-card primary">
+                            <div class="nsm-card-content">
+                                <table class="nsm-table" id="payscale-view-details-table">
+                                    <thead style="background-color:#EEEEEE; font-weight:bold;">
+                                        <tr>
+                                            <td data-name="Role">ROLE</td>
+                                            <td data-name="Amount">AMOUNT</td>
+                                            <td data-name="Experience">EXPERIENCE</td>
+                                            <td data-name="Coeff.">COEFF.</td>
+                                            <td data-name="Seniority">SENIORITY</td>
+                                            <td data-name="Amount">AMOUNT</td>
+                                            <td data-name="Gross Salary">GROSS SALARY</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <select class="form-control role_name" name="role_name">
+                                                    <option value="<?php echo $employee->id; ?>"><?php echo $employee->title; ?></option>
+                                                    <option value="0">+ Add New</option>
+                                                    <?php foreach($roles as $role): ?>
+                                                        <option value="<?php echo $role->id; ?>" role-amount="<?php echo $role->role_amount; ?>"><?php echo $role->title; ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </td>
+                                            <td><span id="rolevalue"><?php echo $role->role_amount; ?></span></td>
+                                            <td>
+                                                <select class="form-control expRoleDropdown">
+                                                    <option value="X 1,00">Tier A</option>
+                                                    <option value="X 1,10">Tier B</option>
+                                                    <option value="X 1,20">Tier C</option>
+                                                    <option value="X 1,30">Tier D</option>
+                                                    <option value="X 1,40">Tier E</option>
+                                                    <option value="X 1,50">Tier F</option>
+                                                </select>
+                                            </td>
+                                            <td style="width:180px;">
+                                                <input type="text"  class="form-control expRolevalue" value="X 1,00" readonly>
+                                                <!-- <select class="form-control" readonly>
+                                                    <option>X 1,00</option>
+                                                    <option>X 1,10</option>
+                                                    <option>X 1,20</option>
+                                                    <option>X 1,30</option>
+                                                    <option>X 1,40</option>
+                                                    <option>X 1,50</option>
+                                                </select> -->
+                                            </td>
+                                            <td>
+                                                <select class="form-control seniorityDropdown">
+                                                    <option value="1000">Tier A</option>
+                                                    <option value="2000">Tier B</option>
+                                                    <option value="3000">Tier C</option>
+                                                    <option value="4000">Tier D</option>
+                                                    <option value="5000">Tier E</option>
+                                                    <option value="6000">Tier F</option>
+                                                </select>
+                                            </td>
+                                            <td style="width:180px;"><input type="text"  class="form-control seniorityamount" value="1000" readonly></td>
+                                            <td><span class="gross_salary">0.00</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>      
+                                <div style="margin-top: 30px; text-align: center;">
+                                    <a href="#" class="btn btn-danger">Save Changes</a>
+                                </div>                                                     
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
 </div>
-<?php include viewPath('includes/footer_accounting'); ?>
+
+<!-- Modal -->
+<div class="modal fade" id="addrole" tabindex="-1" role="dialog" aria-labelledby="addroleLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addroleLabel">Add Role</h5>
+                <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button> 
+            </div>
+            <div class="modal-body">
+                <span>Role name</span>
+                <input type="texy" class="form-control role_name_text" name="role_name_text" placeholder="e.g Developer" required>
+                <br>
+                <span>Amount</span>
+                <input type="texy" class="form-control role_amount" name="role_amount" placeholder="$0.00" required>
+            </div>
+            <div class="modal-footer">
+                <div id="validation-message-container" class="validation-message-container" style="color:red; bold"></div>
+                <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>                
+                <button type="button" class="btn btn-primary save_role">Save role</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     //dropdown checkbox
     var expanded = false;
@@ -150,6 +168,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             expanded = false;
         }
     }
+
     //DataTables JS
     $(document).ready(function() {
         $('#rules_table').DataTable({
@@ -159,89 +178,57 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
             }
         });
     } );
-</script>
 
-<script>
-$(".role_name").change(function () {
-    var role_name = this.value;
-    var role_amount = $(this).attr('role-amount');
+    $(".role_name").change(function () {
+        var role_name = this.value;
+        var role_amount = $(this).attr('role-amount');
 
-    var optiontest = $('option:selected', this).attr('role-amount');
-    // var roleID = this.value;
-    if(role_name == '0')
-    {
-        // alert(role_name);
-        // $('#addrole').dialog('open');
-        $('#addrole').modal('show');
-    }
-    else
-    {
+        var optiontest = $('option:selected', this).attr('role-amount');
+        if(role_name == '0') {
+            $('#addrole').modal('show');
+        } else {
+            $('#rolevalue').text(optiontest);
 
-        $('#rolevalue').text(optiontest);
+            var rolevalue = $('#rolevalue').text();
+            var expRolevalueT = $('.expRolevalue').val();
+            var seniorityamount = $('.seniorityamount').val();
 
-        var rolevalue = $('#rolevalue').text();
-        var expRolevalueT = $('.expRolevalue').val();
-        var seniorityamount = $('.seniorityamount').val();
+            if (expRolevalueT == 'X 1,00')
+            {
+                expRolevalue = '1.0';
+            }
+            else if(expRolevalueT == 'X 1,20')
+            {
+                expRolevalue = '1.2';
+            }
+            else if(expRolevalueT == 'X 1,30')
+            {
+                expRolevalue = '1.3';
+            }
+            else if(expRolevalueT == 'X 1,40')
+            {
+                expRolevalue = '1.4';
+            }
+            else if(expRolevalueT == 'X 1,50')
+            {
+                expRolevalue = '1.5';
+            }
+            else if(expRolevalueT == 'X 1,60')
+            {
+                expRolevalue = '1.6';
+            }
 
-        if (expRolevalueT == 'X 1,00')
-        {
-            expRolevalue = '1.0';
+            var stotal = parseFloat(rolevalue) * parseFloat(expRolevalue);
+            var total = parseFloat(stotal) + parseFloat(seniorityamount);
+
+            $('.gross_salary').text(parseFloat(total).toFixed(2));
         }
-        else if(expRolevalueT == 'X 1,20')
-        {
-            expRolevalue = '1.2';
-        }
-        else if(expRolevalueT == 'X 1,30')
-        {
-            expRolevalue = '1.3';
-        }
-        else if(expRolevalueT == 'X 1,40')
-        {
-            expRolevalue = '1.4';
-        }
-        else if(expRolevalueT == 'X 1,50')
-        {
-            expRolevalue = '1.5';
-        }
-        else if(expRolevalueT == 'X 1,60')
-        {
-            expRolevalue = '1.6';
-        }
+    });    
 
-        var stotal = parseFloat(rolevalue) * parseFloat(expRolevalue);
-        var total = parseFloat(stotal) + parseFloat(seniorityamount);
+    $(".expRoleDropdown").change(function () {
+        var expValue = this.value;
 
-        $('.gross_salary').text(parseFloat(total).toFixed(2));
-        // alert(stotal);
-    }
-
-    //else
-    // {
-    //     // alert('test');
-
-    //     var roleID = this.value;
-
-    //     $.ajax({
-    //         type: 'GET',
-    //         url: "<?php echo base_url(); ?>accounting/get_role_amount",
-    //         data: {
-    //             roleID: roleID
-    //         },
-    //         success: function(result) {
-    //             alert('test';)
-    //         },
-    //         error: function() {
-    //             alert("An error has occurred");
-    //         },
-
-    //     });
-    // }
-});    
-
-$(".expRoleDropdown").change(function () {
-    var expValue = this.value;
-
-    $('.expRolevalue').val(expValue);
+        $('.expRolevalue').val(expValue);
 
         var rolevalue = $('#rolevalue').text();
         var expRolevalueT = $('.expRolevalue').val();
@@ -276,59 +263,53 @@ $(".expRoleDropdown").change(function () {
         var total = parseFloat(stotal) + parseFloat(seniorityamount);
 
         $('.gross_salary').text(parseFloat(total).toFixed(2));
+    });    
 
-        // alert(stotal);
+    $(".seniorityDropdown").change(function () {
+        var expValue = this.value;
+        $('.seniorityamount').val(expValue);
+            var rolevalue = $('#rolevalue').text();
+            var expRolevalueT = $('.expRolevalue').val();
+            var seniorityamount = $('.seniorityamount').val();
 
-});    
+            if (expRolevalueT == 'X 1,00')
+            {
+                expRolevalue = '1.0';
+            }
+            else if(expRolevalueT == 'X 1,20')
+            {
+                expRolevalue = '1.2';
+            }
+            else if(expRolevalueT == 'X 1,30')
+            {
+                expRolevalue = '1.3';
+            }
+            else if(expRolevalueT == 'X 1,40')
+            {
+                expRolevalue = '1.4';
+            }
+            else if(expRolevalueT == 'X 1,50')
+            {
+                expRolevalue = '1.5';
+            }
+            else if(expRolevalueT == 'X 1,60')
+            {
+                expRolevalue = '1.6';
+            }
 
-$(".seniorityDropdown").change(function () {
-    var expValue = this.value;
+            var stotal = parseFloat(rolevalue) * parseFloat(expRolevalue);
+            var total = parseFloat(stotal) + parseFloat(seniorityamount);
+            $('.gross_salary').text(parseFloat(total).toFixed(2));
+    });    
 
-    $('.seniorityamount').val(expValue);
+    $(".save_role").click(function(){
+        var role_name   = $(".role_name_text").val();
+        var role_amount = $(".role_amount").val();
 
-        var rolevalue = $('#rolevalue').text();
-        var expRolevalueT = $('.expRolevalue').val();
-        var seniorityamount = $('.seniorityamount').val();
-
-        if (expRolevalueT == 'X 1,00')
-        {
-            expRolevalue = '1.0';
+        if(role_name == "" || role_amount == "") {
+            $(".validation-message-container").html("Role name & amount is required.");
+            return false;
         }
-        else if(expRolevalueT == 'X 1,20')
-        {
-            expRolevalue = '1.2';
-        }
-        else if(expRolevalueT == 'X 1,30')
-        {
-            expRolevalue = '1.3';
-        }
-        else if(expRolevalueT == 'X 1,40')
-        {
-            expRolevalue = '1.4';
-        }
-        else if(expRolevalueT == 'X 1,50')
-        {
-            expRolevalue = '1.5';
-        }
-        else if(expRolevalueT == 'X 1,60')
-        {
-            expRolevalue = '1.6';
-        }
-
-        var stotal = parseFloat(rolevalue) * parseFloat(expRolevalue);
-        var total = parseFloat(stotal) + parseFloat(seniorityamount);
-
-        $('.gross_salary').text(parseFloat(total).toFixed(2));
-        
-});    
-</script>
-
-<script>
-$(document).on('click touchstart', '.save_role', function() {
-    // alert('test');
-
-    var role_name = $(".role_name_text").val();
-    var role_amount = $(".role_amount").val();
 
         $.ajax({
             type: 'POST',
@@ -339,37 +320,30 @@ $(document).on('click touchstart', '.save_role', function() {
             },
             success: function(result) {
                 sucess("Added Successfully!");
-                
-                // $('.employee_details').html(result);
-                // alert('Email Successfully!');
             },
             error: function() {
                 alert("An error has occurred");
             },
 
         });
+    });    
 
-    // else 
-    // {
-    // 	alert('no');
-    // }
-
-});
-
-function sucess(information, $id) {
-    Swal.fire({
-        title: 'Success!',
-        text: information,
-        icon: 'success',
-        showCancelButton: false,
-        confirmButtonColor: '#32243d',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Ok'
-    }).then((result) => {
-    if (result.value) {
-        location.reload();
-        }
-    });
-}
+    function sucess(information, $id) {
+        Swal.fire({
+            title: 'Success!',
+            text: information,
+            icon: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ok'
+        }).then((result) => {
+        if (result.value) {
+            location.reload();
+            }
+        });
+    }    
 
 </script>
+
+<?php include viewPath('v2/includes/footer'); ?>

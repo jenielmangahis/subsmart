@@ -15606,11 +15606,23 @@ class Accounting extends MY_Controller
         echo json_encode($response, true);
     }
 
-    public function employee_payscale($id)
+    public function employee_payscale_backup($id)
     {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['roles'] = $this->vendors_model->getRoles(logged('company_id'));
         $this->page_data['employee'] = $this->vendors_model->getEmployeeByID($id);
+        $this->load->view('accounting/employee_payscale_backup', $this->page_data);
+    }    
+
+    public function employee_payscale($id)
+    {
+        $this->page_data['users']    = $this->users_model->getUser(logged('id'));
+        $this->page_data['roles']    = $this->vendors_model->getRoles(logged('company_id'));
+        $this->page_data['employee'] = $this->vendors_model->getEmployeeByID($id);
+
+
+        $this->page_data['page']->title = 'PayScale';
+        $this->page_data['page']->parent = 'Reports';        
         $this->load->view('accounting/employee_payscale', $this->page_data);
     }
 
@@ -15619,9 +15631,7 @@ class Accounting extends MY_Controller
         $role_name      = $this->input->post("role_name");
         $role_amount    = $this->input->post("role_amount");
 
-
         $new_data = array(
-            // 'role_name'     => $role_name,
             'title'         => $role_name,
             'role_amount'   => $role_amount,
             'company_id'    => logged('company_id'),
@@ -15629,10 +15639,6 @@ class Accounting extends MY_Controller
         );
 
         $addQuery = $this->vendors_model->save_role($new_data);
-
-        // if ($addQuery > 0) {
-
-        // }
 
         $data = 'Success';
 
