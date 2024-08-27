@@ -7,6 +7,12 @@
         width: 120px;
         border-radius: 50%;
     }
+    #employees_table .nsm-badge, .clock-in-time{
+        font-size: 14px;
+        width: 100px !important;
+        text-align: center;
+        display:inline-block;
+    }
 </style>
 
 <div class="row page-content g-0">
@@ -134,28 +140,11 @@
                                     <i class="bx bx-calendar-event"></i>
                                 </div>
                                 <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2><?= count($on_leave) ?></h2>
+                                    <h2><?= count($leaveRequests) ?></h2>
                                     <span>On Leave</span>
 
                                     <div class="progress nsm-progress mt-2">
-                                        <div class="progress-bar" role="progressbar" style="width: <?php echo round((count($on_leave) / $total_users) * 100, 2) . '%'; ?>;" aria-valuenow="<?php echo count($on_leave); ?>" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-3">
-                        <div class="nsm-counter primary h-100 mb-2">
-                            <div class="row h-100">
-                                <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
-                                    <i class="bx bxs-user-badge"></i>
-                                </div>
-                                <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2>0</h2>
-                                    <span>Contractors</span>
-
-                                    <div class="progress nsm-progress primary mt-2">
-                                        <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                        <div class="progress-bar" role="progressbar" style="width: <?php echo round((count($leaveRequests) / $total_users) * 100, 2) . '%'; ?>;" aria-valuenow="<?php echo count($on_leave); ?>" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </div>
                             </div>
@@ -167,12 +156,11 @@
                                 <tr>
                                     <td class="table-icon"></td>
                                     <td data-name="Employee Name">Employee Name</td>
-                                    <td data-name="In">In</td>
-                                    <td data-name="Out">Out</td>
-                                    <td data-name="Lunch In">Lunch In</td>
-                                    <td data-name="Lunch Out">Lunch Out</td>
-                                    <td data-name="Comments/Location">Comments/Location</td>
-                                    <td data-name="Manage"></td>
+                                    <td data-name="In" style="width:15%;">In</td>
+                                    <td data-name="Out" style="width:15%;">Out</td>
+                                    <td data-name="Lunch In" style="width:15%;">Lunch In</td>
+                                    <td data-name="Lunch Out" style="width:15%;">Lunch Out</td>                                    
+                                    <td data-name="Manage" style="width:5%;"></td>                                    
                                 </tr>
                             </thead>
                             <tbody>
@@ -237,13 +225,13 @@
                                                         date_default_timezone_set($this->session->userdata('usertimezone'));
                                                         if ($log->action == 'Check in') :
                                                             $time_in = date('h:i A', strtotime($log->date_created));
-                                                            $time_out = null;
-                                                            $break_in = null;
-                                                            $break_out = null;
+                                                            $time_out = '---';
+                                                            $break_in = '---';
+                                                            $break_out = '---';
                                                             $btn_action = 'employeeCheckOut';
-                                                            $status = 'fa-check';
-                                                            $break = null;
-                                                            $disabled = null;
+                                                            $status = 'bx bxs-check-circle';
+                                                            $break = '---';
+                                                            $disabled = '---';
                                                             $break_id = 'employeeBreakIn';
                                                             $indicator_in = 'display:block';
                                                             $indicator_out = 'display:none';
@@ -253,17 +241,17 @@
                                                         endif;
                                                         if ($log->action == 'Break in') :
                                                             $break_id = 'employeeBreakOut';
-                                                            $status = 'fa-cutlery';
+                                                            $status = 'bx bxs-bowl-hot';
                                                             $break_in = date('h:i A', strtotime($log->date_created));
                                                             $indicator_in = 'display:none';
                                                             $indicator_out = 'display:none';
                                                             $indicator_in_break = 'display:block';
                                                             $indicator_out_break = 'display:none';
                                                             $tooltip_status = 'On break';
-                                                            $break_out = null;
+                                                            $break_out = '---';
                                                         endif;
                                                         if ($log->action == 'Break out') :
-                                                            $status = 'fa-check';
+                                                            $status = 'bx bxs-check-circle';
                                                             $break_out = date('h:i A', strtotime($log->date_created));
                                                             //                                                                    $break = 'disabled="disabled"';
                                                             $break_id = 'employeeBreakIn';
@@ -274,7 +262,7 @@
                                                             $tooltip_status = 'Back to work';
                                                         endif;
                                                         if ($log->action == 'Check out') :
-                                                            $status = 'fa-times-circle-none';
+                                                            $status = 'bx bxs-x-circle';
                                                             $btn_action = 'employeeCheckIn';
                                                             $time_out = date('h:i A', strtotime($log->date_created));
                                                             $disabled = null;
@@ -293,13 +281,25 @@
                                     ?>
                                         <tr>
                                             <td>
-                                                <div class="nsm-profile">
-                                                    <span><?php echo $user->FName[0] . $user->LName[0]; ?></span>
-                                                </div>
+                                                <?php $image = userProfileImage($user->id); ?>
+                                                <?php if( $image == urlUpload('users/default.png') ){ ?>
+                                                    <div class="nsm-profile">
+                                                        <span><?php echo $user->FName[0] . $user->LName[0]; ?></span>
+                                                    </div>
+                                                <?php }else{ ?>
+                                                    <div class="nsm-profile" style="background-image: url('<?= $image; ?>');" data-img="<?= $image; ?>"></div>
+                                                <?php } ?>
+                                                
                                             </td>
                                             <td class="nsm-text-primary">
-                                                <label class="d-block fw-bold"><?php echo $user->FName; ?> <?php echo $user->LName; ?></label>
-                                                <label class="content-subtitle fst-italic d-block">Employee ID: <?php echo $user->id ?> | Role: <?php echo $u_role; ?></label>
+                                                <label class="d-block fw-bold">
+                                                    <?php if( $u_role != null ){ ?>
+                                                        <?php echo $user->FName; ?> <?php echo $user->LName; ?> <small class="content-subtitle fst-italic" style="font-size:12px;">(<?= $u_role; ?>)</small></label>
+                                                    <?php }else{ ?>
+                                                        <?php echo $user->FName; ?> <?php echo $user->LName; ?></label>
+                                                    <?php } ?>
+                                                    
+                                                <label class="content-subtitle fst-italic d-block">Employee ID: <?php echo $user->id ?></label>
                                             </td>
                                             <td>
                                                 <span class="nsm-badge success clock-in-time in-indicator" style="<?php echo $indicator_in ?>"><?php echo $time_in ?></span>
@@ -316,7 +316,6 @@
                                             <td>
                                                 <span class="nsm-badge success break-out-time in-indicator" style="<?php echo $indicator_out_break ?>"><?php echo $break_out; ?></span>
                                             </td>
-                                            <td></td>
                                             <td>
                                                 <div class="dropdown table-management">
                                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -800,6 +799,89 @@
                                 Swal.fire({
                                     title: 'Success',
                                     html: "<strong>" + emp_name + "</strong> has been Clock-in",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Failed',
+                                    text: "Something is wrong in the process. Please reload the page.",
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
+                            }
+
+                            app_notification(
+                                data.token,
+                                data.body,
+                                data.device_type,
+                                data.company_id,
+                                data.title
+                            );
+                            get_user_current_geo_possition(data.timesheet_logs_id, "timesheet_logs");
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).on('click', '#employeeCheckOut', function() {
+            let _this = $(this);
+            let id = $(this).attr('data-id');
+            let emp_name = $(this).attr('data-name');
+            let selected = this;
+            let entry = 'Manual';
+            let approved_by = $(this).attr('data-approved');
+            let photo = $(this).attr('data-photo');
+            let company_id = $(this).attr('data-company');
+
+            Swal.fire({
+                title: 'Clock Out?',
+                html: "Are you sure you want to Clock-out this person?<br> <strong>" + emp_name + "</strong>",
+                imageUrl: photo,
+                confirmButtonText: 'Yes, Clock-out!',
+                showCancelButton: true,
+                cancelButtonText: "Cancel",
+            }).then((result) => {
+                if (result.value) {
+                    showSwalLoading();
+
+                    $.ajax({
+                        url: '<?= base_url() ?>/timesheet/checkingOutEmployee',
+                        method: "POST",
+                        dataType: "json",
+                        data: {
+                            id: id,
+                            entry: entry,
+                            approved_by: approved_by,
+                            company_id: company_id
+                        },
+                        success: function(data) {
+                            if (data != 0) {
+                                let time = serverTime();
+                                $(selected).attr('data-attn', data.attendance_id);
+                                $(selected).attr('id', 'employeeCheckOut');
+                                $(selected).attr('data-company', data.company_id);
+
+                                _this.closest("tr").find(".clock-in-time").hide();
+                                _this.closest("tr").find(".employee-break").hide();
+                                _this.closest("tr").find(".clock-in-time").text(null);
+
+                                _this.closest("tr").find(".clock-out-time").text(time);
+                                _this.closest("tr").find(".clock-out-time").show();
+                                _this.closest("tr").find(".clock-out-time.in-indicator").show();
+
+                                _this.closest("tr").find(".clock-in-yesterday").text(null);                                
+                                _this.closest("tr").find(".employee-break").attr("id", "employeeBreakIn");
+                                _this.closest("tr").find(".break-in-time").text(null);
+                                _this.closest("tr").find(".break-out-time").text(null);                                
+                                clearTimeout(real_time);
+
+                                Swal.fire({
+                                    title: 'Success',
+                                    html: "<strong>" + emp_name + "</strong> has been Clock-out",
                                     icon: 'success',
                                     showCancelButton: false,
                                     confirmButtonText: 'Okay'
