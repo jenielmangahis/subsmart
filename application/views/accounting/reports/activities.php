@@ -56,18 +56,17 @@
                                                         </a>
 
                                                         <div class="dropdown float-end d-inline-block"
-                                                            style="min-width: 23px; min-height: 1px">
-                                                            <?php if ($reportType->customizable) { ?>
+                                                            style="min-width: 23px; min-height: 1px">                                                            
                                                             <a href="#" class="dropdown-toggle"
                                                                 data-bs-toggle="dropdown" style="color: #888888">
                                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                                                             </a>
                                                             <ul class="dropdown-menu dropdown-menu-end">
-                                                                <li>
-                                                                    <a class="dropdown-item" href="#">Customize</a>
-                                                                </li>
-                                                            </ul>
-                                                            <?php } ?>
+                                                                <?php if ($reportType->customizable) { ?>
+                                                                    <li><a class="dropdown-item" href="#">Customize</a></li>
+                                                                <?php } ?>
+                                                                <li><a class="dropdown-item btn-add-to-management-reports" href="javascript:void(0);" data-name="<?= $reportType->name; ?>" data-id="<?= $reportType->id; ?>">Add to Management Reports</a></li>
+                                                            </ul>                                                            
                                                         </div>
                                                         <?php if ($reportType->favoritable === '1') { ?>
                                                         <a href="#" data-id="<?php echo $reportType->id; ?>"
@@ -103,6 +102,47 @@ $(function(){
         html : true, 
         trigger: "hover focus"
     }); 
+
+    $('.btn-add-to-management-reports').on('click', function(){
+        var rid = $(this).attr('data-id');
+        var report_name = $(this).attr('data-name');
+        var url = base_url + 'accounting/reports/_add_to_management_reports';
+
+        Swal.fire({
+            title: 'Management Reports',
+            html: `Proceed with adding <b>${report_name}</b> report to management report list?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {rid:rid},
+                    dataType:'json',
+                    success: function(result) {
+                        if( result.is_success == 1 ) {
+                            Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Report was successfully updated',
+                            }).then((result) => {
+                                //window.location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    });
 });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
