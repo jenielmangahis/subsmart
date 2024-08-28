@@ -571,30 +571,38 @@ class Timesheet extends MY_Controller
                 if ($attn->user_id == $user->id && $attn->shift_duration > 0) {
                     for ($x = 0; $x < count($week_check); $x++) {
                         if ($week_check[$x] == date('Y-m-d', strtotime($attn->date_created))) {
-                            $shift_duration += $attn->shift_duration;
+                            $duration = 8 - $attn->shift_duration;
+                            $shift_duration += $duration;
                         }
                     }
                     switch (date('Y-m-d', strtotime($attn->date_created))) {
                         case ($week_check[0]):
-                            $mon_duration = $attn->shift_duration;
+                            $time_duration = $attn->shift_duration == 0.0 ? 8 : 8 - $attn->shift_duration;
+                            $mon_duration = $time_duration;
                             break;
                         case ($week_check[1]):
-                            $tue_duration = $attn->shift_duration;
+                            $time_duration = $attn->shift_duration == 0.0 ? 8 : 8 - $attn->shift_duration;
+                            $tue_duration = $time_duration;
                             break;
                         case ($week_check[2]):
-                            $wed_duration = $attn->shift_duration;
+                            $time_duration = $attn->shift_duration == 0.0 ? 8 : 8 - $attn->shift_duration;
+                            $wed_duration = $time_duration;
                             break;
                         case ($week_check[3]):
-                            $thu_duration = $attn->shift_duration;
+                            $time_duration = $attn->shift_duration == 0.0 ? 8 : 8 - $attn->shift_duration;
+                            $thu_duration = $time_duration;
                             break;
                         case ($week_check[4]):
-                            $fri_duration = $attn->shift_duration;
+                            $time_duration = $attn->shift_duration == 0.0 ? 8 : 8 - $attn->shift_duration;
+                            $fri_duration = $time_duration;
                             break;
                         case ($week_check[5]):
-                            $sat_duration = $attn->shift_duration;
+                            $time_duration = $attn->shift_duration == 0.0 ? 8 : 8 - $attn->shift_duration;
+                            $sat_duration = $time_duration;
                             break;
                         case ($week_check[6]):
-                            $sun_duration = $attn->shift_duration;
+                            $time_duration = $attn->shift_duration == 0.0 ? 8 : 8 - $attn->shift_duration;
+                            $sun_duration = $time_duration;
                             break;
                     }
                 }
