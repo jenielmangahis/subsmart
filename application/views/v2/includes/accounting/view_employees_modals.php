@@ -1,11 +1,13 @@
-<div class="modal fade nsm-modal fade" id="edit_employee_modal" tabindex="-1" aria-labelledby="edit_employee_modal_label" aria-hidden="true">
+<div class="modal fade nsm-modal fade" id="edit_employee_modal" tabindex="-1"
+    aria-labelledby="edit_employee_modal_label" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <form id="updatePersonalInfoForm">
             <input type="hidden" name="id" value="<?php echo $employee->id; ?>">
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Edit Employee</span>
-                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i
+                            class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body" id="edit_employee_container" style="overflow-x: auto;max-height: 800px;">
                     <div class="row gy-3 mb-4">
@@ -14,21 +16,25 @@
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">First Name</label>
-                            <input type="text" name="FName" class="nsm-field form-control" required value="<?php echo $employee->FName; ?>" />
+                            <input type="text" name="FName" class="nsm-field form-control" required
+                                value="<?php echo $employee->FName; ?>" />
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Last Name</label>
-                            <input type="text" name="LName" class="nsm-field form-control" required value="<?php echo $employee->LName; ?>" />
+                            <input type="text" name="LName" class="nsm-field form-control" required
+                                value="<?php echo $employee->LName; ?>" />
                         </div>
                     </div>
                     <div class="row gy-3 mb-4">
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Mobile Number</label>
-                            <input type="text" name="mobile" placeholder="xxx-xxx-xxxx" maxlength="12" id="mobile" class="nsm-field form-control mobile-number" value="<?php echo $employee->mobile; ?>" />
+                            <input type="text" name="mobile" placeholder="xxx-xxx-xxxx" maxlength="12" id="mobile"
+                                class="nsm-field form-control mobile-number" value="<?php echo $employee->mobile; ?>" />
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
-                            <input type="text" name="phone" placeholder="xxx-xxx-xxxx" maxlength="12" class="nsm-field form-control phone-number" value="<?php echo $employee->phone; ?>" />
+                            <input type="text" name="phone" placeholder="xxx-xxx-xxxx" maxlength="12"
+                                class="nsm-field form-control phone-number" value="<?php echo $employee->phone; ?>" />
                         </div>
                     </div>
                     <div class="row gy-3 mb-4">
@@ -38,13 +44,15 @@
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Email</label>
                             <div class="nsm-field-group icon-right">
-                                <input type="email" class="nsm-field form-control" id="employeeEmail" name="email" required value="<?php echo $employee->email; ?>">
+                                <input type="email" class="nsm-field form-control" id="employeeEmail" name="email"
+                                    required value="<?php echo $employee->email; ?>">
                             </div>
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Username</label>
                             <div class="nsm-field-group icon-right">
-                                <input type="text" class="nsm-field form-control" id="employeeUsername" name="username" required value="<?php echo $employee->username; ?>">
+                                <input type="text" class="nsm-field form-control" id="employeeUsername" name="username"
+                                    required value="<?php echo $employee->username; ?>">
                             </div>
                         </div>
                     </div>
@@ -54,44 +62,55 @@
                         </div>
                         <div class="col-12">
                             <label class="content-subtitle fw-bold d-block mb-2">Address</label>
-                            <input type="text" class="nsm-field form-control" name="address" value="<?php echo $employee->address; ?>">
+                            <input type="text" class="nsm-field form-control" name="address"
+                                value="<?php echo $employee->address; ?>">
                         </div>
                         <div class="col-12 col-md-8">
                             <label class="content-subtitle fw-bold d-block mb-2">State</label>
-                            <input type="text" class="nsm-field form-control" name="state" value="<?php echo $employee->state; ?>">
+                            <input type="text" class="nsm-field form-control" name="state"
+                                value="<?php echo $employee->state; ?>">
                         </div>
                         <div class="col-12 col-md-4">
                             <label class="content-subtitle fw-bold d-block mb-2">Zip Code</label>
-                            <input type="text" class="nsm-field form-control" name="postal_code" value="<?php echo $employee->postal_code; ?>">
+                            <input type="text" class="nsm-field form-control" name="postal_code"
+                                value="<?php echo $employee->postal_code; ?>">
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Status</label>
                             <select class="form-select" name="status" required>
                                 <option value="" disabled>Select Status</option>
-                                <option value="1" <?php echo $employee->status == 1 ? 'selected' : ''; ?>>Active</option>
-                                <option value="0" <?php echo $employee->status == 0 ? 'selected' : ''; ?>>Inactive</option>
+                                <option value="1" <?php echo $employee->status == 1 ? 'selected' : ''; ?>>Active
+                                </option>
+                                <option value="0" <?php echo $employee->status == 0 ? 'selected' : ''; ?>>Inactive
+                                </option>
                             </select>
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Birth date</label>
-                            <input type="date" class="nsm-field form-control" id="birth-date" name="birthdate" value="<?php echo $employee->birthdate; ?>">
+                            <input type="date" class="nsm-field form-control" id="birth-date" name="birthdate"
+                                value="<?php echo $employee->birthdate; ?>">
                         </div>
                         <div class="col-12">
                             <div class="form-check form-switch nsm-switch d-inline-block me-3">
-                                <input class="form-check-input" type="checkbox" id="app_access" <?php echo ($employee->has_app_access) ? "checked" : ""; ?>>
-                                <input type="hidden" name="has_app_access" value="<?php echo ($employee->has_app_access) ? 1 : 0; ?>">
+                                <input class="form-check-input" type="checkbox" id="app_access"
+                                    <?php echo ($employee->has_app_access) ? "checked" : ""; ?>>
+                                <input type="hidden" name="has_app_access"
+                                    value="<?php echo ($employee->has_app_access) ? 1 : 0; ?>">
                                 <label class="form-check-label" for="app_access">App Access</label>
                             </div>
                             <div class="form-check form-switch nsm-switch d-inline-block">
-                                <input class="form-check-input" type="checkbox" id="web_access" <?php echo ($employee->has_web_access) ? "checked" : ""; ?>>
-                                <input type="hidden" name="has_web_access" value="<?php echo ($employee->has_web_access) ? 1 : 0; ?>">
+                                <input class="form-check-input" type="checkbox" id="web_access"
+                                    <?php echo ($employee->has_web_access) ? "checked" : ""; ?>>
+                                <input type="hidden" name="has_web_access"
+                                    value="<?php echo ($employee->has_web_access) ? 1 : 0; ?>">
                                 <label class="form-check-label" for="web_access">Web Access</label>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="button" name="btn_modal_close" class="nsm-button"
+                        data-bs-dismiss="modal">Close</button>
                     <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button>
                 </div>
             </div>
@@ -153,7 +172,8 @@
 
                     <div class="row">
                         <div class="col-md-12 mb-3">
-                            <h4 class="fw-bold employee_name">Let's get down to <?= $employee->FName ?>'s job specifics</h4>
+                            <h4 class="fw-bold employee_name">Let's get down to <?= $employee->FName ?>'s job specifics
+                            </h4>
                         </div>
                     </div>
 
@@ -344,26 +364,32 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form id="saveTaxwithholdingForm">
-            <input type="hidden" name="employee_id" value="<?php echo $employee->id; ?>">
+                <input type="hidden" name="employee_id" value="<?php echo $employee->id; ?>">
                 <div class="modal-header">
                     <span class="modal-title content-title">Tax withholdings</span>
-                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i
+                            class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12 mb-3">
-                            <h4 class="fw-bold employee_name"><?php echo "What are $employee->FName's withholdings?"; ?></h4>
+                            <h4 class="fw-bold employee_name"><?php echo "What are $employee->FName's withholdings?"; ?>
+                            </h4>
                         </div>
                         <div class="col-md-12">
                             <p class="fs-5"><?php echo "When was $employee->FName hired?"; ?></p>
                         </div>
                         <div class="col-md-12 mb-3">
                             <div class="form-check">
-                                <input id="form_w4_2020" class="form-check-input" type="radio" name="withholding_certificate" value="form_2020" <?php echo ($taxWithholdingData->withholding_certificate == "form_2020") ? "checked" : "" ?>>
+                                <input id="form_w4_2020" class="form-check-input" type="radio"
+                                    name="withholding_certificate" value="form_2020"
+                                    <?php echo ($taxWithholdingData->withholding_certificate == "form_2020") ? "checked" : "" ?>>
                                 <label class="form-check-label" for="form_w4_2020">2020 or later (Form W-4)</label>
                             </div>
                             <div class="form-check">
-                                <input id="form_w4_2019" class="form-check-input" type="radio" name="withholding_certificate" value="form_2019" <?php echo ($taxWithholdingData->withholding_certificate == "form_2019") ? "checked" : "" ?>>
+                                <input id="form_w4_2019" class="form-check-input" type="radio"
+                                    name="withholding_certificate" value="form_2019"
+                                    <?php echo ($taxWithholdingData->withholding_certificate == "form_2019") ? "checked" : "" ?>>
                                 <label class="form-check-label" for="form_w4_2019">2019 or earlier (Form W-4)</label>
                             </div>
                         </div>
@@ -371,62 +397,114 @@
                             <div class="accordion">
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="federal_withholding_panel">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#federal_withholding_collapse" aria-expanded="true" aria-controls="federal_withholding_collapse"> <strong>Federal withholding</strong></button>
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#federal_withholding_collapse" aria-expanded="true"
+                                            aria-controls="federal_withholding_collapse"> <strong>Federal
+                                                withholding</strong></button>
                                     </h2>
-                                    <div id="federal_withholding_collapse" class="accordion-collapse collapse show" aria-labelledby="federal_withholding_panel">
+                                    <div id="federal_withholding_collapse" class="accordion-collapse collapse show"
+                                        aria-labelledby="federal_withholding_panel">
                                         <div class="accordion-body">
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <p><?php echo "You can find the information for this section on $employee->FName's W-4 form."; ?> <a class="fw-bold text-decoration-none" href="https://drive.google.com/file/d/1Keip2AbW3V0jCGz0oZbCoz8DLU63CNZB/view?usp=sharing" target="_blank">Need a blank W-4 form?</a></p>
+                                                    <p><?php echo "You can find the information for this section on $employee->FName's W-4 form."; ?>
+                                                        <a class="fw-bold text-decoration-none"
+                                                            href="https://drive.google.com/file/d/1Keip2AbW3V0jCGz0oZbCoz8DLU63CNZB/view?usp=sharing"
+                                                            target="_blank">Need a blank W-4 form?</a>
+                                                    </p>
                                                 </div>
                                                 <div class="col-md-12 mb-3">
                                                     <strong class="text-muted">Filing Status</strong>
-                                                    <select id="filing_status" class="form-select mt-1 w-auto" name="filing_status">
+                                                    <select id="filing_status" class="form-select mt-1 w-auto"
+                                                        name="filing_status">
                                                         <!-- 2020 Form Options -->
-                                                        <option <?php echo ($taxWithholdingData->filing_status == "Single or Married Filing Separately") ? "selected" : "" ?> value="Single or Married Filing Separately" data-custom="form_2020">Single or Married Filing Separately</option>
-                                                        <option <?php echo ($taxWithholdingData->filing_status == "Married Filing Jointly or Qualifying Widow(er)") ? "selected" : "" ?> value="Married Filing Jointly or Qualifying Widow(er)" data-custom="form_2020">Married Filing Jointly or Qualifying Widow(er)</option>
-                                                        <option <?php echo ($taxWithholdingData->filing_status == "Head of Household") ? "selected" : "" ?> value="Head of Household" data-custom="form_2020">Head of Household</option>
-                                                        <option <?php echo ($taxWithholdingData->filing_status == "Exempt") ? "selected" : "" ?> value="Exempt" data-custom="form_2020">Exempt</option>
+                                                        <option
+                                                            <?php echo ($taxWithholdingData->filing_status == "Single or Married Filing Separately") ? "selected" : "" ?>
+                                                            value="Single or Married Filing Separately"
+                                                            data-custom="form_2020">Single or Married Filing Separately
+                                                        </option>
+                                                        <option
+                                                            <?php echo ($taxWithholdingData->filing_status == "Married Filing Jointly or Qualifying Widow(er)") ? "selected" : "" ?>
+                                                            value="Married Filing Jointly or Qualifying Widow(er)"
+                                                            data-custom="form_2020">Married Filing Jointly or Qualifying
+                                                            Widow(er)</option>
+                                                        <option
+                                                            <?php echo ($taxWithholdingData->filing_status == "Head of Household") ? "selected" : "" ?>
+                                                            value="Head of Household" data-custom="form_2020">Head of
+                                                            Household</option>
+                                                        <option
+                                                            <?php echo ($taxWithholdingData->filing_status == "Exempt") ? "selected" : "" ?>
+                                                            value="Exempt" data-custom="form_2020">Exempt</option>
                                                         <!-- 2019 Form Options -->
-                                                        <option <?php echo ($taxWithholdingData->filing_status == "Single") ? "selected" : "" ?> value="Single" data-custom="form_2019">Single</option>
-                                                        <option <?php echo ($taxWithholdingData->filing_status == "Married") ? "selected" : "" ?> value="Married" data-custom="form_2019">Married</option>
-                                                        <option <?php echo ($taxWithholdingData->filing_status == "Married, but withhold at higher Single rate") ? "selected" : "" ?> value="Married, but withhold at higher Single rate" data-custom="form_2019">Married, but withhold at higher Single rate</option>
-                                                        <option <?php echo ($taxWithholdingData->filing_status == "Do not withhold (exempt)") ? "selected" : "" ?> value="Do not withhold (exempt)" data-custom="form_2019">Do not withhold (exempt)</option>
+                                                        <option
+                                                            <?php echo ($taxWithholdingData->filing_status == "Single") ? "selected" : "" ?>
+                                                            value="Single" data-custom="form_2019">Single</option>
+                                                        <option
+                                                            <?php echo ($taxWithholdingData->filing_status == "Married") ? "selected" : "" ?>
+                                                            value="Married" data-custom="form_2019">Married</option>
+                                                        <option
+                                                            <?php echo ($taxWithholdingData->filing_status == "Married, but withhold at higher Single rate") ? "selected" : "" ?>
+                                                            value="Married, but withhold at higher Single rate"
+                                                            data-custom="form_2019">Married, but withhold at higher
+                                                            Single rate</option>
+                                                        <option
+                                                            <?php echo ($taxWithholdingData->filing_status == "Do not withhold (exempt)") ? "selected" : "" ?>
+                                                            value="Do not withhold (exempt)" data-custom="form_2019">Do
+                                                            not withhold (exempt)</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-12 mb-3 form_2020_input">
-                                                    <input id="mark_w4" class="form-check-input" type="checkbox" <?php echo ($taxWithholdingData->mark_w4 == 1) ? "checked" : ""; ?>>&nbsp;
-                                                    <label class="text-muted" for="mark_w4"><?php echo "Select yes if $employee->FName has marked this box on their W-4."; ?></label>
-                                                    <input type="hidden" name="mark_w4" value="<?php echo ($taxWithholdingData->mark_w4 == 1) ? 1 : 0; ?>">
+                                                    <input id="mark_w4" class="form-check-input" type="checkbox"
+                                                        <?php echo ($taxWithholdingData->mark_w4 == 1) ? "checked" : ""; ?>>&nbsp;
+                                                    <label class="text-muted"
+                                                        for="mark_w4"><?php echo "Select yes if $employee->FName has marked this box on their W-4."; ?></label>
+                                                    <input type="hidden" name="mark_w4"
+                                                        value="<?php echo ($taxWithholdingData->mark_w4 == 1) ? 1 : 0; ?>">
                                                 </div>
                                                 <div class="col-md-12 mb-3 form_2020_input">
                                                     <strong class="text-muted">Claim dependent's deduction</strong>
-                                                    <input class="form-control mt-1 w-auto" name="claim_dependents_deduction" type="number" placeholder="0.00" value="<?php echo $taxWithholdingData->claim_dependents_deduction; ?>">
+                                                    <input class="form-control mt-1 w-auto"
+                                                        name="claim_dependents_deduction" type="number"
+                                                        placeholder="0.00"
+                                                        value="<?php echo $taxWithholdingData->claim_dependents_deduction; ?>">
                                                 </div>
                                                 <div class="col-md-12 mb-3 form_2020_input">
                                                     <strong class="text-muted">Other adjustments</strong>
                                                     <div class="row mt-2">
                                                         <div class="col-md-3 form_2020_input">
                                                             <label>Other income</label>
-                                                            <input class="form-control mt-1 w-auto" name="other_income" type="number" placeholder="0.00" value="<?php echo $taxWithholdingData->other_income; ?>">
+                                                            <input class="form-control mt-1 w-auto" name="other_income"
+                                                                type="number" placeholder="0.00"
+                                                                value="<?php echo $taxWithholdingData->other_income; ?>">
                                                         </div>
                                                         <div class="col-md-3 form_2020_input">
                                                             <label>Deductions</label>
-                                                            <input class="form-control mt-1 w-auto" name="deductions" type="number" placeholder="0.00" value="<?php echo $taxWithholdingData->deductions; ?>">
+                                                            <input class="form-control mt-1 w-auto" name="deductions"
+                                                                type="number" placeholder="0.00"
+                                                                value="<?php echo $taxWithholdingData->deductions; ?>">
                                                         </div>
                                                         <div class="col-md-3 form_2020_input">
                                                             <label>Extra withholding</label>
-                                                            <input class="form-control mt-1 w-auto" name="form2020_extra_withholding" type="number" placeholder="0.00" value="<?php echo $taxWithholdingData->form2020_extra_withholding; ?>">
+                                                            <input class="form-control mt-1 w-auto"
+                                                                name="form2020_extra_withholding" type="number"
+                                                                placeholder="0.00"
+                                                                value="<?php echo $taxWithholdingData->form2020_extra_withholding; ?>">
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12 mb-3 form_2019_input">
-                                                    <strong class="text-muted">Total number of allowances you are claiming</strong>
-                                                    <input class="form-control mt-1 w-auto" name="total_number_allowances" type="number" placeholder="0" value="<?php echo $taxWithholdingData->total_number_allowances; ?>">
+                                                    <strong class="text-muted">Total number of allowances you are
+                                                        claiming</strong>
+                                                    <input class="form-control mt-1 w-auto"
+                                                        name="total_number_allowances" type="number" placeholder="0"
+                                                        value="<?php echo $taxWithholdingData->total_number_allowances; ?>">
                                                 </div>
                                                 <div class="col-md-12 mb-3 form_2019_input">
                                                     <strong class="text-muted">Extra withholding</strong>
-                                                    <input class="form-control mt-1 w-auto" name="form2019_extra_withholding" type="number" placeholder="0.00" value="<?php echo $taxWithholdingData->form2019_extra_withholding; ?>">
+                                                    <input class="form-control mt-1 w-auto"
+                                                        name="form2019_extra_withholding" type="number"
+                                                        placeholder="0.00"
+                                                        value="<?php echo $taxWithholdingData->form2019_extra_withholding; ?>">
                                                 </div>
                                             </div>
                                         </div>
@@ -434,29 +512,46 @@
                                 </div>
                                 <div class="accordion-item">
                                     <h2 class="accordion-header" id="tax_exemptions_panel">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#tax_exemptions_collapse" aria-expanded="true" aria-controls="tax_exemptions_collapse"><strong>Tax exemptions</strong></button>
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#tax_exemptions_collapse" aria-expanded="true"
+                                            aria-controls="tax_exemptions_collapse"><strong>Tax
+                                                exemptions</strong></button>
                                     </h2>
-                                    <div id="tax_exemptions_collapse" class="accordion-collapse collapse show" aria-labelledby="tax_exemptions_panel">
+                                    <div id="tax_exemptions_collapse" class="accordion-collapse collapse show"
+                                        aria-labelledby="tax_exemptions_panel">
                                         <div class="accordion-body">
                                             <div class="row">
                                                 <div class="col-md-12">
-                                                    <p class="text-muted">These are not common. Certain government criteria must be met to take these exemptions.</p>
+                                                    <p class="text-muted">These are not common. Certain government
+                                                        criteria must be met to take these exemptions.</p>
                                                 </div>
                                                 <div class="col-md-12 mb-3">
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="futa_checkbox" <?php echo ($taxWithholdingData->futa_status == 1) ? "checked" : ""; ?>>
-                                                        <label class="form-check-label fw-bold" for="futa_checkbox">FUTA</label>
-                                                        <input type="hidden" name="futa_status" value="<?php echo ($taxWithholdingData->futa_status == 1) ? 1 : 0; ?>">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="futa_checkbox"
+                                                            <?php echo ($taxWithholdingData->futa_status == 1) ? "checked" : ""; ?>>
+                                                        <label class="form-check-label fw-bold"
+                                                            for="futa_checkbox">FUTA</label>
+                                                        <input type="hidden" name="futa_status"
+                                                            value="<?php echo ($taxWithholdingData->futa_status == 1) ? 1 : 0; ?>">
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="ssmedi_checkbox" <?php echo ($taxWithholdingData->ssmedi_status == 1) ? "checked" : ""; ?>>
-                                                        <label class="form-check-label fw-bold" for="ssmedi_checkbox">Social Security and Medicare</label>
-                                                        <input type="hidden" name="ssmedi_status" value="<?php echo ($taxWithholdingData->ssmedi_status == 1) ? 1 : 0; ?>">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="ssmedi_checkbox"
+                                                            <?php echo ($taxWithholdingData->ssmedi_status == 1) ? "checked" : ""; ?>>
+                                                        <label class="form-check-label fw-bold"
+                                                            for="ssmedi_checkbox">Social Security and Medicare</label>
+                                                        <input type="hidden" name="ssmedi_status"
+                                                            value="<?php echo ($taxWithholdingData->ssmedi_status == 1) ? 1 : 0; ?>">
                                                     </div>
                                                     <div class="form-check">
-                                                        <input class="form-check-input" type="checkbox" id="flsui_checkbox" <?php echo ($taxWithholdingData->flsui_status == 1) ? "checked" : ""; ?>>
-                                                        <label class="form-check-label fw-bold" for="flsui_checkbox">FL SUI</label>
-                                                        <input type="hidden" name="flsui_status" value="<?php echo ($taxWithholdingData->flsui_status == 1) ? 1 : 0; ?>">
+                                                        <input class="form-check-input" type="checkbox"
+                                                            id="flsui_checkbox"
+                                                            <?php echo ($taxWithholdingData->flsui_status == 1) ? "checked" : ""; ?>>
+                                                        <label class="form-check-label fw-bold" for="flsui_checkbox">FL
+                                                            SUI</label>
+                                                        <input type="hidden" name="flsui_status"
+                                                            value="<?php echo ($taxWithholdingData->flsui_status == 1) ? 1 : 0; ?>">
                                                     </div>
 
                                                 </div>
@@ -469,7 +564,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="button" name="btn_modal_close" class="nsm-button"
+                        data-bs-dismiss="modal">Close</button>
                     <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button>
                 </div>
             </form>
@@ -630,7 +726,8 @@
                 <div class="modal-body">
                     <div class="row" style="padding: 20px">
                         <div class="col-12">
-                            <h4 class="fw-bold ">What deductions, contributions, or garnishment does <?= $employee->FName ?>'s have?</h4>
+                            <h4 class="fw-bold ">What deductions, contributions, or garnishment does
+                                <?= $employee->FName ?>'s have?</h4>
                         </div>
                         <div class="col-md-12 mt-5 mb-5">
                             <h5><strong>Deductions and contributions</strong></h5>
@@ -662,8 +759,9 @@
                                                     class="bx bx-fw bx-pencil"></i></a>
 
                                             <a class="nsm-button border-0  pointerCursor delete-deductions-and-contributions"
-                                                style="font-size: 16px" data-val="<?= $dc->id ?>" data-employee_id="<?= $dc->employee_id ?>"
-                                                ><i class="bx bx-fw bx-trash"></i></a>
+                                                style="font-size: 16px" data-val="<?= $dc->id ?>"
+                                                data-employee_id="<?= $dc->employee_id ?>"><i
+                                                    class="bx bx-fw bx-trash"></i></a>
                                         </div>
                                     </div>
                                 </div>
@@ -678,7 +776,8 @@
                                 <div class="col-md-12">
 
                                     <div class="col-md-8">
-                                        <button type="button" class="nsm-button add-deduction-and-contributions-modal" ><i
+                                        <button type="button"
+                                            class="nsm-button add-deduction-and-contributions-modal"><i
                                                 class="bx bx-fw bx-plus"></i> Add deductions/contribution</button>
                                     </div>
                                 </div>
@@ -689,10 +788,10 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" name="btn_modal_close " class="nsm-button" 
-                    data-bs-dismiss="modal"   >Close</button>
-                    <button type="button" name="btn_modal_save" 
-                       data-bs-dismiss="modal"  class="nsm-button success">Done</button>
+                    <button type="button" name="btn_modal_close " class="nsm-button"
+                        data-bs-dismiss="modal">Close</button>
+                    <button type="button" name="btn_modal_save" data-bs-dismiss="modal"
+                        class="nsm-button success">Done</button>
                 </div>
             </div>
         </form>
@@ -858,8 +957,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" name="btn_modal_close" class="nsm-button update-deductions-and-contributions-close"
-                        >Close</button>
+                    <button type="button" name="btn_modal_close"
+                        class="nsm-button update-deductions-and-contributions-close">Close</button>
                     <button type="submit" name="btn_modal_save"
                         class="nsm-button primary btn_modal_save_deductions">Save</button>
                 </div>
@@ -876,7 +975,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title ">Add deduction/contribution</span>
-                    <button type="button" name="btn_modal_close"  aria-label="Close"><i
+                    <button type="button" name="btn_modal_close" aria-label="Close"><i
                             class='bx bx-fw bx-x m-0 edit-deductions-contributions-close-modal'></i></button>
                 </div>
                 <div class="modal-body">
@@ -896,7 +995,8 @@
 
                             </div>
                         </div>
-                        <div class="deductions-contribution-section deductions-contribution-section-add" style="display:none">
+                        <div class="deductions-contribution-section deductions-contribution-section-add"
+                            style="display:none">
                             <div class="col-12 col-md-6">
                                 <div class="row">
 
@@ -924,7 +1024,8 @@
                                     <div class="row">
                                         <div class="col-12 mb-3">
                                             <label>Type</label>
-                                            <select class=" nsm-field form-select edit_deduction_contribution_type"
+                                            <select
+                                                class=" nsm-field form-select edit_deduction_contribution_type edit_deduction_contribution_type_add"
                                                 name="type" placeholder="" required>
                                                 <option value="">Select one</option>
                                                 <option value="401(k)">401(k)</option>
@@ -964,7 +1065,8 @@
                                                     <div class="row">
                                                         <div class="col-6 edit-pay-type-container mb-3">
                                                             <label>Calculated as *</label>
-                                                            <select class="nsm-field form-select edit-emp-payscale"
+                                                            <select
+                                                                class="nsm-field form-select edit-emp-payscale contribution_calculated_as"
                                                                 name="deductions_calculated_as" required>
                                                                 <option value="None">None</option>
                                                                 <option value="Flat amount">Flat amount</option>
@@ -975,12 +1077,20 @@
                                                             </select>
                                                         </div>
                                                         <div class="col-6 edit-pay-type-container mb-3">
-                                                            <label>Amount per paycheck *</label>
+                                                            <label class="calculated_label">Amount per paycheck
+                                                                *</label>
                                                             <input class="form-control" name="deductions_amount"
                                                                 placeholder="$0" type="number" step="any" min="0"
                                                                 required>
                                                         </div>
                                                     </div>
+                                                </div>
+                                                <div class="col-12 edit-pay-type-container mb-3">
+                                                    <label class="calculated_as_label">Though this is an after tax deduction, the deduction amount
+                                                        is based off of a percentage
+                                                        of the employee's gross earnigs.
+                                                    </label>
+
                                                 </div>
                                                 <div class="col-12 edit-pay-type-container mb-3">
                                                     <label>Annual maximum</label>
@@ -992,7 +1102,7 @@
                                     </div>
 
                                     <div class="col-md-12">
-                                        <div class="row">
+                                        <div class="row company-contribution-section">
                                             <div class="col-12 edit-pay-type-container mb-3">
                                                 <h6 class="fw-bold">Company contribution</h6>
                                                 <label for="">We'll track your contributions, but it's your
@@ -1002,7 +1112,7 @@
                                             </div>
                                             <div class="col-6 edit-pay-type-container mb-3">
                                                 <label>Calculated as *</label>
-                                                <select class="nsm-field form-select edit-emp-payscale"
+                                                <select class="nsm-field form-select edit-emp-payscale "
                                                     name="contribution_calculated_as" required>
                                                     <option value="None">None</option>
                                                     <option value="Flat amount">Flat amount</option>
@@ -1036,8 +1146,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" name="btn_modal_close " class="nsm-button edit-deductions-contributions-close-modal"
-                        >Close</button>
+                    <button type="button" name="btn_modal_close "
+                        class="nsm-button edit-deductions-contributions-close-modal">Close</button>
                     <button type="submit" name="btn_modal_save"
                         class="nsm-button primary btn_modal_save_deductions">Save</button>
                 </div>
@@ -1052,18 +1162,22 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Add notes</span>
-                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    <button type="button" name="btn_modal_close" data-bs-dismiss="modal" aria-label="Close"><i
+                            class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-12">
-                            <label class="mb-2" for="notes">Notes for <?php echo "$employee->FName $employee->LName" ?></label>
-                            <textarea name="notes" id="notes" class="form-control nsm-field"><?php echo $pay_details->notes ?></textarea>
+                            <label class="mb-2" for="notes">Notes for
+                                <?php echo "$employee->FName $employee->LName" ?></label>
+                            <textarea name="notes" id="notes"
+                                class="form-control nsm-field"><?php echo $pay_details->notes ?></textarea>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" name="btn_modal_close" class="nsm-button" data-bs-dismiss="modal">Close</button>
+                    <button type="button" name="btn_modal_close" class="nsm-button"
+                        data-bs-dismiss="modal">Close</button>
                     <button type="submit" name="btn_modal_save" class="nsm-button primary">Save</button>
                 </div>
             </div>
@@ -1197,7 +1311,7 @@ $(function() {
             $('input[name="has_app_access"]').val(0);
         }
     });
-    
+
     $('#web_access').change(function(e) {
         e.preventDefault();
         if ($(this).prop('checked') == true) {
@@ -1250,14 +1364,16 @@ $(function() {
 
         $.ajax({
             type: "POST",
-            url: window.origin + "/accounting/employees/update_employee_data/personal_information",
+            url: window.origin +
+                "/accounting/employees/update_employee_data/personal_information",
             data: form.serialize(),
             beforeSend: function() {
                 formDisabler(form, true);
             },
             success: function(response) {
                 formDisabler(form, false);
-                const name = $('input[name="FName"]').val() + " " + $('input[name="LName"]').val();
+                const name = $('input[name="FName"]').val() + " " + $('input[name="LName"]')
+                    .val();
                 const email = $('input[name="email"]').val();
                 const birthdate = $('input[name="birthdate"]').val();
                 const address = $('input[name="address"]').val();
@@ -1265,7 +1381,8 @@ $(function() {
                 const postalCode = $('input[name="postal_code"]').val();
                 const formattedAddress = `${address},<br>${state} ${postalCode}`;
                 const phone = $('input[name="email"]').val();
-                const status = ($('select[name="status"]').val() == 1) ? "Active" : "Inactive";
+                const status = ($('select[name="status"]').val() == 1) ? "Active" :
+                    "Inactive";
 
                 $('.name_text').text(name);
                 $('.email_text').text(email);
@@ -1303,10 +1420,17 @@ $(function() {
             success: function(response) {
                 formDisabler(form, false);
                 var text = [];
-                if ($('#futa_checkbox').is(':checked')) { text.push('FUTA'); }
-                if ($('#ssmedi_checkbox').is(':checked')) { text.push('Social Security and Medicare'); }
-                if ($('#flsui_checkbox').is(':checked')) { text.push('FL SUI'); }
-                $('.tax_exemptions_text').html(text.length ? text.join('<br>') : '<i>Not specified</i>');
+                if ($('#futa_checkbox').is(':checked')) {
+                    text.push('FUTA');
+                }
+                if ($('#ssmedi_checkbox').is(':checked')) {
+                    text.push('Social Security and Medicare');
+                }
+                if ($('#flsui_checkbox').is(':checked')) {
+                    text.push('FL SUI');
+                }
+                $('.tax_exemptions_text').html(text.length ? text.join('<br>') :
+                    '<i>Not specified</i>');
                 $('.filing_status_text').text($('#filing_status').val());
                 Swal.fire({
                     icon: "success",
@@ -1454,17 +1578,21 @@ $(function() {
                     var employee_details = data.employee_details;
                     $.each(employee_details, function(index) {
                         console.log(employee_details[index]);
-                        var employee_number = employee_details[index].employee_number;      
-                        var hire_date = employee_details[index].hire_date;   
-                        var employee_status = employee_details[index].employee_status;
-                        var worker_company_class = employee_details[index].worker_company_class;
+                        var employee_number = employee_details[index]
+                            .employee_number;
+                        var hire_date = employee_details[index].hire_date;
+                        var employee_status = employee_details[index]
+                            .employee_status;
+                        var worker_company_class = employee_details[index]
+                            .worker_company_class;
                         var employee_title = employee_details[index].employee_title;
-                        
-                        $(`#emp-details-worker-company-class`).text(worker_company_class);
+
+                        $(`#emp-details-worker-company-class`).text(
+                            worker_company_class);
                         $(`#emp-details-employee-title`).text(employee_title);
                         $(`#emp-details-status`).text(employee_status);
-                        $(`#emp-hire-date`).text(hire_date);  
-                        $(`#emp-details-employee-number`).text(employee_number);                   
+                        $(`#emp-hire-date`).text(hire_date);
+                        $(`#emp-details-employee-number`).text(employee_number);
                     });
 
                     Swal.fire({
