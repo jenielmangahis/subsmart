@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    $(".nsm-sidebar-menu #new-popup ul li a.ajax-modal, #new_estimate_modal .modal-body button.nsm-button").on("click", function(e) {
+    $(".nsm-sidebar-menu #new-popup ul li a.ajax-modal, a.ajax-modal, #new_estimate_modal .modal-body button.nsm-button").on("click", function(e) {
 		e.preventDefault();
         if($(this).hasClass('nsm-button')) {
             var view = $(this).attr('id').replace('-', '_');
