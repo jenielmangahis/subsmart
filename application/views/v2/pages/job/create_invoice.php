@@ -85,7 +85,7 @@
                         </div>
                         <div class="col-md-4">
                             <label>Due Date</label>
-                            <input type="date" class="form-control" id="due-date" <?= $jobInvoice ? date("Y-m-d", strtotime($jobInvoice->due_date)) : date("Y-m-d"); ?> required="">
+                            <input type="date" class="form-control" id="due-date" value="<?= $jobInvoice ? date("Y-m-d", strtotime($jobInvoice->due_date)) : date("m/d/Y"); ?>" required="">
                         </div>
                         <div class="col-md-4">
                             <label>Send a tip amount to assigned technician </label>
@@ -512,8 +512,8 @@
         });
     })()
     const today = new Date().toISOString().substr(0, 10);
-    document.getElementById("date-issued").value = today;
-    document.getElementById("due-date").value = today;
+    //document.getElementById("date-issued").value = today;
+    //document.getElementById("due-date").value = today;
 </script>
 
 <script src="https://cdn.ckeditor.com/4.16.2/standard/ckeditor.js"></script>
