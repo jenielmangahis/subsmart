@@ -18,6 +18,8 @@ export class UpcomingTaxPaymentsTable {
     const { data: responseData } = await api.getPayrollTaxPayments();
     this.data = responseData.map((currData) => {
       return {
+        chart_accounts_id : currData.id,
+        acc_detail_id: currData.acc_detail_id,
         type: {
           title: currData.name,
           date_range: currData.date_range,
@@ -45,7 +47,11 @@ export class UpcomingTaxPaymentsTable {
       const $row = $(document.importNode(this.template, true));
       const $dataElements = $row.find("[data-type]");
       const $actions = $row.find(".payrollTax__actions");
+      const $rowMarkPaid = $row.find(".btn-row-mark-paid");
       const $expandBtn = $row.find(".payrollTax__taxTypeBtn");
+      const chart_accounts_id = this.helpers.Accounting__getValue(tax, 'chart_accounts_id');
+
+      $rowMarkPaid.attr('data-id', chart_accounts_id);
 
       $dataElements.each((_, element) => {
         const $element = $(element);

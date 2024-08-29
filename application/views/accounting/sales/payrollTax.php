@@ -111,54 +111,54 @@
                     <div class="col-12">
                         <div class="nsm-callout primary">
                             <button><i class='bx bx-x'></i></button>
-                            Go to Taxes and select Payroll Tax.<br>
-                            Select Pay Taxes.<br>
-                            Select Create payment on the tax you want to pay.<br>
-                            Select E-pay.<br>
-                            Always choose Earliest as it's the recommended date to pay taxes, then select Approve.<br>
-                            An e-payment confirmation window appears, select Done.
+                            Upcoming tax payments
                         </div>
                     </div>
-                </div>              
-
-                <div class="payrollTax__title payrollTax__title--sm"><h4>Upcoming tax payments</h4></div>
-
-                <table class="table table-hover">
+                </div>      
+                <div class="row mt-4">
+                    <div class="col-12 col-md-4 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search List">
+                        </div>
+                    </div>  
+                </div>
+                <table class="nsm-table" id="payroll-tax-list">
                     <template id="taxRowTemplate">
                         <tr class="payrollTax__row">
-                            <td>
-                                <div class="payrollTax__taxType">
-                                    <button class="payrollTax__taxTypeBtn"><i class="fa fa-chevron-right"></i></button>
-                                    <i class="fa fa-info-circle text-warning payrollTax__taxTypeIcon"></i>
+                            <td class="nsm-text-primary">
+                                <div class="payrollTax__taxType">                                    
                                     <div data-type="type.title" class="payrollTax__text700"></div>
                                     <div data-type="type.date_range" class="payrollTax__taxTypeDateRange"></div>
                                 </div>
                             </td>
-                            <td>
+                            <!-- <td class="nsm-text-primary">
                                 <div data-type="status" class="payrollTax__paymentStatus"></div>
-                            </td>
-                            <td>
+                            </td> -->
+                            <td class="nsm-text-primary">
                                 <div class="payrollTax__text700">
                                     $<span data-type="amount"></span>
                                 </div>
                             </td>
-                            <td>
+                            <td class="nsm-text-primary">
                                 <div data-type="due_date" class="payrollTax__text700"></div>
                             </td>
-                            <td>
+                            <!-- <td class="nsm-text-primary">
                                 <div class="payrollTax__paymentMethod">
                                     <div data-type="payment_method.primary_text" class="payrollTax__text700"></div>
                                     <div data-type="payment_method.secondary_text" class="payrollTax__paymentMethodDate"></div>
                                 </div>
-                            </td>
-                            <td>
-                                <div class="payrollTax__actions d-none">
-                                    <button class="payrollTax__actionsBtn payrollTax__actionsBtn--disabled">Pay</button>
-                                    <button class="payrollTax__actionsBtn payrollTax__actionsBtn--disabled">Mark as paid</button>
+                            </td> -->
+                            <td class="nsm-text-primary">
+                                <div class="dropdown table-management payrollTax__actions">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item btn-row-pay" href="javascript:void(0);">Pay</a></li>
+                                        <li><a class="dropdown-item btn-row-mark-paid" href="javascript:void(0);">Mark as paid</a></li>
+                                     </ul>
                                 </div>
                             </td>
                         </tr>
-                        <tr class="payrollTax__secondaryRow">
+                        <!-- <tr class="payrollTax__secondaryRow">
                             <td colspan="2">
                                 <div class="payrollTax__taxType">
                                     <div data-type="secondary_data.type.title"></div>
@@ -169,17 +169,17 @@
                                     $<span data-type="secondary_data.amount"></span>
                                 </div>
                             </td>
-                        </tr>
+                        </tr> -->
                     </template>
 
                     <thead>
                         <tr>
-                            <th scope="col">Tax type</th>
-                            <th scope="col">Payment status</th>
-                            <th scope="col">Amount</th>
-                            <th scope="col">Due date</th>
-                            <th scope="col">Payment method</th>
-                            <th scope="col">Actions</th>
+                            <td data-name="TaxType">Tax type</td>
+                            <!-- <td data-name="PaymentStatus">Payment status</td> -->
+                            <td data-name="Balance">Balance</td>
+                            <td scope="DueDate">Due date</td>
+                            <!-- <td scope="PaymentMethod">Payment method</td> -->
+                            <td scope="Manamge" style="width:5%;"></td>
                         </tr>
                     </thead>
                     <tbody id="taxRowContainer">
@@ -241,5 +241,9 @@
         </div>
     </div>
 </div>
-
+<script>
+$(function(){
+    $("#payroll-tax-list").nsmPagination({itemsPerPage:10});
+});
+</script>
 <?php include viewPath('v2/includes/footer'); ?>

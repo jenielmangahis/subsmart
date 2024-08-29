@@ -1021,6 +1021,15 @@ class Users_model extends MY_Model
 
         return $amount;
     }
+
+    public function updateUserRole($user_id, $role_id)
+    {
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('id', $user_id);
+        $this->db->where('status', 1);
+        $update = $this->db->update('users', ['role' => $role_id]);
+        return $update;
+    }    
 }
 
 

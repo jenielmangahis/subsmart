@@ -5198,8 +5198,10 @@ class Timesheet extends MY_Controller
         $schedules_pst = $this->timesheet_model->get_my_schedules_for_calendar($last_date_3_months, $first_date_next_month, logged('id'));
         $schedules_calendar =  array();
         foreach ($schedules_pst as $sched) {
-            $schedules_calendar[] = array("title" => "Shift Start", "start" => $this->datetime_zone_converter($sched->shift_start, "UTC", $this->session->userdata('usertimezone')));
-            $schedules_calendar[] = array("title" => "Shift End", "start" => $this->datetime_zone_converter($sched->shift_end, "UTC", $this->session->userdata('usertimezone')));
+            $shift_start = date("G:i A",strtotime($this->datetime_zone_converter($sched->shift_start, "UTC", $this->session->userdata('usertimezone'))));
+            $shift_end   = date("G:i A",strtotime($this->datetime_zone_converter($sched->shift_end, "UTC", $this->session->userdata('usertimezone'))));
+            $schedules_calendar[] = array("title" => "<i class='bx bx-calendar'></i> Shift Start : " . $shift_start, "start" => $this->datetime_zone_converter($sched->shift_start, "UTC", $this->session->userdata('usertimezone')));
+            $schedules_calendar[] = array("title" => "<i class='bx bx-calendar'></i> Shift End : " . $shift_end, "start" => $this->datetime_zone_converter($sched->shift_end, "UTC", $this->session->userdata('usertimezone')));
         }
         $data = new stdClass();
         $data->initial_date = $initial_date;
@@ -5413,7 +5415,6 @@ class Timesheet extends MY_Controller
         $data->display = $display;
         echo json_encode($data);
     }
-
     public function settings()
     {
         add_css(array(
@@ -5431,7 +5432,6 @@ class Timesheet extends MY_Controller
         $this->page_data['page']->parent = 'Timesheet';
 
         $this->load->model('timesheet_model');
-
         $cid = logged("company_id");
         $default_email = logged('email');
         $default_time  = $this->timesheet_model->defaultTimeSendTimesheetReport();

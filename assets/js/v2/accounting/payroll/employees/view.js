@@ -1,360 +1,543 @@
 const currUrl = window.location.href;
-const urlSplit = currUrl.includes('?') ? currUrl.split('?')[0].split('/') : currUrl.split('/');
-const employeeId = urlSplit[urlSplit.length - 1].replace('#', '');
+const urlSplit = currUrl.includes("?")
+    ? currUrl.split("?")[0].split("/")
+    : currUrl.split("/");
+const employeeId = urlSplit[urlSplit.length - 1].replace("#", "");
 
-CKEDITOR.replace('notes');
+CKEDITOR.replace("notes");
 
 $(function () {
-    $('.date').each(function () {
-        if ($(this).attr('id') === 'next-payday' || $(this).attr('id') === 'next-pay-period-end') {
+    $(".date").each(function () {
+        if (
+            $(this).attr("id") === "next-payday" ||
+            $(this).attr("id") === "next-pay-period-end"
+        ) {
             $(this).datepicker({
                 startDate: new Date(),
-                format: 'mm/dd/yyyy',
-                orientation: 'bottom',
-                autoclose: true
+                format: "mm/dd/yyyy",
+                orientation: "bottom",
+                autoclose: true,
             });
         } else {
             $(this).datepicker({
-                format: 'mm/dd/yyyy',
-                orientation: 'bottom',
-                autoclose: true
+                format: "mm/dd/yyyy",
+                orientation: "bottom",
+                autoclose: true,
             });
         }
     });
 });
 
-$('#table-filters').on('click', function (e) {
+$("#table-filters").on("click", function (e) {
     e.stopPropagation();
 });
 
-$('#filter-date').select2({
-    minimumResultsForSearch: -1
-});
-
-$('#edit-employment-details-modal select').select2({
+$("#filter-date").select2({
     minimumResultsForSearch: -1,
-    dropdownParent: $('#edit-employment-details-modal')
 });
 
-$('#edit-payment-method-modal select').select2({
+$("#edit-employment-details-modal select").select2({
     minimumResultsForSearch: -1,
-    dropdownParent: $('#edit-payment-method-modal')
+    dropdownParent: $("#edit-employment-details-modal"),
 });
 
-$('#edit-pay-types-modal select').select2({
+$("#edit-payment-method-modal select").select2({
     minimumResultsForSearch: -1,
-    dropdownParent: $('#edit-pay-types-modal')
+    dropdownParent: $("#edit-payment-method-modal"),
 });
 
-$('#edit_employee_modal select').select2({
+$("#edit-pay-types-modal select").select2({
     minimumResultsForSearch: -1,
-    dropdownParent: $('#edit_employee_modal')
+    dropdownParent: $("#edit-pay-types-modal"),
 });
 
-$('#work-location').select2({ dropdownParent: $('.work-location-grp') }).on('select2:open', function () {
-    var a = $(this).data('select2');
-    if (!$('.select2-link').length) {
-        a.$results.parents('.select2-results').append('<div class="select2-link"><a href="javascript:void(0);">+ Add New</a></div>').on('click', function (b) {
-            $('#edit-employment-details-modal').modal('hide');
-            $('#add-worksite-modal').modal('show');
-        });
+$("#edit_employee_modal select").select2({
+    minimumResultsForSearch: -1,
+    dropdownParent: $("#edit_employee_modal"),
+});
+
+$("#work-location")
+    .select2({ dropdownParent: $(".work-location-grp") })
+    .on("select2:open", function () {
+        var a = $(this).data("select2");
+        if (!$(".select2-link").length) {
+            a.$results
+                .parents(".select2-results")
+                .append(
+                    '<div class="select2-link"><a href="javascript:void(0);">+ Add New</a></div>'
+                )
+                .on("click", function (b) {
+                    $("#edit-employment-details-modal").modal("hide");
+                    $("#add-worksite-modal").modal("show");
+                });
+        }
+    });
+
+$("#work-location").on("change", function () {
+    if ($(this).val() === "add") {
+        $("#edit-employment-details-modal").modal("hide");
+        $("#add-worksite-modal").modal("show");
     }
 });
 
-$('#work-location').on('change', function () {
-    if ($(this).val() === 'add') {
-        $('#edit-employment-details-modal').modal('hide');
-        $('#add-worksite-modal').modal('show');
-    }
-});
-
-$('#add-worksite-form').on('submit', function (e) {
+$("#add-worksite-form").on("submit", function (e) {
     e.preventDefault();
 
     var data = new FormData(this);
 
     $.ajax({
-        url: base_url + '/accounting/employees/add-work-location',
+        url: base_url + "/accounting/employees/add-work-location",
         data: data,
-        type: 'post',
+        type: "post",
         processData: false,
         contentType: false,
         success: function (res) {
             var result = JSON.parse(res);
 
-            $('#edit-employment-details-modal #work-location option:selected').removeAttr('selected');
-            $('#edit-employment-details-modal #work-location').append(`<option value="${result.id}" selected>${result.name}</option>`);
-            $('#edit-employment-details-modal #work-location').trigger('change');
+            $(
+                "#edit-employment-details-modal #work-location option:selected"
+            ).removeAttr("selected");
+            $("#edit-employment-details-modal #work-location").append(
+                `<option value="${result.id}" selected>${result.name}</option>`
+            );
+            $("#edit-employment-details-modal #work-location").trigger("change");
 
-            $('#add-worksite-modal').modal('hide');
-            $('#edit-employment-details-modal').modal('show');
-        }
+            $("#add-worksite-modal").modal("hide");
+            $("#edit-employment-details-modal").modal("show");
+        },
     });
 });
 
-$('.edit-emp-payscale').change(function () {
+$(".edit-emp-payscale").change(function () {
     var psid = $(this).val();
-    var url = base_url + 'payscale/_get_details'
+    var url = base_url + "payscale/_get_details";
     $.ajax({
-        type: 'POST',
+        type: "POST",
         url: url,
         data: { psid: psid },
         dataType: "json",
         success: function (result) {
-            if (result.pay_type == 'Commission Only') {
-                $('.edit-pay-type-container').hide();
+            if (result.pay_type == "Commission Only") {
+                $(".edit-pay-type-container").hide();
             } else {
-                var rate_label = result.pay_type + ' Rate';
-                $('.edit-pay-type-container').show();
-                $('.edit-payscale-pay-type').html(rate_label);
+                var rate_label = result.pay_type + " Rate";
+                $(".edit-pay-type-container").show();
+                $(".edit-payscale-pay-type").html(rate_label);
             }
         },
     });
 });
 
-$(document).on('click', '.update_deductions_contributions', function (e) {
+$(document).on("click", ".update_deductions_contributions", function (e) {
     e.preventDefault();
 
-    var id = $(this).attr('data-val');
+    var id = $(this).attr("data-val");
 
     $.ajax({
-        url: base_url + '/accounting/employees/edit-deductions-and-contributions',
+        url: base_url + "/accounting/employees/edit-deductions-and-contributions",
         data: { id: id },
-        type: 'post',
+        type: "post",
         dataType: "json",
         success: function (res) {
             if (res) {
                 res.forEach(function (item, index) {
                     // Process each item here
                     // console.log("Index: " + index + ", Item: ", item);
-                    $('.update_deduction_id').val(item.id)
-                    $('.update_deduction_contribution_type').val(item.deduction_contribution_type)
-                    $('.update_deduction_type').val(item.type)
-                    $('.update_deduction_description').val(item.description)
-                    $('.update_deductions_calculated_as').val(item.deductions_calculated_as)
-                    $('.update_deductions_amount').val(parseFloat(item.deductions_amount).toFixed(2));
-                    $('.update_annual_maximum').val(parseFloat(item.annual_maximum).toFixed(2));
-                    $('.update_contribution_calculated_as').val(item.contribution_calculated_as)
-                    $('.update_contributions_amount').val(parseFloat(item.contributions_amount).toFixed(2));
+                    $(".update_deduction_id").val(item.id);
 
-                    handleDeductionContributionType(item.type)
+                    handleDeductionContributionTypeMain(item.deduction_contribution_type);
+                    $(".update_deduction_type").val(item.type);
+
+                    $(".update_deduction_description").val(item.description);
+                    $(".update_deductions_calculated_as").val(
+                        item.deductions_calculated_as
+                    );
+                    $(".update_deductions_amount").val(
+                        parseFloat(item.deductions_amount).toFixed(2)
+                    );
+                    $(".update_annual_maximum").val(
+                        parseFloat(item.annual_maximum).toFixed(2)
+                    );
+                    $(".update_contribution_calculated_as").val(
+                        item.contribution_calculated_as
+                    );
+                    $(".update_contributions_amount").val(
+                        parseFloat(item.contributions_amount).toFixed(2)
+                    );
+
+                    handleDeductionContributionType(item.type);
                 });
 
-                $('#update-deductions-and-contributions').modal('show')
-                $('#deduction_contributions_lists').modal('hide')
+                $("#update-deductions-and-contributions").modal("show");
+                $("#deduction_contributions_lists").modal("hide");
             }
-
-        }
+        },
     });
-})
+});
 
 function hide401contributions() {
-    $('.401_contribution_section').hide();
+    $(".401_contribution_section").hide();
 }
 
 function show401contributions() {
-    $('.401_contribution_section').show();
+    $(".401_contribution_section").show();
+}
+
+function showCompanyContributionSection() {
+    $(".company-contribution-section").show();
+}
+
+function hideCompanyContributionSection() {
+    $(".company-contribution-section").hide();
+}
+
+function showEmployeeDeductionSection() {
+    $(".employee-deductions-section").show();
+}
+
+function hideEmployeeDeductionSection() {
+    $(".deduction-type-section").hide();
+}
+
+function showCalculatedAsLabel() {
+    $(".calculated_as_label").show();
+}
+
+function hideCalculatedAsLabel() {
+    $(".calculated_as_label").hide();
 }
 
 function handleDeductionContributionType(type) {
-    $('.deduction-type-section').show();
-    $('.employee-deductions-section').show();
+    $(".deduction-type-section").show();
+    showEmployeeDeductionSection();
+    showCompanyContributionSection();
+    hideCalculatedAsLabel();
     switch (type) {
-        case '401(k)':
-            show401contributions()
+        case "Cash Advance Repayment":
+            hide401contributions();
+            hideCompanyContributionSection();
             break;
-        case '401(k) Catch-up':
-            show401contributions()
+        case "Loan Repayment":
+            hide401contributions();
+            hideCompanyContributionSection();
             break;
-        case '403(b)':
-            hide401contributions()
+        case "Other after tax deductions":
+            hide401contributions();
+            hideCompanyContributionSection();
+            showCalculatedAsLabel();
             break;
-        case '403(b) Catch-up':
-            hide401contributions()
+        case "Wage Garnishment":
+            hide401contributions();
+            hideCompanyContributionSection();
             break;
-        case 'After-tax Roth 401(k)':
-            show401contributions()
+        case "Pretax HSA":
+            hide401contributions();
+            hideCompanyContributionSection();
             break;
-        case 'After-tax Roth 401(k) Catch-up':
-            show401contributions()
+        case "Taxable HSA":
+            hide401contributions();
+            hideCompanyContributionSection();
             break;
-        case 'After-tax Roth 403(b)':
-            hide401contributions()
+        case "Dependent Care FSA":
+            hide401contributions();
+            hideCompanyContributionSection();
             break;
-        case 'Company-only plan':
-            $('.employee-deductions-section').hide();
-            $('input[name="deductions_amount"]').removeAttr('required');
-            hide401contributions()
+        case "Medical Expense FSA":
+            hide401contributions();
+            hideCompanyContributionSection();
             break;
-        case 'SARSEP':
-            hide401contributions()
+        case "401(k)":
+            show401contributions();
             break;
-        case 'SARSEP Catch-up':
-            hide401contributions()
+        case "401(k) Catch-up":
+            show401contributions();
             break;
-        case 'SIMPLE 401(k) Catch-up':
-            hide401contributions()
+        case "403(b)":
+            hide401contributions();
             break;
-        case 'SIMPLE IRA':
+        case "403(b) Catch-up":
+            hide401contributions();
             break;
-        case 'SIMPLE IRA Catch-up':
-            show401contributions()
+        case "After-tax Roth 401(k)":
+            show401contributions();
+            break;
+        case "After-tax Roth 401(k) Catch-up":
+            show401contributions();
+            break;
+        case "After-tax Roth 403(b)":
+            hide401contributions();
+            break;
+        case "Company-only plan":
+            $(".employee-deductions-section").hide();
+            $('input[name="deductions_amount"]').removeAttr("required");
+            hide401contributions();
+            break;
+        case "SARSEP":
+            hide401contributions();
+            break;
+        case "SARSEP Catch-up":
+            hide401contributions();
+            break;
+        case "SIMPLE 401(k) Catch-up":
+            hide401contributions();
+            break;
+        case "SIMPLE IRA":
+            break;
+        case "SIMPLE IRA Catch-up":
+            show401contributions();
             break;
 
         default:
-            $('.deduction-type-section').hide();
+            hideEmployeeDeductionSection();
             break;
     }
 }
 
-$('.edit-deductions-and-contributions-name').change(function () {
+$(".edit-deductions-and-contributions-name").change(function () {
     var type = $(this).val();
 
-    if (type == '') {
-        $('.deductions-contribution-section').hide();
+    if (type == "") {
+        $(".deductions-contribution-section").hide();
     } else {
-        $('.deductions-contribution-section').show();
+        $(".deductions-contribution-section").show();
     }
+});
 
-})
+function handleHSAplans(type) {
+    $(".deduction-type-section").hide();
+    $(".edit_deduction_contribution_type").html(`
+         <option value="">Select one</option>
+        <option value="Pretax HSA">Pretax HSA</option>
+        <option value="Taxable HSA">Taxable HSA</option>`);
 
-$('.deduction_contribution_type').change(function () {
+    $(".update_deduction_contribution_type").val(type);
+}
+
+function handleOtherDeductions(type) {
+    $(".deduction-type-section").hide();
+    $(".edit_deduction_contribution_type").html(`
+         <option value="">Select one</option>
+        <option value="Cash Advance Repayment">Cash Advance Repayment</option>
+        <option value="Loan Repayment">Loan Repayment</option>
+        <option value="Other after tax deductions">Other after tax deductions</option>
+        <option value="Wage Garnishment">Wage Garnishment</option>`);
+
+    $(".update_deduction_contribution_type").val(type);
+}
+
+
+
+function handleFlexibleSpendingAccounts(type) {
+    $(".deduction-type-section").hide();
+    $(".edit_deduction_contribution_type").html(`
+         <option value="">Select one</option>
+        <option value="Dependent Care FSA">Dependent Care FSA</option>
+        <option value="Medical Expense FSA">Medical Expense FSA</option>`);
+
+    $(".update_deduction_contribution_type").val(type);
+}
+
+function handleRetirementPlan(type) {
+    $(".edit_deduction_contribution_type").html(`
+        <option value="">Select one</option>
+        <option value="401(k)">401(k)</option>
+        <option value="401(k) Catch-up">401(k) Catch-up</option>
+        <option value="403(b)">403(b)</option>
+        <option value="403(b) Catch-up">403(b) Catch-up</option>
+        <option value="After-tax Roth 401(k)">After-tax Roth 401(k)</option>
+        <option value="After-tax Roth 401(k) Catch-up">After-tax Roth 401(k)
+            Catch-up
+        </option>
+        <option value="After-tax Roth 403(b)">After-tax Roth 403(b)</option>
+        <option value="Company-only plan">Company-only plan</option>
+        <option value="SARSEP">SARSEP</option>
+        <option value="SARSEP Catch-up">SARSEP Catch-up</option>
+        <option value="SIMPLE 401(k) Catch-up">SIMPLE 401(k) Catch-up</option>
+        <option value="SIMPLE IRA">SIMPLE IRA</option>
+        <option value="SIMPLE IRA Catch-up">SIMPLE IRA Catch-up</option>
+       `);
+    $(".update_deduction_contribution_type").val(type);
+}
+$(".contribution_calculated_as").change(function () {
+    var val = $(this).val();
+    switch (val) {
+        case "Flat amount":
+            $(".calculated_label").html("Amount per paycheck *");
+            break;
+        case "Percent of gross pay":
+            $(".calculated_label").html("Percent per paycheck *");
+            break;
+        case "Per hour worked":
+            $(".calculated_label").html("Amount per hour worked *");
+            break;
+        default:
+            $(".calculated_label").html("Amount per paycheck *");
+            break;
+    }
+});
+
+function handleDeductionContributionTypeMain(type) {
+    switch (type) {
+        case "Retirement plans":
+            $(".edit-deduction-contribution-type-section").show();
+            handleRetirementPlan(type);
+            break;
+        case "Flexible spending accounts":
+            $(".edit-deduction-contribution-type-section").show();
+            handleFlexibleSpendingAccounts(type);
+            break;
+        case "HSA plans":
+            $(".edit-deduction-contribution-type-section").show();
+            handleHSAplans(type);
+            break;
+        case "Other deductions":
+            $(".edit-deduction-contribution-type-section").show();
+            handleOtherDeductions(type);
+            break;
+        default:
+            $(".edit-deduction-contribution-type-section").hide();
+            break;
+    }
+}
+
+$(".deduction_contribution_type").change(function () {
     var type = $(this).val();
+    handleDeductionContributionTypeMain(type);
+});
 
-    if (type == 'Retirement plans') {
-        $('.edit-deduction-contribution-type-section').show()
-    } else {
-        $('.edit-deduction-contribution-type-section').hide()
-    }
-})
-
-$('.edit_deduction_contribution_type').change(function () {
+$(".edit_deduction_contribution_type").change(function () {
     var type = $(this).val();
 
     handleDeductionContributionType(type);
 });
 
-$('#deductions_contributions_form').on('submit', function (e) {
+$("#deductions_contributions_form").on("submit", function (e) {
     e.preventDefault();
 
     var data = new FormData(this);
-    $('.btn_modal_save_deductions').html(`<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Saving...`)
+    $(".btn_modal_save_deductions").html(
+        `<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Saving...`
+    );
 
     $.ajax({
-        url: base_url + '/accounting/employees/add-deductions-and-contributions',
+        url: base_url + "/accounting/employees/add-deductions-and-contributions",
         data: data,
-        type: 'post',
+        type: "post",
         processData: false,
         contentType: false,
         success: function (res) {
-            $('.btn_modal_save_deductions').html("Save")
-            $('#edit-deductions-and-contributions').modal('hide')
-            $('#edit-deductions-and-contributions').find('form').trigger('reset');
-            $('.deductions-contribution-section-add').hide();
+            $(".btn_modal_save_deductions").html("Save");
+            $("#edit-deductions-and-contributions").modal("hide");
+            $("#edit-deductions-and-contributions").find("form").trigger("reset");
+            $(".deductions-contribution-section-add").hide();
             Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Deductions and Contributions Successfully Saved!',
+                icon: "success",
+                title: "Success",
+                text: "Deductions and Contributions Successfully Saved!",
             }).then((result) => {
-                $('#deductions_contributions_form')[0].reset();
-                $('#deduction_contributions_lists').modal('show')
+                $("#deductions_contributions_form")[0].reset();
+                $("#deduction_contributions_lists").modal("show");
                 var data = JSON.parse(res);
                 get_deductions_and_contributions_item(parseInt(data.employee_id, 10));
-
             });
-        }
+        },
     });
-
 });
 
-$(document).on('click', '.delete-deductions-and-contributions', function (e) {
+$(document).on("click", ".delete-deductions-and-contributions", function (e) {
     e.preventDefault();
 
-    var id = $(this).attr('data-val');
-    var employee_id = $(this).attr('data-employee_id');
-
+    var id = $(this).attr("data-val");
+    var employee_id = $(this).attr("data-employee_id");
 
     Swal.fire({
-        icon: 'warning',
-        title: 'Confirmation',
-        text: 'Are you sure you want to delete this item?',
+        icon: "warning",
+        title: "Confirmation",
+        text: "Are you sure you want to delete this item?",
         showCancelButton: true,
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'Cancel'
+        confirmButtonText: "Yes",
+        cancelButtonText: "Cancel",
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: base_url + '/accounting/employees/delete-deductions-and-contributions',
+                url:
+                    base_url +
+                    "/accounting/employees/delete-deductions-and-contributions",
                 data: { id: id },
-                type: 'post',
+                type: "post",
                 dataType: "json",
                 success: function (res) {
                     get_deductions_and_contributions_item(parseInt(employee_id, 10));
                     Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: 'Deductions and Contributions Successfully Deleted!',
-                    })
-                }
+                        icon: "success",
+                        title: "Success",
+                        text: "Deductions and Contributions Successfully Deleted!",
+                    });
+                },
             });
         }
     });
+});
 
-
-
-})
-
-
-$('#update_deductions_contributions_form').on('submit', function (e) {
+$("#update_deductions_contributions_form").on("submit", function (e) {
     e.preventDefault();
 
     var data = new FormData(this);
-    $('.btn_modal_save_deductions').html(`<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Saving...`)
+    $(".btn_modal_save_deductions").html(
+        `<div class="spinner-border spinner-border-sm" role="status"></div>&nbsp;&nbsp;Saving...`
+    );
 
     $.ajax({
-        url: base_url + '/accounting/employees/update-deductions-and-contributions',
+        url: base_url + "/accounting/employees/update-deductions-and-contributions",
         data: data,
-        type: 'post',
+        type: "post",
         processData: false,
         contentType: false,
         success: function (res) {
-            $('.btn_modal_save_deductions').html("Save")
-            $('#edit-deductions-and-contributions').modal('hide')
+            $(".btn_modal_save_deductions").html("Save");
+            $("#edit-deductions-and-contributions").modal("hide");
             var result = JSON.parse(res);
             get_deductions_and_contributions_item(parseInt(result.employee_id, 10));
             Swal.fire({
-                icon: 'success',
-                title: 'Success',
-                text: 'Deductions and Contributions Successfully Updated!',
+                icon: "success",
+                title: "Success",
+                text: "Deductions and Contributions Successfully Updated!",
             }).then(() => {
-                $('#update-deductions-and-contributions').modal('hide')
-            })
-        }
+                $("#update-deductions-and-contributions").modal("hide");
+            });
+        },
     });
-
 });
 
 function get_deductions_and_contributions_item(employee_id) {
     $.ajax({
-        url: base_url + '/accounting/employees/get-deductions-and-contributions',
+        url: base_url + "/accounting/employees/get-deductions-and-contributions",
         data: { employee_id: employee_id },
-        type: 'post',
+        type: "post",
         dataType: "json",
         success: function (res) {
-            $('.deductions_contributions_list_items').html('');
-            $('.deductions_contributions_list_data').html('');
+            $(".deductions_contributions_list_items").html("");
+            $(".deductions_contributions_list_data").html("");
             res.forEach(function (item, index) {
-                $('.deductions_contributions_list_items').append(`
+                $(".deductions_contributions_list_items").append(`
                   <div class="col-md-12 mb-3">
                     <div class="row" style="align-items:center">
                         <div class="col-md-9">
                             <p class="text_value">
-                                ${item.deduction_contribution_type} - ${item.type}</p>
-                            <strong class="text-muted">${item.description}</strong>
+                                ${item.deduction_contribution_type
+                    } - ${item.type}</p>
+                            <strong class="text-muted">${item.description
+                    }</strong>
                             <p class="text_value">
-                                Deduction: $${parseFloat(item.deductions_amount).toFixed(2)}/paycheck ,
-                                outside contribution: $${parseFloat(item.contributions_amount).toFixed(2)},
-                                annual maximum: $${parseFloat(item.annual_maximum).toFixed(2)}
+                                Deduction: $${parseFloat(
+                        item.deductions_amount
+                    ).toFixed(2)}/paycheck ,
+                                outside contribution: $${parseFloat(
+                        item.contributions_amount
+                    ).toFixed(2)},
+                                annual maximum: $${parseFloat(
+                        item.annual_maximum
+                    ).toFixed(2)}
                             </p>
                         </div>
                         <div class="col-md-3">
@@ -364,257 +547,285 @@ function get_deductions_and_contributions_item(employee_id) {
                                     class="bx bx-fw bx-pencil"></i></a>
 
                             <a class="nsm-button border-0  pointerCursor delete-deductions-and-contributions"
-                                style="font-size: 20px" data-val="${item.id}" data-employee_id="${item.employee_id}"><i class="bx bx-fw bx-trash"></i></a>
+                                style="font-size: 20px" data-val="${item.id
+                    }" data-employee_id="${item.employee_id}"><i class="bx bx-fw bx-trash"></i></a>
                         </div>
                     </div>
                  </div>
                 `);
 
-                $('.deductions_contributions_list_data').append(`
+                $(".deductions_contributions_list_data").append(`
                     <div class="col-md-4">
-                        <strong class="text-muted">${item.type}-${item.description}</strong>
+                        <strong class="text-muted">${item.type
+                    }-${item.description}</strong>
                         <p class="text_value">
-                            $${parseFloat(item.deductions_amount).toFixed(2)}/paycheck(Deduction)</p>
+                            $${parseFloat(item.deductions_amount).toFixed(
+                        2
+                    )}/paycheck(Deduction)</p>
                     </div>
             `);
-
-
             });
-
-
-        }
+        },
     });
 }
 
-
-$(document).on('click', '.btn-edit-add-new-commision', function (e) {
+$(document).on("click", ".btn-edit-add-new-commision", function (e) {
     let url = base_url + "user/_add_commission_form";
     $.ajax({
-        type: 'POST',
+        type: "POST",
         url: url,
         success: function (o) {
-            $("#edit-commission-settings tbody").append(o).children(':last').hide().fadeIn(400);
-            $("#edit-commission-settings tbody tr:last-child select").each(function () {
-                $(this).select2({
-                    minimumResultsForSearch: -1,
-                    dropdownParent: $("#edit-pay-types-modal")
-                });
-            });
+            $("#edit-commission-settings tbody")
+                .append(o)
+                .children(":last")
+                .hide()
+                .fadeIn(400);
+            $("#edit-commission-settings tbody tr:last-child select").each(
+                function () {
+                    $(this).select2({
+                        minimumResultsForSearch: -1,
+                        dropdownParent: $("#edit-pay-types-modal"),
+                    });
+                }
+            );
         },
     });
 });
 
+$(document).on(
+    "click",
+    ".update-deductions-and-contributions-close",
+    function (e) {
+        $("#update-deductions-and-contributions").modal("hide");
+        $("#deduction_contributions_lists").modal("show");
+    }
+);
 
-$(document).on('click','.update-deductions-and-contributions-close',function(e){
-    $('#update-deductions-and-contributions').modal('hide')
-    $('#deduction_contributions_lists').modal('show')
-})
-
-
-$(document).on('click','.add-deduction-and-contributions-modal',function(e){
-    $('#edit-deductions-and-contributions').modal('show')
-    $('#deduction_contributions_lists').modal('hide')
-})
-
-$(document).on('click','.edit-deductions-contributions-close-modal',function(e){
-    $('#edit-deductions-and-contributions').modal('hide')
-    $('#deduction_contributions_lists').modal('show')
-})
-
-
-
-$(document).on("click", ".btn-delete-commission-setting-row", function (e) {
-    var tableRow = $(this).closest('tr');
-    tableRow.find('td').fadeOut('fast',
-        function () {
-            tableRow.remove();
-        }
-    );
+$(document).on("click", ".add-deduction-and-contributions-modal", function (e) {
+    $("#edit-deductions-and-contributions").modal("show");
+    $("#deduction_contributions_lists").modal("hide");
 });
 
-$('#user-profile-photo').on('change', function () {
+$(document).on(
+    "click",
+    ".edit-deductions-contributions-close-modal",
+    function (e) {
+        $("#edit-deductions-and-contributions").modal("hide");
+        $("#deduction_contributions_lists").modal("show");
+    }
+);
+
+$(document).on("click", ".btn-delete-commission-setting-row", function (e) {
+    var tableRow = $(this).closest("tr");
+    tableRow.find("td").fadeOut("fast", function () {
+        tableRow.remove();
+    });
+});
+
+$("#user-profile-photo").on("change", function () {
     var data = new FormData();
 
-    data.append('userfile', $(this)[0].files[0]);
+    data.append("userfile", $(this)[0].files[0]);
 
     $.ajax({
         url: `/accounting/employees/update-profile-photo/${employeeId}`,
         data: data,
-        type: 'post',
+        type: "post",
         processData: false,
         contentType: false,
         success: function (result) {
             var res = JSON.parse(result);
 
             Swal.fire({
-                title: res.success ? 'Success' : 'Error',
+                title: res.success ? "Success" : "Error",
                 html: res.message,
-                icon: res.success ? 'success' : 'error',
+                icon: res.success ? "success" : "error",
                 showCloseButton: false,
                 showCancelButton: false,
-                confirmButtonColor: '#2ca01c',
-                confirmButtonText: 'Okay'
+                confirmButtonColor: "#2ca01c",
+                confirmButtonText: "Okay",
             }).then((result) => {
                 if (result.isConfirmed) {
                     location.reload();
                 }
             });
-        }
+        },
     });
 });
 
-$('#remove-photo').on('click', function () {
+$("#remove-photo").on("click", function () {
     Swal.fire({
-        title: 'Are you sure you want remove the profile photo?',
-        icon: 'warning',
+        title: "Are you sure you want remove the profile photo?",
+        icon: "warning",
         showCloseButton: false,
-        confirmButtonColor: '#2ca01c',
-        confirmButtonText: 'Yes',
+        confirmButtonColor: "#2ca01c",
+        confirmButtonText: "Yes",
         showCancelButton: true,
-        cancelButtonText: 'No',
-        cancelButtonColor: '#d33'
+        cancelButtonText: "No",
+        cancelButtonColor: "#d33",
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
                 url: `/accounting/employees/remove-profile-photo/${employeeId}`,
-                type: 'DELETE',
+                type: "DELETE",
                 success: function (res) {
                     var result = JSON.parse(res);
 
                     Swal.fire({
-                        title: result.success ? 'Success' : 'Error',
+                        title: result.success ? "Success" : "Error",
                         html: result.message,
-                        icon: result.success ? 'success' : 'error',
+                        icon: result.success ? "success" : "error",
                         showCloseButton: false,
                         showCancelButton: false,
-                        confirmButtonColor: '#2ca01c',
-                        confirmButtonText: 'Done'
+                        confirmButtonColor: "#2ca01c",
+                        confirmButtonText: "Done",
                     }).then((r) => {
                         if (r.isConfirmed) {
                             location.reload();
                         }
                     });
-                }
+                },
             });
         }
     });
 });
 
-$('#filter-date-range').select2({
-    minimumResultsForSearch: -1
+$("#filter-date-range").select2({
+    minimumResultsForSearch: -1,
 });
 
-$('#filter-date-range').on('change', function (e) {
+$("#filter-date-range").on("change", function (e) {
     var dates = get_start_and_end_dates($(this).val());
 
-    $('#filter-from-date').val(dates.start_date);
-    $('#filter-to-date').val(dates.end_date);
+    $("#filter-from-date").val(dates.start_date);
+    $("#filter-to-date").val(dates.end_date);
 });
 
-$('#filter-from-date, #filter-to-date').on('change', function (e) {
-    $('#filter-date-range').val('custom').trigger('change');
+$("#filter-from-date, #filter-to-date").on("change", function (e) {
+    $("#filter-date-range").val("custom").trigger("change");
 });
 
-$('#apply-button').on('click', function (e) {
+$("#apply-button").on("click", function (e) {
     e.preventDefault();
 
-    var filterDate = $('#filter-date-range').val();
+    var filterDate = $("#filter-date-range").val();
     var url = `${base_url}accounting/employees/view/${employeeId}?`;
 
-    url += filterDate !== 'this-quarter' ? `date=${filterDate}&` : '';
-    url += filterDate !== 'this-quarter' ? `from=${$('#filter-from-date').val().replaceAll('/', '-')}&to=${$('#filter-to-date').val().replaceAll('/', '-')}` : '';
+    url += filterDate !== "this-quarter" ? `date=${filterDate}&` : "";
+    url +=
+        filterDate !== "this-quarter"
+            ? `from=${$("#filter-from-date").val().replaceAll("/", "-")}&to=${$(
+                "#filter-to-date"
+            )
+                .val()
+                .replaceAll("/", "-")}`
+            : "";
 
-    if (url.slice(-1) === '?' || url.slice(-1) === '&' || url.slice(-1) === '#') {
+    if (url.slice(-1) === "?" || url.slice(-1) === "&" || url.slice(-1) === "#") {
         url = url.slice(0, -1);
     }
 
     location.href = url;
 });
 
-$('#transactions-table .select-all').on('change', function () {
-    $('#transactions-table .select-one').prop('checked', $(this).prop('checked')).trigger('change');
+$("#transactions-table .select-all").on("change", function () {
+    $("#transactions-table .select-one")
+        .prop("checked", $(this).prop("checked"))
+        .trigger("change");
 });
 
-$('#transactions-table .select-one').on('change', function () {
-    $('#transactions-table .select-all').prop('checked', $('#transactions-table .select-one:checked').length === $('#transactions-table .select-one').length);
+$("#transactions-table .select-one").on("change", function () {
+    $("#transactions-table .select-all").prop(
+        "checked",
+        $("#transactions-table .select-one:checked").length ===
+        $("#transactions-table .select-one").length
+    );
 
-    if ($('#transactions-table .select-one:checked').length > 0) {
-        $('.print-paychecks-button').attr('id', 'print-paychecks');
-        $('.print-paychecks-button').prop('disabled', false);
+    if ($("#transactions-table .select-one:checked").length > 0) {
+        $(".print-paychecks-button").attr("id", "print-paychecks");
+        $(".print-paychecks-button").prop("disabled", false);
     } else {
-        $('.print-paychecks-button').removeAttr('id');
-        $('.print-paychecks-button').prop('disabled', true);
+        $(".print-paychecks-button").removeAttr("id");
+        $(".print-paychecks-button").prop("disabled", true);
     }
 });
 
-$(document).on('click', '#print-paychecks', function (e) {
+$(document).on("click", "#print-paychecks", function (e) {
     e.preventDefault();
 
-    if ($('#print-paycheck-form').length < 1) {
-        $('body').append(`<form action="/accounting/print-multiple" method="post" id="print-paycheck-form" target="_blank"></form>`);
+    if ($("#print-paycheck-form").length < 1) {
+        $("body").append(
+            `<form action="/accounting/print-multiple" method="post" id="print-paycheck-form" target="_blank"></form>`
+        );
     }
 
-    $('#transactions-table .select-one:checked').each(function () {
-        var row = $(this).closest('tr');
-        var id = row.find('.select-one').val();
+    $("#transactions-table .select-one:checked").each(function () {
+        var row = $(this).closest("tr");
+        var id = row.find(".select-one").val();
 
-        $('#print-paycheck-form').append(`<input type="hidden" name="paycheck_id[]" value="${id}">`);
+        $("#print-paycheck-form").append(
+            `<input type="hidden" name="paycheck_id[]" value="${id}">`
+        );
     });
 
-    $('#print-paycheck-form').submit();
-    $('#print-paycheck-form').remove();
+    $("#print-paycheck-form").submit();
+    $("#print-paycheck-form").remove();
 });
 
-$('#transactions-table [name="check_number[]"]').on('change', function () {
+$('#transactions-table [name="check_number[]"]').on("change", function () {
     var checkNum = $(this).val();
-    var row = $(this).closest('tr');
-    var id = row.find('.select-one').val();
+    var row = $(this).closest("tr");
+    var id = row.find(".select-one").val();
 
     var data = new FormData();
-    data.set('check_number', checkNum);
+    data.set("check_number", checkNum);
 
     $.ajax({
         url: `/accounting/update-paycheck-num/${id}`,
         data: data,
-        type: 'post',
+        type: "post",
         processData: false,
         contentType: false,
-        success: function (res) {
-
-        }
+        success: function (res) { },
     });
 });
 
-$('#transactions-table .print-paycheck').on('click', function (e) {
+$("#transactions-table .print-paycheck").on("click", function (e) {
     e.preventDefault();
 
-    var row = $(this).closest('tr');
-    var id = row.find('.select-one').val();
+    var row = $(this).closest("tr");
+    var id = row.find(".select-one").val();
 
-    if ($('#print-paycheck-form').length < 1) {
-        $('body').append(`<form action="/accounting/print-paycheck" method="post" id="print-paycheck-form" target="_blank"></form>`);
+    if ($("#print-paycheck-form").length < 1) {
+        $("body").append(
+            `<form action="/accounting/print-paycheck" method="post" id="print-paycheck-form" target="_blank"></form>`
+        );
     }
 
-    $('#print-paycheck-form').append(`<input type="hidden" name="paycheck_id" value="${id}">`);
+    $("#print-paycheck-form").append(
+        `<input type="hidden" name="paycheck_id" value="${id}">`
+    );
 
-    $('#print-paycheck-form').submit();
-    $('#print-paycheck-form').remove();
+    $("#print-paycheck-form").submit();
+    $("#print-paycheck-form").remove();
 });
 
-$('#transactions-table .delete-paycheck').on('click', function (e) {
+$("#transactions-table .delete-paycheck").on("click", function (e) {
     e.preventDefault();
 
-    var row = $(this).closest('tr');
-    var id = row.find('.select-one').val();
+    var row = $(this).closest("tr");
+    var id = row.find(".select-one").val();
 
     $.get(`/accounting/delete-paycheck/${id}`, function (res) {
         var result = JSON.parse(res);
         Swal.fire({
-            title: result.success ? 'Delete Successful!' : 'Failed!',
-            text: result.success ? 'Paycheck has been successfully deleted.' : 'Something is wrong in the process.',
-            icon: result.success ? 'success' : 'error',
+            title: result.success ? "Delete Successful!" : "Failed!",
+            text: result.success
+                ? "Paycheck has been successfully deleted."
+                : "Something is wrong in the process.",
+            icon: result.success ? "success" : "error",
             showCancelButton: false,
-            confirmButtonText: 'Okay'
+            confirmButtonText: "Okay",
         }).then((r) => {
             if (r.value) {
                 if (result.success) {
@@ -625,20 +836,22 @@ $('#transactions-table .delete-paycheck').on('click', function (e) {
     });
 });
 
-$('#transactions-table .void-paycheck').on('click', function (e) {
+$("#transactions-table .void-paycheck").on("click", function (e) {
     e.preventDefault();
 
-    var row = $(this).closest('tr');
-    var id = row.find('.select-one').val();
+    var row = $(this).closest("tr");
+    var id = row.find(".select-one").val();
 
     $.get(`/accounting/void-paycheck/${id}`, function (res) {
         var result = JSON.parse(res);
         Swal.fire({
-            title: result.success ? 'Void Successful!' : 'Failed!',
-            text: result.success ? 'Paycheck has been successfully voided.' : 'Something is wrong in the process.',
-            icon: result.success ? 'success' : 'error',
+            title: result.success ? "Void Successful!" : "Failed!",
+            text: result.success
+                ? "Paycheck has been successfully voided."
+                : "Something is wrong in the process.",
+            icon: result.success ? "success" : "error",
             showCancelButton: false,
-            confirmButtonText: 'Okay'
+            confirmButtonText: "Okay",
         }).then((r) => {
             if (r.value) {
                 if (result.success) {
@@ -651,73 +864,103 @@ $('#transactions-table .void-paycheck').on('click', function (e) {
 
 function get_start_and_end_dates(val) {
     switch (val) {
-        case 'custom':
+        case "custom":
             startDate = $(`#filter-from-date`).val();
             endDate = $(`#filter-to-date`).val();
             break;
-        case 'this-month':
+        case "this-month":
             var date = new Date();
             var to_date = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
-            startDate = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+            startDate =
+                String(date.getMonth() + 1).padStart(2, "0") +
+                "/" +
+                String(1).padStart(2, "0") +
+                "/" +
+                date.getFullYear();
+            endDate =
+                String(to_date.getMonth() + 1).padStart(2, "0") +
+                "/" +
+                String(to_date.getDate()).padStart(2, "0") +
+                "/" +
+                to_date.getFullYear();
             break;
-        case 'this-quarter':
+        case "this-quarter":
             var date = new Date();
             var currQuarter = Math.floor(date.getMonth() / 3 + 1);
 
             switch (currQuarter) {
                 case 1:
-                    startDate = '01/01/' + date.getFullYear();
-                    endDate = '03/31/' + date.getFullYear();
+                    startDate = "01/01/" + date.getFullYear();
+                    endDate = "03/31/" + date.getFullYear();
                     break;
                 case 2:
-                    startDate = '04/01/' + date.getFullYear();
-                    endDate = '06/30/' + date.getFullYear();
+                    startDate = "04/01/" + date.getFullYear();
+                    endDate = "06/30/" + date.getFullYear();
                     break;
                 case 3:
-                    startDate = '07/01/' + date.getFullYear();
-                    endDate = '09/30/' + date.getFullYear();
+                    startDate = "07/01/" + date.getFullYear();
+                    endDate = "09/30/" + date.getFullYear();
                     break;
                 case 4:
-                    startDate = '10/01/' + date.getFullYear();
-                    endDate = '12/31/' + date.getFullYear();
+                    startDate = "10/01/" + date.getFullYear();
+                    endDate = "12/31/" + date.getFullYear();
                     break;
             }
             break;
-        case 'this-year':
+        case "this-year":
             var date = new Date();
 
-            startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-            endDate = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
+            startDate =
+                String(1).padStart(2, "0") +
+                "/" +
+                String(1).padStart(2, "0") +
+                "/" +
+                date.getFullYear();
+            endDate =
+                String(12).padStart(2, "0") +
+                "/" +
+                String(31).padStart(2, "0") +
+                "/" +
+                date.getFullYear();
             break;
-        case 'last-month':
+        case "last-month":
             var date = new Date();
             var to_date = new Date(date.getFullYear(), date.getMonth(), 0);
 
-            startDate = String(date.getMonth()).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+            startDate =
+                String(date.getMonth()).padStart(2, "0") +
+                "/" +
+                String(1).padStart(2, "0") +
+                "/" +
+                date.getFullYear();
+            endDate =
+                String(to_date.getMonth() + 1).padStart(2, "0") +
+                "/" +
+                String(to_date.getDate()).padStart(2, "0") +
+                "/" +
+                to_date.getFullYear();
             break;
-        case 'last-quarter':
+        case "last-quarter":
             var date = new Date();
             var currQuarter = Math.floor(date.getMonth() / 3 + 1);
 
             switch (currQuarter) {
                 case 1:
-                    var from_date = new Date('01/01/' + date.getFullYear());
-                    var to_date = new Date('03/31/' + date.getFullYear());
+                    var from_date = new Date("01/01/" + date.getFullYear());
+                    var to_date = new Date("03/31/" + date.getFullYear());
                     break;
                 case 2:
-                    var from_date = new Date('04/01/' + date.getFullYear());
-                    var to_date = new Date('06/30/' + date.getFullYear());
+                    var from_date = new Date("04/01/" + date.getFullYear());
+                    var to_date = new Date("06/30/" + date.getFullYear());
                     break;
                 case 3:
-                    var from_date = new Date('07/01/' + date.getFullYear());
-                    var to_date = new Date('09/30/' + date.getFullYear());
+                    var from_date = new Date("07/01/" + date.getFullYear());
+                    var to_date = new Date("09/30/" + date.getFullYear());
                     break;
                 case 4:
-                    var from_date = new Date('10/01/' + date.getFullYear());
-                    var to_date = new Date('12/31/' + date.getFullYear());
+                    var from_date = new Date("10/01/" + date.getFullYear());
+                    var to_date = new Date("12/31/" + date.getFullYear());
                     break;
             }
 
@@ -728,49 +971,69 @@ function get_start_and_end_dates(val) {
                 to_date.setDate(to_date.getDate() - 1);
             }
 
-            startDate = String(from_date.getMonth() + 1).padStart(2, '0') + '/' + String(from_date.getDate()).padStart(2, '0') + '/' + from_date.getFullYear();
-            endDate = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+            startDate =
+                String(from_date.getMonth() + 1).padStart(2, "0") +
+                "/" +
+                String(from_date.getDate()).padStart(2, "0") +
+                "/" +
+                from_date.getFullYear();
+            endDate =
+                String(to_date.getMonth() + 1).padStart(2, "0") +
+                "/" +
+                String(to_date.getDate()).padStart(2, "0") +
+                "/" +
+                to_date.getFullYear();
             break;
-        case 'last-year':
+        case "last-year":
             var date = new Date();
             date.setFullYear(date.getFullYear() - 1);
 
-            startDate = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-            endDate = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
+            startDate =
+                String(1).padStart(2, "0") +
+                "/" +
+                String(1).padStart(2, "0") +
+                "/" +
+                date.getFullYear();
+            endDate =
+                String(12).padStart(2, "0") +
+                "/" +
+                String(31).padStart(2, "0") +
+                "/" +
+                date.getFullYear();
             break;
-        case 'first-quarter':
+        case "first-quarter":
             var date = new Date();
 
-            startDate = '01/01/' + date.getFullYear();
-            endDate = '03/31/' + date.getFullYear();
+            startDate = "01/01/" + date.getFullYear();
+            endDate = "03/31/" + date.getFullYear();
             break;
-        case 'second-quarter':
+        case "second-quarter":
             var date = new Date();
 
-            startDate = '04/01/' + date.getFullYear();
-            endDate = '06/30/' + date.getFullYear();
+            startDate = "04/01/" + date.getFullYear();
+            endDate = "06/30/" + date.getFullYear();
             break;
-        case 'third-quarter':
+        case "third-quarter":
             var date = new Date();
 
-            startDate = '07/01/' + date.getFullYear();
-            endDate = '09/30/' + date.getFullYear();
+            startDate = "07/01/" + date.getFullYear();
+            endDate = "09/30/" + date.getFullYear();
             break;
-        case 'fourth-quarter':
+        case "fourth-quarter":
             var date = new Date();
 
-            startDate = '10/01/' + date.getFullYear();
-            endDate = '12/31/' + date.getFullYear();
+            startDate = "10/01/" + date.getFullYear();
+            endDate = "12/31/" + date.getFullYear();
             break;
     }
 
     return {
         start_date: startDate,
-        end_date: endDate
+        end_date: endDate,
     };
 }
 
 function addLocationForm() {
-    $('#edit-employment-details-modal').modal('hide');
-    $('#add-worksite-modal').modal('show');
+    $("#edit-employment-details-modal").modal("hide");
+    $("#add-worksite-modal").modal("show");
 }
