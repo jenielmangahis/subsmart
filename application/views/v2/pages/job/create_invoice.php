@@ -81,11 +81,11 @@
                         </div>
                         <div class="col-md-4">
                             <label>Date Issued</label>
-                            <input type="date" class="form-control" id="date-issued" required="">
+                            <input type="date" class="form-control" id="date-issued" value="<?= $jobInvoice ? date("Y-m-d", strtotime($jobInvoice->date_issued)) : date("Y-m-d"); ?>" required="">
                         </div>
                         <div class="col-md-4">
                             <label>Due Date</label>
-                            <input type="date" class="form-control" id="due-date" required="">
+                            <input type="date" class="form-control" id="due-date" <?= $jobInvoice ? date("Y-m-d", strtotime($jobInvoice->due_date)) : date("Y-m-d"); ?> required="">
                         </div>
                         <div class="col-md-4">
                             <label>Send a tip amount to assigned technician </label>
