@@ -7112,6 +7112,11 @@ $(function () {
         // $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload(null, true);
     });
 
+    $(document).on('click', '.btn-side-nav-close', function(){
+        //$('.nsm-side-nav-container').hide();
+        $('#modal-container form .modal .attachments-container').parent().remove();
+    });
+
     $(document).on('click', '#modal-container form .modal #show-existing-attachments', function () {
         if ($('#modal-container form .modal .transactions-container').length > 0) {
             $('#modal-container form .modal .transactions-container').parent().remove();
@@ -7122,16 +7127,19 @@ $(function () {
         if ($('#modal-container form .modal .attachments-container').length < 1) {
             var transactionType = $('#modal-container form .modal .modal-title').text();
             $('#modal-container form .modal .modal-body').children('.row').append(`
-                <div class="col-2 nsm-callout primary">
+                <div class="col-2 nsm-callout primary nsm-side-nav-container">
                     <div class="attachments-container h-100 p-3">
                         <div class="row">
                             <div class="col-12 mb-3">
-                                <h4>Add to ${transactionType}</h4>
-                                <div class="d-flex justify-content-center">
-                                    <select class="form-control nsm-field" id="attachment-types">
+                                <h4 style="display:inline-block;margin-bottom:10px;">Add to ${transactionType}</h4>
+                                <button type="button" class="btn-custom-close btn-side-nav-close"><i class="bx bx-fw bx-x m-0"></i></button>
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                    <select class="form-control nsm-field" id="attachment-types" style="width:100%; !important">
                                         <option value="unlinked">Unlinked</option>
                                         <option value="all">All</option>
                                     </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -7141,11 +7149,12 @@ $(function () {
 
             $('#modal-container form .modal #attachment-types').select2({
                 minimumResultsForSearch: -1,
+                width: 'element',
                 dropdownParent: $('#modal-container form .modal')
             });
 
             var attachmentType = $('#modal-container form .modal #attachment-types').val();
-            $.get(`/accounting/attachments/get-${attachmentType}-attachments-ajax`, function (res) {
+            $.get(base_url + `/accounting/attachments/get-${attachmentType}-attachments-ajax`, function (res) {
                 var attachments = JSON.parse(res);
 
                 $.each(attachments, function (index, attachment) {
@@ -7180,7 +7189,7 @@ $(function () {
 
     $(document).on('change', '#modal-container form .modal #attachment-types, #existing-attachments-modal #attachment-types', function () {
         var cont = $(this).parent().parent().parent();
-        $.get(`/accounting/attachments/get-${$(this).val()}-attachments-ajax`, function (res) {
+        $.get(base_url + `/accounting/attachments/get-${$(this).val()}-attachments-ajax`, function (res) {
             var attachments = JSON.parse(res);
 
             cont.children('div.col-12:not(:first-child)').remove();
@@ -7194,16 +7203,20 @@ $(function () {
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">${attachment.uploaded_name}.${attachment.file_extension}</h5>
+                                    <p class="card-title" style="font-size:12px;">${dateString}</p>
                                     <div class="card-subtitle">
-                                        <div class="row">
-                                            <div class="col">${dateString}</div>
-                                            <div class="col d-flex justify-content-center">${attachment.type === 'Image' ? `<img class="w-50" src="/uploads/accounting/attachments/${attachment.stored_name}">` : ""}</div>
+                                        <div class="row">      
+                                            <div class="col-12">
+                                                <div class="col d-flex justify-content-center">${attachment.type === 'Image' ? `<img class="w-100" src="${base_url}uploads/accounting/attachments/${attachment.stored_name}">` : ""}</div>
+                                            </div>  
+                                            <div class="col-6 mt-3">
+                                                <a href="javascript:void(0);" class="nsm-button nsm-primary btn-small add-attachment" data-id="${attachment.id}" style="display:block;width:95%;text-align:center;"><strong>Add</strong></a>
+                                            </div>
+                                            <div class="col-6 mt-3">
+                                                <a href="${attachment.type === 'Image' ? base_url + `uploads/accounting/attachments/${attachment.stored_name}` : base_url + `accounting/attachments/download?filename=${attachment.stored_name}`}" target="_blank" class="nsm-button nsm-primary btn-small" style="display:block;width:95%;text-align:center;">${attachment.type === 'Image' ? 'Preview' : 'Download'}</a>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <ul class="d-flex justify-content-around list-unstyled">
-                                        <li><a href="#" class="text-decoration-none add-attachment" data-id="${attachment.id}"><strong>Add</strong></a></li>
-                                        <li><a href="${attachment.type === 'Image' ? `/uploads/accounting/attachments/${attachment.stored_name}` : `/accounting/attachments/download?filename=${attachment.stored_name}`}" target="_blank" class="text-decoration-none">${attachment.type === 'Image' ? 'Preview' : 'Download'}</a></li>
-                                    </ul>
+                                    </div>                                    
                                 </div>
                             </div>
                         </div>
