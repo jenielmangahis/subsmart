@@ -343,8 +343,9 @@
                                     <table class="nsm-table float-end text-end">
                                         <tfoot>
                                             <tr>
+                                                <td>&nbsp;</td>
                                                 <td>Subtotal</td>
-                                                <td>
+                                                <td style="min-width: 60px;">
                                                     <span class="transaction-subtotal">
                                                     <?php if(isset($receipt)) : ?>
                                                         <?php
@@ -359,8 +360,9 @@
                                                 </td>
                                             </tr>
                                             <tr>
+                                                <td>&nbsp;</td>
                                                 <td>Taxes</td>
-                                                <td>
+                                                <td style="min-width: 60px;">
                                                     <span class="transaction-taxes">
                                                     <?php if(isset($receipt)) : ?>
                                                         <?php
@@ -375,8 +377,9 @@
                                                 </td>
                                             </tr>
                                             <tr>
+                                                <td>&nbsp;</td>
                                                 <td>Discounts</td>
-                                                <td>
+                                                <td style="min-width: 60px;">
                                                     <span class="transaction-discounts">
                                                     <?php if(isset($receipt)) : ?>
                                                         <?php
@@ -391,20 +394,21 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>
-                                                    <div class="row">
+                                                <td><input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="<?=isset($receipt) ? $receipt->adjustment_name : ''?>"></td>
+                                                <td style="width: 150px;">
+                                                    <!-- <div class="row">
                                                         <div class="col-8">
                                                             <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="<?=isset($receipt) ? $receipt->adjustment_name : ''?>">
                                                         </div>
-                                                        <div class="col-3">
-                                                            <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($receipt) ? number_format(floatval($receipt->adjustment_value), 2, '.', ',') : ''?>">
-                                                        </div>
-                                                        <div class="col-1 d-flex align-items-center">
+                                                        <div class="col-4">
+                                                            <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($receipt) ? number_format(floatval($receipt->adjustment_value), 2, '.', ',') : ''?>" style="display:inline-block; width:80%;">
                                                             <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></span>
                                                         </div>
-                                                    </div>
+                                                    </div> -->
+                                                    <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($receipt) ? number_format(floatval($receipt->adjustment_value), 2, '.', ',') : ''?>" style="display:inline-block; width:80%;">
+                                                    <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></span>                                                    
                                                 </td>
-                                                <td>
+                                                <td style="min-width: 60px;">
                                                     <span class="transaction-adjustment">
                                                     <?php if(isset($receipt)) : ?>
                                                         <?php
@@ -419,8 +423,9 @@
                                                 </td>
                                             </tr>
                                             <tr>
+                                                <td>&nbsp;</td>
                                                 <td>Grand Total ($)</td>
-                                                <td>
+                                                <td style="min-width: 60px;">
                                                     <span class="transaction-grand-total">
                                                     <?php if(isset($receipt)) : ?>
                                                         <?php
