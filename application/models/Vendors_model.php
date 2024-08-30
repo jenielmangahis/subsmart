@@ -1096,7 +1096,7 @@ class Vendors_model extends MY_Model {
 	public function getEmployeeByID($id)
 	{
 		$where = array(
-            'users.id'      => $id,
+            'users.id' => $id,
           );
 
         $this->db->select('*');

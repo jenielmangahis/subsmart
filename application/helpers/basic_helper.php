@@ -144,7 +144,6 @@ if (!function_exists('userProfilePicture')) {
 
     function userProfilePicture($id)
     {
-
         $CI = &get_instance();
         $url = urlUpload('users/user-profile/p_' . $id . '.png?' . time());
         $user = $CI->users_model->getUser($id);

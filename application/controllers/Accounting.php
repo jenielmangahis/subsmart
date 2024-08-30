@@ -15618,7 +15618,7 @@ class Accounting extends MY_Controller
     {
         $this->page_data['users']    = $this->users_model->getUser(logged('id'));
         $this->page_data['roles']    = $this->vendors_model->getRoles(logged('company_id'));
-        $this->page_data['employee'] = $this->vendors_model->getEmployeeByID($id);
+        $this->page_data['employee'] = $emp = $this->vendors_model->getEmployeeByID($id);
         $this->page_data['usr_id']   = $id;
 
         $this->page_data['page']->title = 'PayScale';
