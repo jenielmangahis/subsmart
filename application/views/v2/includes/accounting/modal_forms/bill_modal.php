@@ -1,4 +1,14 @@
 <!-- Modal for bank deposit-->
+ <style>
+.btn-custom-close {
+    background: none;
+    border: none;
+    outline: none !important;
+    font-size: 1em;
+    color: #8b8b8b;
+    float:right;
+}
+ </style>
 <div class="full-screen-modal">
 <?php if(!isset($bill)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
@@ -633,7 +643,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="d-flex justify-content-center align-items-center">
-                                                    <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
+                                                    <a href="javascript:void(0);" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -643,11 +653,11 @@
                         </div>
 
                         <?php if(isset($bill) && !is_null($bill->linked_transacs) || isset($purchaseOrder)) : ?>
-                        <div class="w-auto nsm-callout primary" style="display: none; max-width: 15%">
+                        <div class="w-auto nsm-callout primary nsm-side-nav-container" style="display: none; max-width: 15%">
                             <div class="transactions-container h-100 p-3">
                                 <div class="row">
                                     <div class="col-12">
-                                        <h4>Add to Bill</h4>
+                                        <h4>Add to Bill test</h4>
                                     </div>
 
                                     <?php foreach($linkableTransactions as $linkableTransac) : ?>
