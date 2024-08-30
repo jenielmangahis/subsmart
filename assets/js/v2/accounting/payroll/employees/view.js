@@ -140,6 +140,8 @@ $(document).on("click", ".update_deductions_contributions", function (e) {
         dataType: "json",
         success: function (res) {
             if (res) {
+                $("#update-deductions-and-contributions").modal("show");
+                $("#deduction_contributions_lists").modal("hide");
                 res.forEach(function (item, index) {
                     // Process each item here
                     // console.log("Index: " + index + ", Item: ", item);
@@ -158,18 +160,34 @@ $(document).on("click", ".update_deductions_contributions", function (e) {
                     $(".update_annual_maximum").val(
                         parseFloat(item.annual_maximum).toFixed(2)
                     );
+
+                    $(".update_contribution_annual_maximum").val(
+                        parseFloat(item.contribution_annual_maximum).toFixed(2)
+                    );
+
+                    $(".update_calculated_contribution_amount").val(
+                        parseFloat(item.calculated_contribution_amount).toFixed(2)
+                    );
+
                     $(".update_contribution_calculated_as").val(
                         item.contribution_calculated_as
                     );
+
+                    $(".update_contribution_calculated_as2").val(
+                        item.contribution_calculated_as
+                    );
+
                     $(".update_contributions_amount").val(
                         parseFloat(item.contributions_amount).toFixed(2)
                     );
 
+                    $(".update_tax_option").filter(`[value="${item.tax_options}"]`).prop('checked', true);
+
+
                     handleDeductionContributionType(item.type);
                 });
 
-                $("#update-deductions-and-contributions").modal("show");
-                $("#deduction_contributions_lists").modal("hide");
+
             }
         },
     });
@@ -191,6 +209,14 @@ function hideCompanyContributionSection() {
     $(".company-contribution-section").hide();
 }
 
+function showCompanyContributionSection2() {
+    $(".company-contribution-section2").show();
+}
+
+function hideCompanyContributionSection2() {
+    $(".company-contribution-section2").hide();
+}
+
 function showEmployeeDeductionSection() {
     $(".employee-deductions-section").show();
 }
@@ -207,28 +233,54 @@ function hideCalculatedAsLabel() {
     $(".calculated_as_label").hide();
 }
 
+function hideTypeOption() {
+    $(".tax-option-section").hide();
+}
+function showTypeOption() {
+    $(".tax-option-section").show();
+}
+
+function handleHealthInsuranceField() {
+    showCompanyContributionSection2();
+    hide401contributions();
+    hideCompanyContributionSection();
+    showTypeOption();
+}
+
+function handleOtherDeductionsFields() {
+    hide401contributions();
+    hideCompanyContributionSection();
+}
+
 function handleDeductionContributionType(type) {
     $(".deduction-type-section").show();
     showEmployeeDeductionSection();
     showCompanyContributionSection();
     hideCalculatedAsLabel();
+    hideTypeOption();
+    hideCompanyContributionSection2();
     switch (type) {
+        case "Vision Insurance":
+            handleHealthInsuranceField();
+            break;
+        case "Medical Insurance":
+            handleHealthInsuranceField();
+            break;
+        case "Dental Insurance":
+            handleHealthInsuranceField();
+            break;
         case "Cash Advance Repayment":
-            hide401contributions();
-            hideCompanyContributionSection();
+            handleOtherDeductionsFields();
             break;
         case "Loan Repayment":
-            hide401contributions();
-            hideCompanyContributionSection();
+            handleOtherDeductionsFields();
             break;
         case "Other after tax deductions":
-            hide401contributions();
-            hideCompanyContributionSection();
+            handleOtherDeductionsFields();
             showCalculatedAsLabel();
             break;
         case "Wage Garnishment":
-            hide401contributions();
-            hideCompanyContributionSection();
+            handleOtherDeductionsFields();
             break;
         case "Pretax HSA":
             hide401contributions();
@@ -325,7 +377,17 @@ function handleOtherDeductions(type) {
     $(".update_deduction_contribution_type").val(type);
 }
 
+function handleHealthInsurance(type) {
+    $(".deduction-type-section").hide();
+    $(".edit_deduction_contribution_type").html(`
+         <option value="">Select one</option>
+        <option value="Dental Insurance">Dental Insurance</option>
+        <option value="Medical Insurance">Medical Insurance</option>
+        <option value="Vision Insurance">Vision Insurance</option>
+        `);
 
+    $(".update_deduction_contribution_type").val(type);
+}
 
 function handleFlexibleSpendingAccounts(type) {
     $(".deduction-type-section").hide();
@@ -338,6 +400,7 @@ function handleFlexibleSpendingAccounts(type) {
 }
 
 function handleRetirementPlan(type) {
+    $(".deduction-type-section").hide();
     $(".edit_deduction_contribution_type").html(`
         <option value="">Select one</option>
         <option value="401(k)">401(k)</option>
@@ -376,6 +439,32 @@ $(".contribution_calculated_as").change(function () {
     }
 });
 
+$(".contribution_calculated_as2").change(function () {
+    var val = $(this).val();
+
+    $('.add_contribution_calculated_as').val(val)
+    switch (val) {
+        case "Flat amount":
+            $(".calculated_label2").html("Amount per paycheck *");
+            break;
+        case "Percent of gross pay":
+            $(".calculated_label2").html("Percent per paycheck *");
+            break;
+        case "Per hour worked":
+            $(".calculated_label2").html("Amount per hour worked *");
+            break;
+        default:
+            $(".calculated_label2").html("Amount per paycheck *");
+            break;
+    }
+});
+
+function handleHideResetFields() {
+    $(".edit-deduction-contribution-type-section").hide();
+    $(".deduction-type-section").hide();
+    $(".deductions-contribution-section-add").hide();
+}
+
 function handleDeductionContributionTypeMain(type) {
     switch (type) {
         case "Retirement plans":
@@ -394,7 +483,13 @@ function handleDeductionContributionTypeMain(type) {
             $(".edit-deduction-contribution-type-section").show();
             handleOtherDeductions(type);
             break;
+        case "Health insurance":
+            $(".edit-deduction-contribution-type-section").show();
+            handleHealthInsurance(type);
+
+            break;
         default:
+            hideTypeOption();
             $(".edit-deduction-contribution-type-section").hide();
             break;
     }
@@ -428,8 +523,7 @@ $("#deductions_contributions_form").on("submit", function (e) {
         success: function (res) {
             $(".btn_modal_save_deductions").html("Save");
             $("#edit-deductions-and-contributions").modal("hide");
-            $("#edit-deductions-and-contributions").find("form").trigger("reset");
-            $(".deductions-contribution-section-add").hide();
+            handleHideResetFields();
             Swal.fire({
                 icon: "success",
                 title: "Success",
@@ -503,7 +597,11 @@ $("#update_deductions_contributions_form").on("submit", function (e) {
                 title: "Success",
                 text: "Deductions and Contributions Successfully Updated!",
             }).then(() => {
+                $("#edit-deductions-and-contributions").find("form").trigger("reset");
+                $("#deductions_contributions_form")[0].reset();
                 $("#update-deductions-and-contributions").modal("hide");
+                $("#deduction_contributions_lists").modal("show");
+                handleHideResetFields();
             });
         },
     });
@@ -592,13 +690,13 @@ $(document).on("click", ".btn-edit-add-new-commision", function (e) {
     });
 });
 
-$(document).on(
-    "click",
-    ".update-deductions-and-contributions-close",
-    function (e) {
-        $("#update-deductions-and-contributions").modal("hide");
-        $("#deduction_contributions_lists").modal("show");
-    }
+$(document).on("click", ".update-deductions-and-contributions-close", function (e) {
+    $("#edit-deductions-and-contributions").find("form").trigger("reset");
+    $("#deductions_contributions_form")[0].reset();
+    $("#update-deductions-and-contributions").modal("hide");
+    $("#deduction_contributions_lists").modal("show");
+    handleHideResetFields();
+}
 );
 
 $(document).on("click", ".add-deduction-and-contributions-modal", function (e) {
