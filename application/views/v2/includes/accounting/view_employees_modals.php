@@ -814,7 +814,7 @@
                             <div class="col-12 col-md-6">
                                 <input type="hidden" name="id" class="update_deduction_id">
                                 <select class="nsm-field form-select edit-deductions-and-contributions-name"
-                                    name="deductions_contribution_name" style="visibility: hidden;" required>
+                                    name="deductions_contribution_name" style="display:none" >
                                     <option value="deductions_contributions">Add Deductions/contributions</option>
                                 </select>
                                 <div class="row">
@@ -909,11 +909,84 @@
                                                         name="annual_maximum" type="number" step="any" min="0">
                                                 </div>
                                             </div>
+
+                                            <div class="tax-option-section" style="display:none">
+                                                <div class="col-12 edit-pay-type-container mb-3">
+                                                    <h6 class="fw-bold">Tax options</h6>
+                                                </div>
+                                                <div class="col-12 mb-3">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label class="mb-3">To avoid tax penalties, ask you plan administrator or check your plan documents to select the right option:</label>
+                                                            <div class="form-check mb-3">
+                                                                <input class="form-check-input update_tax_option" type="radio"
+                                                                    name="tax_options" value="pretax">
+                                                                <label class="form-check-label" ><strong>Pretax:</strong> Premium is deducted <strong>before</strong> taxes</label>
+                                                            </div>
+
+                                                            <div class="form-check mb-3">
+                                                                <input class="form-check-input update_tax_option" type="radio"
+                                                                    name="tax_options" value="posttax">
+                                                                <label class="form-check-label" ><strong>Post-tax:</strong> Premium is deducted <strong>after</strong> taxes</label>
+                                                            </div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cold-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                            <div class="company-contribution-section2"  style="display:none" >
+                                                <div class="col-12 edit-pay-type-container mb-3">
+                                                    <h6 class="fw-bold mb-3">Company contribution</h6>
+                                                    <label >We'll track your contributions, but it's your responsibility to pay your provider.</label>
+                                                    
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="row">
+                                                        <div class="col-6 edit-pay-type-container mb-3">
+                                                            <label>Calculated as *</label>
+                                                            <select
+                                                                class="nsm-field form-select edit-emp-payscale contribution_calculated_as2 update_contribution_calculated_as2"
+                                                                name="contribution_calculated_as" >
+                                                                <option value="None">None</option>
+                                                                <option value="Flat amount">Flat amount</option>
+                                                                <option value="Percent of gross pay">Percent of gross
+                                                                    pay
+                                                                </option>
+                                                                <option value="Per hour worked">Per hour worked</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-6 edit-pay-type-container mb-3">
+                                                            <label class="calculated_label2">Amount per paycheck
+                                                                *</label>
+                                                            <input class="form-control update_calculated_contribution_amount" name="calculated_contribution_amount"
+                                                                placeholder="$0" type="number" step="any" min="0"
+                                                                >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 edit-pay-type-container ">
+                                                    <label class="calculated_as_label mb-3">Though this is an after tax deduction, the deduction amount
+                                                        is based off of a percentage
+                                                        of the employee's gross earnigs.
+                                                    </label>
+
+                                                </div>
+                                                <div class="col-12 edit-pay-type-container mb-3">
+                                                    <label>Annual maximum</label>
+                                                    <input class="form-control update_contribution_annual_maximum" name="contribution_annual_maximum" type="number"
+                                                        step="any" min="0">
+                                                </div>
+                                            </div>
+                                            </div>
                                         </div>
                                     </div>
 
                                     <div class="col-md-12">
-                                        <div class="row">
+                                        <div class="row company-contribution-section">
                                             <div class="col-12 edit-pay-type-container mb-3">
                                                 <h6 class="fw-bold">Company contribution</h6>
                                                 <label for="">We'll track your contributions, but it's your
@@ -999,7 +1072,6 @@
                             style="display:none">
                             <div class="col-12 col-md-6">
                                 <div class="row">
-
                                     <div class="col-12 mb-3">
                                         <label>Deductions/contribution type</label>
                                         <select class="nsm-field form-select deduction_contribution_type"
@@ -1014,8 +1086,6 @@
 
                                         </select>
                                     </div>
-
-
 
                                 </div>
                             </div>
@@ -1085,8 +1155,8 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-12 edit-pay-type-container mb-3">
-                                                    <label class="calculated_as_label">Though this is an after tax deduction, the deduction amount
+                                                <div class="col-12 edit-pay-type-container ">
+                                                    <label class="calculated_as_label mb-3">Though this is an after tax deduction, the deduction amount
                                                         is based off of a percentage
                                                         of the employee's gross earnigs.
                                                     </label>
@@ -1098,8 +1168,85 @@
                                                         step="any" min="0">
                                                 </div>
                                             </div>
+
+                                            <div class="tax-option-section" style="display:none">
+                                                <div class="col-12 edit-pay-type-container mb-3">
+                                                    <h6 class="fw-bold">Tax options</h6>
+                                                </div>
+                                                <div class="col-12 mb-3">
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label class="mb-3">To avoid tax penalties, ask you plan administrator or check your plan documents to select the right option:</label>
+                                                            <div class="form-check mb-3">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="tax_options" value="pretax">
+                                                                <label class="form-check-label" ><strong>Pretax:</strong> Premium is deducted <strong>before</strong> taxes</label>
+                                                            </div>
+
+                                                            <div class="form-check mb-3">
+                                                                <input class="form-check-input" type="radio"
+                                                                    name="tax_options" value="posttax">
+                                                                <label class="form-check-label" ><strong>Post-tax:</strong> Premium is deducted <strong>after</strong> taxes</label>
+                                                            </div>
+                                                    </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            
                                         </div>
                                     </div>
+
+                                    <div class="cold-md-12">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                            <div class="company-contribution-section2"  style="display:none" >
+                                                <div class="col-12 edit-pay-type-container mb-3">
+                                                    <h6 class="fw-bold mb-3">Company contribution</h6>
+                                                    <label >We'll track your contributions, but it's your responsibility to pay your provider.</label>
+                                                    
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="row">
+                                                        <div class="col-6 edit-pay-type-container mb-3">
+                                                            <label>Calculated as *</label>
+                                                            <select
+                                                                class="nsm-field form-select edit-emp-payscale contribution_calculated_as2"
+                                                                name="contribution_calculated_as" >
+                                                                <option value="None">None</option>
+                                                                <option value="Flat amount">Flat amount</option>
+                                                                <option value="Percent of gross pay">Percent of gross
+                                                                    pay
+                                                                </option>
+                                                                <option value="Per hour worked">Per hour worked</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-6 edit-pay-type-container mb-3">
+                                                            <label class="calculated_label2">Amount per paycheck
+                                                                *</label>
+                                                            <input class="form-control" name="calculated_contribution_amount"
+                                                                placeholder="$0" type="number" step="any" min="0"
+                                                                >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 edit-pay-type-container ">
+                                                    <label class="calculated_as_label mb-3">Though this is an after tax deduction, the deduction amount
+                                                        is based off of a percentage
+                                                        of the employee's gross earnigs.
+                                                    </label>
+
+                                                </div>
+                                                <div class="col-12 edit-pay-type-container mb-3">
+                                                    <label>Annual maximum</label>
+                                                    <input class="form-control" name="contribution_annual_maximum" type="number"
+                                                        step="any" min="0">
+                                                </div>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
 
                                     <div class="col-md-12">
                                         <div class="row company-contribution-section">
@@ -1112,7 +1259,7 @@
                                             </div>
                                             <div class="col-6 edit-pay-type-container mb-3">
                                                 <label>Calculated as *</label>
-                                                <select class="nsm-field form-select edit-emp-payscale "
+                                                <select class="nsm-field form-select edit-emp-payscale add_contribution_calculated_as"
                                                     name="contribution_calculated_as" required>
                                                     <option value="None">None</option>
                                                     <option value="Flat amount">Flat amount</option>
