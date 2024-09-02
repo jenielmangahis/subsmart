@@ -24174,7 +24174,6 @@ class Accounting_modals extends MY_Controller
                 $this->page_data['items'] = $items;
                 $this->page_data['tags'] = $this->tags_model->get_transaction_tags('Refund Receipt', $transactionId);
                 $this->page_data['refundAcc'] = $refundAcc;
-
                 $view = 'refund_receipt_modal';
             break;
             case 'delayed-credit' :

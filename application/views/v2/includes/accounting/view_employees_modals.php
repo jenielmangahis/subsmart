@@ -964,7 +964,7 @@
                                                                 *</label>
                                                             <input class="form-control update_calculated_contribution_amount" name="calculated_contribution_amount"
                                                                 placeholder="$0" type="number" step="any" min="0"
-                                                                >
+                                                                disabled>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -978,7 +978,7 @@
                                                 <div class="col-12 edit-pay-type-container mb-3">
                                                     <label>Annual maximum</label>
                                                     <input class="form-control update_contribution_annual_maximum" name="contribution_annual_maximum" type="number"
-                                                        step="any" min="0">
+                                                        step="any" min="0" disabled>
                                                 </div>
                                             </div>
                                             </div>
@@ -1224,9 +1224,9 @@
                                                         <div class="col-6 edit-pay-type-container mb-3">
                                                             <label class="calculated_label2">Amount per paycheck
                                                                 *</label>
-                                                            <input class="form-control" name="calculated_contribution_amount"
+                                                            <input class="form-control update_calculated_contribution_amount" name="calculated_contribution_amount"
                                                                 placeholder="$0" type="number" step="any" min="0"
-                                                                >
+                                                                disabled>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1239,8 +1239,8 @@
                                                 </div>
                                                 <div class="col-12 edit-pay-type-container mb-3">
                                                     <label>Annual maximum</label>
-                                                    <input class="form-control" name="contribution_annual_maximum" type="number"
-                                                        step="any" min="0">
+                                                    <input class="form-control update_contribution_annual_maximum" name="contribution_annual_maximum" type="number"
+                                                        step="any" min="0" placeholder="$0" disabled>
                                                 </div>
                                             </div>
                                             </div>

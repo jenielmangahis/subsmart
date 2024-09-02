@@ -1041,7 +1041,6 @@ class Vendors_model extends MY_Model {
         // $vendor = $this->db->insert('employee_role', $new_data);
 		$vendor = $this->db->insert('roles', $new_data);
         $insert_id = $this->db->insert_id();
-
         return  $insert_id;
     }
 
@@ -1097,7 +1096,7 @@ class Vendors_model extends MY_Model {
 	public function getEmployeeByID($id)
 	{
 		$where = array(
-            'users.id'      => $id,
+            'users.id' => $id,
           );
 
         $this->db->select('*');

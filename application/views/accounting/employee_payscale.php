@@ -15,13 +15,24 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="row grid-mb">
                     <div class="col-12">
                         <div class="nsm-card primary" style="height: 50% !important;">
                             <div class="nsm-card-content">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-2">
+                                        <div class="row g-1">
+                                            <?php 
+                                                $profil_image = userProfilePicture($usr_id); 
+                                                if($profil_image == null || $profil_image == "") {
+                                                    $profil_image = url('uploads/users/default.png');
+                                                }
+                                            ?>
+                                            <img src="<?php echo $profil_image; ?>" alt="User Profile">
+                                        </div>
+                                    </div>
+                                    <div class="col-10">
                                         <div class="row g-1">
                                             <div class="col-12 col-md-2">
                                                 <label class="content-subtitle fw-bold">Employee Name:</label>
@@ -73,15 +84,18 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <select class="form-control role_name" id="selected-role-name" name="role_name">
-                                                    <option value="<?php echo $employee->id; ?>"><?php echo $employee->title; ?></option>
-                                                    <option value="0">+ Add New</option>
+                                                <select class="form-control role_name selected-role-name" id="selected-role-name" name="role_name">
+                                                    <!-- <option value="<?php //echo $employee->id; ?>"><?php //echo $employee->title; ?></option> -->
+                                                    <!-- <option value="0">+ Add New</option> -->
                                                     <?php foreach($roles as $role): ?>
-                                                        <option value="<?php echo $role->id; ?>" role-amount="<?php echo $role->role_amount; ?>"><?php echo $role->title; ?></option>
+                                                        <?php $selected = $role->id == $employee->role ? 'selected="selected"' : ''; ?>
+                                                        <option value="<?php echo $role->id; ?>" role-amount="<?php echo $role->role_amount; ?>" <?php echo $selected; ?>>
+                                                            <?php echo $role->title; ?>
+                                                        </option>
                                                     <?php endforeach; ?>
                                                 </select>
                                             </td>
-                                            <td><span id="rolevalue"><?php echo $role->role_amount; ?></span></td>
+                                            <td><span id="rolevalue"></span></td>
                                             <td>
                                                 <select class="form-control expRoleDropdown">
                                                     <option value="X 1,00">Tier A</option>
@@ -118,14 +132,13 @@
                                         </tr>
                                     </tbody>
                                 </table>      
-                                <div style="margin-top: 30px; text-align: center;">
-                                    <a href="javascript:void(0)" id="btn-save-emp-payscale" class="btn btn-danger btn-save-emp-payscale">Save Changes</a>
+                                <div style="margin-top: 30px; text-align: right;">
+                                    <a href="javascript:void(0)" id="btn-save-emp-payscale" class="nsm-button primary w-100 btn-save-emp-payscale">Save Changes</a>
                                 </div>                                                     
                             </div>
                         </div>
                     </div>
-                </div>
-                
+                </div>        
             </div>
         </div>
     </div>
@@ -169,6 +182,25 @@
         }
     }
 
+    function loadDefaultPayscaleDetails()
+    {        
+        var role_name   = $("#selected-role-name").val();
+        var role_amount = $('option:selected', "#selected-role-name").attr('role-amount'); 
+        
+        $('#rolevalue').text(role_amount);
+
+        var expRolevalue = '1.0';
+        var seniorityamount = $(".seniorityDropdown").val();  //1000;
+
+        var stotal = parseFloat(role_amount) * parseFloat(expRolevalue);
+        var total = parseFloat(stotal) + parseFloat(seniorityamount);
+        if(role_amount == 0) {
+            $('.gross_salary').text(parseFloat(0).toFixed(2));      
+        } else {
+            $('.gross_salary').text(parseFloat(total).toFixed(2));      
+        }
+    }
+
     //DataTables JS
     $(document).ready(function() {
         $('#rules_table').DataTable({
@@ -189,8 +221,8 @@
         } else {
             $('#rolevalue').text(optiontest);
 
-            var rolevalue = $('#rolevalue').text();
-            var expRolevalueT = $('.expRolevalue').val();
+            var rolevalue       = $('#rolevalue').text();
+            var expRolevalueT   = $('.expRolevalue').val();
             var seniorityamount = $('.seniorityamount').val();
 
             if (expRolevalueT == 'X 1,00')
@@ -219,9 +251,14 @@
             }
 
             var stotal = parseFloat(rolevalue) * parseFloat(expRolevalue);
-            var total = parseFloat(stotal) + parseFloat(seniorityamount);
+            var total = parseFloat(stotal) + parseFloat(seniorityamount);       
 
-            $('.gross_salary').text(parseFloat(total).toFixed(2));
+            if(rolevalue == 0) {
+                $('.gross_salary').text(parseFloat(0).toFixed(2));
+            } else {
+                $('.gross_salary').text(parseFloat(total).toFixed(2));
+            }
+            
         }
     });    
 
@@ -262,7 +299,11 @@
         var stotal = parseFloat(rolevalue) * parseFloat(expRolevalue);
         var total = parseFloat(stotal) + parseFloat(seniorityamount);
 
-        $('.gross_salary').text(parseFloat(total).toFixed(2));
+        if(rolevalue == 0) {
+            $('.gross_salary').text(parseFloat(0).toFixed(2));
+        } else {
+            $('.gross_salary').text(parseFloat(total).toFixed(2));
+        }        
     });    
 
     $(".seniorityDropdown").change(function () {
@@ -299,7 +340,11 @@
 
             var stotal = parseFloat(rolevalue) * parseFloat(expRolevalue);
             var total = parseFloat(stotal) + parseFloat(seniorityamount);
-            $('.gross_salary').text(parseFloat(total).toFixed(2));
+            if(rolevalue == 0) {
+                $('.gross_salary').text(parseFloat(0).toFixed(2));
+            } else {
+                $('.gross_salary').text(parseFloat(total).toFixed(2));
+            }                
     });    
 
     $(".save_role").click(function(){
@@ -368,6 +413,10 @@
             }
         });
     }    
+
+    $(document).ready(function() {
+        loadDefaultPayscaleDetails();
+    });    
 
 </script>
 
