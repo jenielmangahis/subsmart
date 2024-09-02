@@ -182,7 +182,7 @@ $(document).on("click", ".update_deductions_contributions", function (e) {
                     );
 
                     $(".update_tax_option").filter(`[value="${item.tax_options}"]`).prop('checked', true);
-
+                    handleCalculatedContribution(item.contribution_calculated_as)
 
                     handleDeductionContributionType(item.type);
                 });
@@ -439,30 +439,47 @@ $(".contribution_calculated_as").change(function () {
     }
 });
 
+function handleCalculatedContribution(val) {
+    switch (val) {
+        case "Flat amount":
+            $(".calculated_label2").html("Amount per paycheck *");
+            $('.update_calculated_contribution_amount').removeAttr('disabled')
+            $('.update_contribution_annual_maximum').removeAttr('disabled')
+            break;
+        case "Percent of gross pay":
+            $(".calculated_label2").html("Percent per paycheck *");
+            $('.update_calculated_contribution_amount').removeAttr('disabled')
+            $('.update_contribution_annual_maximum').removeAttr('disabled')
+            break;
+        case "Per hour worked":
+            $(".calculated_label2").html("Amount per hour worked *");
+            $('.update_calculated_contribution_amount').removeAttr('disabled')
+            $('.update_contribution_annual_maximum').removeAttr('disabled')
+            break;
+        default:
+            $(".calculated_label2").html("Amount per paycheck *");
+            $('.update_calculated_contribution_amount').attr('disabled', 'disabled');
+            $('.update_calculated_contribution_amount').val(0)
+            $('.update_contribution_annual_maximum').attr('disabled', 'disabled');
+            $('.update_contribution_annual_maximum').val(0)
+
+            break;
+    }
+}
+
 $(".contribution_calculated_as2").change(function () {
     var val = $(this).val();
 
     $('.add_contribution_calculated_as').val(val)
-    switch (val) {
-        case "Flat amount":
-            $(".calculated_label2").html("Amount per paycheck *");
-            break;
-        case "Percent of gross pay":
-            $(".calculated_label2").html("Percent per paycheck *");
-            break;
-        case "Per hour worked":
-            $(".calculated_label2").html("Amount per hour worked *");
-            break;
-        default:
-            $(".calculated_label2").html("Amount per paycheck *");
-            break;
-    }
+    handleCalculatedContribution(val)
+
 });
 
 function handleHideResetFields() {
     $(".edit-deduction-contribution-type-section").hide();
     $(".deduction-type-section").hide();
     $(".deductions-contribution-section-add").hide();
+    handleCalculatedContribution('')
 }
 
 function handleDeductionContributionTypeMain(type) {
@@ -662,6 +679,7 @@ function get_deductions_and_contributions_item(employee_id) {
                     )}/paycheck(Deduction)</p>
                     </div>
             `);
+
             });
         },
     });
