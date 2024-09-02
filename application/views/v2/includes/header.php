@@ -958,7 +958,7 @@ if (is_null($image)) {
         });
 
         // Customize menu
-        $('#modal-customize-menu').modal({backdrop: 'static', keyboard: false});
+        //$('#modal-customize-menu').modal({backdrop: 'static', keyboard: false});
 
         $('.customize-menu').on('click', function(){
             $('#modal-customize-menu').modal('show');
