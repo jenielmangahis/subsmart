@@ -112,7 +112,7 @@
                                 <?php endif; ?>
                                 <div class="col-12 col-md-2">
                                     <label for="billing-address">Billing address</label>
-                                    <textarea name="billing_address" id="billing-address" class="form-control nsm-field mb-2"><?=isset($receipt) ? str_replace("<br />", "", $receipt->billing_address) : ''?></textarea>
+                                    <textarea name="billing_address" id="billing-address" class="form-control nsm-field mb-2" style="height: 97px;"><?=isset($receipt) ? str_replace("<br />", "", $receipt->billing_address) : ''?></textarea>
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="refund-receipt-date">Refund Receipt date</label>
@@ -124,9 +124,9 @@
                                     <input type="text" class="form-control nsm-field mb-2" name="purchase_order_no" id="purchase-order-no" value="<?=isset($receipt) ? $receipt->po_number : ''?>">
                                 </div>
                                 <div class="col-12 col-md-2">
-                                    <label for="sales-rep">Sales Rep</label>
+                                    <!-- <label for="sales-rep">Sales Rep</label> -->
                                     <!-- <input type="text" name="sales_rep" id="sales-rep" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->sales_rep : ''?>"> -->
-                                    <select id="sales-rep" name="sales_rep" class="form-control" class="form-control nsm-field mb-2"></select>
+                                    <!-- <select id="sales-rep" name="sales_rep" class="form-control" class="form-control nsm-field mb-2"></select> -->
                                 </div>
                                 <div class="col-12 col-md-2 offset-md-4">
                                     <label for="location-of-sale">Location of sale</label>
@@ -135,7 +135,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-12 col-md-6 grid-mb">
+                                <div class="col-12 col-md-2 grid-mb">
                                     <div id="label">
                                         <label for="tags">Tags</label>
                                         <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
@@ -154,6 +154,10 @@
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </select>
+                                </div>
+                                <div class="col-12 col-md-2 grid-mb">
+                                    <label for="sales-rep">Sales Rep</label>
+                                    <select id="sales-rep" name="sales_rep" class="form-control" class="form-control nsm-field mb-2"></select>
                                 </div>
                             </div>
 
@@ -340,7 +344,25 @@
                                                 <textarea name="message_statement" id="message_statement" class="form-control nsm-field mb-2"><?=isset($receipt) ? str_replace("<br />", "", $receipt->message_on_statement) : ''?></textarea>
                                             </div>
                                         </div>
+
+                                        <div class="col-12 col-md-6">
+                                            <div class="attachments">
+                                                <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
+                                                <span>Maximum size: 20MB</span>
+                                                <div id="refund-receipt-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                    <div class="dz-message" style="margin: 20px;border">
+                                                        <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                                        <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex justify-content-center align-items-center">
+                                                    <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
+                                                </div>
+                                            </div>
+                                        </div>                                        
+
                                     </div>
+                                    <!-- 
                                     <div class="row">
                                         <div class="col-12 col-md-6">
                                             <div class="attachments">
@@ -358,6 +380,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    -->
                                 </div>
 
                                 <div class="col-12 col-md-3 offset-md-3">

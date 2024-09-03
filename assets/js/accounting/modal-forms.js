@@ -9519,13 +9519,15 @@ $(function () {
         var val = $(this).val();
 
         if (val !== '' && val !== null && val !== 'add-new') {
-            $.get('/accounting/get-account-balance/' + val, function (res) {
+            $.get(base_url + 'accounting/get-account-balance/' + val, function (res) {
                 var result = JSON.parse(res);
 
                 if (rowEl.find('#check-no').length > 0) {
-                    rowEl.children('div.col-md-1:nth-child(3)').find('h4').html(result.balance);
+                    //rowEl.children('div.col-md-1:nth-child(3)').find('h4').html(result.balance);
+                    $('input[name=result_balance]').val(result.balance);
                 } else {
-                    rowEl.append(`<div class="col-12 col-md-1"><label>Balance</label><h4>${result.balance}</h4></div>`);
+                    //rowEl.append(`<div class="col-12 col-md-1"><label>Balance</label><h4>${result.balance}</h4></div>`);
+                    rowEl.append(`<div class="col-12 col-md-1"><label>Balance</label><input type="text" class="form-control nsm-field mb-2 result-balance" name="result_balance" id="result-balance" value="${result.balance}" disabled></div>`);
                     rowEl.append(`<div class="col-12 col-md-2"><label for="check-no">Check no.</label><input type="text" class="form-control nsm-field mb-2" name="check_no" id="check-no" value="To print" disabled><div class="form-check"><input type="checkbox" name="print_later" value="1" class="form-check-input" id="print-later" checked><label class="form-check-label" for="print-later">Print later</label></div></div>`);
                 }
             });

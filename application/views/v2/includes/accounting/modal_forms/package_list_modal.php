@@ -19,7 +19,7 @@
                             </nav>
                             <div class="tab-content" id="nav-tabContent">
                                 <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                                    <table class="nsm-table" id="package-table">
+                                    <table class="nsm-table package-table-list" id="package-table">
                                         <thead>
                                             <tr>
                                                 <td>ID #</td>
@@ -128,3 +128,20 @@
         </div>
     </div>
 </div>
+
+<script>
+$(document).ready(function() {
+    //$(".package-table-list").nsmPagination({itemsPerPage:10});
+
+    /*$('#package-table-list').DataTable({
+        "paging": true,
+        "filter":true,
+        "searching": true,
+        "lengthChange": true,
+        "pageLength": 10,
+        "order": [],
+    });*/ 
+
+});
+
+</script>
