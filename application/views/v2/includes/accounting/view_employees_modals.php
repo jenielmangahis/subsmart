@@ -996,13 +996,20 @@
                                             </div>
                                             <div class="col-6 edit-pay-type-container mb-3">
                                                 <label>Calculated as *</label>
-                                                <select class="nsm-field form-select update_contribution_calculated_as"
+                                                <select class="nsm-field form-select update_contribution_calculated_as contribution_calculated_as2"
                                                     name="contribution_calculated_as" required>
                                                     <option value="None">None</option>
                                                     <option value="Flat amount">Flat amount</option>
                                                     <option value="Percent of gross pay">Percent of gross pay</option>
                                                     <option value="Per hour worked">Per hour worked</option>
                                                 </select>
+                                            </div>
+                                            <div class="col-6 edit-pay-type-container mb-3">
+                                                <label class="calculated_label2">Amount per paycheck
+                                                    *</label>
+                                                <input class="form-control update_calculated_contribution_amount" name="calculated_contribution_amount"
+                                                    placeholder="$0" type="number" step="any" min="0"
+                                                    disabled>
                                             </div>
                                         </div>
                                     </div>
@@ -1259,7 +1266,7 @@
                                             </div>
                                             <div class="col-6 edit-pay-type-container mb-3">
                                                 <label>Calculated as *</label>
-                                                <select class="nsm-field form-select edit-emp-payscale add_contribution_calculated_as"
+                                                <select class="nsm-field form-select edit-emp-payscale contribution_calculated_as2"
                                                     name="contribution_calculated_as" required>
                                                     <option value="None">None</option>
                                                     <option value="Flat amount">Flat amount</option>
@@ -1267,6 +1274,13 @@
                                                     <option value="Per hour worked">Per hour worked</option>
                                                 </select>
                                             </div>
+                                            <div class="col-6 edit-pay-type-container mb-3">
+                                                            <label class="calculated_label2">Amount per paycheck
+                                                                *</label>
+                                                            <input class="form-control update_calculated_contribution_amount" name="calculated_contribution_amount"
+                                                                placeholder="$0" type="number" step="any" min="0"
+                                                                disabled>
+                                                        </div>
                                         </div>
                                     </div>
                                     <div class="col-md-12 401_contribution_section" style="display:none">

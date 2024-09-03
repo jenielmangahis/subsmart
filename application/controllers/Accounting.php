@@ -61,6 +61,7 @@ class Accounting extends MY_Controller
         $this->load->model('taskhub_status_model');
         $this->load->model('Crud', 'crud');
         $this->load->model('Business_model');
+        $this->load->model('PayScale_model', 'payscale_model');
     
         //$this->load->library('pdf');
         //        The "?v=rand()" is to remove browser caching. It needs to remove in the live website.
@@ -15621,7 +15622,10 @@ class Accounting extends MY_Controller
         $this->page_data['employee'] = $emp = $this->vendors_model->getEmployeeByID($id);
         $this->page_data['usr_id']   = $id;
 
-        $this->page_data['page']->title = 'PayScale';
+        $emp_payscale_details = $this->payscale_model->getById($emp->payscale_id);
+
+        $this->page_data['emp_payscale_details'] = $emp_payscale_details;
+        $this->page_data['page']->title  = 'PayScale';
         $this->page_data['page']->parent = 'Reports';        
         $this->load->view('accounting/employee_payscale', $this->page_data);
     }

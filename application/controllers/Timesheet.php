@@ -3384,25 +3384,34 @@ class Timesheet extends MY_Controller
                 $image = userProfilePicture($user->id);
                 if (is_null($image)) {
                     $initials = getLoggedNameInitials($user->id);
-                    $display .= '<td style="display: flex; align-items: center;">
-                                    <div class="profile-img" style="background-image: none; background-color: #ccc; display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 40px; height: 40px;">
-                                        <span style="color: #fff; font-size: 18px;">' . $initials . '</span>
-                                    </div>
-                                    <div style="margin-left: 10px;">
-                                        <span class="employee-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $user->FName . ' ' . $user->LName . '</span>
-                                        <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role_title . ' | ' . $status . '</span>
+                    $display .= '<td>
+                                    <div style="display: table; height: 40px;">
+                                        <div style="display: table-cell; vertical-align: middle;">
+                                            <div class="profile-img" style="background-color: #ccc; border-radius: 50%; width: 40px; height: 40px; text-align: center; line-height: 40px;">
+                                                <span style="color: #fff; font-size: 18px;">' . $initials . '</span>
+                                            </div>
+                                        </div>
+                                        <div style="display: table-cell; vertical-align: middle; padding-left: 10px;">
+                                            <span class="employee-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $user->FName . ' ' . $user->LName . '</span>
+                                            <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role_title . ' | ' . $status . '</span>
+                                        </div>
                                     </div>
                                  </td>';
                 } else {
-                    $display .= '<td style="display: flex; align-items: center;">
-                                    <div class="profile-img" style="background-image: url(\'' . $image . '\'); background-size: cover; background-position: center; border-radius: 50%; width: 40px; height: 40px;">
-                                    </div>
-                                    <div style="margin-left: 10px;">
-                                        <span class="employee-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $user->FName . ' ' . $user->LName . '</span>
-                                        <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role_title . ' | ' . $status . '</span>
+                    $display .= '<td>
+                                    <div style="display: table; height: 40px;">
+                                        <div style="display: table-cell; vertical-align: middle;">
+                                            <div class="profile-img" style="background-image: url(\'' . $image . '\'); background-size: cover; background-position: center; border-radius: 50%; width: 40px; height: 40px;">
+                                            </div>
+                                        </div>
+                                        <div style="display: table-cell; vertical-align: middle; padding-left: 10px;">
+                                            <span class="employee-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $user->FName . ' ' . $user->LName . '</span>
+                                            <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role_title . ' | ' . $status . '</span>
+                                        </div>
                                     </div>
                                  </td>';
                 }
+
                 // $display .= '<td><span class="employee-name">' . $user->FName . " " . $user->LName . '</span><span class="sub-text">' . $role_title . ' | ' . $status . '</span></td>';
                 // $display .= '<td><a class="group-copy-btn" title="Copy" data-id="' . $user->id . '"><i class="fa fa-clone" aria-hidden="true"></i></a>';
                 // $display .= '<a  class="group-paste-btn" title="Paste"><i class="fa fa-clipboard" aria-hidden="true"></i></a></div>';
@@ -3478,25 +3487,34 @@ class Timesheet extends MY_Controller
                 $image = userProfilePicture($user->id);
                 if (is_null($image)) {
                     $initials = getLoggedNameInitials($user->id);
-                    $display .= '<td style="display: flex; align-items: center;">
-                                    <div class="profile-img" style="background-image: none; background-color: #ccc; display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 40px; height: 40px;">
-                                        <span style="color: #fff; font-size: 18px;">' . $initials . '</span>
-                                    </div>
-                                    <div style="margin-left: 10px;">
-                                        <span class="employee-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $user->FName . ' ' . $user->LName . '</span>
-                                        <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role_title . ' | ' . $status . '</span>
+                    $display .= '<td>
+                                    <div style="display: table; height: 40px;">
+                                        <div style="display: table-cell; vertical-align: middle;">
+                                            <div class="profile-img" style="background-color: #ccc; border-radius: 50%; width: 40px; height: 40px; text-align: center; line-height: 40px;">
+                                                <span style="color: #fff; font-size: 18px;">' . $initials . '</span>
+                                            </div>
+                                        </div>
+                                        <div style="display: table-cell; vertical-align: middle; padding-left: 10px;">
+                                            <span class="employee-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $user->FName . ' ' . $user->LName . '</span>
+                                            <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role_title . ' | ' . $status . '</span>
+                                        </div>
                                     </div>
                                  </td>';
                 } else {
-                    $display .= '<td style="display: flex; align-items: center;">
-                                    <div class="profile-img" style="background-image: url(\'' . $image . '\'); background-size: cover; background-position: center; border-radius: 50%; width: 40px; height: 40px;">
-                                    </div>
-                                    <div style="margin-left: 10px;">
-                                        <span class="employee-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $user->FName . ' ' . $user->LName . '</span>
-                                        <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role_title . ' | ' . $status . '</span>
+                    $display .= '<td>
+                                    <div style="display: table; height: 40px;">
+                                        <div style="display: table-cell; vertical-align: middle;">
+                                            <div class="profile-img" style="background-image: url(\'' . $image . '\'); background-size: cover; background-position: center; border-radius: 50%; width: 40px; height: 40px;">
+                                            </div>
+                                        </div>
+                                        <div style="display: table-cell; vertical-align: middle; padding-left: 10px;">
+                                            <span class="employee-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $user->FName . ' ' . $user->LName . '</span>
+                                            <span class="sub-text" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role_title . ' | ' . $status . '</span>
+                                        </div>
                                     </div>
                                  </td>';
                 }
+
                 // $display .= '<td><span class="employee-name">' . $user->FName . " " . $user->LName . '</span><span class="sub-text">' . $role_title . ' | ' . $status . '</span></td>';
                 // $display .= '<td><a class="group-copy-btn" style="display:none;" title="Copy" data-id="' . $user->id . '"><i class="fa fa-clone" aria-hidden="true"></i></a>';
                 // $display .= '<a  class="group-paste-btn" title="Paste"><i class="fa fa-clipboard" aria-hidden="true"></i></a></div>';
@@ -5198,8 +5216,8 @@ class Timesheet extends MY_Controller
         $schedules_pst = $this->timesheet_model->get_my_schedules_for_calendar($last_date_3_months, $first_date_next_month, logged('id'));
         $schedules_calendar =  array();
         foreach ($schedules_pst as $sched) {
-            $shift_start = date("G:i A",strtotime($this->datetime_zone_converter($sched->shift_start, "UTC", $this->session->userdata('usertimezone'))));
-            $shift_end   = date("G:i A",strtotime($this->datetime_zone_converter($sched->shift_end, "UTC", $this->session->userdata('usertimezone'))));
+            $shift_start = date("G:i A", strtotime($this->datetime_zone_converter($sched->shift_start, "UTC", $this->session->userdata('usertimezone'))));
+            $shift_end   = date("G:i A", strtotime($this->datetime_zone_converter($sched->shift_end, "UTC", $this->session->userdata('usertimezone'))));
             $schedules_calendar[] = array("title" => "<i class='bx bx-calendar'></i> Shift Start : " . $shift_start, "start" => $this->datetime_zone_converter($sched->shift_start, "UTC", $this->session->userdata('usertimezone')));
             $schedules_calendar[] = array("title" => "<i class='bx bx-calendar'></i> Shift End : " . $shift_end, "start" => $this->datetime_zone_converter($sched->shift_end, "UTC", $this->session->userdata('usertimezone')));
         }
