@@ -69,6 +69,41 @@
                                             <div class="col-12 col-md-10">
                                                 <label class="content-subtitle emp-payscale-emp-details"><?php echo $employee->address .', '. $employee->city .', '. $employee->state .', '. $employee->postal_code; ?></label>
                                             </div>
+
+                                            <div class="col-12 col-md-2">
+                                                <label class="content-subtitle emp-payscale-emp-details fw-bold">Email:</label>
+                                            </div>
+                                            <div class="col-12 col-md-10">
+                                                <label class="content-subtitle emp-payscale-emp-details"><?php echo $employee->email != "" ? $employee->email : '-'; ?></label>
+                                            </div>
+
+                                            <div class="col-12 col-md-2">
+                                                <label class="content-subtitle emp-payscale-emp-details fw-bold">Phone Number:</label>
+                                            </div>
+                                            <div class="col-12 col-md-10">
+                                                <label class="content-subtitle emp-payscale-emp-details"><?php echo $employee->phone != "" ? $employee->phone : '-'; ?></label>
+                                            </div>
+
+                                            <div class="col-12 col-md-2">
+                                                <label class="content-subtitle emp-payscale-emp-details fw-bold">Mobile:</label>
+                                            </div>
+                                            <div class="col-12 col-md-10">
+                                                <label class="content-subtitle emp-payscale-emp-details"><?php echo $employee->mobile != "" ? $employee->mobile : '-'; ?></label>
+                                            </div>
+
+                                            <?php 
+                                                $pay_type = "-";
+                                                if($emp_payscale_details) {
+                                                    $pay_type = isset($emp_payscale_details->pay_type) ? $emp_payscale_details->pay_type : '-';
+                                                }
+                                            ?>
+
+                                            <div class="col-12 col-md-2">
+                                                <label class="content-subtitle emp-payscale-emp-details fw-bold">Pay Type:</label>
+                                            </div>
+                                            <div class="col-12 col-md-10">
+                                                <label class="content-subtitle emp-payscale-emp-details"><?php echo $pay_type; ?></label>
+                                            </div>
                                         </div>                                       
                                     </div>
                                 </div>
