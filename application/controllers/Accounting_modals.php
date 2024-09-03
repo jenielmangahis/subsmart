@@ -5530,6 +5530,7 @@ class Accounting_modals extends MY_Controller
                 1
             ]
         ];
+
         $location = $this->items_model->getLocationByCompanyId();
         $items = $this->items_model->getItemsWithFilter($filter);
         $this->page_data['location'] = $location;
