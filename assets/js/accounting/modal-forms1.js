@@ -24,9 +24,11 @@ $(document).ready(function () {
                     </div>
                 `);
             }
-
-            $(`${modal_element} [data-bs-toggle="popover"]`).popover();
-
+            
+            if( modal_element != '#invoiceModal' && modal_element != '#salesReceiptModal' ){
+                $(`${modal_element} [data-bs-toggle="popover"]`).popover();
+            }
+            
             if ($('div#modal-container .modal-body table.clickable:not(#category-details-table, #item-details-table)').length > 0) {
                 rowInputs = $('div#modal-container form .modal table tbody tr:first-child()').html();
                 if(modal_element === '#journalEntryModal' || modal_element === '#depositModal') {
@@ -186,7 +188,7 @@ $(document).ready(function () {
             CKEDITOR.replace('estimate-terms-and-conditions');
             CKEDITOR.replace('estimate-message-to-customer');
             CKEDITOR.replace('estimate-instructions');
-
+            
             $(modal_element).modal('show');
             $(document).off('shown', modal_element);
         });

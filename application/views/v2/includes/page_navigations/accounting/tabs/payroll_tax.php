@@ -52,7 +52,7 @@
         <li >
             <a class="nsm-page-link" href="<?php echo base_url(); ?>accounting/chart-of-accounts">
                 <i class='bx bx-fw bx-calculator'></i>
-                <span>Accouting</span>
+                <span>Accounting</span>
             </a>
         </li>
         <!-- Do not remove the last li -->

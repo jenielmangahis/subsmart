@@ -121,7 +121,7 @@ class Customers extends MY_Controller {
     }
 
     public function index()
-    {        
+    {     
         add_footer_js(array(
             "assets/js/customer/lib/bday-picker.js",
             "assets/js/v2/printThis.js",
@@ -286,10 +286,24 @@ class Customers extends MY_Controller {
             'table' => 'acs_import_fields',
             'select' => '*',
         );
+
+        $customerGroups = $this->customer_ad_model->getAllSettingsCustomerStatusByCompanyId(logged('company_id'));
+        $statusCounts = array();
+        foreach($customerGroups as $g){
+            $statusCounts[$g->name] = 0;
+        }
+
+        $customers = $this->AcsProfile_model->getAllByCompanyId(logged('company_id'));
+        foreach ($customers as $c) {
+            $status = trim($c->status);
+            if (array_key_exists($status, $statusCounts)) {
+                $statusCounts[$status]++;
+            }
+        }
+
         $this->page_data['importFieldsList'] = $this->general->get_data_with_param($getImportFields);
-
         $this->page_data['import_settings'] = $importSettings;
-
+        $this->page_data['statusCounts'] = $statusCounts;
         $this->load->view('v2/pages/accounting/sales/customers/list', $this->page_data);
     }
 
@@ -304,11 +318,12 @@ class Customers extends MY_Controller {
             null,  
             array(
                 'company_id' => $company_id,
+                'status !=' => 'Inactive'
             ),
         );
 
         // Define the where condition
-        $whereCondition = array('company_id' => $company_id);
+        $whereCondition = array('company_id' => $company_id);        
         $getData = $this->serverside_table->getRows($this->input->post(), $whereCondition);
 
         $data = $row = array();
@@ -3117,6 +3132,7 @@ class Customers extends MY_Controller {
 
         $fields = array();
         $fieldNames = array();
+
         foreach($fieldCompanyValues as $field) {
             foreach($importFieldsList as $importSetting) {
                 if($field == $importSetting->id) {
@@ -3135,7 +3151,8 @@ class Customers extends MY_Controller {
             foreach ($items as $item) {
                 $csvData = array();
                 foreach($fieldNames as $fieldName){
-                    array_push($csvData, $item->fieldName);
+                    $field_value = $item->{$fieldName} != '' ? $item->{$fieldName} : 'Not Specified';
+                    array_push($csvData, $field_value);
                 }
                 fputcsv($f, $csvData, $delimiter);
             }

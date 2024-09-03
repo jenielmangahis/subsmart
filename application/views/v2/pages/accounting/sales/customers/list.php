@@ -285,9 +285,9 @@
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/sales'); ?>
     </div>
-    <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/accounting/subtabs/customers_subtabs'); ?>
-    </div>
+    <!-- <div class="col-12 mb-3">
+        <?php //include viewPath('v2/includes/page_navigations/accounting/subtabs/customers_subtabs'); ?>
+    </div> -->
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
@@ -300,81 +300,38 @@
                     </div>
                 </div>
                 <div class="row g-3 mb-3">
-                    <div class="col-12 col-md-4">
-                        <div class="row">
-                            <div class="col-12 col-md-6">
-                                <div class="nsm-counter primary h-100 mb-2 <?=$transaction === 'estimates' ? 'selected' : ''?>" id="estimates">
-                                    <div class="row h-100">
-                                        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
-                                            <i class='bx bx-receipt'></i>
-                                        </div>
-                                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                            <h2 id="total_this_year"><?=count($openEstimates)?></h2>
-                                            <span>ESTIMATES</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <div class="nsm-counter secondary h-100 mb-2 <?=$transaction === 'unbilled-activity' ? 'selected' : ''?>" id="unbilled-activity">
-                                    <div class="row h-100">
-                                        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
-                                            <i class='bx bx-receipt'></i>
-                                        </div>
-                                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                            <h2 id="total_this_year"><?=count($unbilledActivities)?></h2>
-                                            <span>UNBILLED ACTIVITY</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <div class="row">
-                            <div class="col-12 col-md-6">
-                                <div class="nsm-counter error h-100 mb-2 <?=$transaction === 'overdue-invoices' ? 'selected' : ''?><?=$transaction === 'open-invoices' ? 'co-selected' : ''?>" id="overdue-invoices">
-                                    <div class="row h-100">
-                                        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
-                                            <i class='bx bx-receipt'></i>
-                                        </div>
-                                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                            <h2 id="total_this_year"><?=count($overdueInvoices)?></h2>
-                                            <span>OVERDUE</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <div class="nsm-counter h-100 mb-2 <?=$transaction === 'open-invoices' ? 'selected' : ''?>" id="open-invoices">
-                                    <div class="row h-100">
-                                        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
-                                            <i class='bx bx-receipt'></i>
-                                        </div>
-                                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                                            <h2 id="total_this_year"><?=count($openInvoices)?></h2>
-                                            <span>OPEN INVOICES</span>
-                                        </div>
+                    <div class="row g-3 mb-3">
+                        <?php 
+                        $colorClasses = ['primary', 'success', 'error', 'secondary'];
+                        $index = 0;
+                        foreach($statusCounts as $status => $count){?>
+                        <div class="col-6 col-md-3 col-lg-2">
+                            <div class="nsm-counter <?php echo $colorClasses[$index % 4]; ?> h-100 mb-2 " id="estimates">
+                                <div class="row h-100 w-auto">
+                                    
+                                    <div class=" w-100 col-md-8 text-start d-flex align-items-center  justify-content-between">
+                                    <span><i class="bx bx-receipt"></i> <?php 
+                                    if($status == 'Design Team/Engineering Stamps')
+                                    {
+                                    echo 'Design/Eng Stamps';
+                                    }
+                                    elseif($status == 'Loan Documents to be Executed')
+                                    {
+                                        echo 'Loan Docs to be Executed';
+                                    }else{
+                                    echo $status; 
+                                    }
+                                    ?></span>
+                                    <h2 id="total_this_year"><?php echo $count ?></h2>
+                                    
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-md-4">
-                        <div class="nsm-counter success h-100 mb-2 <?=$transaction === 'payments' ? 'selected' : ''?>" id="payments">
-                            <div class="row h-100">
-                                <div class="col-12 col-md-2 d-flex justify-content-center align-items-center">
-                                    <i class='bx bx-receipt'></i>
-                                </div>
-                                <div class="col-12 col-md-10 text-center text-md-start d-flex flex-column justify-content-center">
-                                    <h2 id="total_this_year"><?=count($payments)?></h2>
-                                    <span>PAID LAST 30 DAYS</span>
-                                </div>
-                            </div>
-                        </div>
+                        <?php $index++;}; ?>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-5">
                     <div class="col-12 col-md-4 grid-mb">
                         <form action="<?php echo base_url('accounting/customers') ?>" method="get">
                             <div class="nsm-field-group search">
@@ -470,110 +427,7 @@
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
-                    <tbody>
-                        <form id="accountingCustomerTblFrm" class="accountingCustomerTblFrm">
-                            <!-- <?php if(count($customers) > 0) : ?>
-                            <?php foreach($customers as $customer) : ?>
-                            <tr>
-                                <td>
-                                    <div class="table-row-icon table-checkbox">
-                                        <input class="form-check-input select-one table-select check-input-customers" id="check-input-customers" name="customer_prof_ids[]" type="checkbox" value="<?=$customer->prof_id?>">
-                                    </div>
-                                </td>
-                                <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('accounting/customers/view/' . $customer->prof_id) ?>'"><?=$customer->last_name.', '.$customer->first_name?></td>
-                                <td>
-                                    <?php
-                                        $address = '';
-                                        $address .= $customer->mail_add !== null ? $customer->mail_add : "";
-                                        $address .= $customer->city !== null ? '<br />' . $customer->city : "";
-                                        $address .= $customer->state !== null ? ', ' . $customer->state : "";
-                                        $address .= $customer->zip_code !== null ? ' ' . $customer->zip_code : "";
-                                        echo !empty($address) ? $address : 'Not Specified';
-                                    ?>
-                                </td>
-                                <td>
-                                    <?php 
-                                        if(!empty($customer->phone_h)) {
-                                            if($customer->phone_h != "") {
-                                                if (ctype_space($customer->phone_h)) {
-                                                    echo 'Not Specified'; 
-                                                } else {
-                                                    echo formatPhoneNumber($customer->phone_h);
-                                                }
-                                            } else {
-                                                echo 'Not Specified'; 
-                                            }
-                                        } else {
-                                            echo 'Not Specified'; 
-                                        }
-                                        //!empty($customer->phone_h) ? formatPhoneNumber($customer->phone_h) : 'Not Specified'; 
-                                    ?>
-                                </td>
-                                <td><?= !empty($customer->email) ? $customer->email : 'Not Specified'; ?></td>
-                                <td>
-                                    <?php
-                                        if(!empty($customer->customer_type)) {
-                                            if($customer->customer_type == 'Business') {
-                                                echo 'Commercial';
-                                            } else {
-                                                echo $customer->customer_type;
-                                            }
-                                        } else {
-                                            echo 'Not Specified'; 
-                                        }
-                                        //!empty($customer->customer_type) ? $customer->customer_type : 'Not Specified'; 
-                                    ?>
-                                </td>
-                                <td>0</td>
-                                <td>
-                                    <div class="dropdown table-management">
-                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                            <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li>
-                                                <a class="dropdown-item receive-payment" href="#">Receive payment</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item send-reminder" href="#">Send reminder</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item create-statement" href="#">Create statement</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item create-invoice" href="#">Create invoice</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item create-sales-receipt" href="#">Create sales receipt</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item create-standard-estimate" href="#">Create standard estimate</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item create-options-estimate" href="#">Create options estimate</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item create-bundle-estimate" href="#">Create bundle estimate</a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item send-payment-link" href="#">Send payment link</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                            <?php else : ?>
-                            <tr>
-                                <td colspan="19">
-                                    <div class="nsm-empty">
-                                        <span>No results found.</span>
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php endif; ?> -->
-                        </form>
-                    </tbody>
+                    <tbody></tbody>
                 </table>
             </div>
         </div>

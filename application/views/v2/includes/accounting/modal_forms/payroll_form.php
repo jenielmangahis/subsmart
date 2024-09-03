@@ -1,3 +1,8 @@
+<style>
+.nsm-table > tfoot td {
+    padding: 0.8rem 0.5rem !important;
+}
+</style>
 <div class="row">
     <div class="col-12 col-md-2">
         <label for="payFrom">Pay from</label>
