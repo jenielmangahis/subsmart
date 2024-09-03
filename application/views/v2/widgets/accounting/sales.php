@@ -54,27 +54,11 @@ if (!is_null($dynamic_load) && $dynamic_load == true) :
 endif;
 ?>
 <script>
-$(function(){
-    var sales      = $('#sales_chart');
-    var salesChart = new Chart(sales, {
-        type: 'line',        
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',                    
-                },
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    suggestedMax: 10
-                },
-            },
-            aspectRatio: 1.5,
-        },
-    });
+$(document).ready(function(){
+    initializeSalesChart();
+});
 
+function initializeSalesChart(){
     $(".widget-sales-datepicker").datepicker( {
         format: "mm/yyyy",
         viewMode: "months", 
@@ -139,45 +123,70 @@ $(function(){
     });
 
     loadSalesChart();
-    function loadSalesChart(){    
+}
 
-        var filter_date_from = $('#widget-sales-filter-from').val();
-        var filter_date_to   = $('#widget-sales-filter-to').val();
+function loadSalesChart(){    
+    var chartInstance = Chart.getChart("sales_chart");  
+    if (chartInstance) {
+        chartInstance.destroy();
+    } 
 
-        $.ajax({
-            url: base_url + 'widgets/_load_sales_chart',
-            method: 'post',
-            data: {filter_date_from:filter_date_from,filter_date_to:filter_date_to},
-            dataType: 'json',
-            success: function (data) {                
-                const sales_labels = data.chart_labels;
-                const sales_data = {
-                    labels: sales_labels,
-                    datasets: [{
-                            label: 'Sales',
-                            backgroundColor: 'rgb(106, 74, 134)',
-                            borderColor: 'rgb(106, 74, 134)',
-                            data: data.chart_data_sales,
-                        },
-                        {
-                            label: 'Jobs',
-                            backgroundColor: 'rgb(51, 153, 255)',
-                            borderColor: 'rgb(51, 153, 255)',
-                            data: data.chart_data_jobs,
-                        },
-                        {
-                            label: 'Services',
-                            backgroundColor: 'rgb(255, 102, 0)',
-                            borderColor: 'rgb(255, 102, 0)',
-                            data: data.chart_data_services,
-                        }
-                    ]
-                };
+    var sales      = $('#sales_chart');
+    var salesChart = new Chart(sales, {
+        type: 'line',        
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',                    
+                },
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    suggestedMax: 10
+                },
+            },
+            aspectRatio: 1.5,
+        },
+    });
+    
+    var filter_date_from = $('#widget-sales-filter-from').val();
+    var filter_date_to   = $('#widget-sales-filter-to').val();
 
-                salesChart.data = sales_data;
-                salesChart.update();
-            }
-        });
-    }
-});
+    $.ajax({
+        url: base_url + 'widgets/_load_sales_chart',
+        method: 'post',
+        data: {filter_date_from:filter_date_from,filter_date_to:filter_date_to},
+        dataType: 'json',
+        success: function (data) {                
+            const sales_labels = data.chart_labels;
+            const sales_data = {
+                labels: sales_labels,
+                datasets: [{
+                        label: 'Sales',
+                        backgroundColor: 'rgb(106, 74, 134)',
+                        borderColor: 'rgb(106, 74, 134)',
+                        data: data.chart_data_sales,
+                    },
+                    {
+                        label: 'Jobs',
+                        backgroundColor: 'rgb(51, 153, 255)',
+                        borderColor: 'rgb(51, 153, 255)',
+                        data: data.chart_data_jobs,
+                    },
+                    {
+                        label: 'Services',
+                        backgroundColor: 'rgb(255, 102, 0)',
+                        borderColor: 'rgb(255, 102, 0)',
+                        data: data.chart_data_services,
+                    }
+                ]
+            };
+
+            salesChart.data = sales_data;
+            salesChart.update();
+        }
+    });
+}
 </script>
