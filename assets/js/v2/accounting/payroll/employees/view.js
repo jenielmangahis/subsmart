@@ -475,6 +475,12 @@ $(".contribution_calculated_as2").change(function () {
 
 });
 
+$(".update_calculated_contribution_amount").change(function () {
+    var val = $(this).val();
+    $('.add_calculated_contribution_amount').val(val)
+
+});
+
 function handleHideResetFields() {
     $(".edit-deduction-contribution-type-section").hide();
     $(".deduction-type-section").hide();
