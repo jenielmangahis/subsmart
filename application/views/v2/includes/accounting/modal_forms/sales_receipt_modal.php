@@ -1,3 +1,28 @@
+<style>
+
+.autocomplete-left{
+    display: inline-block;
+    width: 65px;    
+}
+.autocomplete-right{
+    display: inline-block;
+    width: 75s%;
+    vertical-align: top;
+}
+.autocomplete-img {
+    height: 50px;
+    width: 50px;
+}
+#salesReceiptModal .nsm-table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
+#salesReceiptModal .modal-body{
+    overflow-x:hidden;
+}
+
+</style>
+
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
 <?php if(!isset($receipt)) : ?>
@@ -101,7 +126,7 @@
                                 <?php endif; ?>
                                 <div class="col-12 col-md-2">
                                     <label for="billing-address">Billing address</label>
-                                    <textarea name="billing_address" id="billing-address" rows="4" class="form-control nsm-field mb-2"><?=isset($receipt) ? str_replace("<br />", "", $receipt->billing_address) : ''?></textarea>
+                                    <textarea name="billing_address" id="billing-address" rows="10" class="form-control nsm-field mb-2"><?=isset($receipt) ? str_replace("<br />", "", $receipt->billing_address) : ''?></textarea>
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="sales-receipt-date">Sales Receipt date</label>
@@ -112,6 +137,33 @@
                                     
                                     <label for="purchase-order-no">P.O. Number</label>
                                     <input type="text" class="form-control nsm-field mb-2" name="purchase_order_no" id="purchase-order-no" value="<?=isset($receipt) ? $receipt->po_number : ''?>">
+
+                                    <label for="payment_method">Payment method</label>
+                                    <select name="payment_method" id="payment_method" class="form-control nsm-field">
+                                        <?php if(isset($receipt)) : ?>
+                                            <option value="<?=$receipt->payment_method?>"><?=$this->accounting_payment_methods_model->getById($receipt->payment_method)->name?></option>
+                                        <?php endif;?>
+                                    </select>
+
+                                    <div id="label" style="margin-top: 7px;">
+                                        <label for="tags">Tags</label>
+                                        <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
+                                    </div>
+                                    <select name="tags[]" id="tags" class="form-control" multiple="multiple">
+                                        <?php if(isset($tags) && count($tags) > 0) : ?>
+                                            <?php foreach($tags as $tag) : ?>
+                                                <?php 
+                                                    $name = $tag->name;
+                                                    if($tag->group_tag_id !== null) {
+                                                        $group = $this->tags_model->getGroupById($tag->group_tag_id);
+                                                        $name = $group->name.': '.$tag->name;
+                                                    }
+                                                ?>
+                                                <option value="<?=$tag->id?>" selected><?=$name?></option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>                                    
+
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="sales-rep">Sales Representative</label>
@@ -129,9 +181,27 @@
                                                 <option <?= $default_user == $employee->id ? 'selected' : '';  ?> value="<?= $employee->id; ?>"><?= $employee->FName.', '.$employee->LName; ?></option>
                                             <?php endforeach; ?>
                                         <?php endif; ?>
-                                    </select>                                
-                                    <label for="location-of-sale">Location of sale</label>
+                                    </select>                
+
+                                    <label for="location-of-sale" style="margin-top: 11px;">Location of sale</label>
                                     <input type="text" name="location_of_sale" id="location-of-sale" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->location_of_sale : ''?>">                                    
+                                
+                                    <label for="ref_no">Reference no.</label>
+                                    <input type="number" name="ref_no" id="ref_no" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->reference_no : ''?>">                                                
+                                
+                                    <label for="deposit_to_account">Deposit to</label>
+                                    <select name="deposit_to_account" id="deposit_to_account" class="form-control nsm-field" required>
+                                        <?php if(isset($receipt)) : ?>
+                                            <option value="<?=$receipt->deposit_to_account?>"><?=$this->chart_of_accounts_model->getName($receipt->deposit_to_account)?></option>
+                                        <?php endif; ?>
+                                    </select>                                
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <label for="message_sales_receipt">Message displayed on sales receipt</label>
+                                    <textarea name="message_sales_receipt" id="message_sales_receipt" rows="4" class="form-control nsm-field mb-2"><?=isset($receipt) ? str_replace("<br />", "", $receipt->message_sales_receipt) : ''?></textarea>
+                                    
+                                    <label for="message_statement">Message displayed on statement</label>
+                                    <textarea name="message_statement" id="message_statement" rows="4" class="form-control nsm-field mb-2"><?=isset($receipt) ? str_replace("<br />", "", $receipt->message_on_statement) : ''?></textarea>                                
                                 </div>
                                 <!-- <div class="col-12 col-md-2 offset-md-4">
                                     <label for="location-of-sale">Location of sale</label>
@@ -140,52 +210,21 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-12 col-md-6 grid-mb">
-                                    <div id="label">
-                                        <label for="tags">Tags</label>
-                                        <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
-                                    </div>
-                                    <select name="tags[]" id="tags" class="form-control" multiple="multiple">
-                                        <?php if(isset($tags) && count($tags) > 0) : ?>
-                                            <?php foreach($tags as $tag) : ?>
-                                                <?php 
-                                                    $name = $tag->name;
-                                                    if($tag->group_tag_id !== null) {
-                                                        $group = $this->tags_model->getGroupById($tag->group_tag_id);
-                                                        $name = $group->name.': '.$tag->name;
-                                                    }
-                                                ?>
-                                                <option value="<?=$tag->id?>" selected><?=$name?></option>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
-                                    </select>
+                                <div class="col-12 col-md-2">
+
                                 </div>
+                                <div class="col-12 col-md-2">
+
+                                </div>
+                                <div class="col-12 col-md-2">
+
+                                </div>
+                                <div class="col-12 col-md-4">
+
+                                </div>                                
                             </div>
 
-                            <div class="row">
-                                <div class="col-12 col-md-2">
-                                    <label for="payment_method">Payment method</label>
-                                    <select name="payment_method" id="payment_method" class="form-control nsm-field">
-                                        <?php if(isset($receipt)) : ?>
-                                            <option value="<?=$receipt->payment_method?>"><?=$this->accounting_payment_methods_model->getById($receipt->payment_method)->name?></option>
-                                        <?php endif;?>
-                                    </select>
-                                </div>
-                                <div class="col-12 col-md-2">
-                                    <label for="ref_no">Reference no.</label>
-                                    <input type="number" name="ref_no" id="ref_no" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->reference_no : ''?>">
-                                </div>
-                                <div class="col-12 col-md-2">
-                                    <label for="deposit_to_account">Deposit to</label>
-                                    <select name="deposit_to_account" id="deposit_to_account" class="form-control nsm-field" required>
-                                        <?php if(isset($receipt)) : ?>
-                                            <option value="<?=$receipt->deposit_to_account?>"><?=$this->chart_of_accounts_model->getName($receipt->deposit_to_account)?></option>
-                                        <?php endif; ?>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="row">
+                            <div class="row mt-5">
                                 <div class="col-12">
                                     <table class="nsm-table" id="item-table">
                                         <thead>
@@ -298,7 +337,7 @@
                                         <tfoot>
                                             <tr>
                                                 <td colspan="10">
-                                                    <div class="nsm-page-buttons page-buttons-container">
+                                                    <div class="nsm-page-buttons page-buttons-container" style="margin-top: 15px;">
                                                         <button type="button" class="nsm-button" id="add_item">
                                                             Add items
                                                         </button>
@@ -315,19 +354,14 @@
                                     </table>
                                 </div>
                             </div>
-
+                            <br /><br />
                             <div class="row">
                                 <div class="col-12 col-md-6">
                                     <div class="row">
                                         <div class="col-12 col-md-6">
-                                            <label for="message_sales_receipt">Message displayed on sales receipt</label>
-                                            <textarea name="message_sales_receipt" id="message_sales_receipt" class="form-control nsm-field mb-2"><?=isset($receipt) ? str_replace("<br />", "", $receipt->message_sales_receipt) : ''?></textarea>
-
                                            
                                         </div>
                                         <div class="col-12 col-md-6">
-                                        <label for="message_statement">Message displayed on statement</label>
-                                            <textarea name="message_statement" id="message_statement" class="form-control nsm-field mb-2"><?=isset($receipt) ? str_replace("<br />", "", $receipt->message_on_statement) : ''?></textarea>
                                         </div>
                                     </div>
                                     <div class="row">
