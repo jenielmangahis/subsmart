@@ -3,7 +3,7 @@
 <style>
 
 .emp-payscale-emp-details {
-    font-size: 20px !important;
+    font-size: 17px !important;
 }
 
 </style>
@@ -25,7 +25,7 @@
                 
                 <div class="row grid-mb">
                     <div class="col-12">
-                        <div class="nsm-card primary" style="height: 50% !important;">
+                        <div class="nsm-card primary" style="height: 100% !important;">
                             <div class="nsm-card-content">
                                 <div class="row">
                                     <div class="col-2">
@@ -39,116 +39,150 @@
                                             <img src="<?php echo $profil_image; ?>" alt="User Profile">
                                         </div>
                                     </div>
-                                    <div class="col-10">
+                                    <div class="col-4">
                                         <div class="row g-1">
-                                            <div class="col-12 col-md-2">
+                                            <div class="col-12 col-md-4">
                                                 <label class="content-subtitle emp-payscale-emp-details fw-bold">Employee Name:</label>
                                             </div>
-                                            <div class="col-12 col-md-10">
+                                            <div class="col-12 col-md-8">
                                                 <label class="content-subtitle emp-payscale-emp-details"><?php echo $employee->FName . ' '. $employee->LName; ?></label>
                                             </div>
 
-                                            <div class="col-12 col-md-2">
+                                            <div class="col-12 col-md-4">
                                                 <label class="content-subtitle emp-payscale-emp-details fw-bold">Role:</label>
                                             </div>
-                                            <div class="col-12 col-md-10">
+                                            <div class="col-12 col-md-8">
                                                 <label class="content-subtitle emp-payscale-emp-details"><?php echo $employee->title; ?></label>
                                             </div>
 
-                                            <div class="col-12 col-md-2">
+                                            <div class="col-12 col-md-4">
                                                 <label class="content-subtitle emp-payscale-emp-details fw-bold">Start Date:</label>
                                             </div>
-                                            <div class="col-12 col-md-10">
+                                            <div class="col-12 col-md-8">
                                                 <?php $date_hired = $employee->date_hired == '0000-00-00' ? '-' : $employee->date_hired ?>
                                                 <label class="content-subtitle emp-payscale-emp-details"><?php echo $date_hired; ?></label>
                                             </div>
 
-                                            <div class="col-12 col-md-2">
+                                            <div class="col-12 col-md-4">
                                                 <label class="content-subtitle emp-payscale-emp-details fw-bold">Location:</label>
                                             </div>
-                                            <div class="col-12 col-md-10">
+                                            <div class="col-12 col-md-8">
                                                 <label class="content-subtitle emp-payscale-emp-details"><?php echo $employee->address .', '. $employee->city .', '. $employee->state .', '. $employee->postal_code; ?></label>
                                             </div>
+
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle emp-payscale-emp-details fw-bold">Email:</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle emp-payscale-emp-details"><?php echo $employee->email != "" ? $employee->email : '-'; ?></label>
+                                            </div>
+
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle emp-payscale-emp-details fw-bold">Phone Number:</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle emp-payscale-emp-details"><?php echo $employee->phone != "" ? $employee->phone : '-'; ?></label>
+                                            </div>
+
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle emp-payscale-emp-details fw-bold">Mobile:</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle emp-payscale-emp-details"><?php echo $employee->mobile != "" ? $employee->mobile : '-'; ?></label>
+                                            </div>
+
+                                            <?php 
+                                                $pay_type = "-";
+                                                if($emp_payscale_details) {
+                                                    $pay_type = isset($emp_payscale_details->pay_type) ? $emp_payscale_details->pay_type : '-';
+                                                }
+                                            ?>
+
+                                            <div class="col-12 col-md-4">
+                                                <label class="content-subtitle emp-payscale-emp-details fw-bold">Pay Type:</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <label class="content-subtitle emp-payscale-emp-details"><?php echo $pay_type; ?></label>
+                                            </div>
                                         </div>                                       
+                                    </div>
+                                    <div class="col-6">
+                                        <table class="nsm-table" id="payscale-view-details-table">
+                                            <tbody>
+                                                <tr style="background-color:#EEEEEE; font-weight:bold;">
+                                                    <td>ROLE</td>
+                                                    <td>EXPERIENCE</td>   
+                                                    <td>SENIORITY</td>    
+                                                    <td>&nbsp;                                     
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <select class="form-control role_name selected-role-name" id="selected-role-name" name="role_name">
+                                                            <!-- <option value="0">+ Add New</option> -->
+                                                            <?php foreach($roles as $role): ?>
+                                                                <?php $selected = $role->id == $employee->role ? 'selected="selected"' : ''; ?>
+                                                                <option value="<?php echo $role->id; ?>" role-amount="<?php echo $role->role_amount; ?>" <?php echo $selected; ?>>
+                                                                    <?php echo $role->title; ?>
+                                                                </option>
+                                                            <?php endforeach; ?>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <select class="form-control expRoleDropdown">
+                                                            <option value="X 1,00">Tier A</option>
+                                                            <option value="X 1,10">Tier B</option>
+                                                            <option value="X 1,20">Tier C</option>
+                                                            <option value="X 1,30">Tier D</option>
+                                                            <option value="X 1,40">Tier E</option>
+                                                            <option value="X 1,50">Tier F</option>
+                                                        </select>
+                                                    </td>   
+                                                    <td>
+                                                        <select class="form-control seniorityDropdown">
+                                                            <option value="1000">Tier A</option>
+                                                            <option value="2000">Tier B</option>
+                                                            <option value="3000">Tier C</option>
+                                                            <option value="4000">Tier D</option>
+                                                            <option value="5000">Tier E</option>
+                                                            <option value="6000">Tier F</option>
+                                                        </select>
+                                                    </td>                                         
+                                                </tr>
+                                                <tr style="background-color:#EEEEEE; font-weight:bold;">
+                                                    <td>BASIC SALARY</td>
+                                                    <td>COEFF.</td>
+                                                    <td>SENIORITY AMOUNT</td>
+                                                    <td>GROSS SALARY</td>
+                                                </tr>                                                  
+                                                <tr>    
+                                                    <td>
+                                                        <input type=text name='role_value' value="" id="role-value" class="form-control role-value" disabled />
+                                                        <!-- <span id="rolevalue"></span> -->
+                                                    </td>
+                                                    <td style="width:180px;">
+                                                        <input type="text"  class="form-control expRolevalue" value="X 1,00" readonly>
+                                                        <!-- <select class="form-control" readonly>
+                                                            <option>X 1,00</option>
+                                                            <option>X 1,10</option>
+                                                            <option>X 1,20</option>
+                                                            <option>X 1,30</option>
+                                                            <option>X 1,40</option>
+                                                            <option>X 1,50</option>
+                                                        </select> -->
+                                                    </td>
+                                                    <td style="width:180px;"><input type="text"  class="form-control seniorityamount" value="1000" readonly></td>
+                                                    <td><span class="gross_salary">0.00</span></td>
+                                                </tr>                                                
+                                            </tbody>
+                                        </table>      
+                                        <div style="margin-top: 30px; text-align: right;">
+                                            <a href="javascript:void(0)" id="btn-save-emp-payscale" class="nsm-button primary w-100 btn-save-emp-payscale">Save Changes</a>
+                                        </div>                                            
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <br />
-                        <div class="nsm-card primary">
-                            <div class="nsm-card-content">
-                                <table class="nsm-table" id="payscale-view-details-table">
-                                    <thead style="background-color:#EEEEEE; font-weight:bold;">
-                                        <tr>
-                                            <td data-name="Role">ROLE</td>
-                                            <td data-name="Experience">EXPERIENCE</td>
-                                            <td data-name="Seniority">SENIORITY</td>
-                                            <td data-name="Basic Salary">BASIC SALARY</td>
-                                            <td data-name="Coeff.">COEFF.</td>
-                                            <td data-name="Amount">AMOUNT</td>
-                                            <td data-name="Gross Salary">GROSS SALARY</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <select class="form-control role_name selected-role-name" id="selected-role-name" name="role_name">
-                                                    <!-- <option value="<?php //echo $employee->id; ?>"><?php //echo $employee->title; ?></option> -->
-                                                    <!-- <option value="0">+ Add New</option> -->
-                                                    <?php foreach($roles as $role): ?>
-                                                        <?php $selected = $role->id == $employee->role ? 'selected="selected"' : ''; ?>
-                                                        <option value="<?php echo $role->id; ?>" role-amount="<?php echo $role->role_amount; ?>" <?php echo $selected; ?>>
-                                                            <?php echo $role->title; ?>
-                                                        </option>
-                                                    <?php endforeach; ?>
-                                                </select>
-                                            </td>
-                                            <td>
-                                                <select class="form-control expRoleDropdown">
-                                                    <option value="X 1,00">Tier A</option>
-                                                    <option value="X 1,10">Tier B</option>
-                                                    <option value="X 1,20">Tier C</option>
-                                                    <option value="X 1,30">Tier D</option>
-                                                    <option value="X 1,40">Tier E</option>
-                                                    <option value="X 1,50">Tier F</option>
-                                                </select>
-                                            </td>   
-                                            <td>
-                                                <select class="form-control seniorityDropdown">
-                                                    <option value="1000">Tier A</option>
-                                                    <option value="2000">Tier B</option>
-                                                    <option value="3000">Tier C</option>
-                                                    <option value="4000">Tier D</option>
-                                                    <option value="5000">Tier E</option>
-                                                    <option value="6000">Tier F</option>
-                                                </select>
-                                            </td>                                         
-                                            <td>
-                                                <input type=text name='role_value' value="" id="role-value" class="role-value" disabled />
-                                                <!-- <span id="rolevalue"></span> -->
-                                            </td>
-                                            <td style="width:180px;">
-                                                <input type="text"  class="form-control expRolevalue" value="X 1,00" readonly>
-                                                <!-- <select class="form-control" readonly>
-                                                    <option>X 1,00</option>
-                                                    <option>X 1,10</option>
-                                                    <option>X 1,20</option>
-                                                    <option>X 1,30</option>
-                                                    <option>X 1,40</option>
-                                                    <option>X 1,50</option>
-                                                </select> -->
-                                            </td>
-                                            
-                                            <td style="width:180px;"><input type="text"  class="form-control seniorityamount" value="1000" readonly></td>
-                                            <td><span class="gross_salary">0.00</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>      
-                                <div style="margin-top: 30px; text-align: right;">
-                                    <a href="javascript:void(0)" id="btn-save-emp-payscale" class="nsm-button primary w-100 btn-save-emp-payscale">Save Changes</a>
-                                </div>                                                     
-                            </div>
-                        </div>
                     </div>
                 </div>        
             </div>

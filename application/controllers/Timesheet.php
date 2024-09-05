@@ -571,37 +571,92 @@ class Timesheet extends MY_Controller
                 if ($attn->user_id == $user->id && $attn->shift_duration > 0) {
                     for ($x = 0; $x < count($week_check); $x++) {
                         if ($week_check[$x] == date('Y-m-d', strtotime($attn->date_created))) {
-                            $duration = 8 - $attn->shift_duration;
+                            $base_duration = 8.0; 
+                            $shift_duration = $attn->shift_duration;
+
+                            if ($shift_duration > 7.60 && $shift_duration < $base_duration) {
+                                $shift_duration = 7.60; 
+                            }
+                            $duration = $base_duration- $attn->shift_duration;
                             $shift_duration += $duration;
                         }
                     }
                     switch (date('Y-m-d', strtotime($attn->date_created))) {
                         case ($week_check[0]):
-                            $time_duration = $attn->shift_duration == 0.0 ? 8 : 8 - $attn->shift_duration;
+                            $base_duration = 8.0; 
+                            $shift_durations = $attn->shift_duration;
+
+                            if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
+                                $shift_durations = 7.60; 
+                            }
+
+                            $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
                             $mon_duration = $time_duration;
                             break;
                         case ($week_check[1]):
-                            $time_duration = $attn->shift_duration == 0.0 ? 8 : 8 - $attn->shift_duration;
+                            $base_duration = 8.0;
+                            $shift_durations = $attn->shift_duration;
+
+                            if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
+                                $shift_durations = 7.60; 
+                            }
+
+                            $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
                             $tue_duration = $time_duration;
                             break;
                         case ($week_check[2]):
-                            $time_duration = $attn->shift_duration == 0.0 ? 8 : 8 - $attn->shift_duration;
+                            $base_duration = 8.0; 
+                            $shift_durations = $attn->shift_duration;
+
+                            if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
+                                $shift_durations = 7.60; 
+                            }
+
+                            $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
                             $wed_duration = $time_duration;
                             break;
                         case ($week_check[3]):
-                            $time_duration = $attn->shift_duration == 0.0 ? 8 : 8 - $attn->shift_duration;
+                            $base_duration = 8.0; 
+                            $shift_durations = $attn->shift_duration;
+
+                            if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
+                                $shift_durations = 7.60; 
+                            }
+
+                            $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
                             $thu_duration = $time_duration;
                             break;
                         case ($week_check[4]):
-                            $time_duration = $attn->shift_duration == 0.0 ? 8 : 8 - $attn->shift_duration;
+                            $base_duration = 8.0; 
+                            $shift_durations = $attn->shift_duration;
+
+                            if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
+                                $shift_durations = 7.60; 
+                            }
+
+                            $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
                             $fri_duration = $time_duration;
                             break;
                         case ($week_check[5]):
-                            $time_duration = $attn->shift_duration == 0.0 ? 8 : 8 - $attn->shift_duration;
+                            $base_duration = 8.0; 
+                            $shift_durations = $attn->shift_duration;
+
+                            if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
+                                $shift_durations = 7.60; 
+                            }
+
+                            $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
                             $sat_duration = $time_duration;
                             break;
                         case ($week_check[6]):
-                            $time_duration = $attn->shift_duration == 0.0 ? 8 : 8 - $attn->shift_duration;
+                            $base_duration = 8.0; // 8 hours
+                            $shift_durations = $attn->shift_duration;
+
+                            if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
+                                $shift_durations = 7.60; 
+                            }
+
+                            $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
                             $sun_duration = $time_duration;
                             break;
                     }
