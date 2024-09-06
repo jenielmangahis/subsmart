@@ -115,7 +115,7 @@ class Employees extends MY_Controller
     }
 
     public function index()
-    {
+    {        
         $this->hasAccessModule(77);
         add_footer_js(array(
             "assets/js/v2/accounting/payroll/employees/list.js"

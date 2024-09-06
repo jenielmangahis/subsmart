@@ -121,7 +121,7 @@ class Customers extends MY_Controller {
     }
 
     public function index()
-    {     
+    {   
         add_footer_js(array(
             "assets/js/customer/lib/bday-picker.js",
             "assets/js/v2/printThis.js",
