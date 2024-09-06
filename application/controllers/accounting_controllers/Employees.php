@@ -14,6 +14,7 @@ class Employees extends MY_Controller
         $this->load->model('accounting_invoices_model');
 
         $this->load->model('vendors_model');
+        $this->load->model('Deductions_and_contribution_model','deduction_contribution');
         $this->load->model('AcsProfile_model');
         $this->load->model('invoice_model');
         $this->load->model('workorder_model');
@@ -115,7 +116,7 @@ class Employees extends MY_Controller
     }
 
     public function index()
-    {
+    {        
         $this->hasAccessModule(77);
         add_footer_js(array(
             "assets/js/v2/accounting/payroll/employees/list.js"
@@ -188,7 +189,10 @@ class Employees extends MY_Controller
         $this->page_data['nextPayPeriodEnd'] = date('m/d/Y', strtotime("wednesday"));
         $this->page_data['nextPayday'] = date('m/d/Y', strtotime("friday"));
         $this->page_data['pay_schedules'] = $this->users_model->getPaySchedules();
-        $this->page_data['employees'] = $this->get_employees($filters);
+
+    
+        $employees = $this->get_employees($filters);
+        $this->page_data['employees'] = $employees;
         $this->page_data['commission_pays'] = $this->users_model->getPayDetailsByPayType('commission');
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         // $this->load->view('accounting/employees/index', $this->page_data);
@@ -216,6 +220,8 @@ class Employees extends MY_Controller
                 }
 
                 $payRate = '$0.00/hour'; //'Missing';
+             
+
                 $payscale = $this->users_model->get_payscale_by_id($employee->payscale_id);
 
                 if ($payscale->pay_type === 'Hourly') {
@@ -263,6 +269,28 @@ class Employees extends MY_Controller
                     $commission += floatval(str_replace(',', '', $comm->commission_amount));
                 }
 
+              
+              
+              $deductions_contribution = $this->deduction_contribution->getByUser($employee->id);
+                $total_dc = 0;
+                foreach ($deductions_contribution as $dc) {
+                    switch($dc->contribution_calculated_as){
+                        case 'Flat amount':
+                            $total_dc += $dc->calculated_contribution_amount;
+                            break;
+                        case 'Percent of gross pay':
+                            $total_dc += $dc->contribution_annual_maximum * ($dc->calculated_contribution_amount/100);
+                            break;
+                        case 'Per hour worked':
+                            $total_dc += $dc->calculated_contribution_amount;
+                            break;
+                        default:
+                            break;
+                    }
+                  
+                }
+
+
                 if (isset($filters['search']) && $filters['search'] !== "") {
                     if (stripos($employee->LName, $filters['search']) !== false || stripos($employee->FName, $filters['search']) !== false || stripos($employee->email, $filters['search']) !== false) {
                         $data[] = [
@@ -273,7 +301,8 @@ class Employees extends MY_Controller
                             'status' => $empStatus,
                             'email_address' => $employee->email,
                             'phone_number' => $employee->phone,
-                            'commission' => $commission
+                            'commission' => $commission,
+                            'deductions_contribution' => $total_dc,
                         ];
                     }
                 } else {
@@ -285,7 +314,8 @@ class Employees extends MY_Controller
                         'status' => $empStatus,
                         'email_address' => $employee->email,
                         'phone_number' => $employee->phone,
-                        'commission' => $commission
+                        'commission' => $commission,
+                        'deductions_contribution' => $total_dc,
                     ];
                 }
             }

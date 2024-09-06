@@ -13,6 +13,13 @@
     height: 50px;
     width: 50px;
 }
+#refundReceiptModal .nsm-table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
+#refundReceiptModal .modal-body{
+    overflow-x:hidden;
+}
 
 </style>
 <!-- Modal for bank deposit-->
@@ -112,34 +119,10 @@
                                 <?php endif; ?>
                                 <div class="col-12 col-md-2">
                                     <label for="billing-address">Billing address</label>
-                                    <textarea name="billing_address" id="billing-address" class="form-control nsm-field mb-2"><?=isset($receipt) ? str_replace("<br />", "", $receipt->billing_address) : ''?></textarea>
-                                </div>
-                                <div class="col-12 col-md-2">
-                                    <label for="refund-receipt-date">Refund Receipt date</label>
-                                    <div class="nsm-field-group calendar">
-                                        <input type="text" name="refund_receipt_date" id="refund-receipt-date" class="form-control nsm-field mb-2 date" value="<?=isset($receipt) ? date("m/d/Y", strtotime($receipt->refund_receipt_date)) : date("m/d/Y")?>">
-                                    </div>
+                                    <textarea name="billing_address" id="billing-address" class="form-control nsm-field mb-2" style="height:185px;"><?=isset($receipt) ? str_replace("<br />", "", $receipt->billing_address) : ''?></textarea>
 
-                                    <label for="purchase-order-no">P.O. Number</label>
-                                    <input type="text" class="form-control nsm-field mb-2" name="purchase_order_no" id="purchase-order-no" value="<?=isset($receipt) ? $receipt->po_number : ''?>">
-                                </div>
-                                <div class="col-12 col-md-2">
-                                    <label for="sales-rep">Sales Rep</label>
-                                    <!-- <input type="text" name="sales_rep" id="sales-rep" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->sales_rep : ''?>"> -->
-                                    <select id="sales-rep" name="sales_rep" class="form-control" class="form-control nsm-field mb-2"></select>
-                                </div>
-                                <div class="col-12 col-md-2 offset-md-4">
-                                    <label for="location-of-sale">Location of sale</label>
-                                    <input type="text" name="location_of_sale" id="location-of-sale" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->location_of_sale : ''?>">
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-12 col-md-6 grid-mb">
-                                    <div id="label">
-                                        <label for="tags">Tags</label>
-                                        <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
-                                    </div>
+                                    <label for="tags">Tags</label>
+                                    <span class="float-end"><a href="#" class="text-decoration-none mt-2" id="open-tags-modal">Manage tags</a></span>
                                     <select name="tags[]" id="tags" class="form-control" multiple="multiple">
                                         <?php if(isset($tags) && count($tags) > 0) : ?>
                                             <?php foreach($tags as $tag) : ?>
@@ -155,48 +138,69 @@
                                         <?php endif; ?>
                                     </select>
                                 </div>
-                            </div>
-
-                            <div class="row">
                                 <div class="col-12 col-md-2">
-                                    <label for="payment_method">Payment method</label>
+                                    <label for="refund-receipt-date">Refund Receipt date</label>
+                                    <div class="nsm-field-group calendar">
+                                        <input type="text" name="refund_receipt_date" id="refund-receipt-date" class="form-control nsm-field mb-2 date" value="<?=isset($receipt) ? date("m/d/Y", strtotime($receipt->refund_receipt_date)) : date("m/d/Y")?>">
+                                    </div>
+
+                                    <label for="purchase-order-no" class="mt-2">P.O. Number</label>
+                                    <input type="text" class="form-control nsm-field mb-2" name="purchase_order_no" id="purchase-order-no" value="<?=isset($receipt) ? $receipt->po_number : ''?>">
+
+                                    <label for="payment_method" class="mt-2">Payment method</label>
                                     <select name="payment_method" id="payment_method" class="form-control nsm-field">
                                         <?php if(isset($receipt)) : ?>
                                             <option value="<?=$receipt->payment_method?>"><?=$this->accounting_payment_methods_model->getById($receipt->payment_method)->name?></option>
                                         <?php endif;?>
                                     </select>
+                                    
+                                    <?php if(isset($receipt)) { ?>
+                                    <label class="mt-2">Balance</label>
+                                    <?php
+                                        $balance = '$'.number_format(floatval($refundAcc->balance), 2, '.', ',');
+                                        $balance = str_replace('$-', '-$', $balance);
+                                    ?>
+                                    <input type="text" readonly="" disabled="" class="form-control" value="<?= $balance; ?>" />      
+                                    <?php } ?>
+                                    
                                 </div>
                                 <div class="col-12 col-md-2">
-                                    <label for="refund-from-account">Refund From</label>
+                                    <label for="sales-rep" class="mt-2">Sales Rep</label>
+                                    <!-- <input type="text" name="sales_rep" id="sales-rep" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->sales_rep : ''?>"> -->
+                                    <select id="sales-rep" name="sales_rep" class="form-control" class="form-control nsm-field mb-2"></select>
+
+                                    <label for="location-of-sale" class="mt-2">Location of sale</label>
+                                    <input type="text" name="location_of_sale" id="location-of-sale" class="form-control nsm-field mb-2" value="<?=isset($receipt) ? $receipt->location_of_sale : ''?>">
+
+                                    <label for="refund-from-account" class="mt-2">Refund From</label>
                                     <select name="refund_from_account" id="refund-from-account" class="form-control nsm-field" required>
                                         <?php if(isset($receipt)) : ?>
                                             <option value="<?=$receipt->refund_from_account?>"><?=$this->chart_of_accounts_model->getName($receipt->refund_from_account)?></option>
                                         <?php endif; ?>
                                     </select>
+                                    <?php if(isset($receipt)) { ?>
+                                        <label for="check-no" class="mt-2">Check no.</label>
+                                        <input type="text" class="form-control nsm-field mb-2" name="check_no" id="check-no" value="<?=isset($receipt) && $receipt->print_later === "1" ? 'To print' : $receipt->check_no?>" <?=isset($receipt) && $receipt->print_later === "1" ? 'disabled' : ''?>>
+                                        <div class="form-check">
+                                            <input type="checkbox" name="print_later" value="1" class="form-check-input" id="print-later" <?=isset($receipt) && $receipt->print_later === "1" ? 'checked' : ''?>>
+                                            <label class="form-check-label" for="print-later">Print later</label>
+                                        </div>
+                                    <?php } ?>
+                                </div>    
+                                
+                                <div class="col-12 col-md-4">
+                                    <label for="message_refund" class="mt-2">Message displayed on refund receipt</label>
+                                    <textarea name="message_refund" id="message_refund" class="form-control nsm-field mb-2" style="height:100px;"><?=isset($receipt) ? str_replace("<br />", "", $receipt->message_refund_receipt) : ''?></textarea>
+
+                                    <label for="message_statement" class="mt-2">Message displayed on statement</label>
+                                    <textarea name="message_statement" id="message_statement" class="form-control nsm-field mb-2" style="height:100px;"><?=isset($receipt) ? str_replace("<br />", "", $receipt->message_on_statement) : ''?></textarea>
                                 </div>
-                                <?php if(isset($receipt)) : ?>
-                                <div class="col-12 col-md-1">
-                                    <label>Balance</label>
-                                    <h4>
-                                        <?php
-                                        $balance = '$'.number_format(floatval($refundAcc->balance), 2, '.', ',');
-                                        $balance = str_replace('$-', '-$', $balance);
-                                        echo $balance;
-                                        ?>
-                                    </h4>
-                                </div>
-                                <div class="col-12 col-md-2">
-                                    <label for="check-no">Check no.</label>
-                                    <input type="text" class="form-control nsm-field mb-2" name="check_no" id="check-no" value="<?=isset($receipt) && $receipt->print_later === "1" ? 'To print' : $receipt->check_no?>" <?=isset($receipt) && $receipt->print_later === "1" ? 'disabled' : ''?>>
-                                    <div class="form-check">
-                                        <input type="checkbox" name="print_later" value="1" class="form-check-input" id="print-later" <?=isset($receipt) && $receipt->print_later === "1" ? 'checked' : ''?>>
-                                        <label class="form-check-label" for="print-later">Print later</label>
-                                    </div>
-                                </div>
-                                <?php endif; ?>
+                            </div>
+                            <div class="row mt-2">
+                                
                             </div>
 
-                            <div class="row">
+                            <div class="row mt-5">
                                 <div class="col-md-12">
                                     <table class="nsm-table" id="item-table">
                                         <thead>
@@ -327,39 +331,22 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row mt-4">
                                 <div class="col-12 col-md-6">
-                                    <div class="row">
-                                        <div class="col-12 col-md-4">
-                                            <div style="margin-bottom: 12px;">
-                                                <label for="message_refund">Message displayed on refund receipt</label>
-                                                <textarea name="message_refund" id="message_refund" class="form-control nsm-field mb-2"><?=isset($receipt) ? str_replace("<br />", "", $receipt->message_refund_receipt) : ''?></textarea>
-                                            </div>
-                                            <div style="margin-bottom: 15px;">
-                                                <label for="message_statement">Message displayed on statement</label>
-                                                <textarea name="message_statement" id="message_statement" class="form-control nsm-field mb-2"><?=isset($receipt) ? str_replace("<br />", "", $receipt->message_on_statement) : ''?></textarea>
+                                    <div class="attachments">
+                                        <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
+                                        <span>Maximum size: 20MB</span>
+                                        <div id="refund-receipt-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                            <div class="dz-message" style="margin: 20px;border">
+                                                <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                                <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12 col-md-6">
-                                            <div class="attachments">
-                                                <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
-                                                <span>Maximum size: 20MB</span>
-                                                <div id="refund-receipt-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
-                                                    <div class="dz-message" style="margin: 20px;border">
-                                                        <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                                        <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex justify-content-center align-items-center">
-                                                    <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
-                                                </div>
-                                            </div>
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-12 col-md-3 offset-md-3">
                                     <table class="nsm-table float-end text-end">
                                         <tfoot>

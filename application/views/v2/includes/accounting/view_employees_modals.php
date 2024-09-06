@@ -938,7 +938,7 @@
                                     <div class="cold-md-12">
                                         <div class="row">
                                             <div class="col-md-12">
-                                            <div class="company-contribution-section2"  style="display:none" >
+                                            <div class="company-contribution-section"   >
                                                 <div class="col-12 edit-pay-type-container mb-3">
                                                     <h6 class="fw-bold mb-3">Company contribution</h6>
                                                     <label >We'll track your contributions, but it's your responsibility to pay your provider.</label>
@@ -984,35 +984,7 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="col-md-12">
-                                        <div class="row company-contribution-section">
-                                            <div class="col-12 edit-pay-type-container mb-3">
-                                                <h6 class="fw-bold">Company contribution</h6>
-                                                <label for="">We'll track your contributions, but it's your
-                                                    responsibility
-                                                    to
-                                                    pay your provider.</label>
-                                            </div>
-                                            <div class="col-6 edit-pay-type-container mb-3">
-                                                <label>Calculated as *</label>
-                                                <select class="nsm-field form-select update_contribution_calculated_as contribution_calculated_as2 add_contribution_calculated_as"
-                                                    name="contribution_calculated_as" required>
-                                                    <option value="None">None</option>
-                                                    <option value="Flat amount">Flat amount</option>
-                                                    <option value="Percent of gross pay">Percent of gross pay</option>
-                                                    <option value="Per hour worked">Per hour worked</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-6 edit-pay-type-container mb-3">
-                                                <label class="calculated_label2">Amount per paycheck
-                                                    *</label>
-                                                <input class="form-control update_calculated_contribution_amount add_calculated_contribution_amount" name="calculated_contribution_amount"
-                                                    placeholder="$0" type="number" step="any" min="0"
-                                                    disabled>
-                                            </div>
-                                        </div>
-                                    </div>
+                                   
                                     <div class="col-md-12 401_contribution_section" style="display:none">
                                         <div class="row">
                                             <div class="col-12 edit-pay-type-container mb-3">
@@ -1207,7 +1179,7 @@
                                     <div class="cold-md-12">
                                         <div class="row">
                                             <div class="col-md-12">
-                                            <div class="company-contribution-section2"  style="display:none" >
+                                            <div class="company-contribution-section"   >
                                                 <div class="col-12 edit-pay-type-container mb-3">
                                                     <h6 class="fw-bold mb-3">Company contribution</h6>
                                                     <label >We'll track your contributions, but it's your responsibility to pay your provider.</label>
@@ -1253,36 +1225,8 @@
                                             </div>
                                         </div>
                                     </div>
-                                    
 
-                                    <div class="col-md-12">
-                                        <div class="row company-contribution-section">
-                                            <div class="col-12 edit-pay-type-container mb-3">
-                                                <h6 class="fw-bold">Company contribution</h6>
-                                                <label for="">We'll track your contributions, but it's your
-                                                    responsibility
-                                                    to
-                                                    pay your provider.</label>
-                                            </div>
-                                            <div class="col-6 edit-pay-type-container mb-3">
-                                                <label>Calculated as *</label>
-                                                <select class="nsm-field form-select edit-emp-payscale add_contribution_calculated_as contribution_calculated_as2"
-                                                    name="contribution_calculated_as" required>
-                                                    <option value="None">None</option>
-                                                    <option value="Flat amount">Flat amount</option>
-                                                    <option value="Percent of gross pay">Percent of gross pay</option>
-                                                    <option value="Per hour worked">Per hour worked</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-6 edit-pay-type-container mb-3">
-                                                            <label class="calculated_label2">Amount per paycheck
-                                                                *</label>
-                                                            <input class="form-control update_calculated_contribution_amount add_calculated_contribution_amount" name="calculated_contribution_amount"
-                                                                placeholder="$0" type="number" step="any" min="0"
-                                                                disabled>
-                                                        </div>
-                                        </div>
-                                    </div>
+                                 
                                     <div class="col-md-12 401_contribution_section" style="display:none">
                                         <div class="row">
                                             <div class="col-12 edit-pay-type-container mb-3">

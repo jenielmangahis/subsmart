@@ -66,6 +66,7 @@
                             <td>PAY METHOD</td>
                             <td>TOTAL HOURS</td>
                             <td>COMMISSION</td>
+                            <td>EMPLOYEE CONTRIBUTIONS</td>
                             <td>TOTAL PAY</td>
                             <td>EMPLOYEE TAXES</td>
                             <td>NET PAY</td>
@@ -78,6 +79,7 @@
                             <td><?=$employee['pay_method']?></td>
                             <td><?=number_format(floatval($employee['employee_hours']), 2)?></td>
                             <td><?=str_replace('$-', '-$', '$'.number_format(floatval($employee['employee_commission']), 2))?></td>
+                            <td><?=str_replace('$-', '-$', '$'.number_format(floatval($employee['deductions_contribution']), 2))?></td>
                             <td><?=str_replace('$-', '-$', '$'.number_format(floatval($employee['total_pay']), 2))?></td>
                             <td><?=str_replace('$-', '-$', '$'.number_format(floatval($employee['employee_tax']), 2))?></td>
                             <td><?=str_replace('$-', '-$', '$'.number_format(floatval($employee['net_pay']), 2))?></td>
@@ -90,6 +92,7 @@
                             <td></td>
                             <td><?=$total['total_hours']?></td>
                             <td><?=str_replace('$-', '-$', '$'.$total['total_commission'])?></td>
+                            <td><?=str_replace('$-', '-$', '$'.$total['overall_total_dc'])?></td>
                             <td><?=str_replace('$-', '-$', '$'.$total['total_pay'])?></td>
                             <td><?=str_replace('$-', '-$', '$'.$total['total_taxes'])?></td>
                             <td><?=str_replace('$-', '-$', '$'.$total['total_net_pay'])?></td>

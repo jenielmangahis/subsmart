@@ -13,14 +13,14 @@
                             <thead>
                                 <tr>
                                     <td>Name</td>
-                                    <td>Action</td>
+                                    <td style="text-align: right;">Action</td>
                                 </tr>
                             </thead>
                             <tbody>
                             <?php foreach($categories as $category) : ?>
                                 <tr>
                                     <td><?=$category->name?></td>
-                                    <td>
+                                    <td style="text-align: right;">
                                         <button data-id="<?=$category->item_categories_id?>" type="button" data-bs-dismiss="modal" class="nsm-button select_category">
                                             <i class="bx bx-fw bx-plus"></i>
                                         </button>
@@ -32,11 +32,11 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer modal-footer-detail">
+            <!-- <div class="modal-footer modal-footer-detail">
                 <div class="button-modal-list">
                     <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Close</button>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

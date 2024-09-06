@@ -111,7 +111,7 @@ class Credit_notes extends MY_Controller {
     }
 
     public function index()
-    {            
+    {   
         add_footer_js(array(
             "assets/js/v2/accounting/sales/credit_notes/list.js",
             "assets/js/v2/printThis.js",
