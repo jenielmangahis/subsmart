@@ -87,7 +87,7 @@ class EmployeeCommission_model extends MY_Model
     {        
         $this->db->where('user_id', $user_id);
         $this->db->where('is_paid', 0);
-        $this->db->delete($this->table);;
+        $this->db->delete($this->table);
     }
 }
 
