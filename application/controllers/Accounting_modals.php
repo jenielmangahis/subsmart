@@ -68,6 +68,8 @@ class Accounting_modals extends MY_Controller
         $this->load->model('timesheet_model');
         $this->load->model('PayScale_model');
         $this->load->model('LeaveRequest_model');
+        $this->load->model('Deductions_and_contribution_model','deduction_contribution');
+
         $this->load->library('form_validation');
         
         $this->load->model('General_model', 'general');
@@ -1145,6 +1147,7 @@ class Accounting_modals extends MY_Controller
         $medicare = 1.45;
         $futa = 0.6;
         $sui = 0.00;
+        $overall_total_dc = 0;
         // $sui = 2.7;
 
         $this->page_data['payPeriod'] = str_replace('-', ' to ', $postData['pay_period']);
@@ -1205,6 +1208,26 @@ class Accounting_modals extends MY_Controller
 
             $netPay = $empTotalPay - floatval($empTax);
 
+            $deductions_contribution = $this->deduction_contribution->getByUser($empId);
+            $total_dc = 0;
+            foreach ($deductions_contribution as $dc) {
+                switch($dc->contribution_calculated_as){
+                    case 'Flat amount':
+                        $total_dc += $dc->calculated_contribution_amount;
+                        break;
+                    case 'Percent of gross pay':
+                        $total_dc += $dc->contribution_annual_maximum * ($dc->calculated_contribution_amount/100);
+                        break;
+                    case 'Per hour worked':
+                        $total_dc += $dc->calculated_contribution_amount;
+                        break;
+                    default:
+                        break;
+                }
+              
+            }
+            $overall_total_dc += $total_dc;
+
             $employees[] = [
                 'id' => $emp->id,
                 'name' => $emp->LName . ', ' . $emp->FName,
@@ -1215,7 +1238,9 @@ class Accounting_modals extends MY_Controller
                 'employee_tax' => $empTax,
                 'net_pay' => $netPay,
                 'employee_futa' => ($empTotalPay / 100) * $futa,
-                'employee_sui' => $employeeSUI
+                'employee_sui' => $employeeSUI,
+                'deductions_contribution' => $total_dc,
+               
             ];
         }
 
@@ -1246,7 +1271,8 @@ class Accounting_modals extends MY_Controller
             'total_taxes' => number_format($totalTaxes, 2),
             'total_net_pay' => number_format($totalNetPay, 2),
             'total_employer_tax' => number_format($totalEmployerTax, 2, '.', ','),
-            'total_payroll_cost' => number_format($totalPayrollCost, 2, '.', ',')
+            'total_payroll_cost' => number_format($totalPayrollCost, 2, '.', ','),
+            'overall_total_dc' => number_format($overall_total_dc, 2, '.', ','),
         ];
 
         $this->load->view("v2/includes/accounting/modal_forms/payroll_summary", $this->page_data);

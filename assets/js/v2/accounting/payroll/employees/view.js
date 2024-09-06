@@ -209,13 +209,6 @@ function hideCompanyContributionSection() {
     $(".company-contribution-section").hide();
 }
 
-function showCompanyContributionSection2() {
-    $(".company-contribution-section2").show();
-}
-
-function hideCompanyContributionSection2() {
-    $(".company-contribution-section2").hide();
-}
 
 function showEmployeeDeductionSection() {
     $(".employee-deductions-section").show();
@@ -241,9 +234,7 @@ function showTypeOption() {
 }
 
 function handleHealthInsuranceField() {
-    showCompanyContributionSection2();
     hide401contributions();
-    hideCompanyContributionSection();
     showTypeOption();
 }
 
@@ -258,7 +249,6 @@ function handleDeductionContributionType(type) {
     showCompanyContributionSection();
     hideCalculatedAsLabel();
     hideTypeOption();
-    hideCompanyContributionSection2();
     switch (type) {
         case "Vision Insurance":
             handleHealthInsuranceField();

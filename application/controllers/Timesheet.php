@@ -571,23 +571,23 @@ class Timesheet extends MY_Controller
                 if ($attn->user_id == $user->id && $attn->shift_duration > 0) {
                     for ($x = 0; $x < count($week_check); $x++) {
                         if ($week_check[$x] == date('Y-m-d', strtotime($attn->date_created))) {
-                            $base_duration = 8.0; 
+                            $base_duration = 8.0;
                             $shift_duration = $attn->shift_duration;
 
                             if ($shift_duration > 7.60 && $shift_duration < $base_duration) {
-                                $shift_duration = 7.60; 
+                                $shift_duration = 7.60;
                             }
-                            $duration = $base_duration- $attn->shift_duration;
+                            $duration = $base_duration - $attn->shift_duration;
                             $shift_duration += $duration;
                         }
                     }
                     switch (date('Y-m-d', strtotime($attn->date_created))) {
                         case ($week_check[0]):
-                            $base_duration = 8.0; 
+                            $base_duration = 8.0;
                             $shift_durations = $attn->shift_duration;
 
                             if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
-                                $shift_durations = 7.60; 
+                                $shift_durations = 7.60;
                             }
 
                             $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
@@ -598,51 +598,51 @@ class Timesheet extends MY_Controller
                             $shift_durations = $attn->shift_duration;
 
                             if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
-                                $shift_durations = 7.60; 
+                                $shift_durations = 7.60;
                             }
 
                             $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
                             $tue_duration = $time_duration;
                             break;
                         case ($week_check[2]):
-                            $base_duration = 8.0; 
+                            $base_duration = 8.0;
                             $shift_durations = $attn->shift_duration;
 
                             if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
-                                $shift_durations = 7.60; 
+                                $shift_durations = 7.60;
                             }
 
                             $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
                             $wed_duration = $time_duration;
                             break;
                         case ($week_check[3]):
-                            $base_duration = 8.0; 
+                            $base_duration = 8.0;
                             $shift_durations = $attn->shift_duration;
 
                             if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
-                                $shift_durations = 7.60; 
+                                $shift_durations = 7.60;
                             }
 
                             $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
                             $thu_duration = $time_duration;
                             break;
                         case ($week_check[4]):
-                            $base_duration = 8.0; 
+                            $base_duration = 8.0;
                             $shift_durations = $attn->shift_duration;
 
                             if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
-                                $shift_durations = 7.60; 
+                                $shift_durations = 7.60;
                             }
 
                             $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
                             $fri_duration = $time_duration;
                             break;
                         case ($week_check[5]):
-                            $base_duration = 8.0; 
+                            $base_duration = 8.0;
                             $shift_durations = $attn->shift_duration;
 
                             if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
-                                $shift_durations = 7.60; 
+                                $shift_durations = 7.60;
                             }
 
                             $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
@@ -653,7 +653,7 @@ class Timesheet extends MY_Controller
                             $shift_durations = $attn->shift_duration;
 
                             if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
-                                $shift_durations = 7.60; 
+                                $shift_durations = 7.60;
                             }
 
                             $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
@@ -671,25 +671,34 @@ class Timesheet extends MY_Controller
             $image = userProfilePicture($user->id);
             if (is_null($image)) {
                 $initials = getLoggedNameInitials($user->id);
-                $display .= '<td style="display: flex; align-items: center;">
-                    <div class="profile-img" style="background-image: none; background-color: #ccc; display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 40px; height: 40px;">
-                        <span style="color: #fff; font-size: 18px;">' . $initials . '</span>
-                    </div>
-                    <div style="margin-left: 10px;">
-                        <span class="tbl-emp-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $name . '</span>
-                        <span class="tbl-emp-role" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role . '</span>
-                    </div>
-                 </td>';
+                $display .= '<td>
+                                <div style="display: table; height: 40px;">
+                                    <div style="display: table-cell; vertical-align: middle;">
+                                        <div class="profile-img" style="background-color: #ccc; border-radius: 50%; width: 40px; height: 40px; text-align: center; line-height: 40px;">
+                                            <span style="color: #fff; font-size: 18px;">' . $initials . '</span>
+                                        </div>
+                                    </div>
+                                    <div style="display: table-cell; vertical-align: middle; padding-left: 10px;">
+                                        <span class="tbl-emp-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $name . '</span>
+                                        <span class="tbl-emp-role" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role . '</span>
+                                    </div>
+                                </div>
+                             </td>';
             } else {
-                $display .= '<td style="display: flex; align-items: center;">
-                    <div class="profile-img" style="background-image: url(\'' . $image . '\'); background-size: cover; background-position: center; border-radius: 50%; width: 40px; height: 40px;">
-                    </div>
-                    <div style="margin-left: 10px;">
-                        <span class="tbl-emp-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $name . '</span>
-                        <span class="tbl-emp-role" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role . '</span>
-                    </div>
-                 </td>';
+                $display .= '<td>
+                                <div style="display: table; height: 40px;">
+                                    <div style="display: table-cell; vertical-align: middle;">
+                                        <div class="profile-img" style="background-image: url(\'' . $image . '\'); background-size: cover; background-position: center; border-radius: 50%; width: 40px; height: 40px;">
+                                        </div>
+                                    </div>
+                                    <div style="display: table-cell; vertical-align: middle; padding-left: 10px;">
+                                        <span class="tbl-emp-name" style="display: block; font-size: 16px; line-height: 1.2;">' . $name . '</span>
+                                        <span class="tbl-emp-role" style="display: block; font-size: 14px; color: #888; margin-top: 2px;">' . $role . '</span>
+                                    </div>
+                                </div>
+                             </td>';
             }
+
             // $display .= '<td class="center" style="background-color:' . $bg_color . '"><span class="tbl-emp-status">' . $status . '</span></td>';
             $display .= '<td class="center" ><span class="tbl-emp-status" style="' . $bg_color . '">' . $status . '</span></td>';
             $display .= '<td class="center">' . $mon_duration . '</td>';
