@@ -66,7 +66,7 @@
                             <td>PAY METHOD</td>
                             <td>TOTAL HOURS</td>
                             <td>COMMISSION</td>
-                            <td>EMPLOYEE CONTRIBUTIONS</td>
+                            <td>EMPLOYEE DEDUCTIONS</td>
                             <td>TOTAL PAY</td>
                             <td>EMPLOYEE TAXES</td>
                             <td>NET PAY</td>

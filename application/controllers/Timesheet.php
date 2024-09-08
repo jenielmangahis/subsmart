@@ -3822,10 +3822,7 @@ class Timesheet extends MY_Controller
         $display .= '<thead>';
         $display .= '<tr>';
         $display .= '<td style="width: 200px;">Employee</td>';
-        $display .= '<td>Action</td>';
         $display .= '<td>Shift Date</td>';
-        $display .= '<td>Shift Start</td>';
-        $display .= '<td>Shift End</td>';
         $display .= '<td>Clock In</td>';
         $display .= '<td>Clock Out</td>';
         $display .= '<td>Break in</td>';
@@ -3839,7 +3836,6 @@ class Timesheet extends MY_Controller
         $display .= '<td>Overtime</td>';
         $display .= '<td>OT Status</td>';
         $display .= '<td>Payable Hours</td>';
-        $display .= '<td>Notes</td>';
         $display .= '</tr>';
         $display .= '</thead>';
         $display .= '<tbody class="employee-tbody">';
@@ -3853,12 +3849,6 @@ class Timesheet extends MY_Controller
             $display .= '<tr role="row" class="odd">';
             $display .= '<td>';
             $display .= '<span class="employee-name">' . $attendance->FName . ' ' .   $attendance->LName . '</span><span class="employee-role">' . $attendance->title . '</span>';
-            $display .= '</td>';
-            $display .= '<td class="center">';
-            if ($attendance->status == 0) {
-                $display .= '<a class="edit-entry-btn" title="Edit Entry"><a href="#" class="edit_attendancelogs_btn" data-user-name="' . $attendance->FName . ' ' .   $attendance->LName . '" data-att-id="' . $attendance->id . '" data-user-id="' . $attendance->user_id . '" data-shift-date ="' . date("Y-m-d", strtotime($attendance->date_created)) . '" style="font-weight: bold"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a></a>';
-            }
-
             $display .= '</td>';
             $display .= '<td class="center"><label class="time-log gray">' . $shift_date . '</td>';
 
@@ -3895,8 +3885,7 @@ class Timesheet extends MY_Controller
                 $expected_work_hours = round((($expected_hours * 60) - $expected_break) / 60, 2);
             }
 
-            $display .= '<td class="center"><label class="time-log gray">' . $shift_start . '</label></td>';
-            $display .= '<td class="center"><label class="time-log gray">' . $shift_end . '</label></td>';
+           
 
 
 
@@ -3911,7 +3900,7 @@ class Timesheet extends MY_Controller
                 date_default_timezone_set("UTC");
                 $the_date = strtotime($olddate);
                 date_default_timezone_set($this->session->userdata('usertimezone'));
-                $newdate = date("m/d/Y h:i A", $the_date);
+                $newdate = date("h:i A", $the_date);
                 if ($aux->action == "Check in") {
                     $checkin = $newdate;
                 } elseif ($aux->action == "Check out") {
@@ -3922,6 +3911,7 @@ class Timesheet extends MY_Controller
                     $breakout = $newdate;
                 }
             }
+
             $display .= '<td class="center"><label class="time-log gray">' . $checkin . '</label></td>';
             $display .= '<td class="center"><label class="time-log gray">' . $checkout . '</label></td>';
             $display .= '<td class="center"><label class="time-log gray">' . $breakin . '</label></td>';
@@ -3967,17 +3957,12 @@ class Timesheet extends MY_Controller
                 $payable_hours = $payable_hours + $attendance->overtime;
             }
             $display .= '<td class="center num_only time-log">' . $payable_hours . '</td>';
-            $display .= '<td class="center num_only time-log">' . $attendance->notes . '</td>';
             $display .= '</tr>';
         }
         $display .= '</tbody>';
         $display .= '<tfoot>';
         $display .= '<tr>';
         $display .= '<td colspan="9" style="text-align: right;">Total :</td>';
-        $display .= '<td class="center num_only"></td>';
-        $display .= '<td class="center num_only"></td>';
-        $display .= '<td class="center num_only"></td>';
-        $display .= '<td class="center num_only"></td>';
         $display .= '<td class="center num_only"></td>';
         $display .= '<td class="center num_only"></td>';
         $display .= '<td class="center num_only"></td>';

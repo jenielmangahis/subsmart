@@ -1213,13 +1213,13 @@ class Accounting_modals extends MY_Controller
             foreach ($deductions_contribution as $dc) {
                 switch($dc->contribution_calculated_as){
                     case 'Flat amount':
-                        $total_dc += $dc->calculated_contribution_amount;
+                        $total_dc += $dc->deductions_amount;
                         break;
                     case 'Percent of gross pay':
-                        $total_dc += $dc->contribution_annual_maximum * ($dc->calculated_contribution_amount/100);
+                        $total_dc += $dc->annual_maximum * ($dc->deductions_amount/100);
                         break;
                     case 'Per hour worked':
-                        $total_dc += $dc->calculated_contribution_amount;
+                        $total_dc += $dc->deductions_amount;
                         break;
                     default:
                         break;
