@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     //Datepicker
     $(".ts_schedule").datepicker();
     $("#timeLogTable").DataTable().destroy();
@@ -18,132 +18,18 @@ $(document).ready(function() {
                 date_from: $("#from_date_logs").val(),
                 date_to: $("#to_date_logs").val(),
             },
-            success: function(data) {
+            success: function (data) {
                 // alert(data);
                 //
                 $("#timeLogTable").html(data);
                 $("#timeLogTable").show();
                 $("#timeLogTable").DataTable({
 
-                    initComplete: function(settings, json) {
+                    initComplete: function (settings, json) {
                         $("body").find(".dataTables_scrollBody").addClass("scrollbar");
                     },
-                    footerCallback: function(row, data, start, end, display) {
-                        var api = this.api(),
-                            data;
 
-                        // Remove the formatting to get integer data for summation
-                        var intVal = function(i) {
-                            return parseFloat("0" + i);
-                        };
-
-                        // Total over all pages
-                        // total = api
-                        //   .column(10)
-                        //   .data()
-                        //   .reduce(function (a, b) {
-                        //     return intVal(a) + intVal(b);
-                        //   }, 0);
-                        // console.log(total);
-                        // Total over this page
-                        pageTotal_expected = api
-                            .column(9, { page: "current" })
-                            .data()
-                            .reduce(function(a, b) {
-                                return intVal(a) + intVal(b);
-                            }, 0);
-
-                        pageTotal_expected_break = api
-                            .column(10, { page: "current" })
-                            .data()
-                            .reduce(function(a, b) {
-                                return intVal(a) + intVal(b);
-                            }, 0);
-                        pageTotal_expected_work_hours = api
-                            .column(11, { page: "current" })
-                            .data()
-                            .reduce(function(a, b) {
-                                return intVal(a) + intVal(b);
-                            }, 0);
-                        pageTotal_worked_hours = api
-                            .column(12, { page: "current" })
-                            .data()
-                            .reduce(function(a, b) {
-                                return intVal(a) + intVal(b);
-                            }, 0);
-
-                        pageTotal_break_duration = api
-                            .column(13, { page: "current" })
-                            .data()
-                            .reduce(function(a, b) {
-                                return intVal(a) + intVal(b);
-                            }, 0);
-
-                        pageTotal_late = api
-                            .column(14, { page: "current" })
-                            .data()
-                            .reduce(function(a, b) {
-                                return intVal(a) + intVal(b);
-                            }, 0);
-
-                        pageTotal_over_time = api
-                            .column(15, { page: "current" })
-                            .data()
-                            .reduce(function(a, b) {
-                                return intVal(a) + intVal(b);
-                            }, 0);
-
-                        pageTotal_over_payable_hours = api
-                            .column(17, { page: "current" })
-                            .data()
-                            .reduce(function(a, b) {
-                                return intVal(a) + intVal(b);
-                            }, 0);
-
-                        // Update footer
-                        $(api.column(9).footer()).html(
-                            "<label class='time-log gray'>" +
-                            Math.round(pageTotal_expected * 100) / 100 +
-                            "</label>"
-                        );
-                        $(api.column(10).footer()).html(
-                            "<label class='time-log gray'>" +
-                            Math.round(pageTotal_expected_break * 100) / 100 +
-                            "</label>"
-                        );
-                        $(api.column(11).footer()).html(
-                            "<label class='time-log gray'>" +
-                            Math.round(pageTotal_expected_work_hours * 100) / 100 +
-                            "</label>"
-                        );
-                        $(api.column(12).footer()).html(
-                            "<label class='time-log gray'>" +
-                            Math.round(pageTotal_worked_hours * 100) / 100 +
-                            "</label>"
-                        );
-                        $(api.column(13).footer()).html(
-                            "<label class='time-log gray'>" +
-                            Math.round(pageTotal_break_duration * 100) / 100 +
-                            "</label>"
-                        );
-                        $(api.column(14).footer()).html(
-                            "<label class='time-log gray'>" +
-                            Math.round(pageTotal_late * 100) / 100 +
-                            "</label>"
-                        );
-                        $(api.column(15).footer()).html(
-                            "<label class='time-log gray'>" +
-                            Math.round(pageTotal_over_time * 100) / 100 +
-                            "</label>"
-                        );
-
-                        $(api.column(17).footer()).html(
-                            "<label class='time-log gray'>" +
-                            Math.round(pageTotal_over_payable_hours * 100) / 100 +
-                            "</label>"
-                        );
-                    },
-                    scrollX: true,
+                    scrollX: false,
                     order: [
                         [2, "desc"]
                     ]
@@ -152,16 +38,16 @@ $(document).ready(function() {
             },
         });
     }
-    $(document).on("change", "#to_date_logs", function() {
+    $(document).on("change", "#to_date_logs", function () {
         show_attendance_logs_table();
     });
 
-    $(document).on("change", "#from_date_logs", function() {
+    $(document).on("change", "#from_date_logs", function () {
         // console.log("pasok");
         show_attendance_logs_table();
     });
 
-    $(document).on("click", ".edit_attendancelogs_btn", function() {
+    $(document).on("click", ".edit_attendancelogs_btn", function () {
         // console.log("yes");
         $("#edit_attendancelogs").modal({
             backdrop: "static",
@@ -178,7 +64,7 @@ $(document).ready(function() {
                 att_id: $(this).attr("data-att-id"),
                 shift_date: $(this).attr("data-shift-date"),
             },
-            success: function(data) {
+            success: function (data) {
                 // console.log(data);
                 $("#form_timesheet_attendance_id").val(data.att_id);
                 $("#form_user_id").val(data.user_id);
@@ -209,7 +95,7 @@ $(document).ready(function() {
         });
     });
 
-    $(document).on("click", "#save_edited_attendance_logs", function() {
+    $(document).on("click", "#save_edited_attendance_logs", function () {
         let form_timesheet_attendance_id = $("#form_timesheet_attendance_id").val();
         let form_user_id = $("#form_user_id").val();
         let form_timesheet_shift_schedule_id = $(
@@ -267,7 +153,7 @@ $(document).ready(function() {
                         form_over_time: form_over_time,
                         form_attendance_notes: form_attendance_notes,
                     },
-                    success: function(data) {
+                    success: function (data) {
                         show_attendance_logs_table();
                         Swal.fire({
                             showConfirmButton: false,
@@ -283,13 +169,13 @@ $(document).ready(function() {
         // console.log(form_clockin_time);
     });
 
-    $(document).on("click", "#download_to_excel", function() {
+    $(document).on("click", "#download_to_excel", function () {
         $.ajax({
             url: baseURL + "/timesheet/download_attendance_sheet_logs_to_excel",
             type: "POST",
             dataType: "json",
             data: { attn_id: "" },
-            success: function(data) {},
+            success: function (data) { },
         });
     });
 });
@@ -324,7 +210,7 @@ function edit_attendance_log_form_changed() {
         var date2 = new Date(arrayofdates[i][1]);
         let diff = (date2.getTime() - date1.getTime()) / 1000 / 60 / 60;
         $rounded_amount = Math.round(diff * 100) / 100;
-        if ($rounded_amount > 0) {} else {
+        if ($rounded_amount > 0) { } else {
             $rounded_amount = 0;
         }
         arrayofdurations.push($rounded_amount);

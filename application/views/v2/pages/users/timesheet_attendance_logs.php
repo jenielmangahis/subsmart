@@ -48,28 +48,18 @@
     .table-ts-loader {
         display: block;
         margin: 0 auto;
-        clear: both;
         position: relative;
         z-index: 20;
         width: 100%;
-        min-height: 100px;
-        background: rgb(128 128 128 / 18%);
+        text-align: center;
     }
 
-    .table-ts-loader img {
-        width: 80px;
-        height: 80px;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
+    .table-ts-loader .ts-loader-img {
         margin: auto;
+        font-size:40px
     }
 
-    .table-responsive {
-        overflow-x: hidden;
-    }
+  
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -82,10 +72,7 @@
                    <form
                             action="<?= base_url() ?>/timesheet/download_attendance_sheet_logs_to_excel"
                             target="_blank" method="POST">
-                            <div class="row">
-                                <div class="col-lg-3" style="margin-bottom: 12px">
-
-                                </div>
+                            <div class="d-flex mb-5">
                                 <div class="col-lg-2" style="margin-bottom: 12px">
                                     <label for="from_date_logs" class="week-label">From:</label>
                                     <?php
@@ -102,7 +89,7 @@
                                 </div>
                                 <div class="col-lg-2" style="margin-bottom: 12px">
                                     <div><label for="to_date_logs" class="week-label">&nbsp;</label></div>
-                                    <button type="submit" class="btn btn-success action-btn"><i class="fa fa-download"
+                                    <button type="submit" class="nsm-button primary  action-btn"><i class="fa fa-download"
                                             aria-hidden="true"></i> Export to Excel</button>
                                 </div>
                             </div>
@@ -134,13 +121,12 @@
                                     </tbody>
                                     <tfoot></tfoot>
                                 </table>
-                                <div class="table-ts-loader" style="display:none;">
-                                    <img class="ts-loader-img"
-                                        src="<?= base_url() ?>/assets/css/timesheet/images/ring-loader.svg"
-                                        alt="">
-                                </div>
                             </div>
+                            <div class="table-ts-loader" >
+                                        <span class="bx bx-loader bx-spin ts-loader-img"></span>
+                                </div>
                         </div>
+                      
                         <!-- end row -->    
 
                                             <!--Adding Project Schedule-->

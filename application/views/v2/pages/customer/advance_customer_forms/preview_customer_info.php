@@ -278,13 +278,13 @@
                 <label class="content-subtitle fw-bold">Billing Start Date</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($billing_info) && !empty($billing_info->bill_start_date) ? $billing_info->bill_start_date : $office_info->install_date ?></label>
+                <label class="content-subtitle"><?php echo isset($billing_info) && !empty($billing_info->bill_start_date) ? date("m/d/Y", strtotime($billing_info->bill_start_date)) : date("m/d/Y", strtotime($office_info->install_date)) ?></label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Billing End Date</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?php if(isset($billing_info)){ echo $billing_info->bill_end_date != null ? $billing_info->bill_end_date : date("m/d/Y", strtotime("$office_info->install_date +$billing_info->contract_term months"));; }?></label>
+                <label class="content-subtitle"><label class="content-subtitle"><?php echo (!empty($billing_info->bill_end_date)) ? date("m/d/Y", strtotime($billing_info->bill_end_date)) : '<i class="text-muted">Not Specified</i>'; ?></label>
             </div>
         </div>
 
