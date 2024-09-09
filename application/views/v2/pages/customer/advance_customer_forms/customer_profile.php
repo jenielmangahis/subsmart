@@ -243,7 +243,13 @@
                 Date Of Birth 
             </div>
             <div class="col-md-8">
-                <input type="text" placeholder="" class="form-control" name="date_of_birth" id="date_of_birth" value="<?php if(isset($profile_info)){ echo date("m/d/Y", strtotime($profile_info->date_of_birth)); } ?>" />
+                <?php 
+                    $date_of_birth = date("m/d/Y");
+                    if( $profile_info && strtotime($profile_info->date_of_birth) > 0 ){
+                        $date_of_birth = date("m/d/Y", strtotime($profile_info->date_of_birth));
+                    }
+                ?>
+                <input type="text" placeholder="" class="form-control" name="date_of_birth" id="date_of_birth" value="<?= $date_of_birth; ?>" />
             </div>
         </div>
 

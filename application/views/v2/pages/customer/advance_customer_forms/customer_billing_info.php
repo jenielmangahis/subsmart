@@ -147,7 +147,13 @@
                 Billing Start Date
             </div>
             <div class="col-md-6">
-                <input data-type="billing_start_date" type="text" class="form-control " name="bill_start_date" id="bill_start_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_start_date != null ? $billing_info->bill_start_date : $office_info->install_date; } ?>" />
+                <?php 
+                    $bill_start_date = '';
+                    if( $billing_info && strtotime($billing_info->bill_start_date) > 0 ){
+                        $bill_start_date = date("m/d/Y", strtotime($billing_info->bill_start_date));
+                    }
+                ?>
+                <input data-type="billing_start_date" type="text" class="form-control " name="bill_start_date" id="bill_start_date" value="<?= $bill_start_date; ?>" />
             </div>
         </div>
         <div class="row form_line">
@@ -155,7 +161,14 @@
                 Billing End Date
             </div>
             <div class="col-md-6">
-                <input data-type="billing_end_date" type="text" class="form-control " name="bill_end_date" id="bill_end_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_end_date != null ? $billing_info->bill_end_date : date("m/d/Y", strtotime("$office_info->install_date +$billing_info->contract_term months"));; } ?>"/>
+                <?php 
+                    $bill_end_date = '';
+                    if( $billing_info && strtotime($billing_info->bill_end_date) > 0 ){
+                        $bill_end_date = date("m/d/Y", strtotime($billing_info->bill_end_date));
+                    }
+                ?>
+                <!-- <input data-type="billing_end_date" type="text" class="form-control " name="bill_end_date" id="bill_end_date" value="<?php if(isset($billing_info)){ echo $billing_info->bill_end_date != null ? $billing_info->bill_end_date : date("m/d/Y", strtotime("$office_info->install_date +$billing_info->contract_term months"));; } ?>"/> -->
+                <input data-type="billing_end_date" type="text" class="form-control " name="bill_end_date" id="bill_end_date" value="<?= $bill_end_date; ?>"/>
             </div>
         </div>
         <div class="row form_line">
@@ -335,7 +348,7 @@
 <div class="nsm-card primary">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span><i class="bx bx-fw bx-credit-card"></i>Subscription Pay Plan1</span>
+            <span><i class="bx bx-fw bx-credit-card"></i>Subscription Pay Plan</span>
         </div>
     </div>
     <div class="nsm-card-content">

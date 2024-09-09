@@ -131,7 +131,7 @@
                 Lead Source
             </div>
             <div class="col-md-6">
-                <select id="lead_source" name="lead_source" data-customer-source="dropdown" class="input_select"> 
+                <select id="lead_source" name="lead_source" data-customer-source="dropdown" class="input_select" required=""> 
                     <option value selected hidden disabled>Select Lead Source</option>
 
                     <?php foreach ($LEAD_SOURCE_OPTION AS $LEAD_SOURCE) { if ($office_info->lead_source == $LEAD_SOURCE->ls_name) { ?>
