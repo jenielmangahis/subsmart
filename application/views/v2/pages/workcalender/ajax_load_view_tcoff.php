@@ -37,7 +37,12 @@
     <div class="col-12 col-md-12">
         <label class="content-subtitle d-block mb-2 font-15" style="margin-bottom: 5px;">
             <span class="fw-bold"><i class='bx bxs-calendar'></i> Leave Date : </span> 
-            <?= date("F j ", strtotime($technicianScheduleOff->leave_start_date)); ?> to <?= date("F j, Y", strtotime($technicianScheduleOff->leave_end_date)); ?> 
+            <?php if( $technicianScheduleOff->leave_start_date == $technicianScheduleOff->leave_end_date ){ ?>
+                <?= date("F j ", strtotime($technicianScheduleOff->leave_start_date)); ?>
+            <?php }else{ ?>
+                <?= date("F j ", strtotime($technicianScheduleOff->leave_start_date)); ?> to <?= date("F j, Y", strtotime($technicianScheduleOff->leave_end_date)); ?> 
+            <?php } ?>
+            
         </label>        
         <label class="content-subtitle fw-bold d-block mb-2 appointment-view-header mt-3">Task Details</label>
             <div class="d-flex">
