@@ -5690,11 +5690,22 @@ class Customer extends MY_Controller
                     }
 
                     if ($is_custom_field == 0) {
-                        if (trim($item->$fieldName) != '') {
-                            array_push($csvData, $item->$fieldName);
-                        } else {
-                            array_push($csvData, '---');
+                        
+                        if( $fieldName == 'bill_start_date' || $fieldName == 'bill_end_date' || $fieldName == 'date_of_birth' ){
+                            $date = '---';
+                            if( strtotime($item->$fieldName) > 0 ){
+                                $date = date("m/d/Y", strtotime($item->$fieldName));
+                                array_push($csvData, $date);
+                            }
+                        }else{
+                            if (trim($item->$fieldName) != '') {
+                                array_push($csvData, $item->$fieldName);
+                            } else {
+                                array_push($csvData, '---');
+                            }
                         }
+                    
+                        
                     }
                 }
                 fputcsv($f, $csvData, $delimiter);
@@ -9067,11 +9078,11 @@ class Customer extends MY_Controller
 
                     if ($is_custom_field == 0) {
                         
-                        if( $fieldName == 'date_of_birth' ){    
-                            $date_of_birth = '---';
+                        if( $fieldName == 'bill_start_date' || $fieldName == 'bill_end_date' || $fieldName == 'date_of_birth' ){
+                            $date = '---';
                             if( strtotime($item->$fieldName) > 0 ){
-                                $date_of_birth = date("m/d/Y", strtotime($item->$fieldName));
-                                array_push($csvData, $date_of_birth);
+                                $date = date("m/d/Y", strtotime($item->$fieldName));
+                                array_push($csvData, $date);
                             }
                         }else{
                             if (trim($item->$fieldName) != '') {
@@ -9281,6 +9292,24 @@ class Customer extends MY_Controller
                             array_push($csvData, '---');
                         }
                         $is_custom_field = 1;
+                    }
+
+                    if ($is_custom_field == 0) {
+                        
+                        if( $fieldName == 'bill_start_date' || $fieldName == 'bill_end_date' || $fieldName == 'date_of_birth' ){
+                            $date = '---';
+                            if( strtotime($item->$fieldName) > 0 ){
+                                $date = date("m/d/Y", strtotime($item->$fieldName));
+                                array_push($csvData, $date);
+                            }
+                        }else{
+                            if (trim($item->$fieldName) != '') {
+                                array_push($csvData, $item->$fieldName);
+                            } else {
+                                array_push($csvData, '---');
+                            }
+                        }
+                        
                     }
 
                     if ($is_custom_field == 0) {
