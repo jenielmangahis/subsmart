@@ -144,7 +144,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </tr>
                         <tr>
                           <td style="text-align:left ;">Date:</td>
-                          <td style="text-align:right;"><b><?php $wDate = $workorder->date_created; echo date("m-d-Y", strtotime($wDate) ); ?></b></td>
+                          <td style="text-align:right;"><b><?php $wDate = $workorder->date_created; echo date("m/d/Y", strtotime($wDate) ); ?></b></td>
                         </tr>
                         <tr>
                           <td style="text-align:left;">Type:</td>
