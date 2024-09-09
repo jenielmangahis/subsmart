@@ -107,7 +107,15 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </tr>
                             <tr style="font-weight:;">
                                 <td>Scheduled Date:</td>
-                                <td style="text-align:right;"><?php echo date("m-d-Y", strtotime($tickets->ticket_date) );  //$tickets->ticket_date; ?></td>
+                                <td style="text-align:right;">
+                                    <?php 
+                                        $date = '---';
+                                        if( strtotime($tickets->ticket_date) > 0 ){
+                                            $date =  date("m/d/Y", strtotime($tickets->ticket_date)); 
+                                        }
+                                    ?>
+                                    <?php echo $date; ?>
+                                </td>
                             </tr>
                             <tr style="font-weight:;">
                                 <td>Scheduled Time:</td>
