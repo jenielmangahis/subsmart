@@ -729,6 +729,9 @@ $route['accounting/employees/update-deductions-and-contributions'] = 'accounting
 $route['accounting/employees/get-deductions-and-contributions'] = 'accounting_controllers/employees/get_deductions_and_contributions';
 $route['accounting/employees/delete-deductions-and-contributions'] = 'accounting_controllers/employees/delete_deductions_and_contributions';
 
+$route['accounting/employees/_employee_commission_settings'] = 'accounting_controllers/employees/ajax_employee_commission_settings';
+$route['accounting/employees/_update_employee_pay_type'] = 'accounting_controllers/employees/ajax_update_employee_pay_type';
+
 $route['accounting/worksites'] = 'accounting_controllers/worksites/index';
 $route['accounting/worksites/add-work-location'] = 'accounting_controllers/worksites/add';
 $route['accounting/worksites/get-details/(:any)'] = 'accounting_controllers/worksites/get_details/$1';
@@ -1534,6 +1537,7 @@ $route['cron_payment/company_recurring_nsmart_subscription'] = 'Cron_Payment/com
 $route['customer/subscriptions'] = 'Customer/customer_subscriptions';
 $route['customer/_load_active_subscriptions'] = 'Customer/ajax_load_active_subscriptions';
 $route['customer/_load_completed_subscriptions'] = 'Customer/ajax_load_completed_subscriptions';
+$route['customer/_load_all_subscriptions'] = 'Customer/ajax_load_all_subscriptions';
 $route['customer/_load_billing_error_subscriptions'] = 'Customer/ajax_load_billing_error_subscriptions';
 $route['customer/_load_subscription_list_counter'] = 'Customer/ajax_load_subscription_list_counter';
 $route['customer/_load_subscription_payment_history'] = 'Customer/ajax_load_subscription_payment_history';
