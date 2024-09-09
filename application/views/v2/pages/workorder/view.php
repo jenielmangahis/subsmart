@@ -240,7 +240,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                           <li>
                               <span class="label-details">Installtion Date</span>
                               <span class="value-details">
-                                <?php $installation_date = date("m-d-Y", strtotime($workorder->date_issued)); ?>
+                                <?php $installation_date = date("m/d/Y", strtotime($workorder->date_issued)); ?>
                                 <?= $installation_date; ?>
                               </span>
                             </li>
