@@ -9033,12 +9033,20 @@ class Accounting_modals extends MY_Controller
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
+            $return['message'] = 'Please fill up form entries';
         } elseif (!isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please enter at least one line item.';
-        } else {
+        } elseif( $data['adjustment_value'] > 0 && $data['adjustment_name'] == ''){
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please specify adjustment name.';
+        } elseif( !isset($data['customer'])){
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please select customer.';
+        }else {
             $delayedCreditData = [
                 'company_id' => logged('company_id'),
                 'customer_id' => $data['customer'],
@@ -24877,33 +24885,47 @@ class Accounting_modals extends MY_Controller
 
     public function add_package()
     {
+        $is_success = true;
+        $msg = '';
+
         $post = $this->input->post();
-
-        $packageDetails = [
-            'name' => $post['name'],
-            'package_type'  => '1',
-            'total_price' => $post['total_price'],
-            'amount_set' => $post['amount_set'],
-            'created_by' => logged('id'),
-            'company_id' => logged('company_id'),
-            'created_at' => date("Y-m-d H:i:s")
-        ];
-
-        $packageId = $this->workorder_model->addPackage($packageDetails);
-
-        foreach($post['item'] as $key => $itemId) {
-            $packageItemData = [
-                'item_id' => $itemId,
-                'package_id' => $packageId,
-                'package_type' => '1',
-                'price' => $post['item_amount'][$key],
-                'quantity' => $post['quantity'][$key]
-            ];
-
-            $addPackageItem = $this->workorder_model->addItemPackage($packageItemData);
+        if( $post['name'] == '' ){
+            $is_success = false;
+            $msg = 'Please specify package name';
         }
 
-        echo json_encode(['id' => $packageId, 'success' => $packageId ? true : false]);
+        if( count( $post['item'] ) <= 0 ){
+            $is_success = false;
+            $msg = 'Please add package item';
+        }
+
+        if( $is_success ){
+            $packageDetails = [
+                'name' => $post['name'],
+                'package_type'  => '1',
+                'total_price' => $post['total_price'],
+                'amount_set' => $post['amount_set'],
+                'created_by' => logged('id'),
+                'company_id' => logged('company_id'),
+                'created_at' => date("Y-m-d H:i:s")
+            ];
+    
+            $packageId = $this->workorder_model->addPackage($packageDetails);
+    
+            foreach($post['item'] as $key => $itemId) {
+                $packageItemData = [
+                    'item_id' => $itemId,
+                    'package_id' => $packageId,
+                    'package_type' => '1',
+                    'price' => $post['item_amount'][$key],
+                    'quantity' => $post['quantity'][$key]
+                ];
+    
+                $addPackageItem = $this->workorder_model->addItemPackage($packageItemData);
+            }
+        }        
+
+        echo json_encode(['id' => $packageId, 'success' => $is_success, 'msg' => $msg]);
     }
 
     public function get_last_invoice_number()

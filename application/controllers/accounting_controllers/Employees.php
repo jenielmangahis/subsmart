@@ -2921,4 +2921,12 @@ class Employees extends MY_Controller
 
     }
 
+    public function ajax_employee_commission_settings()
+    {
+        $post = $this->input->post();
+
+        $this->page_data['employeeCommissionSettings'] = $this->EmployeeCommissionSetting_model->getAllByUserId($post['eid']);
+        $this->load->view('v2/pages/accounting/payroll/employees/ajax_employee_commission_settings', $this->page_data);
+    }
+
 }
