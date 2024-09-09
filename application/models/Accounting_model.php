@@ -682,6 +682,28 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
 
+        if ($reportType == 'open_purchase_order_details') {
+            $this->db->select('CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer_name , accounting_purchase_order.*, acs_profile.prof_id');
+            $this->db->from('accounting_purchase_order');
+            $this->db->join('accounting_vendors', 'accounting_vendors.id = accounting_purchase_order.vendor_id', 'left');
+            $this->db->join('accounting_vendor_transaction_categories', 'accounting_vendor_transaction_categories.transaction_id = accounting_purchase_order.id', 'left');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = accounting_vendor_transaction_categories.customer_id', 'left');
+            $this->db->join('accounting_vendor_transaction_items', 'accounting_vendor_transaction_items.transaction_id = accounting_purchase_order.id', 'left');
+            $this->db->join('items', 'items.id = accounting_vendor_transaction_items.item_id', 'left');
+            $this->db->where('accounting_vendor_transaction_categories.transaction_type =', 'Purchase Order');
+            $this->db->where('acs_profile.first_name !=', '');
+            $this->db->where('acs_profile.last_name !=', '');
+            $this->db->where("DATE_FORMAT(accounting_purchase_order.purchase_order_date,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(accounting_purchase_order.purchase_order_date,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('accounting_purchase_order.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('acs_profile.prof_id');
+            $data = $this->db->get();
+
+            return $data->result();
+        }
+
         // Get Payment Method List data in Database
         if ($reportType == 'payment_method_list') {
             $this->db->select('accounting_payment_methods.id AS payment_id, accounting_payment_methods.name AS payment_method');
