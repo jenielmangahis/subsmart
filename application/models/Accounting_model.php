@@ -704,6 +704,22 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
 
+        if ($reportType == 'activities_payroll_by_employee') {
+            $this->db->select('users.id AS employee_id, CONCAT(users.FName, " ", users.LName) AS employee, CONCAT(DATE_FORMAT(accounting_payroll.pay_period_start, "%m/%d/%Y"), " — ", DATE_FORMAT(accounting_payroll.pay_period_end, "%m/%d/%Y")) AS pay_period, accounting_payroll_employees.employee_total_pay AS gross_pay, accounting_payroll_employees.employee_commission AS commission, accounting_payroll_employees.employee_bonus AS bonus, accounting_payroll_employees.employee_taxes AS taxes, accounting_payroll_employees.employee_net_pay AS net_pay');
+            $this->db->from('accounting_payroll_employees');
+            $this->db->join('users', 'users.id = accounting_payroll_employees.employee_id', 'left');
+            $this->db->join('accounting_payroll', 'accounting_payroll.id = accounting_payroll_employees.payroll_id', 'left');
+            $this->db->where('users.id !=', '');
+            $this->db->where("accounting_payroll.created_at >= '$reportConfig[date_from]'");
+            $this->db->where("accounting_payroll.created_at <= '$reportConfig[date_to]'");
+            $this->db->where('users.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('users.id');
+            $query = $this->db->get();
+            return $query->result();
+        }    
+
         if ($reportType == 'recurring_template_list_details') {
             $this->db->select("*");
             $this->db->from('accounting_recurring_transactions');
