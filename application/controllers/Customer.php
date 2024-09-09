@@ -5694,9 +5694,9 @@ class Customer extends MY_Controller
                         if( $fieldName == 'bill_start_date' || $fieldName == 'bill_end_date' || $fieldName == 'date_of_birth' ){
                             $date = '---';
                             if( strtotime($item->$fieldName) > 0 ){
-                                $date = date("m/d/Y", strtotime($item->$fieldName));
-                                array_push($csvData, $date);
+                                $date = date("m/d/Y", strtotime($item->$fieldName));                                
                             }
+                            array_push($csvData, $date);
                         }else{
                             if (trim($item->$fieldName) != '') {
                                 array_push($csvData, $item->$fieldName);
@@ -9081,9 +9081,10 @@ class Customer extends MY_Controller
                         if( $fieldName == 'bill_start_date' || $fieldName == 'bill_end_date' || $fieldName == 'date_of_birth' ){
                             $date = '---';
                             if( strtotime($item->$fieldName) > 0 ){
-                                $date = date("m/d/Y", strtotime($item->$fieldName));
-                                array_push($csvData, $date);
+                                $date = date("m/d/Y", strtotime($item->$fieldName));                                
                             }
+
+                            array_push($csvData, $date);
                         }else{
                             if (trim($item->$fieldName) != '') {
                                 array_push($csvData, $item->$fieldName);
@@ -9299,9 +9300,9 @@ class Customer extends MY_Controller
                         if( $fieldName == 'bill_start_date' || $fieldName == 'bill_end_date' || $fieldName == 'date_of_birth' ){
                             $date = '---';
                             if( strtotime($item->$fieldName) > 0 ){
-                                $date = date("m/d/Y", strtotime($item->$fieldName));
-                                array_push($csvData, $date);
+                                $date = date("m/d/Y", strtotime($item->$fieldName));                                
                             }
+                            array_push($csvData, $date);
                         }else{
                             if (trim($item->$fieldName) != '') {
                                 array_push($csvData, $item->$fieldName);
