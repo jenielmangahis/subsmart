@@ -1,9 +1,19 @@
 <!-- Modal -->
 <style>
-    .disabled-button {
-        background-color: #ccc;
-        cursor: not-allowed;
-    }
+.disabled-button {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+#item_list .nsm-table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
+#item_list .modal-body{
+    overflow-x:hidden;
+}
+#item_list #item-table td:nth-child(8){
+ text-align:right !important;
+}
 </style>
 <div class="modal fade nsm-modal" id="item_list" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
@@ -18,11 +28,11 @@
                         <table id="items_table" class="nsm-table" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <td>Name</td>
+                                    <td style="width:50%;">Name</td>
                                     <td>Location</td>
-                                    <td>Qty</td>
-                                    <td>Price</td>
-                                    <td>Action</td>
+                                    <td style="width:10%;">Qty</td>
+                                    <td style="width:10%;">Price</td>
+                                    <td style="width:5%;"></td>
                                 </tr>
                             </thead>
                             <tbody>

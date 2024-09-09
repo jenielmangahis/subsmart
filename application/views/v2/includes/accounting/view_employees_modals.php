@@ -617,8 +617,8 @@
 
 <div class="modal fade nsm-modal" id="edit-pay-types-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
-        <form method="POST" id="edit-pay-types-form"
-            action="<?= base_url('accounting/employees/update/pay-types/' . $employee->id) ?>">
+        <form method="POST" id="edit-pay-types-form">
+            <input type="hidden" name="eid" value="<?= $employee->id; ?>" />
             <div class="modal-content">
                 <div class="modal-header">
                     <span class="modal-title content-title">Pay types</span>
@@ -1725,6 +1725,52 @@ $(function() {
             beforeSend: function() {
                 $('#btn-modal-employment-details').html(
                     '<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    function load_employee_commission_list(eid){
+        $.ajax({
+            url: base_url + 'accounting/employees/_employee_commission_settings',
+            method: 'post', 
+            data: {eid:eid}, 
+            success: function (html) {
+                $('#employee_commission_list_data').html(html);
+            },
+            beforeSend: function() {
+                $('#employee_commission_list_data').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });  
+    }
+
+    $('#edit-pay-types-form').on('submit', function(e){
+        e.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            url: base_url + 'accounting/employees/_update_employee_pay_type',
+            dataType: 'json',
+            data: $('#edit-pay-types-form').serialize(),
+            success: function(data) {                
+                $('#btn-edit-pay-type').html('Save');                   
+                if (data.is_success) {
+                    $('#edit-pay-types-modal').modal('hide');
+                    load_employee_commission_list(data.eid);  
+                    $('#emp-pay-rate').html(data.pay_rate);          
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-edit-pay-type').html('<span class="bx bx-loader bx-spin"></span>');
             }
         });
     });
