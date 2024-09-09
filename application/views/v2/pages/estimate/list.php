@@ -261,7 +261,7 @@
                                 <?php if ($estimate->customer_id > 0) { ?>
                                 <a class="nsm-link"
                                     href="<?php echo base_url('customer/preview_/'.$estimate->customer_id); ?>">
-                                    <?php echo $estimate->customer_name; ?> ()
+                                    <?php echo $estimate->customer_name; ?>
                                 </a>
                                 <?php } elseif ($estimate->lead_id > 0) { ?>
                                 <a class="nsm-link"
@@ -270,7 +270,7 @@
                                 </a>
                                 <?php } ?>
                                 <br />
-                                Estimate Date : <?php echo date('M d, Y', strtotime($estimate->estimate_date)); ?>
+                                Estimate Date : <?php echo date('m/d/Y', strtotime($estimate->estimate_date)); ?>
                             </td>
                             <td><?php echo $estimate->estimate_type; ?></td>
                             <td><span class="nsm-badge <?php echo $badge; ?>"><?php echo $estimate->status; ?></span></td>
