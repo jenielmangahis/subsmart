@@ -1475,6 +1475,8 @@ class Customer extends MY_Controller
 
     public function preview_($id = null)
     {
+        redirect('customer/preview/'.$id);
+
         $this->load->model('IndustryType_model');
 
         $this->page_data['page']->title = 'Customer Preview';
