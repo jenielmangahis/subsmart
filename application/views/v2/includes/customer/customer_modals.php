@@ -252,7 +252,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12">
-                            <input type="number" placeholder="Rate Amount" name="amount" id="amount" class="nsm-field form-control mb-2" required />
+                            <input type="number" step="any" placeholder="Rate Amount" name="amount" id="amount" class="nsm-field form-control mb-2" required />
                         </div>
                     </div>
                 </div>
