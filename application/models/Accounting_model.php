@@ -704,6 +704,19 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
 
+        if ($reportType == 'recurring_template_list_details') {
+            $this->db->select("*");
+            $this->db->from('accounting_recurring_transactions');
+            $this->db->where("DATE_FORMAT(created_at ,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+            $this->db->where("DATE_FORMAT(created_at ,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+            $this->db->where('status !=', 0);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('recurring_type');
+            $data = $this->db->get();
+            return $data->result();
+        }
+
         // Get Payment Method List data in Database
         if ($reportType == 'payment_method_list') {
             $this->db->select('accounting_payment_methods.id AS payment_id, accounting_payment_methods.name AS payment_method');
