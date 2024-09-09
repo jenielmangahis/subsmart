@@ -26,7 +26,13 @@
                 Sales Date
             </div>
             <div class="col-md-6">
-                <input data-type="office_info_sales_date" type="text" class="form-control date_picker" name="sales_date" id="" value="<?php if(isset($office_info)){ echo  $office_info->sales_date; } ?>"/>
+                <?php 
+                    $sales_date = '<i class="text-muted">Not Specified</i>';
+                    if( $office_info && strtotime($office_info->sales_date) > 0 ){
+                        $sales_date = date("m/d/Y", strtotime($office_info->sales_date));
+                    }
+                ?>
+                <input data-type="office_info_sales_date" type="text" class="form-control date_picker" name="sales_date" id="" value="<?php echo $sales_date; ?>"/>
             </div>
         </div>
         <div class="row form_line">

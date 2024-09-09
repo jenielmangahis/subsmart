@@ -24,7 +24,13 @@
                 <label class="content-subtitle fw-bold">Sales Date</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($office_info) && !empty($office_info->sales_date) ?  $office_info->sales_date : '---' ?></label>
+                <?php 
+                    $sales_date = '---';
+                    if( $office_info && strtotime($office_info->sales_date) > 0 ){
+                        $sales_date = date("m/d/Y", strtotime($office_info->sales_date));
+                    }
+                ?>
+                <label class="content-subtitle"><?= $sales_date; ?></label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Credit Score</label>
@@ -76,7 +82,13 @@
                 <label class="content-subtitle fw-bold">Install Date</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= isset($office_info) && !empty($office_info->install_date) ?  $office_info->install_date : '---' ?></label>
+                <?php 
+                    $install_date = '---';
+                    if( $office_info && strtotime($office_info->install_date) > 0 ){
+                        $install_date = date("m/d/Y", strtotime($office_info->install_date));
+                    }
+                ?>
+                <label class="content-subtitle"><?= $install_date; ?></label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Tech Arrival Time</label>
