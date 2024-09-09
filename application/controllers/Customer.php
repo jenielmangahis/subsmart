@@ -9066,11 +9066,22 @@ class Customer extends MY_Controller
                     }
 
                     if ($is_custom_field == 0) {
-                        if (trim($item->$fieldName) != '') {
-                            array_push($csvData, $item->$fieldName);
-                        } else {
-                            array_push($csvData, '---');
+                        
+                        if( $fieldName == 'date_of_birth' ){    
+                            $date_of_birth = '---';
+                            if( strtotime($item->$fieldName) > 0 ){
+                                $date_of_birth = date("m/d/Y", strtotime($item->$fieldName));
+                                array_push($csvData, $date_of_birth);
+                            }
+                        }else{
+                            if (trim($item->$fieldName) != '') {
+                                array_push($csvData, $item->$fieldName);
+                            } else {
+                                array_push($csvData, '---');
+                            }
                         }
+
+                        
                     }
                 }
                 fputcsv($f, $csvData, $delimiter);
