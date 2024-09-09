@@ -131,7 +131,7 @@
                                     echo $date;
                                 ?>
                             </td>
-                            <td><?= $ticket->id; ?><?php echo $ticket->first_name.' '.$ticket->last_name; ?></td>
+                            <td><?php echo $ticket->first_name.' '.$ticket->last_name; ?></td>
                             <td><?php echo $ticket->ticket_status; ?></td>
                             <td>$<?php echo number_format($ticket->grandtotal,2); ?></td>
                             <td>
