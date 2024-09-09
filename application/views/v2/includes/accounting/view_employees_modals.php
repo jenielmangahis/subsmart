@@ -1469,7 +1469,7 @@ $(function() {
 
         $.ajax({
             type: "POST",
-            url: window.origin +
+            url: base_url +
                 "/accounting/employees/update_employee_data/personal_information",
             data: form.serialize(),
             beforeSend: function() {
@@ -1480,7 +1480,7 @@ $(function() {
                 const name = $('input[name="FName"]').val() + " " + $('input[name="LName"]')
                     .val();
                 const email = $('input[name="email"]').val();
-                const birthdate = $('input[name="birthdate"]').val();
+                const birthdate = moment($('input[name="birthdate"]').val()).format('L');
                 const address = $('input[name="address"]').val();
                 const state = $('input[name="state"]').val();
                 const postalCode = $('input[name="postal_code"]').val();
