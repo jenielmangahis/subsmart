@@ -603,9 +603,31 @@ class Inventory extends MY_Controller
         $item = $this->items_model->deleteLocation($id, TRUE);
     }
     public function deleteItemLocation(){
+        $is_success = 0;
+        $msg = '';
+        $item_id = 0;
+
         $post = $this->input->post();
         $id   = $post['id'];
-        $item = $this->items_model->deleteLocation($id);
+        $cid  = logged('company_id');
+
+        $storageLocation = $this->items_model->getItemStorageLocationByIdAndCompanyId($id, $cid);
+        if( $storageLocation ){
+            $item_id = $storageLocation->item_id;
+            $item = $this->items_model->deleteLocation($id);
+
+            $is_success = 1;
+            $msg = '';
+        }
+        
+
+        $json_data = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+            'item_id' => $item_id
+        ];
+
+        echo json_encode($json_data);
     }
     public function delete()
     {
@@ -1079,13 +1101,15 @@ class Inventory extends MY_Controller
 
         $user = logged('FName') . ' ' . logged('LName');
 
-        $comp_id = logged('company_id');
+        $comp_id  = logged('company_id');
+        $location = $this->items_model->getLocationById($this->input->post('loc_id'));
         $data = array(
             'company_id' => $comp_id,
             'initial_qty' => $this->input->post('qty'),
             'qty' => $this->input->post('qty'),
             'loc_id' => $this->input->post('loc_id'),
             'item_id' => $this->input->post('item_id'),
+            'location_name' => $location->location_name,
             'insert_date' => date('Y-m-d H:i:s')
         );
 
@@ -1096,7 +1120,9 @@ class Inventory extends MY_Controller
             $executeOnce = 1;
             $this->items_model->recordItemTransaction($this->input->post('item_id'), $this->input->post('qty'), $this->input->post('loc_id'), "add", $user, "USER");
         }
-        echo json_encode($result);
+
+        $return = ['result' => $result, 'item_id' => $this->input->post('item_id')];
+        echo json_encode($return);
     }
     public function editLocation() {
         postAllowed();
@@ -1481,7 +1507,8 @@ class Inventory extends MY_Controller
             'qty' => $input['qty']
         );
         $this->general->update_with_key_field($data, $input['id'], 'items_has_storage_loc', 'id');
-        echo json_encode(["message" => "success"]);
+
+        echo json_encode(['item_id' => $input['item_id'], "message" => "success"]);
 
     }
     public function selectLocation()
@@ -1695,6 +1722,15 @@ class Inventory extends MY_Controller
         header('Content-Disposition: attachment; filename="' . $filename . '";');
 
         fpassthru($f);
+    }
+
+    public function ajax_item_location_list()
+    {
+        $post = $this->input->post();
+        $itemLocations = $this->items_model->getLocationByItemId($post['item_id']);
+
+        $this->page_data['itemLocations'] = $itemLocations;
+        $this->load->view('v2/pages/inventory/ajax_item_location_list', $this->page_data);
     }
 
     // public function TEST_SERVERSIDE() {
