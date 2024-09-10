@@ -216,7 +216,15 @@
                                     <input class="form-check-input select-one table-select" name="creditNotes[]" type="checkbox" value="<?=$note['id']?>">
                                 </div>
                             </td>
-                            <td><?= $note['date']?></td>
+                            <td>
+                                <?php 
+                                    if( strtotime($note['date']) > 0 ){
+                                        echo date("m/d/Y", strtotime($note['date']));
+                                    }else{
+                                        echo '---';
+                                    }
+                                ?>                                
+                            </td>
                             <td><?= $note['type']?></td>
                             <td><?= $note['no'] != '' ? $note['no'] : '---'; ?></td>
                             <td><?= $note['customer']; ?></td>
