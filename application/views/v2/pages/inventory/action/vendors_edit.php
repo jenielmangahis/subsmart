@@ -48,11 +48,11 @@
                                                 <div class="form-group row mt-4">
                                                     <div class="col-sm-6">
                                                         <label for="vendor-mobile"><b>Mobile Number</b></label>
-                                                        <input type="text" class="form-control" value="<?= $vendor->mobile; ?>" name="vendor_mobile" id="vendor-mobile" required/>
+                                                        <input type="text" class="form-control phone_number" value="<?= $vendor->mobile; ?>" maxlength="12" placeholder="xxx-xxx-xxxx" name="vendor_mobile" id="vendor-mobile" required/>
                                                     </div>
                                                     <div class="col-sm-6">
                                                         <label for="vendor-phone"><b>Phone Number</b></label>
-                                                        <input type="text" class="form-control" value="<?= $vendor->phone; ?>" name="vendor_phone" id="vendor-phone" required/>
+                                                        <input type="text" class="form-control phone_number" value="<?= $vendor->phone; ?>" maxlength="12" placeholder="xxx-xxx-xxxx" name="vendor_phone" id="vendor-phone" required/>
                                                     </div>
                                                 </div>
                                                 <div class="form-group row mt-4">
@@ -110,6 +110,20 @@
 $(function(){
     $('#btn-cancel').on('click', function(){
         location.href = base_url + 'inventory/vendors';
+    });
+
+    $('.phone_number').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
     });
 
     $("#vendor_form").submit(function(e) {
