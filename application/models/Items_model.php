@@ -412,11 +412,12 @@ class Items_model extends MY_Model
     {
         $cid = logged('company_id');
 
-        $this->db->select('*');
+        $this->db->select('items_has_storage_loc.*, storage_loc.location_name AS storage_location_name');
         $this->db->from($this->table_has_location);
-        $this->db->where('item_id', $id);
-        $this->db->where('company_id', $cid);
-        $this->db->where('location_name !=', '');
+        $this->db->join('storage_loc', 'items_has_storage_loc.loc_id = storage_loc.loc_id');
+        $this->db->where('items_has_storage_loc.item_id', $id);
+        $this->db->where('items_has_storage_loc.company_id', $cid);
+        //$this->db->where('location_name !=', '');
         $query = $this->db->get();
         return $query->result_array();
     }
@@ -522,9 +523,18 @@ class Items_model extends MY_Model
             $data['name'] = $query->result()[0]->location_name;
             $insertNewLocation = $this->db->insert($this->table_has_location, $data);
         } else {
+            // $updateItem = $this->db->update(
+            //     'items_has_storage_loc',
+            //     ['qty' => $query->result()[0]->qty + $qty],
+            //     array(
+            //         'item_id' => $item_id,
+            //         'loc_id' => $loc_id,
+            //     )
+            // );
+
             $updateItem = $this->db->update(
                 'items_has_storage_loc',
-                ['qty' => $query->result()[0]->qty + $qty],
+                ['qty' => $qty],
                 array(
                     'item_id' => $item_id,
                     'loc_id' => $loc_id,
@@ -674,6 +684,16 @@ class Items_model extends MY_Model
         $query = $this->db->get($this->table_has_location);
         return $query->row();
     }
+
+    public function getItemStorageLocationByIdAndCompanyId($id, $cid)
+    {
+        $this->db->where('id', $id);
+        $this->db->where('company_id', $cid);
+        $query = $this->db->get($this->table_has_location);
+        
+        return $query->row();
+    }
+
     public function deleteLocation($id, $storage = FALSE)
     {
         if ($storage) {

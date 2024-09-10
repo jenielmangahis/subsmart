@@ -534,6 +534,14 @@ class Accounting extends MY_Controller
         $this->page_data['page']->parent = 'Banking';
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+
+        add_footer_js([
+            'assets/js/accounting/banking/categorized_link_bank/categorized-link-bank.js',
+            'assets/js/accounting/banking/categorized_link_bank/libs/download/download.min.js',
+            // stepper
+            'https://cdn.jsdelivr.net/npm/bs-stepper/dist/js/bs-stepper.min.js',
+        ]);
+
         // $this->load->view('v2/pages/accounting/categorized_link_bank', $this->page_data);
         $this->load->view('accounting/banking/categorized_link_bank', $this->page_data);
 
@@ -661,7 +669,6 @@ class Accounting extends MY_Controller
         $this->page_data['page']->title = 'Rules';
         $this->page_data['page']->parent = 'Banking';
         $this->load->view('accounting/banking/rules', $this->page_data);
-        // $this->load->view('accounting/rules', $this->page_data);
     }
 
     public function receipts()
