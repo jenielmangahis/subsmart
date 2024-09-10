@@ -762,17 +762,6 @@ class Customer_advance_model extends MY_Model
         return $query->row();
     }
 
-    public function get_all_subscription_by_company_id($company_id = 0)
-    {
-        $this->db->select('acs_billing.*, acs_profile.first_name, acs_profile.last_name, acs_profile.company_id, acs_profile.mail_add, acs_profile.city, acs_profile.state, acs_profile.zip_code, acs_profile.phone_m, acs_profile.email');
-        $this->db->from('acs_billing');
-        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
-        $this->db->where('acs_profile.company_id', $company_id);
-        $query = $this->db->get();
-
-        return $query->result();
-    }
-
     public function countTotalSubscriptionsByCompanyId($company_id = 0)
     {
         $this->db->select('COALESCE(acs_billing.mmr,0) AS total_amount_subscriptions, COALESCE(COUNT(acs_billing.bill_id),0) AS total_subscriptions');
@@ -782,6 +771,17 @@ class Customer_advance_model extends MY_Model
         $query = $this->db->get();
 
         return $query->row();
+    }
+
+    public function get_all_subscription_by_company_id($company_id = 0)
+    {
+        $this->db->select('acs_billing.*, acs_profile.first_name, acs_profile.last_name, acs_profile.company_id, acs_profile.mail_add, acs_profile.city, acs_profile.state, acs_profile.zip_code, acs_profile.phone_m, acs_profile.email');
+        $this->db->from('acs_billing');
+        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_profile.company_id', $company_id);
+        $query = $this->db->get();
+
+        return $query->result();
     }
 
     public function get_all_active_subscription_by_company_id($company_id = 0)

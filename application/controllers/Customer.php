@@ -2281,6 +2281,14 @@ class Customer extends MY_Controller
         // set a global data for customer profile id
         $this->page_data['customer_profile_id'] = $userid;
         if ($id != null) {
+            $office_info = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_office');
+            $assignedUser = [];
+            if( $office_info ){
+                $this->load->model('Users_model');
+                $assignedUser = $this->Users_model->getUserByID($office_info->technician);
+            }
+
+            $this->page_data['assignedUser'] = $assignedUser;
             $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($id);
             $this->page_data['cust_invoices'] = $this->invoice_model->getAllByCustomerId($id);
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $id, 'acs_profile');
@@ -2288,7 +2296,7 @@ class Customer extends MY_Controller
             $this->page_data['log_info'] = $this->customer_ad_model->getCustomerActivityLogs($id);
 
             $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_access');
-            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_office');
+            $this->page_data['office_info'] = $office_info;
             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_billing');
             $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_alarm');
             $this->page_data['audit_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $id, 'acs_audit_import');
