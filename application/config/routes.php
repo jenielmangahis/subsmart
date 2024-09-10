@@ -1558,6 +1558,7 @@ $route['inventory/_delete_selected_storage_location'] = 'inventory/ajax_delete_s
 $route['inventory/_create_custom_field'] = 'inventory/ajax_create_custom_field';
 $route['inventory/_update_custom_field'] = 'inventory/ajax_update_custom_field';
 $route['inventory/_delete_custom_field'] = 'inventory/ajax_delete_custom_field';
+$route['inventory/_item_location_list'] = 'inventory/ajax_item_location_list';
 
 // Inventory Fees
 $route['inventory/fees/edit/(:num)'] = 'inventory/edit_fee/$1';
