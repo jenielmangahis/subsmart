@@ -191,10 +191,10 @@
         </div>
         <div class="row form_line">
             <div class="col-md-4">
-                County <span class="required"> *</span>
+                County</span>
             </div>
             <div class="col-md-8">
-                <input data-type="customer_address_county" type="text" class="form-control" name="county" id="county" value="<?php if(isset($profile_info->county)){ echo $profile_info->county; } ?>" required/>
+                <input data-type="customer_address_county" type="text" class="form-control" name="county" id="county" value="<?php if(isset($profile_info->county)){ echo $profile_info->county; } ?>"/>
             </div>
         </div>
         <div class="row form_line">
