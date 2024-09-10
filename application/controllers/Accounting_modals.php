@@ -1148,6 +1148,7 @@ class Accounting_modals extends MY_Controller
         $futa = 0.6;
         $sui = 0.00;
         $overall_total_dc = 0;
+        $total_dc = 0;
         // $sui = 2.7;
 
         $this->page_data['payPeriod'] = str_replace('-', ' to ', $postData['pay_period']);
@@ -1209,7 +1210,7 @@ class Accounting_modals extends MY_Controller
             $netPay = $empTotalPay - floatval($empTax);
 
             $deductions_contribution = $this->deduction_contribution->getByUser($empId);
-            $total_dc = 0;
+            
             foreach ($deductions_contribution as $dc) {
                 switch($dc->contribution_calculated_as){
                     case 'Flat amount':
@@ -1242,6 +1243,7 @@ class Accounting_modals extends MY_Controller
                 'deductions_contribution' => $total_dc,
                
             ];
+            $total_dc = 0;
         }
 
         $totalHours = array_sum(array_column($employees, 'employee_hours'));
