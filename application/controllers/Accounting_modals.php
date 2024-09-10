@@ -11326,6 +11326,7 @@ class Accounting_modals extends MY_Controller
     public function add_new_payee()
     {
         $post = $this->input->post();
+
         $name = explode(' ', trim($post['payee_name']));
         $nameCount = count($name);
 
@@ -13222,6 +13223,7 @@ class Accounting_modals extends MY_Controller
                 $this->page_data['field'] = $this->input->get('field');
             break;
         }
+
         $this->load->view("v2/includes/accounting/modal_forms/$modal", $this->page_data);
     }
 
