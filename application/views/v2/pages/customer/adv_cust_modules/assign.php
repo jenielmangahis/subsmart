@@ -2,7 +2,7 @@
     <div class="nsm-card nsm-grid">
         <div class="nsm-card-header d-block">
             <div class="nsm-card-title">
-                <span>Assign</span>
+                <span>Assigned User</span>
             </div>
         </div>
         <div class="nsm-card-content">
@@ -25,34 +25,20 @@
                         ?>
                         <div class="row w-100">
                             <div class="col-12 col-md-6">
-                                <span class="content-title">Lauren Williams</span>
-                                <span class="content-subtitle d-block">FICO HEROES</span>
+                                <span class="content-title"><?= $assignedUser ? $assignedUser->FName . ' ' . $assignedUser->LName : '---'; ?></span>
+                                <span class="content-subtitle d-block"><?= $assignedUser ? $assignedUser->company_name : '---'; ?></span>
                             </div>
                             <div class="col-12 col-md-6 text-end">
-                                <span class="nsm-badge primary">ADMIN</span>
+                                <span class="nsm-badge primary"><?= $assignedUser ? $assignedUser->role_name : '---'; ?></span>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-12 col-md-6">
-                    <button class="nsm-button w-100 ms-0" id="emailtemplate-assign--trigger">
-                        <i class='bx bx-fw bx-edit'></i> Send Welcome Email
-                    </button>
-                </div>
-                <div class="col-12 col-md-6">
-                        <button class="nsm-button primary w-100 ms-0" onclick="window.open('<?= base_url('customer/module/'.$cus_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
-                            <i class='bx bx-fw bx-eraser'></i> Visit Website
-                        </button>
-                </div>
-                <div class="col-12">
-                    <button class="nsm-button w-100 ms-0 ">
-                        <i class='bx bx-fw bx-history'></i> Send Reset Password
-                    </button>
-                </div>
+                </div>                
             </div>
+        <hr />
          <div class="nsm-card-content mt-4">
             <div class="row g-3">
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-6 mb-4">
                     <div class="row g-2">
                         <div class="col-12 col-md-6">
                             <label class="content-title">Entered by</label>
@@ -82,7 +68,7 @@
                                 ?>
                             </span>
                         </div>
-                        <div class="col-12 col-md-6">
+                        <!-- <div class="col-12 col-md-6">
                             <label class="content-title">Assign To</label>
                         </div>
                         <div class="col-12 col-md-6">
@@ -95,7 +81,7 @@
                                     }
                                 ?>
                             </span>
-                        </div>
+                        </div> -->
                         <div class="col-12 col-md-6">
                             <label class="content-title">Pre Survey</label>
                         </div>
@@ -110,9 +96,23 @@
                                 ?>
                             </span>
                         </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-title">Post Survey</label>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <span class="content-subtitle">
+                                <?php 
+                                    if ($office_info->post_install_survey) {
+                                        echo $office_info->post_install_survey; 
+                                    } else {
+                                        echo "&mdash;";
+                                    }
+                                ?>
+                            </span>
+                        </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-md-6 mb-4">
                     <div class="row g-2">
                         <div class="col-12 col-md-6">
                             <label class="content-title">Provider</label>
@@ -160,28 +160,24 @@
                                 ?>
                                 <?php //$sales_rep->FName. ' ' . $sales_rep->LName; ?>
                             </span>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <label class="content-title">Post Survey</label>
-                        </div>
-                        <div class="col-12 col-md-6">
-                            <span class="content-subtitle">
-                                <?php 
-                                    if ($office_info->post_install_survey) {
-                                        echo $office_info->post_install_survey; 
-                                    } else {
-                                        echo "&mdash;";
-                                    }
-                                ?>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
-                    <button role="button" class="nsm-button primary w-100 ms-0 mt-3" onclick="window.open('<?= base_url('timesheet/attendance_logs') ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
-                        <i class='bx bx-fw bx-history'></i> History Log
+                        </div>                        
+                    </div>                    
+                </div>    
+                <div class="col-12 col-md-6">
+                    <button class="nsm-button w-100 ms-0" id="emailtemplate-assign--trigger">
+                        <i class='bx bx-fw bx-edit'></i> Send Welcome Email
                     </button>
                 </div>
+                <!-- <div class="col-12 col-md-6">
+                        <button class="nsm-button primary w-100 ms-0" onclick="window.open('<?= base_url('customer/module/'.$cus_id) ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');">
+                            <i class='bx bx-fw bx-eraser'></i> Visit Website
+                        </button>
+                </div> -->
+                <div class="col-12 col-md-6">
+                    <button class="nsm-button w-100 ms-0 ">
+                        <i class='bx bx-fw bx-history'></i> Send Reset Password
+                    </button>
+                </div>            
             </div>
         </div>
 
