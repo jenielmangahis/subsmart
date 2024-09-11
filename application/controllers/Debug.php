@@ -2797,6 +2797,35 @@ class Debug extends MYF_Controller {
         phpinfo();
         exit;
     }
+
+    public function fixCustomerDateOfBirth()
+    {
+        $this->load->model('AcsProfile_model');
+
+        $total_updated = 0;        
+        $limit = 500;
+        $customers = $this->AcsProfile_model->getAllNotChecked($limit);
+        
+        if( $customers ){            
+            foreach($customers as $c){
+                if( strtotime($c->date_of_birth) > 0 ){
+                    $date_of_birth = date("Y-m-d", strtotime($c->date_of_birth));
+                }else{
+                    $date_of_birth = NULL;
+                }
+
+                $data = [
+                    'date_of_birth' => $date_of_birth,
+                    'is_checked' => 1
+                ];
+                $this->AcsProfile_model->updateCustomerByProfId($c->prof_id, $data);
+                
+                $total_updated++;
+            }
+        }
+
+        echo 'Total Updated : ' . $total_updated;
+    }
 }
 /* End of file Debug.php */
 

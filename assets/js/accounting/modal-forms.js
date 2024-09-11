@@ -5685,7 +5685,7 @@ $(function () {
                     break;
             }
 
-            if( form  == 'vendor_id' ){
+            if (form == 'vendor_id') {
                 form = 'vendor';
             }
 
@@ -6378,7 +6378,7 @@ $(function () {
                 url: base_url + 'accounting/vendors/_save_vendor',
                 data: data,
                 type: 'post',
-                dataType:'json',
+                dataType: 'json',
                 processData: false,
                 contentType: false,
                 success: function (result) {
@@ -6633,13 +6633,13 @@ $(function () {
             </div>
             <div class="col-12">
                 <label for="phone-m">Mobile</label>
-                <input type="text" class="form-control nsm-field phone_number mb-2" maxlength="12" placeholder="xxx-xxx-xxxx" name="mobile" id="phone-m" required />
+                <input type="number" class="form-control nsm-field phone_number mb-2" maxlength="12" placeholder="xxx-xxx-xxxx" name="mobile" id="phone-m" required />
             </div>
             <div class="col-12 mb-2">
                 <label for="customer-type">Customer Type</label>
                 <select id="customer-type"  name="customer_type"  data-customer-source="dropdown"  class="form-control input_select" required>
                     <option value="Residential">Residential</option>
-                    <option value="Business">Business</option>
+                    <option value="Commercial">Commercial</option>
                 </select>
             </div>
             <div class="col-12">
@@ -6658,7 +6658,7 @@ $(function () {
             <div class="col-12 col-md-6">
                 <input name="country" type="text" class="form-control nsm-field mb-2" placeholder="Country">
             </div>`;
-            $(fields).insertBefore($(this).parent());
+            $(fields).insertBefore($('.customer-section'));
 
             $('#modal-container #payee-modal #customer-type').select2({
                 minimumResultsForSearch: -1,
@@ -6681,8 +6681,9 @@ $(function () {
 
     $(document).on('click', '#modal-container #payee-modal #add-payee-details', function () {
         var type = $('#modal-container #payee-modal #payee_type').val();
-        var name = $('#modal-container #payee-modal #payee_name').val().trim();
-        var nameSplit = name.split(' ');
+        var fname = $('#modal-container #payee-modal #first_name').val().trim();
+        var lname = $('#modal-container #payee-modal #last_name').val().trim();
+        // var nameSplit = name.split(' ');
 
         if (type === undefined) {
             if (dropdownEl.attr('id') === undefined) {
@@ -6767,36 +6768,10 @@ $(function () {
                     autoclose: true
                 });
 
-                switch (nameSplit.length.toString()) {
-                    case '1':
-                        $('#modal-container #vendor-modal #f_name').val(nameSplit[0]);
-                        break;
-                    case '2':
-                        $('#modal-container #vendor-modal #f_name').val(nameSplit[0]);
-                        $('#modal-container #vendor-modal #l_name').val(nameSplit[1]);
-                        break;
-                    case '3':
-                        $('#modal-container #vendor-modal #f_name').val(nameSplit[0]);
-                        $('#modal-container #vendor-modal #m_name').val(nameSplit[1]);
-                        $('#modal-container #vendor-modal #l_name').val(nameSplit[2]);
-                        break;
-                    case '4':
-                        $('#modal-container #vendor-modal #title').val(nameSplit[0]);
-                        $('#modal-container #vendor-modal #f_name').val(nameSplit[1]);
-                        $('#modal-container #vendor-modal #m_name').val(nameSplit[2]);
-                        $('#modal-container #vendor-modal #l_name').val(nameSplit[3]);
-                        break;
-                    case '5':
-                        $('#modal-container #vendor-modal #title').val(nameSplit[0]);
-                        $('#modal-container #vendor-modal #f_name').val(nameSplit[1]);
-                        $('#modal-container #vendor-modal #m_name').val(nameSplit[2]);
-                        $('#modal-container #vendor-modal #l_name').val(nameSplit[3]);
-                        $('#modal-container #vendor-modal #suffix').val(nameSplit[4]);
-                        break;
-                }
-
-                $('#modal-container #vendor-modal #display_name').val(name);
-                $('#modal-container #vendor-modal #print_on_check_name').val(name);
+                $('#modal-container #vendor-modal #f_name').val(fname);
+                $('#modal-container #vendor-modal #l_name').val(lname);
+                $('#modal-container #vendor-modal #display_name').val(fname + ' ' + lname);
+                $('#modal-container #vendor-modal #print_on_check_name').val(fname + ' ' + lname);
                 $('#modal-container #payee-modal').modal('hide');
 
                 $('#modal-container #vendor-modal').attr('data-bs-backdrop', 'static');
@@ -7112,7 +7087,7 @@ $(function () {
         // $('#billPaymentModal #vendor-credits-table').DataTable().ajax.reload(null, true);
     });
 
-    $(document).on('click', '.btn-side-nav-close', function(){
+    $(document).on('click', '.btn-side-nav-close', function () {
         //$('.nsm-side-nav-container').hide();
         $('#modal-container form .modal .attachments-container').parent().remove();
     });
@@ -9310,7 +9285,7 @@ $(function () {
                     $('#modal-container #package_list #package-items-table tbody tr').each(function () {
                         $(this).remove();
                     });
-                }else{
+                } else {
                     Swal.fire({
                         title: 'Add Package',
                         text: res.msg,
@@ -9820,7 +9795,7 @@ const payrollTotal = () => {
 
             totalOvertime += parseFloat($(this).find('td:nth-child(8)').text().replace('$', '').replace(',', ''));
             perHourPay += parseFloat($(this).find('td:nth-child(9)').text().replace('$', '').replace(',', ''));
-            totalHrsPay += parseFloat($(this).find('td:nth-child(10)').text().replace('$', '').replace(',', ''));            
+            totalHrsPay += parseFloat($(this).find('td:nth-child(10)').text().replace('$', '').replace(',', ''));
 
             hours = parseFloat(parseFloat(hours) + empTotalHours);
 

@@ -183,7 +183,7 @@ $(document).on("click", ".update_deductions_contributions", function (e) {
 
                     $(".update_tax_option").filter(`[value="${item.tax_options}"]`).prop('checked', true);
                     handleCalculatedContribution(item.contribution_calculated_as)
-
+                    handleEmployeeDeductionfield(item.deductions_calculated_as)
                     handleDeductionContributionType(item.type);
                 });
 
@@ -413,21 +413,39 @@ function handleRetirementPlan(type) {
 }
 $(".contribution_calculated_as").change(function () {
     var val = $(this).val();
+    handleEmployeeDeductionfield(val)
+});
+
+function handleEmployeeDeductionfield(val) {
     switch (val) {
         case "Flat amount":
             $(".calculated_label").html("Amount per paycheck *");
+            $('.employee_deductions_amount').removeAttr('disabled')
+            $('.employee_annual_maximum').removeAttr('disabled')
+
             break;
         case "Percent of gross pay":
             $(".calculated_label").html("Percent per paycheck *");
+            $('.employee_deductions_amount').removeAttr('disabled')
+            $('.employee_annual_maximum').removeAttr('disabled')
+
             break;
         case "Per hour worked":
             $(".calculated_label").html("Amount per hour worked *");
+            $('.employee_deductions_amount').removeAttr('disabled')
+            $('.employee_annual_maximum').removeAttr('disabled')
+
             break;
         default:
             $(".calculated_label").html("Amount per paycheck *");
+            $('.employee_deductions_amount').attr('disabled', 'disabled');
+            $('.employee_annual_maximum').attr('disabled', 'disabled');
+            $('.employee_deductions_amount').val(0)
+            $('.employee_annual_maximum').val(0)
+
             break;
     }
-});
+}
 
 function handleCalculatedContribution(val) {
     switch (val) {
@@ -465,6 +483,8 @@ $(".contribution_calculated_as2").change(function () {
 
 });
 
+
+
 $(".update_calculated_contribution_amount").change(function () {
     var val = $(this).val();
     $('.add_calculated_contribution_amount').val(val)
@@ -476,6 +496,7 @@ function handleHideResetFields() {
     $(".deduction-type-section").hide();
     $(".deductions-contribution-section-add").hide();
     handleCalculatedContribution('')
+    handleEmployeeDeductionfield('')
 }
 
 function handleDeductionContributionTypeMain(type) {

@@ -54,6 +54,7 @@ class Users extends MY_Controller
 
 	public function businessprofile()
 	{
+		$this->load->library('user_agent');
 		$this->load->model('Business_model');
 		$this->load->model('ServiceCategory_model');
 		$this->load->model('DealsSteals_model');
@@ -66,7 +67,6 @@ class Users extends MY_Controller
 			"assets/js/jquery.fancybox.min.js"
 		));
 
-
 		$user    = (object)$this->session->userdata('logged');
 		$comp_id = logged('company_id');
 		$profiledata = $this->business_model->getByCompanyId($comp_id);
@@ -74,6 +74,10 @@ class Users extends MY_Controller
 
 		$conditions[] = ['field' => 'deals_steals.status', 'value' => $this->DealsSteals_model->statusActive()];
 		$dealsSteals = $this->DealsSteals_model->getAllByCompanyId($comp_id, array(), $conditions);
+
+        $user_agent = $this->agent->agent_string();
+        $ip_address = $this->input->ip_address();
+        $this->Business_model->customerDeviceLookup("business_profile_visit", $ip_address, $user_agent);
 
 		$this->page_data['dealsSteals'] = $dealsSteals;
 		$this->page_data['profiledata'] = $profiledata;
