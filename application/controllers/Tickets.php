@@ -1535,6 +1535,8 @@ class Tickets extends MY_Controller
         $this->load->helper('functions');
         $this->load->model('AcsProfile_model');
         $this->load->model('Job_tags_model');
+        $this->load->model('Customer_advance_model');
+        $this->load->model('User_docflies_model');
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
@@ -1551,8 +1553,7 @@ class Tickets extends MY_Controller
             $this->page_data['auto_increment_estimate_id'] = 0;
         }
 
-        $user_id = logged('id');
-
+        $user_id    = logged('id');
         $company_id = logged('company_id');
         $role = logged('role');
         $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);       
@@ -1581,13 +1582,25 @@ class Tickets extends MY_Controller
             $next_num = 1;
         }
 
-        $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+        $next_num  = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+        $ratePlans = $this->Customer_advance_model->getAllSettingsRatePlansByCompanyId($company_id);
+
+        //esign templates
+        $esignTemplates  = $this->User_docflies_model->getAllDocfileTemplatesByCompanyId($company_id);
+        $defaultTemplate = $this->User_docflies_model->getDefaultTemplateByCompanyId($company_id);
+        if( $defaultTemplate ){
+            foreach($esignTemplates as $record){
+                $record->is_default = $defaultTemplate->template_id == $record->id ? 1 : 0;
+            }
+        }
 
         $this->page_data['prefix'] = $prefix;
         $this->page_data['next_num'] = $next_num;
         $this->page_data['default_start_date'] = $default_start_date;
         $this->page_data['default_start_time'] = $default_start_time;
         $this->page_data['items'] = $this->items_model->getItemlist();        
+        $this->page_data['ratePlans'] = $ratePlans;
+        $this->page_data['esignTemplates'] = $esignTemplates;
         $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);
         $this->page_data['type'] = $this->input->get('type');
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
@@ -1605,6 +1618,7 @@ class Tickets extends MY_Controller
         $jobs_id  = 0;
         $is_valid = 1;
         $msg = '';
+        $esign_id = 0;        
 
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
@@ -1640,6 +1654,19 @@ class Tickets extends MY_Controller
         }
 
         if( $is_valid == 1 ){
+
+            $monthly_monitoring_cost = 0;
+            $update_customer_mmr     = 0;
+            $installation_cost = 0;
+            $otp_cost = 0;
+            if( $this->input->post('is_with_esign') ){
+                $otp_cost = $this->input->post('otp');
+                $installation_cost = $this->input->post('installation_cost');
+                $monthly_monitoring_cost = $this->input->post('monthly_monitoring_rate');
+                $esign_id = $this->input->post('esign_template');
+                $update_customer_mmr = 1;
+            }
+
             $techni = serialize($this->input->post('assign_tech'));
             $tDate  = date("Y-m-d",strtotime($this->input->post('ticket_date')));
             $status = $this->input->post('ticket_status');
@@ -1683,6 +1710,9 @@ class Tickets extends MY_Controller
                 'customer_phone'            => $this->input->post('customer_phone'),
                 'employee_id'               => $this->input->post('employee_id'),
                 'created_by'                => logged('id'),
+                'monthly_monitoring'        => $monthly_monitoring_cost,
+                'otp_setup'                 => $otp_cost,
+                'installation_cost'         => $installation_cost,
                 // 'hash_id'                   => $hasID,
                 'company_id'                => $company_id,
                 'created_at'                => date("Y-m-d H:i:s"),
@@ -1699,6 +1729,49 @@ class Tickets extends MY_Controller
             );
 
             $updateaddQuery = $this->tickets_model->updateTicketsHash_ID($update_data);
+
+            //Update customer mmr
+            if( $update_customer_mmr == 1 ){
+                $check = [
+                    'where' => [
+                        'fk_prof_id' => $this->input->post('customer_id'),
+                    ],
+                    'table' => 'acs_alarm',
+                ];
+                $exist = $this->general->get_data_with_param($check, false);
+                if ($exist) {
+                    $input_alarm['monthly_monitoring'] = $monthly_monitoring_cost;
+                    $input_alarm['otps'] = $otp_cost;   
+                    $this->general->update_with_key_field($input_alarm, $this->input->post('customer_id'), 'acs_alarm', 'fk_prof_id');
+                }else{
+                    $input_alarm['fk_prof_id'] = $this->input->post('customer_id');
+                    $input_alarm['monitor_comp'] = '';
+                    $input_alarm['monitor_id'] = 0;
+                    $input_alarm['acct_type'] = '';
+                    $input_alarm['online'] = 'Yes';
+                    $input_alarm['in_service'] = 'Yes';
+                    $input_alarm['equipment'] = '';
+                    $input_alarm['collections'] = '';
+                    $input_alarm['credit_score_alarm'] = '';
+                    $input_alarm['passcode'] = '';
+                    $input_alarm['install_code'] = '';
+                    $input_alarm['mcn'] = 0;
+                    $input_alarm['scn'] = 0;
+                    $input_alarm['panel_type'] = $this->input->post('panel_type');
+                    $input_alarm['system_type'] = '';
+                    $input_alarm['warranty_type'] = $this->input->post('warranty_type');
+                    $input_alarm['dealer'] = '';
+                    $input_alarm['alarm_login'] = '';
+                    $input_alarm['alarm_customer_id'] = '';
+                    $input_alarm['alarm_cs_account'] = '';
+                    $input_alarm['comm_type'] = '';
+                    $input_alarm['account_cost'] = 0;
+                    $input_alarm['pass_thru_cost'] = 0;
+                    $input_alarm['monthly_monitoring'] = $monthly_monitoring_cost;
+                    $input_alarm['otps'] = $otp_cost;   
+                    $this->general->add_($input_alarm, 'acs_alarm');
+                }
+            }
 
             //Google Calendar
             createSyncToCalendar($addQuery, 'service_ticket', $company_id);
@@ -1917,7 +1990,7 @@ class Tickets extends MY_Controller
             createActivityLog($activity_name);
         }
 
-        $json_data = ['is_success' => $is_valid, 'msg' => $msg, 'job_id' => $jobs_id];
+        $json_data = ['is_success' => $is_valid, 'msg' => $msg, 'job_id' => $jobs_id, 'esign_id' => $esign_id, 'customer_id' => $this->input->post('customer_id')];
         echo json_encode($json_data);       
 
         exit;
