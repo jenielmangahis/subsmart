@@ -1873,6 +1873,7 @@ class Tickets extends MY_Controller
             }
             
             $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+            $invoice_id = $this->createInitialInvoice($jobs_id);
 
             //Update job settings
             if( $is_with_settings == 1 ){
@@ -2051,6 +2052,160 @@ class Tickets extends MY_Controller
         echo json_encode($json_data);       
 
         exit;
+    }
+
+    public function createInitialInvoice($job_id)
+    {
+        $this->load->model('Invoice_model');
+        $this->load->model('Invoice_settings_model');
+
+        $company_id = logged('company_id');
+        
+        $this->db->where('id', $job_id);
+        $job = $this->db->get('jobs')->row();
+
+        $this->db->where('prof_id', $job->customer_id);
+        $customer = $this->db->get('acs_profile')->row();
+
+        $workorder = array();
+        if( $job->work_order_id > 0 ){
+            $this->db->where('id', $job->work_order_id);
+            $workorder = $this->db->get('work_orders')->row();
+        }
+        
+        $this->db->where('id', $job->ticket_id);
+        $ticket = $this->db->get('tickets')->row();
+
+        $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($company_id);
+        if( $invoiceSettings ){            
+            $next_number = (int) $invoiceSettings->invoice_num_next;     
+            $prefix      = $invoiceSettings->invoice_num_prefix;        
+        }else{
+            $lastInsert = $this->Invoice_model->getLastInsertByCompanyId($company_id);
+            $prefix     = 'INV-';
+            if( $lastInsert ){
+                $next_number   = $lastInsert->id + 1;
+            }else{
+                $next_number   = 1;
+            }
+        }
+
+        $invoiceNumber = formatInvoiceNumberV2($prefix, $next_number);        
+
+        $monthly_monitoring = $ticket->monthly_monitoring;
+        $program_setup      = $ticket->otp_setup;
+        $installation_cost  = $ticket->installation_cost;
+
+        $grand_total = $ticket->grandtotal;
+        $sub_total   = $ticket->subtotal;
+        $tax         = $ticket->taxes;
+
+        $new_data = array(
+            'customer_id'               => $job->customer_id,
+            'job_location'              => $job->job_location,
+            'job_name'                  => $job->job_name,
+            'job_id'                    => $job->id,
+            'job_number'                => $job->job_number,
+            'business_name'             => $customer->business_name,
+            'tags'                      => $job->tags,
+            'invoice_type'              => 'Total Due',
+            'work_order_number'         => !empty($workorder) ? $workorder->work_order_number : '',
+            'purchase_order'            => '',
+            'invoice_number'            => $invoiceNumber,
+            'date_issued'               => date("Y-m-d"),
+            'customer_email'            => $customer->email,
+            'online_payments'           => '',
+            'billing_address'           => $customer->mail_add,
+            'shipping_to_address'       => $customer->mail_add,
+            'ship_via'                  => '',
+            'shipping_date'             => '',
+            'tracking_number'           => '',
+            'terms'                     => 0,     
+            'tip'                       => 0,       
+            'due_date'                  => date("Y-m-d", strtotime("+5 days")),
+            'location_scale'            => '',
+            'message_to_customer'       => '',
+            'terms_and_conditions'      => !empty($workorder) ? $workorder->terms_and_conditions : '',            
+            'attachments'               => $job->attachment,
+            'status'                    => 'Draft',
+            'company_id'                => $company_id,
+            'deposit_request_type'      => '$',
+            'deposit_request'           => '0',
+            'monthly_monitoring'        => $monthly_monitoring,
+            'program_setup'             => $program_setup,
+            'installation_cost'         => $installation_cost,
+            'payment_methods'           => $job->BILLING_METHOD,
+            'sub_total'                 => $sub_total,
+            'taxes'                     => $tax,
+            'adjustment_name'           => !empty($workorder) ? $workorder->adjustment_name : '',
+            'adjustment_value'          => !empty($workorder) ? $workorder->adjustment_value : 0,
+            'grand_total'               => $grand_total,
+            'user_id'                   => logged('id'),
+            'date_created'              => date("Y-m-d H:i:s"),
+            'date_updated'              => date("Y-m-d H:i:s")
+        );
+
+        $invoice_id = $this->Invoice_model->createInvoice($new_data);
+
+        //Update invoice settings
+        if( $invoiceSettings ){
+            $invoice_settings_data = ['invoice_num_next' => $next_number + 1];
+            $this->Invoice_settings_model->update($invoiceSettings->id, $invoice_settings_data);
+        }else{
+            $invoice_settings_data = [
+                'invoice_num_prefix' => $prefix,
+                'invoice_num_next' => $next_number,
+                'check_payable_to' => '',
+                'accept_credit_card' => 1,
+                'accept_check' => 0,
+                'accept_cash'  => 1,
+                'accept_direct_deposit' => 0,
+                'accept_credit' => 0,
+                'mobile_payment' => 1,
+                'capture_customer_signature' => 1,
+                'hide_item_price' => 0,
+                'hide_item_qty' => 0,
+                'hide_item_tax' => 0,
+                'hide_item_discount' => 0,
+                'hide_item_total' => 0,
+                'hide_from_email' => 0,
+                'hide_item_subtotal' => 0,
+                'hide_business_phone' => 0,
+                'hide_office_phone' => 0,
+                'accept_tip' => 0,
+                'due_terms' => '',
+                'auto_convert_completed_work_order' => 0,
+                'message' => 'Thank you for your business.',
+                'terms_and_conditions' => 'Thank you for your business.',
+                'company_id' => $company_id,
+                'commercial_message' => 'Thank you for your business.',
+                'commercial_terms_and_conditions' => 'Thank you for your business.',
+                'logo' => '',
+                'payment_fee_percent' => '',
+                'payment_fee_amount' => '',
+                'recurring' => ''
+            ];
+
+            $this->Invoice_settings_model->create($invoice_settings_data);
+        }
+
+        //Job Items
+        $jobItems = $this->jobs_model->get_specific_job_items($job->id);
+        foreach( $jobItems as $item ){
+            $invoice_item_data = [
+                'invoice_id' => $invoice_id,
+                'items_id' => $item->fk_item_id,
+                'qty' => $item->qty,
+                'cost' => $item->cost,
+                'tax' => $item->tax,
+                'discount' => $item->discount,
+                'total' => $item->total
+            ];
+
+            $this->Invoice_model->add_invoice_details($invoice_item_data);
+        }
+
+        return $invoice_id;
     }
 }
 
