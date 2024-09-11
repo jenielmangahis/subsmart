@@ -38,7 +38,7 @@
                             <td class="table-icon"></td>
                             <td data-name="Name">Name</td>
                             <td data-name="Date Created" style="width:10%;">Date Created</td>
-                            <td data-name="Manage"></td>
+                            <td data-name="Manage" style="width:5%;"></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -55,7 +55,7 @@
                                         </div>
                                     </td>
                                     <td class="fw-bold nsm-text-primary"><?= $source->ls_name; ?></td>
-                                    <td><?= date("d-m-Y h:i A",strtotime($source->date_created)); ?></td>
+                                    <td><?= date("m/d/Y h:i A",strtotime($source->date_created)); ?></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">

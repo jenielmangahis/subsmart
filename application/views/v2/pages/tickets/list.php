@@ -108,11 +108,11 @@
                             </td>
                             <td class="table-icon"></td>
                             <td data-name="Work Order Number">Ticket No.</td>
-                            <td data-name="Date Issued">Date Created</td>
+                            <td data-name="Date Issued">Ticket Date</td>
                             <td data-name="Customer">Customer</td>
                             <td data-name="Status">Status</td>
-                            <td data-name="Amount">Amount</td>
-                            <td data-name="Manage"></td>
+                            <td data-name="Amount" style="width:10%; !important;">Amount</td>
+                            <td data-name="Manage" style="width:5%;"></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -121,8 +121,16 @@
                             <td style="text-align:center;"><input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0"></td>
                             <td><div class="table-row-icon"><i class='bx bx-briefcase'></i></div></td>
                             <td><b><?php echo $ticket->ticket_no; ?></b></td>
-                            <td><?php $originalDate = $ticket->created_at;
-                                $newDate = date("M d, Y", strtotime($originalDate)); echo $newDate; ?></td>
+                            <td>
+                                <?php 
+                                    $date = '---';
+                                    if( strtotime($ticket->ticket_date) > 0 ){
+                                        $date =  date("m/d/Y", strtotime($ticket->ticket_date)); 
+                                    }
+
+                                    echo $date;
+                                ?>
+                            </td>
                             <td><?php echo $ticket->first_name.' '.$ticket->last_name; ?></td>
                             <td><?php echo $ticket->ticket_status; ?></td>
                             <td>$<?php echo number_format($ticket->grandtotal,2); ?></td>
@@ -159,7 +167,7 @@
             "ordering": false,
             language: {
                 processing: '<span>Fetching data...</span>'
-            },
+            }     
         });
 
         $("#custom-ticket-searchbar").keyup(function() {

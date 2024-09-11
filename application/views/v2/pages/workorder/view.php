@@ -144,7 +144,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </tr>
                         <tr>
                           <td style="text-align:left ;">Date:</td>
-                          <td style="text-align:right;"><b><?php $wDate = $workorder->date_created; echo date("m-d-Y", strtotime($wDate) ); ?></b></td>
+                          <td style="text-align:right;"><b><?php $wDate = $workorder->date_created; echo date("m/d/Y", strtotime($wDate) ); ?></b></td>
                         </tr>
                         <tr>
                           <td style="text-align:left;">Type:</td>
@@ -240,7 +240,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                           <li>
                               <span class="label-details">Installtion Date</span>
                               <span class="value-details">
-                                <?php $installation_date = date("m-d-Y", strtotime($workorder->date_issued)); ?>
+                                <?php 
+                                  $installation_date = '---'; 
+                                  if( strtotime($workorder->date_issued) > 0 ){
+                                    $installation_date = date("m/d/Y", strtotime($workorder->date_issued)); 
+                                  }
+                                ?>
                                 <?= $installation_date; ?>
                               </span>
                             </li>

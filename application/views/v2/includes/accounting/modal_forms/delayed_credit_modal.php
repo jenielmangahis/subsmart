@@ -1,4 +1,16 @@
 <!-- Modal for bank deposit-->
+ <style>
+#delayedCreditModal .nsm-table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
+#delayedCreditModal .modal-body{
+    overflow-x:hidden;
+}
+#delayedCreditModal #item-table td:nth-child(8){
+ text-align:right !important;
+}
+ </style>
 <div class="full-screen-modal">
 <?php if(!isset($credit)) : ?>
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
@@ -111,15 +123,9 @@
                                     <div class="nsm-field-group calendar">
                                         <input type="text" name="delayed_credit_date" id="delayed-credit-date" class="form-control nsm-field mb-2 date" value="<?=isset($credit) ? date("m/d/Y", strtotime($credit->delayed_credit_date)) : date("m/d/Y")?>">
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col-12 col-md-6 grid-mb">
-                                    <div id="label">
-                                        <label for="tags">Tags</label>
-                                        <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
-                                    </div>
+                                    <label for="tags">Tags</label>
+                                    <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
                                     <select name="tags[]" id="tags" class="form-control" multiple="multiple">
                                         <?php if(isset($tags) && count($tags) > 0) : ?>
                                             <?php foreach($tags as $tag) : ?>
@@ -135,15 +141,19 @@
                                         <?php endif; ?>
                                     </select>
                                 </div>
+                                <div class="col-12 col-md-4">
+                                    <label for="memo">Memo</label>
+                                    <textarea name="memo" id="memo" style="height:98px !important;" class="form-control nsm-field mb-2"><?=isset($credit) ? str_replace("<br />", "", $credit->memo) : ''?></textarea>
+                                </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row mt-5">
                                 <div class="col-12 grid-mb">
                                     <table class="nsm-table" id="item-table">
                                         <thead>
-                                            <td data-name="Item">ITEM</td>
-                                            <td data-name="Type">TYPE</td>
-                                            <td data-name="Location">LOCATION</td>
+                                            <td data-name="Item" style="width:20%;">ITEM</td>
+                                            <td data-name="Type" style="width:10%;">TYPE</td>
+                                            <td data-name="Location" style="width:15%;">LOCATION</td>
                                             <td data-name="Quantity">QUANTITY</td>
                                             <td data-name="Price">PRICE</td>
                                             <td data-name="Discount">DISCOUNT</td>
@@ -268,29 +278,19 @@
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-12 col-md-6">
-                                    <div class="row">
-                                        <div class="col-12 col-md-4">
-                                            <label for="memo">Memo</label>
-                                            <textarea name="memo" id="memo" class="form-control nsm-field mb-2"><?=isset($credit) ? str_replace("<br />", "", $credit->memo) : ''?></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12 col-md-6">
-                                            <div class="attachments">
-                                                <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
-                                                <span>Maximum size: 20MB</span>
-                                                <div id="delayed-credit-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
-                                                    <div class="dz-message" style="margin: 20px;border">
-                                                        <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                                        <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex justify-content-center align-items-center">
-                                                    <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
-                                                </div>
+                            <div class="row mt-5">
+                                <div class="col-12 col-md-6">                                    
+                                    <div class="attachments">
+                                        <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
+                                        <span>Maximum size: 20MB</span>
+                                        <div id="delayed-credit-attachments" class="dropzone justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                            <div class="dz-message" style="margin: 20px;border">
+                                                <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                                <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                             </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
                                         </div>
                                     </div>
                                 </div>
@@ -348,30 +348,17 @@
                                             </tr>
                                             <tr>
                                                 <td>
-                                                    <div class="row">
-                                                        <div class="col-8">
-                                                            <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="<?=isset($credit) ? $credit->adjustment_name : ''?>">
+                                                    <div class="row" style="float: right;">
+                                                        <div class="col-10">
+                                                            <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control nsm-field" value="<?= isset($credit) ? $credit->adjustment_name : '' ?>">
                                                         </div>
-                                                        <div class="col-3">
-                                                            <input type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?=isset($credit) ? number_format(floatval($credit->adjustment_value), 2, '.', ',') : ''?>">
-                                                        </div>
-                                                        <div class="col-1 d-flex align-items-center">
-                                                            <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional it allows you to adjust the total amount Eg. +10 or -10."></span>
+                                                        <div class="col-1 d-flex align-items-center" style="padding-left: 0 !important;">
+                                                            <span id="modal-help-popover-adjustment" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <span class="transaction-adjustment">
-                                                    <?php if(isset($credit)) : ?>
-                                                        <?php
-                                                        $amount = '$'.number_format(floatval($credit->adjustment_value), 2, '.', ',');
-                                                        $amount = str_replace('$-', '-$', $amount);
-                                                        echo $amount;
-                                                        ?>
-                                                    <?php else : ?>
-                                                        $0.00
-                                                    <?php endif; ?>
-                                                    </span>
+                                                    <input style="float: right; width: 75px;text-align:right;padding-right:1px !important;" type="number" name="adjustment_value" id="adjustment_input_cm" step=".01" class="form-control nsm-field adjustment_input_cm_c" onchange="convertToDecimal(this)" value="<?= isset($credit) ? number_format(floatval($credit->adjustment_value), 2, '.', ',') : '' ?>">
                                                 </td>
                                             </tr>
                                             <tr>
@@ -450,3 +437,15 @@
     <!--end of modal-->
 </form>
 </div>
+<script>
+$(function(){
+    $('#modal-help-popover-adjustment').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
+        }
+    });
+});
+</script>

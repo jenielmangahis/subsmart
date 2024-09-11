@@ -101,7 +101,7 @@
                                                 <?php foreach ($customFields as $cf) : ?>
                                                     <tr>
                                                         <td class="fw-bold nsm-text-primary"><?php echo $cf->name; ?></td>
-                                                        <td><?php echo $cf->date_created; ?></td>                                                        
+                                                        <td><?php echo date("m/d/Y g:i A", strtotime($cf->date_created)); ?></td>                                                        
                                                         <td class="text-end">
                                                             <button class="nsm-button btn-sm m-0 me-2 edit-custom-field" data-id="<?php echo $cf->id; ?>" data-name="<?php echo $cf->name; ?>">
                                                                 Edit

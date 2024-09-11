@@ -2663,12 +2663,12 @@
     </div>
 </div>
 
-<div id="overlay">
+<!-- <div id="overlay">
     <div>
         <img src="<?=base_url()?>/assets/img/uploading.gif" class="" style="width: 80px;" alt="" />
         <center><p>Processing...</p></center>
     </div>
-</div>
+</div> -->
 
 <style>
     .pointers-none {

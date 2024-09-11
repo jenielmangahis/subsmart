@@ -278,13 +278,25 @@
                 <label class="content-subtitle fw-bold">Billing Start Date</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?php echo isset($billing_info) && !empty($billing_info->bill_start_date) ? date("m/d/Y", strtotime($billing_info->bill_start_date)) : date("m/d/Y", strtotime($office_info->install_date)) ?></label>
+                <?php 
+                    $start_date = '<i class="text-muted">Not Specified</i>';
+                    if( $billing_info && ( $billing_info->bill_start_date != '1970-01-01' && strtotime($billing_info->bill_start_date) > 0 ) ){
+                        $start_date = date("m/d/Y", strtotime($billing_info->bill_start_date));
+                    }
+                ?>
+                <label class="content-subtitle"><?php echo $start_date; ?></label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Billing End Date</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><label class="content-subtitle"><?php echo (!empty($billing_info->bill_end_date)) ? date("m/d/Y", strtotime($billing_info->bill_end_date)) : '<i class="text-muted">Not Specified</i>'; ?></label>
+                <?php 
+                    $end_date = '<i class="text-muted">Not Specified</i>';
+                    if( $billing_info && ( $billing_info->bill_end_date != '1970-01-01' && strtotime($billing_info->bill_end_date) > 0 ) ){
+                        $end_date = date("m/d/Y", strtotime($billing_info->bill_end_date));
+                    }
+                ?>
+                <label class="content-subtitle"><label class="content-subtitle"><?php echo $end_date; ?></label>
             </div>
         </div>
 

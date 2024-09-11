@@ -687,9 +687,11 @@ class Users_model extends MY_Model
     */
     public function getUserByID($id)
     {
-        $this->db->select('*');
+        $this->db->select('users.*,roles.title AS role_name, business_profile.business_name AS company_name');
         $this->db->from('users');
-        $this->db->where('id', $id);
+        $this->db->where('users.id', $id);
+        $this->db->join('roles', 'users.role = roles.id');
+        $this->db->join('business_profile', 'users.company_id = business_profile.company_id');
         $query = $this->db->get();
         return $query->row();
     }

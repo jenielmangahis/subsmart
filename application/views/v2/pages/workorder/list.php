@@ -136,8 +136,8 @@ function workordermodule__formatWorkOrderNumber($number) {
                             <td data-name="Total">Amount</td>
                             <td data-name="Priority">Priority</td>
                             <td data-name="Status">Status</td>
-                            <td data-name="Date Created">Date Created</td>
-                            <td data-name="Manage"></td>
+                            <td data-name="Date Created" style="width:8%;">Date Created</td>
+                            <td data-name="Manage" style="width:3%;"></td>
                         </tr>
                     </thead>
                     <tbody>
@@ -225,7 +225,7 @@ function workordermodule__formatWorkOrderNumber($number) {
                                     <td>$<?= number_format($workorder->grand_total, 2); ?></td>
                                     <td><span class="nsm-badge <?= $prio_badge ?>"><?php echo $workorder->priority; ?></span></td>
                                     <td><span class="nsm-badge <?= $status_badge ?>"><?php echo $workorder->w_status; ?></span></td>
-                                    <td><?php echo date('M d, Y', strtotime($workorder->date_created)) ?></td>
+                                    <td><?php echo date('m/d/Y', strtotime($workorder->date_created)) ?></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">

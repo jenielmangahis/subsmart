@@ -5,8 +5,8 @@
             <td data-name="Customer Name">Customer Name</td>
             <td data-name="Recurring Start Date">Recurring Start Date</td>
             <td data-name="Recurring End Date">Recurring End Date</td>
-            <td data-name="Total Amount">Total Amount</td>
-            <td data-name="Manage"></td>
+            <td data-name="Amount" style="text-align:right;width:10%;">Subscription Amount</td>
+            <td data-name="Manage" style="width:5%;"></td>
         </tr>
     </thead>
     <tbody>
@@ -23,9 +23,25 @@
                         </div>
                     </td>
                     <td class="fw-bold nsm-text-primary"><?= $as->first_name . ' ' . $as->last_name; ?></td>
-                    <td><?= date("d-M-Y", strtotime($as->recurring_start_date)); ?></td>
-                    <td><?= date("d-M-Y", strtotime($as->recurring_end_date)); ?></td>
                     <td>
+                        <?php 
+                            $recurring_start_date = '---';
+                            if( strtotime($as->recurring_start_date) > 0 ){
+                                $recurring_start_date = date("m/d/Y", strtotime($as->recurring_start_date));
+                            }
+                        ?>
+                        <?= $recurring_start_date; ?>
+                    </td>
+                    <td>
+                        <?php 
+                            $recurring_end_date = '---';
+                            if( strtotime($as->recurring_end_date) > 0 ){
+                                $recurring_end_date = date("m/d/Y", strtotime($as->recurring_end_date));
+                            }
+                        ?>
+                        <?= $recurring_end_date; ?>
+                    </td>
+                    <td style="text-align:right;">
                         <?php
                             $total_amount = (float)$as->transaction_amount + (float)$as->finance_amount;
                             echo number_format($total_amount, 2);

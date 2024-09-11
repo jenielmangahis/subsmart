@@ -135,7 +135,7 @@ table.dataTable.no-footer {
                                         </td>
                                         <td class="fw-bold nsm-text-primary"><?php echo $rate->name; ?></td>
                                         <td><?php echo $rate->rate; ?> %</td>
-                                        <td><?php echo date("m-d-Y h:i A",strtotime($rate->date_created)); ?></td>
+                                        <td><?php echo date("m/d/Y h:i A",strtotime($rate->date_created)); ?></td>
                                         <td><?php echo ($rate->is_default == 1) ? "<i style='font-size: 31px;' class='bx bx-check text-success'></i>" : ""?></td>
                                         <td>
                                             <div class="dropdown table-management">

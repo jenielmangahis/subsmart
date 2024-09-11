@@ -536,13 +536,25 @@
                 <label class="content-subtitle fw-bold">Recurring Start Date</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= !empty($billing_info->recurring_start_date) ?  $billing_info->recurring_start_date : '---' ?></label>
+                <?php 
+                    $recurring_start_date = '---';
+                    if( $billing_info && strtotime($billing_info->recurring_start_date) > 0 ){
+                        $recurring_start_date = date("m/d/Y", strtotime($billing_info->recurring_start_date));
+                    }
+                ?>
+                <label class="content-subtitle"><?= $recurring_start_date; ?></label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Recurring End Date</label>
             </div>
             <div class="col-12 col-md-6">
-                <label class="content-subtitle"><?= !empty($billing_info->recurring_end_date) ?  $billing_info->recurring_end_date : '---' ?></label>
+                <?php 
+                    $recurring_end_date = '---';
+                    if( $billing_info && strtotime($billing_info->recurring_end_date) > 0 ){
+                        $recurring_end_date = date("m/d/Y", strtotime($billing_info->recurring_end_date));
+                    }
+                ?>
+                <label class="content-subtitle"><?= $recurring_end_date; ?></label>
             </div>
             <div class="col-12 col-md-6">
                 <label class="content-subtitle fw-bold">Transaction Amount</label>
