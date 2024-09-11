@@ -84,7 +84,7 @@
                                 <?php endif; ?>
                                 <div class="col-12 col-md-8 grid-mb">
                                     <div class="row">
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-4">
                                             <label for="payee">Payee</label>
                                             <select name="payee" id="payee" class="form-control nsm-field">
                                                 <?php if(isset($expense)) : ?>
@@ -109,7 +109,7 @@
                                                 <?php endif; ?>
                                             </select>
                                         </div>
-                                        <div class="col-12 col-md-3">
+                                        <div class="col-12 col-md-4">
                                             <label for="expense_payment_account">Payment account</label>
                                             <select name="expense_payment_account" id="expense_payment_account" class="form-control nsm-field" required>
                                                 <?php if(isset($expense)) : ?>
@@ -117,8 +117,10 @@
                                                 <?php endif; ?>
                                             </select>
                                         </div>
-                                        <div class="col-12 col-md-3 d-flex">
-                                            <p style="align-self: flex-end; margin-bottom: 0px">Balance <span id="account-balance"><?= $balance ?></span></p>
+                                        <div class="col-12 col-md-4">
+                                            <label for="expense_payment_account">Balance</label>
+                                            <input type="text"  class="form-control" value="<?= $balance?>" readOnly>
+
                                         </div>
                                     </div>
                                 </div>
@@ -151,61 +153,64 @@
                             </div>
 
                             <div class="row">
-                                <?php if($is_copy) : ?>
-                                <div class="col-12">
-                                    <div class="nsm-callout primary">
-                                        <button><i class='bx bx-x'></i></button>
-                                        <h6 class="mt-0">This is a copy</h6>
-                                        <span>This is a copy of an expense. Revise as needed and save the expense.</span>
+                            <div class="col-md-8">
+                                <div class="row">
+                                    <?php if($is_copy) : ?>
+                                    <div class="col-12">
+                                        <div class="nsm-callout primary">
+                                            <button><i class='bx bx-x'></i></button>
+                                            <h6 class="mt-0">This is a copy</h6>
+                                            <span>This is a copy of an expense. Revise as needed and save the expense.</span>
+                                        </div>
+                                    </div>
+                                    <?php endif; ?>
+                                    <div class="col-md-4">
+                                        <label for="payment_date">Payment date</label>
+                                        <div class="nsm-field-group calendar">
+                                            <input type="text" name="payment_date" id="payment_date" class="form-control nsm-field mb-2 date" value="<?=isset($expense) ? ($expense->payment_date !== "" && !is_null($expense->payment_date) ? date("m/d/Y", strtotime($expense->payment_date)) : "") : date("m/d/Y")?>" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="payment_method">Payment method</label>
+                                        <select name="payment_method" id="payment_method" class="form-control nsm-field mb-2">
+                                            <?php if(isset($expense)) : ?>
+                                                <option value="<?=$expense->payment_method_id?>"><?=$this->accounting_payment_methods_model->getById($expense->payment_method_id)->name?></option>
+                                            <?php endif;?>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                            <label for="ref_no">Ref no.</label>
+                                            <input type="text" name="ref_no" id="ref_no" class="form-control nsm-field" <?=isset($expense) ? "value='$expense->ref_no'" : ''?>>
+                                    </div>
+                                    <div class="col-12 col-md-8 grid-mb">
+                                        <div id="label">
+                                            <label for="tags">Tags</label>
+                                            <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
+                                        </div>
+                                        <select name="tags[]" id="tags" class="form-control" multiple="multiple">
+                                            <?php if(isset($tags) && count($tags) > 0) : ?>
+                                                <?php foreach($tags as $tag) : ?>
+                                                    <?php 
+                                                        $name = $tag->name;
+                                                        if($tag->group_tag_id !== null) {
+                                                            $group = $this->tags_model->getGroupById($tag->group_tag_id);
+                                                            $name = $group->name.': '.$tag->name;
+                                                        }
+                                                    ?>
+                                                    <option value="<?=$tag->id?>" selected><?=$name?></option>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </select>
+                                    </div>
+                                    <div class="cold-12 col-md-4 grid-mb">
+                                        <label for="permit_number">Permit no.</label>
+                                        <input type="number" class="form-control nsm-field mb-2" name="permit_number" id="permit_number" <?=isset($expense) ? "value='$expense->permit_no'" : ''?>> 
                                     </div>
                                 </div>
-                                <?php endif; ?>
-                                <div class="col-12 col-md-2">
-                                    <label for="payment_date">Payment date</label>
-                                    <div class="nsm-field-group calendar">
-                                        <input type="text" name="payment_date" id="payment_date" class="form-control nsm-field mb-2 date" value="<?=isset($expense) ? ($expense->payment_date !== "" && !is_null($expense->payment_date) ? date("m/d/Y", strtotime($expense->payment_date)) : "") : date("m/d/Y")?>" required>
-                                    </div>
-                                </div>
-                                <div class="col-12 col-md-2">
-                                    <label for="payment_method">Payment method</label>
-                                    <select name="payment_method" id="payment_method" class="form-control nsm-field mb-2">
-                                        <?php if(isset($expense)) : ?>
-                                            <option value="<?=$expense->payment_method_id?>"><?=$this->accounting_payment_methods_model->getById($expense->payment_method_id)->name?></option>
-                                        <?php endif;?>
-                                    </select>
-                                </div>
-                                <div class="col-12 col-md-2">
-                                    <div class="mb-2">
-                                        <label for="ref_no">Ref no.</label>
-                                        <input type="text" name="ref_no" id="ref_no" class="form-control nsm-field" <?=isset($expense) ? "value='$expense->ref_no'" : ''?>>
-                                    </div>
-                                    <label for="permit_number">Permit no.</label>
-                                    <input type="number" class="form-control nsm-field mb-2" name="permit_number" id="permit_number" <?=isset($expense) ? "value='$expense->permit_no'" : ''?>> 
-                                </div>
+                            </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-12 col-md-6 grid-mb">
-                                    <div id="label">
-                                        <label for="tags">Tags</label>
-                                        <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
-                                    </div>
-                                    <select name="tags[]" id="tags" class="form-control" multiple="multiple">
-                                        <?php if(isset($tags) && count($tags) > 0) : ?>
-                                            <?php foreach($tags as $tag) : ?>
-                                                <?php 
-                                                    $name = $tag->name;
-                                                    if($tag->group_tag_id !== null) {
-                                                        $group = $this->tags_model->getGroupById($tag->group_tag_id);
-                                                        $name = $group->name.': '.$tag->name;
-                                                    }
-                                                ?>
-                                                <option value="<?=$tag->id?>" selected><?=$name?></option>
-                                            <?php endforeach; ?>
-                                        <?php endif; ?>
-                                    </select>
-                                </div>
-                            </div>
+                        
 
                             <div class="row">
                                 <div class="col-12">
@@ -537,21 +542,19 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-8 mt-5">
                                     <div class="row">
-                                        <div class="col-12 col-md-4">
+                                        <div class="col-12 col-md-6">
                                             <div class="form-group">
                                                 <label for="memo">Memo</label>
-                                                <textarea name="memo" id="memo" class="nsm-field form-control mb-2"><?=isset($expense) ? str_replace("<br />", "", $expense->memo) : ''?></textarea>
+                                                <textarea name="memo" style="height: 150px  !important" id="memo" class="nsm-field form-control mb-2"><?=isset($expense) ? str_replace("<br />", "", $expense->memo) : ''?></textarea>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
                                         <div class="col-12 col-md-6">
                                             <div class="attachments">
                                                 <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
                                                 <span>Maximum size: 20MB</span>
-                                                <div id="expense-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                <div id="expense-attachments" class="dropzone d-block justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                                     <div class="dz-message" style="margin: 20px;border">
                                                         <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                         <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
@@ -563,6 +566,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                   
                                 </div>
                             </div>
                         </div>

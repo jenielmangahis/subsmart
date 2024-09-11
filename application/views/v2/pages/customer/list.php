@@ -871,24 +871,8 @@ table.dataTable thead th, table.dataTable thead td{
         margin: 0;
     }
 
-    .searchSalesAreaDiv {
-        width: 185px;
-    }
-
-    .searchCustomerTypeDiv {
-        width: 200px;
-    }
-
-    .searchGroupDiv {
-        width: 230px;
-    }
-
-    .searchPaymentTypeDiv {
-        width: 230px;
-    }
-
-    .searchPlanDiv {
-        width: 230px;
+    .dropdownFilterWidth {
+        width: max-content;
     }
 
     .searchCustomerListInput {
@@ -937,7 +921,7 @@ table.dataTable thead th, table.dataTable thead td{
                         <div class="container-fluid mb-3">
                             <div class="row">
                                 <div class="col-xl-3 mb-3">
-                                    <lebel class="text-muted">Customer / Business Filter</lebel>
+                                    <label class="text-muted">Customer / Business Filter</label>
                                     <div class="input-group">
                                         <input class="searchCustomerListInput form-control mt-2" type="text" placeholder="Search entry here...">
                                         <select class="form-select displayCustomerList mt-2">
@@ -948,16 +932,16 @@ table.dataTable thead th, table.dataTable thead td{
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-xl-2 mb-3 searchCustomerTypeDiv">
-                                    <lebel class="text-muted">Customer Type</lebel>
+                                <div class="col-xl-2 mb-3 dropdownFilterWidth">
+                                    <label class="text-muted">Customer Type</label>
                                     <select class="form-select searchCustomerType mt-2">
                                         <option value="">None</option>
                                         <option value="Residential">Residential</option>
                                         <option value="Commercial">Commercial</option>
                                     </select>
                                 </div>
-                                <div class="col-xl-2 mb-3 searchGroupDiv">
-                                    <lebel class="text-muted">Customer Group filter</lebel>
+                                <div class="col-xl-2 mb-3 dropdownFilterWidth">
+                                    <label class="text-muted">Customer Group filter</label>
                                     <select class="form-select searchGroup mt-2">
                                         <option value="">None</option>
                                         <?php
@@ -967,8 +951,8 @@ table.dataTable thead th, table.dataTable thead td{
                                         ?>
                                     </select>
                                 </div>
-                                <div class="col-xl-1 mb-3 searchSalesAreaDiv">
-                                    <lebel class="text-muted">Sales Area filter</lebel>
+                                <div class="col-xl-1 mb-3 dropdownFilterWidth">
+                                    <label class="text-muted">Sales Area filter</label>
                                     <select class="form-select searchSalesArea mt-2">
                                         <option value="">None</option>
                                         <?php
@@ -978,8 +962,8 @@ table.dataTable thead th, table.dataTable thead td{
                                         ?>
                                     </select>
                                 </div>                         
-                                <div class="col-xl-2 mb-3 searchPlanDiv">
-                                    <lebel class="text-muted">Rate Plan filter</lebel>
+                                <div class="col-xl-2 mb-3 dropdownFilterWidth">
+                                    <label class="text-muted">Rate Plan filter</label>
                                     <select class="form-select searchPlan mt-2">
                                         <option value="">None</option>
                                         <?php
@@ -989,8 +973,8 @@ table.dataTable thead th, table.dataTable thead td{
                                         ?>
                                     </select>
                                 </div>
-                                <div class="col-xl-2 mb-3 searchPaymentTypeDiv">
-                                    <lebel class="text-muted">Payment Type filter</lebel>
+                                <div class="col-xl-2 mb-3 dropdownFilterWidth">
+                                    <label class="text-muted">Payment Type filter</label>
                                     <select class="form-select searchPaymentType mt-2">
                                         <option value="">None</option>
                                         <option value="CC">Credit Card</option>
@@ -1009,8 +993,58 @@ table.dataTable thead th, table.dataTable thead td{
                                         <option value="OPT">Other Payment Type</option>
                                     </select>
                                 </div>
+                                <div class="col-xl-2 mb-3 dropdownFilterWidth">
+                                    <label class="text-muted">Status</label>
+                                    <select class="form-select searchStatus mt-2">
+                                        <option value="">None</option>
+                                        <?php
+                                            foreach ($customer_status as $status) {
+                                                echo "<option value='$status->name'>$status->name</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-xl-2 mb-3 dropdownFilterWidth">
+                                    <label class="text-muted">Panel Type</label>
+                                    <select class="form-select panelType mt-2">
+                                        <option value="">None</option>
+                                        <option value="AERIONICS">AERIONICS</option>
+                                        <option value="AlarmNet">AlarmNet</option>
+                                        <option value="Alarm.com">Alarm.com</option>
+                                        <option value="Alula">Alula</option>
+                                        <option value="Bosch">Bosch</option>
+                                        <option value="DSC">DSC</option>
+                                        <option value="ELK">ELK</option>
+                                        <option value="FBI">FBI</option>
+                                        <option value="GRI">GRI</option>
+                                        <option value="GE">GE</option>
+                                        <option value="Honeywell">Honeywell</option>
+                                        <option value="Honeywell Touch">Honeywell Touch</option>
+                                        <option value="Honeywell 3000">Honeywell 3000</option>
+                                        <option value="Honeywell">Honeywell</option>
+                                        <option value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
+                                        <option value="Honeywell Lyric">Honeywell Lyric</option>
+                                        <option value="IEI">IEI</option>
+                                        <option value="MIER">MIER</option>
+                                        <option value="2 GIG">2 GIG</option>
+                                        <option value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
+                                        <option value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
+                                        <option value="Qolsys">Qolsys</option>
+                                        <option value="Qolsys IQ Panel 2">Qolsys IQ Panel 2</option>
+                                        <option value="Qolsys IQ Panel 2 Plus">Qolsys IQ Panel 2 Plus</option>
+                                        <option value="Qolsys IQ Panel 3">Qolsys IQ Panel 3</option>
+                                    </select>
+                                </div>
+                                <div class="col-xl-2 mb-3 dropdownFilterWidth">
+                                    <label class="text-muted">Billing Start date</label>
+                                    <input class="form-control billingStartDate mt-2" type="date">
+                                </div>
+                                <div class="col-xl-2 mb-3 dropdownFilterWidth">
+                                    <label class="text-muted">End Start date</label>
+                                    <input class="form-control billingEndDate mt-2" type="date">
+                                </div>
                                 <div class="col-xl-2 mb-3">
-                                    <lebel class="text-muted">Scroll</lebel>
+                                    <label class="text-muted">Scroll</label>
                                     <div class="input-group mt-2">
                                         <button class="btn btn-dark scrollToStart"><i class="fas fa-angle-double-left"></i></button>
                                         <button class="btn btn-secondary scrollToLeft"><i class="fas fa-angle-left"></i></button>
@@ -1036,6 +1070,7 @@ table.dataTable thead th, table.dataTable thead td{
                                                     <th>Birthdate</th>
                                                     <th>Email</th>
                                                     <th>Phone (M)</th>
+                                                    <th>Status</th>
                                                     <th>Sales Rep</th>
                                                     <th>Install Date</th>
                                                     <th>Monitoring Company</th>
@@ -1128,6 +1163,22 @@ table.dataTable thead th, table.dataTable thead td{
             customerManagementTable.columns(26).search(filterData).draw();
         });
         $('.searchPaymentType').change(function(e) {
+            var filterData = $(this).val();
+            customerManagementTable.columns(33).search(filterData).draw();
+        });
+        $('.searchStatus').change(function(e) {
+            var filterData = $(this).val();
+            customerManagementTable.columns(13).search(filterData).draw();
+        });
+        $('.panelType').change(function(e) {
+            var filterData = $(this).val();
+            customerManagementTable.columns(20).search(filterData).draw();
+        });
+        $('.billingStartDate').change(function(e) {
+            var filterData = $(this).val();
+            customerManagementTable.columns(31).search(filterData).draw();
+        });
+        $('.billingEndDate').change(function(e) {
             var filterData = $(this).val();
             customerManagementTable.columns(32).search(filterData).draw();
         });

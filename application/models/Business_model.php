@@ -140,6 +140,115 @@ class Business_model extends MY_Model
         $this->db->where('company_id', $cid);
         $this->db->update();
     }
+
+    public function getAnalyticsData($category)
+    {
+        $company_id = logged('company_id');
+        switch ($category) {
+            case 'business_profile':
+                $this->db->select('*');
+                $this->db->from('business_profile');
+                $this->db->where('business_profile.company_id', $company_id);
+                $query = $this->db->get();
+                return $query->row();
+                break;
+            case 'total_invoices':
+                $this->db->select('SUM(invoices.grand_total) AS total_invoices');
+                $this->db->from('invoices');
+                $this->db->where('invoices.company_id', $company_id);
+                $query = $this->db->get();
+                return $query->row()->total_invoices;
+                break;
+            case 'total_estimates':
+                $this->db->select('SUM(estimates.grand_total) AS total_estimates');
+                $this->db->from('estimates');
+                $this->db->where('estimates.company_id', $company_id);
+                $query = $this->db->get();
+                return $query->row()->total_estimates;
+                break;
+            case 'total_customers':
+                $this->db->select('COUNT(acs_profile.prof_id) AS total_customers');
+                $this->db->from('acs_profile');
+                $this->db->where('acs_profile.company_id', $company_id);
+                $this->db->where('acs_profile.activated', 1);
+                $query = $this->db->get();
+                return $query->row()->total_customers;
+                break;
+            case 'total_active_deals':
+                $this->db->select('COUNT(invoices.id) AS total_active_deals');
+                $this->db->from('invoices');
+                $this->db->where('invoices.company_id', $company_id);
+                $this->db->where('invoices.status !=', "Paid");
+                $query = $this->db->get();
+                return $query->row()->total_active_deals;
+                break;
+            case 'business_view_count':
+                // How many times your business has been viewed by customers
+                $this->db->select('COUNT(visit_analytics_info.id) AS business_view_count');
+                $this->db->from('visit_analytics_info');
+                $this->db->where('visit_analytics_info.company_id', $company_id);
+                $this->db->where('visit_analytics_info.category', "business_profile_visit");
+                $query = $this->db->get();
+                return $query->row()->business_view_count;
+                break;
+            case 'business_contact_view_count':
+                // How many times customers have seen your contact details
+                $this->db->select('COUNT(visit_analytics_info.id) AS business_contact_view_count');
+                $this->db->from('visit_analytics_info');
+                $this->db->where('visit_analytics_info.company_id', $company_id);
+                $this->db->where('visit_analytics_info.category', "business_contact_visit");
+                $query = $this->db->get();
+                return $query->row()->business_view_count;
+                break;
+            case 'total_job_posted_count':
+                // All jobs posted in your coverage areas, that are requesting business services you are offering
+                $this->db->select('COUNT(jobs.id) AS total_job_posted_count');
+                $this->db->from('jobs');
+                $this->db->where('jobs.company_id', $company_id);
+                $this->db->where('jobs.status !=', "Draft");
+                $query = $this->db->get();
+                return $query->row()->total_job_posted_count;
+                break;
+            case 'total_job_leads_count':
+                // The total number of job leads, you have been invited to estimate
+                $this->db->select('COUNT(ac_leads.leads_id) AS total_job_leads_count');
+                $this->db->from('ac_leads');
+                $this->db->where('ac_leads.company_id', $company_id);
+                $query = $this->db->get();
+                return $query->row()->total_job_leads_count;
+                break;
+        }
+    }
+
+    public function customerDeviceLookup($category, $ip_address, $user_agent)
+    {
+        $company_id = logged('company_id');
+        $unique_id = md5($ip_address . $user_agent);
+        $current_month_start = date('Y-m-01 00:00:00');
+
+        $this->db->where('company_id', $company_id);
+        $this->db->where('unique_id', $unique_id);
+        $this->db->where('category', $category);
+        $this->db->where('created_at >=', $current_month_start); 
+        $query = $this->db->get('visit_analytics_info');
+
+        if ($query->num_rows() > 0) {
+            return 'exist';
+        } else {
+            $data = [
+                'company_id' => $company_id,
+                'unique_id' => $unique_id,
+                'category' => $category,
+                'ip_address' => $ip_address,
+                'user_agent' => $user_agent,
+            ];
+
+            $this->db->insert('visit_analytics_info', $data);
+            return 'recorded';
+        }
+    }
+
+
 }
 
 /* End of file Business_model.php */

@@ -129,10 +129,17 @@ class Customer extends MY_Controller
             'where' => ['company_id' => $company_id],
         ];
 
+        $getCustomerStatusData = [
+            'select' => '*',
+            'table' => 'acs_cust_status',
+            'where' => ['company_id' => $company_id],
+        ];
+
         $this->page_data['rate_plan'] = $this->general->get_data_with_param($getRatePlanData);
         $this->page_data['customer_status'] = $this->general->get_data_with_param($getCustomerStatus);
         $this->page_data['customer_group'] = $this->general->get_data_with_param($getCustomerGroup);
         $this->page_data['sales_area'] = $this->general->get_data_with_param($getSalesArea);
+        $this->page_data['customer_status'] = $this->general->get_data_with_param($getCustomerStatusData);
 
         $this->page_data['companyId'] = logged('company_id');
         $this->page_data['enabled_table_headers'] = $enabled_table_headers;
@@ -1106,6 +1113,9 @@ class Customer extends MY_Controller
         $getRatePlan = ['where' => ['company_id' => logged('company_id')],'table' => 'ac_rateplan','select' => 'id, plan_name, amount,'];
         $getRatePlanData = $this->general->get_data_with_param($getRatePlan);
         // ===============
+        $getCustomerStatus = ['where' => ['company_id' => logged('company_id')],'table' => 'acs_cust_status','select' => 'id, name,'];
+        $getCustomerStatusData = $this->general->get_data_with_param($getCustomerStatus);
+        // ===============
         $getBillingFrequencyData = array('One Time Only', 'Every 1 Month', 'Every 3 Months', 'Every 6 Months', 'Every 1 Year');
         // ===============
         $getBillingDayData = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31');
@@ -1117,8 +1127,8 @@ class Customer extends MY_Controller
         // Initialize Table Information
         $initializeTable = $this->serverside_table->initializeTable(
             "customer_list_view", 
-            array('profile_first_name',  'profile_last_name',  'profile_business_name',  'profile_customer_type',  'profile_fk_sa_id',  'profile_mail_add',  'profile_city',  'profile_state',  'profile_zip_code',  'profile_ssn',  'profile_date_of_birth',  'profile_email',  'profile_phone_m', 'office_sales_rep', 'office_install_date', 'alarm_monitor_comp', 'alarm_monitor_id', 'alarm_acct_type', 'alarm_passcode', 'alarm_panel_type', 'alarm_system_type', 'alarm_warranty_type', 'alarm_comm_type', 'alarm_monthly_monitoring', 'alarm_account_cost', 'alarm_pass_thru_cost', 'billing_mmr',  'billing_bill_freq',  'billing_bill_day', 'billing_contract_term',  'billing_bill_start_date',  'billing_bill_end_date',  'billing_bill_method', 'billing_check_num', 'billing_routing_num', 'billing_acct_number', 'billing_credit_card_num', 'billing_credit_card_exp', 'profile_customer_group_id'),
-            array('profile_first_name',  'profile_last_name',  'profile_business_name',  'profile_customer_type',  'profile_fk_sa_id',  'profile_mail_add',  'profile_city',  'profile_state',  'profile_zip_code',  'profile_ssn',  'profile_date_of_birth',  'profile_email',  'profile_phone_m', 'office_sales_rep', 'office_install_date', 'alarm_monitor_comp', 'alarm_monitor_id', 'alarm_acct_type', 'alarm_passcode', 'alarm_panel_type', 'alarm_system_type', 'alarm_warranty_type', 'alarm_comm_type', 'alarm_monthly_monitoring', 'alarm_account_cost', 'alarm_pass_thru_cost', 'billing_mmr',  'billing_bill_freq',  'billing_bill_day', 'billing_contract_term',  'billing_bill_start_date',  'billing_bill_end_date',  'billing_bill_method', 'billing_check_num', 'billing_routing_num', 'billing_acct_number', 'billing_credit_card_num', 'billing_credit_card_exp', 'profile_customer_group_id'),
+            array('profile_first_name',  'profile_last_name',  'profile_business_name',  'profile_customer_type',  'profile_fk_sa_id',  'profile_mail_add',  'profile_city',  'profile_state',  'profile_zip_code',  'profile_ssn',  'profile_date_of_birth',  'profile_email',  'profile_phone_m',  'profile_status', 'office_sales_rep', 'office_install_date', 'alarm_monitor_comp', 'alarm_monitor_id', 'alarm_acct_type', 'alarm_passcode', 'alarm_panel_type', 'alarm_system_type', 'alarm_warranty_type', 'alarm_comm_type', 'alarm_monthly_monitoring', 'alarm_account_cost', 'alarm_pass_thru_cost', 'billing_mmr',  'billing_bill_freq',  'billing_bill_day', 'billing_contract_term',  'billing_bill_start_date',  'billing_bill_end_date',  'billing_bill_method', 'billing_check_num', 'billing_routing_num', 'billing_acct_number', 'billing_credit_card_num', 'billing_credit_card_exp', 'profile_customer_group_id',),
+            array('profile_first_name',  'profile_last_name',  'profile_business_name',  'profile_customer_type',  'profile_fk_sa_id',  'profile_mail_add',  'profile_city',  'profile_state',  'profile_zip_code',  'profile_ssn',  'profile_date_of_birth',  'profile_email',  'profile_phone_m', 'profile_status', 'office_sales_rep', 'office_install_date', 'alarm_monitor_comp', 'alarm_monitor_id', 'alarm_acct_type', 'alarm_passcode', 'alarm_panel_type', 'alarm_system_type', 'alarm_warranty_type', 'alarm_comm_type', 'alarm_monthly_monitoring', 'alarm_account_cost', 'alarm_pass_thru_cost', 'billing_mmr',  'billing_bill_freq',  'billing_bill_day', 'billing_contract_term',  'billing_bill_start_date',  'billing_bill_end_date',  'billing_bill_method', 'billing_check_num', 'billing_routing_num', 'billing_acct_number', 'billing_credit_card_num', 'billing_credit_card_exp', 'profile_customer_group_id',),
             null,  
             array(
                 'company_id' => $company_id,    
@@ -1182,6 +1192,19 @@ class Customer extends MY_Controller
                 $email = (!empty($getDatas->profile_email)) ? $getDatas->profile_email : "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $phone_m = (!empty($getDatas->profile_phone_m)) ? $getDatas->profile_phone_m : "<small class='text-muted'><i>Not Specified</i></small>";
+                // ===============
+                $customerStatus = "<small class='text-muted'><i>Not Specified</i></small>";
+                // ===============
+                $customerStatusDropdown = "<select class='form-select form-select-sm updateInputValue' data-id='$getDatas->prof_id' data-category='profile' data-column='status'>";
+                foreach ($getCustomerStatusData as $getCustomerStatusDatas) {
+                    if ($getDatas->profile_status == $getCustomerStatusDatas->name) {
+                        $customerStatus = $getCustomerStatusDatas->name;
+                        $customerStatusDropdown .= "<option selected value='$getCustomerStatusDatas->name'>$getCustomerStatusDatas->name</option>";
+                    } else {
+                        $customerStatusDropdown .= "<option value='$getCustomerStatusDatas->name'>$getCustomerStatusDatas->name</option>";
+                    }
+                }
+                $customerStatusDropdown .= "</select>";
                 // ===============
                 $salesRep = "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
@@ -1397,6 +1420,9 @@ class Customer extends MY_Controller
                     "<span class='textPreview'>$birthdate</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-id='$getDatas->prof_id' data-category='profile' data-column='date_of_birth' type='date' value='".date('Y-m-d', strtotime($getDatas->profile_date_of_birth))."'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<span class='textPreview'>$email</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-id='$getDatas->prof_id' data-category='profile' data-column='email' type='text' value='$getDatas->profile_email'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<span class='textPreview'>$phone_m</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-id='$getDatas->prof_id' data-category='profile' data-column='phone_m' type='text' value='$getDatas->profile_phone_m'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
+
+                    "<span class='textPreview'>$customerStatus</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$customerStatusDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
+
                     "<span class='textPreview'>$salesRep</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$salesRepDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<span class='textPreview'>$install_date</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-id='$getDatas->prof_id' data-category='office' data-column='install_date' type='date' value='".date('Y-m-d', strtotime($getDatas->office_install_date))."'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<span class='textPreview'>$monitoringCompany</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'>$monitoringCompanyDropdown<span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",

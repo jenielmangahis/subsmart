@@ -7,9 +7,14 @@ class Contact extends MYF_Controller {
 		parent::__construct();
 		//$this->checkLogin(1);
 		$this->page_data['page']->title = 'nSmart - Contact';
+		$this->load->library('user_agent');
+		$this->load->model('Business_model');
 	}
 
 	public function index(){		
+		$user_agent = $this->agent->agent_string();
+        $ip_address = $this->input->ip_address();
+        $this->Business_model->customerDeviceLookup("business_contact_visit", $ip_address, $user_agent);
 		$this->load->view('contact', $this->page_data);
 	}
 

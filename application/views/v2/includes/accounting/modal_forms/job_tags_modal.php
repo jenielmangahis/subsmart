@@ -7,11 +7,9 @@
             </div>
             <div class="modal-body">
                 <div class="row mt-3">
-                    <div class="col-12 col-md-6 d-flex">
-                        <button type="button" class="nsm-button m-auto" onclick="getTagForm({}, 'create')">Create Tag</button>
-                    </div>
-                    <div class="col-12 col-md-6 d-flex">
-                        <button type="button" class="nsm-button m-auto" onclick="getGroupTagForm()">Create Group</button>
+                    <div class="d-flex gap-2 align-center justify-content-end mb-5">
+                        <button type="button" class="nsm-button" onclick="getTagForm({}, 'create')">Create Tag</button>
+                        <button type="button" class="nsm-button " onclick="getGroupTagForm()">Create Group</button>
                     </div>
                     <div class="col-12 py-3">
                         <input type="text" name="search_tag" id="search-tag" class="form-control nsm-field mb-2" placeholder="Find tag by name">
