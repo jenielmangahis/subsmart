@@ -53,18 +53,18 @@
                                         <thead>
                                             <tr>
                                                 <th>Date</th>
-                                                <th>Trans. Type</th>
+                                                <!-- <th>Trans. Type</th> -->
                                                 <th>Memo/Desc</th>
-                                                <th>Num</th>
+                                                <!-- <th>Num</th> -->
                                                 <th>Amount</th>
                                                 <th>Open Balance</th>
                                                 <th>Vendor</th>
-                                                <th>Terms</th>
-                                                <th>Pymt Method</th>
+                                                <!-- <th>Terms</th>
+                                                <th>Pymt Method</th> -->
                                                 <th>Due Date</th>
-                                                <th>Client/Vendor Msg</th>
+                                                <!-- <th>Client/Vendor Msg</th>
                                                 <th>A/R Paid</th>
-                                                <th>Sent</th>
+                                                <th>Sent</th> -->
                                                 <th>Del. Addr.</th>  
                                             </tr>
                                         </thead>

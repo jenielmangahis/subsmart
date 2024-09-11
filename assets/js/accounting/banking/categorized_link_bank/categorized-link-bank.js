@@ -174,6 +174,58 @@ $('#assign-to-payee').on('change', function() {
     }
 });
 
+$('#assign-to-customer').on('change', function() {
+    var assign_to_payee_value = $('#assign-to-customer').val();
+    var form = 'payee';
+    var modalTitle = 'New Customer';
+
+    if(assign_to_payee_value == 'add-new') {
+        $("#payee-modal-customer").modal('show');
+
+        $.get(base_url + `accounting/get-dropdown-modal/payee_modal?type=customer`, function (result) {
+            if (form !== 'item') {
+                $('#modal-container').append(result);
+            } else {
+                $('#modal-container').append(`<div class="full-screen-modal">${result}</div>`)
+            }
+
+            switch (form) {
+                case 'account':
+                    initAccountModal();
+                    break;
+                case 'item_category':
+                    $('#modal-container #item-category-modal').modal('show');
+                    break;
+                default:
+                    if (form !== 'item' && form !== 'payee' && form !== 'item_location') {
+                        $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).attr('id', `ajax-add-${form.replaceAll('_', '-')}`);
+                        $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).removeAttr('action');
+                        $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).removeAttr('method');
+                    }
+
+                    if (form === 'payee' && modalTitle !== '') {
+                        $('#modal-container #payee-modal-customer .modal-title').html(modalTitle);
+                        $('#modal-container #payee-modal-customer #payee_type').select2({
+                            minimumResultsForSearch: -1,
+                            dropdownParent: $('#modal-container #payee-modal-customer')
+                        });
+
+                        $('#modal-container #payee-modal-customer #customer-type').select2({
+                            minimumResultsForSearch: -1,
+                            dropdownParent: $('#modal-container #payee-modal-customer')
+                        });
+                    }
+
+                    $(`#modal-container #${form.replaceAll('_', '-')}-modal`).attr('data-bs-backdrop', 'static');
+                    $(`#modal-container #${form.replaceAll('_', '-')}-modal`).attr('data-bs-keyboard', 'false');
+
+                    $(`#modal-container #${form.replaceAll('_', '-')}-modal`).modal('show');
+                    break;
+            }
+        });        
+    }
+});
+
 $(document).on('submit', '#new-payee-form', function (e) {
     e.preventDefault();
 
@@ -220,6 +272,7 @@ $(document).on('submit', '#new-payee-form', function (e) {
             }
 
             $("#payee-modal").modal('hide');
+            $("#payee-modal-customer").modal('hide');
         }
     });
 });   
