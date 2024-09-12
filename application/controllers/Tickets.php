@@ -1614,6 +1614,7 @@ class Tickets extends MY_Controller
     {
         $this->load->helper(array('hashids_helper', 'form'));
         $this->load->model('JobSettings_model');
+        $this->load->model('Customer_advance_model');
 
         $jobs_id  = 0;
         $is_valid = 1;
@@ -1657,6 +1658,7 @@ class Tickets extends MY_Controller
 
             $monthly_monitoring_cost = 0;
             $update_customer_mmr     = 0;
+            $update_customer_billing = 0;
             $installation_cost = 0;
             $otp_cost = 0;
             if( $this->input->post('is_with_esign') ){
@@ -1665,6 +1667,7 @@ class Tickets extends MY_Controller
                 $monthly_monitoring_cost = $this->input->post('monthly_monitoring_rate');
                 $esign_id = $this->input->post('esign_template');
                 $update_customer_mmr = 1;
+                $update_customer_billing = 1;
             }
 
             $techni = serialize($this->input->post('assign_tech'));
@@ -1740,6 +1743,7 @@ class Tickets extends MY_Controller
                 ];
                 $exist = $this->general->get_data_with_param($check, false);
                 if ($exist) {
+                    $input_alarm['panel_type'] = $this->input->post('panel_type');
                     $input_alarm['monthly_monitoring'] = $monthly_monitoring_cost;
                     $input_alarm['otps'] = $otp_cost;   
                     $this->general->update_with_key_field($input_alarm, $this->input->post('customer_id'), 'acs_alarm', 'fk_prof_id');
@@ -1772,6 +1776,32 @@ class Tickets extends MY_Controller
                     $this->general->add_($input_alarm, 'acs_alarm');
                 }
             }
+
+            //Update customer billing
+            if( $update_customer_billing == 1 ){
+                $billing = $this->Customer_advance_model->get_data_by_id('fk_prof_id', $this->input->post('customer_id'), 'acs_billing');
+                if( $billing ){
+                    $input_billing['routing_num'] = $this->input->post('routing_number');
+                    $input_billing['acct_num'] = $this->input->post('account_number');
+                    $input_billing['check_num'] = $this->input->post('checking_account_number');
+                    $input_billing['credit_card_exp_mm_yyyy'] = $this->input->post('card_security_code');
+                    $this->general->update_with_key_field($input_billing, $this->input->post('customer_id'), 'acs_billing', 'fk_prof_id');
+                }else{
+                    $input_billing['fk_prof_id'] = $this->input->post('customer_id');
+                    $input_billing['card_address'] = $this->input->post('service_location');
+                    $input_billing['city'] = $this->input->post('customer_city');
+                    $input_billing['state'] = $this->input->post('customer_state');
+                    $input_billing['zip'] = $this->input->post('customer_zip');
+                    $input_billing['mmr'] = $monthly_monitoring_cost;
+                    $input_billing['bill_start_date'] = NULL;
+                    $input_billing['bill_end_date'] = NULL;
+                    $input_billing['routing_num'] = $this->input->post('routing_number');
+                    $input_billing['acct_num'] = $this->input->post('account_number');
+                    $input_billing['check_num'] = $this->input->post('checking_account_number');
+                    $input_billing['credit_card_exp_mm_yyyy'] = $this->input->post('card_security_code');
+                    $this->general->add_($input_billing, 'acs_billing');
+                } 
+            }               
 
             //Google Calendar
             createSyncToCalendar($addQuery, 'service_ticket', $company_id);
@@ -2000,12 +2030,25 @@ class Tickets extends MY_Controller
     public function ajax_get_customer_basic_info()
     {
         $this->load->model('AcsProfile_model');
+        $this->load->model('Customer_advance_model');
 
         $prof_id    = $this->input->post('id');
         $company_id = logged('company_id');
 
         $customer = $this->AcsProfile_model->getCustomerBasicInfoByProfIdAndCompanyId($prof_id, $company_id);
         if( $customer ){
+            $routing_number = ''; //ABA
+            $acct_num  = '';
+            $check_num = '';
+            $cvc = '';
+
+            $billing = $this->Customer_advance_model->get_data_by_id('fk_prof_id', $prof_id, 'acs_billing');            
+            if($billing){
+                $routing_number = $billing->routing_num;
+                $acct_num  = $billing->acct_num;
+                $check_num = $billing->check_num;
+                $cvc = $billing->credit_card_exp_mm_yyyy;
+            }
             $json_data = [
                 'mail_add' => $customer->mail_add,
                 'city' => $customer->city,
@@ -2013,8 +2056,12 @@ class Tickets extends MY_Controller
                 'zip_code' => $customer->zip_code,
                 'phone_h' => formatPhoneNumber($customer->phone_h),
                 'phone_m' => formatPhoneNumber($customer->phone_m),
-                'business_name' => $customer->business_name
-            ];    
+                'business_name' => $customer->business_name,
+                'routing_number' => $routing_number,
+                'acct_num' => $acct_num,
+                'check_num' => $check_num,
+                'cvc' => $cvc
+            ];     
         }else{
             $json_data = [
                 'mail_add' => '',
@@ -2023,7 +2070,11 @@ class Tickets extends MY_Controller
                 'zip_code' => '',
                 'phone_h' => '',
                 'phone_m' => '',
-                'business_name' => ''
+                'business_name' => '',
+                'routing_number' => '',
+                'acct_num' => '',
+                'check_num' => '',
+                'cvc' => ''
             ];
         }
         
