@@ -25,7 +25,7 @@
     <div class="col-md-6">
         <div class="nsm-card primary">
             <div class="nsm-card-content">
-                <label for="customers" class="required"><b>Customer</b></label>
+                <label for="sel-customer_t" class="required"><b>Customer</b></label>
                     <a class="link-modal-open" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="color:#02A32C;float:right;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
                     <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
                         <option value="0">- Select Customer -</option>
@@ -33,16 +33,22 @@
                             <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
                         <?php } ?>
                     </select>
-                    <label for="city" class="mt-2"><b>Business Name</b> (optional)</label>
+                    <label for="business_name" class="mt-2"><b>Business Name</b> (optional)</label>
                     <input type="text" class="form-control" name="business_name" id="business_name" placeholder="Business Name" />
-                    <label for="job_name" class="mt-2"><b>Service description</b> (optional)</label>
-                    <textarea class="form-control" name="service_description"></textarea>
-                    <label for="city" class="mt-2">Service Tag</label><label style="float:right;margin-bottom:10px;"></label>
-                    <select class="form-control" name="job_tag">
+                    
+                    <label for="ticket_customer_phone" class="required mt-2"><b>Customer Phone Number</b></label>
+                    <input type="text" class="form-control phone_number" name="customer_phone" id="ticket_customer_phone" required maxlength="12" placeholder="xxx-xxx-xxxx" />
+
+                    <label for="job_tag" class="mt-2">Service Tag</label><label style="float:right;margin-bottom:10px;"></label>
+                    <select class="form-control" name="job_tag" id="job_tag">
                         <?php foreach($tags as $t){ ?>
                             <option value="<?= $t->name; ?>"><?= $t->name; ?></option>
                         <?php } ?>
                     </select>
+
+                    <label for="service_description" class="mt-2"><b>Service description</b> (optional)</label>
+                    <textarea class="form-control" name="service_description" id="service_description" style="height:100px;"></textarea>
+                    
             </div>
         </div>        
     </div>
@@ -50,25 +56,22 @@
     <div class="col-md-6">
         <div class="nsm-card primary">
             <div class="nsm-card-content">
-                <label for="job_location" class="required"><b>City</b></label>
+                <label for="customer_city" class="required"><b>City</b></label>
                 <input type="text" class="form-control" name="customer_city" id="customer_city"
                         required placeholder="Enter City" 
                         onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
-                <label for="job_location" class="required mt-2"><b>Service Location</b></label>
-                <input type="text" class="form-control" name="service_location" id="service_location"
-                        required placeholder="Enter Location"
-                        onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
-                <label for="job_location" class="required mt-2"><b>State</b></label>
+                <label for="service_location" class="required mt-2"><b>Service Location</b></label>
+                <textarea class="form-control" name="service_location" id="service_location" style="height:100px;" required></textarea>
+                
+                <label for="customer_state" class="required mt-2"><b>State</b></label>
                 <input type="text" class="form-control" name="customer_state" id="customer_state"
                         required placeholder="Enter State" 
                         onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
 
-                <label for="job_location" class="required mt-2"><b>Zip Code</b></label>
+                <label for="customer_zip" class="required mt-2"><b>Zip Code</b></label>
                 <input type="text" class="form-control" name="customer_zip" id="customer_zip"
                         required placeholder="Enter Zip Code" 
-                        onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
-                <label for="job_location" class="required mt-2"><b>Customer Phone Number</b></label>
-                <input type="text" class="form-control phone_number" name="customer_phone" id="ticket_customer_phone" required maxlength="12" placeholder="xxx-xxx-xxxx" />
+                        onChange="jQuery('#customer_name').text(jQuery(this).val());"/>                
             </div>
         </div>        
     </div>
@@ -177,7 +180,7 @@
                                 <option value="Job">Job</option>
                             </select>
                         </div>
-                    </div>
+                    </div>                    
                 </div>
                 <div class="row mt-4" style="background-color:white;">
                     <div class="col-md-3 form-group">
@@ -237,7 +240,7 @@
                             
                             
                         </div>
-                        <div class="col-md-6 form-group" id="service-ticket-esign-template">                            
+                        <div class="col-md-6 form-group mt-2" id="service-ticket-esign-template">                            
                             <label for="esign-template-list"><b>eSign Templates</b></label>
                             <select class="form-control nsm-field form-select" name="esign_template" id="esign-templates">
                                 <?php foreach($esignTemplates as $e){ ?>
@@ -255,11 +258,45 @@
                             <div class="row">
                                 <div class="col-md-6 form-group mt-2">
                                     <label for="service-ticket-installation-cost"><b>Installation Cost</b></label>
-                                    <input type="number" step="any" class="form-control" value="0.00" name="installation_cost" id="service-ticket-installation-cost" required>
+                                    <input type="number" step="any" class="form-control" value="0.00" name="installation_cost" id="service-ticket-installation-cost">
                                 </div>
                                 <div class="col-md-6 form-group mt-2">
                                     <label for="service-ticket-otp"><b>One Time (Program and Setup)</b></label>
-                                    <input type="number" step="any" class="form-control" value="0.00" name="otp" id="service-ticket-otp" required>
+                                    <input type="number" step="any" class="form-control" value="0.00" name="otp" id="service-ticket-otp">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 form-group mt-2">
+                            <div class="row">
+                                <div class="col-md-6 form-group mt-2">
+                                    <label for="customer_checking_account_number"><b>Checking Account Number</b></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="checking_account_number" id="customer_checking_account_number"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 form-group mt-2">
+                                    <label for="customer_account_number"><b>Account Number</b></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="account_number" id="customer_account_number"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 form-group mt-2">
+                            <div class="row">
+                                <div class="col-md-6 form-group mt-2">
+                                    <label for="customer_routing_number"><b>ABA</b></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="routing_number" id="customer_routing_number"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 form-group mt-2">
+                                    <label for="customer_card_security_code"><b>Security Code</b></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="card_security_code" id="customer_card_security_code"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -449,10 +486,10 @@
 </div>
 <script>
 $(document).ready(function(){
-    $('#esign-templates').select2({
-        dropdownParent: $("#modal-quick-add-service-ticket #with-esign-inputs-container"),
-        placeholder: 'Select template',
-    });
+    // $('#esign-templates').select2({
+    //     dropdownParent: $("#service-ticket-esign-template"),
+    //     placeholder: 'Select template',
+    // });
 
     $('#ticket-appointment-user').select2({
         ajax: {
@@ -513,6 +550,11 @@ $(document).ready(function(){
                 $("#customer_zip").val(response.zip_code);                
                 $("#customer_zip").val(response.zip_code);
                 $("#business_name").val(response.business_name);
+
+                $("#customer_checking_account_number").val(response.check_num);
+                $("#customer_account_number").val(response.acct_num);
+                $("#customer_routing_number").val(response.routing_number);
+                $("#customer_card_security_code").val(response.cvc);
             },
             error: function(response){
     
