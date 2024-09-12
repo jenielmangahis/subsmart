@@ -1784,6 +1784,7 @@ class Tickets extends MY_Controller
                     $input_billing['routing_num'] = $this->input->post('routing_number');
                     $input_billing['acct_num'] = $this->input->post('account_number');
                     $input_billing['check_num'] = $this->input->post('checking_account_number');
+                    $input_billing['credit_card_num'] = $this->input->post('customer_cc_num');
                     $input_billing['credit_card_exp_mm_yyyy'] = $this->input->post('card_security_code');
                     $this->general->update_with_key_field($input_billing, $this->input->post('customer_id'), 'acs_billing', 'fk_prof_id');
                 }else{
@@ -1798,6 +1799,7 @@ class Tickets extends MY_Controller
                     $input_billing['routing_num'] = $this->input->post('routing_number');
                     $input_billing['acct_num'] = $this->input->post('account_number');
                     $input_billing['check_num'] = $this->input->post('checking_account_number');
+                    $input_billing['credit_card_num'] = $this->input->post('customer_cc_num');
                     $input_billing['credit_card_exp_mm_yyyy'] = $this->input->post('card_security_code');
                     $this->general->add_($input_billing, 'acs_billing');
                 } 
@@ -2041,6 +2043,7 @@ class Tickets extends MY_Controller
             $acct_num  = '';
             $check_num = '';
             $cvc = '';
+            $cc_num = '';
 
             $billing = $this->Customer_advance_model->get_data_by_id('fk_prof_id', $prof_id, 'acs_billing');            
             if($billing){
@@ -2048,6 +2051,7 @@ class Tickets extends MY_Controller
                 $acct_num  = $billing->acct_num;
                 $check_num = $billing->check_num;
                 $cvc = $billing->credit_card_exp_mm_yyyy;
+                $cc_num = $billing->credit_card_num;
             }
             $json_data = [
                 'mail_add' => $customer->mail_add,
@@ -2060,7 +2064,8 @@ class Tickets extends MY_Controller
                 'routing_number' => $routing_number,
                 'acct_num' => $acct_num,
                 'check_num' => $check_num,
-                'cvc' => $cvc
+                'cvc' => $cvc,
+                'cc_num' => $cc_num
             ];     
         }else{
             $json_data = [
@@ -2074,7 +2079,8 @@ class Tickets extends MY_Controller
                 'routing_number' => '',
                 'acct_num' => '',
                 'check_num' => '',
-                'cvc' => ''
+                'cvc' => '',
+                'cc_num' => ''
             ];
         }
         
