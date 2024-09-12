@@ -300,6 +300,16 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-6 form-group mt-2">
+                            <div class="row">
+                                <div class="col-md-6 form-group mt-2">
+                                    <label for="customer_cc_num"><b>Credit Card Number</b></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="customer_cc_num" id="customer_cc_num"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>                
 
@@ -555,6 +565,7 @@ $(document).ready(function(){
                 $("#customer_account_number").val(response.acct_num);
                 $("#customer_routing_number").val(response.routing_number);
                 $("#customer_card_security_code").val(response.cvc);
+                $("#customer_cc_num").val(response.cc_num);
             },
             error: function(response){
     
