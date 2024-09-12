@@ -250,7 +250,7 @@
                                             $template_name = $e->name .'(default)';
                                         }    
                                     ?>
-                                    <option value="<?= $e->id; ?>"><?= $template_name; ?></option>
+                                    <option <?= $e->is_default == 1 ? 'selected="selected"' : ''; ?> value="<?= $e->id; ?>"><?= $template_name; ?></option>
                                 <?php } ?>
                             </select>
                         </div>
