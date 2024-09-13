@@ -342,8 +342,10 @@ class Reconcile_model extends MY_Model {
 
 	public function selectonwherehistory($id)  
 	{  
-	  	$this->db->from('accounting_reconcile_history');  
-    	$this->db->where('chart_of_accounts_id',$id); 
+	  	$this->db->from('accounting_reconcile_history');
+		if($id != 'all') {
+			$this->db->where('chart_of_accounts_id',$id);
+		}  
     	$this->db->where('active','1'); 
     	$result =  $this->db->get()->result();
         return $result;

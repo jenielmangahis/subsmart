@@ -284,7 +284,7 @@ class Reconcile extends MY_Controller {
     {
         $this->page_data['alert'] = 'accounting/alert_promt';
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
-        $this->page_data['rows']  =  $this->reconcile_model->selectsummary();
+        $this->page_data['rows']  = $this->reconcile_model->selectsummary();
 
         $this->page_data['page']->title = 'Reconciliation Summary';
         $this->page_data['page']->parent = 'Accounting';
@@ -297,6 +297,10 @@ class Reconcile extends MY_Controller {
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
         $this->page_data['page']->title = 'History by account';
         $this->page_data['page']->parent = 'Accounting';
+
+        $account_id = 'all';
+        $this->page_data['rows'] = $this->reconcile_model->selectonwherehistory($account_id);
+
         $this->load->view('accounting/reconcile/history_by_account', $this->page_data);
     }
 

@@ -24,7 +24,40 @@
                         <h6>RECONCILIATION SUMMARY</h6>
                     </div>
                 </div>
-                <table class="nsm-table">
+                <table class="nsm-table" id="reconSummary">
+                    <thead>
+                        <tr>
+                            <td data-name="Account">ACCOUNT</td>
+                            <td data-name="chrg">CHRG</td>
+                            <td data-name="Memo Sc">MEMO SC</td>
+                            <td data-name="Memo It">MEMO IT</td>
+                            <td data-name="Ending Balance" align="right">ENDING BALANCE</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (count($rows) > 0) { ?>
+                            <?php foreach($rows as $row) { ?>
+                                <tr>
+                                    <td><?php echo $row->expense_account; ?></td>
+                                    <td><?php echo $row->CHRG; ?></td>
+                                    <td><?php echo $row->memo_sc; ?></td>
+                                    <td><?php echo $row->memo_it; ?></td>
+                                    <td align="right"><?php echo number_format($row->ending_balance,2); ?></td>
+                                </tr>
+                            <?php } ?>
+                        <?php } else { ?>
+                            <tr>
+                                <td colspan="4">
+                                    <div class="nsm-empty">
+                                        <span>No results found.</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php } ?>
+
+                    </tbody>
+                </table>
+                <!-- <table class="nsm-table">
                     <thead>
                         <tr>
                             <td data-name="Account">ACCOUNT</td>
@@ -34,18 +67,26 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td colspan="4">
-                                <div class="nsm-empty">
-                                    <span>No results found.</span>
-                                </div>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td colspan="4">
+                                    <div class="nsm-empty">
+                                        <span>No results found.</span>
+                                    </div>
+                                </td>
+                            </tr>
                     </tbody>
-                </table>
+                </table> -->
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    $(function() {
+        $("#reconSummary").nsmPagination({
+            itemsPerPage: 10
+        });
+    });    
+</script>
 
 <?php include viewPath('v2/includes/footer'); ?>
