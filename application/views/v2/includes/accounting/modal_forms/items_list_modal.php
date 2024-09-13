@@ -31,7 +31,7 @@
                                     <td style="width:50%;">Name</td>
                                     <td>Location</td>
                                     <td style="width:10%;">Qty</td>
-                                    <td style="width:10%;">Price</td>
+                                    <td style="width:10%;text-align:right">Price</td>
                                     <td style="width:5%;"></td>
                                 </tr>
                             </thead>
@@ -47,7 +47,7 @@
                                         <td><?= $item->title ?></td>
                                         <td><?= $location[0]['name'] ?></td>
                                         <td><?= $qty ?></td>
-                                        <td><?= $item->price ?></td>
+                                        <td style="text-align:right;"><?= number_format($item->price,2,",",""); ?></td>
                                         <td>
                                             <button data-id="<?= $item->id ?>" type="button" data-bs-dismiss="modal" class="nsm-button select_item <?php //echo $buttonClass ?>" <?php //echo $disabled; ?>>
                                                 <i class="bx bx-fw bx-plus"></i>
@@ -61,11 +61,11 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="modal-footer modal-footer-detail">
-                <div class="button-modal-list">
-                    <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div> -->
         </div>
     </div>
 </div>
+<script>
+$(function(){
+    $('#items_table').nsmPagination({itemsPerPage:8});
+});
+</script>

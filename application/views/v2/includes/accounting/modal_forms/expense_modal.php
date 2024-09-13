@@ -1,3 +1,12 @@
+<style>
+#expenseModal .nsm-table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
+#expenseModal .modal-body{
+    overflow-x:hidden;
+}
+</style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
 <?php if(!isset($expense)) : ?>
