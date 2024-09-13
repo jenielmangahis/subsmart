@@ -22,18 +22,7 @@
 .form_line{
     margin-bottom: 10px;
 }
-.nsm-counter .bx{
-    font-size: 1em;
-    padding: 2px;
-    display: none;
 
-}
-.nsm-counter h2{
-    font-size: 16px;
-}
-.nsm-counter {
-padding: 0.8rem 1rem;
-}
 #person-list .table-icon {
     width: 1% !important;
 }   
@@ -81,20 +70,20 @@ padding: 0.8rem 1rem;
                 <div class="row g-3 mb-3">
                     <?php
                       $colorClasses = ['primary', 'success', 'error', 'secondary'];
-$index = 0;
-foreach ($statusCounts as $status => $count) {?>
+                    $index = 0;
+                    foreach ($statusCounts as $status => $count) {?>
                     <div class="col-6 col-md-3 col-lg-2 select-filter-card" data-value="<?php echo $status; ?>" >
                         <div class="nsm-counter <?php echo $colorClasses[$index % 4]; ?> h-100 mb-2 " id="estimates">
                             <div class="row h-100 w-auto">
                                 <div class=" w-100 col-md-8 text-start d-flex align-items-center  justify-content-between">
-                                    <span><i class="bx bx-receipt"></i><?php echo $status; ?></span>
-                                    <h2 id="total_this_year"><?php echo $count; ?></h2>
+                                    <div><span><i class="bx bx-receipt" ></i>  <?php echo $status; ?></span></div>
+                                    <h2 id="total_this_year ml-3"><?php echo $count; ?></h2>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <?php ++$index;
-} ?>
+                                        <?php ++$index;
+                    } ?>
                 </div>
                 <div class="row mt-5">
                     <div class="col-12 col-md-4">

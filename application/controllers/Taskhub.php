@@ -917,7 +917,7 @@ class Taskhub extends MY_Controller {
         $post = $this->input->post();  
 	
 		$assigned_to_arr = explode(",", $post['a_to_multiple']);
-		$post_encode_assigned_to = json_encode($assigned_to_arr);
+		$post_encode_assigned_to = json_encode($assigned_to_arr, JSON_NUMERIC_CHECK); //json_encode($assigned_to_arr);
 
 		$taskid = trim($this->input->post('taskid'));
 		if(($id > 0) || ($taskid > 0)){
@@ -1018,7 +1018,7 @@ class Taskhub extends MY_Controller {
 					'task_color' => null, 
 					'priority' => $post['priority'],
 					'company_id' => $company_id, 
-					'assigned_employee_ids' => !empty($post_encode_assigned_to) ? $post_encode_assigned_to : $assigned_to,
+					'assigned_employee_ids' => !empty($post_encode_assigned_to) ? $post_encode_assigned_to : json_encode($assigned_to, JSON_NUMERIC_CHECK),
 					'list_id' => $list_id,
 					'status'=> $post['status']
 				];					
@@ -1065,7 +1065,7 @@ class Taskhub extends MY_Controller {
         $post = $this->input->post();  
 
 		$assigned_to_arr = explode(",", $post['a_to_multiple']);
-		$post_encode_assigned_to = json_encode($assigned_to_arr);
+		$post_encode_assigned_to = json_encode($assigned_to_arr, JSON_NUMERIC_CHECK); //json_encode($assigned_to_arr);
 
         if( $post['title'] != '' ){
             $taskStatus = $this->Taskhub_status_model->getById($post['status']);
@@ -1097,7 +1097,7 @@ class Taskhub extends MY_Controller {
                 'priority' => $post['priority'],
                 'company_id' => $cid,
                 'view_count' => 0,
-				'assigned_employee_ids' => !empty($post_encode_assigned_to) ? $post_encode_assigned_to : $assigned_to,
+				'assigned_employee_ids' => !empty($post_encode_assigned_to) ? $post_encode_assigned_to : json_encode($assigned_to, JSON_NUMERIC_CHECK),
 				'list_id' => $list_id,
 				'status' => $post['status'],
 

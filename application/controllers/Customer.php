@@ -78,11 +78,19 @@ class Customer extends MY_Controller
             $statusCounts[$g->name] = 0;
         }
 
+        $statusCounts['Active Subscription'] = 0;
+
         $customers = $this->AcsProfile_model->getAllByCompanyId($company_id);
         foreach ($customers as $c) {
             $status = trim($c->status);
             if (array_key_exists($status, $statusCounts)) {
                 $statusCounts[$status]++;
+            }
+
+            $active_sub_status= ['Active w/RAR','Active w/RMR','Active w/RQR','Active w/RYR','Inactive w/RMM'];
+
+            if (in_array($status, $active_sub_status)) {
+                $statusCounts['Active Subscription']++;
             }
         }
 
@@ -162,11 +170,18 @@ class Customer extends MY_Controller
         foreach($customerGroups as $g){
             $statusCounts[$g->name] = 0;
         }
+
+        $statusCounts['Active Subscription'] = 0;
         
         foreach ($commercials as $commercial) {
             $status = trim($commercial->status);
             if (array_key_exists($status, $statusCounts)) {
                 $statusCounts[$status]++;
+            }
+            $active_sub_status= ['Active w/RAR','Active w/RMR','Active w/RQR','Active w/RYR','Inactive w/RMM'];
+
+            if (in_array($status, $active_sub_status)) {
+                $statusCounts['Active Subscription']++;
             }
         }
 
@@ -692,11 +707,22 @@ class Customer extends MY_Controller
         foreach($customerGroups as $g){
             $statusCounts[$g->name] = 0;
         }
+        $statusCounts['Active Subscription'] = 0;
+
+
+        
+        
+
         
         foreach ($persons as $person) {
             $status = trim($person->status);
             if (array_key_exists($status, $statusCounts)) {
                 $statusCounts[$status]++;
+            }
+            $active_sub_status= ['Active w/RAR','Active w/RMR','Active w/RQR','Active w/RYR','Inactive w/RMM'];
+
+            if (in_array($status, $active_sub_status)) {
+                $statusCounts['Active Subscription']++;
             }
         }
 
@@ -773,15 +799,20 @@ class Customer extends MY_Controller
      */
     public function getCustomerLists()
     {
-        $data = [];
-        $draw = $this->input->post('draw');
-        $start = $_POST['start'];
-        $length = $_POST['length'];
-        $search = $_POST['search']['value'];
-        $search = ['search' => $search];
-        $customers = $this->customer_ad_model->getCustomerLists($search, $start, $length);
-        $allCustomers = $this->customer_ad_model->getCustomerLists($search, 0, 0);
+        $request = $_REQUEST;
+        $draw = isset($request['draw']) ? intval($request['draw']) : 0;
+        $start = isset($request['start']) ? intval($request['start']) : 0;
+        $length = isset($request['length']) ? intval($request['length']) : 10;
+        $search = isset($request['search']['value']) ? $request['search']['value'] : '';
+        $filter_status = isset($request['filter_status']) ? $request['filter_status'] : '';
+
+     
+        $customers = $this->customer_ad_model->getCustomerLists($search, $start, $length,null,$filter_status == 'All Status' ? '' :$filter_status);
+        $allCustomers = $this->customer_ad_model->getCustomerLists($search, 0, 0,null,$filter_status == 'All Status' ? '' :$filter_status);
         $all_customer_ids = [];
+
+  
+        
         foreach ($allCustomers as $c) {
             if (!in_array($c->prof_id, $all_customer_ids)) {
                 $all_customer_ids[] = $c->prof_id;

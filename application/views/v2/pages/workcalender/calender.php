@@ -2857,7 +2857,8 @@
                     $('#modal-quick-add-service-ticket').modal('hide');                   
 
                     Swal.fire({
-                        text: 'Service ticket has been added!',
+                        title: 'Service Ticket',
+                        text: 'Service ticket has been created',
                         icon: 'success',
                         showCancelButton: false,
                         confirmButtonColor: '#6a4a86',
@@ -2866,7 +2867,11 @@
                     }).then((result) => {
                         //reloadCalendar(selected_calendar_view);
                         //loadUpcomingSchedules();
-                        location.href = base_url + 'job/new_job1/' + data.job_id
+                        if( data.esign_id > 0 ){
+                            location.href = base_url + 'eSign_v2/templatePrepare?id='+data.esign_id+'&job_id='+data.job_id+'&customer_id='+data.customer_id;
+                        }else{
+                            location.href = base_url + 'job/new_job1/' + data.job_id
+                        }
                     });    
                 }else{
                     Swal.fire({

@@ -1535,6 +1535,8 @@ class Tickets extends MY_Controller
         $this->load->helper('functions');
         $this->load->model('AcsProfile_model');
         $this->load->model('Job_tags_model');
+        $this->load->model('Customer_advance_model');
+        $this->load->model('User_docflies_model');
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
@@ -1551,8 +1553,7 @@ class Tickets extends MY_Controller
             $this->page_data['auto_increment_estimate_id'] = 0;
         }
 
-        $user_id = logged('id');
-
+        $user_id    = logged('id');
         $company_id = logged('company_id');
         $role = logged('role');
         $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);       
@@ -1581,13 +1582,25 @@ class Tickets extends MY_Controller
             $next_num = 1;
         }
 
-        $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+        $next_num  = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+        $ratePlans = $this->Customer_advance_model->getAllSettingsRatePlansByCompanyId($company_id);
+
+        //esign templates
+        $esignTemplates  = $this->User_docflies_model->getAllDocfileTemplatesByCompanyId($company_id);
+        $defaultTemplate = $this->User_docflies_model->getDefaultTemplateByCompanyId($company_id);
+        if( $defaultTemplate ){
+            foreach($esignTemplates as $record){
+                $record->is_default = $defaultTemplate->template_id == $record->id ? 1 : 0;
+            }
+        }
 
         $this->page_data['prefix'] = $prefix;
         $this->page_data['next_num'] = $next_num;
         $this->page_data['default_start_date'] = $default_start_date;
         $this->page_data['default_start_time'] = $default_start_time;
         $this->page_data['items'] = $this->items_model->getItemlist();        
+        $this->page_data['ratePlans'] = $ratePlans;
+        $this->page_data['esignTemplates'] = $esignTemplates;
         $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);
         $this->page_data['type'] = $this->input->get('type');
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
@@ -1601,10 +1614,12 @@ class Tickets extends MY_Controller
     {
         $this->load->helper(array('hashids_helper', 'form'));
         $this->load->model('JobSettings_model');
+        $this->load->model('Customer_advance_model');
 
         $jobs_id  = 0;
         $is_valid = 1;
         $msg = '';
+        $esign_id = 0;        
 
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
@@ -1640,6 +1655,21 @@ class Tickets extends MY_Controller
         }
 
         if( $is_valid == 1 ){
+
+            $monthly_monitoring_cost = 0;
+            $update_customer_mmr     = 0;
+            $update_customer_billing = 0;
+            $installation_cost = 0;
+            $otp_cost = 0;
+            if( $this->input->post('is_with_esign') ){
+                $otp_cost = $this->input->post('otp');
+                $installation_cost = $this->input->post('installation_cost');
+                $monthly_monitoring_cost = $this->input->post('monthly_monitoring_rate');
+                $esign_id = $this->input->post('esign_template');
+                $update_customer_mmr = 1;
+                $update_customer_billing = 1;
+            }
+
             $techni = serialize($this->input->post('assign_tech'));
             $tDate  = date("Y-m-d",strtotime($this->input->post('ticket_date')));
             $status = $this->input->post('ticket_status');
@@ -1683,6 +1713,9 @@ class Tickets extends MY_Controller
                 'customer_phone'            => $this->input->post('customer_phone'),
                 'employee_id'               => $this->input->post('employee_id'),
                 'created_by'                => logged('id'),
+                'monthly_monitoring'        => $monthly_monitoring_cost,
+                'otp_setup'                 => $otp_cost,
+                'installation_cost'         => $installation_cost,
                 // 'hash_id'                   => $hasID,
                 'company_id'                => $company_id,
                 'created_at'                => date("Y-m-d H:i:s"),
@@ -1699,6 +1732,78 @@ class Tickets extends MY_Controller
             );
 
             $updateaddQuery = $this->tickets_model->updateTicketsHash_ID($update_data);
+
+            //Update customer mmr
+            if( $update_customer_mmr == 1 ){
+                $check = [
+                    'where' => [
+                        'fk_prof_id' => $this->input->post('customer_id'),
+                    ],
+                    'table' => 'acs_alarm',
+                ];
+                $exist = $this->general->get_data_with_param($check, false);
+                if ($exist) {
+                    $input_alarm['panel_type'] = $this->input->post('panel_type');
+                    $input_alarm['monthly_monitoring'] = $monthly_monitoring_cost;
+                    $input_alarm['otps'] = $otp_cost;   
+                    $this->general->update_with_key_field($input_alarm, $this->input->post('customer_id'), 'acs_alarm', 'fk_prof_id');
+                }else{
+                    $input_alarm['fk_prof_id'] = $this->input->post('customer_id');
+                    $input_alarm['monitor_comp'] = '';
+                    $input_alarm['monitor_id'] = 0;
+                    $input_alarm['acct_type'] = '';
+                    $input_alarm['online'] = 'Yes';
+                    $input_alarm['in_service'] = 'Yes';
+                    $input_alarm['equipment'] = '';
+                    $input_alarm['collections'] = '';
+                    $input_alarm['credit_score_alarm'] = '';
+                    $input_alarm['passcode'] = '';
+                    $input_alarm['install_code'] = '';
+                    $input_alarm['mcn'] = 0;
+                    $input_alarm['scn'] = 0;
+                    $input_alarm['panel_type'] = $this->input->post('panel_type');
+                    $input_alarm['system_type'] = '';
+                    $input_alarm['warranty_type'] = $this->input->post('warranty_type');
+                    $input_alarm['dealer'] = '';
+                    $input_alarm['alarm_login'] = '';
+                    $input_alarm['alarm_customer_id'] = '';
+                    $input_alarm['alarm_cs_account'] = '';
+                    $input_alarm['comm_type'] = '';
+                    $input_alarm['account_cost'] = 0;
+                    $input_alarm['pass_thru_cost'] = 0;
+                    $input_alarm['monthly_monitoring'] = $monthly_monitoring_cost;
+                    $input_alarm['otps'] = $otp_cost;   
+                    $this->general->add_($input_alarm, 'acs_alarm');
+                }
+            }
+
+            //Update customer billing
+            if( $update_customer_billing == 1 ){
+                $billing = $this->Customer_advance_model->get_data_by_id('fk_prof_id', $this->input->post('customer_id'), 'acs_billing');
+                if( $billing ){
+                    $input_billing['routing_num'] = $this->input->post('routing_number');
+                    $input_billing['acct_num'] = $this->input->post('account_number');
+                    $input_billing['check_num'] = $this->input->post('checking_account_number');
+                    $input_billing['credit_card_num'] = $this->input->post('customer_cc_num');
+                    $input_billing['credit_card_exp_mm_yyyy'] = $this->input->post('card_security_code');
+                    $this->general->update_with_key_field($input_billing, $this->input->post('customer_id'), 'acs_billing', 'fk_prof_id');
+                }else{
+                    $input_billing['fk_prof_id'] = $this->input->post('customer_id');
+                    $input_billing['card_address'] = $this->input->post('service_location');
+                    $input_billing['city'] = $this->input->post('customer_city');
+                    $input_billing['state'] = $this->input->post('customer_state');
+                    $input_billing['zip'] = $this->input->post('customer_zip');
+                    $input_billing['mmr'] = $monthly_monitoring_cost;
+                    $input_billing['bill_start_date'] = NULL;
+                    $input_billing['bill_end_date'] = NULL;
+                    $input_billing['routing_num'] = $this->input->post('routing_number');
+                    $input_billing['acct_num'] = $this->input->post('account_number');
+                    $input_billing['check_num'] = $this->input->post('checking_account_number');
+                    $input_billing['credit_card_num'] = $this->input->post('customer_cc_num');
+                    $input_billing['credit_card_exp_mm_yyyy'] = $this->input->post('card_security_code');
+                    $this->general->add_($input_billing, 'acs_billing');
+                } 
+            }               
 
             //Google Calendar
             createSyncToCalendar($addQuery, 'service_ticket', $company_id);
@@ -1800,6 +1905,7 @@ class Tickets extends MY_Controller
             }
             
             $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+            $invoice_id = $this->createInitialInvoice($jobs_id);
 
             //Update job settings
             if( $is_with_settings == 1 ){
@@ -1917,7 +2023,7 @@ class Tickets extends MY_Controller
             createActivityLog($activity_name);
         }
 
-        $json_data = ['is_success' => $is_valid, 'msg' => $msg, 'job_id' => $jobs_id];
+        $json_data = ['is_success' => $is_valid, 'msg' => $msg, 'job_id' => $jobs_id, 'esign_id' => $esign_id, 'customer_id' => $this->input->post('customer_id')];
         echo json_encode($json_data);       
 
         exit;
@@ -1926,12 +2032,27 @@ class Tickets extends MY_Controller
     public function ajax_get_customer_basic_info()
     {
         $this->load->model('AcsProfile_model');
+        $this->load->model('Customer_advance_model');
 
         $prof_id    = $this->input->post('id');
         $company_id = logged('company_id');
 
         $customer = $this->AcsProfile_model->getCustomerBasicInfoByProfIdAndCompanyId($prof_id, $company_id);
         if( $customer ){
+            $routing_number = ''; //ABA
+            $acct_num  = '';
+            $check_num = '';
+            $cvc = '';
+            $cc_num = '';
+
+            $billing = $this->Customer_advance_model->get_data_by_id('fk_prof_id', $prof_id, 'acs_billing');            
+            if($billing){
+                $routing_number = $billing->routing_num;
+                $acct_num  = $billing->acct_num;
+                $check_num = $billing->check_num;
+                $cvc = $billing->credit_card_exp_mm_yyyy;
+                $cc_num = $billing->credit_card_num;
+            }
             $json_data = [
                 'mail_add' => $customer->mail_add,
                 'city' => $customer->city,
@@ -1939,8 +2060,13 @@ class Tickets extends MY_Controller
                 'zip_code' => $customer->zip_code,
                 'phone_h' => formatPhoneNumber($customer->phone_h),
                 'phone_m' => formatPhoneNumber($customer->phone_m),
-                'business_name' => $customer->business_name
-            ];    
+                'business_name' => $customer->business_name,
+                'routing_number' => $routing_number,
+                'acct_num' => $acct_num,
+                'check_num' => $check_num,
+                'cvc' => $cvc,
+                'cc_num' => $cc_num
+            ];     
         }else{
             $json_data = [
                 'mail_add' => '',
@@ -1949,7 +2075,12 @@ class Tickets extends MY_Controller
                 'zip_code' => '',
                 'phone_h' => '',
                 'phone_m' => '',
-                'business_name' => ''
+                'business_name' => '',
+                'routing_number' => '',
+                'acct_num' => '',
+                'check_num' => '',
+                'cvc' => '',
+                'cc_num' => ''
             ];
         }
         
@@ -1978,6 +2109,160 @@ class Tickets extends MY_Controller
         echo json_encode($json_data);       
 
         exit;
+    }
+
+    public function createInitialInvoice($job_id)
+    {
+        $this->load->model('Invoice_model');
+        $this->load->model('Invoice_settings_model');
+
+        $company_id = logged('company_id');
+        
+        $this->db->where('id', $job_id);
+        $job = $this->db->get('jobs')->row();
+
+        $this->db->where('prof_id', $job->customer_id);
+        $customer = $this->db->get('acs_profile')->row();
+
+        $workorder = array();
+        if( $job->work_order_id > 0 ){
+            $this->db->where('id', $job->work_order_id);
+            $workorder = $this->db->get('work_orders')->row();
+        }
+        
+        $this->db->where('id', $job->ticket_id);
+        $ticket = $this->db->get('tickets')->row();
+
+        $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($company_id);
+        if( $invoiceSettings ){            
+            $next_number = (int) $invoiceSettings->invoice_num_next;     
+            $prefix      = $invoiceSettings->invoice_num_prefix;        
+        }else{
+            $lastInsert = $this->Invoice_model->getLastInsertByCompanyId($company_id);
+            $prefix     = 'INV-';
+            if( $lastInsert ){
+                $next_number   = $lastInsert->id + 1;
+            }else{
+                $next_number   = 1;
+            }
+        }
+
+        $invoiceNumber = formatInvoiceNumberV2($prefix, $next_number);        
+
+        $monthly_monitoring = $ticket->monthly_monitoring;
+        $program_setup      = $ticket->otp_setup;
+        $installation_cost  = $ticket->installation_cost;
+
+        $grand_total = $ticket->grandtotal;
+        $sub_total   = $ticket->subtotal;
+        $tax         = $ticket->taxes;
+
+        $new_data = array(
+            'customer_id'               => $job->customer_id,
+            'job_location'              => $job->job_location,
+            'job_name'                  => $job->job_name,
+            'job_id'                    => $job->id,
+            'job_number'                => $job->job_number,
+            'business_name'             => $customer->business_name,
+            'tags'                      => $job->tags,
+            'invoice_type'              => 'Total Due',
+            'work_order_number'         => !empty($workorder) ? $workorder->work_order_number : '',
+            'purchase_order'            => '',
+            'invoice_number'            => $invoiceNumber,
+            'date_issued'               => date("Y-m-d"),
+            'customer_email'            => $customer->email,
+            'online_payments'           => '',
+            'billing_address'           => $customer->mail_add,
+            'shipping_to_address'       => $customer->mail_add,
+            'ship_via'                  => '',
+            'shipping_date'             => '',
+            'tracking_number'           => '',
+            'terms'                     => 0,     
+            'tip'                       => 0,       
+            'due_date'                  => date("Y-m-d", strtotime("+5 days")),
+            'location_scale'            => '',
+            'message_to_customer'       => '',
+            'terms_and_conditions'      => !empty($workorder) ? $workorder->terms_and_conditions : '',            
+            'attachments'               => $job->attachment,
+            'status'                    => 'Draft',
+            'company_id'                => $company_id,
+            'deposit_request_type'      => '$',
+            'deposit_request'           => '0',
+            'monthly_monitoring'        => $monthly_monitoring,
+            'program_setup'             => $program_setup,
+            'installation_cost'         => $installation_cost,
+            'payment_methods'           => $job->BILLING_METHOD,
+            'sub_total'                 => $sub_total,
+            'taxes'                     => $tax,
+            'adjustment_name'           => !empty($workorder) ? $workorder->adjustment_name : '',
+            'adjustment_value'          => !empty($workorder) ? $workorder->adjustment_value : 0,
+            'grand_total'               => $grand_total,
+            'user_id'                   => logged('id'),
+            'date_created'              => date("Y-m-d H:i:s"),
+            'date_updated'              => date("Y-m-d H:i:s")
+        );
+
+        $invoice_id = $this->Invoice_model->createInvoice($new_data);
+
+        //Update invoice settings
+        if( $invoiceSettings ){
+            $invoice_settings_data = ['invoice_num_next' => $next_number + 1];
+            $this->Invoice_settings_model->update($invoiceSettings->id, $invoice_settings_data);
+        }else{
+            $invoice_settings_data = [
+                'invoice_num_prefix' => $prefix,
+                'invoice_num_next' => $next_number,
+                'check_payable_to' => '',
+                'accept_credit_card' => 1,
+                'accept_check' => 0,
+                'accept_cash'  => 1,
+                'accept_direct_deposit' => 0,
+                'accept_credit' => 0,
+                'mobile_payment' => 1,
+                'capture_customer_signature' => 1,
+                'hide_item_price' => 0,
+                'hide_item_qty' => 0,
+                'hide_item_tax' => 0,
+                'hide_item_discount' => 0,
+                'hide_item_total' => 0,
+                'hide_from_email' => 0,
+                'hide_item_subtotal' => 0,
+                'hide_business_phone' => 0,
+                'hide_office_phone' => 0,
+                'accept_tip' => 0,
+                'due_terms' => '',
+                'auto_convert_completed_work_order' => 0,
+                'message' => 'Thank you for your business.',
+                'terms_and_conditions' => 'Thank you for your business.',
+                'company_id' => $company_id,
+                'commercial_message' => 'Thank you for your business.',
+                'commercial_terms_and_conditions' => 'Thank you for your business.',
+                'logo' => '',
+                'payment_fee_percent' => '',
+                'payment_fee_amount' => '',
+                'recurring' => ''
+            ];
+
+            $this->Invoice_settings_model->create($invoice_settings_data);
+        }
+
+        //Job Items
+        $jobItems = $this->jobs_model->get_specific_job_items($job->id);
+        foreach( $jobItems as $item ){
+            $invoice_item_data = [
+                'invoice_id' => $invoice_id,
+                'items_id' => $item->fk_item_id,
+                'qty' => $item->qty,
+                'cost' => $item->cost,
+                'tax' => $item->tax,
+                'discount' => $item->discount,
+                'total' => $item->total
+            ];
+
+            $this->Invoice_model->add_invoice_details($invoice_item_data);
+        }
+
+        return $invoice_id;
     }
 }
 
