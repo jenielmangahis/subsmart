@@ -171,6 +171,10 @@ table.dataTable thead th, table.dataTable thead td{
     font-size:14px;
 }
 
+.select-filter-card{
+    cursor: pointer
+}
+
 </style>
 
 <div class="nsm-fab-container">
@@ -203,7 +207,7 @@ table.dataTable thead th, table.dataTable thead td{
                       $colorClasses = ['primary', 'success', 'error', 'secondary'];
                       $index = 0;
                     foreach($statusCounts as $status => $count){?>
-                    <div class="col-6 col-md-3 col-lg-2">
+                    <div class="col-6 col-md-3 col-lg-2 select-filter-card" data-value="<?php echo $status; ?>">
                         <div class="nsm-counter <?php echo $colorClasses[$index % 4]; ?> h-100 mb-2 " id="estimates">
                             <div class="row h-100 w-auto">
                                 
@@ -236,6 +240,18 @@ table.dataTable thead th, table.dataTable thead td{
                         </div>
                     </div>
                     <div class="col-md-8 grid-mb text-end">
+                    <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                <span>Filter by : <span id="filter-selected">All Status</span></span> <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                 <li><a class="dropdown-item"data-value="" href="#">All Status</a></li>
+                                 <?php  foreach($statusCounts as $status => $count){?>
+                                <li><a class="dropdown-item" data-value="<?= $status ?>" href="#"><?= $status ?></a></li>
+                              
+                                <?php } ?>
+                            </ul>
+                        </div>
                     <button type="button" class="nsm-button batchCustomerUpdaterButton" data-bs-toggle="modal" data-bs-target=".batchCustomerUpdaterModal" style="display: none;"><i class='bx bxs-edit'></i> Customer Management</button>
                     <button type="button" class="nsm-button dupEntryButton d-none" data-bs-toggle="modal" data-bs-target=".duplicateRemoverModal"><i class='bx bxs-duplicate'></i> Duplicate Entries <small class="text-muted dupEntryCount"></small></button>
                         <div class="nsm-page-buttons page-button-container">
@@ -2091,9 +2107,18 @@ table.dataTable thead th, table.dataTable thead td{
             "processing": true,
             "serverSide": true,
             // "order": [],
+            "pageLength": 10,
             "ajax": {
                 "url": "<?= base_url('customer/getCustomerLists'); ?>",
-                "type": "POST"
+                "type": "POST",
+                "data": function (d) {
+                // Include custom parameters for filtering
+                d.filter_status = $('#filter-selected').text().trim(); // Get filter value from UI element
+                },
+                "dataSrc": function (json) {
+                csv_data = json.data;
+                return json.data;
+        }
             },
             // Load data from an Ajax source
             // "createdRow": function( row, data, dataIndex){
@@ -2127,7 +2152,29 @@ table.dataTable thead th, table.dataTable thead td{
             let phone = $(this).attr("data-id");
 
             window.open('tel:' + phone);
-        });       
+        });   
+
+        $('.select-filter .dropdown-item').on('click', function(e) {
+            e.preventDefault();
+            var filterValue = $(this).attr('data-value');
+            var filterText = $(this).text();
+
+            $('#filter-selected').text(filterText);
+
+            CUSTOMER_LIST_TABLE.ajax.reload();
+        });
+
+
+        
+        $('.select-filter-card').on('click', function(e) {
+            e.preventDefault();
+            var filterValue = $(this).attr('data-value');
+            console.log('filterValue',filterValue)
+            $('#filter-selected').text(filterValue);
+
+            CUSTOMER_LIST_TABLE.ajax.reload();
+        });
+
 
         $('#print-customer-list').on('click', function(){
             var profid = $(this).attr('data-id');

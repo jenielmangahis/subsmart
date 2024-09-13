@@ -1,6 +1,6 @@
 <!-- Modal -->
 <div class="modal fade nsm-modal" id="item_category_list" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" style="width: 50rem;" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title" id="items-categories-modal-label">Add By Group</span>

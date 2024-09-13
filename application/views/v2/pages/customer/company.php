@@ -22,18 +22,7 @@
 .form_line{
     margin-bottom: 10px;
 }
-.nsm-counter .bx{
-    font-size: 1em;
-    padding: 2px;
-    display: none;
 
-}
-.nsm-counter h2{
-    font-size: 16px;
-}
-.nsm-counter {
-padding: 0.8rem 1rem;
-}
 #company-list .table-icon {
     width: 1% !important;
 }   
@@ -51,6 +40,9 @@ padding: 0.8rem 1rem;
     color: #ffffff;
     font-size: 15px;
     padding: 10px;
+}
+.select-filter-card{
+    cursor: pointer
 }
 </style>
 
@@ -80,7 +72,7 @@ padding: 0.8rem 1rem;
                       $colorClasses = ['primary', 'success', 'error', 'secondary'];
                       $index = 0;
                     foreach($statusCounts as $status => $count){?>
-                    <div class="col-6 col-md-3 col-lg-2">
+                    <div class="col-6 col-md-3 col-lg-2 select-filter-card" data-value="<?php echo $status; ?>" >
                         <div class="nsm-counter <?php echo $colorClasses[$index % 4]; ?> h-100 mb-2 " id="estimates">
                             <div class="row h-100 w-auto">
                                 
@@ -602,6 +594,17 @@ $(document).ready(function() {
         // Show the modal
         $("#company_modal").modal('show');
     });
+
+    
+    $('.select-filter-card').on('click', function(e) {
+        e.preventDefault();
+        var filterValue = $(this).attr('data-value');
+        console.log('filterValue',filterValue)
+        $('#filter-selected').text(filterValue);
+
+        COMPANY_LIST_TABLE.ajax.reload();
+    });
+
 
     function deleteItem(itemId) {
         Swal.fire({

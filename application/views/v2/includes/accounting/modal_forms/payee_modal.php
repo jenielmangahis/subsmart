@@ -42,7 +42,7 @@
                             </div>
                             <div class="col-12">
                                 <label for="phone-m">Mobile</label>
-                                <input type="number" class="form-control nsm-field phone_number mb-2" maxlength="12" placeholder="xxx-xxx-xxxx" name="mobile" id="phone-m" required />
+                                <input type="text" class="form-control nsm-field phone_number mb-2" maxlength="12" placeholder="xxx-xxx-xxxx" name="mobile" id="phone-m" required />
                             </div>
                             <div class="col-12 mb-2">
                                 <label for="customer-type">Customer Type</label>
@@ -84,11 +84,11 @@
 
 <script>
     $(document).ready(function() {
-        console.log("Document is ready!"); 
+        console.log("Document is ready!");
 
         $('#customer-type').change(function() {
             var customerType = $(this).val();
-            console.log('Customer Type:', customerType); 
+            console.log('Customer Type:', customerType);
             var businessNameContainer = $('#business_name_container');
 
             if (customerType === 'Commercial') {
@@ -99,5 +99,10 @@
                 businessNameContainer.hide();
             }
         });
+    });
+
+    document.getElementById('phone-m').addEventListener('input', function(e) {
+        let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+        e.target.value = x[1] ? x[1] + (x[2] ? '-' + x[2] + (x[3] ? '-' + x[3] : '') : '') : '';
     });
 </script>

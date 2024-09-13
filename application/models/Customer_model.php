@@ -92,7 +92,12 @@ class Customer_model extends MY_Model
         $this->db->where('customer_type', $customer_type);        
             
         if (!empty($filter_status)) {
-            $this->db->where('status', $filter_status); 
+            if($filter_status =="Active Subscription"){
+                $this->db->where_in('status', ['Active w/RAR','Active w/RMR','Active w/RQR','Active w/RYR','Inactive w/RMM']); 
+            }else{
+                $this->db->where('status', $filter_status); 
+            }
+            
         }
     
         if (!empty($search)) {
