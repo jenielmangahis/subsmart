@@ -47,7 +47,7 @@
                             <?php } ?>
                         <?php } else { ?>
                             <tr>
-                                <td colspan="4">
+                                <td colspan="5">
                                     <div class="nsm-empty">
                                         <span>No results found.</span>
                                     </div>
