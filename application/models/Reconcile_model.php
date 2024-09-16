@@ -113,10 +113,15 @@ class Reconcile_model extends MY_Model {
 
 	}
 
-	public function selectsummary()  
+	public function selectsummary($company_id)  
   	{  
+		$this->db->select('accounting_reconcile.*');
+		$this->db->where('accounting_reconcile.adjustment_date is NOT NULL', NULL, FALSE); 
+		$this->db->where('accounting_chart_of_accounts.company_id', $company_id);
+		$this->db->join('accounting_chart_of_accounts', 'accounting_reconcile.chart_of_accounts_id = accounting_chart_of_accounts.id', 'LEFT');
+
 	  	$this->db->from('accounting_reconcile');  
-		$this->db->where('adjustment_date is NOT NULL', NULL, FALSE); 
+
 		$result =  $this->db->get()->result();
 	    return $result;
   	}
@@ -338,13 +343,19 @@ class Reconcile_model extends MY_Model {
 	{
 		$query="update accounting_reconcile set expense_account = '',service_charge = '0',descp_sc = '', memo_sc='',first_date='',mailing_address='',checkno='',CHRG=''  where active=1 and id = '$id'";
 		echo $this->db->query($query);
-	}
+	}	
 
-	public function selectonwherehistory($id)  
+	public function selectonwherehistory($id, $company_id)  
 	{  
-	  	$this->db->from('accounting_reconcile_history');  
-    	$this->db->where('chart_of_accounts_id',$id); 
-    	$this->db->where('active','1'); 
+		$this->db->select('accounting_reconcile_history.*');
+		$this->db->where('accounting_chart_of_accounts.company_id', $company_id);
+		$this->db->where('accounting_reconcile_history.active','1'); 
+		if($id != 'all') {
+			$this->db->where('chart_of_accounts_id',$id);
+		}  
+		$this->db->join('accounting_chart_of_accounts', 'accounting_reconcile_history.chart_of_accounts_id = accounting_chart_of_accounts.id', 'LEFT');	
+		$this->db->from('accounting_reconcile_history');
+
     	$result =  $this->db->get()->result();
         return $result;
 	}

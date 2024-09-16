@@ -4,12 +4,19 @@
         background-color: #ccc;
         cursor: not-allowed;
     }
+    #products_list .nsm-table thead td{
+        background-color:#6a4a86;
+        color:#ffffff;
+    }
+    #products_list #item-table td:nth-child(3){
+    text-align:right !important;
+    }
 </style>
 <div class="modal fade nsm-modal" id="products_list" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <span class="modal-title content-title" id="products-lists-modal-label">Products Lists</span>
+                <span class="modal-title content-title" id="products-lists-modal-label">Product Lists</span>
                 <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
             </div>
             <div class="modal-body">
@@ -18,10 +25,10 @@
                         <table id="items_table" class="nsm-table" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <td> Name</td>
-                                    <td> Qty</td>
-                                    <td> Price</td>
-                                    <td> Action</td>
+                                    <td style="width:50%;"> Name</td>
+                                    <td style="width:10%;">Qty</td>
+                                    <td style="width:10%;text-align:right">Price</td>
+                                    <td style="width:5%;"></td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -29,7 +36,7 @@
                                     <tr>
                                         <td><?= $item->title !== '' ? $item->title : 'No name provided' ?></td>
                                         <td><?= $this->items_model->countQty($item->id) ?></td>
-                                        <td><?= $item->price ?></td>
+                                        <td style="text-align:right;"><?= number_format($item->price,2,",",""); ?></td>
                                         <td>
                                             <button data-id="<?= $item->id ?>" type="button" data-bs-dismiss="modal" class="nsm-button select_item <?= $item->title === '' ? 'disabled-button' : '' ?>" <?= $item->title === '' ? 'disabled' : '' ?>>
                                                 <i class="bx bx-fw bx-plus"></i>
@@ -40,11 +47,6 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
-            </div>
-            <div class="modal-footer modal-footer-detail">
-                <div class="button-modal-list">
-                    <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

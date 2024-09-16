@@ -30,9 +30,9 @@ class Autocomplete extends MY_Controller
             $default_imp_img = userProfileImage($u->id);
             $result[] = [
                 'id' => $u->id,
-                'FName' => $u->FName,
-                'LName' => $u->LName,
-                'email' => $u->email,
+                'FName' => mb_strimwidth(strtolower($u->FName), 0, 8),
+                'LName' => mb_strimwidth(strtolower($u->LName), 0, 8),
+                'email' => mb_strimwidth($u->email, 0, 20, ".."),
                 'user_image' => $default_imp_img
             ];            
         }

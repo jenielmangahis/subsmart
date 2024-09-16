@@ -1,29 +1,38 @@
-<div id="vendor-modal" class="modal fade modal-fluid nsm-modal" role="dialog">
-    <div class="modal-dialog modal-dialog-centered modal-xl test">
-        <!-- Modal content-->
-        <?php if(!isset($vendorDetails)) : ?>
+<style>
+    .modal .modal-body {
+        overflow-y: auto;
+    }
+</style>
+<div class="full-screen-modal">
+<?php if(!isset($vendorDetails)) : ?>
         <form id="add-vendor-form">
         <?php else : ?>
         <form action="<?= base_url('accounting/vendors/'.$vendorDetails->id.'/update'); ?>" method="post" class="form-validate" enctype="multipart/form-data">
         <?php endif; ?>
+<div id="vendor-modal" class="modal fade modal-fluid nsm-modal" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-xl ">
+        <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
                 <span class="modal-title content-title">Vendor Information</span>
                 <button type="button" class="cancel-add-vendor" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
             </div>
-            <div class="modal-body overflow-auto">
+            <div class="modal-body">
                 <div class="row">
                     <div class="col-12 col-md-7">
                         <div class="row">
-                            <div class="col-6 col-md-2">
+                            <div class="col-12">
                                 <label for="title">Title</label>
                                 <input type="text" name="title" id="title" class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->title : ''?>">
                             </div>
-                            <div class="col-6 col-md-3">
-                                <label for="f_name">First name</label>
+                            
+                        </div>
+                        <div class="row">
+                            <div class="col-6 col-md-3">`
+                                    <label for="f_name">First name</label>
                                 <input type="text" name="f_name" id="f_name" required class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->f_name : ''?>" required>
                             </div>
-                            <div class="col-6 col-md-2">
+                            <div class="col-6 col-md-3">
                                 <label for="m_name">Middle name</label>
                                 <input type="text" name="m_name" id="m_name" required class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->m_name : ''?>" required>
                             </div>
@@ -31,7 +40,7 @@
                                 <label for="l_name">Last name</label>
                                 <input type="text" name="l_name" id="l_name" required class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->l_name : ''?>" required>
                             </div>
-                            <div class="col-6 col-md-2">
+                            <div class="col-6 col-md-3">
                                 <label for="suffix">Suffix</label>
                                 <input type="text" name="suffix" id="suffix" class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->suffix : ''?>">
                             </div>
@@ -51,11 +60,11 @@
                         <div class="row">
                             <div class="col-12 col-md-4">
                                 <label for="phone">Phone</label>
-                                <input type="text" name="phone" id="phone" class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->phone : ''?>">
+                                <input type="text" name="phone" id="phone" class="form-control phone_number nsm-field mb-2" placeholder="xxx-xxx-xxxx" value="<?=isset($vendorDetails) ? $vendorDetails->phone : ''?>">
                             </div>
                             <div class="col-12 col-md-4">
                                 <label for="mobile">Mobile</label>
-                                <input type="text" name="mobile" id="mobile" class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->mobile : ''?>">
+                                <input type="text" name="mobile" placeholder="xxx-xxx-xxxx"  id="mobile" class="form-control nsm-field mb-2 mobile_number" value="<?=isset($vendorDetails) ? $vendorDetails->mobile : ''?>">
                             </div>
                             <div class="col-12 col-md-4">
                                 <label for="fax">Fax</label>
@@ -167,7 +176,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row" style="height:500px">
                     <div class="col-12 col-md-7">
                         <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
                         <span>Maximum size: 20MB</span>
@@ -190,9 +199,35 @@
                 <button type="submit" class="nsm-button primary float-end" name="save">Save</button>
             </div>
         </div>
-        </form>
+       
     </div>
 </div>
+</form>
+</div>
+<script>
+ 
+ $(function() {
+    $(document).on('keyup', '.phone_number , .mobile_number', function(e) {
+        var input = $(this).val();
+
+        // Remove non-numeric characters
+        input = input.replace(/\D/g, '');
+
+        // Formatting the phone number (xxx-xxx-xxxx)
+        if (input.length > 3 && input.length <= 6) {
+            input = input.slice(0, 3) + '-' + input.slice(3);
+        } else if (input.length > 6) {
+            input = input.slice(0, 3) + '-' + input.slice(3, 6) + '-' + input.slice(6, 10);
+        }
+
+        // Set the formatted value back into the input
+        $(this).val(input);
+    });
+});
+
+
+</script>
+
 <script>
 $('#vendor-modal').modal({backdrop: 'static', keyboard: false});
 </script>

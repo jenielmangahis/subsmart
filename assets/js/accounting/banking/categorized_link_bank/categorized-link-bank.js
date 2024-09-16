@@ -230,7 +230,6 @@ $(document).on('submit', '#new-payee-form', function (e) {
     e.preventDefault();
 
     var data = new FormData(this);
-
     var hasPayeeType = data.has('payee_type');
     if (!data.has('payee_type')) {
         var type = dropdownEl.attr('id') === 'person_tracking' ? 'vendor' : dropdownEl.attr('id');
@@ -275,6 +274,22 @@ $(document).on('submit', '#new-payee-form', function (e) {
             $("#payee-modal-customer").modal('hide');
         }
     });
+
+    $("#first_name").val('');
+    $("#last_name").val('');
+
+    $(".payee-firstname").val('');
+    $(".payee-lastname").val('');
+    
+    $("#customer_email").val('');
+    $("#business_name").val('');
+    $("#phone-m").val('');
+    $("#street").val('');
+    $("#city").val('');
+    $("#state").val('');
+    $("#zip_code").val('');
+    $("#country").val('');    
+    
 });   
 
 var switchEl = $('#createRules #auto-add-switch')[0];

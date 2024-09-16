@@ -363,7 +363,7 @@
         <form id="new-payee-form" class="w-50 m-auto">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="modal-title content-title">New Name</span>
+                    <span class="modal-title content-title">Add New Payee</span>
                     <button type="button" class="cancel-add-payee" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
                 </div>
                 <div class="modal-body">
@@ -450,11 +450,11 @@
                     <div class="row" style="min-height: 100%">
                         <div class="col-6">
                             <label for="name"><span class="text-danger">*</span> First Name</label>
-                            <input type="text" name="first_name" id="first_name" class="nsm-field form-control mb-2" required />
+                            <input type="text" name="first_name" id="first_name" class="nsm-field form-control mb-2 payee-firstname" required />
                         </div>
                         <div class="col-6">
                             <label for="name"><span class="text-danger">*</span> Last Name</label>
-                            <input type="text" name="last_name" id="last_name" class="nsm-field form-control mb-2" required />
+                            <input type="text" name="last_name" id="last_name" class="nsm-field form-control mb-2 payee-lastname" required />
                         </div>
                         <div class="col-12" id="business_name_container" style="display: none;">
                             <label for="business_name"><span class="text-danger"></span> Business Name</label>
@@ -473,7 +473,7 @@
                         <?php if ($type === 'customer') : ?>
                             <div class="col-12">
                                 <label for="email">Email</label>
-                                <input data-type="customer_email" type="email" class="form-control nsm-field mb-2" name="email" id="email" required />
+                                <input data-type="customer_email" type="email" id="customer_email" class="form-control nsm-field mb-2" name="email" id="email" required />
                             </div>
                             <div class="col-12">
                                 <label for="phone-m">Mobile</label>
@@ -491,16 +491,16 @@
                                 <input name="street" id="street" class="form-control nsm-field mb-2" placeholder="Street" required>
                             </div>
                             <div class="col-12 col-md-6">
-                                <input name="city" type="text" class="form-control nsm-field mb-2" placeholder="City" required>
+                                <input name="city" type="text" id="city" class="form-control nsm-field mb-2" placeholder="City" required>
                             </div>
                             <div class="col-12 col-md-6">
-                                <input name="state" type="text" class="form-control nsm-field mb-2" placeholder="State" required>
+                                <input name="state" type="text" id="state" class="form-control nsm-field mb-2" placeholder="State" required>
                             </div>
                             <div class="col-12 col-md-6">
-                                <input name="zip_code" type="text" class="form-control nsm-field mb-2" placeholder="ZIP Code" required>
+                                <input name="zip_code" type="text" id="zip_code" class="form-control nsm-field mb-2" placeholder="ZIP Code" required>
                             </div>
                             <div class="col-12 col-md-6">
-                                <input name="country" type="text" class="form-control nsm-field mb-2" placeholder="Country">
+                                <input name="country" type="text" id="country" class="form-control nsm-field mb-2" placeholder="Country">
                             </div>
                         <?php endif; ?>
                     </div>
@@ -534,5 +534,19 @@
                 businessNameContainer.hide();
             }
         });
+
+        $('#phone-m').keydown(function(e) {
+            var key = e.charCode || e.keyCode || 0;
+            $text = $(this);
+            if (key !== 8 && key !== 9) {
+                if ($text.val().length === 3) {
+                    $text.val($text.val() + '-');
+                }
+                if ($text.val().length === 7) {
+                    $text.val($text.val() + '-');
+                }
+            }
+            return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+        });        
     }); 
 </script>
