@@ -1,4 +1,9 @@
-$(document).ready(function () {
+$(document).ready(function () {    
+    $(document).on('change', '#vendor',function(){
+        var vendor_id = $(this).val();
+        $(`.attachments .dropzone`).attr('data-id', vendor_id);
+    });
+
     $(".nsm-sidebar-menu #new-popup ul li a.ajax-modal, a.ajax-modal, #new_estimate_modal .modal-body button.nsm-button").on("click", function(e) {
 		e.preventDefault();
         if($(this).hasClass('nsm-button')) {
@@ -24,8 +29,8 @@ $(document).ready(function () {
                     </div>
                 `);
             }
-            
-            if( modal_element != '#invoiceModal' && modal_element != '#salesReceiptModal' ){
+                        
+            if( modal_element != '#invoiceModal' &&  modal_element!= '#salesReceiptModal' && modal_element != '#delayedCreditModal' ){
                 $(`${modal_element} [data-bs-toggle="popover"]`).popover();
             }
             
@@ -125,10 +130,12 @@ $(document).ready(function () {
                 });
             }
 
-            if ($(`${modal_element} .attachments`).length > 0) {
-                var attachmentContId = $(`${modal_element} .attachments .dropzone`).attr('id');
+            $('#customer').on('change', function(){
+                var attachmentContId = $(`.attachments .dropzone`).attr('id');
+                modalAttachments.destroy();
+                var vendorId = $(this).val();
                 modalAttachments = new Dropzone(`#${attachmentContId}`, {
-                    url: '/accounting/attachments/attach',
+                    url: base_url + 'accounting/attachments/attach/'+ vendorId,
                     maxFilesize: 20,
                     uploadMultiple: true,
                     // maxFiles: 1,
@@ -137,15 +144,63 @@ $(document).ready(function () {
                         this.on("success", function(file, response) {
                             var ids = JSON.parse(response)['attachment_ids'];
                             var modal = $(`${modal_element}`);
-
+        
                             for (i in ids) {
                                 if (modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
                                     modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
                                 }
-
+        
                                 modalAttachmentId.push(ids[i]);
                             }
                             modalAttachedFiles.push(file);
+                        });
+                    },
+                    removedfile: function(file) {
+                        var ids = modalAttachmentId;
+                        var index = modalAttachedFiles.map(function(d, index) {
+                            if (d == file) return index;
+                        }).filter(isFinite)[0];
+        
+                        $(`${modal_element} .attachments`).parent().find(`input[name="attachments[]"][value="${ids[index]}"]`).remove();
+        
+                        if($('#modal-container form .modal .attachments-container').length > 0) {
+                            $('#modal-container form .modal .attachments-container #attachment-types').trigger('change');
+                        }
+        
+                        //remove thumbnail
+                        var previewElement;
+                        return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
+                    }
+                });
+            });
+
+            if ($(`${modal_element} .attachments`).length > 0) {                
+                //var attachmentContId = $(`${modal_element} .attachments .dropzone`).attr('id');
+                var attachmentContId = $(`${modal_element} .attachments .dropzone`).attr('id');
+                var vendorId = $(`${modal_element} .attachments .dropzone`).attr('data-id');
+                modalAttachments = new Dropzone(`#${attachmentContId}`, {
+                    url: base_url + 'accounting/attachments/attach/'+vendorId,
+                    maxFilesize: 20,
+                    uploadMultiple: true,
+                    // maxFiles: 1,
+                    addRemoveLinks: true,
+                    init: function() {
+                        this.on("success", function(file, response) {
+                            if( JSON.parse(response)['is_success'] ){                                
+                                var ids = JSON.parse(response)['attachment_ids'];
+                                var modal = $(`${modal_element}`);
+
+                                for (i in ids) {
+                                    if (modal.find(`input[name="attachments[]"][value="${ids[i]}"]`).length === 0) {
+                                        modal.find('.attachments').parent().append(`<input type="hidden" name="attachments[]" value="${ids[i]}">`);
+                                    }
+
+                                    modalAttachmentId.push(ids[i]);
+                                }
+                                modalAttachedFiles.push(file);
+                            }else{
+                                toast(false, "Please select vendor.");
+                            }                            
                         });
                     },
                     removedfile: function(file) {
@@ -164,7 +219,7 @@ $(document).ready(function () {
                         var previewElement;
                         return (previewElement = file.previewElement) !== null ? (previewElement.parentNode.removeChild(file.previewElement)) : (void 0);
                     }
-                });
+                });                
             }
 
             if ($(`${modal_element} .dropdown`).length > 0) {
