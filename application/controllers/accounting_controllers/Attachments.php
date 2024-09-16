@@ -475,30 +475,41 @@ class Attachments extends MY_Controller {
     {
         $files = $_FILES['file'];
 
-        if(count($files['name']) > 0) {
-            $insert = $this->uploadFile($files);
-            $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $vendorId);
-            $order = count($attachments);
-            foreach($insert as $attachmentId) {
-                $linkAttachmentData = [
-                    'type' => 'Vendor',
-                    'attachment_id' => $attachmentId,
-                    'linked_id' => $vendorId,
-                    'order_no' => $order
-                ];
-
-                $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
-
-                $order++;
+        if( $vendorId > 0 ){
+            if(count($files['name']) > 0) {
+                $insert = $this->uploadFile($files);
+                $attachments = $this->accounting_attachments_model->get_attachments('Vendor', $vendorId);
+                $order = count($attachments);
+                foreach($insert as $attachmentId) {
+                    $linkAttachmentData = [
+                        'type' => 'Vendor',
+                        'attachment_id' => $attachmentId,
+                        'linked_id' => $vendorId,
+                        'order_no' => $order
+                    ];
+    
+                    $linkedId = $this->accounting_attachments_model->link_attachment($linkAttachmentData);
+    
+                    $order++;
+                }
+    
+                $return = new stdClass();
+                $return->attachment_ids = $insert;
+                $return->is_success = true;
+                echo json_encode($return);
+            } else {
+                $return = new stdClass();
+                $return->attachment_ids = 0;
+                $return->is_success = false;
+                echo json_encode('error');
             }
-
+        }else{
             $return = new stdClass();
-            $return->attachment_ids = $insert;
-
-            echo json_encode($return);
-        } else {
+            $return->attachment_ids = 0;
+            $return->is_success = false;
             echo json_encode('error');
         }
+        
     }
 
     public function get_all_attachments()
