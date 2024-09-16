@@ -21,20 +21,27 @@
             </div>
             <div class="modal-body">
                 <div class="row">
+                    <div class="col-12 col-md-5 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" for="products_table" id="search_field" placeholder="Search List">
+                        </div>
+                    </div>  
                     <div class="col-12">
-                        <table id="items_table" class="nsm-table" style="width: 100%;">
+                        <table id="products_table" class="nsm-table" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <td style="width:50%;"> Name</td>
-                                    <td style="width:10%;">Qty</td>
-                                    <td style="width:10%;text-align:right">Price</td>
-                                    <td style="width:5%;"></td>
+                                    <td data-name="Name" style="width:50%;"> Name</td>
+                                    <td data-name="Type" style="width:10%;">Type</td>
+                                    <td data-name="Qty" style="width:10%;">Qty</td>
+                                    <td data-name="Price" style="width:10%;text-align:right">Price</td>
+                                    <td data-name="Manage" style="width:5%;"></td>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($items as $item) : ?>
                                     <tr>
-                                        <td><?= $item->title !== '' ? $item->title : 'No name provided' ?></td>
+                                        <td class="nsm-text-primary"><?= $item->title !== '' ? $item->title : 'No name provided' ?></td>
+                                        <td class="nsm-text-primary"><?= $item->type; ?></td>
                                         <td><?= $this->items_model->countQty($item->id) ?></td>
                                         <td style="text-align:right;"><?= number_format($item->price,2,",",""); ?></td>
                                         <td>
@@ -52,3 +59,11 @@
         </div>
     </div>
 </div>
+<script>
+$(function(){
+    $('#products_table').nsmPagination({itemsPerPage:8});
+    $("#search_field").on("input", debounce(function() {
+        tableSearch($(this));
+    }, 1000));
+});
+</script>
