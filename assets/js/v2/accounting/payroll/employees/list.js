@@ -829,7 +829,7 @@ $(document).on('click', '#commission-payroll-modal #preview-payroll', function()
         processData: false,
         contentType: false,
         success: function(res) {
-            console.log("test", res);
+            //console.log("test", res);
             $('div#commission-payroll-modal div.modal-body').html(res);
 
             var chartHeight = $('div#commission-payroll-modal div.modal-body div#commissionPayrollChart').parent().prev().height();
@@ -944,6 +944,23 @@ $(document).on('click', '#commission-payroll-modal #back-payroll-form', function
         templateResult: formatResult,
         templateSelection: optionSelect,
         dropdownParent: $('#commission-payroll-modal')
+    });
+
+    $('.date').each(function() {
+        if($(this).attr('id') === 'next-payday' || $(this).attr('id') === 'next-pay-period-end') {
+            $(this).datepicker({
+                startDate: new Date(),
+                format: 'mm/dd/yyyy',
+                orientation: 'bottom',
+                autoclose: true
+            });
+        } else {
+            $(this).datepicker({
+                format: 'mm/dd/yyyy',
+                orientation: 'bottom',
+                autoclose: true
+            });
+        }
     });
 });
 
