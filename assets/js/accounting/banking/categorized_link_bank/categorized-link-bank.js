@@ -260,6 +260,7 @@ $(document).on('submit', '#new-payee-form', function (e) {
             if (dropdownEl === null && $("#accountingRulesPageWrapper")) {
                 // for accounting rules page
                 $("[data-type='assignments.payee']").append(`<option value="${data.get('payee_type') + '-' + res.payee.id}" selected>${name}</option>`);
+                $("#assign-to-payee").append(`<option value="${data.get('payee_type') + '-' + res.payee.id}" selected>${name}</option>`);   
             }
 
             if (dropdownEl !== null) {

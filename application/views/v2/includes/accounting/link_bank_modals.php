@@ -380,14 +380,15 @@
                             <label for="business_name"><span class="text-danger"></span> Business Name</label>
                             <input type="text" name="business_name" id="business_name" class="nsm-field form-control mb-2">
                         </div>
+                        <input type="hidden" name="payee_type" value="vendor" />
                         <?php if ($type !== 'vendor' && $type !== 'customer') : ?>
-                            <div class="col-12">
+                            <!-- <div class="col-12">
                                 <label for="name">Type</label>
                                 <select name="payee_type" id="payee_type" class="nsm-field form-control">
                                     <option value="vendor">Vendor</option>
                                     <option value="customer">Customer</option>
                                 </select>
-                            </div>
+                            </div> -->
                         <?php endif; ?>
                         <?php if ($type === 'customer') : ?>
                             <div class="col-12">

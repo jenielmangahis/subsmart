@@ -33,10 +33,11 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <label for="filter-account">Account</label>
-                                        <select class="nsm-field form-select" name="filter_account" id="filter-account">
+                                        <select class="nsm-field form-select filter-account" name="filter_account" id="filter-account">
                                             <option value="all">All</option>
                                             <?php foreach($this->chart_of_accounts_model->select() as $row) : ?>
-                                                <option value="<?=$row->id?>"><?=$row->name?></option>
+                                                <?php $is_selected = $row->id == $selected_account ? 'selected="selected"' : ''; ?>
+                                                <option <?php echo $is_selected; ?>value="<?=$row->id?>"><?=$row->name?></option>
                                             <?php endforeach;?>
                                         </select>
                                     </div>
@@ -129,6 +130,12 @@
         $("#reconHistoryByAccount").nsmPagination({
             itemsPerPage: 10
         });
+
+        $( ".filter-account" ).on( "change", function() {
+            var account_type = $("#filter-account").val();
+            var url = base_url + 'accounting/reconcile/view/history-by-account?account_type=' + account_type;
+            window.location.href = url
+        });        
     });    
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

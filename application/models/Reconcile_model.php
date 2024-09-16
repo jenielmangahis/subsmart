@@ -351,7 +351,7 @@ class Reconcile_model extends MY_Model {
 		$this->db->where('accounting_chart_of_accounts.company_id', $company_id);
 		$this->db->where('accounting_reconcile_history.active','1'); 
 		if($id != 'all') {
-			$this->db->where('chart_of_accounts_id',$id);
+			$this->db->where('accounting_reconcile_history.chart_of_accounts_id',$id);
 		}  
 		$this->db->join('accounting_chart_of_accounts', 'accounting_reconcile_history.chart_of_accounts_id = accounting_chart_of_accounts.id', 'LEFT');	
 		$this->db->from('accounting_reconcile_history');

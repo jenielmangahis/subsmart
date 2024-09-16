@@ -142,6 +142,7 @@ if (!function_exists('userProfileImage')) {
 
 if (!function_exists('userProfilePicture')) {
 
+    
     function userProfilePicture($id)
     {
         $CI = &get_instance();

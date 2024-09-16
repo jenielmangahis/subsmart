@@ -268,8 +268,7 @@
                                             <?php echo $row->subject; ?>
                                         </td>   
                                         <td>
-                                            <div class="d-flex align-items-center">           
-                                            
+                                            <div class="d-flex align-items-center">                
                                                 <?php 
                                                     if($row->assigned_employee_ids != null) {
                                                         $assignees_json_decode = json_decode($row->assigned_employee_ids);
@@ -279,7 +278,12 @@
                                                                 $image = userProfilePicture($user_id);
                                                                 $assignee = $this->users_model->getUser($user_id);
                                                                 if($assignee) {
-                                                                    echo '<div class="nsm-profile" style="background-image: url('. $image . '); width: 40px; margin-right: -10px !important;"></div>';
+                                                                    if($image == "") {
+                                                                        $user_initial = strtoupper(substr($assignee->FName, -1) . substr($assignee->LName, -1));
+                                                                        echo '<div class="nsm-profile" style="background-image: url('. $image . '); width: 40px; margin-right: -10px !important;"><span>' . $user_initial . '</span></div>';
+                                                                    } else {
+                                                                        echo '<div class="nsm-profile" style="background-image: url('. $image . '); width: 40px; margin-right: -10px !important;"></div>';
+                                                                    }
                                                                 } else {
                                                                     echo '<div class="nsm-profile" style="background-image: url('. url('uploads/users/default.png') . '); width: 40px; margin-right: -10px !important;"></div>';
                                                                 } 
@@ -291,10 +295,6 @@
                                                         echo '<div class="nsm-profile" style="background-image: url('. url('uploads/users/default.png') . '); width: 40px; margin-right: -10px !important;"></div>';
                                                     }
                                                 ?>                                       
-                                            
-                                                
-                                                <!-- <div class="nsm-profile" style="background-image: url('http://localhost:8013/ci/locals/subsmart/uploads/users/user-profile/nikhil-shetty-eo06KqUISE0-unsplash.jpg?1718778194'); width: 40px; margin-right: -9px !important;"></div>
-                                                <div class="nsm-profile" style="background-image: url('http://localhost:8013/ci/locals/subsmart/uploads/users/default.png'); width: 40px; margin-right: -9px !important;"></div> -->
                                             </div>                                            
                                         </td>                                       
                                         <td>
