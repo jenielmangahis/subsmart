@@ -6633,7 +6633,7 @@ $(function () {
             </div>
             <div class="col-12">
                 <label for="phone-m">Mobile</label>
-                <input type="number" class="form-control nsm-field phone_number mb-2" maxlength="12" placeholder="xxx-xxx-xxxx" name="mobile" id="phone-m" required />
+                <input type="text" class="form-control nsm-field phone_number mb-2" maxlength="12" placeholder="xxx-xxx-xxxx" name="mobile" id="phone-m" required />
             </div>
             <div class="col-12 mb-2">
                 <label for="customer-type">Customer Type</label>

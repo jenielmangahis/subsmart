@@ -980,7 +980,7 @@ table.dataTable thead th, table.dataTable thead td{
                                 </div>                         
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
                                     <label class="text-muted">Rate Plan filter</label>
-                                    <select class="form-select searchPlan mt-2">
+                                    <select class="form-select searchRatePlan mt-2">
                                         <option value="">None</option>
                                         <?php
                                             foreach ($rate_plan as $plan) {
@@ -1010,7 +1010,7 @@ table.dataTable thead th, table.dataTable thead td{
                                     </select>
                                 </div>
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
-                                    <label class="text-muted">Status</label>
+                                    <label class="text-muted">Status Filter</label>
                                     <select class="form-select searchStatus mt-2">
                                         <option value="">None</option>
                                         <?php
@@ -1021,8 +1021,8 @@ table.dataTable thead th, table.dataTable thead td{
                                     </select>
                                 </div>
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
-                                    <label class="text-muted">Panel Type</label>
-                                    <select class="form-select panelType mt-2">
+                                    <label class="text-muted">Panel Type Filter</label>
+                                    <select class="form-select searchPanelType mt-2">
                                         <option value="">None</option>
                                         <option value="AERIONICS">AERIONICS</option>
                                         <option value="AlarmNet">AlarmNet</option>
@@ -1052,15 +1052,37 @@ table.dataTable thead th, table.dataTable thead td{
                                     </select>
                                 </div>
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
-                                    <label class="text-muted">Billing Start date</label>
+                                    <label class="text-muted">Sales Rep Filter</label>
+                                    <select class="form-select searchSalesRep mt-2">
+                                        <option value="">None</option>
+                                        <?php
+                                            foreach ($salesRep as $salesReps) {
+                                                echo "<option value='$salesReps->id'>$salesReps->FName $salesReps->LName</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-xl-2 mb-3 dropdownFilterWidth">
+                                    <label class="text-muted">Technician Filter</label>
+                                    <select class="form-select searchTechnician mt-2">
+                                        <option value="">None</option>
+                                        <?php
+                                            foreach ($technician as $technicians) {
+                                                echo "<option value='$technicians->id'>$technicians->FName $technicians->LName</option>";
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+                                <div class="col-xl-2 mb-3 dropdownFilterWidth">
+                                    <label class="text-muted">Billing Start date Filter</label>
                                     <input class="form-control billingStartDate mt-2" type="date">
                                 </div>
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
-                                    <label class="text-muted">End Start date</label>
+                                    <label class="text-muted">End Start date Filter</label>
                                     <input class="form-control billingEndDate mt-2" type="date">
                                 </div>
                                 <div class="col-xl-2 mb-3">
-                                    <label class="text-muted">Scroll</label>
+                                    <label class="text-muted">Horizontal Scroll</label>
                                     <div class="input-group mt-2">
                                         <button class="btn btn-dark scrollToStart"><i class="fas fa-angle-double-left"></i></button>
                                         <button class="btn btn-secondary scrollToLeft"><i class="fas fa-angle-left"></i></button>
@@ -1088,6 +1110,7 @@ table.dataTable thead th, table.dataTable thead td{
                                                     <th>Phone (M)</th>
                                                     <th>Status</th>
                                                     <th>Sales Rep</th>
+                                                    <th>Technician</th>
                                                     <th>Install Date</th>
                                                     <th>Monitoring Company</th>
                                                     <th>Monitoring ID</th>
@@ -1168,15 +1191,15 @@ table.dataTable thead th, table.dataTable thead td{
         });
         $('.searchGroup').change(function(e) {
             var filterData = $(this).val();
-            customerManagementTable.columns(38).search(filterData).draw();
+            customerManagementTable.columns(39).search(filterData).draw();
         });
         $('.searchSalesArea').change(function(e) {
             var filterData = $(this).val();
             customerManagementTable.columns(4).search(filterData).draw();
         });
-        $('.searchPlan').change(function(e) {
+        $('.searchRatePlan').change(function(e) {
             var filterData = $(this).val();
-            customerManagementTable.columns(26).search(filterData).draw();
+            customerManagementTable.columns(27).search(filterData).draw();
         });
         $('.searchPaymentType').change(function(e) {
             var filterData = $(this).val();
@@ -1186,9 +1209,17 @@ table.dataTable thead th, table.dataTable thead td{
             var filterData = $(this).val();
             customerManagementTable.columns(13).search(filterData).draw();
         });
-        $('.panelType').change(function(e) {
+        $('.searchPanelType').change(function(e) {
             var filterData = $(this).val();
             customerManagementTable.columns(20).search(filterData).draw();
+        });
+        $('.searchSalesRep').change(function(e) {
+            var filterData = $(this).val();
+            customerManagementTable.columns(14).search(filterData).draw();
+        });
+        $('.searchTechnician').change(function(e) {
+            var filterData = $(this).val();
+            customerManagementTable.columns(40).search(filterData).draw();
         });
         $('.billingStartDate').change(function(e) {
             var filterData = $(this).val();
