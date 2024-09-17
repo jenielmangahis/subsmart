@@ -24,15 +24,20 @@
             </div>
             <div class="modal-body">
                 <div class="row">
+                    <div class="col-12 col-md-5 grid-mb">
+                        <div class="nsm-field-group search">
+                            <input type="text" class="nsm-field nsm-search form-control mb-2" for="items_table" id="items_search_field" placeholder="Search List">
+                        </div>
+                    </div>  
                     <div class="col-12">
                         <table id="items_table" class="nsm-table" style="width: 100%;">
                             <thead>
                                 <tr>
-                                    <td style="width:50%;">Name</td>
-                                    <td>Location</td>
-                                    <td style="width:10%;">Qty</td>
-                                    <td style="width:10%;">Price</td>
-                                    <td style="width:5%;"></td>
+                                    <td data-name="Name" style="width:50%;"> Name</td>
+                                    <td data-name="Type" style="width:10%;">Type</td>
+                                    <td data-name="Qty" style="width:10%;">Qty</td>
+                                    <td data-name="Price" style="width:10%;text-align:right">Price</td>
+                                    <td data-name="Manage" style="width:5%;"></td>
                                 </tr>
                             </thead>
                             <tbody>
@@ -44,10 +49,10 @@
                                     ?>
                                     <tr>
                                     <?php if($item->title !== ''){ ?>
-                                        <td><?= $item->title ?></td>
-                                        <td><?= $location[0]['name'] ?></td>
-                                        <td><?= $qty ?></td>
-                                        <td><?= $item->price ?></td>
+                                        <td class="nsm-text-primary"><?= $item->title; ?></td>
+                                        <td class="nsm-text-primary"><?= $item->type; ?></td>
+                                        <td><?= $qty; ?></td>
+                                        <td style="text-align:right;"><?= number_format($item->price,2,",",""); ?></td>
                                         <td>
                                             <button data-id="<?= $item->id ?>" type="button" data-bs-dismiss="modal" class="nsm-button select_item <?php //echo $buttonClass ?>" <?php //echo $disabled; ?>>
                                                 <i class="bx bx-fw bx-plus"></i>
@@ -61,11 +66,14 @@
                     </div>
                 </div>
             </div>
-            <!-- <div class="modal-footer modal-footer-detail">
-                <div class="button-modal-list">
-                    <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div> -->
         </div>
     </div>
 </div>
+<script>
+$(function(){
+    $('#items_table').nsmPagination({itemsPerPage:8});
+    $("#items_search_field").on("input", debounce(function() {
+        tableSearch($(this));
+    }, 1000));
+});
+</script>

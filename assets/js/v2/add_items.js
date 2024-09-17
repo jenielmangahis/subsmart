@@ -1,7 +1,13 @@
+$('#modal-edit-product-stock').on('hidden.bs.modal', function () {
+    $('#modal-product-list').modal('show');
+	$('#search_product').val('');
+	loadAddProductList();
+});
+
 function loadAddProductList(){
 	$.ajax({
 		type: "POST",
-		url: base_url + "/items/_add_product_list",
+		url: base_url + "items/_add_product_list",
 		beforeSend:function(){
 			$('#modal-product-list .modal-body .product-list-container').html('<span class="bx bx-loader bx-spin"></span>');
 		},
@@ -17,7 +23,7 @@ function loadAddProductList(){
 function loadAddServicesList(){
 	$.ajax({
 		type: "POST",
-		url: base_url + "/items/_add_services_list",
+		url: base_url + "items/_add_services_list",
 		beforeSend:function(){
 			$('#modal-services-list .modal-body .services-list-container').html('<span class="bx bx-loader bx-spin"></span>');
 		},
@@ -30,10 +36,27 @@ function loadAddServicesList(){
 	});
 }
 
+function loadEditProductStock(strorage_id, product_id, container_id){
+	$.ajax({
+		type: "POST",
+		url: base_url + "items/_edit_product_stock",
+		data:{strorage_id:strorage_id,product_id:product_id},
+		beforeSend:function(){
+			$('#'+container_id).html('<span class="bx bx-loader bx-spin"></span>');
+		},
+		success: function(html)
+		{
+			setTimeout(
+				function(){$('#'+container_id).html(html);}, 
+			500);    
+		}
+	});
+}
+
 function productSearch(product_name){
 	$.ajax({
 		type: "POST",
-		url: base_url + "/items/_add_product_list",
+		url: base_url + "items/_add_product_list",
 		data: {product_name:product_name},
 		beforeSend:function(){
 			$('#modal-product-list .modal-body .product-list-container').html('<span class="bx bx-loader bx-spin"></span>');
@@ -50,7 +73,7 @@ function productSearch(product_name){
 function serviceSearch(service_name){
 	$.ajax({
 		type: "POST",
-		url: base_url + "/items/_add_services_list",
+		url: base_url + "items/_add_services_list",
 		data: {service_name:service_name},
 		beforeSend:function(){
 			$('#modal-services-list .modal-body .services-list-container').html('<span class="bx bx-loader bx-spin"></span>');
@@ -174,3 +197,52 @@ function computeGradTotal(default_tax_percentage){
 	
 	return grand_total.toFixed(2);
 }
+
+$('#frm-update-product-stock').on('submit', function(e){
+	e.preventDefault();
+
+	var _this = $(this);
+	e.preventDefault();
+
+	var formData = new FormData(this);
+
+	var url = base_url + "items/_update_product_stock";
+	_this.find("button[type=submit]").html("Saving");
+	_this.find("button[type=submit]").prop("disabled", true);
+
+	$.ajax({
+		type: 'POST',
+		url: url,
+		data: formData,
+		dataType: 'json',
+		success: function(result) {
+			if( result.is_success == 1 ){
+				$('#modal-edit-product-stock').modal('hide');
+				// Swal.fire({
+				// 	text: "Product stock was successfully updated.",
+				// 	icon: 'success',
+				// 	showCancelButton: false,
+				// 	confirmButtonText: 'Okay'
+				// }).then((result) => {
+				// 	//if (result.value) {						
+				// 		//$('#modal-product-list').modal('show');
+				// 		$('#search_product').val('');
+				// 		//loadAddProductList();
+				// 	//}
+				// });
+			}else{
+				Swal.fire({
+					icon: 'error',
+					title: 'Error!',
+					html: result.msg
+				});
+			}
+
+			_this.find("button[type=submit]").html("Submit");
+			_this.find("button[type=submit]").prop("disabled", false);
+		},
+		cache: false,
+		contentType: false,
+		processData: false
+	});
+});

@@ -106,7 +106,13 @@
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Birthdate</strong>
-                                <p class="text_value birthdate_text"><?php echo ($employee->birthdate != '0000-00-00' && $employee->birthdate != null) ? date("m/d/Y", strtotime($employee->birthdate)) : '<i>Not specified</i>'; ?></p>
+                                <?php 
+                                    $birth_date = 'Not Specified';
+                                    if( strtotime($employee->birthdate) > 0 ){
+                                        $birth_date = date("m/d/Y", strtotime($employee->birthdate));
+                                    }
+                                ?>
+                                <p class="text_value birthdate_text"><?php echo $birth_date; ?></p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Home Address</strong>
@@ -203,22 +209,19 @@
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Salary</strong>
-                                <p class="text_value"><?php echo $employee->pay_rate; ?></p>
+                                <p class="text_value" id="emp-pay-rate"><?php echo $employee->pay_rate; ?></p>
                             </div>
                             <div class="col-md-4">
                                 <strong class="text-muted">Commission</strong>
-                                <?php
-                                    foreach($employeeCommissionSettings as $ecs) {
-                                        if ($cs = array_shift(array_filter($commissionSettings, function($cs) use ($ecs) {
-                                            return $ecs->commission_setting_id === $cs->id;
-                                        }))) {
-                                            $commission_settings = ($ecs->commission_type === 'amount') ? '$' . number_format($ecs->commission_value, 2) : number_format($ecs->commission_value, 2) . '%';
-                                        }
-                                    }
-                                ?>
-                                <p class="text_value">
-                                    <?php echo ($commission_settings && $cs->name) ? "$commission_settings $cs->name" : "<i>Not specified</i>"; ?>
-                                </p>
+                                <div class="row" id="employee_commission_list_data">
+                                    <?php foreach($employeeCommissionSettings as $ecs) { ?>
+                                        <div class="col-md-4">
+                                            <strong class="text-muted"><?= $ecs->name; ?></strong>
+                                            <p class="text_value">
+                                                $<?= number_format($ecs->commission_value,2,".","") ?> (<?= ucfirst($ecs->commission_type) ?>)</p>
+                                        </div>
+                                    <?php } ?>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -247,34 +250,18 @@
                     <div class="nsm-card mb-3">
                         <div class="row">
                             <div class="col-md-12">
-                                <h4 class="float-start fw-bold">
-                                    <h4 class="float-start fw-bold">Deductions and Contributions</h4>
-                                </h4>
-                                <!-- <a class="nsm-button border-0 float-end pointerCursor edit-deductions-and-contributions"
-                                    data-bs-toggle="modal" data-bs-target="#edit-deductions-and-contributions"
-                                    data-bs-backdrop="false">Edit</a> -->
-                                <a class="nsm-button border-0 float-end pointerCursor deduction_contributions_lists"
-                                    data-bs-toggle="modal" data-bs-target="#deduction_contributions_lists"
-                                    data-bs-backdrop="false">Edit</a>
-                            </div>
-                            <div class="col-md-12">
-                                <p class="text_value">Include paycheck deductions and company contributions for
-                                    healthcare and retirement. Garnishments too.</p>
-                            </div>
+                                <h4 class="float-start fw-bold"><h4 class="float-start fw-bold">Deductions and Contributions</h4></h4>
+                                <a class="nsm-button border-0 float-end pointerCursor edit-deductions-and-contributions" data-bs-toggle="modal" data-bs-target="#edit-deductions-and-contributions" data-bs-backdrop="false">Edit</a>
+                            </div>      
                             <div class="col-md-12">
                                 <div class="row deductions_contributions_list_data" >
-                                    <?php 
-                                        foreach($dc_data as $dc){
-                                            ?>
+                                    <?php foreach($dc_data as $dc){ ?>
                                     <div class="col-md-4">
                                         <strong class="text-muted"><?= $dc->type.'- '.$dc->description ?></strong>
                                         <p class="text_value">
                                             $<?= number_format($dc->deductions_amount,0) ?>/paycheck(Deduction)</p>
                                     </div>
-                                    <?php
-
-                                        }
-                                    ?>
+                                    <?php } ?>
 
                                 </div>
                             </div>
@@ -482,5 +469,7 @@ $('a[data-bs-target="#edit-tax-withholdings-modal"]').click(function (e) {
         $('.form_2019_input > input').show().removeAttr('disabled');
     }
 });
+
+
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

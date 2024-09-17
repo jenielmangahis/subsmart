@@ -10,7 +10,7 @@
         </div>
             <div class="row">
                 <div class="col-xl-12">
-                    <div id='calendar'></div>
+                    <div id="calendar" class="schedule-calendar"></div>
                 </div>
             </div>
     </div>

@@ -300,10 +300,11 @@ class Reconcile extends MY_Controller {
         $this->page_data['page']->title = 'History by account';
         $this->page_data['page']->parent = 'Accounting';
 
-        $account_id = 'all';
+        $account_id = isset($_GET['account_type']) ? $_GET['account_type'] : 'all';
+        $this->page_data['selected_account'] = $account_id;
         $company_id = logged('company_id');
-        $this->page_data['rows'] = $rec_rows = $this->reconcile_model->selectonwherehistory($account_id, $company_id);
 
+        $this->page_data['rows'] = $rec_rows = $this->reconcile_model->selectonwherehistory($account_id, $company_id);
         $this->load->view('accounting/reconcile/history_by_account', $this->page_data);
     }
 
