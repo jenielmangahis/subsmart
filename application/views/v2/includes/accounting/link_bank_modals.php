@@ -33,7 +33,7 @@
                                             </div>
                                             <div class="col-12 col-md-2 d-flex align-items-center justify-content-center">in</div>
                                             <div class="col-12 col-md-5">
-                                                <input type="text" class="nsm-field form-control" id="for-accounts-input" required>
+                                                <!-- <input type="text" class="nsm-field form-control" id="for-accounts-input" required> -->
                                                 <select name="accounts" class="nsm-field form-control d-none" id="for-accounts" multiple="multiple" required></select>
                                             </div>
                                         </div>
