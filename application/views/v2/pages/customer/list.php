@@ -5,184 +5,328 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.bootstrap5.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
-
 <style>
-.row-adt-project{
+    .row-adt-project {
     background-color: #d1b3ff !important;
-}
-.badge-primary{
-    background-color: #007bff;
-}
-.badge{
-    display: inline-block;
-    padding: 0.25em 0.4em;
-    font-size: 75%;
-    font-weight: 700;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 0.25rem;
-    margin-top: 9px;
-}
-.cont{
-    overflow-x: auto;
-}
-.customerTbl>thead {
-    color: #888888;
-    font-weight: bold;
-    font-size: 14px;
-}
+    }
 
-.customerTbl td {
-    padding: 0.8rem 0.5rem;
-}
+    .badge-primary {
+        background-color: #007bff;
+    }
 
-.customerTbl>tbody td {
-    border-bottom: 1px solid #e8e8e8;
-}
+    .badge {
+        display: inline-block;
+        padding: 0.25em 0.4em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: 0.25rem;
+        margin-top: 9px;
+    }
 
-.customerTbl td .bx {
-    color: #888888;
-}
-.customerTbl>tbody>tr:hover {
-    background-color: #f7f7f7;
-}
-.customerTbl{
-    width: 100%;
-    font-size: 15px;
-}
-.customerTbl>tfoot td {
-    padding: 0.8rem 0 0 0;
-}
-.customerTbl .table-icon {
-    width: 1%;
-}
-table {
-    width: 100% !important;
-}
-.dataTables_filter, .dataTables_length{
-    display: none;
-}
-table.dataTable thead th, table.dataTable thead td {
-    padding: 10px !important;
-    border-bottom: 1px solid lightgray;
-}
-table.dataTable.no-footer {
-     border-bottom: 0px solid #111; 
-     margin-bottom: 10px;
-}
+    .cont {
+        overflow-x: auto;
+    }
 
-#customerDuplicateTable td, #commercialDuplicateTable td {
-    padding: 0.8rem 0rem;
-}
+    .customerTbl>thead {
+        color: #888888;
+        font-weight: bold;
+        font-size: 14px;
+    }
 
-#customerDuplicateTable_info, #commercialDuplicateTable_info { 
-    display: none;
-}
+    .customerTbl td {
+        padding: 0.8rem 0.5rem;
+    }
 
-table.dataTable thead th, table.dataTable thead td{
-    padding: 10px 18px;
-    border-bottom: 1px solid lightgray !important;
-}
+    .customerTbl>tbody td {
+        border-bottom: 1px solid #e8e8e8;
+    }
 
-/* table.dataTable.no-footer {
-    border-bottom: 1px solid lightgray !important;
-} */
+    .customerTbl td .bx {
+        color: #888888;
+    }
 
-.customCheckbox {
-    width: 20px;
-    height: 20px;
-}
+    .customerTbl>tbody>tr:hover {
+        background-color: #f7f7f7;
+    }
 
-.flexWrapUnset {
-    flex-wrap: unset;
-}
+    .customerTbl {
+        width: 100%;
+        font-size: 15px;
+    }
 
-.scrollable-content {
-    overflow-x: auto;
-    white-space: nowrap;
-}
+    .customerTbl>tfoot td {
+        padding: 0.8rem 0 0 0;
+    }
 
-.fieldColumn {
-    width: 170px;
-    vertical-align: middle;
-}
+    .customerTbl .table-icon {
+        width: 1%;
+    }
 
-.mergeProfile {
-    margin-left: 50px;
-}
+    table {
+        width: 100% !important;
+    }
 
-.fw-xnormal {
-    font-weight: 500;
-    cursor: pointer;
-}
+    .dataTables_filter,
+    .dataTables_length {
+        display: none;
+    }
 
-.checkSize {
-    font-size: 21px;
-    margin-left: 10px;
-    display: none;
-}
+    table.dataTable thead th,
+    table.dataTable thead td {
+        padding: 10px !important;
+        border-bottom: 1px solid lightgray;
+    }
 
-.padding2px {
-    padding: 1.75px !important;
-}
+    table.dataTable.no-footer {
+        border-bottom: 0px solid #111;
+        margin-bottom: 10px;
+    }
 
-.mergeProfile > label > small {
-    margin-left: 10px;
-}
+    #customerDuplicateTable td,
+    #commercialDuplicateTable td {
+        padding: 0.8rem 0rem;
+    }
 
-.displayHide {
-    display: none; 
-}
+    #customerDuplicateTable_info,
+    #commercialDuplicateTable_info {
+        display: none;
+    }
 
-.modal-content {
-    padding: unset;
-}
+    table.dataTable thead th,
+    table.dataTable thead td {
+        padding: 10px 18px;
+        border-bottom: 1px solid lightgray !important;
+    }
 
-.mergeOutputEntryWidth {
-    width: 400px;
-}
+    /* table.dataTable.no-footer {
+        border-bottom: 1px solid lightgray !important;
+    } */
 
-.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
-    color: #fff;
-    background-color: #6a4a86;
-    border-radius: 50px;
-    font-weight: bold;
-}
+    .customCheckbox {
+        width: 20px;
+        height: 20px;
+    }
 
-#customerDuplicateTable > tbody > tr > td, #commercialDuplicateTable > tbody > tr > td {
-    vertical-align: middle;
-}
+    .flexWrapUnset {
+        flex-wrap: unset;
+    }
 
-#customerDuplicateTable > thead > tr > th, #commercialDuplicateTable > thead > tr > th {
-    color: gray;
-}
+    .scrollable-content {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
 
-#customerDuplicateTable > tbody > tr:hover {
-    cursor: pointer;
-}
+    .fieldColumn {
+        width: 170px;
+        vertical-align: middle;
+    }
 
-.removeDuplicatedEntry2:focus, .removeDuplicatedEntry2:active:focus, .removeDuplicatedEntry2.active:focus{
-    outline:none;
-    box-shadow:none;
-}
-#customer-list .nsm-badge{
-    font-size:14px;
-}
+    .mergeProfile {
+        margin-left: 50px;
+    }
 
-.select-filter-card{
-    cursor: pointer
-}
+    .fw-xnormal {
+        font-weight: 500;
+        cursor: pointer;
+    }
 
+    .checkSize {
+        font-size: 21px;
+        margin-left: 10px;
+        display: none;
+    }
+
+    .padding2px {
+        padding: 1.75px !important;
+    }
+
+    .mergeProfile>label>small {
+        margin-left: 10px;
+    }
+
+    .displayHide {
+        display: none;
+    }
+
+    .modal-content {
+        padding: unset;
+    }
+
+    .mergeOutputEntryWidth {
+        width: 400px;
+    }
+
+    .nav-pills .nav-link.active,
+    .nav-pills .show>.nav-link {
+        color: #fff;
+        background-color: #6a4a86;
+        border-radius: 50px;
+        font-weight: bold;
+    }
+
+    #customerDuplicateTable>tbody>tr>td,
+    #commercialDuplicateTable>tbody>tr>td {
+        vertical-align: middle;
+    }
+
+    #customerDuplicateTable>thead>tr>th,
+    #commercialDuplicateTable>thead>tr>th {
+        color: gray;
+    }
+
+    #customerDuplicateTable>tbody>tr:hover {
+        cursor: pointer;
+    }
+
+    .removeDuplicatedEntry2:focus,
+    .removeDuplicatedEntry2:active:focus,
+    .removeDuplicatedEntry2.active:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    #customer-list .nsm-badge {
+        font-size: 14px;
+    }
+
+    .select-filter-card {
+        cursor: pointer
+    }
+
+    .customerManagementTable th:nth-child(1),
+    .customerManagementTable th:nth-child(2),
+    .customerManagementTable td:nth-child(1),
+    .customerManagementTable td:nth-child(2) {
+        position: sticky;
+        left: 0;
+        background: white;
+        z-index: 3;
+    }
+
+    .customerManagementTable th:nth-child(2),
+    .customerManagementTable td:nth-child(2) {
+        left: 80px;
+    }
+
+    .customerManagementTable th {
+        z-index: 4;
+    }
+
+    .tableUpdaterDiv {
+        width: max-content;
+        max-width: 100%;
+        /* height: 550px; */
+        overflow: auto;
+        position: relative;
+
+    }
+
+    .actionButton,
+    .textPreview {
+        cursor: pointer;
+    }
+
+    .customerManagementTable {
+        width: 100% !important;
+        border-collapse: collapse !important;
+    }
+
+    .customerManagementTable>tbody>tr>td {
+        position: relative;
+    }
+
+    .textPreview:hover {
+        color: red;
+        font-weight: bolder;
+    }
+
+    .customerManagementTable th,
+    .customerManagementTable td {
+        border: 1px solid lightgray;
+        padding: 8px !important;
+        text-align: left !important;
+        text-wrap: nowrap;
+    }
+
+    .customerManagementTable th {
+        background-color: #f2f2f2 !important;
+    }
+
+    .customerManagementTable~.dataTables_info {
+        display: none;
+    }
+
+    .customerManagementTable~.dataTables_paginate {
+        /* position: fixed; */
+        /* float: left !important; */
+        margin-bottom: 35px;
+    }
+
+    .customerProfileBanner {
+        font-family: sans-serif;
+        margin: 0;
+    }
+
+    .dropdownFilterWidth {
+        width: max-content;
+    }
+
+    .searchCustomerListInput {
+        width: 60% !important;
+    }
+
+    .custom-loader {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        border: 1px solid #d3d3d3;
+        z-index: 9999;
+    }
+
+    .custom-loader p {
+        margin: 0;
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .drag_handle {
+        position: absolute;
+        width: 10px;
+        height: 10px;
+        bottom: 0;
+        right: 0;
+        background-color: green;
+        cursor: pointer;
+        visibility: hidden;
+    }
+
+    .cell_dragging {
+        border: 2px solid green !important;
+    }
+
+    .cell_dragging_action {
+        cursor: grabbing;
+    }
+
+    .default_cell {
+        border: 1px solid lightgray;
+    }
 </style>
-
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
         <i class="bx bx-plus"></i>
     </div>
 </div>
-
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/customer_tabs'); ?>
@@ -809,113 +953,6 @@ table.dataTable thead th, table.dataTable thead td{
         </div>
     </div>
 </div>
-
-<style>
-    /* Fixed column styles */
-    .customerManagementTable th:nth-child(1),
-    .customerManagementTable th:nth-child(2),
-    .customerManagementTable td:nth-child(1),
-    .customerManagementTable td:nth-child(2) {
-        position: sticky;
-        left: 0;
-        background: white;
-        z-index: 3;
-    }
-
-    .customerManagementTable th:nth-child(2),
-    .customerManagementTable td:nth-child(2) {
-        left: 80px;
-        /* Adjust this value based on the width of the first column */
-    }
-
-    /* Ensure the header has higher z-index */
-    .customerManagementTable th {
-        z-index: 4;
-    }
-
-
-    .tableUpdaterDiv {
-        width: max-content;
-        max-width: 100%;
-        /* height: 550px; */
-        overflow: auto;
-        position: relative;
-
-    }
-
-    .actionButton,
-    .textPreview {
-        cursor: pointer;
-    }
-
-    .customerManagementTable {
-        width: 100% !important;
-        border-collapse: collapse !important;
-    }
-
-
-
-    .textPreview:hover {
-        color: red;
-        font-weight: bolder;
-    }
-
-    .customerManagementTable th,
-    .customerManagementTable td {
-        border: 1px solid lightgray !important;
-        padding: 8px !important;
-        text-align: left !important;
-        text-wrap: nowrap;
-    }
-
-    .customerManagementTable th {
-        background-color: #f2f2f2 !important;
-    }
-
-    .customerManagementTable~.dataTables_info {
-        display: none;
-    }
-
-    .customerManagementTable~.dataTables_paginate {
-        /* position: fixed; */
-        /* float: left !important; */
-        margin-bottom: 35px;
-    } 
-
-    .customerProfileBanner {
-        font-family: sans-serif;
-        margin: 0;
-    }
-
-    .dropdownFilterWidth {
-        width: max-content;
-    }
-
-    .searchCustomerListInput {
-        width: 60% !important;
-    }
-
-    .custom-loader {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-        background-color: rgba(255, 255, 255, 0.8);
-        padding: 20px;
-        border-radius: 10px;
-        border: 1px solid #d3d3d3;
-        z-index: 9999; 
-    }
-
-    .custom-loader p {
-        margin: 0;
-        font-size: 16px;
-        font-weight: bold;
-        color: #333;
-    }
-</style>
-
 <div class="modal batchCustomerUpdaterModal" data-bs-backdrop="static" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-fullscreen modal-dialog-centered">
         <div class="modal-content">
@@ -1158,11 +1195,6 @@ table.dataTable thead th, table.dataTable thead td{
     </div>
 </div>
 
-<style>
-    
-
-</style>
-
 <script src="<?= base_url("assets/js/v2/printThis.js") ?>"></script>
 <script type="text/javascript">
     const URL_ORIGIN = window.origin;
@@ -1170,7 +1202,167 @@ table.dataTable thead th, table.dataTable thead td{
     var lastOptionInAccTypeCount = 0;
     var customerManagementTable;
     let horizontalScroll = 0;
+    let cell_dragging = false;
+    let initialValue;
+    let initialSelectedOption;
+    let startCell;
+    let startIndex;
+    let startColumnIndex;
+    let lastDraggedIndex = 1;
+
     $(document).ready(function() {
+        // Handle click to show the drag handle and add green border
+        $(document).on('click', '.customerManagementTable > tbody > tr > td', function() {
+            // Hide all other drag handles and reset borders
+            $('.drag_handle').css('visibility', 'hidden');
+            $('.customerManagementTable > tbody > tr > td').removeClass('cell_dragging');
+
+            // Show the drag handle for the clicked cell
+            $(this).find('.drag_handle').css('visibility', 'visible');
+            $(this).addClass('cell_dragging'); // Highlight the clicked cell
+        });
+
+        // Hide the drag handle and reset the border
+        $(document).on('click', function(e) {
+            if (!$(e.target).closest('td').length) {
+                $('.drag_handle').css('visibility', 'hidden');
+                $('.customerManagementTable > tbody > tr > td').removeClass('cell_dragging');
+            }
+        });
+
+        // Handle mouse down on the drag handle
+        $(document).on('mousedown', '.drag_handle', function(e) {
+            e.preventDefault();
+            cell_dragging = true;
+            startCell = $(this).closest('td');
+            initialValue = startCell.find('input, select').val();
+            initialSelectedOption = $(this).closest('td').find('.updateInputValue').find('option:selected').text();
+            startIndex = startCell.parent().index();
+            startColumnIndex = startCell.index();
+            lastDraggedIndex = startIndex;
+            startCell.addClass('cell_dragging');
+        });
+
+        // Handle mouse move (cell_dragging over cells in the same column)
+        $(document).on('mousemove', '.customerManagementTable td', function(e) {
+            if (cell_dragging) {
+                $(this).addClass('cell_dragging_action');
+                let currentColumnIndex = $(this).index(); // Get the column index
+                let currentRowIndex = $(this).parent().index(); // Get the row index
+
+                // Only allow dragging for the same column
+                if (currentColumnIndex === startColumnIndex) {
+                    if (currentRowIndex !== lastDraggedIndex) {
+                        // Dragging down
+                        if (currentRowIndex > lastDraggedIndex) {
+                            // Apply 'cell_dragging' to all cells between last dragged and current row (inclusive)
+                            for (let i = lastDraggedIndex + 1; i <= currentRowIndex + 1; i++) {
+                                $('.customerManagementTable tr').eq(i).find('td').eq(startColumnIndex).addClass('cell_dragging');
+                            }
+                        }
+                        // Dragging up
+                        else if (currentRowIndex < lastDraggedIndex) {
+                            // Remove 'cell_dragging' from all cells between current and last dragged row (inclusive)
+                            for (let i = lastDraggedIndex; i > currentRowIndex; i--) {
+                                $('.customerManagementTable tr').eq(i + 1).find('td').eq(startColumnIndex).removeClass('cell_dragging');
+                            }
+                        }
+
+                        // Update last dragged index to the current row
+                        lastDraggedIndex = currentRowIndex;
+                    }
+                }
+            }
+        });
+
+        // Handle mouse up (stop cell_dragging)
+        $(document).on('mouseup', function() {
+            let customerIDs = [];
+            let category = "";
+            let column = "";
+
+            if (cell_dragging) {
+                category = $('.customerManagementTable td.cell_dragging').find('input, select').attr('data-category');
+                column = $('.customerManagementTable td.cell_dragging').find('input, select').attr('data-column');
+
+                // Fill all selected cells with the value and remove dragging highlight
+                $('.customerManagementTable td.cell_dragging').each(function() {
+                    if (initialValue) {
+                        let selectElement = $(this).find('select');
+                        let inputElement = $(this).find('input');
+                        let inputType = inputElement.attr('type');
+
+                        // Handle input elements
+                        if (inputType === 'text') {
+                            inputElement.val(initialValue);
+                            $(this).find('.textPreview').text(initialValue);
+                        } else if (inputType === 'date') {
+                            inputElement.val(initialValue);
+                            let dateParts = initialValue.split('-');
+                            let formatted = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
+                            $(this).closest('td').find('.textPreview').text(formatted);
+                        } else if (inputType === 'number') {
+                            inputElement.val(initialValue);
+                            $(this).find('.textPreview').text("$" + initialValue);
+                        }
+
+                        // Handle select elements
+                        if (selectElement.length > 0) {
+                            selectElement.val(initialValue);
+                            let initialSelectedOption = selectElement.find('option:selected').text();
+                            $(this).find('.textPreview').text(initialSelectedOption);
+                        }
+
+                    }
+                    let customerID = $(this).find('input, select').attr('data-id');
+                    customerIDs.push(customerID)
+                });
+
+                if (initialValue && customerIDs.length != 1) {
+                    // console.log("CustomerID: " + customerIDs);
+                    // console.log("ValueToCopy: " + initialValue);
+                    // console.log("Category: " + category);
+                    // console.log("Column: " + column);
+
+                    $.ajax({
+                        type: "POST",
+                        url: URL_ORIGIN + "/Customer/customerServersideLoadSave",
+                        data: {
+                            id: customerIDs,
+                            category: "cell_grid_update",
+                            dataCategory: category,
+                            column: column,
+                            value: initialValue
+                        },
+                        // beforeSend: function() {
+                        //     Swal.fire({
+                        //         icon: "info",
+                        //         title: "Updating " + customerIDs.length + " Row cells",
+                        //         html: "Please wait while the update process is running...",
+                        //         allowOutsideClick: false,
+                        //         allowEscapeKey: false,
+                        //         didOpen: () => {
+                        //             Swal.showLoading();  // Show the loading spinner
+                        //         },
+                        //     });
+                        // },
+                        success: function(response) {
+                            // console.log(response);
+                            // Swal.close();
+                            iziToast.success({
+                                displayMode: 2,
+                                message: 'Multiple Cells updated successfully!',
+                                timeout: 3000,
+                                position: 'topCenter',
+                            });
+                        },
+                    });
+                }
+            }
+            $('.customerManagementTable td').removeClass('cell_dragging_action');
+            cell_dragging = false;
+        });
+
         customerManagementTable = $('.customerManagementTable').DataTable({
             "ordering": false,
             "processing": true,
@@ -1490,10 +1682,6 @@ table.dataTable thead th, table.dataTable thead td{
                 }
             }
         }
-
-    
-
-
 
     function saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue) {
         $.ajax({
@@ -2131,8 +2319,11 @@ table.dataTable thead th, table.dataTable thead td{
         }
     });
 
-    $(document).ready(function() {
 
+    // =================================================================
+
+
+    $(document).ready(function() {
         var CUSTOMER_LIST_TABLE = $('#customer-list').DataTable({
             "ordering": false,
             "processing": true,

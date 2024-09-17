@@ -68,7 +68,7 @@
                             </div>
                             <div class="col-12 col-md-4">
                                 <label for="fax">Fax</label>
-                                <input type="text" name="fax" id="fax" class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->fax : ''?>">
+                                <input type="number" name="fax" step="any"  id="fax" class="form-control nsm-field mb-2" value="<?=isset($vendorDetails) ? $vendorDetails->fax : ''?>">
                             </div>
                         </div>
                     </div>
@@ -119,7 +119,7 @@
                         <div class="row">
                             <div class="col-12 col-md-6">
                                 <label for="opening_balance">Opening balance</label>
-                                <input type="text" name="opening_balance" id="opening_balance" class="form-control nsm-field mb-2" <?=isset($vendorDetails) ? 'disabled' : ''?> value="<?=isset($vendorDetails) && $vendorDetails->opening_balance !== null && $vendorDetails->opening_balance !== "" ? number_format(floatval($vendorDetails->opening_balance), 2, '.', ',') : ""?>">
+                                <input type="number" step="any" name="opening_balance" id="opening_balance" class="form-control nsm-field mb-2" <?=isset($vendorDetails) ? 'disabled' : ''?> value="<?=isset($vendorDetails) && $vendorDetails->opening_balance !== null && $vendorDetails->opening_balance !== "" ? number_format(floatval($vendorDetails->opening_balance), 2, '.', ',') : ""?>">
                             </div>
                             <div class="col-12 col-md-6">
                                 <label for="opening_balance_as_of_date">as of</label>
@@ -177,7 +177,7 @@
                     </div>
                 </div>
                 <div class="row" style="height:500px">
-                    <div class="col-12 col-md-7">
+                    <div class="col-12 col-md-7 attachments">
                         <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
                         <span>Maximum size: 20MB</span>
                         <div id="vendAtt" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">

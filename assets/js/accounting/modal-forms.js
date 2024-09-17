@@ -6698,7 +6698,7 @@ $(function () {
                 $('#modal-container').append(result);
 
                 var vendorAttachment = new Dropzone(`#vendAtt`, {
-                    url: '/accounting/attachments/attach',
+                    url: '/accounting/attachments/attach/Vendor',
                     maxFilesize: 20,
                     uploadMultiple: true,
                     // maxFiles: 1,

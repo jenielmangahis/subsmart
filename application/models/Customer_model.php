@@ -654,6 +654,9 @@ class Customer_model extends MY_Model
         } else if ($updateType == "specific_update") {
             $this->db->where($primaryKey, $id);
             return $this->db->update($table, $data);
+        } else if ($updateType == "cell_grid_update") {
+            $this->db->where_in($primaryKey, json_decode($id, true));
+            return $this->db->update($table, $data);
         }
     }
 
