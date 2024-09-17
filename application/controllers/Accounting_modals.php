@@ -4389,7 +4389,7 @@ class Accounting_modals extends MY_Controller
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
+            $return['message'] = 'Please fillup form entries';
         } elseif (!isset($data['expense_account']) && !isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
@@ -9036,6 +9036,10 @@ class Accounting_modals extends MY_Controller
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = 'Please fill up form entries';
+        } elseif( $data['total_amount'] <= 0 ){
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Cannot save having 0 total amount.';
         } elseif (!isset($data['item'])) {
             $return['data'] = null;
             $return['success'] = false;
