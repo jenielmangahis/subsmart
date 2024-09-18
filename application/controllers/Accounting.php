@@ -3604,6 +3604,34 @@ class Accounting extends MY_Controller
         echo $output;
     }
 
+    public function saveNewRuledata() {
+        $user_id  = getLoggedUserID();
+        $post_data = $this->input->post();
+
+        $copy_data = array(
+            'user_id'    => $user_id,
+            'rules_name' => $post_data['rule_name'],
+            'banks'      => 0,
+            'apply_type' => $post_data['transaction_type'],
+            'include'    => $post_data['include'],
+            'memo'       => '',
+            'priority'   => 0,
+            'is_active'  => 1,
+            'auto'       => isset($post_data['auto']) ? $post_data['auto'] : 0,
+        );
+
+        $rules_id = $this->rules_model->addRule($copy_data);
+
+        if($rules_id != null) {
+            /**
+             * Todo: save other details here (other db table)
+             */
+            echo json_encode(1);
+        } else {
+            echo json_encode(0);
+        }
+    }
+
     /*** Receipt ***/
     public function uploadReceiptImage()
     {

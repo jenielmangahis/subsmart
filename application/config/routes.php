@@ -855,6 +855,7 @@ $route['accounting/deleteRulesData'] = 'accounting/deleteRulesData';
 $route['accounting/rules/delete_single_rule'] = 'accounting/deleteSingleRuleData';
 $route['accounting/rules/delete_multi_rule'] = 'accounting/multiDeleteRulesData';
 $route['accounting/rules/copy_rule'] = 'accounting/copyRuleData';
+$route['accounting/rules/save_new_rule'] = 'accounting/saveNewRuledata';
 
 // [Addons - Booking]
 $route['more/addon/booking'] = 'booking/index';
