@@ -146,13 +146,13 @@ class Customer extends MY_Controller
         $getSalesRepData = [
             'select' => '*',
             'table' => 'users',
-            'where' => ['company_id' => $company_id, 'user_type' => 5],
+            'where' => ['company_id' => $company_id,],
         ];
 
         $getTechnicianData = [
             'select' => '*',
             'table' => 'users',
-            'where' => ['company_id' => $company_id, 'user_type' => 6],
+            'where' => ['company_id' => $company_id,],
         ];
 
         $this->page_data['rate_plan'] = $this->general->get_data_with_param($getRatePlanData);
@@ -1141,10 +1141,10 @@ class Customer extends MY_Controller
         $getSalesArea = ['where' => ['fk_comp_id' => logged('company_id')], 'table' => 'ac_salesarea', 'select' => 'sa_id, sa_name'];
         $getSalesAreaData = $this->general->get_data_with_param($getSalesArea);
         // ===============
-        $getSalesRep = ['where' => ['company_id' => logged('company_id'), 'user_type' => 5], 'table' => 'users', 'select' => 'id, FName, LName,'];
+        $getSalesRep = ['where' => ['company_id' => logged('company_id'),], 'table' => 'users', 'select' => 'id, FName, LName,'];
         $getSalesRepData = $this->general->get_data_with_param($getSalesRep);
         // ===============
-        $getTechnician = ['where' => ['company_id' => logged('company_id'), 'user_type' => 6], 'table' => 'users', 'select' => 'id, FName, LName,'];
+        $getTechnician = ['where' => ['company_id' => logged('company_id'),], 'table' => 'users', 'select' => 'id, FName, LName,'];
         $getTechnicianData = $this->general->get_data_with_param($getTechnician);
         // ===============
         $getMonitoringCompany =  array('ADT', 'CMS', 'COPS', 'FrontPoint', 'ProtectionOne', 'Stanley', 'Guardian', 'Vector', 'Central', 'Brinks', 'Equipment Funding', 'Other',);
@@ -1457,7 +1457,7 @@ class Customer extends MY_Controller
                 // ===============
                 $creditCardNumber = (!empty($getDatas->billing_credit_card_num)) ? $getDatas->billing_credit_card_num : "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
-                $creditCardExpiration = (!empty($getDatas->billing_credit_card_exp)) ? date('m/d/Y', strtotime($getDatas->billing_credit_card_exp)) : "<small class='text-muted'><i>Not Specified</i></small>";
+                $creditCardExpiration = (!empty($getDatas->billing_credit_card_exp)) ? $getDatas->billing_credit_card_exp : "<small class='text-muted'><i>Not Specified</i></small>";
                 // ===============
                 $mmr_profit = number_format((floatval($getDatas->alarm_monthly_monitoring) - floatval($getDatas->alarm_account_cost)), 2);
 
@@ -1507,7 +1507,7 @@ class Customer extends MY_Controller
                     "<div class='drag_handle'></div><span class='textPreview'>$routingNumber</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-id='$getDatas->prof_id' data-category='billing' data-column='routing_num' type='text' value='$getDatas->billing_routing_num'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$accountNumber</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-id='$getDatas->prof_id' data-category='billing' data-column='acct_num' type='text' value='$getDatas->billing_acct_number'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<div class='drag_handle'></div><span class='textPreview'>$creditCardNumber</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-id='$getDatas->prof_id' data-category='billing' data-column='credit_card_num' type='text' value='$getDatas->billing_credit_card_num'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
-                    "<div class='drag_handle'></div><span class='textPreview'>$creditCardExpiration</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue' data-id='$getDatas->prof_id' data-category='billing' data-column='credit_card_exp' type='date' value='".date('Y-m-d', strtotime($getDatas->billing_credit_card_exp))."'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
+                    "<div class='drag_handle'></div><span class='textPreview'>$creditCardExpiration</span> <div class='input-group input-group-sm inputMode' style='width: 250px; display: none;'> <input  class='form-control form-control-sm updateInputValue creditCardExpiryInput' data-id='$getDatas->prof_id' data-category='billing' data-column='credit_card_exp' type='text' value='$getDatas->billing_credit_card_exp' placeholder='MM/YY'> <span class='input-group-text actionButton saveChanges'><i class='fas fa-check text-success'></i></span> <span class='input-group-text actionButton cancelEdit'><i class='fas fa-times text-danger'></i></span> </div>",
                     "<span class='fw-bold'>$mmr_profit</span>",
                 );
                 $i++;
