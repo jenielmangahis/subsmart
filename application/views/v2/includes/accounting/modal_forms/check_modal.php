@@ -1,12 +1,19 @@
 <!-- Modal for bank deposit-->
 <style>
-    .btn-recent-checks-print{
-        display:inline-block;
-        float:right;
-    }
-    #checkModal h5.dropdown-header{
-        display:inline-block;
-    }
+.btn-recent-checks-print{
+    display:inline-block;
+    float:right;
+}
+#checkModal h5.dropdown-header{
+    display:inline-block;
+}
+#checkModal #category-details-table td .table-checkbox{
+    margin:0 auto;
+}
+#checkModal .nsm-table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
 </style>
 <div class="full-screen-modal">
 <?php if(!isset($check)) : ?>
@@ -250,24 +257,27 @@
                                                     <table class="nsm-table" id="category-details-table">
                                                         <thead>
                                                             <tr>
-                                                                <td data-name="Num">#</td>
-                                                                <td data-name="Expense Name">EXPENSE NAME</td>
-                                                                <td data-name="Category">CATEGORY</td>
+                                                                <td data-name="Num" style="width:2%;">#</td>
+                                                                <td data-name="Customer" style="width:20%;">CUSTOMER</td>
+                                                                <td data-name="Expense Name" style="width:20%;">EXPENSE NAME</td>
+                                                                <td data-name="Category" style="width:15%;">CATEGORY</td>
                                                                 <td data-name="Description">DESCRIPTION</td>
-                                                                <td data-name="Amount">AMOUNT</td>
-                                                                <td data-name="Billable">BILLABLE</td>
-                                                                <td data-name="Markup %">MARKUP %</td>
-                                                                <td data-name="Tax">TAX</td>
-                                                                <td data-name="Customer">CUSTOMER</td>
+                                                                <td data-name="Amount" style="width:8%;">AMOUNT</td>
+                                                                <td data-name="Billable" style="width:5%;text-align:center;">BILLABLE</td>
+                                                                <td data-name="Markup %" style="width:8%; text-align:center;">MARKUP %</td>
+                                                                <td data-name="Tax" style="width:5%;text-align:center;">TAX</td>                                                                
                                                                 <?php if(isset($check) && !is_null($check->linked_transacs)) : ?>
                                                                 <td data-name="Linked"></td>
                                                                 <?php endif; ?>
-                                                                <td data-name="Manage"></td>
+                                                                <td data-name="Manage" style="width:3%;"></td>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
                                                                 <td>1</td>
+                                                                <td>
+                                                                    <select name="category_customer[]" class="nsm-field form-control"></select>
+                                                                </td>
                                                                 <td>
                                                                     <select name="expense_account[]" class="nsm-field form-control" required></select>
                                                                 </td>
@@ -286,15 +296,12 @@
                                                                         <input class="form-check-input table-select" name="category_billable[]" type="checkbox" value="1">
                                                                     </div>
                                                                 </td>
-                                                                <td><input type="number" name="category_markup[]" class="nsm-field form-control" onchange="convertToDecimal(this)"></td>
+                                                                <td><input type="number" name="category_markup[]" class="nsm-field form-control text-end" onchange="convertToDecimal(this)"></td>
                                                                 <td>
                                                                     <div class="table-row-icon table-checkbox">
                                                                         <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1">
                                                                     </div>
-                                                                </td>
-                                                                <td>
-                                                                    <select name="category_customer[]" class="nsm-field form-control"></select>
-                                                                </td>
+                                                                </td>                                                               
                                                                 <td>
                                                                     <button type="button" class="nsm-button delete-row">
                                                                         <i class='bx bx-fw bx-trash'></i>
@@ -458,17 +465,17 @@
                                                         <thead>
                                                             <tr>
                                                                 <td data-name="Product/Service">PRODUCT/SERVICE</td>
-                                                                <td data-name="Type">TYPE</td>
-                                                                <td data-name="Location">LOCATION</td>
-                                                                <td data-name="Quantity">QUANTITY</td>
-                                                                <td data-name="Price">PRICE</td>
-                                                                <td data-name="Discount">DISCOUNT</td>
-                                                                <td data-name="Tax">TAX (CHANGE IN %)</td>
-                                                                <td data-name="Total">TOTAL</td>
+                                                                <td data-name="Type" style="width:10%;">TYPE</td>
+                                                                <td data-name="Location" style="width:15%;">LOCATION</td>
+                                                                <td data-name="Quantity" style="width:8%;">QUANTITY</td>
+                                                                <td data-name="Price" style="width:8%;">PRICE</td>
+                                                                <td data-name="Discount" style="width:8%;">DISCOUNT</td>
+                                                                <td data-name="Tax" style="width:8%;">TAX</td>
+                                                                <td data-name="Total" style="width:8%;">TOTAL</td>
                                                                 <?php if(isset($check) && !is_null($check->linked_transacs)) : ?>
                                                                 <td data-name="Linked"></td>
                                                                 <?php endif; ?>
-                                                                <td data-name="Manage"></td>
+                                                                <td data-name="Manage" style="width:3%;"></td>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -573,12 +580,12 @@
                                             <textarea name="memo" id="memo" class="nsm-field form-control mb-2"><?=isset($check) ? str_replace("<br />", "", $check->memo) : ''?></textarea>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-12 col-md-6">
+                                    <div class="row mt-4">
+                                        <div class="col-12 col-md-6">   
                                             <div class="attachments">
                                                 <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
                                                 <span>Maximum size: 20MB</span>
-                                                <div id="check-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                <div id="check-attachments" class="dropzone d-block justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                                     <div class="dz-message" style="margin: 20px;border">
                                                         <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                         <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
