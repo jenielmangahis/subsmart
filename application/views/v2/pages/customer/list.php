@@ -1111,6 +1111,35 @@
                                     </select>
                                 </div>
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
+                                    <label class="text-muted">Monitoring Company Filter</label>
+                                    <select class="form-select searchMonitoringCompany mt-2">
+                                        <option value="">None</option>
+                                        <option value="ADT">ADT</option>
+                                        <option value="CMS">CMS</option>
+                                        <option value="COPS">COPS</option>
+                                        <option value="FrontPoint">FrontPoint</option>
+                                        <option value="ProtectionOne">ProtectionOne</option>
+                                        <option value="Stanley">Stanley</option>
+                                        <option value="Guardian">Guardian</option>
+                                        <option value="Vector">Vector</option>
+                                        <option value="Central">Central</option>
+                                        <option value="Brinks">Brinks</option>
+                                        <option value="Equipment Funding">Equipment Funding</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-xl-2 mb-3 dropdownFilterWidth">
+                                    <label class="text-muted">Account Type Filter</label>
+                                    <select class="form-select searchAccountType mt-2">
+                                        <option value="">None</option>
+                                        <option value="In-House">In-House</option>
+                                        <option value="Purchase">Purchase</option>
+                                        <option value="Commercial">Commercial</option>
+                                        <option value="Rental">Rental</option>
+                                        <option value="Residential">Residential</option>
+                                    </select>
+                                </div>
+                                <div class="col-xl-2 mb-3 dropdownFilterWidth">
                                     <label class="text-muted">Billing Start date Filter</label>
                                     <input class="form-control billingStartDate mt-2" type="date">
                                 </div>
@@ -1413,6 +1442,14 @@
             var filterData = $(this).val();
             customerManagementTable.columns(40).search(filterData).draw();
         });
+        $('.searchMonitoringCompany').change(function(e) {
+            var filterData = $(this).val();
+            customerManagementTable.columns(16).search(filterData).draw();
+        });
+        $('.searchAccountType').change(function(e) {
+            var filterData = $(this).val();
+            customerManagementTable.columns(18).search(filterData).draw();
+        });
         $('.billingStartDate').change(function(e) {
             var filterData = $(this).val();
             customerManagementTable.columns(31).search(filterData).draw();
@@ -1425,6 +1462,47 @@
             var searchInput = $(this).val();
             customerManagementTable.search(searchInput).draw();
         });
+
+        $(document).on('input', '.creditCardExpiryInput', function() {
+            let value = $(this).val().replace(/\D/g, ''); 
+            if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            $(this).val(value); 
+        });
+
+        $(document).on('keydown', '.creditCardExpiryInput', function(e) {
+            let cursorPosition = this.selectionStart;
+            let value = $(this).val();
+
+            if (e.key === 'Backspace' && cursorPosition > 0) {
+                e.preventDefault();
+
+                let newValue = value.slice(0, cursorPosition - 1) + value.slice(cursorPosition);
+
+                if (newValue.charAt(2) === '/') {
+                    newValue = newValue.replace('/', '');
+                }
+
+                $(this).val(newValue);
+                this.setSelectionRange(cursorPosition - 1, cursorPosition - 1);
+            }
+        });
+
+        $(document).on('keypress', '.creditCardExpiryInput', function(e) {
+            let value = $(this).val();
+            let cursorPosition = this.selectionStart;
+
+            if (!/\d/.test(e.key)) {
+                e.preventDefault();
+            }
+
+            if (cursorPosition === 2 && e.key !== 'Backspace') {
+                $(this).val(value + '/');
+                this.setSelectionRange(cursorPosition + 1, cursorPosition + 1);
+            }
+        });
+
     });
 
     $(document).on('change', '.displayCustomerList', function () {

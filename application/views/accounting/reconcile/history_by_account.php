@@ -69,7 +69,7 @@
                         <?php if (count($rows) > 0) { ?>
                             <?php foreach($rows as $row) { ?>
                                 <tr>
-                                    <td><?php echo $row->expense_account; ?></td>
+                                    <td><?php echo $row->account_name; ?></td>
                                     <td>
                                         <?php //echo $row->ending_date; ?>
                                         <?php 
