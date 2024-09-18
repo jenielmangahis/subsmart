@@ -68,7 +68,7 @@
                             <div class="row">
                                 <div class="col-md-6 grid-mb d-flex align-items-end">
                                     <div class="dropdown">
-                                        <button class="nsm-button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter <i class="bx bx-fw bx-chevron-right"></i></button>
+                                        <button class="nsm-button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter <i class="bx bx-fw bx-chevron-down"></i></button>
 
                                         <div class="dropdown-menu p-3" style="width: max-content">
                                             <div class="row">
@@ -93,13 +93,13 @@
                                                 <div class="col-12 col-md-4">
                                                     <label for="from">From</label>
                                                     <div class="nsm-field-group calendar">
-                                                        <input type="text" name="from" id="from" class="form-control nsm-field date" value="<?=date("m/d/Y", strtotime(" -365 days"))?>">
+                                                        <input type="date" name="from" id="from" class="form-control nsm-field" value="<?=date("Y-m-d", strtotime(" -365 days"))?>">
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-4">
                                                     <label for="to">To</label>
                                                     <div class="nsm-field-group calendar">
-                                                        <input type="text" name="to" id="to" class="form-control nsm-field date">
+                                                        <input type="date" name="to" id="to" class="form-control nsm-field" value="<?= date("Y-m-d"); ?>">
                                                     </div>
                                                 </div>
                                             </div>
@@ -158,7 +158,9 @@
                                         <thead>
                                             <tr>
                                                 <td class="table-icon text-center">
-                                                    <input class="form-check-input select-all table-select" type="checkbox">
+                                                    <div class="table-row-icon table-checkbox">
+                                                        <input class="form-check-input select-all table-select" type="checkbox">
+                                                    </div>
                                                 </td>
                                                 <td data-name="Payee">PAYEE</td>
                                                 <td data-name="Ref No.">REF NO.</td>
