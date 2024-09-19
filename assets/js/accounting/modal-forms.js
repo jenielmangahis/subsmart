@@ -2223,7 +2223,7 @@ $(function () {
             $.get('/accounting/get-account-balance/' + val, function (res) {
                 var result = JSON.parse(res);
 
-                $('#expenseModal span#account-balance').html(result.balance);
+                $('#expenseModal #expense_payment_balance').val(result.balance);
             });
         }
     });
@@ -2866,7 +2866,9 @@ $(function () {
             var split = $(this).val().split('-');
             unlinkTransaction();
 
+
             if (split[0] === 'vendor') {
+                $('#expense-attachments').attr('data-id', split[1]);
                 $.get(base_url + 'accounting/get-linkable-transactions/expense/' + split[1], function (res) {
                     var transactions = JSON.parse(res);
 
@@ -7019,9 +7021,8 @@ $(function () {
         $('#modal-container #customer-modal').hide();
     });
 
-    $(document).on('submit', '#modal-container #vendor-modal #add-vendor-form', function (e) {
+    $(document).on('submit', '#add-vendor-form', function (e) {
         e.preventDefault();
-
         var data = new FormData(this);
         data.set('payee_type', 'vendor');
 
@@ -7032,6 +7033,7 @@ $(function () {
             processData: false,
             contentType: false,
             success: function (result) {
+                console.log('result', result)
                 var res = JSON.parse(result);
 
                 var name = res.payee.display_name;
@@ -7039,6 +7041,8 @@ $(function () {
                 dropdownEl.append(`<option value="${data.get('payee_type') + '-' + res.payee.id}" selected>${name}</option>`);
 
                 $('#modal-container #vendor-modal').modal('hide');
+                toast(true, 'Vendor successfully added!');
+
             }
         });
 

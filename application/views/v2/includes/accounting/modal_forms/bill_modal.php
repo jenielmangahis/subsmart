@@ -21,6 +21,9 @@
 #billModal #item-details-table td:nth-child(8){
  text-align:right !important;
 }
+.hide-delete{
+    display:none;
+}
  </style>
 <div class="full-screen-modal">
 <?php if(!isset($bill)) : ?>
@@ -473,7 +476,7 @@
                                                                 <td></td>
                                                                 <?php endif; ?>
                                                                 <td>
-                                                                    <button type="button" class="nsm-button delete-row">
+                                                                    <button type="button" class="nsm-button delete-row <?= $count == 1 ? 'hide-delete' : ''; ?>">
                                                                         <i class='bx bx-fw bx-trash'></i>
                                                                     </button>
                                                                 </td>
