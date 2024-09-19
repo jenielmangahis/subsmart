@@ -403,7 +403,7 @@ $('#createRules #conditions-table #add-condition').on('click', function(e) {
             </select>
         </td>
         <td>
-            <input required type="text" name="text[]" class="nsm-field form-control" placeholder="Enter Text">
+            <input required type="text" name="text_rule[]" id="text-rule[]" class="nsm-field form-control text-rule" placeholder="Enter Text">
         </td>
         <td><button class="nsm-button remove-condition"><i class="bx bx-fw bx-trash"></i></button></td>
     </tr>`);
@@ -872,6 +872,59 @@ $(document).on('click', '#createRules #clear', function(e) {
     $(this).parent().html(`<button class="nsm-button primary" id="assign-more"><i class="bx bx-fw bx-plus"></i> Assign more</button>`);
 });
 
+$(document).on('click', '#button-test-rule', function(e) {
+    e.preventDefault();
+    var err_count = 0
+    $("input[name='text_rule[]']").each(function(){
+        if($(this).val() === '') {
+            err_count++;
+        }
+    });
+
+    if(err_count == 0) {
+        $("#text-rule-condition-alert").html('<span style="color: blue;"><strong>Congrats, no condition error.</strong></span>');
+    } else {
+        $("#text-rule-condition-alert").html('<span style="color: red;"><strong>Condition must contain a value.</strong></span>');
+    }   
+});
+
 $(document).on('submit', '#createRules #addRuleForm', function(e) {
     e.preventDefault();
+
+    var new_rule_url = base_url + 'accounting/rules/save_new_rule';
+    var frmData = $("#addRuleForm").serialize();
+
+    $.ajax({
+        url: new_rule_url,
+        method: "POST",
+        data: frmData,
+        success: function(data) {
+            if(data == 1) {
+                Swal.fire({
+                    showConfirmButton: false,
+                    timer: 2000,
+                    title: 'Success',
+                    text: "Rule has been added!",
+                    icon: 'success'
+                });
+                setTimeout(function() { 
+                    $('.createRuleModalRight').modal('hide');
+                    window.location.href = base_url + "accounting/rules";
+                }, 2500);                
+            } else {
+                Swal.fire({
+                    showConfirmButton: false,
+                    timer: 2000,
+                    title: 'Failed',
+                    text: "Something is wrong in the process!",
+                    icon: 'warning'
+                });
+                setTimeout(function() { 
+                    $('.createRuleModalRight').modal('hide');
+                    window.location.href = base_url + "accounting/rules";
+                }, 2500);  
+            }
+        }
+    });
 });
+

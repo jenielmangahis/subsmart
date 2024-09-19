@@ -54,6 +54,7 @@
                                 </div>
                             </div>
                             <div class="col-12 grid-mb">
+                                <div class="col-12 col-md-12 text-rule-condition-alert" id="text-rule-condition-alert" style="text-align: center;"></div>
                                 <table class="nsm-table" id="conditions-table">
                                     <tbody>
                                         <tr>
@@ -72,7 +73,7 @@
                                                 </select>
                                             </td>
                                             <td>
-                                                <input required type="text" name="text[]" class="nsm-field form-control" placeholder="Enter Text">
+                                                <input required type="text" name="text_rule[]" id="text-rule[]" class="nsm-field form-control text-rule" placeholder="Enter Text">
                                             </td>
                                             <td></td>
                                         </tr>
@@ -85,7 +86,7 @@
                                         </tr>
                                         <tr>
                                             <td colspan="4">
-                                                <button class="nsm-button" id="test-rule">Test Rule</button>
+                                                <button type="button" class="nsm-button button-test-rule" id="button-test-rule">Test Rule</button>
                                             </td>
                                         </tr>
                                     </tfoot>
