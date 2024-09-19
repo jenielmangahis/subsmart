@@ -122,7 +122,7 @@
                                         <input type="text" class="form-control" id="tsEmployeeDatepicker" value="<?php echo date('m/d/Y', strtotime('monday this week')) ?>">
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row mt-2">
                                     <div class="col-lg-12 table-responsive">
                                         <div class="table-wrapper-settings">
                                             <table id="tsEmployeeDataTable" class="nsm-table table-to-list"></table>

@@ -91,7 +91,7 @@ class Timesheet extends MY_Controller
             "Saturday" => date("M d,y", strtotime('saturday this week')),
             "Sunday" => date("M d,y", strtotime('sunday this week')),
         );
-        $this->page_data['date_this_week'] = $date_this_week;
+        $this->page_data['date_this_week'] = $date_this_week;        
         $this->load->view('v2/pages/users/timesheet_employee', $this->page_data);
     }
 
@@ -447,6 +447,9 @@ class Timesheet extends MY_Controller
         $week = $this->input->get('week');
         $week_convert = date('Y-m-d', strtotime($week));
 
+        $start_date = $week_convert;        
+        $end_date   = date("Y-m-d", strtotime("+7 day", strtotime($start_date)));
+
         $date_this_week = array(
             "Monday" => date("M d", strtotime('monday this week', strtotime($week_convert))),
             "Tuesday" => date("M d", strtotime('tuesday this week', strtotime($week_convert))),
@@ -470,7 +473,8 @@ class Timesheet extends MY_Controller
         $users = $this->users_model->getUsers();
         $user_roles = $this->users_model->getRoles();
         // $ts_logs = $this->timesheet_model->getTSByDate($week_check);
-        $attendance = $this->timesheet_model->employeeAttendance();
+        $date_range = ['from' => $start_date, 'to' => $end_date];
+        $attendance = $this->timesheet_model->employeeAttendance($date_range);
         $week_duration = $this->timesheet_model->getLastWeekTotalDuration();
 
         $name = null;
@@ -566,98 +570,144 @@ class Timesheet extends MY_Controller
             }
 
 
+            $mon_duration = 0;
+            $tue_duration = 0;
+            $wed_duration = 0;
+            $thu_duration = 0;
+            $fri_duration = 0;
+            $sat_duration = 0;
+            $sun_duration = 0;
+            $shift_duration = 0;
+            $total_shift_duration = 0;
+            $date_checked = [];
 
             foreach ($attendance as $attn) {
                 if ($attn->user_id == $user->id && $attn->shift_duration > 0) {
-                    for ($x = 0; $x < count($week_check); $x++) {
-                        if ($week_check[$x] == date('Y-m-d', strtotime($attn->date_created))) {
-                            $base_duration = 8.0;
-                            $shift_duration = $attn->shift_duration;
+                    // for ($x = 0; $x < count($week_check); $x++) {
+                    //     if ($week_check[$x] == date('Y-m-d', strtotime($attn->date_created))) {
+                    //         $base_duration = 8.0;
+                    //         $shift_duration = $attn->shift_duration;
 
-                            if ($shift_duration > 7.60 && $shift_duration < $base_duration) {
-                                $shift_duration = 7.60;
-                            }
-                            $duration = $base_duration - $attn->shift_duration;
-                            $shift_duration += $duration;
-                        }
-                    }
+                    //         if ($shift_duration > 7.60 && $shift_duration < $base_duration) {
+                    //             $shift_duration = 7.60;
+                    //         }
+                    //         //$duration = $base_duration - $attn->shift_duration;
+                    //         $duration = $attn->shift_duration;
+                    //     }
+                    // }
                     switch (date('Y-m-d', strtotime($attn->date_created))) {
                         case ($week_check[0]):
                             $base_duration = 8.0;
                             $shift_durations = $attn->shift_duration;
 
-                            if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
-                                $shift_durations = 7.60;
-                            }
+                            // if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
+                            //     $shift_durations = 7.60;
+                            // }
 
-                            $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
-                            $mon_duration = $time_duration;
+                            // $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
+                            // $mon_duration = $time_duration;                            
+                            if( $mon_duration == 0 ){
+                                $mon_duration = $shift_durations;
+                                $total_shift_duration += $shift_durations;
+                            }
+                            
                             break;
                         case ($week_check[1]):
                             $base_duration = 8.0;
                             $shift_durations = $attn->shift_duration;
 
-                            if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
-                                $shift_durations = 7.60;
+                            // if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
+                            //     $shift_durations = 7.60;
+                            // }
+
+                            //$time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
+                            //$tue_duration  = $time_duration;                            
+                            if( $tue_duration == 0 ){
+                                $tue_duration = $shift_durations;    
+                                $total_shift_duration += $shift_durations;
                             }
 
-                            $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
-                            $tue_duration = $time_duration;
                             break;
                         case ($week_check[2]):
                             $base_duration = 8.0;
                             $shift_durations = $attn->shift_duration;
 
-                            if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
-                                $shift_durations = 7.60;
-                            }
+                            // if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
+                            //     $shift_durations = 7.60;
+                            // }
 
-                            $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
-                            $wed_duration = $time_duration;
+                            // $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
+                            // $wed_duration = $time_duration;
+                            
+                            if( $wed_duration == 0 ){                                
+                                $wed_duration = $shift_durations;
+                                $total_shift_duration += $shift_durations;
+                            }
+                            
                             break;
                         case ($week_check[3]):
                             $base_duration = 8.0;
                             $shift_durations = $attn->shift_duration;
 
-                            if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
-                                $shift_durations = 7.60;
+                            // if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
+                            //     $shift_durations = 7.60;
+                            // }
+
+                            // $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
+                            // $thu_duration = $time_duration;                            
+                            if( $thu_duration == 0 ){
+                                $thu_duration = $shift_durations;
+                                $total_shift_duration += $shift_durations;
                             }
 
-                            $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
-                            $thu_duration = $time_duration;
                             break;
                         case ($week_check[4]):
                             $base_duration = 8.0;
                             $shift_durations = $attn->shift_duration;
 
-                            if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
-                                $shift_durations = 7.60;
+                            // if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
+                            //     $shift_durations = 7.60;
+                            // }
+
+                            // $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
+                            // $fri_duration = $time_duration;                            
+                            if( $fri_duration == 0 ){          
+                                $fri_duration = $shift_durations;                      
+                                $total_shift_duration += $shift_durations;
                             }
 
-                            $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
-                            $fri_duration = $time_duration;
                             break;
                         case ($week_check[5]):
                             $base_duration = 8.0;
                             $shift_durations = $attn->shift_duration;
 
-                            if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
-                                $shift_durations = 7.60;
+                            // if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
+                            //     $shift_durations = 7.60;
+                            // }
+
+                            // $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
+                            // $sat_duration = $time_duration;                            
+                            if( $sat_duration == 0 ){          
+                                $sat_duration = $shift_durations;                      
+                                $total_shift_duration += $shift_durations;
                             }
 
-                            $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
-                            $sat_duration = $time_duration;
                             break;
                         case ($week_check[6]):
                             $base_duration = 8.0; // 8 hours
                             $shift_durations = $attn->shift_duration;
 
-                            if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
-                                $shift_durations = 7.60;
+                            // if ($shift_durations > 7.60 && $shift_durations < $base_duration) {
+                            //     $shift_durations = 7.60;
+                            // }
+
+                            // $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
+                            // $sun_duration = $time_duration;                            
+                            if( $sun_duration == 0 ){                                
+                                $sun_duration = $shift_durations;
+                                $total_shift_duration += $shift_durations;
                             }
 
-                            $time_duration = $shift_durations == 0.0 ? $base_duration : $base_duration - $shift_durations;
-                            $sun_duration = $time_duration;
                             break;
                     }
                 }
@@ -669,12 +719,12 @@ class Timesheet extends MY_Controller
             //            }
             $display .= '<tr>';
             $image = userProfilePicture($user->id);
-            if (is_null($image)) {
+            if ($image == urlUpload('users/default.png') || $image == NULL ) {
                 $initials = getLoggedNameInitials($user->id);
                 $display .= '<td>
                                 <div style="display: table; height: 40px;">
                                     <div style="display: table-cell; vertical-align: middle;">
-                                        <div class="profile-img" style="background-color: #ccc; border-radius: 50%; width: 40px; height: 40px; text-align: center; line-height: 40px;">
+                                        <div class="profile-img" style="background-color: #6a4a86; border-radius: 50%; width: 40px; height: 40px; text-align: center; line-height: 40px;">
                                             <span style="color: #fff; font-size: 18px;">' . $initials . '</span>
                                         </div>
                                     </div>
@@ -701,14 +751,14 @@ class Timesheet extends MY_Controller
 
             // $display .= '<td class="center" style="background-color:' . $bg_color . '"><span class="tbl-emp-status">' . $status . '</span></td>';
             $display .= '<td class="center" ><span class="tbl-emp-status" style="' . $bg_color . '">' . $status . '</span></td>';
-            $display .= '<td class="center">' . $mon_duration . '</td>';
-            $display .= '<td class="center">' . $tue_duration . '</td>';
-            $display .= '<td class="center">' . $wed_duration . '</td>';
-            $display .= '<td class="center">' . $thu_duration . '</td>';
-            $display .= '<td class="center">' . $fri_duration . '</td>';
-            $display .= '<td class="center">' . $sat_duration . '</td>';
-            $display .= '<td class="center">' . $sun_duration . '</td>';
-            $display .= '<td class="center">' . $shift_duration . '</td>';
+            $display .= '<td class="center">' . number_format($mon_duration,2,".","") . '</td>';
+            $display .= '<td class="center">' . number_format($tue_duration,2,".","") . '</td>';
+            $display .= '<td class="center">' . number_format($wed_duration,2,".","") . '</td>';
+            $display .= '<td class="center">' . number_format($thu_duration,2,".","") . '</td>';
+            $display .= '<td class="center">' . number_format($fri_duration,2,".","") . '</td>';
+            $display .= '<td class="center">' . number_format($sat_duration,2,".","") . '</td>';
+            $display .= '<td class="center">' . number_format($sun_duration,2,".","") . '</td>';
+            $display .= '<td class="center">' . number_format($total_shift_duration,2,".","") . '</td>';
             $display .= '</tr>';
             $name = null;
             $role = null;

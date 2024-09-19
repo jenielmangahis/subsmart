@@ -1,3 +1,24 @@
+<style>
+#payBillsModal .nsm-table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
+.span-input{
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+</style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
@@ -38,8 +59,9 @@
                                                 <option value="<?=$account->id?>"><?=$account->name?></option>
                                             </select>
                                         </div>
-                                        <div class="col-12 col-md-3 d-flex ">
-                                            <p style="align-self: flex-end; margin-bottom: 0px">Balance <span id="account-balance"><?= $balance ?></span></p>
+                                        <div class="col-12 col-md-2">
+                                            <label for="payment_account">Balance</label>
+                                            <span class="span-input text-end" style="align-self: flex-end; margin-bottom: 0px"><span id="account-balance"><?= $balance ?></span></span>
                                         </div>
                                         <div class="col-12 col-md-2">
                                             <label for="payment_date">Payment date</label>
@@ -66,7 +88,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6 grid-mb d-flex align-items-end">
+                                <div class="col-md-12 grid-mb text-end">
                                     <div class="dropdown">
                                         <button class="nsm-button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filter <i class="bx bx-fw bx-chevron-down"></i></button>
 
@@ -103,30 +125,30 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-12 col-md-6">
+                                            <div class="row mt-2">
+                                                <div class="col-12 col-md-8">
                                                     <label for="payee">Payee</label>
                                                     <select name="payee" id="pay-bills-vendor" class="form-control nsm-field"></select>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-12 col-md-6">
-                                                    <div class="form-check">
+                                                    <div class="form-check" style="margin-left:4px;">
                                                         <input type="checkbox" name="overdue_only" id="overdue_only" class="form-check-input">
                                                         <label for="overdue_only" class="form-check-label">Overdue status only</label>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <div class="row mt-4">
                                                 <div class="col-12">
-                                                    <button class="nsm-button" type="button" onclick="resetbillsfilter()">Reset</button>
+                                                    <button class="nsm-button float-end" type="button" onclick="resetbillsfilter()">Reset</button>
                                                     <button class="nsm-button success float-end" type="button" onclick="applybillsfilter()">Apply</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 grid-mb text-end">
+                                <!-- <div class="col-md-6 grid-mb text-end">
                                     <div class="nsm-page-button page-button-container">
                                         <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
                                             <i class="bx bx-fw bx-cog"></i>
@@ -148,74 +170,75 @@
                                                 </ul>
                                             </div>
                                         </ul>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col-12">
-                                    <table class="nsm-table" id="bills-table">
-                                        <thead>
-                                            <tr>
-                                                <td class="table-icon text-center">
-                                                    <div class="table-row-icon table-checkbox">
-                                                        <input class="form-check-input select-all table-select" type="checkbox">
+                            <div class="col-12">
+                                <table class="nsm-table" id="bills-table">
+                                    <thead>
+                                        <tr>
+                                            <td class="table-icon text-center">
+                                                <div class="table-row-icon table-checkbox">
+                                                    <input class="form-check-input select-all table-select" type="checkbox">
+                                                </div>
+                                            </td>
+                                            <td data-name="Payee">PAYEE</td>
+                                            <td data-name="Ref No." style="width:15%;">REF NO.</td>
+                                            <td data-name="Due Date" style="width:10%;">DUE DATE</td>
+                                            <td data-name="Open Balance" style="width:10%;">OPEN BALANCE</td>
+                                            <td data-name="Credit Applied">CREDIT APPLIED</td>
+                                            <td data-name="Payment" style="width:10%;">PAYMENT</td>
+                                            <td data-name="Total Amount" style="width:9%;text-align:right;">TOTAL AMOUNT</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php if (count($bills) > 0) : ?>
+                                        <?php foreach($bills as $bill) : ?>
+                                        <tr data-vcredits="<?=$bill['vendor_credits']?>" data-payeeid="<?=$bill['payee_id']?>">
+                                            <td>
+                                                <div class="table-row-icon table-checkbox">
+                                                    <input class="form-check-input select-one table-select" type="checkbox" value="<?=$bill['id']?>">
+                                                </div>
+                                            </td>
+                                            <td><span class="span-input"><?= $bill['payee'] ? $bill['payee'] : '---'; ?></span></td>
+                                            <td><span class="span-input"><?=$bill['ref_no']?></span></td>
+                                            <td><span class="span-input"><?=$bill['due_date']?></span></td>
+                                            <td><span class="span-input"><?=$bill['open_balance']?></span></td>
+                                            <td>
+                                                <?php if(!in_array($bill['vendor_credits'], ['', '0.00', null])) : ?>
+                                                <?php $max = floatval($bill['vendor_credits']) > floatval($bill['open_balance']) ? $bill['open_balance'] : $bill['vendor_credits'];?>
+                                                <div class="row">
+                                                    <div class="col-12 col-md-9">
+                                                        <input type="number" class="form-control nsm-field text-end credit-applied" step=".01" max="<?=$max?>" onchange="convertToDecimal(this)">
                                                     </div>
-                                                </td>
-                                                <td data-name="Payee">PAYEE</td>
-                                                <td data-name="Ref No.">REF NO.</td>
-                                                <td data-name="Due Date">DUE DATE</td>
-                                                <td data-name="Open Balance">OPEN BALANCE</td>
-                                                <td data-name="Credit Applied">CREDIT APPLIED</td>
-                                                <td data-name="Payment">PAYMENT</td>
-                                                <td data-name="Total Amount">TOTAL AMOUNT</td>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php if (count($bills) > 0) : ?>
-                                            <?php foreach($bills as $bill) : ?>
-                                            <tr data-vcredits="<?=$bill['vendor_credits']?>" data-payeeid="<?=$bill['payee_id']?>">
-                                                <td>
-                                                    <div class="table-row-icon table-checkbox">
-                                                        <input class="form-check-input select-one table-select" type="checkbox" value="<?=$bill['id']?>">
+                                                    <div class="col-12 col-md-3 d-md-flex align-items-center">
+                                                        <span class="available-credit"><?=$bill['vendor_credits']?></span> &nbsp;available
                                                     </div>
-                                                </td>
-                                                <td><?=$bill['payee']?></td>
-                                                <td><?=$bill['ref_no']?></td>
-                                                <td><?=$bill['due_date']?></td>
-                                                <td><?=$bill['open_balance']?></td>
-                                                <td>
-                                                    <?php if(!in_array($bill['vendor_credits'], ['', '0.00', null])) : ?>
-                                                    <?php $max = floatval($bill['vendor_credits']) > floatval($bill['open_balance']) ? $bill['open_balance'] : $bill['vendor_credits'];?>
-                                                    <div class="row">
-                                                        <div class="col-12 col-md-9">
-                                                            <input type="number" class="form-control nsm-field text-end credit-applied" step=".01" max="<?=$max?>" onchange="convertToDecimal(this)">
-                                                        </div>
-                                                        <div class="col-12 col-md-3 d-md-flex align-items-center">
-                                                            <span class="available-credit"><?=$bill['vendor_credits']?></span> &nbsp;available
-                                                        </div>
-                                                    </div>
-                                                    <?php else : ?>
-                                                    <span class="float-end">Not available</span>
-                                                    <?php endif; ?>
-                                                </td>
-                                                <td><input type="number" class="form-control nsm-field text-end payment-amount" onchange="convertToDecimal(this)"></td>
-                                                <td><span>$0.00</span></td>
-                                            </tr>
-                                            <?php endforeach; ?>
-                                        <?php else : ?>
-                                            <tr>
-                                                <td colspan="8">
-                                                    <div class="nsm-empty">
-                                                        <span>No results found.</span>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php endif; ?>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                </div>
+                                                <?php else : ?>
+                                                <span class="float-end">Not available</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td><input type="number" class="form-control nsm-field text-end payment-amount" onchange="convertToDecimal(this)"></td>
+                                            <td style="text-align:right;">
+                                                <span class="span-input">$0.00</span>
+                                            </td>
+                                        </tr>
+                                        <?php endforeach; ?>
+                                    <?php else : ?>
+                                        <tr>
+                                            <td colspan="8">
+                                                <div class="nsm-empty">
+                                                    <span>No results found.</span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php endif; ?>
+                                    </tbody>
+                                </table>
                             </div>
+
                         </div>
                     </div>
                 </div>

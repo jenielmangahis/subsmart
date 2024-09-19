@@ -4,7 +4,7 @@
         <form id="new-payee-form" class="w-50 m-auto">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="modal-title content-title">New Name</span>
+                    <span class="modal-title content-title">New Payee</span>
                     <button type="button" class="cancel-add-payee" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
                 </div>
                 <div class="modal-body">
