@@ -98,10 +98,10 @@ $(document).ready(function () {
                         dropdownParent: $(modal_element)
                     });
                 } else {
-                    $(this).select2({
-                        minimumResultsForSearch: -1,
-                        dropdownParent: $(modal_element)
-                    });
+                    // $(this).select2({
+                    //     minimumResultsForSearch: -1,
+                    //     dropdownParent: $(modal_element)
+                    // });
                 }
             });
 
@@ -232,7 +232,8 @@ $(document).ready(function () {
 
             if (modal_element === '#payBillsModal') {
                 $('#payBillsModal #bills-table').nsmPagination({
-                    itemsPerPage: parseInt($('#payBillsModal #bills-table-rows li a.dropdown-item.active').html().trim())
+                    //itemsPerPage: parseInt($('#payBillsModal #bills-table-rows li a.dropdown-item.active').html().trim())
+                    itemsPerPage: 10
                 })
             }
 
