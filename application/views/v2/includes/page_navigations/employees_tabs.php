@@ -30,7 +30,7 @@
                         <?php endif; ?>
 
                         <li><a class="dropdown-item" href="<?php echo base_url('timesheet/leave_requests') ?>">Leave Requests</a></li>
-                        <li><a class="dropdown-item" href="<?php echo base_url('timesheet/requests') ?>">Overtime Requests</a></li>
+                        <li><a class="dropdown-item" href="<?php echo base_url('timesheet/overtime_requests') ?>">Overtime Requests</a></li>
                         <li><a class="dropdown-item" href="<?php echo base_url('timesheet/my_schedule') ?>">My Schedule</a></li>
                         <?php if( logged('user_type') == 7 ){ //Admin only ?>
                             <li><a class="dropdown-item" href="<?php echo base_url('timesheet/settings') ?>">Settings</a></li>
