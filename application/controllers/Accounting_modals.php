@@ -4839,9 +4839,22 @@ class Accounting_modals extends MY_Controller
         }
 
         if ($this->form_validation->run() === false) {
+            $return['message'] = 'Please fillup form entries';
+
+            if( form_error('payment_account') ){
+                $return['message'] = 'Payment account is required';
+            }
+
+            if( form_error('payment_date') ){
+                $return['message'] = 'Payment date is required';
+            }
+
+            if( form_error('bills[]') ){
+                $return['message'] = 'Cannot save empty bills data';
+            }
+            
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
         } elseif (!isset($data['bills']) && is_null($data['bills'])) {
             $return['data'] = null;
             $return['success'] = false;
