@@ -3605,10 +3605,10 @@ class Accounting extends MY_Controller
     }
 
     public function saveNewRuledata() {
-        $user_id  = getLoggedUserID();
+        $user_id  = logged('id'); //getLoggedUserID();
         $post_data = $this->input->post();
 
-        $copy_data = array(
+        $rule_data = array(
             'user_id'    => $user_id,
             'rules_name' => $post_data['rule_name'],
             'banks'      => 0,
@@ -3620,7 +3620,7 @@ class Accounting extends MY_Controller
             'auto'       => isset($post_data['auto']) ? $post_data['auto'] : 0,
         );
 
-        $rules_id = $this->rules_model->addRule($copy_data);
+        $rules_id = $this->rules_model->addRule($rule_data);
 
         if($rules_id != null) {
             /**
