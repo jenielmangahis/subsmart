@@ -2637,7 +2637,7 @@ $(function () {
         });
     });
 
-    $(document).on('change', '#payBillsModal #bills-table .payment-amount, #payBillsModal #bills-table .credit-applied', function () {
+    $(document).on('change', '#payBillsModal #bills-table .payment-amount, #payBillsModal #bills-table .credit-applied', function () {        
         if ($(this).hasClass('payment-amount')) {
             var row = $(this).closest('tr');
             var payment = $(this).val();
@@ -2674,6 +2674,9 @@ $(function () {
         }
 
         var total = parseFloat(payment) + parseFloat(creditApplied);
+        if( isNaN(total) ){
+            total = 0;
+        }
 
         row.find('td:last-child span').html(formatter.format(parseFloat(total)));
 
@@ -11981,9 +11984,9 @@ const resetbillsfilter = () => {
     $('#payBillsModal #due_date').val('last-365-days').trigger('change');
     //$('#payBillsModal #from').val('');
     //$('#payBillsModal #to').val('');    
-    $('#payBillsModal #pay-bills-vendor').append('<option value="all">All</option>').trigger('change');
+    $('#payBillsModal #pay-bills-vendor').val('all').trigger('change');
     $('#payBillsModal #overdue_only').prop('checked', false);
-    applybillsfilter();
+    billsfilter();
 }
 
 const applybillsfilter = () => {
@@ -11995,7 +11998,7 @@ const applybillsfilter = () => {
     data.set('overdue', $('#payBillsModal #overdue_only').prop('checked'));
 
     $.ajax({
-        url: '/accounting/get-payable-bills',
+        url: base_url + 'accounting/get-payable-bills',
         data: data,
         type: 'post',
         processData: false,
@@ -12004,13 +12007,13 @@ const applybillsfilter = () => {
             var bills = JSON.parse(result);
 
             if (bills.length < 1) {
-                $('#payBillsModal #bills-table tbody').html(`<tr>
-                    <td colspan="8">
-                        <div class="nsm-empty">
-                            <span>No results found.</span>
-                        </div>
-                    </td>
-                </tr>`);
+                // $('#payBillsModal #bills-table tbody').html(`<tr>
+                //     <td colspan="8">
+                //         <div class="nsm-empty">
+                //             <span>No results found.</span>
+                //         </div>
+                //     </td>
+                // </tr>`);
             } else {
                 $('#payBillsModal #bills-table tbody').html('');
                 $.each(bills, function (key, bill) {
@@ -12043,6 +12046,77 @@ const applybillsfilter = () => {
                     <td>${creditApplied}</td>
                     <td><input type="number" class="form-control nsm-field text-end payment-amount" onchange="convertToDecimal(this)"></td>
                     <td><span>$0.00</span></td>
+                    </tr>`);
+                });
+            }
+
+            $('#payBillsModal #bills-table').nsmPagination({
+                //itemsPerPage: parseInt($('#payBillsModal #bills-table-rows li a.dropdown-item.active').html().trim())
+                itemsPerPage: 10
+            })
+
+            $('#payBillsModal #bills-table thead input.select-all').prop('checked', false);
+        }
+    });
+}
+
+const billsfilter = () => {
+    var data = new FormData();
+    data.set('due_date', $('#payBillsModal #due_date').val());
+    data.set('from', $('#payBillsModal #from').val());
+    data.set('to', $('#payBillsModal #to').val());
+    data.set('vendor', $('#payBillsModal #pay-bills-vendor').val());
+    data.set('overdue', $('#payBillsModal #overdue_only').prop('checked'));
+
+    $.ajax({
+        url: base_url + 'accounting/get-payable-bills',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function (result) {
+            var bills = JSON.parse(result);
+
+            if (bills.length < 1) {
+                $('#payBillsModal #bills-table tbody').html(`<tr>
+                    <td colspan="8">
+                        <div class="nsm-empty">
+                            <span>No results found.</span>
+                        </div>
+                    </td>
+                </tr>`);
+            } else {
+                $('#payBillsModal #bills-table tbody').html('');
+                $.each(bills, function (key, bill) {
+                    var creditApplied = '';
+                    var noCredit = ['', '0.00', null];
+                    if (noCredit.includes(bill.vendor_credits)) {
+                        creditApplied = '<span class="float-end">Not available</span>';
+                    } else {
+                        var max = parseFloat(bill.vendor_credits) > parseFloat(bill.open_balance) ? bill.open_balance : bill.vendor_credits;
+                        creditApplied = `<div class="row">
+                            <div class="col-12 col-md-6">
+                                <input type="number" class="form-control nsm-field text-end credit-applied" step=".01" max="${max}" onchange="convertToDecimal(this)">
+                            </div>
+                            <div class="col-12 col-md-6 d-md-flex align-items-center">
+                                <span class="available-credit">${bill.vendor_credits}</span> &nbsp;available
+                            </div>
+                        </div>`;
+                    }
+
+                    $('#payBillsModal #bills-table tbody').append(`<tr data-vcredits="${bill.vendor_credits}" data-payeeid="${bill.payee_id}">
+                    <td>
+                        <div class="table-row-icon table-checkbox">
+                            <input class="form-check-input select-one table-select" type="checkbox" value="${bill.id}">
+                        </div>
+                    </td>
+                    <td><span class="span-input">${bill.payee}</span></td>
+                    <td><span class="span-input">${bill.ref_no}</span></td>
+                    <td><span class="span-input">${bill.due_date}</span></td>
+                    <td><span class="span-input" style="text-align:right;">${bill.open_balance}</span></td>
+                    <td>${creditApplied}</td>
+                    <td><input type="number" class="form-control nsm-field text-end payment-amount" onchange="convertToDecimal(this)"></td>
+                    <td style="text-align:right;"><span class="span-input">$0.00</span></td>
                     </tr>`);
                 });
             }
