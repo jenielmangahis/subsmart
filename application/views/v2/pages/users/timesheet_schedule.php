@@ -70,6 +70,45 @@
     .table-responsive {
         overflow-x: hidden;
     }
+    .shift-start-input, .shift-end-input{
+        display:inline-block;
+        width:100px;
+        margin:2px;
+    }
+
+    .popover-body{
+        background-color: #6a4a86;
+        color:#ffffff;
+    }
+    .bs-popover-auto[data-popper-placement^=top]>.popover-arrow::after, .bs-popover-top>.popover-arrow::after {
+        bottom: #6a4a86;
+        border-top-color: #6a4a86;
+    }
+    .copy-btn i, .paste-btn i{
+        font-size: 16px;
+        position: relative;
+        top: 2px;
+    }
+    .row-action-buttons{
+        margin-top:10px;
+        margin-bottom:10px;
+    }
+    .total-hours{
+        font-weight:bold;
+        width:84px;
+    }
+    .sub-text i{
+        font-size: 18px;
+        position: relative;
+        top: 2px;
+    }
+    #ts_schedule_tbl thead td{
+        background-color:#6a4a86;
+        color:#ffffff;
+    }
+    #ts_schedule_tbl_filter{
+        margin-bottom:12px;
+    }
 </style>
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -151,6 +190,42 @@
                             $('.table-ts-loader').css('display', 'none');
                             // console.log(data);
                         });
+
+                        $('.popover-info-start').popover({
+                            placement: 'top',
+                            html : true, 
+                            trigger: "hover",
+                            content: function() {
+                                return 'Shift Start Time';
+                            } 
+                        }); 
+
+                        $('.popover-info-end').popover({
+                            placement: 'top',
+                            html : true, 
+                            trigger: "hover",
+                            content: function() {
+                                return 'Shift End Time';
+                            } 
+                        }); 
+
+                        $('.copy-btn').popover({
+                            placement: 'top',
+                            html : true, 
+                            trigger: "hover",
+                            content: function() {
+                                return 'Copy Schedule';
+                            } 
+                        }); 
+
+                        $('.paste-btn').popover({
+                            placement: 'top',
+                            html : true, 
+                            trigger: "hover",
+                            content: function() {
+                                return 'Paste Schedule';
+                            } 
+                        }); 
                     }
                 });
             }
