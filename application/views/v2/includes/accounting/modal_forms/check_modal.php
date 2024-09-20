@@ -14,6 +14,9 @@
     background-color:#6a4a86;
     color:#ffffff;
 }
+.dropzone {
+    min-height: 160px !important;
+}
 </style>
 <div class="full-screen-modal">
 <?php if(!isset($check)) : ?>
@@ -152,8 +155,10 @@
                                                 <?php endif; ?>
                                             </select>
                                         </div>
-                                        <div class="col-12 col-md-3 d-flex ">
-                                            <p style="align-self: flex-end; margin-bottom: 0px">Balance <span id="account-balance"><?= $balance ?></span></p>
+                                        <div class="col-12 col-md-3 ">
+                                            <label for="account_balance">Balance</label>
+                                            <input type="text" name="account_balance" disabled id="account_balance" class="form-control nsm-field mb-2 date" value="<?php echo $balance; ?>">
+                                            <!-- <p style="align-self: flex-end; margin-bottom: 0px">Balance <span id="account-balance"><?= $balance ?></span></p> -->
                                         </div>
                                     </div>
                                 </div>
@@ -197,16 +202,14 @@
                                 <?php endif; ?>
                                 <div class="col-12 col-md-2">
                                     <label for="mailing_address">Mailing address</label>
-                                    <textarea name="mailing_address" style="height:100px;" id="mailing_address" class="form-control nsm-field mb-2"><?=isset($check) ? str_replace("<br />", "", $check->mailing_address) : ''?></textarea>
+                                    <textarea name="mailing_address" id="mailing_address" style="min-height: 192px;" class="form-control nsm-field mb-2"><?=isset($check) ? str_replace("<br />", "", $check->mailing_address) : ''?></textarea>
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="payment_date">Payment date</label>
                                     <div class="nsm-field-group calendar">
                                         <input type="text" name="payment_date" id="payment_date" class="form-control nsm-field mb-2 date" value="<?=isset($check) ? ($check->payment_date !== "" && !is_null($check->payment_date) ? date("m/d/Y", strtotime($check->payment_date)) : "") : date("m/d/Y")?>" required>
                                     </div>
-                                </div>
-                                <div class="col-md-2"></div>
-                                <div class="col-12 col-md-2">
+
                                     <div class="mb-2">
                                         <label for="check_no">Check no.</label>
                                         <input type="text" name="check_no" id="check_no" class="form-control nsm-field" <?=isset($check) && !is_null($check->to_print) ? "value='To Print' disabled" : "value='$check->check_no'"?>>
@@ -217,11 +220,27 @@
                                     </div>
                                     <label for="permit_number">Permit no.</label>
                                     <input type="number" class="form-control nsm-field mb-2" name="permit_number" id="permit_number" <?=isset($check) ? "value='$check->permit_no'" : ''?>> 
+
+                                </div>
+                                <div class="col-md-2"></div>
+                                <div class="col-12 col-md-2">
+                                    <!-- 
+                                    <div class="mb-2">
+                                        <label for="check_no">Check no.</label>
+                                        <input type="text" name="check_no" id="check_no" class="form-control nsm-field" <?=isset($check) && !is_null($check->to_print) ? "value='To Print' disabled" : "value='$check->check_no'"?>>
+                                        <div class="form-check">
+                                            <input type="checkbox" name="print_later" id="print_later" class="form-check-input" value="1" <?=isset($check) && !is_null($check->to_print) ? 'checked' : ''?>>
+                                            <label for="print_later" class="form-check-label">Print later</label>
+                                        </div>
+                                    </div>
+                                    <label for="permit_number">Permit no.</label>
+                                    <input type="number" class="form-control nsm-field mb-2" name="permit_number" id="permit_number" <?=isset($check) ? "value='$check->permit_no'" : ''?>> 
+                                    -->
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-12 col-md-6 grid-mb">
+                                <div class="col-12 col-md-4 grid-mb">
                                     <div id="label">
                                         <label for="tags">Tags</label>
                                         <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
@@ -573,14 +592,12 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-8">
                                     <div class="row">
                                         <div class="col-12 col-md-4">
                                             <label for="memo">Memo</label>
-                                            <textarea name="memo" id="memo" class="nsm-field form-control mb-2"><?=isset($check) ? str_replace("<br />", "", $check->memo) : ''?></textarea>
+                                            <textarea name="memo" id="memo" rows="7" class="nsm-field form-control mb-2"><?=isset($check) ? str_replace("<br />", "", $check->memo) : ''?></textarea>
                                         </div>
-                                    </div>
-                                    <div class="row mt-4">
                                         <div class="col-12 col-md-6">   
                                             <div class="attachments">
                                                 <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
@@ -701,7 +718,8 @@ $(function(){
     //  Override script, Get the last used bank account option
     $.ajax({
         type: "POST",
-        url: window.origin + "/accounting/getDefaultAccount",
+        //url: window.origin + "/accounting/getDefaultAccount",
+        url: base_url + "/accounting/getDefaultAccount",
         dataType: "JSON",
         success: function (response) {
             var newOption = new Option(response.account_name, response.account_id, false, false);
