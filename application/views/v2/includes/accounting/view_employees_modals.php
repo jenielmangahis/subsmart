@@ -42,6 +42,16 @@
                             <label class="content-title">nSmart App Login Details</label>
                         </div>
                         <div class="col-12 col-md-6">
+                            <label class="content-subtitle fw-bold d-block mb-2">Social Security number</label>
+                            <input type="text" name="ssn" placeholder="xxx-xxx-3075" maxlength="12"
+                            class="nsm-field form-control ssn-number" value="<?php echo $employee->ssn; ?>" />
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <label class="content-subtitle fw-bold d-block mb-2">Birth date</label>
+                            <input type="date" class="nsm-field form-control" id="birth-date" name="birthdate"
+                                value="<?php echo $employee->birthdate; ?>">
+                        </div>
+                        <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Email</label>
                             <div class="nsm-field-group icon-right">
                                 <input type="email" class="nsm-field form-control" id="employeeEmail" name="email"
@@ -85,11 +95,7 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="col-12 col-md-6">
-                            <label class="content-subtitle fw-bold d-block mb-2">Birth date</label>
-                            <input type="date" class="nsm-field form-control" id="birth-date" name="birthdate"
-                                value="<?php echo $employee->birthdate; ?>">
-                        </div>
+                      
                         <div class="col-12">
                             <div class="form-check form-switch nsm-switch d-inline-block me-3">
                                 <input class="form-check-input" type="checkbox" id="app_access"
@@ -1603,6 +1609,21 @@ $(function() {
     });
 
     $('.phone-number').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <=
+            105));
+    });
+
+    $('.ssn-number').keydown(function(e) {
         var key = e.charCode || e.keyCode || 0;
         $text = $(this);
         if (key !== 8 && key !== 9) {
