@@ -122,6 +122,10 @@
                                 <strong class="text-muted">Phone Number</strong>
                                 <p class="text_value phone_text"><?php echo ($employee->phone) ? $employee->phone : '<i>Not specified</i>'; ?></p>
                             </div>
+                            <div class="col-md-4">
+                                <strong class="text-muted">Social Security number</strong>
+                                <p class="text_value phone_text"><?php echo ($employee->ssn) ? $employee->ssn : '<i>Not specified</i>'; ?></p>
+                            </div>
                         </div>
                     </div>
                     <div class="nsm-card mb-3">

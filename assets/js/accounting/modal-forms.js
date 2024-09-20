@@ -2726,7 +2726,9 @@ $(function () {
                 date.setDate(date.getDate() - 365);
 
                 var from_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-                var to_date = '';
+
+                var date = new Date();
+                var to_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
                 break;
             case 'custom':
                 var from_date = $('#payBillsModal #from').val();
@@ -2735,7 +2737,7 @@ $(function () {
             case 'today':
                 var date = new Date();
                 var from_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-                var to_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+                var to_date   = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
                 break;
             case 'yesterday':
                 var date = new Date();
@@ -2852,9 +2854,12 @@ $(function () {
                 var to_date = '';
                 break;
         }
+        
+        var date_from = moment(from_date);
+        var date_to   = moment(to_date);
 
-        $('#payBillsModal #from').val(from_date);
-        $('#payBillsModal #to').val(to_date);
+        $('#payBillsModal #from').val(date_from.format("YYYY-MM-DD"));
+        $('#payBillsModal #to').val(date_to.format("YYYY-MM-DD"));
     });
 
     $(document).on('change', '#payBillsModal #from, #payBillsModal #to', function () {
@@ -11974,8 +11979,8 @@ const computeTransactionTotal = () => {
 
 const resetbillsfilter = () => {
     $('#payBillsModal #due_date').val('last-365-days').trigger('change');
-    $('#payBillsModal #from').val('');
-    $('#payBillsModal #to').val('');
+    //$('#payBillsModal #from').val('');
+    //$('#payBillsModal #to').val('');    
     $('#payBillsModal #pay-bills-vendor').append('<option value="all">All</option>').trigger('change');
     $('#payBillsModal #overdue_only').prop('checked', false);
     applybillsfilter();
@@ -12043,7 +12048,8 @@ const applybillsfilter = () => {
             }
 
             $('#payBillsModal #bills-table').nsmPagination({
-                itemsPerPage: parseInt($('#payBillsModal #bills-table-rows li a.dropdown-item.active').html().trim())
+                //itemsPerPage: parseInt($('#payBillsModal #bills-table-rows li a.dropdown-item.active').html().trim())
+                itemsPerPage: 10
             })
 
             $('#payBillsModal #bills-table thead input.select-all').prop('checked', false);

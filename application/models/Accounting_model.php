@@ -650,6 +650,25 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
 
+        if ($reportType == 'state_mandated_retirement_plans') {
+            $this->db->select('users.id AS user_id, CONCAT(users.FName, " ", users.LName) AS name');
+            $this->db->from('users');
+            $this->db->join('accounting_deductions_and_contributions', 'accounting_deductions_and_contributions.employee_id = users.id', 'left');
+            $this->db->join('accounting_payroll_employees', 'users.id = accounting_payroll_employees.employee_id', 'left');
+            $this->db->join('accounting_payroll', 'accounting_payroll.id = accounting_payroll_employees.payroll_id', 'left');
+            $this->db->where('users.FName !=', '');
+            $this->db->where('users.LName !=', '');
+            $this->db->where("pay_period_start >= '$reportConfig[date_from]'");
+            $this->db->where("pay_period_end <= '$reportConfig[date_to]'");
+            $this->db->where('users.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $this->db->group_by('users.id');
+            $data = $this->db->get();
+
+            return $data->result();
+        }
+
         if ($reportType == 'retirements_detail') {
             $this->db->select('users.id AS user_id, CONCAT(users.FName, " ", users.LName) AS name');
             $this->db->from('users');
