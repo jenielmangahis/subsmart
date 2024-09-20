@@ -19,15 +19,19 @@ function load_calendar() {
             var calendarEl = document.getElementById("calendar");
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 headerToolbar: {
-                    left: "prev,next, today",
+                    left: "prev,next,today",
                     center: "title",
                     right: "dayGridMonth,dayGridWeek",
                 },
+                displayEventTime: false,
                 initialDate: initial,
                 navLinks: false, // can click day/week names to navigate views
                 editable: false,
                 dayMaxEvents: true, // allow "more" link when too many events
                 events: schedule,
+                eventContent: function( info ) {
+                    return {html: info.event.title};
+                }          
             });
             calendar.render();
         },

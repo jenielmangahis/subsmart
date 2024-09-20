@@ -409,7 +409,7 @@ function Shift_end_validation(selected, validate_start, validate_end) {
         $(selected).parent("td").children("div").removeAttr("style");
         return true;
     } else {
-        $(selected).parent("td").children("div").attr("style", "padding-top:10px;");
+       // $(selected).parent("td").children("div").attr("style", "padding-top:10px;");
         $(selected).parent("td").children(".shift-end-day-indecator").hide();
         return false;
     }
