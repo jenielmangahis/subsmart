@@ -5903,6 +5903,9 @@ class Accounting_modals extends MY_Controller
     public function get_vendor_details($vendorId)
     {
         $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
+        if( $vendor->email == '' || $vendor->email == null ){
+            $vendor->email = 'Not Specified';
+        }
 
         echo json_encode($vendor);
     }
