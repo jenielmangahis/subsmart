@@ -309,7 +309,7 @@
                                                                     </select>
                                                                 </td>
                                                                 <td><input type="text" name="description[]" class="nsm-field form-control"></td>
-                                                                <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01"></td>
+                                                                <td><input type="number" name="category_amount[]" onchange="convertToDecimal(this)" value="0.00" class="nsm-field form-control text-end" step=".01"></td>
                                                                 <td>
                                                                     <div class="table-row-icon table-checkbox">
                                                                         <input class="form-check-input table-select" name="category_billable[]" type="checkbox" value="1">
@@ -414,7 +414,7 @@
                                                             <?php endif; ?>
 
                                                             <?php do {?>
-                                                            <tr>
+                                                            <tr style="display:none;">
                                                                 <td><?=$count?></td>
                                                                 <td></td>
                                                                 <td></td>

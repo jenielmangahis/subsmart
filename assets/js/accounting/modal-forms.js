@@ -10381,6 +10381,8 @@ const addTableLines = (e) => {
     var lastRow = $(`table${table} tbody tr:last-child() td:first-child()`);
     var lastRowCount = parseInt(lastRow.html());
 
+
+
     for (var i = 0; i < rowCount; i++) {
         lastRowCount++;
         var newRowHtml = '';
