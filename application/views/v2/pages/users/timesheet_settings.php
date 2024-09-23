@@ -25,7 +25,7 @@
 }
 .col-day-week-timesheet{
     display: inline-block;
-    width: 126px;
+    width: 113px;
     padding: 9px;
     background-color: #cecece;
 

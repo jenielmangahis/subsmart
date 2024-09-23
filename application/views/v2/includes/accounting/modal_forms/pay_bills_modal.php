@@ -125,15 +125,13 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row mt-2">
+                                            <div class="row mt-4">
                                                 <div class="col-12 col-md-8">
                                                     <label for="payee">Payee</label>
-                                                    <select name="payee" id="pay-bills-vendor" class="form-control nsm-field"></select>
+                                                    <select name="payee" id="pay-bills-vendor" class="form-control nsm-field"><option value="all" selected="">All</option></select>                                                    
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-12 col-md-6">
-                                                    <div class="form-check" style="margin-left:4px;">
+                                                <div class="col-12 col-md-4">
+                                                    <div class="form-check" style="padding-top:34px;">
                                                         <input type="checkbox" name="overdue_only" id="overdue_only" class="form-check-input">
                                                         <label for="overdue_only" class="form-check-label">Overdue status only</label>
                                                     </div>
@@ -142,7 +140,7 @@
                                             <div class="row mt-4">
                                                 <div class="col-12">
                                                     <button class="nsm-button float-end" type="button" onclick="resetbillsfilter()">Reset</button>
-                                                    <button class="nsm-button success float-end" type="button" onclick="applybillsfilter()">Apply</button>
+                                                    <button class="nsm-button success float-end" type="button" onclick="billsfilter()">Apply</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -183,11 +181,11 @@
                                                     <input class="form-check-input select-all table-select" type="checkbox">
                                                 </div>
                                             </td>
-                                            <td data-name="Payee">PAYEE</td>
-                                            <td data-name="Ref No." style="width:15%;">REF NO.</td>
+                                            <td data-name="Payee" style="width:15%">PAYEE</td>
+                                            <td data-name="Ref No." style="width:11%;">REF NO.</td>
                                             <td data-name="Due Date" style="width:10%;">DUE DATE</td>
-                                            <td data-name="Open Balance" style="width:10%;">OPEN BALANCE</td>
-                                            <td data-name="Credit Applied">CREDIT APPLIED</td>
+                                            <td data-name="Open Balance" style="width:8%;">OPEN BALANCE</td>
+                                            <td data-name="Credit Applied" style="width:16%;">CREDIT APPLIED</td>
                                             <td data-name="Payment" style="width:10%;">PAYMENT</td>
                                             <td data-name="Total Amount" style="width:9%;text-align:right;">TOTAL AMOUNT</td>
                                         </tr>
@@ -204,21 +202,30 @@
                                             <td><span class="span-input"><?= $bill['payee'] ? $bill['payee'] : '---'; ?></span></td>
                                             <td><span class="span-input"><?=$bill['ref_no']?></span></td>
                                             <td><span class="span-input"><?=$bill['due_date']?></span></td>
-                                            <td><span class="span-input"><?=$bill['open_balance']?></span></td>
+                                            <td><span class="span-input" style="text-align:right;"><?=$bill['open_balance']?></span></td>
                                             <td>
-                                                <?php if(!in_array($bill['vendor_credits'], ['', '0.00', null])) : ?>
                                                 <?php $max = floatval($bill['vendor_credits']) > floatval($bill['open_balance']) ? $bill['open_balance'] : $bill['vendor_credits'];?>
                                                 <div class="row">
-                                                    <div class="col-12 col-md-9">
+                                                    <div class="col-12 col-md-6">
                                                         <input type="number" class="form-control nsm-field text-end credit-applied" step=".01" max="<?=$max?>" onchange="convertToDecimal(this)">
                                                     </div>
-                                                    <div class="col-12 col-md-3 d-md-flex align-items-center">
+                                                    <div class="col-12 col-md-6 d-md-flex align-items-center">
+                                                        <span class="available-credit"><?=$bill['vendor_credits']?></span> &nbsp;available
+                                                    </div>
+                                                </div>
+                                                <!-- <?php if(!in_array($bill['vendor_credits'], ['', '0.00', null])) : ?>
+                                                <?php $max = floatval($bill['vendor_credits']) > floatval($bill['open_balance']) ? $bill['open_balance'] : $bill['vendor_credits'];?>
+                                                <div class="row">
+                                                    <div class="col-12 col-md-6">
+                                                        <input type="number" class="form-control nsm-field text-end credit-applied" step=".01" max="<?=$max?>" onchange="convertToDecimal(this)">
+                                                    </div>
+                                                    <div class="col-12 col-md-6 d-md-flex align-items-center">
                                                         <span class="available-credit"><?=$bill['vendor_credits']?></span> &nbsp;available
                                                     </div>
                                                 </div>
                                                 <?php else : ?>
                                                 <span class="float-end">Not available</span>
-                                                <?php endif; ?>
+                                                <?php endif; ?> -->
                                             </td>
                                             <td><input type="number" class="form-control nsm-field text-end payment-amount" onchange="convertToDecimal(this)"></td>
                                             <td style="text-align:right;">
@@ -241,27 +248,26 @@
 
                         </div>
                     </div>
-                </div>
 
-                <div class="modal-footer">
-                    <div class="row w-100">
-                        <div class="col-md-6">
-                            <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
-                        </div>
-                        <div class="col-md-6">
-                            <!-- Split dropup button -->
-                            <div class="btn-group float-end" role="group">
-                                <button type="button" class="nsm-button success">
-                                Schedule payments online
-                                </button>
-                                <div class="btn-group" role="group">
-                                    <button type="button" class="nsm-button success dropdown-toggle" style="margin-left: 0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <i class="bx bx-fw bx-chevron-up text-white"></i>
+                    <div class="modal-footer">
+                        <div class="row w-100">
+                            <div class="col-md-6">
+                                <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                            <div class="col-md-6">
+                                <!-- Split dropup button -->
+                                <div class="btn-group float-end" role="group">
+                                    <button type="button" class="nsm-button success" onclick="savePayBills(event)">
+                                    Schedule payments online
                                     </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#" onclick="savePayBills(event)">Save</a>
-                                        <a class="dropdown-item" href="#" onclick="savePrintPayBills(event)">Save and print</a>
-                                        <a class="dropdown-item" href="#" onclick="saveClosePayBills(event)">Save and close</a>
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="nsm-button success dropdown-toggle" style="margin-left: 0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="bx bx-fw bx-chevron-up text-white"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="#" onclick="savePrintPayBills(event)">Save and print</a>
+                                            <a class="dropdown-item" href="#" onclick="saveClosePayBills(event)">Save and close</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

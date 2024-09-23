@@ -12,7 +12,7 @@
 }
 
 #modal-container .modal .attachments-container span.select2.select2-container, #existing-attachments-modal .attachments-container span.select2.select2-container {
-    width: 50% !important;
+    /* width: 50% !important; */
 }
 
 span.select2-selection.select2-selection--single {
@@ -371,4 +371,13 @@ div#payrollModal .graph-color, div#commission-payroll-modal .graph-color, div#bo
         background-repeat: no-repeat;
         background-color: #0077c5;
     }
+}
+
+.btn-custom-close {
+    background: none;
+    border: none;
+    outline: none !important;
+    font-size: 1em;
+    color: #8b8b8b;
+    float: right;
 }

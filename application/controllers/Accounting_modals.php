@@ -3933,9 +3933,28 @@ class Accounting_modals extends MY_Controller
                 $return['success'] = false;
                 $return['message'] = 'Please select bank account.';
             }else{
+
+                if( isset($data['category_amount']) ) {
+                    $empty_category_amount = 0;
+                    foreach($data['category_amount'] as $cat_ammount) {
+                        if(empty($cat_ammount)) {
+                            $empty_category_amount++;
+                        }elseif($cat_ammount == 0) {
+                            //$empty_category_amount++;
+                        }
+                    }
+                    if($empty_category_amount > 0) {
+                        $return['data'] = null;
+                        $return['success'] = false;
+                        $return['message'] = 'Category amount contain null value, please review your category details.';
+                        return $return;
+                        exit;
+                    }   
+                }
+
                 $return['data'] = null;
                 $return['success'] = false;
-                $return['message'] = 'Cannot create data';
+                $return['message'] = 'Cannot create data.';
             }
         }elseif( $data['check_no'] == '' && !isset($data['print_later']) ){
             $return['data'] = null;
@@ -4839,9 +4858,22 @@ class Accounting_modals extends MY_Controller
         }
 
         if ($this->form_validation->run() === false) {
+            $return['message'] = 'Please fillup form entries';
+
+            if( form_error('payment_account') ){
+                $return['message'] = 'Payment account is required';
+            }
+
+            if( form_error('payment_date') ){
+                $return['message'] = 'Payment date is required';
+            }
+
+            if( form_error('bills[]') ){
+                $return['message'] = 'Cannot save empty bills data';
+            }
+            
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
         } elseif (!isset($data['bills']) && is_null($data['bills'])) {
             $return['data'] = null;
             $return['success'] = false;
@@ -5890,6 +5922,9 @@ class Accounting_modals extends MY_Controller
     public function get_vendor_details($vendorId)
     {
         $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
+        if( $vendor->email == '' || $vendor->email == null ){
+            $vendor->email = 'Not Specified';
+        }
 
         echo json_encode($vendor);
     }

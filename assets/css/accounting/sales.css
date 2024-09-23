@@ -208,14 +208,14 @@
 .nav-tabs .nav-link.active{
 	/* background-color: transparent !important; */
     border: 0;
-    border-bottom: 5px solid #498002 !important;
+    /* border-bottom: 5px solid #498002 !important; */
     font-weight: bolder;
     text-decoration: none;
 }
 .nav-tabs .nav-link.active:hover{
 	background-color: transparent !important;
     border: 0;
-    border-bottom: 5px solid #498002 !important;
+    /* border-bottom: 5px solid #498002 !important; */
     font-weight: bolder;
     text-decoration: none;
 }
