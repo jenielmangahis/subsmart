@@ -7118,7 +7118,7 @@ $(function () {
                     <div class="attachments-container h-100 p-3">
                         <div class="row">
                             <div class="col-12 mb-3">
-                                <h4 style="display:inline-block;margin-bottom:10px;">Add to ${transactionType}</h4>
+                                <h4 style="font-size: 23px;width: 171px;display:inline-block;margin-bottom:20px;">Add to ${transactionType}</h4>                                
                                 <button type="button" class="btn-custom-close btn-side-nav-close"><i class="bx bx-fw bx-x m-0"></i></button>
                                 <div class="row">
                                     <div class="col-12 mb-3">
