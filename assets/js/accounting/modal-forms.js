@@ -167,9 +167,9 @@ $(function () {
     // });
 
     $(document).on('click', 'div#payrollModal div.modal-footer button#continue-payroll', function () {
-        payroll.paySchedule = $('#payrollModal [name="pay_schedule"]:checked').val();
+        payroll.paySchedule = $('#payrollModal [name="payscale"]:checked').val();
         payroll.paySchedForm = $('div#payrollModal div.modal-body').html();
-        var paySchedName = $('#payrollModal [name="pay_schedule"]:checked').next().find('.payscale_name').html();
+        var paySchedName = $('#payrollModal [name="payscale"]:checked').next().find('.payscale_name').html();
         if (payroll.paySchedule !== "" && payroll.paySchedule !== undefined || true) {
             $.get(base_url + 'accounting/get-payroll-form/' + payroll.paySchedule, function (res) {
                 $('div#payrollModal .modal-body').html(res);
@@ -2740,7 +2740,7 @@ $(function () {
             case 'today':
                 var date = new Date();
                 var from_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
-                var to_date   = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+                var to_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
                 break;
             case 'yesterday':
                 var date = new Date();
@@ -2857,9 +2857,9 @@ $(function () {
                 var to_date = '';
                 break;
         }
-        
+
         var date_from = moment(from_date);
-        var date_to   = moment(to_date);
+        var date_to = moment(to_date);
 
         $('#payBillsModal #from').val(date_from.format("YYYY-MM-DD"));
         $('#payBillsModal #to').val(date_to.format("YYYY-MM-DD"));
