@@ -27,10 +27,10 @@
                                                 <div class="form-group">
                                                     <label for="email-body">Body</label>
                                                     <?php 
-                                                        $msg = 'Dear '. $vendorName . "\r\n \r\n";
-                                                        $msg .= "Please find our purchase order attached to this email. \r\n \r\n";
-                                                        $msg .= "Thank you. \r\n";
-                                                        $msg .= $company->business_name;
+                                                        $msg = '<p>Dear '. $vendorName . "</p><br />";
+                                                        $msg .= "<p>Please find our purchase order attached to this email.</p><br/>";
+                                                        $msg .= "<p>Thank you.</p>";
+                                                        $msg .= "<b>".$company->business_name."</b>";
                                                     ?>
                                                     <textarea id="email-body" name="body" class="form-control" style="height: 265px;"><?= $msg; ?></textarea>
                                                 </div>
@@ -68,4 +68,15 @@
     function closeModal() {
         $('#sendEmailModal').modal('hide'); 
     }
+
+    CKEDITOR.replace( 'email-body', {
+        toolbarGroups: [
+            { name: 'document',    groups: [ 'mode', 'document' ] },            // Displays document group with its two subgroups.
+            { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },           // Group's name will be used to create voice label.
+            '/',                                                                // Line break - next group will be placed in new line.
+            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+            { name: 'links' }
+        ],
+        height: '265px',
+    });
 </script>

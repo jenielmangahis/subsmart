@@ -23776,12 +23776,13 @@ class Accounting_modals extends MY_Controller
         $data = $this->input->post();
 
         $mail = email__getInstance();
-        $mail->FromName = $company->business_email;
+        $mail->FromName = 'nSmartrac';
         $mail->addAddress($purchaseOrder->email);
         $mail->isHTML(true);
-        $mail->Subject = "nSmartrac Purchase Order: " . $data['subject'];
+        $mail->Subject = $company->business_name . " : " . $data['subject'];
         $mail->Body = $data['body'];
-        $mail->addStringAttachment("/assets/pdf/$fileName", $fileName);
+
+        $mail->addAttachment(getcwd()."/assets/pdf/$fileName");
         $sent = $mail->Send();
 
         // $this->email->clear(true);
