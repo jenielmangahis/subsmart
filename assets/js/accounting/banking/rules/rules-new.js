@@ -573,11 +573,61 @@ $(document).on('click', '#createRules .add-line', function(e) {
 });
 
 $(document).on('click', '#createRules .remove-split-detail', function(e) {
-    e.preventDefault();
+    e.preventDefault();        
 
+    if($('#createRules .remove-split-detail').length == 1) {
+        $(this).closest('.row').parent().html(`
+        <div class="row">
+            <div class="col-12 col-md-4 d-flex align-items-center">
+                Category
+            </div>
+            <div class="col-12 col-md-8">
+                <select name="assign_to_category" class="nsm-field form-control" id="assign-to-category" required></select>
+            </div>
+        </div>`);
+
+        $(`<div class="col-12 grid-mb">
+            <div class="row">
+                <div class="col-12 col-md-4"></div>
+                <div class="col-12 col-md-8">
+                    <button class="nsm-button primary" id="add-split">
+                        <i class="bx bx-fw bx-plus"></i> Add a split
+                    </button>
+                </div>
+            </div>
+        </div>`).insertAfter($('#createRules #assign-to-category').closest('.grid-mb'));
+
+        $('#createRules #assign-to-category').select2({
+            placeholder: 'Select a category',
+            ajax: {
+                url: base_url + 'accounting/get-dropdown-choices',
+                dataType: 'json',
+                data: function(params) {
+                    var query = {
+                        search: params.term,
+                        type: 'public',
+                        field: 'account',
+                        modal: 'create-rules'
+                    }
+        
+                    // Query parameters will be ?search=[term]&type=public&field=[type]
+                    return query;
+                }
+            },
+            templateResult: formatResult,
+            templateSelection: optionSelect,
+            dropdownParent: $('#createRules')
+        });        
+    } else {
+        $(this).closest('.row').remove();
+    }
+
+    /**
+     * Old codes backup
+     */
+    /*
     if($('#createRules .remove-split-detail').length > 2) {
         $(this).closest('.row').remove();
-
         var count = 1;
         $($('#createRules .remove-split-detail')[0]).closest('.row').parent().find('.row').each(function() {
             if($(this).find('select[name="split_detail_category[]"]').length > 0) {
@@ -586,7 +636,6 @@ $(document).on('click', '#createRules .remove-split-detail', function(e) {
                 $(this).find('input[name="split_detail_value[]"]').attr('id', `split-detail-${count}-value`);
                 $(this).find('select[name="split_detail_category[]"]').prev().attr('for', `split-detail-${count}-category`);
                 $(this).find('select[name="split_detail_category[]"]').attr('id', `split-detail-${count}-category`);
-
                 count++;
             }
         });
@@ -634,6 +683,10 @@ $(document).on('click', '#createRules .remove-split-detail', function(e) {
             dropdownParent: $('#createRules')
         });
     }
+    */
+    /**
+     * Old codes end
+     */   
 });
 
 $(document).on('change', '#createRules #split-by', function() {

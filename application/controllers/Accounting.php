@@ -3605,7 +3605,7 @@ class Accounting extends MY_Controller
     }
 
     public function saveNewRuledata() {
-        $user_id  = logged('id'); //getLoggedUserID();
+        $user_id  = logged('id'); 
         $post_data = $this->input->post();
 
         $rule_data = array(
@@ -3621,11 +3621,29 @@ class Accounting extends MY_Controller
         );
 
         $rules_id = $this->rules_model->addRule($rule_data);
-
         if($rules_id != null) {
+
             /**
-             * Todo: save other details here (other db table)
+             * Note: 
+             *   - add saving other rules data
+             *   - below code will save data to 'accounting_rules_conditions' 
              */
+            if(isset($post_data['field']) && $post_data['field'] != "") {
+                $post_fields     = $post_data['field'];
+                $post_conditions = $post_data['condition'];
+                $post_rules      = $post_data['text_rule'];
+                $acc_rule_condition_data = array();
+                foreach($post_fields as $post_key => $post_field) {
+                    $acc_rule_condition_data[] = array(
+                        'rules_id' => $rules_id,
+                        'description' => $post_field,
+                        'contain' => isset($post_conditions[$post_key]) ? $post_conditions[$post_key] : '-',
+                        'comment' => isset($post_rules[$post_key]) ? $post_rules[$post_key] : '-'
+                    );
+                }
+                $rules_condition_returns = $this->rules_model->addRulesConditions($acc_rule_condition_data);
+            }
+
             echo json_encode(1);
         } else {
             echo json_encode(0);
