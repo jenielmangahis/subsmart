@@ -489,7 +489,7 @@ class Accounting extends MY_Controller
         $this->load->view('accounting/my_accountant', $this->page_data);
     }
 
-    public function link_bank()
+    public function link_bank_old()
     {
         $comp_id = logged('company_id');
         $get_company_account = array(
@@ -511,6 +511,86 @@ class Accounting extends MY_Controller
         $this->page_data['page']->parent = 'Banking';
 
         $this->page_data['users'] = $this->users_model->getUser(logged('id'));
+        $this->load->view('v2/pages/accounting/link_bank', $this->page_data);
+    }
+
+    public function link_bank()
+    {
+        $this->load->helper(array('plaid_helper'));
+        $this->load->model('PlaidAccount_model');
+        $this->load->model('PlaidBankAccount_model');
+        $this->load->model('PlaidErrorLogs_model');
+
+        $is_valid = 1;
+        $cid = logged('company_id');
+        $uid = logged('id');
+
+        $plaidAccounts = $this->PlaidBankAccount_model->getAllByCompanyId($cid);        
+        $plaidAccount  = $this->PlaidAccount_model->getDefaultCredentials();
+
+        if( $plaidAccount ){
+            foreach($plaidAccounts as $pc){            
+                try{
+                    $balance = balanceGet($plaidAccount->client_id, $plaidAccount->client_secret, $pc->access_token, $pc->account_id);
+                     if( isset($balance->error_code) && $balance->error_code != '' ){
+                        $pc->balance_available = 'Cannot connect to your bank account';
+                        $pc->balance_current   = 'Cannot connect to your bank account';
+
+                        $err_data = [
+                            'user_id' => $uid,
+                            'log_date' => date("Y-m-d H:i:s"),
+                            'log_msg' => $balance->error_code . ' / ' . $balance->error_message
+                        ];
+
+                        $this->PlaidErrorLogs_model->create($err_data);
+                    }else{
+                        if( !empty($balance->accounts) ){
+                            $pc->balance_available = $balance->accounts[0]->balances->available;
+                            $pc->balance_current   = $balance->accounts[0]->balances->current;
+                        }
+                    }
+                    
+                }catch(Exception $e){
+                    $is_valid = 0;
+                    $err_data = [
+                        'user_id' => $uid,
+                        'log_date' => date("Y-m-d H:i:s"),
+                        'log_msg' => $e->getMessage()
+                    ];
+
+                    $this->PlaidErrorLogs_model->create($err_data);
+                }         
+            }
+        }else{
+            $err_data = [
+                'user_id' => $uid,
+                'log_date' => date("Y-m-d H:i:s"),
+                'log_msg' => 'Token Error'
+            ];
+
+            $this->PlaidErrorLogs_model->create($err_data);
+            $is_valid = 0;
+        }
+
+        $plaid_handler_open = 0;
+        $plaid_token = '';
+        $client_name = '';
+        $get = $this->input->get();
+        if( isset($get['oauth_state_id']) ){
+            $plaid_handler_open = 1;                     
+            $plaid_token        = $this->session->userdata('plaid_token');
+
+            $plaidAccount = $this->PlaidAccount_model->getDefaultCredentials();
+            $client_name  = $plaidAccount->client_name;
+        }
+        
+        $this->page_data['client_name'] = $plaid_token;
+        $this->page_data['plaid_token'] = $plaid_token;
+        $this->page_data['plaid_handler_open'] = $plaid_handler_open;
+        $this->page_data['page']->title = 'Link Bank';
+        $this->page_data['page']->parent = 'Banking';
+        $this->page_data['is_valid'] = $is_valid;
+        $this->page_data['plaidAccounts'] = $plaidAccounts;
         $this->load->view('v2/pages/accounting/link_bank', $this->page_data);
     }
 
