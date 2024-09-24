@@ -8114,8 +8114,12 @@ $(function () {
 
     $(document).on('submit', '#sendEmailModal #send-email-form', function (e) {
         e.preventDefault();
+        
+        for ( instance in CKEDITOR.instances ){
+            CKEDITOR.instances[instance].updateElement();
+        }        
 
-        var data = new FormData(this);
+        var data = new FormData(this);        
 
         $.ajax({
             url: $(this).attr('action'),
