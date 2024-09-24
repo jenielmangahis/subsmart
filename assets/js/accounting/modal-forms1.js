@@ -4,17 +4,19 @@ $(document).ready(function () {
     $(document).on('change', '#vendor', function () {
         var vendor_id = $(this).val();
         $(`.attachments .dropzone`).attr('data-id', vendor_id);
+        modalAttachments.destroy();
+        initializeDropzone();
     });
+
     $(document).on('change', '#expenseModal #payee', function () {
         modalAttachments.destroy();
 
         var split = $(this).val().split('-');
         vendorIdTemp = split[1]
-
+        modalAttachments.destroy();
         initializeDropzone();
 
     });
-
 
 
     $(".nsm-sidebar-menu #new-popup ul li a.ajax-modal, a.ajax-modal, #new_estimate_modal .modal-body button.nsm-button").on("click", function (e) {
@@ -223,7 +225,8 @@ $(document).ready(function () {
             //var attachmentContId = $(`${modal_element} .attachments .dropzone`).attr('id');
             var attachmentContId = $(`${modal_element} .attachments .dropzone`).attr('id');
             var vendorId = $(`${modal_element} .attachments .dropzone`).attr('data-id') ?? vendorIdTemp;
-            console.log('vendorId', vendorId)
+            console.log('vendorId', vendorId);
+            console.log('modal element', modal_element);
             modalAttachments = new Dropzone(`#${attachmentContId}`, {
                 url: base_url + 'accounting/attachments/attach/' + vendorId,
                 maxFilesize: 20,

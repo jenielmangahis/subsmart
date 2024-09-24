@@ -13730,7 +13730,7 @@ const clearForm = () => {
 }
 
 const printPurchaseOrder = () => {
-    var id = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/purchase-order/', '');
+    var id = $('#modal-container form').attr('data-href').replace(base_url + '/accounting/update-transaction/purchase-order/', '');
 
     $.get(`/accounting/print-purchase-order-modal/${id}`, function (result) {
         $('div#modal-container').append(result);
@@ -13740,7 +13740,7 @@ const printPurchaseOrder = () => {
 }
 
 const sendPurchaseOrder = (purchaseOrderId) => {
-    $.get(`/accounting/send-purchase-order-email-modal/${purchaseOrderId}`, function (result) {
+    $.get(base_url + `/accounting/send-purchase-order-email-modal/${purchaseOrderId}`, function (result) {
         $('div#modal-container').append(result);
 
         $('#sendEmailModal').modal('show');
