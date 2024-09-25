@@ -162,7 +162,7 @@
                                                                 <td data-name="Quantity" style="width:8%;">QUANTITY</td>
                                                                 <td data-name="Price" style="width:8%;">PRICE</td>
                                                                 <td data-name="Discount" style="width:8%;">DISCOUNT</td>
-                                                                <td data-name="Tax" style="width:8%;">TAX (CHANGE IN %)</td>
+                                                                <td data-name="Tax" style="width:8%;">TAX</td>
                                                                 <td data-name="Total" style="width:8%;text-align:right;">TOTAL</td>
                                                                 <td data-name="Manage" style="width:5%;"></td>
                                                             </thead>

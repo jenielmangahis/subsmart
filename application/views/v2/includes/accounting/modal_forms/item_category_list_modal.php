@@ -37,6 +37,6 @@
 </div>
 <script>
 $(function(){
-    $('#item_categories_table').nsmPagination({itemsPerPage:8});
+    $('#item_categories_table').nsmPagination({itemsPerPage:5});
 });
 </script>

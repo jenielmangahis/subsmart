@@ -1,3 +1,12 @@
+<style>
+#creditCardCreditModal .nsm-table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
+#creditCardCreditModal #category-details-table td .table-checkbox{
+    margin:0 auto;
+}
+</style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
 <?php if(!isset($ccCredit)) : ?>
@@ -69,8 +78,10 @@
                                                 <?php endif; ?>
                                             </select>
                                         </div>
-                                        <div class="col-12 col-md-3 d-flex ">
-                                            <p style="align-self: flex-end; margin-bottom: 0px">Balance <span id="account-balance"><?= $balance ?></span></p>
+                                        <div class="col-12 col-md-3 ">
+                                            <label for="account-balance">Balance</label>
+                                            <input type="text" class="form-control" disabled name="" id="account-balance" value="<?= $balance; ?>" />
+                                            <!-- <p style="align-self: flex-end; margin-bottom: 0px">Balance <span id="account-balance"><?= $balance; ?></span></p> -->
                                         </div>
                                     </div>
                                 </div>
@@ -108,18 +119,18 @@
                                         <input type="text" name="payment_date" id="payment_date" class="form-control nsm-field mb-2 date" value="<?=isset($ccCredit) ? ($ccCredit->payment_date !== "" && !is_null($ccCredit->payment_date) ? date("m/d/Y", strtotime($ccCredit->payment_date)) : "") : date("m/d/Y")?>" required>
                                     </div>
                                 </div>
-                                <div class="col-md-2"></div>
                                 <div class="col-12 col-md-2">
                                     <label for="ref_no">Ref no.</label>
                                     <input type="text" name="ref_no" id="ref_no" class="form-control nsm-field mb-2" <?=isset($ccCredit) ? "value='$ccCredit->ref_no'" : ""?>>
-
+                                </div>
+                                <div class="col-12 col-md-2">
                                     <label for="permit_number">Permit no.</label>
                                     <input type="number" class="form-control nsm-field mb-2" name="permit_number" id="permit_number" <?=isset($ccCredit) ? "value='$ccCredit->permit_no'" : ""?>> 
                                 </div>
                             </div>
 
                             <div class="row">
-                                <div class="col-12 col-md-6 grid-mb">
+                                <div class="col-12 col-md-4 grid-mb">
                                     <div id="label">
                                         <label for="tags">Tags</label>
                                         <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
@@ -141,7 +152,7 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row mt-4">
                                 <div class="col-12">
                                     <div class="accordion grid-mb">
                                         <div class="accordion-item">
@@ -155,21 +166,22 @@
                                                     <table class="nsm-table" id="category-details-table">
                                                         <thead>
                                                             <tr>
-                                                                <td data-name="Num">#</td>
-                                                                <td data-name="Expense Name">EXPENSE NAME</td>
-                                                                <td data-name="Category">CATEGORY</td>
+                                                                <td data-name="Num" style="width:2%;">#</td>
+                                                                <td data-name="Customer" style="width:15%;">CUSTOMER</td>
+                                                                <td data-name="Expense Name" style="width:15%;">EXPENSE NAME</td>
+                                                                <td data-name="Category" style="width:15%;">CATEGORY</td>
                                                                 <td data-name="Description">DESCRIPTION</td>
-                                                                <td data-name="Amount">AMOUNT</td>
-                                                                <td data-name="Billable">BILLABLE</td>
-                                                                <td data-name="Markup %">MARKUP %</td>
-                                                                <td data-name="Tax">TAX</td>
-                                                                <td data-name="Customer">CUSTOMER</td>
-                                                                <td data-name="Manage"></td>
+                                                                <td data-name="Amount" style="width:8%;">AMOUNT</td>
+                                                                <td data-name="Billable" style="width:5%;">BILLABLE</td>
+                                                                <td data-name="Markup %" style="width:8%;">MARKUP %</td>
+                                                                <td data-name="Tax" style="width:3%;">TAX</td>                                                                
+                                                                <td data-name="Manage" style="width:3%;"></td>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
                                                                 <td>1</td>
+                                                                <td><select name="category_customer[]" class="nsm-field form-control"></select></td>
                                                                 <td>
                                                                     <select name="expense_account[]" class="nsm-field form-control" required></select>
                                                                 </td>
@@ -188,15 +200,12 @@
                                                                         <input class="form-check-input table-select" name="category_billable[]" type="checkbox" value="1">
                                                                     </div>
                                                                 </td>
-                                                                <td><input type="number" name="category_markup[]" class="nsm-field form-control" onchange="convertToDecimal(this)"></td>
+                                                                <td><input type="number" name="category_markup[]" class="nsm-field form-control text-end" onchange="convertToDecimal(this)"></td>
                                                                 <td>
                                                                     <div class="table-row-icon table-checkbox">
                                                                         <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1">
                                                                     </div>
-                                                                </td>
-                                                                <td>
-                                                                    <select name="category_customer[]" class="nsm-field form-control"></select>
-                                                                </td>
+                                                                </td>                                                                
                                                                 <td>
                                                                     <button type="button" class="nsm-button delete-row">
                                                                         <i class='bx bx-fw bx-trash'></i>
@@ -386,30 +395,24 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-md-6">
-                                    <div class="row">
-                                        <div class="col-12 col-md-4">
-                                            <div class="form-group">
-                                                <label for="memo">Memo</label>
-                                                <textarea name="memo" id="memo" class="nsm-field form-control mb-2"><?=isset($ccCredit) ? str_replace("<br />", "", $ccCredit->memo) : ''?></textarea>
+                                <div class="col-12 col-md-4">
+                                    <div class="form-group">
+                                        <label for="memo">Memo</label>
+                                        <textarea name="memo" id="memo" class="nsm-field form-control mb-2" style="height:150px !important;"><?=isset($ccCredit) ? str_replace("<br />", "", $ccCredit->memo) : ''?></textarea>
+                                    </div> 
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <div class="attachments">
+                                        <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
+                                        <span>Maximum size: 20MB</span>
+                                        <div id="cc-credit-attachments" class="dropzone d-block justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;" data-id="0">
+                                            <div class="dz-message" style="margin: 20px;border">
+                                                <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                                <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12 col-md-6">
-                                            <div class="attachments">
-                                                <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
-                                                <span>Maximum size: 20MB</span>
-                                                <div id="cc-credit-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
-                                                    <div class="dz-message" style="margin: 20px;border">
-                                                        <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                                        <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex justify-content-center align-items-center">
-                                                    <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
-                                                </div>
-                                            </div>
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
                                         </div>
                                     </div>
                                 </div>
