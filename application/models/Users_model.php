@@ -147,8 +147,9 @@ class Users_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         //$this->db->where('parent_id', $parent_id);
-        $this->db->where('id', $parent_id);
-        $this->db->or_where('company_id', $cid);
+        //$this->db->where('id', $parent_id);
+        //$this->db->or_where('company_id', $cid);
+        $this->db->where('company_id', $cid);
         $query = $this->db->get();
 
         return $query->result();

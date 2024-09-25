@@ -238,9 +238,16 @@ class Timesheet_model extends MY_Model
         return $qry->result();
     }
     
-    public function employeeAttendance()
+    public function employeeAttendance($date_range = array())
     {
-        $qry = $this->db->get($this->attn_tbl)->result();
+        if( $date_range ){
+            $this->db->where('DATE(date_created) >=', $date_range['from']);
+            $this->db->where('DATE(date_created) <=', $date_range['to']);     
+            $qry = $this->db->get($this->attn_tbl)->result();       
+        }else{
+            $qry = $this->db->get($this->attn_tbl)->result();
+        }
+        
         return $qry;
     }
     //Employee's End
