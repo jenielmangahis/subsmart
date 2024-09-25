@@ -793,13 +793,11 @@ class Users_model extends MY_Model
         return $query->result();
     }
 
-    public function getPayScheduleEmployees($paySchedId)
+    public function getPayScheduleEmployees($payscaleId)
     {
-        $this->db->select('users.*');
-        $this->db->from('users');
-        $this->db->where('employee_pay_details.pay_schedule_id', $paySchedId);
-        $this->db->join('employee_pay_details', 'employee_pay_details.user_id = users.id');
-        $query = $this->db->get();
+        $this->db->where('company_id', logged('company_id'));
+        $this->db->where('payscale_id', $payscaleId);
+        $query = $this->db->get('users');
         return $query->result();
     }
 
