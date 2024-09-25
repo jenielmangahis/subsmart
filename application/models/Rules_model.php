@@ -66,6 +66,17 @@ class Rules_model extends MY_Model
         }
     }
 
+    public function addRulesConditions($post_datas) {
+        if(!empty($post_datas)) {
+            foreach($post_datas as $post_data) {
+                $this->db->insert('accounting_rules_conditions',$post_data);
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function addConditions($description,$contain,$comment){
         for($x = 0; $x < count($description);$x++){
             $data[] = [

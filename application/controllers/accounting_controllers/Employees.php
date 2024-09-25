@@ -2929,4 +2929,74 @@ class Employees extends MY_Controller
         $this->load->view('v2/pages/accounting/payroll/employees/ajax_employee_commission_settings', $this->page_data);
     }
 
+    public function ajax_update_employee_pay_type()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        $pay_rate = '';
+
+        $payscale = $this->users_model->get_payscale_by_id($this->input->post('empPayscale'));
+        $data = [
+            'payscale_id' => $this->input->post('empPayscale'),
+            'base_hourly' => $payscale->pay_type === 'Hourly' ? $this->input->post('salary_rate') : '',
+            'base_weekly' => $payscale->pay_type === 'Weekly' ? $this->input->post('salary_rate') : '',
+            'base_monthly' => $payscale->pay_type === 'Monthly' ? $this->input->post('salary_rate') : '',
+            'base_salary' => $payscale->pay_type === 'Daily' ? $this->input->post('salary_rate') : '',
+            'base_yearly' => $payscale->pay_type === 'Yearly' ? $this->input->post('salary_rate') : ''
+        ];
+
+        $update = $this->users_model->update($this->input->post('eid'), $data);
+
+        if ($payscale->pay_type === 'Hourly') {
+            $pay_rate = str_replace('$-', '-$', '$' . number_format(floatval(str_replace(',', '', $this->input->post('salary_rate'))), 2, '.', ',')) . '/hour';
+        }
+
+        if ($payscale->pay_type === 'Daily') {
+            $pay_rate = str_replace('$-', '-$', '$' . number_format(floatval(str_replace(',', '', $this->input->post('salary_rate'))), 2, '.', ',')) . '/day';
+        }
+
+        if ($payscale->pay_type === 'Weekly') {
+            $pay_rate = str_replace('$-', '-$', '$' . number_format(floatval(str_replace(',', '', $this->input->post('salary_rate'))), 2, '.', ',')) . '/week';
+        }
+
+        if ($payscale->pay_type === 'Monthly') {
+            $pay_rate = str_replace('$-', '-$', '$' . number_format(floatval(str_replace(',', '', $this->input->post('salary_rate'))), 2, '.', ',')) . '/month';
+        }
+
+        if ($payscale->pay_type === 'Yearly') {
+            $pay_rate = str_replace('$-', '-$', '$' . number_format(floatval(str_replace(',', '', $this->input->post('salary_rate'))), 2, '.', ',')) . '/year';
+        }
+
+        if ($payscale->pay_type === 'Commission Only') {
+            $pay_rate = 'Commission only';
+        }
+
+        if (!empty($this->input->post('commission_setting_id'))) {
+            $this->EmployeeCommissionSetting_model->deleteAllByUserId($this->input->post('eid'));
+            foreach ($this->input->post('commission_setting_id') as $key => $csid) {
+                $employee_commission_setting = [
+                    'user_id' => $this->input->post('eid'),
+                    'company_id' => logged('company_id'),
+                    'commission_setting_id' => $csid,
+                    'commission_type' => $this->input->post('commission_setting_type')[$key],
+                    'commission_value' => $this->input->post('commission_setting_value')[$key]
+                ];
+
+                $this->EmployeeCommissionSetting_model->create($employee_commission_setting);
+            }
+        }
+
+        $is_success = 1;
+        $msg = '';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+            'eid' => $this->input->post('eid'),
+            'pay_rate' => $pay_rate
+        ];
+
+        echo json_encode($return);
+    }
+
 }

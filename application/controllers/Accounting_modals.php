@@ -5922,9 +5922,9 @@ class Accounting_modals extends MY_Controller
     public function get_vendor_details($vendorId)
     {
         $vendor = $this->vendors_model->get_vendor_by_id($vendorId);
-        if( $vendor->email == '' || $vendor->email == null ){
-            $vendor->email = 'Not Specified';
-        }
+        // if( $vendor->email == '' || $vendor->email == null ){
+        //     $vendor->email = 'Not Specified';
+        // }
 
         echo json_encode($vendor);
     }
@@ -23775,14 +23775,23 @@ class Accounting_modals extends MY_Controller
 
         $data = $this->input->post();
 
-        $this->email->clear(true);
-        $this->email->from($company->business_email);
-        $this->email->to($purchaseOrder->email);
-        $this->email->subject($data['subject']);
-        $this->email->message($data['body']);
-        $this->email->attach(base_url("/assets/pdf/$fileName"));
+        $mail = email__getInstance();
+        $mail->FromName = 'nSmartrac';
+        $mail->addAddress($purchaseOrder->email);
+        $mail->isHTML(true);
+        $mail->Subject = $company->business_name . " : " . $data['subject'];
+        $mail->Body = $data['body'];
 
-        $sent = $this->email->send();
+        $mail->addAttachment(getcwd()."/assets/pdf/$fileName");
+        $sent = $mail->Send();
+
+        // $this->email->clear(true);
+        // $this->email->from($company->business_email);
+        // $this->email->to($purchaseOrder->email);
+        // $this->email->subject($data['subject']);
+        // $this->email->message($data['body']);
+        // $this->email->attach(base_url("/assets/pdf/$fileName"));
+        // $sent = $this->email->send();
 
         unlink(getcwd()."/assets/pdf/$fileName");
 

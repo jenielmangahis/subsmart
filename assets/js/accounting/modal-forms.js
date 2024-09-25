@@ -7118,7 +7118,7 @@ $(function () {
                     <div class="attachments-container h-100 p-3">
                         <div class="row">
                             <div class="col-12 mb-3">
-                                <h4 style="display:inline-block;margin-bottom:10px;">Add to ${transactionType}</h4>
+                                <h4 style="font-size: 23px;width: 171px;display:inline-block;margin-bottom:20px;">Add to ${transactionType}</h4>                                
                                 <button type="button" class="btn-custom-close btn-side-nav-close"><i class="bx bx-fw bx-x m-0"></i></button>
                                 <div class="row">
                                     <div class="col-12 mb-3">
@@ -8114,8 +8114,12 @@ $(function () {
 
     $(document).on('submit', '#sendEmailModal #send-email-form', function (e) {
         e.preventDefault();
+        
+        for ( instance in CKEDITOR.instances ){
+            CKEDITOR.instances[instance].updateElement();
+        }        
 
-        var data = new FormData(this);
+        var data = new FormData(this);        
 
         $.ajax({
             url: $(this).attr('action'),
@@ -10380,6 +10384,8 @@ const addTableLines = (e) => {
     var table = e.currentTarget.dataset.target;
     var lastRow = $(`table${table} tbody tr:last-child() td:first-child()`);
     var lastRowCount = parseInt(lastRow.html());
+
+
 
     for (var i = 0; i < rowCount; i++) {
         lastRowCount++;
@@ -13728,7 +13734,7 @@ const clearForm = () => {
 }
 
 const printPurchaseOrder = () => {
-    var id = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/purchase-order/', '');
+    var id = $('#modal-container form').attr('data-href').replace(base_url + '/accounting/update-transaction/purchase-order/', '');
 
     $.get(`/accounting/print-purchase-order-modal/${id}`, function (result) {
         $('div#modal-container').append(result);
@@ -13738,7 +13744,7 @@ const printPurchaseOrder = () => {
 }
 
 const sendPurchaseOrder = (purchaseOrderId) => {
-    $.get(`/accounting/send-purchase-order-email-modal/${purchaseOrderId}`, function (result) {
+    $.get(base_url + `/accounting/send-purchase-order-email-modal/${purchaseOrderId}`, function (result) {
         $('div#modal-container').append(result);
 
         $('#sendEmailModal').modal('show');

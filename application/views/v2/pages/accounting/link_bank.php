@@ -135,9 +135,9 @@ add_css(array(
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/tabs/banking'); ?>
     </div>
-    <div class="col-12 mb-3">
+    <!-- <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/accounting/subtabs/link_bank_subtabs'); ?>
-    </div>
+    </div> -->
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
@@ -151,205 +151,301 @@ add_css(array(
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-md-4 grid-mb">
-                        <div class="nsm-field-group search">
-                            <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" placeholder="Search by name or conditions">
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-8 grid-mb text-end">
-                        <div class="dropdown d-inline-block">
-                            <input type="hidden" class="nsm-field form-control" id="selected_ids">
-                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
-                                <span>
-                                    Batch Actions
-                                </span> <i class='bx bx-fw bx-chevron-down'></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="delete">Delete</a></li>
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="disable">Disable</a></li>
-                                <li><a class="dropdown-item disabled" href="javascript:void(0);" id="enable">Enable</a></li>
-                            </ul>
-                        </div>
-
+                    <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" id="importRulesLink">
-                                <i class='bx bx-fw bx-import'></i> Import
+                            <button type="button" class="nsm-button primary btn-connect-plaid">
+                                <i class='bx bx-fw bx-cog'></i> Connect Bank Account
                             </button>
-                            <button type="button" class="nsm-button" id="newRuleButton" data-bs-toggle="modal" data-bs-target="#createRules">
-                                <i class='bx bx-fw bx-list-plus'></i> New Rule
-                            </button>
-                            <button type="button" class="nsm-button" id="exportButton">
-                                <i class='bx bx-fw bx-export'></i> Export
-                            </button>
-                            <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
-                                <i class="bx bx-fw bx-cog"></i>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end table-settings p-3">
-                                <p class="m-0">Columns</p>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_conditions" id="chk_conditions" class="form-check-input">
-                                    <label for="chk_conditions" class="form-check-label">Conditions</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_settings" id="chk_settings" class="form-check-input">
-                                    <label for="chk_settings" class="form-check-label">Settings</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="checkbox" checked="checked" name="chk_status" id="chk_status" class="form-check-input">
-                                    <label for="chk_status" class="form-check-label">Status</label>
-                                </div>
-                                <p class="m-0">Page Size</p>
-                                <div class="form-check">
-                                    <input type="radio" checked="checked" name="page_size" id="page-size-50" class="form-check-input">
-                                    <label for="page-size-50" class="form-check-label">50</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" name="page_size" id="page-size-75" class="form-check-input">
-                                    <label for="page-size-75" class="form-check-label">75</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" name="page_size" id="page-size-100" class="form-check-input">
-                                    <label for="page-size-100" class="form-check-label">100</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" name="page_size" id="page-size-200" class="form-check-input">
-                                    <label for="page-size-200" class="form-check-label">200</label>
-                                </div>
-                                <div class="form-check">
-                                    <input type="radio" name="page_size" id="page-size-300" class="form-check-input">
-                                    <label for="page-size-300" class="form-check-label">300</label>
-                                </div>
-                            </ul>
                         </div>
                     </div>
                 </div>
                 <table class="nsm-table">
                     <thead>
                         <tr>
-                            <td class="table-icon text-center">
-                                <input class="form-check-input select-all table-select" type="checkbox">
-                            </td>
-                            <td data-name="Priority">PRIORITY</td>
-                            <td data-name="Rule Name">RULE NAME</td>
-                            <td data-name="Applied To">APPLIED TO</td>
-                            <td data-name="Conditions">Conditions</td>
-                            <td data-name="Settings">SETTINGS</td>
-                            <td data-name="Auto Add">AUTO ADD</td>
-                            <td data-name="Status">STATUS</td>
+                            <td data-name="Bank">Bank</td>
+                            <td data-name="Account Name">Account Name</td>
+                            <td data-name="Type">Type</td>
+                            <td data-name="Balance" style="width: 20%;">Balance</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if (count($rules) > 0) : ?>
-                            <?php foreach ($rules as $rule) : ?>
-                                <tr>
-                                    <td>
-                                        <div class="table-row-icon table-checkbox">
-                                            <input class="form-check-input select-one table-select" type="checkbox">
-                                        </div>
-                                    </td>
-                                    <td><?php echo $rule->priority == 1 ? 'Yes': 'No'; ?></td>
-                                    <td><?php echo $rule->rules_name ?></td>
-                                    <td><?php echo $rule->apply_type ?></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td><?php echo $rule->auto == 1 ? 'Yes' : 'No'; ?></td>
-                                    <td><?php echo $rule->is_active == 1 ? 'Active' : 'Inactive'; ?></td>
-                                    <td>
-                                        <div class="dropdown table-management">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                                <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item" href="#">Edit</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="#">Copy</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="#">Disable</a>
-                                                </li>
-                                                <li>
-                                                    <a class="dropdown-item" href="#">Delete</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php else : ?>
+                        <?php if ($is_valid == 1) { ?>
+                            <?php foreach ($plaidAccounts as $pa){ ?>
                             <tr>
-                                <td colspan="19">
+                                <td><?= $pa->institution_name; ?></td>
+                                <td><?= $pa->account_name; ?></td>
+                                <td><?= ucwords($pa->subtype); ?></td>
+                                <td>                                    
+                                    <?php 
+                                        if( is_int($pa->balance_current) ){
+                                            echo number_format($pa->balance_current, 2);
+                                        }else{
+                                            echo $pa->balance_current;
+                                        }   
+                                    ?>        
+                                </td>
+                                <td>
+                                    <div class="dropdown table-management">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">     
+                                            <li>
+                                                <a class="dropdown-item transactions-bank-account" href="javascript:void(0);" data-id="<?= $pa->id; ?>">View Bank Transactions</a>
+                                            </li>                                       
+                                            <li>
+                                                <a class="dropdown-item recurring-transactions" href="javascript:void(0);" data-id="<?= $pa->id; ?>">View Recurring Transactions</a>
+                                            </li>                                       
+                                            <li>
+                                                <a class="dropdown-item delete-bank-account" href="javascript:void(0);" data-id="<?= $pa->id; ?>">Delete</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        <?php }else{ ?>
+                            <tr>
+                                <td colspan="4">
                                     <div class="nsm-empty">
                                         <span>No results found.</span>
                                     </div>
                                 </td>
                             </tr>
-                        <?php endif; ?>
+                        <?php } ?>
                     </tbody>
                 </table>
+
+                <div class="modal fade nsm-modal fade" id="modalPlaidTransactionsList" aria-labelledby="modalPlaidTransactionsListLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <span class="modal-title content-title" id="new_feed_modal_label">Bank Transactions</span>
+                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>                            
+                            <div class="modal-body modal-bank-transactions-container"></div>                            
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade nsm-modal fade" id="modalPlaidRecurringTransactionsList" aria-labelledby="modalPlaidRecurringTransactionsListLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <span class="modal-title content-title" id="new_feed_modal_label">Recurring Transactions</span>
+                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>                            
+                            <div class="modal-body modal-recurring-transactions-container"></div>                            
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 </div>
-<script>
-    $(function() {
-        $('#importRulesLink').on('click', function() {
-            $('#importRules').modal('show');
+<script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $(".nsm-table").nsmPagination(); 
+
+    <?php if( $plaid_handler_open == 1 ){ ?>
+        var linkHandler = Plaid.create({
+            env: '<?= PLAID_API_ENV ?>',
+            clientName: '<?= $client_name; ?>',
+            token: '<?= $plaid_token; ?>',
+            product: ['auth','transactions'],
+            receivedRedirectUri : window.location.href,
+            selectAccount: true,
+            onSuccess: function(public_token, metadata) {
+                if( public_token != '' ){
+                    var url = base_url + '_create_plaid_account';
+                    var account_id = metadata.account.id;
+                    var ins_id     = metadata.institution.institution_id;
+                    var ins_name   = metadata.institution.name;
+                    var meta_data   = JSON.stringify(metadata);
+                    //console.log('metadata: ' + JSON.stringify(metadata));
+                    $.ajax({
+                        type: "POST",
+                        url: url,
+                        data: {public_token:public_token,meta_data:meta_data},
+                        dataType:'json',
+                        success: function(result) {
+                            if( result.is_success == 1 ){
+                                //load bank details
+                                load_plaid_accounts();
+                            }else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error!',
+                                    html: result.msg
+                                });
+                            }
+                        }
+                    }); 
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        html: 'Cannot connect to Plaid. Please try again later.'
+                    });
+                }                        
+            },
         });
+        linkHandler.open();
+    <?php } ?>
+});
+
+$(document).on('click', '.transactions-bank-account', function(){
+    var url = base_url + 'plaid_account/_bank_account_transactions';
+    var pid = $(this).attr('data-id');
+
+    $('#modalPlaidTransactionsList').modal('show');
+    $(".modal-bank-transactions-container").html('<span class="bx bx-loader bx-spin"></span>');
+
+    setTimeout(function () {
+      $.ajax({
+         type: "POST",
+         url: url,
+         data: {pid:pid},
+         success: function(o)
+         {          
+            $(".modal-bank-transactions-container").html(o);
+         }
+      });
+    }, 800);
+});
+
+$(document).on('click', '.recurring-transactions', function(){
+    var url = base_url + 'plaid_account/_bank_account_recurring_transactions';
+    var pid = $(this).attr('data-id');
+
+    $('#modalPlaidRecurringTransactionsList').modal('show');
+    $(".modal-recurring-transactions-container").html('<span class="bx bx-loader bx-spin"></span>');
+
+    setTimeout(function () {
+      $.ajax({
+         type: "POST",
+         url: url,
+         data: {pid:pid},
+         success: function(o)
+         {          
+            $(".modal-recurring-transactions-container").html(o);
+         }
+      });
+    }, 800);
+});
+
+$(document).on('click', '.btn-connect-plaid', function(){
+    var redirect_url = '<?= PLAID_API_REDIRECT_URL_MAIN; ?>';
+    var url = base_url + '_launch_plaid_accounts';
+    $.ajax({
+         type: "POST",
+         url: url,
+         dataType:'json',
+         data:{redirect_url:redirect_url},
+         success: function(o)
+         {          
+            if( o.is_valid == 1 ){
+                var linkHandler = Plaid.create({
+                    env: '<?= PLAID_API_ENV ?>',
+                    clientName: o.client_name,
+                    token: o.plaid_token,
+                    product: ['auth','transactions'],
+                    selectAccount: true,
+                    onSuccess: function(public_token, metadata) {
+                        if( public_token != '' ){
+                            var url = base_url + '_create_plaid_account';
+                            var account_id = metadata.account.id;
+                            var ins_id     = metadata.institution.institution_id;
+                            var ins_name   = metadata.institution.name;
+                            var meta_data   = JSON.stringify(metadata);
+                            //console.log('metadata: ' + JSON.stringify(metadata));
+                            $.ajax({
+                                type: "POST",
+                                url: url,
+                                data: {public_token:public_token,meta_data:meta_data},
+                                dataType:'json',
+                                success: function(result) {
+                                    if( result.is_success == 1 ){
+                                        //load bank details
+                                        location.reload();
+                                        //load_plaid_accounts();
+                                    }else{
+                                        Swal.fire({
+                                            icon: 'error',
+                                            title: 'Error!',
+                                            html: result.msg
+                                        });
+                                    }
+                                }
+                            }); 
+                        }else{
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                html: 'Cannot connect to Plaid. Please try again later.'
+                            });
+                        }                        
+                    },
+                });
+                linkHandler.open();
+            }else{
+                var api_connect_url = base_url + 'tools/api_connectors';
+                //var html_message = o.msg + "<br />To check your Plaid API credentials click <a href='"+api_connect_url+"'>API Connectors</a>";
+                var html_message = o.msg;
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: html_message
+                });
+            }            
+         }
     });
+});
 
-    function exportTableToCSV() {
-        var tableData = [];
+$(document).on("click", ".delete-bank-account", function(e) {
+        var pid = $(this).attr("data-id");
+        var url = base_url + 'plaid_account/_delete_bank_account';
 
-        var headers = ['PRIORITY', 'RULE NAME', 'APPLIED TO', 'Conditions', 'SETTINGS', 'AUTO ADD', 'STATUS'];
-
-        tableData.push(headers);
-
-        $('table.nsm-table tbody tr').each(function() {
-            var rowData = [];
-            $(this).find('td:not(:first-child)').each(function(index) {
-                if (index < headers.length) {
-                    rowData.push($(this).text().trim());
-                }
-            });
-            tableData.push(rowData);
-        });
-
-        if (tableData.length <= 1) {
-            alert("No data to export.");
-            return null;
-        }
-
-        var csvContent = "data:text/csv;charset=utf-8,";
-        tableData.forEach(function(rowArray) {
-            var row = rowArray.join(",");
-            csvContent += row + "\r\n";
-        });
-
-        return encodeURI(csvContent);
-    }
-
-    function downloadCSV(csvContent) {
-        var link = document.createElement("a");
-        link.setAttribute("href", csvContent);
-        link.setAttribute("download", "link_bank_data.csv");
-        document.body.appendChild(link);
-        link.click();
-    }
-
-    $(document).ready(function() {
-        $('#exportButton').on('click', function() {
-            var csvContent = exportTableToCSV();
-            if (csvContent) {
-                downloadCSV(csvContent);
+        Swal.fire({
+            title: 'Delete Connected Bank Account',
+            html: "Are you sure you want to delete selected bank account?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    dataType: 'json',
+                    data: {pid:pid},
+                    success: function(o) {
+                        if( o.is_success == 1 ){   
+                            Swal.fire({
+                                title: 'Delete Successful!',
+                                text: "Bank Account was Deleted Successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                //if (result.value) {
+                                    location.reload();
+                                //}
+                            });
+                        }else{
+                          Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: o.msg
+                          });
+                        }
+                    },
+                });
             }
-        });
-    });
-    document.querySelectorAll('input[type="checkbox"], input[type="radio"]').forEach(input => {
-        input.addEventListener('change', function() {
-            console.log(this.name + " is now " + (this.checked ? "checked" : "unchecked") + " with value: " + this.value);
         });
     });
 </script>

@@ -15,7 +15,7 @@
     <div style="background-color:#f9fafb;width:80%;border-radius:15px;" id="dashboardDivs">
         <div class="row">
             <div class="col-md-1 horizontal-tab-label"><h6>MONEY IN</h6><hr /></div>
-            <div class="col-md-11 horizontal-tab-group" style="padding: 0 14% 0% 3%">
+            <div class="col-md-11 horizontal-tab-group" style="padding: 0 9% 0% 3%">
                 <div align="center" style="display: inline-block;">
                     <a href="<?php echo base_url('accounting/products-and-services') ?>">
                         <div id="circle" style="padding:20px 0 ;">
