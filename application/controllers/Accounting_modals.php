@@ -13030,6 +13030,7 @@ class Accounting_modals extends MY_Controller
         $this->page_data['otherExpenseAccs'] = $this->chart_of_accounts_model->get_other_expense_accounts();
         $this->page_data['cogsAccs'] = $this->chart_of_accounts_model->get_cogs_accounts();
         $this->load->view('v2/includes/accounting/modal_forms/vendor_modal', $this->page_data);
+        $this->load->view('v2/includes/accounting/modal_forms/vendor_modal_sub', $this->page_data);
     }
 
     public function add_customer_details_modal()
@@ -21367,6 +21368,7 @@ class Accounting_modals extends MY_Controller
                 foreach($expenses_transaction_ids as $expenses_transaction_id) {
                     if(isset($expenses_transaction_type[$expenses_transaction_id])) {
                         $transaction_type = strtolower($expenses_transaction_type[$expenses_transaction_id]);
+                        $transaction_type = str_replace(" ","-", $transaction_type);
                         if($transaction_type == 'expense') {
                             $delete = $this->delete_expense($expenses_transaction_id);
                         }elseif($transaction_type == 'check') {
