@@ -1,3 +1,15 @@
+<style>
+#delayedChargeModal .nsm-table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
+#delayedChargeModal .modal-body{
+    overflow-x:hidden;
+}
+#delayedChargeModal .nsm-table td:nth-child(8){
+    text-align:right !important; 
+}
+</style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
     <?php if (!isset($charge)) : ?>
@@ -98,28 +110,23 @@
 
                                     <div class="row">
                                         <?php if ($is_copy) : ?>
-                                            <div class="col-12">
+                                            <!-- <div class="col-12">
                                                 <div class="nsm-callout primary">
                                                     <button><i class='bx bx-x'></i></button>
                                                     <h6 class="mt-0">This is a copy</h6>
                                                     <span>This is a copy of a delayed charge. Revise as needed and save the delayed charge.</span>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         <?php endif; ?>
-                                        <div class="col-12 col-md-2">
+                                        <div class="col-12 col-md-3">
                                             <label for="delayed-charge-date">Delayed Charge date</label>
                                             <div class="nsm-field-group calendar">
                                                 <input type="text" name="delayed_charge_date" id="delayed-charge-date" class="form-control nsm-field mb-2 date" value="<?= isset($charge) ? date("m/d/Y", strtotime($charge->delayed_charge_date)) : date("m/d/Y") ?>">
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-12 col-md-6 grid-mb">
-                                            <div id="label">
-                                                <label for="tags">Tags</label>
-                                                <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
-                                            </div>
+                                        <div class="col-12 col-md-3">
+                                            <label for="tags">Tags</label>
+                                            <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>                                            
                                             <select name="tags[]" id="tags" class="form-control" multiple="multiple">
                                                 <?php if (isset($tags) && count($tags) > 0) : ?>
                                                     <?php foreach ($tags as $tag) : ?>
@@ -136,150 +143,162 @@
                                             </select>
                                         </div>
                                     </div>
-
-                                    <div class="row">
+                                    <div class="row mt-4">
                                         <div class="col-12 grid-mb">
-                                            <table class="nsm-table" id="item-table">
-                                                <thead>
-                                                    <td data-name="Item">ITEM</td>
-                                                    <td data-name="Type">TYPE</td>
-                                                    <td data-name="Location">LOCATION</td>
-                                                    <td data-name="Quantity">QUANTITY</td>
-                                                    <td data-name="Price">PRICE</td>
-                                                    <td data-name="Discount">DISCOUNT</td>
-                                                    <td data-name="Tax">TAX (CHANGE IN %)</td>
-                                                    <td data-name="Total">TOTAL</td>
-                                                    <td data-name="Manage"></td>
-                                                </thead>
-                                                <tbody>
-                                                    <?php if (isset($items) && count($items) > 0) : ?>
-                                                        <?php foreach ($items as $item) : ?>
-                                                            <?php if (!is_null($item->itemDetails)) : ?>
-                                                                <?php $itemDetails = $item->itemDetails; ?>
-                                                                <?php $locations = $item->locations; ?>
-                                                                <tr>
-                                                                    <td><?= $itemDetails->title ?><input type="hidden" name="item[]" value="<?= $item->item_id ?>"></td>
-                                                                    <td><?= ucfirst($itemDetails->type) ?></td>
-                                                                    <td>
-                                                                        <?php if ($itemDetails->type === 'product' || $itemDetails->type === 'item') : ?>
-                                                                            <select name="location[]" class="form-control nsm-field" required>
-                                                                                <?php foreach ($locations as $location) : ?>
-                                                                                    <option value="<?= $location['id'] ?>" <?= $item->location_id === $location['id'] ? 'selected' : '' ?>><?= $location['name'] ?></option>
-                                                                                <?php endforeach; ?>
-                                                                            </select>
+                                            <div class="accordion grid-mb">
+                                                <div class="accordion-item">
+                                                    <h2 class="accordion-header">
+                                                        <button class="accordion-button content-title" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-item-details" aria-expanded="true" aria-controls="collapse-item-details">
+                                                            Items
+                                                        </button>
+                                                    </h2>
+                                                    <div class="accordion-collapse collapse show" id="collapse-item-details">
+                                                        <div class="accordion-body">
+                                                        <table class="nsm-table" id="item-table">
+                                                            <thead>
+                                                                <td data-name="Item" style="width:30%;">ITEM</td>
+                                                                <td data-name="Type">TYPE</td>
+                                                                <td data-name="Location">LOCATION</td>
+                                                                <td data-name="Quantity" style="width:8%;">QUANTITY</td>
+                                                                <td data-name="Price" style="width:8%;">PRICE</td>
+                                                                <td data-name="Discount" style="width:8%;">DISCOUNT</td>
+                                                                <td data-name="Tax" style="width:8%;">TAX</td>
+                                                                <td data-name="Total" style="width:8%;text-align:right;">TOTAL</td>
+                                                                <td data-name="Manage" style="width:5%;"></td>
+                                                            </thead>
+                                                            <tbody>
+                                                                <?php if (isset($items) && count($items) > 0) : ?>
+                                                                    <?php foreach ($items as $item) : ?>
+                                                                        <?php if (!is_null($item->itemDetails)) : ?>
+                                                                            <?php $itemDetails = $item->itemDetails; ?>
+                                                                            <?php $locations = $item->locations; ?>
+                                                                            <tr>
+                                                                                <td><?= $itemDetails->title ?><input type="hidden" name="item[]" value="<?= $item->item_id ?>"></td>
+                                                                                <td><?= ucfirst($itemDetails->type) ?></td>
+                                                                                <td>
+                                                                                    <?php if ($itemDetails->type === 'product' || $itemDetails->type === 'item') : ?>
+                                                                                        <select name="location[]" class="form-control nsm-field" required>
+                                                                                            <?php foreach ($locations as $location) : ?>
+                                                                                                <option value="<?= $location['id'] ?>" <?= $item->location_id === $location['id'] ? 'selected' : '' ?>><?= $location['name'] ?></option>
+                                                                                            <?php endforeach; ?>
+                                                                                        </select>
+                                                                                    <?php endif; ?>
+                                                                                </td>
+                                                                                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="<?= $item->quantity ?>"></td>
+                                                                                <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?= number_format(floatval($item->price), 2, '.', ',') ?>"></td>
+                                                                                <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?= number_format(floatval($item->discount), 2, '.', ',') ?>"></td>
+                                                                                <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?= number_format(floatval($item->tax), 2, '.', ',') ?>"></td>
+                                                                                <td>
+                                                                                    <span class="row-total">
+                                                                                        <?php
+                                                                                        $rowTotal = '$' . number_format(floatval($item->total), 2, '.', ',');
+                                                                                        $rowTotal = str_replace('$-', '-$', $rowTotal);
+                                                                                        echo $rowTotal;
+                                                                                        ?>
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <button type="button" class="nsm-button delete-row">
+                                                                                        <i class='bx bx-fw bx-trash'></i>
+                                                                                    </button>
+                                                                                </td>
+                                                                            </tr>
+                                                                        <?php else : ?>
+                                                                            <?php $packageDetails = $item->packageDetails; ?>
+                                                                            <?php $packageItems = $item->packageItems; ?>
+                                                                            <tr class="package">
+                                                                                <td><?= $packageDetails->name ?><input type="hidden" name="package[]" value="<?= $packageDetails->id ?>"></td>
+                                                                                <td>Package</td>
+                                                                                <td></td>
+                                                                                <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="<?= $item->qty ?>"></td>
+                                                                                <td><span class="item-amount"><?= number_format(floatval($item->cost), 2, '.', ',') ?></span></td>
+                                                                                <td></td>
+                                                                                <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?= number_format(floatval($item->tax), 2, '.', ',') ?>"></td>
+                                                                                <td>
+                                                                                    <span class="row-total">
+                                                                                        <?php
+                                                                                        $rowTotal = '$' . number_format(floatval($item->total), 2, '.', ',');
+                                                                                        $rowTotal = str_replace('$-', '-$', $rowTotal);
+                                                                                        echo $rowTotal;
+                                                                                        ?>
+                                                                                    </span>
+                                                                                </td>
+                                                                                <td>
+                                                                                    <button type="button" class="nsm-button delete-row">
+                                                                                        <i class='bx bx-fw bx-trash'></i>
+                                                                                    </button>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr class="package-items">
+                                                                                <td colspan="3">
+                                                                                    <table class="nsm-table">
+                                                                                        <thead>
+                                                                                            <tr class="package-item-header">
+                                                                                                <th>Item Name</th>
+                                                                                                <th>Quantity</th>
+                                                                                                <th>Price</th>
+                                                                                            </tr>
+                                                                                        </thead>
+                                                                                        <tbody id="package-items-table">
+                                                                                            <?php foreach ($packageItems as $packageItem) : ?>
+                                                                                                <?php $item = $this->items_model->getItemById($packageItem->item_id)[0]; ?>
+                                                                                                <tr class="package-item">
+                                                                                                    <td><?= $item->title ?></td>
+                                                                                                    <td><?= $packageItem->quantity ?></td>
+                                                                                                    <td><?= number_format(floatval($packageItem->price), 2, '.', ',') ?></td>
+                                                                                                </tr>
+                                                                                            <?php endforeach; ?>
+                                                                                        </tbody>
+                                                                                    </table>
+                                                                                </td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                                <td></td>
+                                                                            </tr>
                                                                         <?php endif; ?>
-                                                                    </td>
-                                                                    <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="<?= $item->quantity ?>"></td>
-                                                                    <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?= number_format(floatval($item->price), 2, '.', ',') ?>"></td>
-                                                                    <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?= number_format(floatval($item->discount), 2, '.', ',') ?>"></td>
-                                                                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?= number_format(floatval($item->tax), 2, '.', ',') ?>"></td>
-                                                                    <td>
-                                                                        <span class="row-total">
-                                                                            <?php
-                                                                            $rowTotal = '$' . number_format(floatval($item->total), 2, '.', ',');
-                                                                            $rowTotal = str_replace('$-', '-$', $rowTotal);
-                                                                            echo $rowTotal;
-                                                                            ?>
-                                                                        </span>
-                                                                    </td>
-                                                                    <td>
-                                                                        <button type="button" class="nsm-button delete-row">
-                                                                            <i class='bx bx-fw bx-trash'></i>
-                                                                        </button>
-                                                                    </td>
-                                                                </tr>
-                                                            <?php else : ?>
-                                                                <?php $packageDetails = $item->packageDetails; ?>
-                                                                <?php $packageItems = $item->packageItems; ?>
-                                                                <tr class="package">
-                                                                    <td><?= $packageDetails->name ?><input type="hidden" name="package[]" value="<?= $packageDetails->id ?>"></td>
-                                                                    <td>Package</td>
-                                                                    <td></td>
-                                                                    <td><input type="number" name="quantity[]" class="form-control nsm-field text-end" required value="<?= $item->qty ?>"></td>
-                                                                    <td><span class="item-amount"><?= number_format(floatval($item->cost), 2, '.', ',') ?></span></td>
-                                                                    <td></td>
-                                                                    <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="form-control nsm-field text-end" step=".01" value="<?= number_format(floatval($item->tax), 2, '.', ',') ?>"></td>
-                                                                    <td>
-                                                                        <span class="row-total">
-                                                                            <?php
-                                                                            $rowTotal = '$' . number_format(floatval($item->total), 2, '.', ',');
-                                                                            $rowTotal = str_replace('$-', '-$', $rowTotal);
-                                                                            echo $rowTotal;
-                                                                            ?>
-                                                                        </span>
-                                                                    </td>
-                                                                    <td>
-                                                                        <button type="button" class="nsm-button delete-row">
-                                                                            <i class='bx bx-fw bx-trash'></i>
-                                                                        </button>
+                                                                    <?php endforeach; ?>
+                                                                <?php endif; ?>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr>
+                                                                    <td colspan="10">
+                                                                        <div class="nsm-page-buttons page-buttons-container">
+                                                                            <button type="button" class="nsm-button" id="add_item">
+                                                                                Add items
+                                                                            </button>
+                                                                            <button type="button" class="nsm-button" id="add_group">
+                                                                                Add By Group
+                                                                            </button>
+                                                                            <button type="button" class="nsm-button" id="add_create_package">
+                                                                                Add/Create Package
+                                                                            </button>
+                                                                        </div>
                                                                     </td>
                                                                 </tr>
-                                                                <tr class="package-items">
-                                                                    <td colspan="3">
-                                                                        <table class="nsm-table">
-                                                                            <thead>
-                                                                                <tr class="package-item-header">
-                                                                                    <th>Item Name</th>
-                                                                                    <th>Quantity</th>
-                                                                                    <th>Price</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody id="package-items-table">
-                                                                                <?php foreach ($packageItems as $packageItem) : ?>
-                                                                                    <?php $item = $this->items_model->getItemById($packageItem->item_id)[0]; ?>
-                                                                                    <tr class="package-item">
-                                                                                        <td><?= $item->title ?></td>
-                                                                                        <td><?= $packageItem->quantity ?></td>
-                                                                                        <td><?= number_format(floatval($packageItem->price), 2, '.', ',') ?></td>
-                                                                                    </tr>
-                                                                                <?php endforeach; ?>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                    <td></td>
-                                                                </tr>
-                                                            <?php endif; ?>
-                                                        <?php endforeach; ?>
-                                                    <?php endif; ?>
-                                                </tbody>
-                                                <tfoot>
-                                                    <tr>
-                                                        <td colspan="10">
-                                                            <div class="nsm-page-buttons page-buttons-container">
-                                                                <button type="button" class="nsm-button" id="add_item">
-                                                                    Add items
-                                                                </button>
-                                                                <button type="button" class="nsm-button" id="add_group">
-                                                                    Add By Group
-                                                                </button>
-                                                                <button type="button" class="nsm-button" id="add_create_package">
-                                                                    Add/Create Package
-                                                                </button>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tfoot>
-                                            </table>
+                                                            </tfoot>
+                                                        </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>                                            
                                         </div>
                                     </div>
 
                                     <div class="row">
                                         <div class="col-12 col-md-6">
                                             <div class="row">
-                                                <div class="col-12 col-md-6 d-flex flex-column">
+                                                <div class="col-12 col-md-5">
                                                     <label for="memo">Memo</label>
                                                     <textarea name="memo" id="memo" class="form-control nsm-field mb-2" rows="7"><?= isset($charge) ? str_replace("<br />", "", $charge->memo) : '' ?></textarea>
                                                 </div>
-                                                <div class="col-12 col-md-6 d-flex flex-column">
+                                                <div class="col-12 col-md-7">
                                                     <div class="attachments">
                                                         <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label>
                                                         <span>Maximum size: 20MB</span>
-                                                        <div id="delayed-charge-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%; height: 11.5rem;">
+                                                        <div id="delayed-charge-attachments" class="dropzone d-block justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                                             <div class="dz-message" style="margin: 20px;border">
                                                                 <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                                 <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>

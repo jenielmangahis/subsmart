@@ -8,9 +8,15 @@ $(document).ready(function () {
         initializeDropzone();
     });
 
-    $(document).on('change', '#expenseModal #payee', function () {
+    $(document).on('change', '#creditCardCreditModal #payee', function () {
+        var split = $(this).val().split('-');
+        vendor_id = split[1]
+        $(`.attachments .dropzone`).attr('data-id', vendor_id);
         modalAttachments.destroy();
+        initializeDropzone();
+    });
 
+    $(document).on('change', '#expenseModal #payee', function () {
         var split = $(this).val().split('-');
         vendorIdTemp = split[1]
         modalAttachments.destroy();

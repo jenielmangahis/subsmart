@@ -224,7 +224,7 @@
                         <div class="col-md-6 form-group">
                             <div class="row">
                                 <div class="col-md-6 form-group mt-2">
-                                    <label for="service-ticket-monthly-monitoring-rate"><b>Monthly Monitoring Rate</b></label>
+                                    <label for="service-ticket-monthly-monitoring-rate"><b>Change Monthly Monitoring Rate</b></label>
                                     <select style="display:inline-block;" class="form-control nsm-field form-select" name="monthly_monitoring_rate" id="service-ticket-monthly-monitoring-rate">
                                         <option value="0.00">Select Plan Rate</option>
                                         <?php foreach( $ratePlans as $rp ){ ?>
@@ -233,8 +233,8 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6 form-group mt-2">
-                                    <label for=""><b>Monthly Monitoring Rate Value</b></label>
-                                    <input style="display:inline-block;" type="text" id="plan-value" value="0.00" class="form-control" disabled="" readonly="" />
+                                    <label for=""><b>Monthly Monitoring Rate</b></label>
+                                    <input style="display:inline-block;" type="text" id="plan-value" name="monthly_monitoring_rate_value" value="0.00" class="form-control" readonly="" />
                                 </div>
                             </div>
                             
@@ -566,6 +566,15 @@ $(document).ready(function(){
                 $("#customer_routing_number").val(response.routing_number);
                 $("#customer_card_security_code").val(response.cvc);
                 $("#customer_cc_num").val(response.cc_num);
+
+                var mmr  = parseFloat(response.mmr);
+                var otps = parseFloat(response.otps);
+                $("#plan-value").val(mmr.toFixed(2));
+                $("#service-ticket-otp").val(otps.toFixed(2));
+                $('#span_mmr').html(mmr.toFixed(2));
+                $('#span_otp').html(otps.toFixed(2))
+
+                computeGrandTotal();
             },
             error: function(response){
     
@@ -701,7 +710,8 @@ $(document).ready(function(){
         var fixedSubtotal = calculateSubtotal();
         var fixedTaxes = calculateTaxes();
         var otp = $('#service-ticket-otp').val();
-        var mmr = $('#service-ticket-monthly-monitoring-rate').val();
+        //var mmr = $('#service-ticket-monthly-monitoring-rate').val();
+        var mmr = $('#plan-value').val();
         var installation_cost = $('#service-ticket-installation-cost').val();
         var grandTotal = parseFloat(fixedSubtotal) + parseFloat(fixedTaxes) + parseFloat(otp) + parseFloat(mmr) + parseFloat(installation_cost);
 
@@ -803,7 +813,7 @@ $(document).ready(function(){
     $('#service-ticket-otp').on('change', function(){
         var amount = parseFloat($(this).val());
         if( amount > 0 ){
-            $('#span_otp').html(amount.toFixed(2))
+            $('#span_otp').html(amount.toFixed(2));
         }else{
             $('#span_otp').html('0.00');
         }

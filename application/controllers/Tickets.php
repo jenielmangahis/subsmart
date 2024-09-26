@@ -1664,7 +1664,7 @@ class Tickets extends MY_Controller
             if( $this->input->post('is_with_esign') ){
                 $otp_cost = $this->input->post('otp');
                 $installation_cost = $this->input->post('installation_cost');
-                $monthly_monitoring_cost = $this->input->post('monthly_monitoring_rate');
+                $monthly_monitoring_cost = $this->input->post('monthly_monitoring_rate_value');
                 $esign_id = $this->input->post('esign_template');
                 $update_customer_mmr = 1;
                 $update_customer_billing = 1;
@@ -2037,13 +2037,21 @@ class Tickets extends MY_Controller
         $prof_id    = $this->input->post('id');
         $company_id = logged('company_id');
 
-        $customer = $this->AcsProfile_model->getCustomerBasicInfoByProfIdAndCompanyId($prof_id, $company_id);
+        $customer = $this->AcsProfile_model->getCustomerBasicInfoByProfIdAndCompanyId($prof_id, $company_id);        
         if( $customer ){
             $routing_number = ''; //ABA
             $acct_num  = '';
             $check_num = '';
             $cvc = '';
             $cc_num = '';
+            $otps = 0;
+            $mmr  = 0;
+
+            $alarm = $this->Customer_advance_model->getCustomerAlarmData($prof_id);
+            if( $alarm ){
+                $otps = $alarm->otps > 0 ? $alarm->otps : 0;
+                $mmr  = $alarm->monthly_monitoring ? $alarm->monthly_monitoring : 0;
+            }                      
 
             $billing = $this->Customer_advance_model->get_data_by_id('fk_prof_id', $prof_id, 'acs_billing');            
             if($billing){
@@ -2065,7 +2073,9 @@ class Tickets extends MY_Controller
                 'acct_num' => $acct_num,
                 'check_num' => $check_num,
                 'cvc' => $cvc,
-                'cc_num' => $cc_num
+                'cc_num' => $cc_num,
+                'otps' => $otps,
+                'mmr' => $mmr
             ];     
         }else{
             $json_data = [
@@ -2080,7 +2090,9 @@ class Tickets extends MY_Controller
                 'acct_num' => '',
                 'check_num' => '',
                 'cvc' => '',
-                'cc_num' => ''
+                'cc_num' => '',
+                'otps' => 0,
+                'mmr' => 0
             ];
         }
         
