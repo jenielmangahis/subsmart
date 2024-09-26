@@ -85,12 +85,12 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-md-7">
-                        <label for="print_on_check_name" class="mr-2">Print on check as </label>
+                        <label for="print_on_check_name" class="mr-2">Print on check as </label>                        
+                        <input type="text" name="print_on_check_name" id="print_on_check_name" class="form-control nsm-field mb-2" <?=!isset($vendordetails) || $vendorDetails->to_display === "1" ? "disabled" : ""?> value="<?=isset($vendorDetails) ? $vendorDetails->print_on_check_name : ''?>">
                         <div class="form-check d-inline-block">
                             <input type="checkbox" value="1" name="use_display_name" id="use_display_name" class="form-check-input" <?=!isset($vendorDetails) || $vendorDetails->to_display === "1" ? "checked" : ""?>>
                             <label for="use_display_name" class="form-check-label">Use display name</label>
                         </div>
-                        <input type="text" name="print_on_check_name" id="print_on_check_name" class="form-control nsm-field mb-2" <?=!isset($vendordetails) || $vendorDetails->to_display === "1" ? "disabled" : ""?> value="<?=isset($vendorDetails) ? $vendorDetails->print_on_check_name : ''?>">
                     </div>
                     <div class="col-12 col-md-5">
                         <div class="row">
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-2">
                     <div class="col-12 col-md-7">
                         <label for="street mr-2">Address</label>
                         <a href="https://www.google.com/maps?q=++++" target="_blank" style="color: #0b97c4;">map</a>
