@@ -12142,55 +12142,56 @@ class Accounting_modals extends MY_Controller
             ];
         }
         $uniqueNames = [];
-
         
-        foreach ($customers as $customer) {
-            $name = $customer->first_name . ' ' . $customer->last_name;
-            if (!in_array($name, $uniqueNames)) {
-                // Add $name to $uniqueNames
-                $uniqueNames[] = $name;
-            if ($search !== null && $search !== '') {
-                $stripos = stripos($name, $search);
-                if ($stripos !== false) {
-                    $searched = substr($name, $stripos, strlen($search));
-                    if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'contact' || $field === 'report') {
-                        if ($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Customers') {
-                            $choices['results'][array_key_last($choices['results'])]['text'] = 'Customers';
-                        } else {
-                            $choices['results'][]['text'] = 'Customers';
+        foreach ($customers as $customer) {     
+            if($customer->first_name != "" && $customer->last_name != "") {
+                $name = $customer->first_name . ' ' . $customer->last_name;
+                if (!in_array($name, $uniqueNames)) {
+                    // Add $name to $uniqueNames
+                    $uniqueNames[] = $name;
+                    if ($search !== null && $search !== '') {
+                        $stripos = stripos($name, $search);
+                        if ($stripos !== false) {
+                            $searched = substr($name, $stripos, strlen($search));
+                            if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'contact' || $field === 'report') {
+                                if ($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Customers') {
+                                    $choices['results'][array_key_last($choices['results'])]['text'] = 'Customers';
+                                } else {
+                                    $choices['results'][]['text'] = 'Customers';
+                                }
+                                $choices['results'][array_key_last($choices['results'])]['children'][] = [
+                                    'id' => 'customer-'.$customer->prof_id,
+                                    'text' => str_replace($searched, "<strong>$searched</strong>", $name)
+                                ];
+                            } else {
+                            
+                                $choices['results'][] = [
+                                    'id' => $customer->prof_id,
+                                    'text' => str_replace($searched, "<strong>$searched</strong>", $name)
+                                ];
+                            
+                            }
                         }
-                        $choices['results'][array_key_last($choices['results'])]['children'][] = [
-                            'id' => 'customer-'.$customer->prof_id,
-                            'text' => str_replace($searched, "<strong>$searched</strong>", $name)
-                        ];
                     } else {
-                       
-                        $choices['results'][] = [
-                            'id' => $customer->prof_id,
-                            'text' => str_replace($searched, "<strong>$searched</strong>", $name)
-                        ];
-                    
+                        if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'contact' || $field === 'report') {
+                            if ($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Customers') {
+                                $choices['results'][array_key_last($choices['results'])]['text'] = 'Customers';
+                            } else {
+                                $choices['results'][]['text'] = 'Customers';
+                            }
+                            $choices['results'][array_key_last($choices['results'])]['children'][] = [
+                                'id' => 'customer-'.$customer->prof_id,
+                                'text' => $name
+                            ];
+                        } else {
+                        
+                            $choices['results'][] = [
+                                'id' => $customer->prof_id,
+                                'text' => $name
+                            ];
+                        
                     }
                 }
-            } else {
-                if ($field === 'payee' || $field === 'received-from' || $field === 'names' || $field === 'contact' || $field === 'report') {
-                    if ($choices['results'] !== null && $choices['results'][array_key_last($choices['results'])]['text'] === 'Customers') {
-                        $choices['results'][array_key_last($choices['results'])]['text'] = 'Customers';
-                    } else {
-                        $choices['results'][]['text'] = 'Customers';
-                    }
-                    $choices['results'][array_key_last($choices['results'])]['children'][] = [
-                        'id' => 'customer-'.$customer->prof_id,
-                        'text' => $name
-                    ];
-                } else {
-                  
-                    $choices['results'][] = [
-                        'id' => $customer->prof_id,
-                        'text' => $name
-                    ];
-                
-            }
             }
         }
         }
