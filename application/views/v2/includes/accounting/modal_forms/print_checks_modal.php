@@ -1,3 +1,9 @@
+<style>
+#printChecksModal .nsm-table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
+</style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
 <form id="modal-form">
@@ -116,8 +122,10 @@
                                     <table class="nsm-table" id="checks-table">
                                         <thead>
                                             <tr>
-                                                <td class="table-icon text-center">
-                                                    <input class="form-check-input select-all table-select" type="checkbox">
+                                                <td class="table-icon text-center" style="width:3%;">
+                                                    <div class="table-row-icon table-checkbox">
+                                                        <input class="form-check-input select-all table-select" type="checkbox">
+                                                    </div>
                                                 </td>
                                                 <td data-name="Date">DATE</td>
                                                 <td data-name="Type">TYPE</td>
