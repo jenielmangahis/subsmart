@@ -37,7 +37,7 @@
                                 <div class="col-12 col-md-8 grid-mb">
                                     <div class="row">
                                         <div class="col-12 col-md-3">
-                                            <label for="vendor">Vendor</label>
+                                            <label for="vendor">Vendor <span style="color:red;font-weight:bold">*</span></label>
                                             <select name="vendor_id" id="vendor" class="form-control nsm-field" required>
                                                 <?php if(isset($vendorCredit)) : ?>
                                                 <option value="<?=$vendorCredit->vendor_id?>">
@@ -77,24 +77,30 @@
                                     </div>
                                 </div>
                                 <?php endif; ?>
-                                <div class="col-12 col-md-2">
-                                    <label for="mailing_address">Mailing address</label>
-                                    <textarea name="mailing_address" id="mailing_address" class="form-control nsm-field mb-2"><?=isset($vendorCredit) ? str_replace("<br />", "", $vendorCredit->mailing_address) : ''?></textarea>
-                                </div>
-                                <div class="col-12 col-md-2">
-                                    <label for="payment_date">Payment date</label>
-                                    <div class="nsm-field-group calendar">
-                                        <input type="text" name="payment_date" id="payment_date" class="form-control nsm-field mb-2 date" value="<?=isset($vendorCredit) ? ($vendorCredit->payment_date !== "" && !is_null($vendorCredit->payment_date) ? date("m/d/Y", strtotime($vendorCredit->payment_date)) : "") : date("m/d/Y")?>" required>
+                                <div class="col-12 col-md-6">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4">
+                                                <label for="mailing_address">Mailing address</label>
+                                                <textarea name="mailing_address" id="mailing_address" class="form-control nsm-field mb-2" style="height: 83% !important"><?=isset($vendorCredit) ? str_replace("<br />", "", $vendorCredit->mailing_address) : ''?></textarea>
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <label for="payment_date">Payment date</label>
+                                            <div class="nsm-field-group calendar">
+                                                <input type="text" name="payment_date" id="payment_date" class="form-control nsm-field mb-2 date" value="<?=isset($vendorCredit) ? ($vendorCredit->payment_date !== "" && !is_null($vendorCredit->payment_date) ? date("m/d/Y", strtotime($vendorCredit->payment_date)) : "") : date("m/d/Y")?>" required>
+                                            </div>
+
+                                            <label for="ref_no">Ref no.</label>
+                                            <input type="text" name="ref_no" id="ref_no" class="form-control nsm-field mb-2" <?=isset($vendorCredit) ? "value='$vendorCredit->ref_no'" : ''?>>
+                                            
+                                            <label for="permit_number">Permit no.</label>
+                                            <input type="number" class="form-control nsm-field mb-2" name="permit_number" id="permit_number" <?=isset($vendorCredit) ? "value='$vendorCredit->permit_no'" : ''?>> 
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="memo">Memo</label>
+                                            <textarea name="memo" id="memo" class="nsm-field form-control mb-2" style="height: 83% !important"><?=isset($vendorCredit) ? str_replace("<br />", "", $vendorCredit->memo) : ''?></textarea>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2"></div>
-                                <div class="col-12 col-md-2">
-                                    <label for="ref_no">Ref no.</label>
-                                    <input type="text" name="ref_no" id="ref_no" class="form-control nsm-field mb-2" <?=isset($vendorCredit) ? "value='$vendorCredit->ref_no'" : ''?>>
-                                    
-                                    <label for="permit_number">Permit no.</label>
-                                    <input type="number" class="form-control nsm-field mb-2" name="permit_number" id="permit_number" <?=isset($vendorCredit) ? "value='$vendorCredit->permit_no'" : ''?>> 
-                                </div>
+                                </div>      
                             </div>
 
                             <div class="row">
@@ -135,25 +141,28 @@
                                                         <thead>
                                                             <tr>
                                                                 <td data-name="Num">#</td>
-                                                                <td data-name="Expense Name">EXPENSE NAME</td>
-                                                                <td data-name="Category">CATEGORY</td>
+                                                                <td data-name="Customer"  style="width: 15%;">CUSTOMER</td>
+                                                                <td data-name="Expense Name"  style="width: 15%;">EXPENSE NAME</td>
+                                                                <td data-name="Category" style="width: 15%;">CATEGORY</td>
                                                                 <td data-name="Description">DESCRIPTION</td>
-                                                                <td data-name="Amount">AMOUNT</td>
+                                                                <td data-name="Amount"  style="width: 10%;">AMOUNT</td>
                                                                 <td data-name="Billable">BILLABLE</td>
-                                                                <td data-name="Markup %">MARKUP %</td>
+                                                                <td data-name="Markup %"  style="width: 10%;">MARKUP %</td>
                                                                 <td data-name="Tax">TAX</td>
-                                                                <td data-name="Customer">CUSTOMER</td>
                                                                 <td data-name="Manage"></td>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr>
+                                                            <tr >
                                                                 <td>1</td>
+                                                                <td>
+                                                                    <select name="category_customer[]" class="nsm-field form-control"></select>
+                                                                </td>
                                                                 <td>
                                                                     <select name="expense_account[]" class="nsm-field form-control" required></select>
                                                                 </td>
                                                                 <td>
-                                                                    <select name="category[]" class="nsm-field form-control">
+                                                                    <select name="category[]" class="nsm-field form-control" srt>
                                                                         <option disabled selected>&nbsp;</option>
                                                                         <option value="fixed">Fixed Cost</option>
                                                                         <option value="variable">Variable Cost</option>
@@ -173,9 +182,7 @@
                                                                         <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1">
                                                                     </div>
                                                                 </td>
-                                                                <td>
-                                                                    <select name="category_customer[]" class="nsm-field form-control"></select>
-                                                                </td>
+                                                               
                                                                 <td>
                                                                     <button type="button" class="nsm-button delete-row">
                                                                         <i class='bx bx-fw bx-trash'></i>
@@ -187,6 +194,14 @@
                                                             <?php foreach($categories as $category) : ?>
                                                             <tr>
                                                                 <td><?=$count?></td>
+                                                                <td>
+                                                                    <select name="category_customer[]" class="nsm-field form-control">
+                                                                        <option value="<?=$category->customer_id?>">
+                                                                            <?php $customer = $this->accounting_customers_model->get_by_id($category->customer_id); ?>
+                                                                            <?=$customer->first_name . ' ' . $customer->last_name?>
+                                                                        </option>
+                                                                    </select>
+                                                                </td>
                                                                 <td>
                                                                     <select name="expense_account[]" class="nsm-field form-control" required>
                                                                         <option value="<?=$category->expense_account_id?>"><?=$this->chart_of_accounts_model->getName($category->expense_account_id)?></option>
@@ -213,14 +228,7 @@
                                                                         <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1" <?=$category->tax === "1" ? 'checked' : ''?>>
                                                                     </div>
                                                                 </td>
-                                                                <td>
-                                                                    <select name="category_customer[]" class="nsm-field form-control">
-                                                                        <option value="<?=$category->customer_id?>">
-                                                                            <?php $customer = $this->accounting_customers_model->get_by_id($category->customer_id); ?>
-                                                                            <?=$customer->first_name . ' ' . $customer->last_name?>
-                                                                        </option>
-                                                                    </select>
-                                                                </td>
+                                                             
                                                                 <td>
                                                                     <button type="button" class="nsm-button delete-row">
                                                                         <i class='bx bx-fw bx-trash'></i>
@@ -299,16 +307,17 @@
                                                             <tr>
                                                                 <td data-name="Product/Service">PRODUCT/SERVICE</td>
                                                                 <td data-name="Type">TYPE</td>
-                                                                <td data-name="Location">LOCATION</td>
-                                                                <td data-name="Quantity">QUANTITY</td>
-                                                                <td data-name="Price">PRICE</td>
-                                                                <td data-name="Discount">DISCOUNT</td>
-                                                                <td data-name="Tax">TAX (CHANGE IN %)</td>
-                                                                <td data-name="Total">TOTAL</td>
+                                                                <td data-name="Location" style="width: 15%;">LOCATION</td>
+                                                                <td data-name="Quantity" style="width: 10%;">QUANTITY</td>
+                                                                <td data-name="Price" style="width: 10%;">PRICE</td>
+                                                                <td data-name="Discount" style="width: 10%;">DISCOUNT</td>
+                                                                <td data-name="Tax" style="width: 10%;">TAX (CHANGE IN %)</td>
+                                                                <td data-name="Total" style="width: 15%;">TOTAL</td>
                                                                 <td data-name="Manage"></td>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
+                                                            
                                                             <?php if(isset($items) && count($items) > 0) : ?>
                                                                 <?php foreach($items as $item) : ?>
                                                                     <?php $itemDetails = $this->items_model->getItemById($item->item_id)[0];?>
@@ -365,21 +374,12 @@
                                     </div>
                                 </div>
 
-                                <div class="col-12 col-md-6">
-                                    <div class="row">
-                                        <div class="col-12 col-md-4">
-                                            <div class="form-group">
-                                                <label for="memo">Memo</label>
-                                                <textarea name="memo" id="memo" class="nsm-field form-control mb-2"><?=isset($vendorCredit) ? str_replace("<br />", "", $vendorCredit->memo) : ''?></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="row">
                                         <div class="col-12 col-md-6">
                                             <div class="attachments">
                                                 <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
                                                 <span>Maximum size: 20MB</span>
-                                                <div id="vendor-credit-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                <div id="vendor-credit-attachments" class="dropzone d-block justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                                     <div class="dz-message" style="margin: 20px;border">
                                                         <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                         <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
@@ -391,7 +391,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                             </div>
                         </div>
                     </div>
