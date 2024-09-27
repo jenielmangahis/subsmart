@@ -1581,7 +1581,7 @@ class Settings extends MY_Controller {
         $cid  = logged('company_id');
         $uid  = logged('id');
 
-        $settings = $this->CalendarSettings_model->getByCompanyId($company_id);             
+        $settings = $this->CalendarSettings_model->getByCompanyId($cid);             
         if( $settings ){
             $calendar_settings = [
                 'timezone' => $post['calendar_timezone'],

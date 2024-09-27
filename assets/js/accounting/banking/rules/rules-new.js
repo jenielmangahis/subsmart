@@ -201,7 +201,7 @@ $('#createRules #for-accounts').on('change', function() {
 $(document).on('change', '#createRules #conditions-table select[name="field[]"]', function() {
     if($(this).val() === 'amount') {
         $(this).closest('tr').find('select[name="condition[]"]').html(`<option value="doesnt-equal">Doesn't equal</option>
-        <option value="eqauls" selected>Equals</option>
+        <option value="equals" selected>Equals</option>
         <option value="is-greater-than">Is greater than</option>
         <option value="is-less-than">Is less than</option>`).trigger('change');
     } else {
