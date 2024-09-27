@@ -21,7 +21,22 @@ class EmailBroadcast extends MY_Controller
         $cid = logged('company_id');
         $default_name = logged('FName') . ' ' . logged('LName');
         $default_date = date("Y-m-d");
-        $emailBroadcasts = $this->EmailBroadcast_model->getAllByCompanyId($cid);   
+        $filter       = 'All';
+        $search       = '';
+        
+        if( $this->input->get('status') && $this->input->get('status') != '' ){
+            $filter = trim(ucfirst($this->input->get('status')));            
+            $conditions[] = ['field' => 'status', 'value' => $filter];
+            $emailBroadcasts = $this->EmailBroadcast_model->getAllByCompanyId($cid, $conditions);   
+        }else{
+            $conditions = [];
+            if( $this->input->get('search') ){                
+                $search = $this->input->get('search');
+                $conditions[] = ['field' => 'broadcast_name', 'value' => $search];
+                $conditions[] = ['field' => 'subject', 'value' => $search];
+            }
+            $emailBroadcasts = $this->EmailBroadcast_model->getAllByCompanyId($cid,$conditions);   
+        }        
         
         $emailBroadCastSummary = [];
         foreach( $emailBroadcasts as $b ){
@@ -30,6 +45,8 @@ class EmailBroadcast extends MY_Controller
             $emailBroadCastSummary[$b->id] = ['total_sent' => count($emailBroadcastSent), 'total_not_sent' => count($emailBroadcastNotSent)];
         }
 
+        $this->page_data['filter'] = $filter;
+        $this->page_data['search'] = $search;
         $this->page_data['optionStatus']    = $this->EmailBroadcast_model->optionStatus();
         $this->page_data['emailBroadcasts'] = $emailBroadcasts;
         $this->page_data['emailBroadCastSummary'] = $emailBroadCastSummary;
@@ -106,6 +123,10 @@ class EmailBroadcast extends MY_Controller
 
                 $this->EmailBroadcastRecipient_model->create($data);
             }
+
+            //Activity Logs
+            $activity_name = 'Email Broadcast : Created Email Broadcast ' . $post['broadcast_name']; 
+            createActivityLog($activity_name);
         }     
 
         $return = [
@@ -159,6 +180,10 @@ class EmailBroadcast extends MY_Controller
             if(!$mail->Send()){
                 $is_success = 1;
                 $msg = 'Cannot send email. Please try again later.';
+            }else{
+                //Activity Logs
+                $activity_name = 'Email Broadcast : Sent a test email broadcast with subject ' . $post['broadcast_subject']; 
+                createActivityLog($activity_name);
             }
         }     
 
@@ -197,6 +222,10 @@ class EmailBroadcast extends MY_Controller
 
             $is_success = 1;
             $msg = '';
+
+            //Activity Logs
+            $activity_name = 'Email Broadcast : Paused sending email broadcast ' . $emailBroadcast->broadcast_name; 
+            createActivityLog($activity_name);
         }
 
         $return = [
@@ -223,6 +252,82 @@ class EmailBroadcast extends MY_Controller
 
             $is_success = 1;
             $msg = '';
+
+            //Activity Logs
+            $activity_name = 'Email Broadcast : Resumed sending email broadcast ' . $emailBroadcast->broadcast_name; 
+            createActivityLog($activity_name);
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+
+    }
+
+    public function ajax_update_status_selected()
+    {
+        $this->load->model('EmailBroadcast_model');
+
+        $is_success = 0;
+        $msg = 'Nothing to update';
+
+        $post = $this->input->post();
+
+        $total_updated = 0;
+        $status = '';
+        if( $post['with_selected_action'] == 'pause' ){
+            $status = $this->EmailBroadcast_model->isDraft();
+        }elseif( $post['with_selected_action'] == 'resume' ){
+            $status = $this->EmailBroadcast_model->isOngoing();
+        }
+
+        foreach( $post['row_selected'] as $ebid ){
+            $emailBroadcast =  $this->EmailBroadcast_model->getById($ebid);
+            if( $emailBroadcast && $emailBroadcast->status != $this->EmailBroadcast_model->isCompleted() ){
+                
+                $data = ['status' => $status];
+                $this->EmailBroadcast_model->update($emailBroadcast->id, $data);
+                $total_updated++;
+            }
+        }
+
+        if( $total_updated > 0 ){
+            $is_success = 1;
+            $msg = 'Selected Email Broadcast was successfully updated';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_selected_broadcast()
+    {
+        $this->load->model('EmailBroadcast_model');
+        $this->load->model('EmailBroadcastRecipient_model');
+
+        $is_success = 0;
+        $msg = 'Nothing to delete';
+
+        $post = $this->input->post();
+
+        $total_deleted = 0;
+        foreach($post['row_selected'] as $bid){
+            $this->EmailBroadcastRecipient_model->deleteAllByEmailBroadcastId($bid);
+            $this->EmailBroadcast_model->delete($bid);
+
+            $total++;
+        }
+
+        if( $total > 0 ){
+            $is_success = 1;
+            $msg = 'Selected Email Broadcast was successfully deleted';
         }
 
         $return = [
@@ -250,6 +355,10 @@ class EmailBroadcast extends MY_Controller
             
             $is_success = 1;
             $msg = '';
+
+            //Activity Logs
+            $activity_name = 'Email Broadcast : Deleted email broadcast ' . $emailBroadcast->broadcast_name; 
+            createActivityLog($activity_name);
         }
 
         $return = [
@@ -276,6 +385,17 @@ class EmailBroadcast extends MY_Controller
 
         $this->page_data['emailTemplates'] = $emailTemplates;
         $this->load->view('v2/pages/email_broadcasts/ajax_email_template_list', $this->page_data);
+    }
+
+    public function ajax_recipient_summary()
+    {
+        $this->load->model('EmailBroadcastRecipient_model');
+
+        $post = $this->input->post();
+        $emailBroadcastRecipients = $this->EmailBroadcastRecipient_model->getAllByEmailBroadCastId($post['ebid']);
+
+        $this->page_data['emailBroadcastRecipients'] = $emailBroadcastRecipients;
+        $this->load->view('v2/pages/email_broadcasts/ajax_recipient_summary', $this->page_data);
     }
 
     public function ajax_get_email_broadcast()
@@ -377,6 +497,10 @@ class EmailBroadcast extends MY_Controller
 
                 $this->EmailBroadcastRecipient_model->create($data);
             }
+
+            //Activity Logs
+            $activity_name = 'Email Broadcast : Updated email broadcast ' . $eBroadcast->broadcast_name; 
+            createActivityLog($activity_name);
         }     
 
         $return = [
@@ -385,5 +509,10 @@ class EmailBroadcast extends MY_Controller
         ];
 
         echo json_encode($return);
+    }
+
+    public function ajax_delete_selected()
+    {
+
     }
 }
