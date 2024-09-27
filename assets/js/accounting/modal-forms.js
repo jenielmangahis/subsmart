@@ -7041,15 +7041,39 @@ $(function () {
             processData: false,
             contentType: false,
             success: function (result) {
-                console.log('result', result)
+                //console.log('result', result)
                 var res = JSON.parse(result);
 
                 var name = res.payee.display_name;
-
+                
                 dropdownEl.append(`<option value="${data.get('payee_type') + '-' + res.payee.id}" selected>${name}</option>`);
 
                 $('#modal-container #vendor-modal').modal('hide');
                 toast(true, 'Vendor successfully added!');
+
+            }
+        });
+
+        $('#modal-container #vendor-modal').modal('hide');
+    });
+
+    $(document).on('submit', '#add-vendor-form-sub', function (e) {
+        e.preventDefault();
+        var data = new FormData(this);
+        data.set('payee_type', 'vendor');
+
+        $.ajax({
+            url: base_url + 'accounting/add-full-payee-details',
+            data: data,
+            type: 'post',
+            processData: false,
+            contentType: false,
+            success: function (result) {
+
+                $('#modal-container #vendor-modal').modal('hide');
+                toast(true, 'Vendor successfully added!');
+
+                location.reload();
 
             }
         });
