@@ -10386,7 +10386,6 @@ const addTableLines = (e) => {
     var lastRowCount = parseInt(lastRow.html());
 
 
-
     for (var i = 0; i < rowCount; i++) {
         lastRowCount++;
         var newRowHtml = '';
@@ -10402,14 +10401,14 @@ const addTableLines = (e) => {
         }
 
         $(`table${table} tbody`).append(newRowHtml);
-        $(`table${table} tbody tr:last-child() td:first-child()`).html(lastRowCount);
+        $(`table${table} tbody tr:last-child() td:first-child()`).html(i+1);
 
         $(`table${table} tbody tr:last-child() td:first-child()`).trigger('click');
 
-        $(`table${table} tbody tr:last-child() .delete-row-btn`).on('click', function () {
-            $(this).closest('tr').remove();
-            updateRowCount(table);
-        });
+        // $(`table${table} tbody tr:last-child() .delete-row-btn`).on('click', function () {
+        //     $(this).closest('tr').remove();
+        //     updateRowCount(table);
+        // });
     }
 }
 

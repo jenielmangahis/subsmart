@@ -12,6 +12,7 @@ class Vendors_model extends MY_Model {
 
 	public function getAllByCompany($status = [1]) {
 		$this->db->where('company_id', logged('company_id'));
+		$this->db->where('f_name !=', '');
 		$this->db->where_in('status', $status);
 		$this->db->order_by('f_name', 'asc');
 		$query = $this->db->get($this->table);

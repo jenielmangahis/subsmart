@@ -5,7 +5,7 @@
 </style>
 <div class="full-screen-modal">
 <?php if(!isset($vendorDetails)) : ?>
-        <form id="add-vendor-form">
+        <form id="add-vendor-form-sub">
         <?php else : ?>
         <form action="<?= base_url('accounting/vendors/'.$vendorDetails->id.'/update'); ?>" method="post" class="form-validate" enctype="multipart/form-data">
         <?php endif; ?>

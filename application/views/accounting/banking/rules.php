@@ -127,11 +127,7 @@
                                         <td><?= $rule->apply_type; ?></td>
                                         <td>
                                             <?php if (!empty($rule->conditions)) { ?>
-                                                <ul>
-                                                    <?php foreach ($rule->conditions as $c) { ?>
-                                                        <li><?= $c; ?></li>
-                                                    <?php } ?>
-                                                </ul>
+                                                    <?php foreach ($rule->conditions as $condition) { ?><?php echo $condition . "<br />"; ?><?php } ?>                                            
                                             <?php } else { ?>
                                                 No conditions set
                                             <?php } ?>
@@ -212,6 +208,13 @@
         tableData.push(headers);
 
         $('#rulesTable tbody tr').each(function() {
+
+            function decodeHtml(html) {
+                var txt = document.createElement("textarea");
+                txt.innerHTML = html;
+                return txt.value;
+            }            
+
             var rowData = [];
             $(this).find('td:not(:first-child)').each(function(index) {
                 if (index < headers.length) {

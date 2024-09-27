@@ -201,7 +201,7 @@ $('#createRules #for-accounts').on('change', function() {
 $(document).on('change', '#createRules #conditions-table select[name="field[]"]', function() {
     if($(this).val() === 'amount') {
         $(this).closest('tr').find('select[name="condition[]"]').html(`<option value="doesnt-equal">Doesn't equal</option>
-        <option value="eqauls" selected>Equals</option>
+        <option value="equals" selected>Equals</option>
         <option value="is-greater-than">Is greater than</option>
         <option value="is-less-than">Is less than</option>`).trigger('change');
     } else {
@@ -810,3 +810,174 @@ $(document).on('submit', '#createRules #addRuleForm', function(e) {
         }
     });
 });
+
+$('#assign-to-payee').on('change', function() {
+    var assign_to_payee_value = $('#assign-to-payee').val();
+    var form = 'payee';
+    var modalTitle = 'New Name';
+
+    if(assign_to_payee_value == 'add-new') {
+        $("#payee-modal").modal('show');
+
+        $.get(base_url + `accounting/get-dropdown-modal/payee_modal?type=payee`, function (result) {
+            if (form !== 'item') {
+                $('#modal-container').append(result);
+            } else {
+                $('#modal-container').append(`<div class="full-screen-modal">${result}</div>`)
+            }
+
+            switch (form) {
+                case 'account':
+                    initAccountModal();
+                    break;
+                case 'item_category':
+                    $('#modal-container #item-category-modal').modal('show');
+                    break;
+                default:
+                    if (form !== 'item' && form !== 'payee' && form !== 'item_location') {
+                        $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).attr('id', `ajax-add-${form.replaceAll('_', '-')}`);
+                        $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).removeAttr('action');
+                        $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).removeAttr('method');
+                    }
+
+                    if (form === 'payee' && modalTitle !== '') {
+                        $('#modal-container #payee-modal .modal-title').html(modalTitle);
+                        $('#modal-container #payee-modal #payee_type').select2({
+                            minimumResultsForSearch: -1,
+                            dropdownParent: $('#modal-container #payee-modal')
+                        });
+
+                        $('#modal-container #payee-modal #customer-type').select2({
+                            minimumResultsForSearch: -1,
+                            dropdownParent: $('#modal-container #payee-modal')
+                        });
+                    }
+
+                    $(`#modal-container #${form.replaceAll('_', '-')}-modal`).attr('data-bs-backdrop', 'static');
+                    $(`#modal-container #${form.replaceAll('_', '-')}-modal`).attr('data-bs-keyboard', 'false');
+
+                    $(`#modal-container #${form.replaceAll('_', '-')}-modal`).modal('show');
+                    break;
+            }
+        });        
+    }
+});
+
+$('#assign-to-customer').on('change', function() {
+    var assign_to_payee_value = $('#assign-to-customer').val();
+    var form = 'payee';
+    var modalTitle = 'New Customer';
+
+    if(assign_to_payee_value == 'add-new') {
+        $("#payee-modal-customer").modal('show');
+
+        $.get(base_url + `accounting/get-dropdown-modal/payee_modal?type=customer`, function (result) {
+            if (form !== 'item') {
+                $('#modal-container').append(result);
+            } else {
+                $('#modal-container').append(`<div class="full-screen-modal">${result}</div>`)
+            }
+
+            switch (form) {
+                case 'account':
+                    initAccountModal();
+                    break;
+                case 'item_category':
+                    $('#modal-container #item-category-modal').modal('show');
+                    break;
+                default:
+                    if (form !== 'item' && form !== 'payee' && form !== 'item_location') {
+                        $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).attr('id', `ajax-add-${form.replaceAll('_', '-')}`);
+                        $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).removeAttr('action');
+                        $(`#modal-container #${form.replaceAll('_', '-')}-modal form`).removeAttr('method');
+                    }
+
+                    if (form === 'payee' && modalTitle !== '') {
+                        $('#modal-container #payee-modal-customer .modal-title').html(modalTitle);
+                        $('#modal-container #payee-modal-customer #payee_type').select2({
+                            minimumResultsForSearch: -1,
+                            dropdownParent: $('#modal-container #payee-modal-customer')
+                        });
+
+                        $('#modal-container #payee-modal-customer #customer-type').select2({
+                            minimumResultsForSearch: -1,
+                            dropdownParent: $('#modal-container #payee-modal-customer')
+                        });
+                    }
+
+                    $(`#modal-container #${form.replaceAll('_', '-')}-modal`).attr('data-bs-backdrop', 'static');
+                    $(`#modal-container #${form.replaceAll('_', '-')}-modal`).attr('data-bs-keyboard', 'false');
+
+                    $(`#modal-container #${form.replaceAll('_', '-')}-modal`).modal('show');
+                    break;
+            }
+        });        
+    }
+});
+
+$(document).on('submit', '#new-payee-form', function (e) {
+    e.preventDefault();
+
+    var data = new FormData(this);
+    var hasPayeeType = data.has('payee_type');
+    if (!data.has('payee_type')) {
+        var type = dropdownEl.attr('id') === 'person_tracking' ? 'vendor' : dropdownEl.attr('id');
+
+        if (type === undefined) {
+            type = dropdownEl.attr('name').includes('customer') ? 'customer' : type;
+            type = dropdownEl.attr('name').includes('vendor') ? 'vendor' : type;
+        }
+
+        data.append('payee_type', type);
+    }
+
+    $.ajax({
+        url: base_url + 'accounting/add-new-payee',
+        data: data,
+        type: 'post',
+        processData: false,
+        contentType: false,
+        success: function (result) {
+            var res = JSON.parse(result);
+
+            if (data.get('payee_type') === 'vendor') {
+                var name = res.payee.display_name;
+            } else {
+                var name = res.payee.first_name + ' ' + res.payee.last_name;
+            }
+
+            if (dropdownEl === null && $("#accountingRulesPageWrapper")) {
+                // for accounting rules page
+                $("[data-type='assignments.payee']").append(`<option value="${data.get('payee_type') + '-' + res.payee.id}" selected>${name}</option>`);
+                $("#assign-to-payee").append(`<option value="${data.get('payee_type') + '-' + res.payee.id}" selected>${name}</option>`);   
+            }
+
+            if (dropdownEl !== null) {
+                if (hasPayeeType) {
+                    dropdownEl.append(`<option value="${data.get('payee_type') + '-' + res.payee.id}" selected>${name}</option>`).trigger('change');
+                } else {
+                    dropdownEl.append(`<option value="${res.payee.id}" selected>${name}</option>`).trigger('change');
+                }
+            }
+
+            $("#payee-modal").modal('hide');
+            $("#payee-modal-customer").modal('hide');
+        }
+    });
+
+    $("#first_name").val('');
+    $("#last_name").val('');
+
+    $(".payee-firstname").val('');
+    $(".payee-lastname").val('');
+    
+    $("#customer_email").val('');
+    $("#business_name").val('');
+    $("#phone-m").val('');
+    $("#street").val('');
+    $("#city").val('');
+    $("#state").val('');
+    $("#zip_code").val('');
+    $("#country").val('');    
+    
+}); 
