@@ -132,7 +132,7 @@
                                                 <div class="grid-mb" <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? '' : 'style="display: none"'?>>
                                                     <label for="startTime">Start time</label>
                                                     <select name="start_time" id="startTime" class="form-control nsm-field">
-                                                        <option disabled selected>&nbsp;</option>
+                                                        <!-- <option disabled selected>&nbsp;</option>-->
                                                         <?php foreach ($dropdown['times'] as $time) :?>
                                                         <option value="<?=$time['value']?>" <?=isset($timeActivity) && substr($timeActivity->start_time, 0, -3) === $time['value'] ? 'selected' : ''?>><?=$time['display']?></option>
                                                         <?php endforeach; ?>
@@ -141,7 +141,7 @@
                                                 <div class="grid-mb" <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? '' : 'style="display: none"'?>>
                                                     <label for="endTime">End Time</label>
                                                     <select name="end_time" id="endTime" class="form-control nsm-field">
-                                                        <option disabled selected>&nbsp;</option>
+                                                        <!-- <option disabled selected>&nbsp;</option> -->
                                                         <?php foreach ($dropdown['times'] as $time) :?>
                                                         <option value="<?=$time['value']?>" <?=isset($timeActivity) && substr($timeActivity->end_time, 0, -3) === $time['value'] ? 'selected' : ''?>><?=$time['display']?></option>
                                                         <?php endforeach; ?>
