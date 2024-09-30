@@ -1,3 +1,24 @@
+<style>
+#depositModal .nsm-table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
+.span-input{
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+</style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
 <?php if(!isset($deposit)) : ?>
@@ -45,8 +66,9 @@
                                                 <?php endif; ?>
                                             </select>
                                         </div>
-                                        <div class="col-12 col-md-3 d-flex ">
-                                            <p style="align-self: flex-end; margin-bottom: 0px">Balance <span id="account-balance"><?= $balance ?></span></p>
+                                        <div class="col-12 col-md-3">
+                                            <label for="payment_account">Balance</label>
+                                            <span class="span-input text-end" style="align-self: flex-end; margin-bottom: 0px"><span id="account-balance"><?= $balance ?></span></span>
                                         </div>
                                         <div class="col-12 col-md-3">
                                             <label for="date">Date</label>
@@ -86,7 +108,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-12 col-md-6 grid-mb">
+                                <div class="col-12 col-md-4 grid-mb">
                                     <div id="label">
                                         <label for="tags">Tags</label>
                                         <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
@@ -114,7 +136,7 @@
                                         <div class="accordion-item">
                                             <h2 class="accordion-header">
                                                 <button class="accordion-button content-title collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-nsmartrac-payments" aria-expanded="true" aria-controls="collapse-nsmartrac-payments">
-                                                    nSmarTrac Payments
+                                                    Company Payments
                                                 </button>
                                             </h2>
                                             <div class="accordion-collapse collapse" id="collapse-nsmartrac-payments">
@@ -124,7 +146,9 @@
                                                         <thead>
                                                             <tr>
                                                                 <td class="table-icon text-center">
-                                                                    <input class="form-check-input select-all table-select" type="checkbox">
+                                                                    <div class="table-row-icon table-checkbox">
+                                                                        <input class="form-check-input select-all table-select" type="checkbox">
+                                                                    </div>                                                                    
                                                                 </td>
                                                                 <td data-name="Received From">RECEIVED FROM</td>
                                                                 <td data-name="Date">DATE</td>
@@ -168,19 +192,19 @@
                                                     <table class="nsm-table clickable" id="bank-deposit-table">
                                                         <thead>
                                                             <tr>
-                                                                <td data-name="Num">#</td>
-                                                                <td data-name="Received From">RECEIVED FROM</td>
-                                                                <td data-name="Account">ACCOUNT</td>
+                                                                <td data-name="Num" style="width:3%;text-align:center;">#</td>
+                                                                <td data-name="Received From" style="width:19%;">RECEIVED FROM</td>
+                                                                <td data-name="Account" style="width:19%;">ACCOUNT</td>
                                                                 <td data-name="Description">DESCRIPTION</td>
                                                                 <td data-name="Payment Method">PAYMENT METHOD</td>
-                                                                <td data-name="Ref no.">REF NO.</td>
-                                                                <td data-name="Amount">AMOUNT</td>
-                                                                <td data-name="Manage"></td>
+                                                                <td data-name="Ref no." style="width:10%;">REF NO.</td>
+                                                                <td data-name="Amount" style="width:10%;">AMOUNT</td>
+                                                                <td data-name="Manage" style="width:3%;"></td>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
-                                                                <td>1</td>
+                                                                <td style="text-align:center;">1</td>
                                                                 <td>
                                                                     <select name="received_from[]" class="form-control nsm-field"></select>
                                                                 </td>
@@ -203,7 +227,7 @@
                                                             <?php if(isset($funds) && count($funds) > 0) : $fundsAmount = 0.00;?>
                                                                 <?php foreach($funds as $fund) : $fundsAmount += floatval($fund->amount);?>
                                                                     <tr>
-                                                                        <td><?=$count?></td>
+                                                                        <td style="text-align:center;"><?=$count?></td>
                                                                         <td>
                                                                             <select name="received_from[]" class="form-control nsm-field">
                                                                                 <option value="<?=$fund->received_from_key.'-'.$fund->received_from_id?>"><?=$fund->name?></option>
@@ -234,7 +258,7 @@
 
                                                             <?php do {?>
                                                             <tr>
-                                                                <td><?=$count?></td>
+                                                                <td style="text-align:center;"><?=$count?></td>
                                                                 <td></td>
                                                                 <td></td>
                                                                 <td></td>
@@ -248,7 +272,7 @@
                                                                 </td>
                                                             </tr>
                                                             <?php $count++; } while ($count <= 2) ?>
-                                                            <tr>
+                                                            <!-- <tr>
                                                                 <td>2</td>
                                                                 <td></td>
                                                                 <td></td>
@@ -261,12 +285,12 @@
                                                                         <i class='bx bx-fw bx-trash'></i>
                                                                     </button>
                                                                 </td>
-                                                            </tr>
+                                                            </tr> -->
                                                         </tbody>
                                                         <tfoot>
                                                             <tr>
                                                                 <td colspan="8">
-                                                                    <div class="nsm-page-buttons page-buttons-container">
+                                                                    <div class="nsm-page-buttons page-buttons-container mt-2">
                                                                         <button type="button" class="nsm-button" onclick="addTableLines(event)" data-target="#bank-deposit-table">
                                                                             Add lines
                                                                         </button>
@@ -274,7 +298,7 @@
                                                                             Clear all lines
                                                                         </button>
                                                                     </div>
-                                                                    <div class="form-check">
+                                                                    <div class="form-check mt-4">
                                                                         <input type="checkbox" class="form-check-input" value="1" name="track_returns_for_customers" id="track-returns-for-customers">
                                                                         <label for="track-returns-for-customers" class="form-check-label">Track returns for customers</label>
                                                                     </div>
@@ -289,60 +313,52 @@
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <div class="row mt-4">
                                 <div class="col-12 col-md-6">
-                                    <div class="row">
-                                        <div class="col-12 col-md-4">
-                                            <label for="memo">Memo</label>
-                                            <textarea name="memo" id="memo" class="form-control nsm-field mb-2"><?=isset($deposit) ? str_replace("<br />", "", $deposit->memo) : ''?></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12 col-md-6">
-                                            <div class="attachments">
-                                                <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
-                                                <span>Maximum size: 20MB</span>
-                                                <div id="bank-deposit-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
-                                                    <div class="dz-message" style="margin: 20px;border">
-                                                        <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
-                                                        <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex justify-content-center align-items-center">
-                                                    <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
-                                                </div>
+                                    <label for="memo">Memo</label>
+                                    <textarea name="memo" id="memo" class="form-control nsm-field mb-2" style="height:150px !important;"><?=isset($deposit) ? str_replace("<br />", "", $deposit->memo) : ''?></textarea>
+                                    
+                                    <!-- <div class="attachments mt-2">
+                                        <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
+                                        <span>Maximum size: 20MB</span>
+                                        <div id="bank-deposit-attachments" class="dropzone d-block justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                            <div class="dz-message" style="margin: 20px;border">
+                                                <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                                <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
                                             </div>
                                         </div>
-                                    </div>
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
+                                        </div>
+                                    </div> -->
                                 </div>
                                 <div class="col-12 col-md-6">
                                     <div class="row">
-                                        <div class="col-12 col-md-8 offset-md-4">
+                                        <div class="col-12 col-md-8 offset-md-2">
                                             <table class="nsm-table" id="bank-deposit-cashback">
                                                 <tfoot>
                                                     <tr>
                                                         <td class="border-0">
                                                             <div class="row">
-                                                                <div class="col-12 col-md-4">
+                                                                <div class="col-12 col-md-6">
                                                                     <label for="cashBackTarget">Cash back goes to</label>
                                                                     <select name="cash_back_account" id="cash_back_account" class="form-control nsm-field" required>
                                                                         <?php if(isset($deposit) && !is_null($cash_back_account)) : ?>
                                                                         <option value="<?=$cash_back_account->id?>"><?=$cash_back_account->name?></option>
                                                                         <?php endif; ?>
                                                                     </select>
-                                                                </div>
-                                                                <div class="col-12 col-md-4">
-                                                                    <label for="cashBackMemo">Cash back memo</label>
-                                                                    <textarea name="cash_back_memo" id="cashBackMemo" class="form-control nsm-field"><?=isset($deposit) ? $deposit->cash_back_memo : ''?></textarea>
-                                                                </div>
-                                                                <div class="col-12 col-md-4">
-                                                                    <label for="cashBackAmount">Cash back amount</label>
+
+                                                                    <label for="cashBackAmount" class="mt-2">Cash back amount</label>
                                                                     <input type="number" name="cash_back_amount" value="<?=isset($deposit) && $deposit->cash_back_amount !== "0" ? number_format(floatval($deposit->cash_back_amount), 2, '.', ',') : ''?>" id="cashBackAmount" step=".01" onchange="convertToDecimal(this)" class="form-control nsm-field text-end">
+                                                                </div>
+                                                                <div class="col-12 col-md-6">
+                                                                    <label for="cashBackMemo">Cash back memo</label>
+                                                                    <textarea name="cash_back_memo" id="cashBackMemo" style="height:150px !important;" class="form-control nsm-field"><?=isset($deposit) ? $deposit->cash_back_memo : ''?></textarea>
                                                                 </div>
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    <tr>
+                                                    <tr style="display:none;">
                                                         <td>
                                                             <div class="row">
                                                                 <div class="col-12 col-md-4"></div>
