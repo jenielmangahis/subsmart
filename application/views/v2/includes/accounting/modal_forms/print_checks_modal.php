@@ -3,6 +3,21 @@
     background-color:#6a4a86;
     color:#ffffff;
 }
+.span-input{
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
 </style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
@@ -22,32 +37,40 @@
                                 <div class="col-md-8">
                                     <div class="row">
                                         <div class="col-md-3">
+                                            <label for="payment_account">Accounts</label>
                                             <select name="payment_account" id="payment_account" class="nsm-field form-control mb-2" required>
                                                 <option value="<?=$account->id?>"><?=$account->name?></option>
                                             </select>
                                         </div>
+                                        <div class="col-12 col-md-3">
+                                            <label for="payment_account">Balance</label>
+                                            <span class="span-input text-end" style="align-self: flex-end; margin-bottom: 0px"><span id="account-balance"><?= $balance ?></span></span>                                            
+                                        </div>
+                                        <div class="col-12 col-md-3">
+                                            <label for="payment_account"><span id="selected-checks">0</span> Checks Selected</label>
+                                            <span class="span-input text-end" style="align-self: flex-end; margin-bottom: 0px"><span id="selected-checks-total">$0.00</span></span>
+                                        </div>
+                                        <!-- 
                                         <div class="col-md-2 d-flex">
                                             <p style="align-self: center; margin: 0">Balance <span id="account-balance"><?=$balance?></span></p>
                                         </div>
                                         <div class="col-md-2 d-flex">
                                             <p style="align-self: center; margin: 0"><span id="selected-checks">0</span> checks selected <span id="selected-checks-total">$0.00</span></p>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
-                                <div class="col-md-4 text-end">
-                                    <button class="nsm-button mb-2" type="button" id="add-check-button">Add check</button>
-                                </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 grid-mb d-flex align-items-end">
+                            <div class="row mt-4">
+                                <div class="col-md-4 grid-mb d-flex align-items-end">
+                                    <button class="nsm-button mb-2" type="button" id="add-check-button">Add check</button>
                                     <button class="nsm-button" type="button" id="remove-from-list">
                                         Remove from list
                                     </button>
                                 </div>
-                                <div class="col-md-6 grid-mb text-end">
+                                <div class="col-md-8 grid-mb text-end">
                                     <div class="d-inline-block">
-                                        <label for="starting-check-no" class="float-start">Starting check no.</label>
-                                        <input type="number" class="nsm-field form-control" min="0" value="<?=$startingCheckNo?>" id="starting-check-no" required>
+                                        <label for="starting-check-no" class="float-start">Starting check no.</label><br />
+                                        <input type="number" class="nsm-field form-control" style="width:200px;" min="0" value="<?=$startingCheckNo?>" id="starting-check-no" required>
                                     </div>
                                     <?php if(!is_null($printSettings) && $printSettings->check_type === "2") : ?>
                                     <div class="d-inline-block">
@@ -60,8 +83,8 @@
                                     </div>
                                     <?php endif; ?>
                                     <div class="dropdown d-inline-block">
-                                        <label for="sort-by" class="float-start">Sort by</label>
-                                        <select id="sort-by" class="nsm-field form-select" required>
+                                        <label for="sort-by" class="float-start">Sort by</label><br />
+                                        <select id="sort-by" class="nsm-field form-control" required style="width:222px !important;">
                                             <option value="payee">Sort by Payee</option>
                                             <option selected value="order-created">Sort by Order created</option>
                                             <option value="date-payee">Sort by Date / Payee</option>
