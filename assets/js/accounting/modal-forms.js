@@ -6282,6 +6282,100 @@ $(function () {
         });
     });
 
+    //new modal submit container - start
+    $(document).on('click', '#item-modal .footer-button #save-and-close', function (e) {
+        e.preventDefault();
+
+        var formIsValid = true;
+        $('#item-modal form').find('input[required], textarea[required]').each(function () {
+            if (!$(this).val().trim()) {
+
+                formIsValid = false;
+                return false; // Exit the loop early
+
+            }
+        });
+        $('#item-modal form').find('input[required], textarea[required]').each(function () {
+            if (!$(this).val().trim()) {
+                $(this).addClass('reset-indicator');
+            }
+        });
+
+        // If any required field is empty, show SweetAlert and prevent form submission
+        if (!formIsValid) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill in all required fields.',
+                confirmButtonColor: '#6a4a86',
+            });
+            return false; // Prevent further execution
+        }
+
+        // If all required fields are filled, hide the modal and submit the form
+        $('#item-modal').modal('hide');
+        $('#item-modal form').trigger('submit');
+    });
+
+    $(document).on('click', '#item-modal .footer-button #save-and-new', function (e) {
+        e.preventDefault();
+
+        var form = $('#product-item-form');
+        var formData = new FormData(form[0]); // Use FormData to handle file uploads
+        var actionUrl = form.attr('action');
+
+        // Perform form validation before proceeding
+        if (!form[0].checkValidity()) {
+            form.addClass('was-validated');
+            return false;
+        }
+
+        // Submit the form via AJAX
+        $.ajax({
+            url: actionUrl,
+            type: 'POST',
+            data: formData,
+            processData: false, // Prevent jQuery from automatically processing data
+            contentType: false, // Ensure proper content type for file uploads
+            success: function (response) {
+                // Display success message
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Form submitted successfully.',
+                    confirmButtonColor: '#6a4a86',
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    // Reload table content using AJAX
+                    $.ajax({
+                        url: '/accounting/sales/products_and_services/item_forms/product.php', // Specify the endpoint to fetch updated data
+                        type: 'GET',
+                        success: function (tableHtml) {
+                            // Replace table content with updated data
+                            $('#imported_items').html(tableHtml);
+                        },
+                        error: function (xhr, status, error) {
+                            console.log('Error fetching table data:', error);
+                        }
+                    });
+
+                    // Reset form fields and remove validation state
+                    form.trigger('reset').removeClass('was-validated');
+                });
+            },
+            error: function (xhr, status, error) {
+                // Display error message
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong. Please try again.',
+                    confirmButtonColor: '#6a4a86'
+                });
+            }
+        });
+    });    
+    //new modal submit container - start
 
     $(document).on('submit', '#item-category-modal form', function (e) {
         e.preventDefault();

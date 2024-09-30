@@ -88,6 +88,8 @@
                                                 <?php endif; ?>
                                             </select>
                                         </div>
+                                    </div>
+                                    <div class="col-12 col-md-2">
                                         <div class="grid-mb">
                                             <label for="customer">Customer</label>
                                             <select name="customer" id="customer" class="form-control nsm-field" required>
@@ -97,6 +99,17 @@
                                                 <?php endif; ?>
                                             </select>
                                         </div>
+                                    </div>
+                                    <div class="col-12 col-md-2">
+                                        <div class="grid-mb <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? 'd-none' : ''?>">
+                                            <label for="time"><?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? 'Break' : 'Time'?></label>
+                                            <input type="text" name="time" id="breaktime-a" class="form-control nsm-field" placeholder="hh:mm" required value="<?=isset($timeActivity) && !is_null($timeActivity->start_time) ? substr($timeActivity->break_duration, 0, -3) : substr($timeActivity->time, 0, -3)?>">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12 col-md-2">
                                         <div class="grid-mb" <?=!is_null($timesheetSettings) && $timesheetSettings->service === "0" ? 'style="display: none"' : ''?>>
                                             <label for="service">Service</label>
                                             <select name="service" id="service" class="form-control nsm-field" required>
@@ -106,59 +119,75 @@
                                                 <?php endif; ?>
                                             </select>
                                         </div>
+                                    </div>
+                                    <div class="col-12 col-md-2">
                                         <?php if(is_null($timesheetSettings) || $timesheetSettings->billable === "1") : ?>
-                                        <div class="row">
-                                            <div class="col-4 d-flex align-items-center">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="checkbox" name="billable" id="billable" value="1" onchange="showHiddenFields(this)" <?=isset($timeActivity) && $timeActivity->billable === "1" ? 'checked' : ''?>>
-                                                    <label class="form-check-label" for="billable">Billable(/hr)</label>
+                                            <div class="row" style="margin-top: 18px">
+                                                <div class="col-4">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="checkbox" name="billable" id="billable" value="1" onchange="showHiddenFields(this)" <?=isset($timeActivity) && $timeActivity->billable === "1" ? 'checked' : ''?>>
+                                                        <label class="form-check-label" for="billable">Billable(/hr)</label>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-4">
-                                                <input type="number" name="hourly_rate" id="hourlyRate" step=".01" class="form-control nsm-field text-end" <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'style="display: none"'?> value="<?=isset($timeActivity) && $timeActivity->billable === "1" ? number_format(floatval(str_replace(',', '', $timeActivity->hourly_rate)), 2) : '0.00'?>" onchange="convertToDecimal(this)">
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="form-check" <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'style="display: none"'?>>
-                                                    <input type="checkbox" name="taxable" id="taxable" class="form-check-input" value="1" <?=isset($timeActivity) && $timeActivity->taxable === "1" ? 'checked' : ''?>>
-                                                    <label for="taxable" class="form-check-label">Taxable</label>
+                                            <div class="row">
+                                                <div class="col-5">
+                                                    <input type="number" name="hourly_rate" id="hourlyRate" step=".01" class="form-control nsm-field" <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'style="display: none"'?> value="<?=isset($timeActivity) && $timeActivity->billable === "1" ? number_format(floatval(str_replace(',', '', $timeActivity->hourly_rate)), 2) : '0.00'?>" onchange="convertToDecimal(this)">
                                                 </div>
+                                                <div class="col-4">  
+                                                    <div class="form-check" id="taxableCheck" <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'style="display: none"'?>>
+                                                        <input type="checkbox" name="taxable" id="taxable" class="form-check-input" value="1" <?=isset($timeActivity) && $timeActivity->taxable === "1" ? 'checked' : ''?>>
+                                                        <label for="taxable" class="form-check-label">Taxable</label>
+                                                    </div>
+                                                </div>                                                
                                             </div>
-                                        </div>
                                         <?php endif; ?>
                                     </div>
+                                    <div class="col-12 col-md-2">
+                                        <div class="grid-mb <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? '' : 'd-none'?>">
+                                            <label for="break">Break</label>
+                                            <input type="text" name="break" id="breaktime-b" class="form-control nsm-field" placeholder="hh:mm" value="<?=isset($timeActivity) ? substr($timeActivity->break_duration, 0, -3) : ''?>">
+                                        </div>                                        
+                                        <div class="grid-mb" <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? '' : 'style="display: none"'?>>
+                                            <label for="startTime">Start time</label>
+                                            <select name="start_time" id="startTime" class="form-control nsm-field">
+                                                <!-- <option disabled selected>&nbsp;</option>-->
+                                                <?php foreach ($dropdown['times'] as $time) :?>
+                                                <option value="<?=$time['value']?>" <?=isset($timeActivity) && substr($timeActivity->start_time, 0, -3) === $time['value'] ? 'selected' : ''?>><?=$time['display']?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                        <div class="grid-mb" <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? '' : 'style="display: none"'?>>
+                                            <label for="endTime">End Time</label>
+                                            <select name="end_time" id="endTime" class="form-control nsm-field">
+                                                <!-- <option disabled selected>&nbsp;</option> -->
+                                                <?php foreach ($dropdown['times'] as $time) :?>
+                                                <option value="<?=$time['value']?>" <?=isset($timeActivity) && substr($timeActivity->end_time, 0, -3) === $time['value'] ? 'selected' : ''?>><?=$time['display']?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-12 col-md-4">
+                                        <div class="grid-mb">
+                                            <label for="description">Description</label>
+                                            <textarea name="description" id="description" rows="4" class="form-control nsm-field"><?=$timeActivity->description?></textarea>
+                                        </div> 
+                                    </div>
+                                    <div class="col-12 col-md-2">
+                                        &nbsp;
+                                    </div>
+                                    <div class="col-12 col-md-2">
+                                        &nbsp;
+                                    </div>
+                                </div>
+
+                                <div class="row">
                                     <div class="col-12 col-md-4 offset-md-2">
                                         <div class="row">
                                             <div class="col-12 col-md-6">
-                                                <div class="grid-mb" <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? '' : 'style="display: none"'?>>
-                                                    <label for="startTime">Start time</label>
-                                                    <select name="start_time" id="startTime" class="form-control nsm-field">
-                                                        <!-- <option disabled selected>&nbsp;</option>-->
-                                                        <?php foreach ($dropdown['times'] as $time) :?>
-                                                        <option value="<?=$time['value']?>" <?=isset($timeActivity) && substr($timeActivity->start_time, 0, -3) === $time['value'] ? 'selected' : ''?>><?=$time['display']?></option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                                <div class="grid-mb" <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? '' : 'style="display: none"'?>>
-                                                    <label for="endTime">End Time</label>
-                                                    <select name="end_time" id="endTime" class="form-control nsm-field">
-                                                        <!-- <option disabled selected>&nbsp;</option> -->
-                                                        <?php foreach ($dropdown['times'] as $time) :?>
-                                                        <option value="<?=$time['value']?>" <?=isset($timeActivity) && substr($timeActivity->end_time, 0, -3) === $time['value'] ? 'selected' : ''?>><?=$time['display']?></option>
-                                                        <?php endforeach; ?>
-                                                    </select>
-                                                </div>
-                                                <div class="grid-mb <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? 'd-none' : ''?>">
-                                                    <label for="time"><?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? 'Break' : 'Time'?></label>
-                                                    <input type="text" name="time" id="breaktime-a" class="form-control nsm-field" placeholder="hh:mm" required value="<?=isset($timeActivity) && !is_null($timeActivity->start_time) ? substr($timeActivity->break_duration, 0, -3) : substr($timeActivity->time, 0, -3)?>">
-                                                </div>
-                                                <div class="grid-mb <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? '' : 'd-none'?>">
-                                                    <label for="break">Break</label>
-                                                    <input type="text" name="break" id="breaktime-b" class="form-control nsm-field" placeholder="hh:mm" value="<?=isset($timeActivity) ? substr($timeActivity->break_duration, 0, -3) : ''?>">
-                                                </div>
-                                                <div class="grid-mb">
-                                                    <label for="description">Description</label>
-                                                    <textarea name="description" id="description" class="form-control nsm-field"><?=$timeActivity->description?></textarea>
-                                                </div>
                                                 <?php if(isset($timeActivity)) : ?>
                                                 <div id="summary">
                                                     <label for="summary">Summary</label>
@@ -169,8 +198,9 @@
                                         </div>
                                     </div>                                    
                                 </div>
+                                
                                 <div class="row mt-4">
-                                    <div class="col-12 col-md-4">
+                                    <div class="col-12 col-md-6">
                                         <div class="attachments">
                                             <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
                                             <span>Maximum size: 20MB</span>
@@ -227,19 +257,29 @@
         
     </form>
     <script>
-           $(document).ready(function(){
+        $(document).ready(function(){
 
-                $('#time').datetimepicker({
-                    format: 'LT'
-                });
-
-                $('#breaktime-a').datetimepicker({
-                    format: 'LT'
-                });
-
-                $('#breaktime-b').datetimepicker({
-                    format: 'LT'
-                });
+            $('#time').datetimepicker({
+                format: 'LT'
             });
+
+            $('#breaktime-a').datetimepicker({
+                format: 'LT'
+            });
+
+            $('#breaktime-b').datetimepicker({
+                format: 'LT'
+            });
+           
+            $('#billable').click(function() {
+                if (!$(this).is(':checked')) {
+                    $("#hourlyRate").hide();
+                    $("#taxableCheck").hide();                    
+                } else {
+                    $("#hourlyRate").show();
+                    $("#taxableCheck").show();
+                }
+            });            
+        });
     </script>
 </div>

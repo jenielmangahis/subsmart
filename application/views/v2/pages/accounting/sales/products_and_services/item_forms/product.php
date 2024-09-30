@@ -80,7 +80,7 @@
                         <table class="nsm-table" id="storage-locations">
                             <thead>
                                 <tr>
-                                    <th width="70%">LOCATION</th>
+                                    <th width="60%">LOCATION</th>
                                     <th>QTY</th>
                                     <th></th>
                                 </tr>
@@ -197,8 +197,49 @@
                 </tr>
             </tbody>
         </table>
+    <div>
+        
+    <div class="footer-button">
+        <div class="btn-group dropup float-end" role="group">
+            <button type="button" class="nsm-button success" id="save-and-close">
+                Save and close
+            </button>
+            <div class="btn-group" role="group">
+                <button type="submit" class="nsm-button success dropdown-toggle" style="margin-left: 0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="bx bx-fw bx-chevron-up text-white"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#" id="save-and-new">Save and new</a>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function() {
+                $('select[name="location_id[]"]').select2({
+                    ajax: {
+                        url: base_url + 'accounting/get-dropdown-choices',
+                        dataType: 'json',
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public',
+                                field: 'item-locations',
+                                modal: 'item-modal'
+                            }
+            
+                            // Query parameters will be ?search=[term]&type=public&field=[type]
+                            return query;
+                        }
+                    },
+                    templateResult: formatResult,
+                    templateSelection: optionSelect,
+                    dropdownParent: $('#modal-container #item-modal')
+                });
+            });
+        </script>
     </div>
-    <div class="modal-footer position-fixed w-100 bottom-0 bg-white">
+
+    <!--<div class="modal-footer position-fixed w-100 bottom-0 bg-white">
         <div class="btn-group dropup float-end" role="group">
             <button type="submit" class="nsm-button success" id="save-and-close">
                 Save and close
@@ -214,28 +255,28 @@
         </div>
         <script>
             $(document).ready(function() {
-             $('select[name="location_id[]"]').select2({
-            ajax: {
-                url: base_url + 'accounting/get-dropdown-choices',
-                dataType: 'json',
-                data: function (params) {
-                    var query = {
-                        search: params.term,
-                        type: 'public',
-                        field: 'item-locations',
-                        modal: 'item-modal'
-                    }
-    
-                    // Query parameters will be ?search=[term]&type=public&field=[type]
-                    return query;
-                }
-            },
-            templateResult: formatResult,
-            templateSelection: optionSelect,
-            dropdownParent: $('#modal-container #item-modal')
-        });
-    });
+                $('select[name="location_id[]"]').select2({
+                    ajax: {
+                        url: base_url + 'accounting/get-dropdown-choices',
+                        dataType: 'json',
+                        data: function (params) {
+                            var query = {
+                                search: params.term,
+                                type: 'public',
+                                field: 'item-locations',
+                                modal: 'item-modal'
+                            }
+            
+                            // Query parameters will be ?search=[term]&type=public&field=[type]
+                            return query;
+                        }
+                    },
+                    templateResult: formatResult,
+                    templateSelection: optionSelect,
+                    dropdownParent: $('#modal-container #item-modal')
+                });
+            });
         </script>
-    </div>
+    </div> -->
 
 </form>

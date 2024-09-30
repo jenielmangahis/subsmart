@@ -127,8 +127,25 @@
             </tr>
         </tbody>
     </table>
+
+    <div class="footer-button">
+        <div class="btn-group dropup float-end" role="group">
+            <button type="button" class="nsm-button success" id="save-and-close">
+                Save and close
+            </button>
+            <div class="btn-group" role="group">
+                <button type="button" class="nsm-button success dropdown-toggle" style="margin-left: 0" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="bx bx-fw bx-chevron-up text-white"></i>
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#" id="save-and-new">Save and new</a>
+                </div>
+            </div>
+        </div>
+    </div>    
 </div>
-<div class="modal-footer position-fixed w-100 bottom-0 bg-white">
+
+<!-- <div class="modal-footer position-fixed w-100 bottom-0 bg-white">
     <div class="btn-group dropup float-end" role="group">
         <button type="button" class="nsm-button success" id="save-and-close">
             Save and close
@@ -142,5 +159,5 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 </form>
