@@ -149,11 +149,11 @@
                                                 </div>
                                                 <div class="grid-mb <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? 'd-none' : ''?>">
                                                     <label for="time"><?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? 'Break' : 'Time'?></label>
-                                                    <input type="text" name="time" id="time" class="form-control nsm-field" placeholder="hh:mm" required value="<?=isset($timeActivity) && !is_null($timeActivity->start_time) ? substr($timeActivity->break_duration, 0, -3) : substr($timeActivity->time, 0, -3)?>">
+                                                    <input type="text" name="time" id="breaktime-a" class="form-control nsm-field" placeholder="hh:mm" required value="<?=isset($timeActivity) && !is_null($timeActivity->start_time) ? substr($timeActivity->break_duration, 0, -3) : substr($timeActivity->time, 0, -3)?>">
                                                 </div>
                                                 <div class="grid-mb <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? '' : 'd-none'?>">
                                                     <label for="break">Break</label>
-                                                    <input type="text" name="break" id="break" class="form-control nsm-field" placeholder="hh:mm" value="<?=isset($timeActivity) ? substr($timeActivity->break_duration, 0, -3) : ''?>">
+                                                    <input type="text" name="break" id="breaktime-b" class="form-control nsm-field" placeholder="hh:mm" value="<?=isset($timeActivity) ? substr($timeActivity->break_duration, 0, -3) : ''?>">
                                                 </div>
                                                 <div class="grid-mb">
                                                     <label for="description">Description</label>
@@ -165,6 +165,23 @@
                                                     <p><?=$totalTime?></p>
                                                 </div>
                                                 <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </div>                                    
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-12 col-md-4">
+                                        <div class="attachments">
+                                            <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
+                                            <span>Maximum size: 20MB</span>
+                                            <div id="cc-credit-attachments" class="dropzone d-block justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;" data-id="0">
+                                                <div class="dz-message" style="margin: 20px;border">
+                                                    <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                                    <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
                                             </div>
                                         </div>
                                     </div>
@@ -198,7 +215,7 @@
                                     </div>
                                 </div>
 
-                                <button type="button" class="nsm-button float-end" id="save">Save</button>
+                                <!-- <button type="button" class="nsm-button float-end" id="save">Save</button> -->
                             </div>
                         </div>
                     </div>
@@ -212,9 +229,17 @@
     <script>
            $(document).ready(function(){
 
-            $('#time').datetimepicker({
-                 format: 'LT'
-             });
-              });
+                $('#time').datetimepicker({
+                    format: 'LT'
+                });
+
+                $('#breaktime-a').datetimepicker({
+                    format: 'LT'
+                });
+
+                $('#breaktime-b').datetimepicker({
+                    format: 'LT'
+                });
+            });
     </script>
 </div>

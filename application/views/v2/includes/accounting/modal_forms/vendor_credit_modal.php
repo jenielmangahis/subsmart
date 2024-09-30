@@ -176,7 +176,7 @@
                                                                         <input class="form-check-input table-select" name="category_billable[]" type="checkbox" value="1">
                                                                     </div>
                                                                 </td>
-                                                                <td><input type="number" name="category_markup[]" class="nsm-field form-control" onchange="convertToDecimal(this)"></td>
+                                                                <td><input type="number" name="category_markup[]" class="nsm-field form-control text-end" onchange="convertToDecimal(this)"></td>
                                                                 <td>
                                                                     <div class="table-row-icon table-checkbox">
                                                                         <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1">
@@ -222,7 +222,7 @@
                                                                         <input class="form-check-input table-select" name="category_billable[]" type="checkbox" value="1" <?=$category->billable === "1" ? 'checked' : ''?>>
                                                                     </div>
                                                                 </td>
-                                                                <td><input type="number" name="category_markup[]" class="nsm-field form-control" onchange="convertToDecimal(this)" value="<?=number_format(floatval($category->markup_percentage), 2, '.', ',')?>"></td>
+                                                                <td><input type="number" name="category_markup[]" class="nsm-field form-control text-end" onchange="convertToDecimal(this)" value="<?=number_format(floatval($category->markup_percentage), 2, '.', ',')?>"></td>
                                                                 <td>
                                                                     <div class="table-row-icon table-checkbox">
                                                                         <input class="form-check-input table-select" name="category_tax[]" type="checkbox" value="1" <?=$category->tax === "1" ? 'checked' : ''?>>
@@ -312,7 +312,7 @@
                                                                 <td data-name="Price" style="width: 10%;">PRICE</td>
                                                                 <td data-name="Discount" style="width: 10%;">DISCOUNT</td>
                                                                 <td data-name="Tax" style="width: 10%;">TAX (CHANGE IN %)</td>
-                                                                <td data-name="Total" style="width: 15%;">TOTAL</td>
+                                                                <td data-name="Total" style="width: 8%">TOTAL</td>
                                                                 <td data-name="Manage"></td>
                                                             </tr>
                                                         </thead>
@@ -338,8 +338,8 @@
                                                                         <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="<?=number_format(floatval($item->rate), 2, '.', ',')?>"></td>
                                                                         <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="<?=number_format(floatval($item->discount), 2, '.', ',')?>"></td>
                                                                         <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="<?=number_format(floatval($item->tax), 2, '.', ',')?>"></td>
-                                                                        <td>
-                                                                            <span class="row-total">
+                                                                        <td class="text-end">
+                                                                            <span class="row-total " >
                                                                                 <?php
                                                                                     $rowTotal = '$'.number_format(floatval($item->total), 2, '.', ',');
                                                                                     $rowTotal = str_replace('$-', '-$', $rowTotal);
