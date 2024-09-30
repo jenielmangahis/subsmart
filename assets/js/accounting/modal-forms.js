@@ -2342,12 +2342,14 @@ $(function () {
         var id = e.currentTarget.dataset.id;
 
         $.get(base_url + 'accounting/get-item-details/' + id, function (res) {
+            console.log('goes here when adding item')
             var result = JSON.parse(res);
             var item = result.item;
             var locations = result.locations;
             var locs = '';
             var item_cost = 0;
             var item_price = 0;
+            var qtyField='<input type="number" name="quantity[]" class="form-control text-end" required value="0">'
 
             if (item.cost != null) {
                 item_cost = item.cost;
@@ -2360,19 +2362,25 @@ $(function () {
             if (item.type === 'product' || item.type === 'Product' || item.type === 'inventory' || item.type === 'Inventory') {
                 locs += '<select name="location[]" class="nsm-field form-control" required>';
 
-                for (var i in locations) {
-                    locs += `<option value="${locations[i].id}" data-quantity="${locations[i].qty === "null" ? 0 : locations[i].qty}">${locations[i].name}</option>`;
-                }
-
+               
+                    for (var i in locations) {
+                         if(locations[i]){
+                            locs += `<option value="${locations[i].id}" data-quantity="${locations[i].qty === "null" ? 0 : locations[i].qty}">${locations[i].name}</option>`;
+                        }else{
+                            locs += `<option value=''>N/A</option>`
+                        }
+                    }
                 locs += '</select>';
 
                 if ($('#modal-container form .modal').attr('id') === 'creditCardCreditModal' || $('#modal-container form .modal').attr('id') === 'vendorCreditModal') {
-                    var qtyField = `<input type="number" name="quantity[]" class="form-control text-end" required value="0" max="${locations[0].qty}">`;
+                    if(locations[0]){
+                         qtyField = `<input type="number" name="quantity[]" class="form-control text-end" required value="0" max="${locations[0].qty}">`;
+                    }
                 } else {
-                    var qtyField = `<input type="number" name="quantity[]" class="form-control text-end" required value="0">`;
+                     qtyField = `<input type="number" name="quantity[]" class="form-control text-end" required value="0">`;
                 }
             } else {
-                var qtyField = `<input type="number" name="quantity[]" class="form-control text-end" required value="0">`;
+                 qtyField = `<input type="number" name="quantity[]" class="form-control text-end" required value="0">`;
             }
 
             if ($('#modal-container form .modal').attr('id') === 'purchaseOrderModal' && $('#modal-container #item-details-table thead th').length > 9) {
@@ -2384,8 +2392,8 @@ $(function () {
                     <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="${item_cost}"></td>
                     <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="0.00"></td>
                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="7.50"></td>
-                    <td><span class="row-total">$0.00</span></td>
-                    <td class="text-end">0</td>
+                    <td class="text-end"><span class="row-total">$0.00</span></td>
+                    <td >0</td>
                     <td>
                         <div class="table-row-icon table-checkbox">
                             <input class="form-check-input table-select" name="item_closed[]" type="checkbox" value="1">
@@ -2406,7 +2414,7 @@ $(function () {
                     <td><input type="number" name="item_amount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="${item_price}"></td>
                     <td><input type="number" name="discount[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="0.00"></td>
                     <td><input type="number" name="item_tax[]" onchange="convertToDecimal(this)" class="nsm-field form-control text-end" step=".01" value="7.50"></td>
-                    <td><span class="row-total">$0.00</span></td>
+                    <td class="text-end"><span class="row-total ">$0.00</span></td>
                     <td>
                         <button type="button" class="nsm-button delete-row">
                             <i class='bx bx-fw bx-trash'></i>
@@ -10408,6 +10416,8 @@ const addTableLines = (e) => {
     var table = e.currentTarget.dataset.target;
     var lastRow = $(`table${table} tbody tr:last-child() td:first-child()`);
     var lastRowCount = parseInt(lastRow.html());
+    var tableRowCount = $(`${table} tbody tr`).length;
+ 
 
 
     for (var i = 0; i < rowCount; i++) {
@@ -10425,7 +10435,7 @@ const addTableLines = (e) => {
         }
 
         $(`table${table} tbody`).append(newRowHtml);
-        $(`table${table} tbody tr:last-child() td:first-child()`).html(i+1);
+        $(`table${table} tbody tr:last-child() td:first-child()`).html(tableRowCount +i+1);
 
         $(`table${table} tbody tr:last-child() td:first-child()`).trigger('click');
 
@@ -10440,13 +10450,15 @@ const clearTableLines = (e) => {
     e.preventDefault();
     var table = e.currentTarget.dataset.target;
 
+    console.log('table',table)
+
     if ($('#modal-container .modal a#linked-transaction').length > 0) {
         unlinkTransaction();
         $('#modal-container .modal #payee').trigger('change');
         $('#modal-container .modal #vendor').trigger('change');
     }
 
-    if (table !== '#previous-adjustments-table') {
+    if (table !== '#previous-adjustments-table' && table != '#category-details-table') {
         $(`table${table} tbody tr`).each(function (index, value) {
             var count = $(this).find('td:first-child()').html();
             if (index < rowCount) {
