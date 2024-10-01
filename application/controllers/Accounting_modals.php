@@ -911,7 +911,9 @@ class Accounting_modals extends MY_Controller
 
         $this->page_data['payDate'] = $payDate;
 
-        $employees = $this->users_model->getPayScheduleEmployees($paySchedule->id);
+        $employees = $this->users_model->getPayScheduleEmployees($paySchedId);
+       
+
         foreach($employees as $index => $employee)
         {
             $employees[$index]->pay_scale = $this->users_model->get_payscale_by_id($employee->payscale_id);
