@@ -490,8 +490,10 @@ echo put_header_assets();
                                     </table>
                                     <!-- <a href="#" id="add_another_estimate" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line</a> &emsp; -->
                                     <!-- <a href="#" id="add_another" style="color:#02A32C;"><i class="fa fa-plus-square" aria-hidden="true"></i> Add Items in bulk</a> -->
-                                    <a class="link-modal-open nsm-link" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span> Add Items</a> &emsp;
-                                    <a class="link-modal-open nsm-link" href="#" id="add_package" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg"><span class="fa fa-plus-square fa-margin-right"></span> Add Package</a>
+                                    <div class="mt-4">
+                                    <a class="link-modal-open nsm-link nsm-button primary" href="#" id="add_another_items" data-bs-toggle="modal" data-bs-target="#item_list"><span class="bx bx-plus-medical"></span> Add Items</a>
+                                    <a class="link-modal-open nsm-link nsm-button primary" href="#" id="add_package" data-bs-toggle="modal" data-bs-target=".bd-example-modal-lg"><span class="bx bx-plus-medical"></span> Add Package</a>
+                                    </div>
                                     <hr>
                                 </div>
                             </div>
@@ -704,7 +706,7 @@ echo put_header_assets();
             </div>
 
             <div class="modal fade nsm-modal bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
+                <div class="modal-dialog modal-md">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="exampleModalLabel">Add Package</h5>
@@ -713,29 +715,24 @@ echo put_header_assets();
                             </button>
                         </div>
                         <div class="modal-body pt-0 pl-3 pb-3">
-                            <table id="dt-package-list" class="table table-hover" style="width: 100%;">
+                            <table id="dt-package-list" class="table-hover" style="width: 100%;">
                                 <thead>
-                                    <tr>
-                                        <td>Name</td>
+                                    <tr>                                        
                                         <td></td>
+                                        <td>Name</td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($packages as $package) { ?>
                                         <tr>
-                                            <td><?php echo $package->name; ?></td>
                                             <td>
-                                                <button id="<?= $package->item_categories_id; ?>" type="button" data-bs-dismiss="modal" class="btn btn-sm btn-default select_package"><span class="fa fa-plus"></span> </button>
+                                                <button id="<?= $package->id; ?>" type="button" data-bs-dismiss="modal" class="nsm-button primary select_package"><span class="fa fa-plus"></span> </button>
                                             </td>
+                                            <td><?php echo $package->name; ?></td>                                            
                                         </tr>
-
                                     <?php } ?>
                                 </tbody>
                             </table>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <!-- <button type="button" class="nsm-button primary">Save changes</button> -->
                         </div>
                     </div>
                 </div>
@@ -1166,11 +1163,11 @@ echo put_header_assets();
             "autoWidth": false,
             "order": [],
             "aoColumnDefs": [{
-                    "sWidth": "95%",
+                    "sWidth": "5%",
                     "aTargets": [0]
                 },
                 {
-                    "sWidth": "5%",
+                    "sWidth": "95%",
                     "aTargets": [1]
                 },
             ]
@@ -1280,7 +1277,8 @@ echo put_header_assets();
 
         $.ajax({
             type: 'POST',
-            url: "<?php echo base_url(); ?>workorder/select_package",
+            //url: "<?php echo base_url(); ?>workorder/select_package",
+            url: base_url + "estimate/_get_package_items",
             data: {
                 idd: idd
             },
@@ -1303,6 +1301,15 @@ echo put_header_assets();
                     }
                     var total_pu = v.price * v.units;
                     var total_tax = (v.price * v.units) * 7.5 / 100;
+
+                    if( isNaN(total_tax) ){
+                        total_tax = 0;
+                    }
+
+                    if( isNaN(total_pu) ){
+                        total_pu = 0;
+                    }
+
                     var total_temp = total_pu + total_tax;
                     var total = total_temp.toFixed(2);
 
@@ -1310,7 +1317,7 @@ echo put_header_assets();
                     markup = "<tr id=\"ss\">" +
                         "<td width=\"35%\"><input value='" + v.title + "' type=\"text\" name=\"items[]\" class=\"form-control getItems\" ><input type=\"hidden\" value='" + v.id + "' name=\"item_id[]\"><div class=\"show_mobile_view\"><span class=\"getItems_hidden\">" + v.title + "</span></div></td>\n" +
                         "<td width=\"20%\"><div class=\"dropdown-wrapper\"><select name=\"item_type[]\" class=\"form-control\"><option value=\"product\">Product</option><option value=\"material\">Material</option><option value=\"service\">Service</option><option value=\"fee\">Fee</option></select></div></td>\n" +
-                        "<td width=\"10%\"><input data-itemid='" + v.id + "' id='quantity_" + count + "' value='" + v.units + "' type=\"number\" name=\"quantity[]\" data-counter='" + count + "'  min=\"0\" class=\"form-control quantity mobile_qty \"></td>\n" +
+                        "<td width=\"10%\"><input data-itemid='" + v.id + "' id='quantity_" + count + "' value='0' type=\"number\" name=\"quantity[]\" data-counter='" + count + "'  min=\"0\" class=\"form-control quantity mobile_qty \"></td>\n" +
                         "<td width=\"10%\"><input id='price_" + count + "' value='" + v.price + "'  type=\"number\" name=\"price[]\" class=\"form-control price hidden_mobile_view \" placeholder=\"Unit Price\" data-counter='" + count + "'><input type=\"hidden\" class=\"priceqty\" id='priceqty_" + v.id + "' value='" + total_pu + "'><div class=\"show_mobile_view\"><span class=\"price\">" + v.price + "</span><input type=\"hidden\" class=\"form-control price\" name=\"price[]\" data-counter=\"0\" id=\"priceM_0\" min=\"0\" value='" + v.price + "'></div></td>\n" +
                         //   "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter=\"0\" id=\"discount_0\" value=\"0\" ></td>\n" +
                         // //  "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
@@ -1320,8 +1327,8 @@ echo put_header_assets();
                         "<td style=\"text-align: center\" class=\"hidden_mobile_view\" width=\"15%\"><span data-subtotal='" + total + "' id='span_total_" + count + "' class=\"total_per_item\">" + total +
                         // "</span><a href=\"javascript:void(0)\" class=\"remove_item_row\"><i class=\"fa fa-times-circle\" aria-hidden=\"true\"></i></a>"+
                         "</span> <input type=\"hidden\" name=\"total[]\" id='sub_total_text" + v.id + "' value='" + total + "'></td>" +
-                        "<td>\n" +
-                        '<a href="#" class="remove btn btn-sm btn-success"><i class="fa fa-trash" aria-hidden="true"></i></a>\n' +
+                        "<td style='padding:10px;'>" +
+                        '<a href="#" class="remove nsm-button"><i class="bx bx-fw bx-trash" aria-hidden="true"></i></a>' +
                         "</td>\n" +
                         "</tr>";
                     tableBody = $("#jobs_items_table_body");
