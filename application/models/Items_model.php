@@ -743,6 +743,15 @@ class Items_model extends MY_Model
         return $query->result();
     }
 
+    public function get_package_items_v2($packageId)
+    {
+        $this->db->select('item_package.*,items.*');
+        $this->db->join('items', 'item_package.item_id = items.id', 'left');
+        $this->db->where('package_id', $packageId);
+        $query = $this->db->get('item_package');
+        return $query->result();
+    }
+
     public function get_package_by_id($packageId)
     {
         $this->db->where('id', $packageId);
@@ -767,7 +776,10 @@ class Items_model extends MY_Model
     public function get_company_packages($companyId, $filters = [])
     {
         $this->db->where('company_id', $companyId);
-        $this->db->where_in('status', $filters['status']);
+        $this->db->where('name !=', '');
+        if( $filters ){
+            $this->db->where_in('status', $filters['status']);
+        }        
         $query = $this->db->get('package_details');
         return $query->result();
     }
