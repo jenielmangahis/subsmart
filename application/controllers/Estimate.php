@@ -3091,4 +3091,15 @@ class Estimate extends MY_Controller
         $json_data = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($json_data);
     }
+
+    public function ajax_get_package_items()
+    {
+        $this->load->model('Items_model');
+        $id = $this->input->post('idd');
+
+        $items = $this->Items_model->get_package_items_v2($id);
+        $this->page_data['items'] = $items;
+        // $this->page_data['checklists_items'] = $checklist;
+        echo json_encode($this->page_data);
+    }
 }

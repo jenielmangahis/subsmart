@@ -8214,6 +8214,7 @@ class Accounting extends MY_Controller
     public function addNewEstimate($customer_id = 0)
     {
         $this->load->model('AcsProfile_model');
+        $this->load->model('Items_model');
         
         add_footer_js(array(
             'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js',
@@ -8257,7 +8258,8 @@ class Accounting extends MY_Controller
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['number'] = $this->estimate_model->getlastInsert();
         $this->page_data['items'] = $this->items_model->getItemlist();
-        $this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
+        //$this->page_data['packages'] = $this->estimate_model->getPackagelist($company_id);
+        $this->page_data['packages'] = $this->Items_model->get_company_packages($company_id, []);
         $this->load->view('accounting/addnewEstimate', $this->page_data);
     }
 
