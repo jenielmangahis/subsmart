@@ -655,11 +655,24 @@ class Customer_model extends MY_Model
             $this->db->where($primaryKey, $id);
             return $this->db->update($table, $data);
         } else if ($updateType == "cell_grid_update") {
-            $this->db->where_in($primaryKey, json_decode($id, true));
-            return $this->db->update($table, $data);
+            $idsArray = json_decode($id, true);
+            if (isset($data['bill_end_date']) && is_array($data['bill_end_date'])) {
+                foreach ($idsArray as $index => $id) {
+                    $dataToUpdate = $data;  
+                    if (isset($data['bill_end_date'])) {
+                        $dataToUpdate['bill_end_date'] = $data['bill_end_date'][$index]; 
+                    }
+                    $this->db->where($primaryKey, $id);
+                    $this->db->update($table, $dataToUpdate); 
+                }
+                return true;
+            } else {
+                $this->db->where_in($primaryKey, $idsArray);
+                $this->db->update($table, $data);
+                return true;
+            }
         }
     }
-
 }
 
 /* End of file Customer_model.php */

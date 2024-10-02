@@ -1,3 +1,12 @@
+<style>
+#journalEntryModal .nsm-table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
+#journal-table > tfoot td {
+    padding:0.8rem 0.5rem;
+}
+</style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
 <?php if(!isset($journal_entry)) : ?>
@@ -34,13 +43,13 @@
                     <div class="row" style="min-height: 100%">
                         <div class="col">
                             <div class="row journal-entry-details">
-                                <div class="col-12 col-md-3 grid-mb">
+                                <div class="col-12 col-md-2 grid-mb">
                                     <label for="journalDate">Journal Date</label>
                                     <div class="nsm-field-group calendar">
-                                        <input type="text" class="form-control nsm-field date" name="journal_date" id="journalDate" value="<?=$journal_date?>"/>
+                                        <input type="text" class="form-control nsm-field date" name="journal_date" id="journalDate" value="<?=$journal_date?>" />
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-3 grid-mb">
+                                <div class="col-12 col-md-2 grid-mb">
                                     <label for="journalNo">Journal No</label>
                                     <input type="number" name="journal_no" id="journalNo" class="form-control nsm-field" min="<?=$journal_no?>" value="<?=$journal_no?>" required>
                                 </div>
@@ -65,27 +74,23 @@
                                     <table class="nsm-table clickable" id="journal-table">
                                         <thead>
                                             <tr>
-                                                <td data-name="Num">#</td>
-                                                <td data-name="Account">ACCOUNT</td>
-                                                <td data-name="Debits">DEBITS</td>
-                                                <td data-name="Credits">CREDITS</td>
+                                                <td data-name="Num" style="width:3%;">#</td>
+                                                <td data-name="Account" style="width:18%;">ACCOUNT</td>                                                
+                                                <td data-name="Name" style="width:18%;">NAME</td>
                                                 <td data-name="Description">DESCRIPTION</td>
-                                                <td data-name="Name">NAME</td>
-                                                <td data-name="Manage"></td>
+                                                <td data-name="Debits" style="width:10%;">DEBITS</td>
+                                                <td data-name="Credits" style="width:10%;">CREDITS</td>                                                
+                                                <td data-name="Manage" style="width:3%;"></td>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td>1</td>
-                                                <td>
-                                                    <select name="journal_entry_accounts[]" class="form-control nsm-field"></select>
-                                                </td>
+                                                <td><select name="journal_entry_accounts[]" class="form-control nsm-field"></select></td>
+                                                <td><select name="names[]" class="form-control nsm-field"></select></td>
+                                                <td><input type="text" name="descriptions[]" class="form-control nsm-field"></td>
                                                 <td><input type="number" name="debits[]" class="form-control nsm-field text-end" step="0.01"></td>
                                                 <td><input type="number" name="credits[]" class="form-control nsm-field text-end" step="0.01"></td>
-                                                <td><input type="text" name="descriptions[]" class="form-control nsm-field"></td>
-                                                <td>
-                                                    <select name="names[]" class="form-control nsm-field"></select>
-                                                </td>
                                                 <td>
                                                     <button type="button" class="nsm-button delete-row">
                                                         <i class='bx bx-fw bx-trash'></i>
@@ -102,9 +107,6 @@
                                                             <option value="<?=$entry->account_id?>"><?=$entry->account->name?></option>
                                                         </select>
                                                     </td>
-                                                    <td><input type="number" name="debits[]" class="form-control nsm-field text-end" step="0.01" value="<?=$entry->debit !== "0" ? number_format(floatval($entry->debit), 2, '.', ',') : ""?>"></td>
-                                                    <td><input type="number" name="credits[]" class="form-control nsm-field text-end" step="0.01" value="<?=$entry->credit !== "0" ? number_format(floatval($entry->credit), 2, '.', ',') : ""?>"></td>
-                                                    <td><input type="text" name="descriptions[]" class="form-control nsm-field" value="<?=$entry->description?>"></td>
                                                     <td>
                                                         <select name="names[]" class="form-control nsm-field">
                                                             <?php if(!is_null($entry->name_id)) : ?>
@@ -112,6 +114,9 @@
                                                             <?php endif; ?>
                                                         </select>
                                                     </td>
+                                                    <td><input type="text" name="descriptions[]" class="form-control nsm-field" value="<?=$entry->description?>"></td>
+                                                    <td><input type="number" name="debits[]" class="form-control nsm-field text-end" step="0.01" value="<?=$entry->debit !== "0" ? number_format(floatval($entry->debit), 2, '.', ',') : ""?>"></td>
+                                                    <td><input type="number" name="credits[]" class="form-control nsm-field text-end" step="0.01" value="<?=$entry->credit !== "0" ? number_format(floatval($entry->credit), 2, '.', ',') : ""?>"></td>
                                                     <td>
                                                         <button type="button" class="nsm-button delete-row">
                                                             <i class='bx bx-fw bx-trash'></i>
@@ -152,12 +157,12 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
+                                                <td></td>                                                
+                                                <td></td>
                                                 <td></td>
                                                 <td class="text-end">Total</td>
-                                                <td class="text-end">0.00</td>
-                                                <td class="text-end">0.00</td>
-                                                <td></td>
-                                                <td></td>
+                                                <td><input type="text" class="form-control text-end" id="journal-debit-total" disabled="" value="0.00" /></td>
+                                                <td><input type="text" class="form-control text-end" id="journal-credit-total" disabled="" value="0.00" /></td>
                                             </tr>
                                             <tr>
                                                 <td colspan="7">

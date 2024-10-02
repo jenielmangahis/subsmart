@@ -786,8 +786,8 @@ class Reports extends MY_Controller {
             fputcsv($f, $date, $delimiter);
         }
         fputcsv($f, $generated, $delimiter);
-        ($type === "commercial_vs_residential") ? fputcsv($f, $fields_header, $delimiter) : '';
-        fputcsv($f, $fields, $delimiter);
+        //($type === "commercial_vs_residential") ? fputcsv($f, $fields_header, $delimiter) : '';
+        //fputcsv($f, $fields, $delimiter);
 
         //output each row of the data, format line as csv and write to file pointer
         //echo "<pre>";print_r($all);die;

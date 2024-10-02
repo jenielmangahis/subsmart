@@ -2197,7 +2197,7 @@ class Accounting_modals extends MY_Controller
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
+            $return['message'] = validation_errors();
         } elseif (!isset($data['account']) && !isset($data['amount'])) {
             $return['data'] = null;
             $return['success'] = false;
