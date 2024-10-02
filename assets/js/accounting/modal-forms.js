@@ -11514,6 +11514,7 @@ const showHiddenFields = (el) => {
             $('div#singleTimeModal select#startTime, select#endTime').prop('required', true);
             $('div#singleTimeModal input#time').parent().addClass('d-none');
             $('div#singleTimeModal input#break').parent().removeClass('d-none');
+            $('div#singleTimeModal input#breaktime-b').parent().removeClass('d-none');
             // $('div#singleTimeModal label[for="time"]').html('Break');
             // $('div#singleTimeModal input#time').removeAttr('required');
             // $('div#singleTimeModal input#time').val('');
@@ -11523,6 +11524,7 @@ const showHiddenFields = (el) => {
             $('select#startTime, select#endTime').removeAttr('required');
             $('div#singleTimeModal input#time').parent().removeClass('d-none');
             $('div#singleTimeModal input#break').parent().addClass('d-none');
+            $('div#singleTimeModal input#breaktime-b').parent().addClass('d-none');
             // $('label[for="time"]').html('Time');
             // $('input#time').prop('required', true);
         }
