@@ -69,20 +69,20 @@
                         <div class="col-12 mb-2">
                             <label for="description">Description</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="selling" name="selling" value="1" checked>
+                                <input class="form-check-input check-input-selling" type="checkbox" id="selling" name="selling" value="1" checked>
                                 <label class="form-check-label" for="selling">I sell this product/service to my customers.</label>
                             </div>
                         </div>
                         <div class="col-12 mb-2">
-                            <textarea name="description" id="description" placeholder="Description on sales forms" class="form-control nsm-field"></textarea>
+                            <textarea name="description" id="description" placeholder="Description on sales forms" class="form-control nsm-field disc-on-sales-form"></textarea>
                         </div>
                         <div class="col-12 col-md-6 mb-2">
                             <label for="price">Sales price/rate</label>
-                            <input type="number" required name="price" id="price" step="0.01" class="form-control nsm-field text-end" onchange="convertToDecimal(this)">
+                            <input type="number" name="price" id="price" step="0.01" class="form-control nsm-field text-end sales-price-rate" onchange="convertToDecimal(this)">
                         </div>
                         <div class="col-12 col-md-6 mb-2">
                             <label for="income_account">Income account</label>
-                            <select name="income_account" id="income_account" class="form-control nsm-field" required></select>
+                            <select name="income_account" id="income_account" class="form-control nsm-field sales-income-account"></select> 
                         </div>
                     </div>
                 </td>
@@ -161,3 +161,20 @@
     </div>
 </div> -->
 </form>
+
+<script>
+
+$(document).ready(function () {
+    $(".check-input-selling").change(function() {
+        if(this.checked) {
+            $(".disc-on-sales-form").prop('disabled', false);
+            $(".sales-price-rate").prop('disabled', false);
+            $(".sales-income-account").prop('disabled', false);     
+        } else {
+            $(".disc-on-sales-form").prop('disabled', true);
+            $(".sales-price-rate").prop('disabled', true);
+            $(".sales-income-account").prop('disabled', true);
+        }
+    });  
+});
+</script>

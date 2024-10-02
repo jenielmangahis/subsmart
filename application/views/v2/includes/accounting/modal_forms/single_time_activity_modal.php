@@ -119,10 +119,22 @@
                                                 <?php endif; ?>
                                             </select>
                                         </div>
+
+                                        <div class="row" style="margin-top: 15px; margin-bottom: 10px;">
+                                            <div class="col-5">
+                                                <input type="number" name="hourly_rate" id="hourlyRate" step=".01" class="form-control nsm-field" <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'style="display: none"'?> value="<?=isset($timeActivity) && $timeActivity->billable === "1" ? number_format(floatval(str_replace(',', '', $timeActivity->hourly_rate)), 2) : '0.00'?>" onchange="convertToDecimal(this)">
+                                            </div>
+                                            <div class="col-4">  
+                                                <div class="form-check" id="taxableCheck" <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'style="display: none"'?>>
+                                                    <input type="checkbox" name="taxable" id="taxable" class="form-check-input" value="1" <?=isset($timeActivity) && $timeActivity->taxable === "1" ? 'checked' : ''?>>
+                                                    <label for="taxable" class="form-check-label">Taxable</label>
+                                                </div>
+                                            </div>                                                
+                                        </div>                                        
                                     </div>
                                     <div class="col-12 col-md-2">
                                         <?php if(is_null($timesheetSettings) || $timesheetSettings->billable === "1") : ?>
-                                            <div class="row" style="margin-top: 18px">
+                                            <div class="row" style="margin-top: 27px">
                                                 <div class="col-4">
                                                     <div class="form-check">
                                                         <input class="form-check-input" type="checkbox" name="billable" id="billable" value="1" onchange="showHiddenFields(this)" <?=isset($timeActivity) && $timeActivity->billable === "1" ? 'checked' : ''?>>
@@ -130,7 +142,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="row">
+                                            <!-- <div class="row">
                                                 <div class="col-5">
                                                     <input type="number" name="hourly_rate" id="hourlyRate" step=".01" class="form-control nsm-field" <?=isset($timeActivity) && $timeActivity->billable === "1" ? '' : 'style="display: none"'?> value="<?=isset($timeActivity) && $timeActivity->billable === "1" ? number_format(floatval(str_replace(',', '', $timeActivity->hourly_rate)), 2) : '0.00'?>" onchange="convertToDecimal(this)">
                                                 </div>
@@ -140,7 +152,7 @@
                                                         <label for="taxable" class="form-check-label">Taxable</label>
                                                     </div>
                                                 </div>                                                
-                                            </div>
+                                            </div> -->
                                         <?php endif; ?>
                                     </div>
                                     <div class="col-12 col-md-2">
