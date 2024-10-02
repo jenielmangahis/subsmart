@@ -1027,8 +1027,8 @@ $(function () {
                     credit = parseFloat(parseFloat(credit) + rowCredit).toFixed(2);
                 });
 
-                $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(3)').html(parseFloat(debit).toFixed(2));
-                $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(4)').html(parseFloat(credit).toFixed(2));
+                $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(5)').html(parseFloat(debit).toFixed(2));
+                $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(6)').html(parseFloat(credit).toFixed(2));
                 break;
         }
     });
@@ -1367,9 +1367,9 @@ $(function () {
         convertToDecimal($(this));
 
         if ($(this).attr('name') === 'debits[]') {
-            $(this).parent().parent().children('td:nth-child(4)').children('input').val('');
+            $(this).parent().parent().children('td:nth-child(6)').children('input').val('0.00');
         } else {
-            $(this).parent().parent().children('td:nth-child(3)').children('input').val('');
+            $(this).parent().parent().children('td:nth-child(5)').children('input').val('0.00');
         }
 
         var debit = 0.00;
@@ -1397,8 +1397,8 @@ $(function () {
             credit = parseFloat(parseFloat(credit) + rowCredit).toFixed(2);
         });
 
-        $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(3)').html(parseFloat(debit).toFixed(2));
-        $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(4)').html(parseFloat(credit).toFixed(2));
+        $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(5) #journal-debit-total').val(parseFloat(debit).toFixed(2));
+        $('div#journalEntryModal table#journal-table tfoot tr td:nth-child(6) #journal-credit-total').val(parseFloat(credit).toFixed(2));
     });
 
     $(document).on('change', '#statementModal #startDate, #statementModal #endDate', function () {
