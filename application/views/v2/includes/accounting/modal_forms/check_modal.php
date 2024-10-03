@@ -17,6 +17,21 @@
 .dropzone {
     min-height: 160px !important;
 }
+.span-input{
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
 </style>
 <div class="full-screen-modal">
 <?php if(!isset($check)) : ?>
@@ -157,8 +172,8 @@
                                         </div>
                                         <div class="col-12 col-md-3 ">
                                             <label for="account_balance">Balance</label>
-                                            <input type="text" name="account_balance" disabled id="account_balance" class="form-control nsm-field mb-2 date" value="<?php echo $balance; ?>">
-                                            <!-- <p style="align-self: flex-end; margin-bottom: 0px">Balance <span id="account-balance"><?= $balance ?></span></p> -->
+                                            <!-- <input type="text" name="account_balance" disabled id="account_balance" class="form-control nsm-field mb-2 date" value="<?php echo $balance; ?>"> -->
+                                            <span id="account-balance" class="span-input"><?= $balance ?></span>
                                         </div>
                                     </div>
                                 </div>
@@ -276,7 +291,7 @@
                                                     <table class="nsm-table" id="category-details-table">
                                                         <thead>
                                                             <tr>
-                                                                <td data-name="Num" style="width:2%;">#</td>
+                                                                <td data-name="Num" style="width:2%;text-align:center;">#</td>
                                                                 <td data-name="Customer" style="width:20%;">CUSTOMER</td>
                                                                 <td data-name="Expense Name" style="width:20%;">EXPENSE NAME</td>
                                                                 <td data-name="Category" style="width:15%;">CATEGORY</td>

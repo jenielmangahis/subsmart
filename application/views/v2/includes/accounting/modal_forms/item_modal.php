@@ -19,7 +19,7 @@
                                 <td>
                                     <div class="row" style="height: 117px">
                                         <div class="col-12 col-md-3 image-height">
-                                            <div class="type-icon" style="background-image: url('/assets/img/accounting/inventory.png')">
+                                            <div class="type-icon" style="background-image: url('<?php echo base_url(); ?>assets/img/accounting/inventory.png')">
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-9 d-flex align-items-center">
@@ -36,7 +36,7 @@
                                 <td>
                                     <div class="row" style="height: 117px">
                                         <div class="col-12 col-md-3 image-height">
-                                            <div class="type-icon" style="background-image: url('/assets/img/accounting/non-inventory.png')">
+                                            <div class="type-icon" style="background-image: url('<?php echo base_url(); ?>assets/img/accounting/non-inventory.png')">
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-9 d-flex align-items-center">
@@ -55,7 +55,7 @@
                                 <td>
                                     <div class="row" style="height: 117px">
                                         <div class="col-12 col-md-3 image-height">
-                                            <div class="type-icon" style="background-image: url('/assets/img/accounting/service.png')">
+                                            <div class="type-icon" style="background-image: url('<?php echo base_url(); ?>assets/img/accounting/service.png')">
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-9 d-flex align-items-center">
