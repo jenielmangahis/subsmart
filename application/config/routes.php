@@ -1230,6 +1230,7 @@ $route['estimate/settings'] = 'Estimate/estimate_settings';
 $route['estimate/_save_estimate_setttings'] = 'Estimate/ajax_save_estimate_setttings';
 $route['estimate/_update_next_reminder_date'] = 'Estimate/ajax_update_next_reminder_date';
 $route['estimate/_update_estimate_status'] = 'Estimate/ajax_update_estimate_status';
+$route['estimate/_get_package_items'] = 'Estimate/ajax_get_package_items';
 
 // Credit Notes
 $route['credit_notes'] = 'Credit_Notes/index';
