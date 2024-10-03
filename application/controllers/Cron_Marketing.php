@@ -367,7 +367,8 @@ class Cron_Marketing extends MY_Controller
         $total_sent    = 0;
 
         $limit = 5;
-        $emailBroadcast = $this->EmailBroadcast_model->getAllOngoingBroadcast($limit);
+        $conditions[] = ['field' => 'send_date', 'value' => date("Y-m-d")];
+        $emailBroadcast = $this->EmailBroadcast_model->getAllOngoingBroadcast($conditions, $limit);
         if( $emailBroadcast ){
             $mail = email__getInstance();
             foreach($emailBroadcast as $eb){
