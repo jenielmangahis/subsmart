@@ -10,7 +10,7 @@
                     <th>
                         <div class="row" style="height: 68.5px;">
                             <div class="col-12 col-sm-2">
-                                <div class="type-icon" style="background-image: url('/assets/img/accounting/inventory.png')"></div>
+                                <div class="type-icon" style="width: 72px; background-image: url('<?php echo base_url(); ?>assets/img/accounting/inventory.png');"></div>
                             </div>
                             <div class="col-12 col-sm-10 d-flex align-items-center">
                                 <h5><span>Inventory</span></h5> &nbsp;&nbsp; <a href="#" class="text-decoration-none" id="select-item-type"><span>Change type</span></a>

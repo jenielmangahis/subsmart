@@ -976,8 +976,8 @@
                                 <div class="col-xl-3 mb-3">
                                     <label class="text-muted">Customer / Business Filter</label>
                                     <div class="input-group">
-                                        <input class="searchCustomerListInput form-control mt-2" type="text" placeholder="Search entry here...">
-                                        <select class="form-select displayCustomerList mt-2">
+                                        <input class="searchCustomerListInput form-control mt-2" type="text" placeholder="Search entry here..." tabindex="-1">
+                                        <select class="form-select displayCustomerList mt-2" tabindex="-1">
                                             <option selected value="10">10</option>
                                             <option value="50">50</option>
                                             <option value="100">100</option>
@@ -987,7 +987,7 @@
                                 </div>
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
                                     <label class="text-muted">Customer Type</label>
-                                    <select class="form-select searchCustomerType mt-2">
+                                    <select class="form-select searchCustomerType mt-2" tabindex="-1">
                                         <option value="">None</option>
                                         <option value="Residential">Residential</option>
                                         <option value="Commercial">Commercial</option>
@@ -995,7 +995,7 @@
                                 </div>
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
                                     <label class="text-muted">Customer Group filter</label>
-                                    <select class="form-select searchGroup mt-2">
+                                    <select class="form-select searchGroup mt-2" tabindex="-1">
                                         <option value="">None</option>
                                         <?php
                                             foreach ($customer_group as $group) {
@@ -1006,7 +1006,7 @@
                                 </div>
                                 <div class="col-xl-1 mb-3 dropdownFilterWidth">
                                     <label class="text-muted">Sales Area filter</label>
-                                    <select class="form-select searchSalesArea mt-2">
+                                    <select class="form-select searchSalesArea mt-2" tabindex="-1">
                                         <option value="">None</option>
                                         <?php
                                             foreach ($sales_area as $salesarea) {
@@ -1017,7 +1017,7 @@
                                 </div>                         
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
                                     <label class="text-muted">Rate Plan filter</label>
-                                    <select class="form-select searchRatePlan mt-2">
+                                    <select class="form-select searchRatePlan mt-2" tabindex="-1">
                                         <option value="">None</option>
                                         <?php
                                             foreach ($rate_plan as $plan) {
@@ -1028,7 +1028,7 @@
                                 </div>
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
                                     <label class="text-muted">Payment Type filter</label>
-                                    <select class="form-select searchPaymentType mt-2">
+                                    <select class="form-select searchPaymentType mt-2" tabindex="-1">
                                         <option value="">None</option>
                                         <option value="CC">Credit Card</option>
                                         <option value="DC">Debit Card</option>
@@ -1048,7 +1048,7 @@
                                 </div>
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
                                     <label class="text-muted">Status Filter</label>
-                                    <select class="form-select searchStatus mt-2">
+                                    <select class="form-select searchStatus mt-2" tabindex="-1">
                                         <option value="">None</option>
                                         <?php
                                             foreach ($customer_status as $status) {
@@ -1059,7 +1059,7 @@
                                 </div>
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
                                     <label class="text-muted">Panel Type Filter</label>
-                                    <select class="form-select searchPanelType mt-2">
+                                    <select class="form-select searchPanelType mt-2" tabindex="-1">
                                         <option value="">None</option>
                                         <option value="AERIONICS">AERIONICS</option>
                                         <option value="AlarmNet">AlarmNet</option>
@@ -1090,7 +1090,7 @@
                                 </div>
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
                                     <label class="text-muted">Sales Rep Filter</label>
-                                    <select class="form-select searchSalesRep mt-2">
+                                    <select class="form-select searchSalesRep mt-2" tabindex="-1">
                                         <option value="">None</option>
                                         <?php
                                             foreach ($salesRep as $salesReps) {
@@ -1101,7 +1101,7 @@
                                 </div>
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
                                     <label class="text-muted">Technician Filter</label>
-                                    <select class="form-select searchTechnician mt-2">
+                                    <select class="form-select searchTechnician mt-2" tabindex="-1">
                                         <option value="">None</option>
                                         <?php
                                             foreach ($technician as $technicians) {
@@ -1112,7 +1112,7 @@
                                 </div>
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
                                     <label class="text-muted">Monitoring Company Filter</label>
-                                    <select class="form-select searchMonitoringCompany mt-2">
+                                    <select class="form-select searchMonitoringCompany mt-2" tabindex="-1">
                                         <option value="">None</option>
                                         <option value="ADT">ADT</option>
                                         <option value="CMS">CMS</option>
@@ -1130,7 +1130,7 @@
                                 </div>
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
                                     <label class="text-muted">Account Type Filter</label>
-                                    <select class="form-select searchAccountType mt-2">
+                                    <select class="form-select searchAccountType mt-2" tabindex="-1">
                                         <option value="">None</option>
                                         <option value="In-House">In-House</option>
                                         <option value="Purchase">Purchase</option>
@@ -1141,19 +1141,19 @@
                                 </div>
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
                                     <label class="text-muted">Billing Start date Filter</label>
-                                    <input class="form-control billingStartDate mt-2" type="date">
+                                    <input class="form-control billingStartDate mt-2" type="date" tabindex="-1">
                                 </div>
                                 <div class="col-xl-2 mb-3 dropdownFilterWidth">
                                     <label class="text-muted">End Start date Filter</label>
-                                    <input class="form-control billingEndDate mt-2" type="date">
+                                    <input class="form-control billingEndDate mt-2" type="date" tabindex="-1">
                                 </div>
                                 <div class="col-xl-2 mb-3">
                                     <label class="text-muted">Horizontal Scroll</label>
                                     <div class="input-group mt-2">
-                                        <button class="btn btn-dark scrollToStart"><i class="fas fa-angle-double-left"></i></button>
-                                        <button class="btn btn-secondary scrollToLeft"><i class="fas fa-angle-left"></i></button>
-                                        <button class="btn btn-secondary scrollToRight"><i class="fas fa-angle-right"></i></button>
-                                        <button class="btn btn-dark scrollToEnd"><i class="fas fa-angle-double-right"></i></button>
+                                        <button class="btn btn-dark scrollToStart" tabindex="-1"><i class="fas fa-angle-double-left"></i></button>
+                                        <button class="btn btn-secondary scrollToLeft" tabindex="-1"><i class="fas fa-angle-left"></i></button>
+                                        <button class="btn btn-secondary scrollToRight" tabindex="-1"><i class="fas fa-angle-right"></i></button>
+                                        <button class="btn btn-dark scrollToEnd" tabindex="-1"><i class="fas fa-angle-double-right"></i></button>
                                     </div>
                                 </div>
                                 <div class="col-xl-12 mb-3">
@@ -1238,24 +1238,29 @@
     let startIndex;
     let startColumnIndex;
     let lastDraggedIndex = 1;
+    let valueOnText;
+    let currentInputElement;
+    let columnName;
+    let selectedCells = [];
 
     $(document).ready(function() {
         // Handle click to show the drag handle and add green border
         $(document).on('click', '.customerManagementTable > tbody > tr > td', function() {
-            // Hide all other drag handles and reset borders
+            valueOnText = $(this).closest('td').find('.updateInputValue').is('select') ? $(this).closest('td').find('.updateInputValue option:selected').text() : $(this).closest('td').find('.updateInputValue').val();
+            columnName = $('.customerManagementTable th').eq($(this).closest('td').index()).text();
+
             $('.drag_handle').css('visibility', 'hidden');
             $('.customerManagementTable > tbody > tr > td').removeClass('cell_dragging');
 
-            // Show the drag handle for the clicked cell
             $(this).find('.drag_handle').css('visibility', 'visible');
-            $(this).addClass('cell_dragging'); // Highlight the clicked cell
+            $(this).addClass('cell_dragging');
         });
 
         // Hide the drag handle and reset the border
         $(document).on('click', function(e) {
             if (!$(e.target).closest('td').length) {
-                $('.drag_handle').css('visibility', 'hidden');
-                $('.customerManagementTable > tbody > tr > td').removeClass('cell_dragging');
+                // $('.drag_handle').css('visibility', 'hidden');
+                // $('.customerManagementTable > tbody > tr > td').removeClass('cell_dragging');
             }
         });
 
@@ -1276,28 +1281,25 @@
         $(document).on('mousemove', '.customerManagementTable td', function(e) {
             if (cell_dragging) {
                 $(this).addClass('cell_dragging_action');
-                let currentColumnIndex = $(this).index(); // Get the column index
-                let currentRowIndex = $(this).parent().index(); // Get the row index
+                let currentColumnIndex = $(this).index();
+                let currentRowIndex = $(this).parent().index();
 
-                // Only allow dragging for the same column
                 if (currentColumnIndex === startColumnIndex) {
                     if (currentRowIndex !== lastDraggedIndex) {
+
                         // Dragging down
                         if (currentRowIndex > lastDraggedIndex) {
-                            // Apply 'cell_dragging' to all cells between last dragged and current row (inclusive)
                             for (let i = lastDraggedIndex + 1; i <= currentRowIndex + 1; i++) {
                                 $('.customerManagementTable tr').eq(i).find('td').eq(startColumnIndex).addClass('cell_dragging');
                             }
                         }
                         // Dragging up
                         else if (currentRowIndex < lastDraggedIndex) {
-                            // Remove 'cell_dragging' from all cells between current and last dragged row (inclusive)
                             for (let i = lastDraggedIndex; i > currentRowIndex; i--) {
                                 $('.customerManagementTable tr').eq(i + 1).find('td').eq(startColumnIndex).removeClass('cell_dragging');
                             }
                         }
 
-                        // Update last dragged index to the current row
                         lastDraggedIndex = currentRowIndex;
                     }
                 }
@@ -1309,87 +1311,360 @@
             let customerIDs = [];
             let category = "";
             let column = "";
+            let billEndDates = [];
 
             if (cell_dragging) {
-                category = $('.customerManagementTable td.cell_dragging').find('input, select').attr('data-category');
-                column = $('.customerManagementTable td.cell_dragging').find('input, select').attr('data-column');
+                Swal.fire({
+                    icon: "warning",
+                    title: "Multiple Cell Update",
+                    html: "Do you want to apply changes in column <strong>" + columnName + "</strong>?<br><hr><strong class='text-success'>" + valueOnText + "</strong> value will apply",
+                    showCancelButton: true,
+                    confirmButtonText: "Proceed",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        category = $('.customerManagementTable td.cell_dragging').find('input, select').attr('data-category');
+                        column = $('.customerManagementTable td.cell_dragging').find('input, select').attr('data-column');
 
-                // Fill all selected cells with the value and remove dragging highlight
-                $('.customerManagementTable td.cell_dragging').each(function() {
-                    if (initialValue) {
-                        let selectElement = $(this).find('select');
-                        let inputElement = $(this).find('input');
-                        let inputType = inputElement.attr('type');
+                        $('.customerManagementTable td.cell_dragging').each(function() {
+                            let customerID = $(this).find('input, select').attr('data-id');
+                            customerIDs.push(customerID)
 
-                        // Handle input elements
-                        if (inputType === 'text') {
-                            inputElement.val(initialValue);
-                            $(this).find('.textPreview').text(initialValue);
-                        } else if (inputType === 'date') {
-                            inputElement.val(initialValue);
-                            let dateParts = initialValue.split('-');
-                            let formatted = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
-                            $(this).closest('td').find('.textPreview').text(formatted);
-                        } else if (inputType === 'number') {
-                            inputElement.val(initialValue);
-                            $(this).find('.textPreview').text("$" + initialValue);
-                        }
+                            let billEndDate = null;
+                            if (column == "contract_term") {
+                                let billStartDate = $('input[data-id="' + customerID + '"][data-column="bill_start_date"]').val();
+                                let contractTerm = $('select[data-id="' + customerIDs[0] + '"][data-column="contract_term"]').val();
+                                if (billStartDate && contractTerm) {
+                                    let startDate = new Date(billStartDate);
+                                    startDate.setMonth(startDate.getMonth() + parseInt(contractTerm));
+                                    billEndDate = startDate.toISOString().split('T')[0];
+                                }
+                            } else if (column == "bill_start_date") {
+                                let contractTerm = $('select[data-id="' + customerIDs[0] + '"][data-column="contract_term"]').val();
+                                let billStartDate = $('input[data-id="' + customerID + '"][data-column="bill_start_date"]').val();
+                                if (billStartDate && contractTerm) {
+                                    let startDate = new Date(billStartDate);
+                                    startDate.setMonth(startDate.getMonth() + parseInt(contractTerm));
+                                    billEndDate = startDate.toISOString().split('T')[0];
+                                }
+                            }
+                            billEndDates.push(billEndDate);
+                        });
 
-                        // Handle select elements
-                        if (selectElement.length > 0) {
-                            selectElement.val(initialValue);
-                            let initialSelectedOption = selectElement.find('option:selected').text();
-                            $(this).find('.textPreview').text(initialSelectedOption);
-                        }
+                        if (initialValue && customerIDs.length != 1) {
+                            let ajaxData = {
+                                id: customerIDs,
+                                category: "cell_grid_update",
+                                dataCategory: category,
+                                column: column,
+                                value: initialValue,
+                            };
 
-                    }
-                    let customerID = $(this).find('input, select').attr('data-id');
-                    customerIDs.push(customerID)
-                });
+                            if (column == "contract_term" || column == "bill_start_date") {
+                                if (typeof billEndDates !== 'undefined') {
+                                    ajaxData.bill_end_date = billEndDates;
+                                }
+                            }
 
-                if (initialValue && customerIDs.length != 1) {
-                    // console.log("CustomerID: " + customerIDs);
-                    // console.log("ValueToCopy: " + initialValue);
-                    // console.log("Category: " + category);
-                    // console.log("Column: " + column);
+                            $.ajax({
+                                type: "POST",
+                                url: URL_ORIGIN + "/Customer/customerServersideLoadSave",
+                                data: ajaxData,
+                                beforeSend: function() {
+                                    Swal.fire({
+                                        icon: "info",
+                                        title: "Updating " + customerIDs.length + " Row cells",
+                                        html: "Please wait while the update process is running...",
+                                        allowOutsideClick: false,
+                                        allowEscapeKey: false,
+                                        didOpen: () => {
+                                            Swal.showLoading();
+                                        },
+                                    });
+                                },
+                                success: function(response) {
+                                    $('.customerManagementTable td.cell_dragging').each(function() {
+                                        if (initialValue) {
+                                            let selectElement = $(this).find('select');
+                                            let inputElement = $(this).find('input');
+                                            let inputType = inputElement.attr('type');
 
-                    $.ajax({
-                        type: "POST",
-                        url: URL_ORIGIN + "/Customer/customerServersideLoadSave",
-                        data: {
-                            id: customerIDs,
-                            category: "cell_grid_update",
-                            dataCategory: category,
-                            column: column,
-                            value: initialValue
-                        },
-                        // beforeSend: function() {
-                        //     Swal.fire({
-                        //         icon: "info",
-                        //         title: "Updating " + customerIDs.length + " Row cells",
-                        //         html: "Please wait while the update process is running...",
-                        //         allowOutsideClick: false,
-                        //         allowEscapeKey: false,
-                        //         didOpen: () => {
-                        //             Swal.showLoading();  // Show the loading spinner
-                        //         },
-                        //     });
-                        // },
-                        success: function(response) {
-                            // console.log(response);
-                            // Swal.close();
-                            iziToast.success({
-                                displayMode: 2,
-                                message: 'Multiple Cells updated successfully!',
-                                timeout: 3000,
-                                position: 'topCenter',
+                                            if (inputType === 'text') {
+                                                inputElement.val(initialValue);
+                                                $(this).find('.textPreview').text(initialValue);
+                                            } else if (inputType === 'date') {
+                                                inputElement.val(initialValue);
+                                                let dateParts = initialValue.split('-');
+                                                let formatted = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
+                                                $(this).closest('td').find('.textPreview').text(formatted);
+                                            } else if (inputType === 'number') {
+                                                inputElement.val(initialValue);
+                                                $(this).find('.textPreview').text("$" + initialValue);
+                                            }
+
+                                            if (selectElement.length > 0) {
+                                                selectElement.val(initialValue);
+                                                let initialSelectedOption = selectElement.find('option:selected').text();
+                                                $(this).find('.textPreview').text(initialSelectedOption);
+                                            }
+
+                                        }
+                                    });
+
+                                    if (column == "contract_term" || column == "bill_start_date") {
+                                        customerIDs.forEach((customerID, index) => {
+                                            let billEndDate = billEndDates[index];
+                                            if (billEndDate) {
+                                                let dateParts = billEndDate.split('-');
+                                                let formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
+                                                $('input[data-id="' + customerID + '"][data-column="bill_end_date"]').val(billEndDate).change();
+                                                $('input[data-id="' + customerID + '"][data-column="bill_end_date"]').closest('td').find('.textPreview').text(formattedDate);
+                                            }
+                                        });
+                                    }
+                                    iziToast.success({
+                                        displayMode: 2,
+                                        message: 'Multiple Cells updated successfully!',
+                                        timeout: 3000,
+                                        position: 'topCenter',
+                                    });
+                                    $('.drag_handle').css('visibility', 'hidden');
+                                    $('.customerManagementTable > tbody > tr > td').removeClass('cell_dragging');
+                                    Swal.close();
+                                },
+                                error: function() {
+                                    iziToast.error({
+                                        message: 'Unable to save changes due to network error.',
+                                        timeout: 3000,
+                                        position: 'topCenter',
+                                    });
+                                    $('.drag_handle').css('visibility', 'hidden');
+                                    $('.customerManagementTable > tbody > tr > td').removeClass('cell_dragging');
+                                    Swal.close();
+                                },
                             });
-                        },
-                    });
-                }
+                        }
+                    } else {
+                        $('.drag_handle').css('visibility', 'hidden');
+                        $('.customerManagementTable > tbody > tr > td').removeClass('cell_dragging');
+                    }
+                });
             }
             $('.customerManagementTable td').removeClass('cell_dragging_action');
             cell_dragging = false;
+        });
+
+        // Keyboard selection for cells (up and down)
+        $(document).on('keydown', function(event) {
+            const currentCell = $('.customerManagementTable td.cell_dragging').last();
+
+            if (event.shiftKey && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
+                event.preventDefault();
+
+                if (!startCell) {
+                    startCell = currentCell;
+                }
+
+                let nextCell;
+                const currentRow = currentCell.parent();
+                const columnIndex = currentCell.index();
+
+                if (event.key === "ArrowDown") {
+                    nextCell = currentRow.next().find('td').eq(columnIndex);
+                } else if (event.key === "ArrowUp") {
+                    nextCell = currentRow.prev().find('td').eq(columnIndex);
+                }
+
+                if (nextCell.length) {
+                    nextCell.addClass('cell_dragging');
+                    selectedCells.push(nextCell);
+                }
+            }
+
+            // Handle Ctrl + Shift + Arrow Down to select all cells below
+            if (event.ctrlKey && event.shiftKey && event.key === "ArrowDown") {
+                event.preventDefault();
+
+                const columnIndex = currentCell.index();
+                let currentRow = currentCell.parent();
+
+                while (currentRow.length) {
+                    const cells = currentRow.find('td').eq(columnIndex);
+                    if (cells.length) {
+                        cells.addClass('cell_dragging');
+                        selectedCells.push(cells);
+                    }
+                    currentRow = currentRow.next();
+                }
+            }
+        });
+
+        // $(document).on('click', function(event) {
+        //     if (!$(event.target).closest('.customerManagementTable td').length && !$(event.target).closest('.swal2-container').length) {
+        //         $('.customerManagementTable td').removeClass('cell_dragging').find('.drag_handle').attr('style', 'visibility: hidden;');
+        //     }
+        // });
+
+        // Prevent specific key combinations
+        $(document).on('keydown', function(event) {
+            if ((event.shiftKey && (event.key === 'ArrowLeft' || event.key === 'ArrowRight')) ||
+                (event.shiftKey && event.ctrlKey && (event.key === 'ArrowLeft' || event.key === 'ArrowRight'))) {
+                event.preventDefault();
+            }
+        });
+
+        // Reset dragging state when Shift is released
+        $(document).on('keyup', function(event) {
+            let customerIDs = [];
+            let category = "";
+            let column = "";
+            let billEndDates = [];
+
+            if (event.key === "Shift") {
+                if ($('.cell_dragging').length > 1) {
+                    const firstSelectedCell = $('.customerManagementTable td.cell_dragging').first();
+                    const firstInputElement = firstSelectedCell.find('input, select');
+                    if (firstInputElement.length) {
+                        initialValue = firstInputElement.val();
+                    }
+
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Multiple Cell Update",
+                        html: "Do you want to apply changes in column <strong>" + columnName + "</strong>?<br><hr><strong class='text-success'>" + valueOnText + "</strong> value will apply",
+                        showCancelButton: true,
+                        confirmButtonText: "Proceed",
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $('.customerManagementTable td.cell_dragging').each(function() {
+                                const inputElement = $(this).find('input, select');
+                                const customerID = $(this).find('input, select').attr('data-id');
+                                customerIDs.push(customerID);
+
+                                category = inputElement.attr('data-category');
+                                column = inputElement.attr('data-column');
+
+                                let billEndDate = null;
+                                if (column == "contract_term") {
+                                    let billStartDate = $('input[data-id="' + customerID + '"][data-column="bill_start_date"]').val();
+                                    let contractTerm = $('select[data-id="' + customerIDs[0] + '"][data-column="contract_term"]').val();
+                                    if (billStartDate && contractTerm) {
+                                        let startDate = new Date(billStartDate);
+                                        startDate.setMonth(startDate.getMonth() + parseInt(contractTerm));
+                                        billEndDate = startDate.toISOString().split('T')[0];
+                                    }
+                                } else if (column == "bill_start_date") {
+                                    let contractTerm = $('select[data-id="' + customerIDs[0] + '"][data-column="contract_term"]').val();
+                                    let billStartDate = $('input[data-id="' + customerID + '"][data-column="bill_start_date"]').val();
+                                    if (billStartDate && contractTerm) {
+                                        let startDate = new Date(billStartDate);
+                                        startDate.setMonth(startDate.getMonth() + parseInt(contractTerm));
+                                        billEndDate = startDate.toISOString().split('T')[0];
+                                    }
+                                }
+                                billEndDates.push(billEndDate);
+                            });
+
+                            if (customerIDs.length > 0) {
+                                const ajaxData = {
+                                    id: customerIDs,
+                                    category: "cell_grid_update",
+                                    dataCategory: category,
+                                    column: column,
+                                    value: initialValue,
+                                };
+
+                                if (column === "contract_term" || column === "bill_start_date") {
+                                    ajaxData.bill_end_date = billEndDates;
+                                }
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: URL_ORIGIN + "/Customer/customerServersideLoadSave",
+                                    data: ajaxData,
+                                    beforeSend: function() {
+                                        Swal.fire({
+                                            icon: "info",
+                                            title: "Updating " + customerIDs.length + " Row cells",
+                                            html: "Please wait while the update process is running...",
+                                            allowOutsideClick: false,
+                                            allowEscapeKey: false,
+                                            didOpen: () => {
+                                                Swal.showLoading();
+                                            },
+                                        });
+                                    },
+                                    success: function(response) {
+                                        $('.customerManagementTable td.cell_dragging').each(function() {
+                                            if (initialValue) {
+                                                let selectElement = $(this).find('select');
+                                                let inputElement = $(this).find('input');
+                                                let inputType = inputElement.attr('type');
+
+                                                if (inputType === 'text') {
+                                                    inputElement.val(initialValue);
+                                                    $(this).find('.textPreview').text(initialValue);
+                                                } else if (inputType === 'date') {
+                                                    inputElement.val(initialValue);
+                                                    let dateParts = initialValue.split('-');
+                                                    let formatted = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
+                                                    $(this).closest('td').find('.textPreview').text(formatted);
+                                                } else if (inputType === 'number') {
+                                                    inputElement.val(initialValue);
+                                                    $(this).find('.textPreview').text("$" + initialValue);
+                                                }
+
+                                                if (selectElement.length > 0) {
+                                                    selectElement.val(initialValue);
+                                                    let initialSelectedOption = selectElement.find('option:selected').text();
+                                                    $(this).find('.textPreview').text(initialSelectedOption);
+                                                }
+                                            }
+                                        });
+                                        
+                                        if (column == "contract_term" || column == "bill_start_date") {
+                                            customerIDs.forEach((customerID, index) => {
+                                                let billEndDate = billEndDates[index];
+                                                if (billEndDate) {
+                                                    let dateParts = billEndDate.split('-');
+                                                    let formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
+                                                    $('input[data-id="' + customerID + '"][data-column="bill_end_date"]').val(billEndDate).change();
+                                                    $('input[data-id="' + customerID + '"][data-column="bill_end_date"]').closest('td').find('.textPreview').text(formattedDate);
+                                                }
+                                            });
+                                        }
+                                        iziToast.success({
+                                            displayMode: 2,
+                                            message: 'Cells updated successfully!',
+                                            timeout: 3000,
+                                            position: 'topCenter',
+                                        });
+                                        $('.drag_handle').css('visibility', 'hidden');
+                                        $('.customerManagementTable > tbody > tr > td').removeClass('cell_dragging');
+                                        selectedCells = [];
+                                        startCell = null;
+                                        Swal.close();
+                                    },
+                                    error: function() {
+                                        iziToast.error({
+                                            message: 'Unable to save changes due to network error.',
+                                            timeout: 3000,
+                                            position: 'topCenter',
+                                        });
+                                        $('.drag_handle').css('visibility', 'hidden');
+                                        $('.customerManagementTable > tbody > tr > td').removeClass('cell_dragging');
+                                        selectedCells = [];
+                                        startCell = null;
+                                        Swal.close();
+                                    },
+                                });
+                            }
+                        } else {
+                            $('.drag_handle').css('visibility', 'hidden');
+                            $('.customerManagementTable > tbody > tr > td').removeClass('cell_dragging');
+                        }
+                    });
+                }
+            }
         });
 
         customerManagementTable = $('.customerManagementTable').DataTable({
@@ -1405,7 +1680,9 @@
                 "processing": "<div class='custom-loader'><p>Processing, please wait...</p></div>"
             }
         });
+
         $('.batchCustomerUpdaterButton').toggle();
+
         $('.searchCustomerType').change(function(e) {
             var filterData = $(this).val();
             customerManagementTable.columns(3).search(filterData).draw();
@@ -1464,11 +1741,11 @@
         });
 
         $(document).on('input', '.creditCardExpiryInput', function() {
-            let value = $(this).val().replace(/\D/g, ''); 
+            let value = $(this).val().replace(/\D/g, '');
             if (value.length >= 2) {
                 value = value.substring(0, 2) + '/' + value.substring(2, 4);
             }
-            $(this).val(value); 
+            $(this).val(value);
         });
 
         $(document).on('keydown', '.creditCardExpiryInput', function(e) {
@@ -1505,7 +1782,7 @@
 
     });
 
-    $(document).on('change', '.displayCustomerList', function () {
+    $(document).on('change', '.displayCustomerList', function() {
         const value = $(this).val();
         if (value == '500') {
             Swal.fire({
@@ -1535,18 +1812,18 @@
             });
         } else if (value == '100') {
             Swal.fire({
-                        icon: "info",
-                        title: "Showing 100 Entries",
-                        html: "Please wait while the process is running...",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        didOpen: () => {
-                            Swal.showLoading();
-                        },
-                    });
-                    customerManagementTable.page.len(value).draw().on('draw', function() {
-                        Swal.close();
-                    });
+                icon: "info",
+                title: "Showing 100 Entries",
+                html: "Please wait while the process is running...",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            });
+            customerManagementTable.page.len(value).draw().on('draw', function() {
+                Swal.close();
+            });
         } else {
             customerManagementTable.page.len(value).draw();
         }
@@ -1603,6 +1880,8 @@
     });
 
     $(document).on('click', '.saveChanges', function() {
+        valueOnText = $(this).closest('td').find('.updateInputValue').is('select') ? $(this).closest('td').find('.updateInputValue option:selected').text() : $(this).closest('td').find('.updateInputValue').val();
+        currentInputElement = $(this).closest('td');
         const updateID = $(this).closest('td').find('.updateInputValue').attr('data-id');
         const updateCategory = $(this).closest('td').find('.updateInputValue').attr('data-category');
         const updateColumn = $(this).closest('td').find('.updateInputValue').attr('data-column');
@@ -1614,7 +1893,10 @@
         } else if ($(this).closest('td').find('.moneyInput').is('input[type="number"]')) {
             let moneyValue = parseFloat($(this).closest('td').find('.moneyInput').val());
             if (!isNaN(moneyValue)) {
-                let formattedMoney = moneyValue.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+                let formattedMoney = moneyValue.toLocaleString('en-US', {
+                    style: 'currency',
+                    currency: 'USD'
+                });
                 $(this).closest('td').find('.textPreview').text(formattedMoney);
             } else {
                 $(this).closest('td').find('.textPreview').text("<small><i>Not Specified</i></small>");
@@ -1643,159 +1925,114 @@
             $(this).closest('td').find('.textPreview').html('<small class="text-muted"><i>Not Specified</i></small>');
         }
 
-        saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue);
-
-        // If user repeats action with the same value 3 times, then prompt custom alert
-        if (updateColumn == "acct_type") {
-            if (updateValue === lastOptionInAccType) {
-                lastOptionInAccTypeCount += 1;
-            } else {
-                lastOptionInAccType = updateValue
-                lastOptionInAccTypeCount = 0;
-            }
-
-            if (lastOptionInAccTypeCount == 2) {
-                var dataIdInAccType = [];
-                $('select[data-category="alarm"][data-column="acct_type"]').each(function() {
-                    var dataId = $(this).attr('data-id');
-                    dataIdInAccType.push(dataId);
-                });
-
-                Swal.fire({
-                    icon: "warning",
-                    title: "Repetitive Action",
-                    html: "Do you want to apply <strong>" + updateValue + "</strong> value to the rest of the rows in Account Type Column?",
-                    showCancelButton: true,
-                    confirmButtonText: "All Rows",
-                    denyButtonText: "10 Rows Only",
-                    showDenyButton: true,
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        Swal.fire({
-                            icon: "info",
-                            title: "Updating All Rows",
-                            html: "Please wait while the update process is running...",
-                            allowOutsideClick: false,
-                            allowEscapeKey: false,
-                            didOpen: () => {
-                                Swal.showLoading();
-                            },
-                        });
-
-                        $.ajax({
-                            type: "POST",
-                            url: URL_ORIGIN + "/Customer/customerServersideLoadSave",
-                            data: {
-                                id: updateID,
-                                category: "all_rows",
-                                column: updateColumn,
-                                value: updateValue
-                            },
-                            success: function(response) {
-                                customerManagementTable.ajax.reload(null, false);
-                                Swal.close();
-                                iziToast.success({
-                                    displayMode: 2,
-                                    message: 'Cell updated successfully!',
-                                    timeout: 3000,
-                                    position: 'topCenter',
-                                });
-                            },
-                        });
-
-                    } else if (result.isDenied) {
-                        Swal.fire({
-                            icon: "info",
-                            title: "Updating 10 Rows",
-                            html: "Please wait while the update process is running...",
-                            allowOutsideClick: false,
-                            allowEscapeKey: false,
-                            didOpen: () => {
-                                Swal.showLoading();
-                            },
-                        });
-
-                        $.ajax({
-                            type: "POST",
-                            url: URL_ORIGIN + "/Customer/customerServersideLoadSave",
-                            data: {
-                                id: dataIdInAccType,
-                                category: "ten_rows",
-                                column: updateColumn,
-                                value: updateValue
-                            },
-                            success: function(response) {
-                                customerManagementTable.ajax.reload(null, false);
-                                Swal.close();
-                                iziToast.success({
-                                    displayMode: 2,
-                                    message: 'Cell updated successfully!',
-                                    timeout: 3000,
-                                    position: 'topCenter',
-                                });
-                            },
-                        });
-                    }
-                });
-
-                // alert('repeated 3 times');
-                lastOptionInAccTypeCount = -1;
-            }
-
-        }
-
-        $(this).closest('td').find('.textPreview').show();
-        $(this).closest('td').find('.inputMode').hide();
+        saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue, valueOnText, columnName);
     });
 
     function validateDecimal(input) {
-            // Allow up to two decimal places
-            let value = input.value;
-            let decimalIndex = value.indexOf('.');
-            
-            if (decimalIndex >= 0) {
-                let decimalPart = value.substring(decimalIndex + 1);
-                if (decimalPart.length > 2) {
-                    input.value = value.substring(0, decimalIndex + 3);
-                }
+        let value = input.value;
+        let decimalIndex = value.indexOf('.');
+
+        if (decimalIndex >= 0) {
+            let decimalPart = value.substring(decimalIndex + 1);
+            if (decimalPart.length > 2) {
+                input.value = value.substring(0, decimalIndex + 3);
+            }
+        }
+    }
+
+    function saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue, valueOnText, columnName) {
+        let billEndDate = null;
+        let ajaxData = {
+            id: updateID,
+            category: updateCategory,
+            column: updateColumn,
+            value: updateValue,
+        };
+
+        if (updateColumn == "contract_term") {
+            let billStartDate = $('input[data-id="' + updateID + '"][data-column="bill_start_date"]').val();
+            let contractTerm = updateValue;
+
+            if (billStartDate) {
+                let startDate = new Date(billStartDate);
+                startDate.setMonth(startDate.getMonth() + parseInt(contractTerm));
+                billEndDate = startDate.toISOString().split('T')[0];
+                ajaxData.bill_end_date = billEndDate;
+            }
+        } else if (updateColumn == "bill_start_date") {
+            let contractTerm = $('select[data-id="' + updateID + '"][data-column="contract_term"]').val();
+            let billStartDate = updateValue;
+
+            if (contractTerm) {
+                let startDate = new Date(billStartDate);
+                startDate.setMonth(startDate.getMonth() + parseInt(contractTerm));
+                billEndDate = startDate.toISOString().split('T')[0];
+                ajaxData.bill_end_date = billEndDate;
             }
         }
 
-    function saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue) {
-        $.ajax({
-            type: "POST",
-            url: URL_ORIGIN + "/Customer/customerServersideLoadSave",
-            data: {
-                id: updateID,
-                category: updateCategory,
-                column: updateColumn,
-                value: updateValue
-            },
-            success: function(response) {
-                iziToast.success({
-                    displayMode: 2,
-                    message: 'Cell updated successfully!',
-                    timeout: 3000,
-                    position: 'topCenter',
+        Swal.fire({
+            icon: "warning",
+            title: "Cell Update",
+            html: "Do you want to apply changes in column <strong>" + columnName + "</strong>?<br><hr><strong class='text-success'>" + valueOnText + "</strong> value will apply",
+            showCancelButton: true,
+            confirmButtonText: "Proceed",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "POST",
+                    url: URL_ORIGIN + "/Customer/customerServersideLoadSave",
+                    data: ajaxData,
+                    beforeSend: function() {
+                        Swal.fire({
+                            icon: "info",
+                            title: "Updating a cell",
+                            html: "Please wait while the update process is running...",
+                            allowOutsideClick: false,
+                            allowEscapeKey: false,
+                            didOpen: () => {
+                                Swal.showLoading();
+                            },
+                        });
+                    },
+                    success: function(response) {
+                        iziToast.success({
+                            displayMode: 2,
+                            message: 'Cell updated successfully!',
+                            timeout: 3000,
+                            position: 'topCenter',
+                        });
+                        currentInputElement.find('.textPreview').show();
+                        currentInputElement.find('.inputMode').hide();
+                        $('.drag_handle').css('visibility', 'hidden');
+                        $('.customerManagementTable > tbody > tr > td').removeClass('cell_dragging');
+                        if (updateColumn == "contract_term" || updateColumn == "bill_start_date") {
+                            let dateParts = billEndDate.split('-');
+                            let formattedDate = `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
+                            $('input[data-id="' + updateID + '"][data-column="bill_end_date"]').val(billEndDate).change();
+                            $('input[data-id="' + updateID + '"][data-column="bill_end_date"]').closest('td').find('.textPreview').text(formattedDate);
+                        }
+                        Swal.close();
+                    },
+                    error: function() {
+                        iziToast.info({
+                            message: 'Retrying, please wait..',
+                            timeout: 3000,
+                            position: 'topCenter',
+                        });
+                        iziToast.error({
+                            message: 'Unable to save changes due to network error.',
+                            timeout: 3000,
+                            position: 'topCenter',
+                        });
+                        setTimeout(() => {
+                            saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue, valueOnText, columnName);
+                        }, 3000);
+                    },
                 });
-            },
-            error: function() {
-                iziToast.info({
-                    message: 'Retrying, please wait..',
-                    timeout: 3000,
-                    position: 'topCenter',
-                });
-                iziToast.error({
-                    message: 'Unable to save changes due to network error.',
-                    timeout: 1500,
-                    position: 'topCenter',
-                });
-                setTimeout(() => {
-                    saveSpecificColumnEntry(updateID, updateCategory, updateColumn, updateValue);
-                }, 3000);
-                // console.log('Unable to save: network error');
-            },
+            }
         });
+
     }
 
     function resetOutputEntry() {
@@ -2686,5 +2923,19 @@
           });
         }, 800);
     });
+
+    // Set tabindex of all current .paginate_button elements to -1
+    $('.paginate_button').attr('tabindex', '-1');
+
+    // Use event delegation to handle future elements
+    $(document).on('draw.dt', function() {
+        $('.paginate_button').attr('tabindex', '-1');
+    });
+
+    // Also handle any dynamically created or hidden elements in the pagination
+    $(document).on('click', '.paginate_button', function() {
+        $('.paginate_button').attr('tabindex', '-1');
+    });
+
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

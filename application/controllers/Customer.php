@@ -1535,6 +1535,10 @@ class Customer extends MY_Controller
             $postData['column'] => trim($postData['value']),
         );
 
+        if (isset($postData['bill_end_date']) && is_array($postData['bill_end_date']) && !empty($postData['bill_end_date'])) {
+            $updateData['bill_end_date'] = array_map('trim', $postData['bill_end_date']);
+        }
+
         switch ($postData['category']) {
             case 'profile':
                 $updateProcess = $this->company->updateCustomerSpecificData('prof_id', $postData['id'], 'acs_profile', $updateData, 'specific_update');

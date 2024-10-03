@@ -53,9 +53,9 @@
                                     </select>
                                 </div>
 
-                                <div class="col-12 col-md-2 offset-md-1">
+                                <div class="col-12 col-md-2">
                                     <label for="">Balance</label>
-                                    <h3><?=isset($transfer) ? str_replace('$-', '-$', '$'.number_format(floatval($transfer->transfer_from->balance), 2, '.', ',')) : ''?></h3>
+                                    <h3><?=isset($transfer) ? str_replace('$-', '-$', '$'.number_format(floatval($transfer->transfer_from->balance), 2, '.', ',')) : '0.00'?></h3>
                                 </div>
                             </div>
 
@@ -69,9 +69,9 @@
                                     </select>
                                 </div>
 
-                                <div class="col-12 col-md-2 offset-md-1">
+                                <div class="col-12 col-md-2">
                                     <label for="">Balance</label>
-                                    <h3><?=isset($transfer) ? str_replace('$-', '-$', '$'.number_format(floatval($transfer->transfer_to->balance), 2, '.', ',')) : ''?></h3>
+                                    <h3><?=isset($transfer) ? str_replace('$-', '-$', '$'.number_format(floatval($transfer->transfer_to->balance), 2, '.', ',')) : '0.00'?></h3>
                                 </div>
                             </div>
 
@@ -81,7 +81,7 @@
                                     <input type="number" name="transfer_amount" value="<?=isset($transfer) ? number_format(floatval($transfer->transfer_amount), 2, '.', ',') : ''?>" step="0.01" onchange="convertToDecimal(this)" id="transferAmount" class="form-control nsm-field text-end" required>
                                 </div>
 
-                                <div class="col-12 col-md-2 offset-md-1">
+                                <div class="col-12 col-md-2">
                                     <label for="date">Date</label>
                                     <div class="nsm-field-group calendar">
                                         <input type="text" class="form-control nsm-field mb-2 date" name="date" id="date" value="<?=!isset($transfer) ? date('m/d/Y') : ($transfer->transfer_date !== "" && !is_null($transfer->transfer_date) ? date("m/d/Y", strtotime($transfer->transfer_date)) : "")?>"/>
@@ -90,13 +90,28 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-12 col-md-3">
+                                <div class="col-12 col-md-2">
                                     <label for="memo">Memo</label>
-                                    <textarea name="memo" id="memo" class="form-control nsm-field mb-2"><?=$transfer->transfer_memo?></textarea>
+                                    <textarea name="memo" id="memo" rows="7" class="form-control nsm-field mb-2"><?=$transfer->transfer_memo?></textarea>
+                                </div>
+                                <div class="col-12 col-md-3">
+                                    <div class="attachments">
+                                        <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
+                                        <span>Maximum size: 20MB</span>
+                                        <div id="transfer-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3; background: #ffffff; width: 100%; height: 160px;">
+                                            <div class="dz-message" style="margin: 20px;border">
+                                                <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                                <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="row">
+                            <!-- <div class="row">
                                 <div class="col-12 col-md-3">
                                     <div class="attachments">
                                         <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
@@ -112,7 +127,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
