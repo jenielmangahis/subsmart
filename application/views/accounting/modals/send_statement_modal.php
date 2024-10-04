@@ -21,9 +21,9 @@
                             <label for="subject">Subject</label>
                             <input type="text" name="subject" id="subject" class="form-control" value="Statement from <?= $company_name ?>">
                         </div>
-                        <div class="form-group">
-                            <label for="body">Body</label>
-                            <textarea name="body" id="body" maxlength="4000" class="form-control" style="height: 200px !important">
+                        <div class="form-group mt-3">
+                            <label for="email-body">Body</label>
+                            <textarea name="body" id="email-body" class="form-control" style="height: 265px !important">
 <?php if(isset($customer_name)) : ?>
 Dear <?= $customer_name ?>,
 
@@ -48,11 +48,27 @@ Thanks for your business!
                     <div class="col-md-4">
                         
                     </div>
-                    <div class="col-md-4">
-                        <button type="submit" class="btn btn-success btn-rounded float-right">Send</button>
+                    <div class="col-md-4 text-end">
+                        <button type="submit" class="nsm nsm-button primary float-right" style="border:none;">Send</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    function closeModal() {
+        $('#sendEmailModal').modal('hide'); 
+    }
+
+    CKEDITOR.replace( 'email-body', {
+        toolbarGroups: [
+            { name: 'document',    groups: [ 'mode', 'document' ] },            // Displays document group with its two subgroups.
+            { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },           // Group's name will be used to create voice label.
+            '/',                                                                // Line break - next group will be placed in new line.
+            { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+            { name: 'links' }
+        ],
+        height: '265px',
+    });
+</script>
