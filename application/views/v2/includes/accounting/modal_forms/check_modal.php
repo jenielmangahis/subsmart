@@ -429,7 +429,7 @@
                                                             <?php endif; ?>
 
                                                             <?php do {?>
-                                                            <tr style="display:none;">
+                                                            <tr style="">
                                                                 <td><?=$count?></td>
                                                                 <td></td>
                                                                 <td></td>

@@ -121,12 +121,14 @@
                 type: 'POST',
                 url: url,
                 data: _this.serialize(),
+                dataType:'json',
                 success: function(result) {
-                    if (result === "Updated") {
-                        
-                    } else {
+                    if (result.is_success == 1) {
+                        $("#new_lead_source_modal").modal('hide');
+                        _this.trigger("reset");
+
                         Swal.fire({
-                            title: 'Save Successful!',
+                            title: 'Lead Source',
                             text: "New lead source has been added successfully.",
                             icon: 'success',
                             showCancelButton: false,
@@ -136,9 +138,13 @@
                                 location.reload();
                             //}
                         });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.msg,
+                        });
                     }
-                    $("#new_lead_source_modal").modal('hide');
-                    _this.trigger("reset");
 
                     _this.find("button[type=submit]").html("Save");
                     _this.find("button[type=submit]").prop("disabled", false);
@@ -158,12 +164,14 @@
                 type: 'POST',
                 url: url,
                 data: _this.serialize(),
+                dataType:"json",
                 success: function(result) {
-                    if (result === "Updated") {
-                        
-                    } else {
+                    if (result.is_success == 1) {
+                        $("#edit_lead_source_modal").modal('hide');
+                        _this.trigger("reset");
+
                         Swal.fire({
-                            title: 'Update Successful!',
+                            title: 'Lead Source',
                             text: "Lead source has been updated successfully.",
                             icon: 'success',
                             showCancelButton: false,
@@ -173,10 +181,14 @@
                                 location.reload();
                             //}
                         });
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: result.msg,
+                        });
                     }
-                    $("#edit_lead_source_modal").modal('hide');
-                    _this.trigger("reset");
-
+                    
                     _this.find("button[type=submit]").html("Save");
                     _this.find("button[type=submit]").prop("disabled", false);
                 },

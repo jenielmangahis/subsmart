@@ -77,8 +77,11 @@ $(document).ready(function () {
                 catDetailsInputs = $(`${modal_element} .modal-body table#category-details-table tbody tr:first-child()`).html();
                 catDetailsBlank = $(`${modal_element} .modal-body table#category-details-table tbody tr:last-child()`).html();
 
-                $(`${modal_element} .modal-body table#category-details-table tbody tr`).remove();
+                // $(`${modal_element} .modal-body table#category-details-table tbody tr`).remove();
                 // $(`${modal_element} .modal-body table#category-details-table tbody tr:last-child()`).remove();
+
+                $(`${modal_element} .modal-body table#category-details-table tbody tr:first-child()`).remove();
+                $(`${modal_element} .modal-body table#category-details-table tbody tr:last-child()`).remove();
             }
 
             if (modal_element === '#printChecksModal') {

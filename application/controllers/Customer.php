@@ -4803,44 +4803,69 @@ class Customer extends MY_Controller
 
     public function add_leadsource_ajax()
     {
+        $is_success = 1;
+        $msg = '';
+
+        $cid = logged('company_id');
         $input = $this->input->post();
-        // customer_ad_model
-        if (empty($input['ls_id'])) {
-            unset($input['ls_id']);
-            $input['fk_company_id'] = logged('company_id');
-            if ($this->customer_ad_model->add($input, 'ac_leadsource')) {
+
+        $isNameExists = $this->customer_ad_model->getLeadSourceByNameAndCompanyId(trim($input['ls_name']), $cid);
+        if( $isNameExists ){
+            $is_success = 0;
+            $msg = 'Lead source name already exists.';
+        }
+
+        if( $is_success == 1 ){
+            // customer_ad_model
+            if (empty($input['ls_id'])) {
+                unset($input['ls_id']);
+                $input['fk_company_id'] = $cid;
+                $result = $this->customer_ad_model->add($input, 'ac_leadsource');
 
                 //Activity Logs
                 $activity_name = 'Created Lead Source : ' . $input['ls_name']; 
                 createActivityLog($activity_name);
-
-                echo 'Lead Source Added!';
-            } else {
-                echo 'Error';
-            }
-        } else {
-            if ($this->customer_ad_model->update_data($input, 'ac_leadsource', 'ls_id')) {
-                echo 'Updated';
-            } else {
-                echo 'Error';
-            }
+                
+            } 
         }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
     }
 
     public function update_leadsource_ajax()
     {
+        $is_success = 1;
+        $msg = '';
+
+        $cid = logged('company_id');
         $input = $this->input->post();
-        $data = ['ls_id' => $input['ls_id'], 'ls_name' => $input['ls_name']];
-        if ($this->customer_ad_model->update_data($data, 'ac_leadsource', 'ls_id')) {
+
+        $isNameExists = $this->customer_ad_model->getLeadSourceByNameAndCompanyId(trim($input['ls_name']), $cid);
+        if( $isNameExists && ($isNameExists->ls_id !=  $input['ls_id']) ){
+            $is_success = 0;
+            $msg = 'Lead source name already exists.';
+        }
+
+        if( $is_success == 1 ){
+            $data = ['ls_id' => $input['ls_id'], 'ls_name' => $input['ls_name']];
+            $this->customer_ad_model->update_data($data, 'ac_leadsource', 'ls_id');
 
             //Activity Logs
             $activity_name = 'Updated Lead Source : ' . $input['ls_name']; 
             createActivityLog($activity_name);
-
-            echo 1;
-        } else {
-            echo 0;
         }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
     }
 
     public function add_activation_fee_ajax()
