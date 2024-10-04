@@ -52,7 +52,7 @@
                                         <td class="nsm-text-primary"><?= $item->title; ?></td>
                                         <td class="nsm-text-primary"><?= $item->type; ?></td>
                                         <td><?= $qty; ?></td>
-                                        <td style="text-align:right;"><?= number_format($item->price,2,",",""); ?></td>
+                                        <td style="text-align:right;"><?= number_format($item->price,2,".",""); ?></td>
                                         <td>
                                             <button data-id="<?= $item->id ?>" type="button" data-bs-dismiss="modal" class="nsm-button select_item <?php //echo $buttonClass ?>" <?php //echo $disabled; ?>>
                                                 <i class="bx bx-fw bx-plus"></i>
