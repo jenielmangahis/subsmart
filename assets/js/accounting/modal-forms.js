@@ -1,4 +1,3 @@
-
 const GET_OTHER_MODAL_URL = "/accounting/get-other-modals/";
 const vendorModals = ['#expenseModal', '#checkModal', '#billModal', '#vendorCreditModal', '#purchaseOrderModal', '#creditCardCreditModal'];
 const customerModals = ['#invoiceModal', '#creditMemoModal', '#salesReceiptModal', '#refundReceiptModal', '#delayedCreditModal', '#delayedChargeModal', '#standard-estimate-modal', '#options-estimate-modal', '#bundle-estimate-modal'];
@@ -665,7 +664,7 @@ $(function () {
     $(document).on('change', 'div#billPaymentModal select[name="payment_account"]', function () {
         var value = $(this).val();
 
-        $.get(base_url + 'accounting/get-account-balance/' + value, function (res) {
+        $.get('/accounting/get-account-balance/' + value, function (res) {
             var result = JSON.parse(res);
 
             $('div#billPaymentModal span#account-balance').html(result.balance);
@@ -675,7 +674,7 @@ $(function () {
     $(document).on('change', 'div#depositModal select#bank_deposit_account', function () {
         var value = $(this).val();
 
-        $.get(base_url + 'accounting/get-account-balance/' + value, function (res) {
+        $.get('/accounting/get-account-balance/' + value, function (res) {
             var result = JSON.parse(res);
 
             $('div#depositModal span#account-balance').html(result.balance);
@@ -687,7 +686,7 @@ $(function () {
         var value = el.val();
 
         if (value !== '' && value !== null && value !== 'add-new') {
-            $.get(base_url + 'accounting/get-account-balance/' + value, function (res) {
+            $.get('/accounting/get-account-balance/' + value, function (res) {
                 var result = JSON.parse(res);
 
                 el.parent().next().find('h3').html(result.balance);
@@ -701,7 +700,7 @@ $(function () {
         var value = $(this).val();
         var el = $(this);
 
-        $.get(base_url + 'accounting/get-account-balance/' + value, function (res) {
+        $.get('/accounting/get-account-balance/' + value, function (res) {
             var result = JSON.parse(res);
 
             el.parent().next().children('h6').html('Balance ' + result.balance);
@@ -1411,8 +1410,8 @@ $(function () {
 
     $(document).on('change', 'div#statementModal select#statementType, div#statementModal select#customerBalanceStatus, div#statementModal input#statementDate', function () {
         if ($('#statementModal #apply-button').length < 1) {
-            $('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').append(`<div class="col-12 grid-mb"><button type="button" class="nsm-button" id="apply-button">Apply</button></div>`);
-            $('#statementModal .modal-body div.row div.col').children(':last-child').hide();
+            //$('div#statementModal div.modal-body div.row div.col').children('.row:nth-child(3)').append(`<div class="col-12 grid-mb"><button type="button" class="nsm-button" id="apply-button">Apply</button></div>`);            
+            //$('#statementModal .modal-body div.row div.col').children(':last-child').hide();
         }
 
         if ($(this).attr('id') === 'statementType') {
@@ -1939,7 +1938,7 @@ $(function () {
 
         if (flag === true) {
             $.ajax({
-                url: '/accounting/send-email-form/',
+                url: base_url + 'accounting/send-email-form/',
                 data: { json: JSON.stringify(data) },
                 type: 'post',
                 success: function (res) {
@@ -2221,7 +2220,7 @@ $(function () {
         var val = $(this).val();
 
         if (val !== '' && val !== null && val !== 'add-new') {
-            $.get(base_url + 'accounting/get-account-balance/' + val, function (res) {
+            $.get('/accounting/get-account-balance/' + val, function (res) {
                 var result = JSON.parse(res);
 
                 $('#expenseModal #expense_payment_balance').val(result.balance);
@@ -2233,7 +2232,7 @@ $(function () {
         var val = $(this).val();
 
         if (val !== '' && val !== null && val !== 'add-new') {
-            $.get(base_url + 'accounting/get-account-balance/' + val, function (res) {
+            $.get('/accounting/get-account-balance/' + val, function (res) {
                 var result = JSON.parse(res);
 
                 $('#creditCardCreditModal span#account-balance').html(result.balance);
@@ -2245,7 +2244,7 @@ $(function () {
         var val = $(this).val();
 
         if (val !== '' && val !== null && val !== 'add-new') {
-            $.get(base_url + 'accounting/get-account-balance/' + val, function (res) {
+            $.get('/accounting/get-account-balance/' + val, function (res) {
                 var result = JSON.parse(res);
 
                 $('#checkModal span#account-balance').html(result.balance);
@@ -2286,7 +2285,7 @@ $(function () {
     $(document).on('change', '#printChecksModal #payment_account', function () {
         var id = $(this).val();
 
-        $.get(base_url + 'accounting/get-account-balance/' + id, function (res) {
+        $.get('/accounting/get-account-balance/' + id, function (res) {
             var result = JSON.parse(res);
 
             $('#printChecksModal span#account-balance').html(result.balance);
@@ -2296,7 +2295,7 @@ $(function () {
     $(document).on('change', '#payBillsModal #payment_account', function () {
         var id = $(this).val();
 
-        $.get(base_url + 'accounting/get-account-balance/' + id, function (res) {
+        $.get('/accounting/get-account-balance/' + id, function (res) {
             var result = JSON.parse(res);
 
             $('#payBillsModal span#account-balance').html(result.balance);
@@ -11296,9 +11295,7 @@ const submitModalForm = (event, el) => {
                 if (submitType === 'save-and-new') {
                     clearForm();
                     if (modalId == 'creditMemoModal') {
-                    }
-                    if(modalId == '#transferModal') {
-                        $('div#transferModal #transferAmount').val('');
+
                     }
                 }
 
@@ -13850,7 +13847,7 @@ const clearForm = () => {
             var count = $(this).find('td:nth-child(2)').html();
 
             if (index < rowCount) {
-                if (table !== 'category-details-table' && table !== 'item-details-table' && table !== 'timesheet-table') {
+                if (table !== 'category-details-table' && table !== 'item-details-table' && table !== 'timesheet-table' && table !== 'journal-table') {
                     $(this).html(blankRow);
                 } else {
                     if (table === 'category-details-table') {
@@ -13859,6 +13856,8 @@ const clearForm = () => {
                 }
                 $(this).find('td:nth-child(2)').html(count);
             }
+
+
 
             if (index >= rowCount) {
                 $(this).remove();
