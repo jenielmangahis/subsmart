@@ -1,3 +1,14 @@
+<style>
+#statementModal .nsm-table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    color: #6a4a86;
+    background-color: #dad1e0;
+    font-weight:bold;
+}
+</style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
 <form onsubmit="submitModalForm(event, this)" id="modal-form">
@@ -31,7 +42,7 @@
                                 <div class="col-12 col-md-2 grid-mb">
                                     <label for="statementDate">Statement Date</label>
                                     <div class="nsm-field-group calendar">
-                                        <input type="text" class="form-control nsm-field date" name="statement_date" id="statementDate" value="<?php echo date('m/d/Y') ?>"/>
+                                        <input type="date" class="form-control nsm-field" name="statement_date" id="statementDate" value="<?php echo date('Y-m-d') ?>"/>
                                     </div>
                                 </div>
                             </div>
@@ -48,22 +59,24 @@
                                 <div class="col-12 col-md-2 grid-mb">
                                     <label for="startDate">Start Date</label>
                                     <div class="nsm-field-group calendar">
-                                        <input type="text" class="form-control nsm-field date" name="start_date" id="startDate" value="<?php echo date('m/d/Y', strtotime('-1 months')); ?>"/>                                        
+                                        <input type="date" class="form-control nsm-field" name="start_date" id="startDate" value="<?php echo date('Y-m-d', strtotime('-1 months')); ?>"/>                                        
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-2 grid-mb">
                                     <label for="endDate">End Date</label>
                                     <div class="nsm-field-group calendar">
-                                        <input type="text" class="form-control nsm-field date" name="end_date" id="endDate" value="<?php echo date('m/d/Y'); ?>"/>
+                                        <input type="date" class="form-control nsm-field" name="end_date" id="endDate" value="<?php echo date('Y-m-d'); ?>"/>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-md-2 grid-mb">
+                                    <label></label>
+                                    <div class="nsm-field-group">
+                                        <button type="button" class="nsm-button" id="apply-button">Apply</button>
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="row">
-                                <div class="col-12">
-                                    <h2>Recipients List</h2>
-                                </div>
-
+                            <hr />
+                            <div class="row mt-2">
                                 <div class="col-12">
                                     <ul class="nav nav-pills" id="recipients-tabs" role="tablist">
                                         <li class="nav-item" role="presentation">
@@ -76,7 +89,7 @@
 
                                     <div class="tab-content" id="recipients-tab-content">
                                         <div class="tab-pane fade <?=count($withoutEmail) > 0 ? 'show active' : ''?>" id="missing-email" role="tabpanel" aria-labelledby="missing-email-tab">
-                                            <table class="nsm-table" id="missing-email-table">
+                                            <table class="nsm-table mt-2" id="missing-email-table">
                                                 <thead>
                                                     <tr>
                                                         <td class="table-icon text-center">
@@ -84,12 +97,14 @@
                                                         </td>
                                                         <td data-name="Recipients">RECIPIENTS</td>
                                                         <td data-name="Email Address">EMAIL ADDRESS</td>
-                                                        <td data-name="Balance">BALANCE</td>
+                                                        <td data-name="Balance" style="text-align:right;">BALANCE</td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    <?php $total = 0; ?>
                                                     <?php if(count($withoutEmail) > 0) : ?>
                                                     <?php foreach($withoutEmail as $cust) : ?>
+                                                    <?php $total += floatval($cust['balance']);  ?>
                                                     <tr>
                                                         <td>
                                                             <div class="table-row-icon table-checkbox">
@@ -98,9 +113,13 @@
                                                         </td>
                                                         <td><?=$cust['name']?></td>
                                                         <td><input type="email" name="no_email[]" class="form-control nsm-field" value="<?=$cust['email']?>"></td>
-                                                        <td><?=str_replace('$-', '-$', '$'.number_format(floatval($cust['balance']), 2, '.', ','))?></td>
+                                                        <td style="text-align:right;"><?=str_replace('$-', '-$', '$'.number_format(floatval($cust['balance']), 2, '.', ''))?></td>
                                                     </tr>
                                                     <?php endforeach; ?>
+                                                    <tr>
+                                                        <td colspan=3><b>TOTAL</b></td>
+                                                        <td style="text-align:right;"><b>$<?= number_format($total, 2, '.', '') ?></b></td>
+                                                    </tr>
                                                     <?php else : ?>
                                                     <tr>
                                                         <td colspan="4">
@@ -115,7 +134,7 @@
                                         </div>
 
                                         <div class="tab-pane fade <?=count($withoutEmail) < 1 ? 'show active' : ''?>" id="statements-avail" role="tabpanel" aria-labelledby="statements-avail-tab">
-                                            <table class="nsm-table" id="statements-table">
+                                            <table class="nsm-table mt-2" id="statements-table">
                                                 <thead>
                                                     <tr>
                                                         <td class="table-icon text-center">
@@ -123,12 +142,14 @@
                                                         </td>
                                                         <td data-name="Recipients">RECIPIENTS</td>
                                                         <td data-name="Email Address">EMAIL ADDRESS</td>
-                                                        <td data-name="Balance">BALANCE</td>
+                                                        <td data-name="Balance" style="text-align:right;">BALANCE</td>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+                                                    <?php $total = 0; ?>
                                                     <?php if(count($customers) > 0) : ?>
                                                     <?php foreach($customers as $customer) : ?>
+                                                    <?php $total += number_format(floatval($customer['balance']), 2, '.', ''); ?>
                                                     <tr>
                                                         <td>
                                                             <div class="table-row-icon table-checkbox">
@@ -137,9 +158,13 @@
                                                         </td>
                                                         <td><?=$customer['name']?></td>
                                                         <td><input type="email" name="email[]" class="form-control nsm-field" value="<?=$customer['email']?>"></td>
-                                                        <td><?=str_replace('$-', '-$', '$'.number_format(floatval($customer['balance']), 2, '.', ','))?></td>
+                                                        <td style="text-align:right;"><?=str_replace('$-', '-$', '$'.number_format(floatval($customer['balance']), 2, '.', ''))?></td>
                                                     </tr>
                                                     <?php endforeach; ?>
+                                                    <tr>
+                                                        <td colspan=3><b>TOTAL</b></td>
+                                                        <td style="text-align:right;"><b>$<?= number_format($total, 2, '.', '') ?></b></td>
+                                                    </tr>
                                                     <?php else : ?>
                                                     <tr>
                                                         <td colspan="4">
@@ -185,8 +210,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <button type="submit" class="nsm-button float-end" id="save">Save</button>
                         </div>
                     </div>
                 </div>

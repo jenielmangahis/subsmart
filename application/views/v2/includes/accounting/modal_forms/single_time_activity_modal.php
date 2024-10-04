@@ -112,7 +112,7 @@
                                     <div class="col-12 col-md-2">
                                         <div class="grid-mb" <?=!is_null($timesheetSettings) && $timesheetSettings->service === "0" ? 'style="display: none"' : ''?>>
                                             <label for="service">Service</label>
-                                            <select name="service" id="service" class="form-control nsm-field" required>
+                                            <select name="service" id="service" class="form-control nsm-field select-time-activity-service" required>
                                                 <option value="" disabled <?=!isset($timeActivity) ? 'selected' : ''?>>Choose the service worked on</option>
                                                 <?php if(isset($timeActivity)) : ?>
                                                 <option value="<?=$timeActivity->service_id?>" selected><?=$timeActivity->service?></option>
@@ -156,9 +156,14 @@
                                         <?php endif; ?>
                                     </div>
                                     <div class="col-12 col-md-2">
-                                        <div class="grid-mb <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? '' : 'd-none'?>">
+                                        <div class="grid-mb <?php echo isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? '' : 'd-none'; ?>">
                                             <label for="break">Break</label>
-                                            <input type="text" name="break" id="breaktime-b" class="form-control nsm-field" placeholder="hh:mm" value="<?=isset($timeActivity) ? substr($timeActivity->break_duration, 0, -3) : ''?>">
+                                            <!-- <input type="text" name="break" id="breaktime-b" class="form-control nsm-field" placeholder="hh:mm" value="<?php //echo isset($timeActivity) ? substr($timeActivity->break_duration, 0, -3) : ''?>"> -->
+                                            <select name="break" id="breaktime" class="form-control nsm-field breaktime-c">
+                                                <?php foreach ($dropdown['times'] as $time) :?>
+                                                    <option value="<?=$time['value']?>" <?=isset($timeActivity) && substr($timeActivity->break_duration, 0, -3) === $time['value'] ? 'selected' : ''?>><?=$time['display']?></option>
+                                                <?php endforeach; ?>
+                                            </select>                                       
                                         </div>                                        
                                         <div class="grid-mb" <?=isset($timeActivity) && $timeActivity->start_time !== "" && !is_null($timeActivity->start_time) ? '' : 'style="display: none"'?>>
                                             <label for="startTime">Start time</label>
@@ -280,6 +285,10 @@
             });
 
             $('#breaktime-b').datetimepicker({
+                format: 'LT'
+            });
+
+            $('#breaktime-b2').datetimepicker({
                 format: 'LT'
             });
            
