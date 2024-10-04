@@ -1299,4 +1299,14 @@ class Customer_advance_model extends MY_Model
 
         return $return;
     }
+
+    public function getLeadSourceByNameAndCompanyId($name, $cid)
+    {
+        $this->db->select('*');
+        $this->db->where('ls_name', $name);
+        $this->db->where('fk_company_id', $cid);
+        $query = $this->db->get('ac_leadsource');
+
+        return $query->row();
+    }
 }
