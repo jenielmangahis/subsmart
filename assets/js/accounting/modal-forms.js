@@ -6419,6 +6419,7 @@ $(function () {
                     if (res.success) {
                         dropdownEl.append(`<option value="${res.data.id}" selected>${res.data.title}</option>`);
                         dropdownEl.trigger('change');
+                        $('#singleTimeModal #service').append(`<option value="${res.data.id}" selected>${res.data.title}</option>`).trigger('change');
                     }
                 }
             });
