@@ -1499,7 +1499,7 @@ $(function () {
         }
 
         $.ajax({
-            url: '/accounting/get-statement-customers',
+            url: base_url + '/accounting/get-statement-customers',
             data: data,
             type: 'post',
             processData: false,
@@ -11587,7 +11587,7 @@ const makeRecurring = (modalName) => {
                 <div class="col-12 col-md-3 d-flex flex-column p-0 align-items-start">
                     <span>Create &emsp;</span>
                     <div class="d-flex align-items-start justify-content-center"><input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
-                    <span>&emsp; days in advance</span></div>
+                    <span style="margin-top: 7px;">&emsp; days in advance</span></div>
                 </div>
             </div>
         </div>
@@ -11624,7 +11624,7 @@ const makeRecurring = (modalName) => {
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="row h-100">
-                        <div class="col-1 d-flex align-items-end justify-content-center">on</div>
+                        <div class="col-1 d-flex align-items-end justify-content-center" style="margin-bottom: 7px;">on</div>
                         <div class="col-11 col-md-2 d-flex align-items-end">
                             <select name="recurring_week" class="form-control nsm-field">
                                 <option value="day">day</option>
@@ -11640,11 +11640,11 @@ const makeRecurring = (modalName) => {
                             ${options}
                             </select>
                         </div>
-                        <div class="col-2 d-flex align-items-end justify-content-center">of every</div>
+                        <div class="col-2 d-flex align-items-end justify-content-center" style="margin-bottom: 7px;">of every</div>
                         <div class="col-8 col-md-2 d-flex align-items-end">
                             <input type="number" value="1" class="form-control nsm-field" name="recurr_every">
                         </div>
-                        <div class="col-2 align-items-end d-flex">month(s)</div>
+                        <div class="col-2 align-items-end d-flex" style="margin-bottom: 7px;">month(s)</div>
                     </div>
                 </div>
                 <div class="col-12 col-md-1">
