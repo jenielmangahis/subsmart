@@ -94,7 +94,7 @@ div, h1, h2, h3, h4, span, p, input, form, img, hr, img, a {
 .container-checkbox input:checked ~ .checkmark:after {display: block; } 
 .container-checkbox .checkmark:after {left: 5px; top: 0px; width: 7px; height: 12px; border: solid white; border-width: 0 3px 3px 0; -webkit-transform: rotate(45deg); -ms-transform: rotate(45deg); transform: rotate(45deg); } 
 .refer-form-content form button {background: #694a85; color: #fff; font-weight: 500; font-size: 18px; width: 100%; height: 50px; cursor: pointer; } 
-.refer-form-content form button:hover{background: #000;}
+.refer-form-content form button:hover{color:#fada97 !important}
 .refer-form-content input::placeholder{color:#c5c5c5; font-size: 14px;}
 .row.refer-form-sec {height: auto; overflow: hidden; margin-top: 55px; }
 .referal-progress table td:nth-child(2) {text-align: right; } 
@@ -137,27 +137,24 @@ div, h1, h2, h3, h4, span, p, input, form, img, hr, img, a {
 }
 }
 </style>
-<div class="container">
-        <div class="row refer-form-sec">
-          <div class="col">
-            <div class="refer-image">
-              <img src="<?php echo base_url('assets/img/refer_friend_bannerjpg.png'); ?>" style="padding: 54px;">
-            </div>
-          </div>
-          <div class="col">
-            <div class="refer-form-content" style="margin-top:40px;">
-              <h2>Email Successfully Sent!</h2>
-              <p>Click button to redirect to the dashboard </p>
-              <br />
-              <div class="mt-3">
-                <form action="#" method="#" id="form-referer">
-                  <button type="submit" class="btn-send">Go To Dashboard</button>
-                </form>
-              </div>
-            </div>
+<div class="container mb-5">
+    <div class="row refer-form-sec">
+      <div class="col-md-2">
+      
+      </div>
+      <div class="col-md-8">
+        <div class="refer-form-content" style="margin-top:40px;">
+          <h2>Email Successfully Sent!</h2>
+          <br />
+          <div class="mt-3">
+            <form action="#" method="#" id="form-referer">
+              <button type="submit" class="btn-send nsm-button">Go back to dashboard</button>
+            </form>
           </div>
         </div>
+      </div>
     </div>
+</div>
 <?php include viewPath('frontcommon/footer'); ?>
 <script>
 $(function(){

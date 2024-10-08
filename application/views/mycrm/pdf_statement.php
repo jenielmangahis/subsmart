@@ -22,7 +22,9 @@
             <br>
             <b><?php echo $company->business_name; ?></b><br>
             <?php echo $company->business_email; ?><br>
-            <?php echo $company->address; ?>
+            <?php echo $company->address; ?> <br> 
+            <?php echo $company->city; ?>, <?php echo $company->state; ?><?php echo $company->postal_code; ?> <br> 
+            United States
         </td>
         <td style="vertical-align: top;text-align: right;">
             <table>
