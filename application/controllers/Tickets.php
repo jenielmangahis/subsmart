@@ -1777,6 +1777,45 @@ class Tickets extends MY_Controller
                     $input_alarm['alarm_cs_account'] = $this->input->post('customer_monitoring_id');
                     $this->general->add_($input_alarm, 'acs_alarm');
                 }
+            }else{
+                $check = [
+                    'where' => [
+                        'fk_prof_id' => $this->input->post('customer_id'),
+                    ],
+                    'table' => 'acs_alarm',
+                ];
+                $exist = $this->general->get_data_with_param($check, false);
+                if ($exist) {
+                    $input_alarm['panel_type'] = $this->input->post('panel_type');
+                    $this->general->update_with_key_field($input_alarm, $this->input->post('customer_id'), 'acs_alarm', 'fk_prof_id');
+                }else{
+                    $input_alarm['fk_prof_id'] = $this->input->post('customer_id');
+                    $input_alarm['monitor_comp'] = '';                    
+                    $input_alarm['acct_type'] = '';
+                    $input_alarm['online'] = 'Yes';
+                    $input_alarm['in_service'] = 'Yes';
+                    $input_alarm['equipment'] = '';
+                    $input_alarm['collections'] = '';
+                    $input_alarm['credit_score_alarm'] = '';
+                    $input_alarm['passcode'] = '';
+                    $input_alarm['install_code'] = '';
+                    $input_alarm['mcn'] = 0;
+                    $input_alarm['scn'] = 0;
+                    $input_alarm['panel_type'] = $this->input->post('panel_type');
+                    $input_alarm['system_type'] = '';
+                    $input_alarm['warranty_type'] = $this->input->post('warranty_type');
+                    $input_alarm['dealer'] = '';
+                    $input_alarm['alarm_login'] = '';
+                    $input_alarm['alarm_customer_id'] = '';                    
+                    $input_alarm['comm_type'] = '';
+                    $input_alarm['account_cost'] = 0;
+                    $input_alarm['pass_thru_cost'] = 0;
+                    $input_alarm['monthly_monitoring'] = $monthly_monitoring_cost;
+                    $input_alarm['otps'] = $otp_cost;   
+                    $input_alarm['monitor_id'] = '';
+                    $input_alarm['alarm_cs_account'] = '';
+                    $this->general->add_($input_alarm, 'acs_alarm');
+                }
             }
 
             //Update customer billing
@@ -2082,12 +2121,14 @@ class Tickets extends MY_Controller
             $bank_name = '';
             $cc_exp_month = '';
             $cc_exp_year  = '';
+            $panel_type = '';
 
             $alarm = $this->Customer_advance_model->getCustomerAlarmData($prof_id);
             if( $alarm ){
                 $otps = $alarm->otps > 0 ? $alarm->otps : 0;
                 $mmr  = $alarm->monthly_monitoring ? $alarm->monthly_monitoring : 0;
                 $cs_account = $alarm->alarm_cs_account;
+                $panel_type = $alarm->panel_type;
             }                      
 
             $billing = $this->Customer_advance_model->get_data_by_id('fk_prof_id', $prof_id, 'acs_billing');            
@@ -2131,6 +2172,7 @@ class Tickets extends MY_Controller
                 'otps' => $otps,
                 'mmr' => $mmr,
                 'cs_account' => $cs_account,
+                'panel_type' => $panel_type
             ];     
         }else{
             $json_data = [
@@ -2155,6 +2197,7 @@ class Tickets extends MY_Controller
                 'otps' => 0,
                 'mmr' => 0,
                 'cs_account' => '',
+                'panel_type' => ''
             ];
         }
         
