@@ -1746,11 +1746,12 @@ class Tickets extends MY_Controller
                     $input_alarm['panel_type'] = $this->input->post('panel_type');
                     $input_alarm['monthly_monitoring'] = $monthly_monitoring_cost;
                     $input_alarm['otps'] = $otp_cost;   
+                    $input_alarm['monitor_id'] = $this->input->post('customer_monitoring_id');
+                    $input_alarm['alarm_cs_account'] = $this->input->post('customer_monitoring_id');
                     $this->general->update_with_key_field($input_alarm, $this->input->post('customer_id'), 'acs_alarm', 'fk_prof_id');
                 }else{
                     $input_alarm['fk_prof_id'] = $this->input->post('customer_id');
-                    $input_alarm['monitor_comp'] = '';
-                    $input_alarm['monitor_id'] = 0;
+                    $input_alarm['monitor_comp'] = '';                    
                     $input_alarm['acct_type'] = '';
                     $input_alarm['online'] = 'Yes';
                     $input_alarm['in_service'] = 'Yes';
@@ -1766,13 +1767,14 @@ class Tickets extends MY_Controller
                     $input_alarm['warranty_type'] = $this->input->post('warranty_type');
                     $input_alarm['dealer'] = '';
                     $input_alarm['alarm_login'] = '';
-                    $input_alarm['alarm_customer_id'] = '';
-                    $input_alarm['alarm_cs_account'] = '';
+                    $input_alarm['alarm_customer_id'] = '';                    
                     $input_alarm['comm_type'] = '';
                     $input_alarm['account_cost'] = 0;
                     $input_alarm['pass_thru_cost'] = 0;
                     $input_alarm['monthly_monitoring'] = $monthly_monitoring_cost;
                     $input_alarm['otps'] = $otp_cost;   
+                    $input_alarm['monitor_id'] = $this->input->post('customer_monitoring_id');
+                    $input_alarm['alarm_cs_account'] = $this->input->post('customer_monitoring_id');
                     $this->general->add_($input_alarm, 'acs_alarm');
                 }
             }
@@ -1781,13 +1783,34 @@ class Tickets extends MY_Controller
             if( $update_customer_billing == 1 ){
                 $billing = $this->Customer_advance_model->get_data_by_id('fk_prof_id', $this->input->post('customer_id'), 'acs_billing');
                 if( $billing ){
-                    $input_billing['routing_num'] = $this->input->post('routing_number');
-                    $input_billing['acct_num'] = $this->input->post('account_number');
-                    $input_billing['check_num'] = $this->input->post('checking_account_number');
+                    $cc_exp = $billing->credit_card_exp;
+                    if( $this->input->post('customer_cc_expiry_date_month') != '' && $this->input->post('customer_cc_expiry_date_year') != '' ){
+                        $cc_exp = $this->input->post('customer_cc_expiry_date_month') . '/' . $this->input->post('customer_cc_expiry_date_year');  
+                    }
+
+                    $input_billing['bill_method'] = $this->input->post('bill_method');                    
+                    $input_billing['check_num'] = $this->input->post('customer_check_number');
+                    $input_billing['bank_name'] = $this->input->post('customer_check_bank_name');
+
+                    if( $this->input->post('bill_method') == 'CHECK' ){
+                        $input_billing['acct_num'] = $this->input->post('customer_check_account_number');
+                        $input_billing['routing_num'] = $this->input->post('customer_check_routing_number');
+                    }else{
+                        $input_billing['acct_num'] = $this->input->post('customer_ach_account_number');
+                        $input_billing['routing_num'] = $this->input->post('customer_ach_routing_number');
+                    }
+
                     $input_billing['credit_card_num'] = $this->input->post('customer_cc_num');
-                    $input_billing['credit_card_exp_mm_yyyy'] = $this->input->post('card_security_code');
+                    $input_billing['credit_card_exp_mm_yyyy'] = $this->input->post('customer_cc_cvc');
+                    $input_billing['credit_card_exp'] = $cc_exp;
                     $this->general->update_with_key_field($input_billing, $this->input->post('customer_id'), 'acs_billing', 'fk_prof_id');
                 }else{
+                    $cc_exp = '';
+                    if( $this->input->post('customer_cc_expiry_date_month') != '' && $this->input->post('customer_cc_expiry_date_year') != '' ){
+                        $cc_exp = $this->input->post('customer_cc_expiry_date_month') . '/' . $this->input->post('customer_cc_expiry_date_year');
+                    }
+
+                    $input_billing['bill_method'] = $this->input->post('bill_method');
                     $input_billing['fk_prof_id'] = $this->input->post('customer_id');
                     $input_billing['card_address'] = $this->input->post('service_location');
                     $input_billing['city'] = $this->input->post('customer_city');
@@ -1796,11 +1819,18 @@ class Tickets extends MY_Controller
                     $input_billing['mmr'] = $monthly_monitoring_cost;
                     $input_billing['bill_start_date'] = NULL;
                     $input_billing['bill_end_date'] = NULL;
-                    $input_billing['routing_num'] = $this->input->post('routing_number');
-                    $input_billing['acct_num'] = $this->input->post('account_number');
-                    $input_billing['check_num'] = $this->input->post('checking_account_number');
+
+                    if( $this->input->post('bill_method') == 'CHECK' ){
+                        $input_billing['acct_num'] = $this->input->post('customer_check_account_number');
+                        $input_billing['routing_num'] = $this->input->post('customer_check_routing_number');
+                    }else{
+                        $input_billing['acct_num'] = $this->input->post('customer_ach_account_number');
+                        $input_billing['routing_num'] = $this->input->post('customer_ach_routing_number');
+                    }
+                    
                     $input_billing['credit_card_num'] = $this->input->post('customer_cc_num');
-                    $input_billing['credit_card_exp_mm_yyyy'] = $this->input->post('card_security_code');
+                    $input_billing['credit_card_exp_mm_yyyy'] = $this->input->post('customer_cc_cvc');
+                    $input_billing['credit_card_exp'] = $cc_exp;
                     $this->general->add_($input_billing, 'acs_billing');
                 } 
             }               
@@ -2038,28 +2068,46 @@ class Tickets extends MY_Controller
         $company_id = logged('company_id');
 
         $customer = $this->AcsProfile_model->getCustomerBasicInfoByProfIdAndCompanyId($prof_id, $company_id);        
-        if( $customer ){
-            $routing_number = ''; //ABA
-            $acct_num  = '';
-            $check_num = '';
-            $cvc = '';
-            $cc_num = '';
+        if( $customer ){            
+            $cc_num  = '';
+            $cc_exp = '';
+            $cc_cvc  = '';
             $otps = 0;
             $mmr  = 0;
+            $cs_account  = '';
+            $bill_method = 'CC';    
+            $acct_num  = '';
+            $check_num = '';
+            $routing_num = ''; //ABA
+            $bank_name = '';
+            $cc_exp_month = '';
+            $cc_exp_year  = '';
 
             $alarm = $this->Customer_advance_model->getCustomerAlarmData($prof_id);
             if( $alarm ){
                 $otps = $alarm->otps > 0 ? $alarm->otps : 0;
                 $mmr  = $alarm->monthly_monitoring ? $alarm->monthly_monitoring : 0;
+                $cs_account = $alarm->alarm_cs_account;
             }                      
 
             $billing = $this->Customer_advance_model->get_data_by_id('fk_prof_id', $prof_id, 'acs_billing');            
-            if($billing){
-                $routing_number = $billing->routing_num;
-                $acct_num  = $billing->acct_num;
-                $check_num = $billing->check_num;
+            if($billing){                
                 $cvc = $billing->credit_card_exp_mm_yyyy;
                 $cc_num = $billing->credit_card_num;
+                $cc_exp = $billing->credit_card_exp;
+                $cc_cvc = $billing->credit_card_exp_mm_yyyy;
+                
+                if( $cc_exp != '' ){
+                    $exp_dates = explode("/", $cc_exp);
+                    $cc_exp_month = $exp_dates[0];
+                    $cc_exp_year  = $exp_dates[1];
+                }
+
+                $acct_num  = $billing->acct_num;
+                $check_num = $billing->check_num;
+                $routing_num = $billing->routing_num;
+                $bank_name = $billing->bank_name;
+                $bill_method = $billing->bill_method;
             }
             $json_data = [
                 'mail_add' => $customer->mail_add,
@@ -2069,13 +2117,20 @@ class Tickets extends MY_Controller
                 'phone_h' => formatPhoneNumber($customer->phone_h),
                 'phone_m' => formatPhoneNumber($customer->phone_m),
                 'business_name' => $customer->business_name,
-                'routing_number' => $routing_number,
                 'acct_num' => $acct_num,
                 'check_num' => $check_num,
+                'routing_num' => $routing_num,
+                'bank_name' => $bank_name,
                 'cvc' => $cvc,
                 'cc_num' => $cc_num,
+                'cc_exp' => $cc_exp,
+                'cc_exp_month' => $cc_exp_month,
+                'cc_exp_year' => $cc_exp_year,
+                'cc_cvc' => $cc_cvc,
+                'bill_method' => $bill_method,
                 'otps' => $otps,
-                'mmr' => $mmr
+                'mmr' => $mmr,
+                'cs_account' => $cs_account,
             ];     
         }else{
             $json_data = [
@@ -2086,13 +2141,20 @@ class Tickets extends MY_Controller
                 'phone_h' => '',
                 'phone_m' => '',
                 'business_name' => '',
-                'routing_number' => '',
                 'acct_num' => '',
                 'check_num' => '',
+                'routing_num' => '',
+                'bank_name' => '',
                 'cvc' => '',
                 'cc_num' => '',
+                'cc_exp' => '',
+                'cc_exp_month' => '',
+                'cc_exp_year' => '',
+                'cc_cvc' => '',
+                'bill_method' => 'CC',
                 'otps' => 0,
-                'mmr' => 0
+                'mmr' => 0,
+                'cs_account' => '',
             ];
         }
         
