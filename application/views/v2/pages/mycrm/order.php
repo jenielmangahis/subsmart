@@ -42,7 +42,7 @@
                                         <label class="d-block fw-bold nsm-link default" onclick="location.href='<?= url('mycrm/view_payment/' . $p->id); ?>'"><?= $p->order_number; ?></label>
                                     </td>
                                     <td><?= $p->description; ?></td>
-                                    <td><?= date("d/M/Y g:i A", strtotime($p->date_created)); ?></td>
+                                    <td><?= date("m/d/Y g:i A", strtotime($p->date_created)); ?></td>
                                     <td>$<?= number_format($p->total_amount,2); ?></td>
                                     <td>
                                         <div class="dropdown table-management">
