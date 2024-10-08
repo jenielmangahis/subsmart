@@ -18,7 +18,7 @@
                     <div class="col-12 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
                             <a class="nsm-button primary" href="<?php echo url('mycrm/order_pdf/' . $payment->id) ?>" target="_new" style="margin-right: 10px;">PDF Order</a>
-                            <a class="nsm-button primary" href="<?php echo url('mycrm/invoice_pdf/' . $payment->id) ?>" target="_new" style="margin-right: 10px;">PDF Invoice</a>
+                            <a class="nsm-button primary" href="<?php echo url('mycrm/pdf_statement/' . $payment->id) ?>" target="_new" style="margin-right: 10px;">PDF Statement</a>
                             <a class="nsm-button primary" href="<?php echo url('mycrm/orders') ?>" style="margin-right: 10px;">Back to list</a>
                         </div>
                     </div>
