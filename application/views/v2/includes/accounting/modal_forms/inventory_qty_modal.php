@@ -1,3 +1,25 @@
+<style>
+#inventoryModal .nsm-table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+}
+.span-input{
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    text-align:right;
+}
+</style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
     <?php if (!isset($adjustment)) : ?>
@@ -34,35 +56,32 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="row">
-                                        <div class="col-12 col-md-4">
+                                        <div class="col-12 col-md-3">
                                             <div class="form-group">
                                                 <label class="control-label" for="adjustmentDate">Adjustment Date</label>
                                                 <div class="nsm-field-group calendar">
-                                                    <input type="text" class="form-control nsm-field date" name="adjustment_date" id="adjustmentDate" value="<?= !isset($adjustment) ? date('m/d/Y') : date('m/d/Y', strtotime($adjustment->adjustment_date)) ?>" />
+                                                    <input type="date" style="width:50%;" class="form-control nsm-field" name="adjustment_date" id="adjustmentDate" value="<?= !isset($adjustment) ? date('Y-m-d') : date('Y-m-d', strtotime($adjustment->adjustment_date)) ?>" />
                                                 </div>
-                                                <label for="inventoryAdjAccount">Inventory Adjustment Account</label>
+                                                <label for="inventoryAdjAccount" class="mt-2">Inventory Adjustment Account</label>
                                                 <select name="inventory_adj_account" id="inventory_adj_account" class="form-control nsm-field" required>
                                                     <?php if (isset($adjustment)) : ?>
                                                         <option value="<?= $adjustment->account->id ?>"><?= $adjustment->account->name ?></option>
                                                     <?php endif; ?>
                                                 </select>
+                                                <label class="control-label mt-2" for="referenceNo">Reference no.</label>
+                                                <input type="number" required name="reference_no" id="referenceNo" class="form-control nsm-field" value="<?= $adjustment_no ?>">
+
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-4">
                                             <div class="form-group">
                                                 <label class="control-label" for="memo">Memo</label>
-                                                <textarea name="memo" id="memo" rows="4" class="nsm-field form-control"><?= isset($adjustment) ? str_replace("<br />", "", $adjustment->memo) : '' ?></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-4">
-                                            <div class="form-group">
-                                                <label class="control-label" for="referenceNo">Reference no.</label>
-                                                <input type="number" required name="reference_no" id="referenceNo" class="form-control nsm-field" value="<?= $adjustment_no ?>">
+                                                <textarea name="memo" id="memo" style="width:400px !important;height:159px !important;" class="nsm-field form-control"><?= isset($adjustment) ? str_replace("<br />", "", $adjustment->memo) : '' ?></textarea>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="row">
+                                    <div class="row mt-4">
                                         <div class="col-12 grid-mb">
                                             <?php if (isset($adjustment)) : ?>
                                                 <div class="accordion grid-mb">
@@ -98,7 +117,7 @@
                                                                         <td style="width: 15%;">
                                                                             <select name="location[]" class="form-control nsm-field" required></select>
                                                                         </td>
-                                                                        <td style="width:9rem;"></td>
+                                                                        <td style="width:9rem;"><span class="span-input"></span></td>
                                                                         <td style="width:9rem;"><input type="number" name="new_qty[]" class="form-control nsm-field text-end" required></td>
                                                                         <td style="width:9rem;"><input type="number" name="change_in_qty[]" class="form-control nsm-field text-end" required></td>
                                                                         <td>
@@ -107,7 +126,7 @@
                                                                             </button>
                                                                         </td>
                                                                     </tr>
-                                                                    <?php $count = 1; ?>
+                                                                    <?php $count = 2; ?>
                                                                     <?php do { ?>
                                                                         <tr>
                                                                             <td><?= $count ?></td>
@@ -240,8 +259,6 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <button type="button" class="nsm-button float-end" id="save">Save</button>
                                 </div>
                             </div>
                         </div>
