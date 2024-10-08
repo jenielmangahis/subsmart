@@ -18,6 +18,19 @@
 .link-modal-open{
     text-decoration:none !important;
 }
+.cc-expiry-month, .cc-expiry-year{
+    display:inline-block;
+    width:44% !important;
+    flex:none !important;
+}
+.cc-separator{
+    display: inline-block;
+    padding: 6px;
+    font-size: 16px;
+}
+.grp-billing-check,.grp-billing-ach{
+    display:none;
+}
 </style>
 <input type="hidden" id="siteurl" value="<?=base_url();?>">
 <input type="hidden" id="redirect-calendar" name="redirect_calendar" value="<?= $redirect_calendar; ?>">
@@ -39,7 +52,7 @@
                     <label for="ticket_customer_phone" class="required mt-2"><b>Customer Phone Number</b></label>
                     <input type="text" class="form-control phone_number" name="customer_phone" id="ticket_customer_phone" required maxlength="12" placeholder="xxx-xxx-xxxx" />
 
-                    <label for="job_tag" class="mt-2">Service Tag</label><label style="float:right;margin-bottom:10px;"></label>
+                    <label for="job_tag" class="mt-2"><b>Service Tag</b></label>
                     <select class="form-control" name="job_tag" id="job_tag">
                         <?php foreach($tags as $t){ ?>
                             <option value="<?= $t->name; ?>"><?= $t->name; ?></option>
@@ -55,7 +68,7 @@
 
     <div class="col-md-6">
         <div class="nsm-card primary">
-            <div class="nsm-card-content">
+            <div class="nsm-card-content">                
                 <label for="customer_city" class="required"><b>City</b></label>
                 <input type="text" class="form-control" name="customer_city" id="customer_city"
                         required placeholder="Enter City" 
@@ -184,6 +197,10 @@
                 </div>
                 <div class="row mt-4" style="background-color:white;">
                     <div class="col-md-3 form-group">
+                        <label for="zip"><b>Plan Type</b></label>
+                        <input type="text" class="form-control" name="plan_type" id="plan_type" placeholder="Plan Type" />
+                    </div>
+                    <div class="col-md-3 form-group">
                         <label for="zip"><b>Warranty Type</b></label>
                         <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="form-control" >
                             <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
@@ -203,13 +220,15 @@
                                 <option <?php if($ulist->id == logged('id')){ echo "selected";} ?> value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
                             <?php } ?>
                         </select>
-                    </div>
+                    </div>                    
+                </div>
+                <div class="row mt-4" style="background-color:white;">
                     <div class="col-md-6 form-group">
                         <label for=""><b>Assigned Technician</b></label>
                         <select class="form-control nsm-field form-select" name="assign_tech[]" id="ticket-appointment-user" multiple="multiple">
                         </select>
                     </div>
-                    <div class="col-md-12 form-group">
+                    <div class="col-md-6 form-group">
                         <label for="zip"><b>Job Description</b></label>                        
                         <textarea name="job_description" class="form-control" required="" style="height:100px;"></textarea>
                         <div class="form-check mt-2">
@@ -265,49 +284,98 @@
                                     <input type="number" step="any" class="form-control" value="0.00" name="otp" id="service-ticket-otp">
                                 </div>
                             </div>
-                        </div>
-
+                        </div>                        
+                    </div>
+                    <div class="row" style="background-color:white;">                        
                         <div class="col-md-6 form-group mt-2">
-                            <div class="row">
-                                <div class="col-md-6 form-group mt-2">
-                                    <label for="customer_checking_account_number"><b>Checking Account Number</b></label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="checking_account_number" id="customer_checking_account_number"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 form-group mt-2">
-                                    <label for="customer_account_number"><b>Account Number</b></label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="account_number" id="customer_account_number"/>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 form-group mt-2">
-                            <div class="row">
-                                <div class="col-md-6 form-group mt-2">
-                                    <label for="customer_routing_number"><b>ABA</b></label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="routing_number" id="customer_routing_number"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 form-group mt-2">
-                                    <label for="customer_card_security_code"><b>Security Code</b></label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="card_security_code" id="customer_card_security_code"/>
-                                    </div>
-                                </div>
+                            <label for="bill_method"><b>Billing Method</b></label>
+                            <div class="input-group">
+                                <select id="bill_method" name="bill_method" class="form-select">
+                                    <option value="CC">Credit Card</option>
+                                    <option value="CHECK">Check</option>
+                                    <option value="ACH">ACH</option>/option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-6 form-group mt-2">
-                            <div class="row">
-                                <div class="col-md-6 form-group mt-2">
-                                    <label for="customer_cc_num"><b>Credit Card Number</b></label>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="customer_cc_num" id="customer_cc_num"/>
+                            <label for="customer_monitoring_id"><b>Monitoring ID</b></label>
+                            <input type="text" class="form-control" name="customer_monitoring_id" id="customer_monitoring_id"/>
+                        </div>
+                        
+                        <div class="grp-billing-cc">                      
+                            <div class="col-md-12 form-group mt-2 group-cc">
+                                <div class="row">                                
+                                    <div class="col-md-6 form-group mt-2">
+                                        <label for="customer_cc_num"><b>Credit Card Number</b></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="customer_cc_num" id="customer_cc_num"/>
+                                        </div>
                                     </div>
-                                </div>
+                                    <div class="col-md-2 form-group mt-2">
+                                        <label for="customer_cc_expiry_date_month"><b>Expiry Date</b></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control cc-expiry-month" maxlength="2" size="2" name="customer_cc_expiry_date_month" id="customer_cc_expiry_date_month" placeholder="MM"/>
+                                            <span class="cc-separator">/</span>
+                                            <input type="text" class="form-control cc-expiry-year" maxlength="4" size="4" name="customer_cc_expiry_date_year" id="customer_cc_expiry_date_year" placeholder="YYYY"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 form-group mt-2">
+                                        <label for="customer_cc_cvc"><b>CVC</b></label>
+                                        <div class="input-group" style="width:35%;">
+                                            <input type="text" class="form-control cc-cvc" maxlength="3" size="3" name="customer_cc_cvc" id="customer_cc_cvc"/>
+                                        </div>
+                                    </div>
+                                </div>                                
+                            </div>
+                        </div>
+                        <div class="grp-billing-check">                      
+                            <div class="col-md-12 form-group mt-2 group-cc">
+                                <div class="row">                                
+                                    <div class="col-md-6 form-group mt-2">
+                                        <label for="customer_check_number"><b>Check Number</b></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="customer_check_number" id="customer_check_number"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 form-group mt-2">
+                                        <label for="customer_check_routing_number"><b>Routing Number</b></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="customer_check_routing_number" id="customer_check_routing_number"/>
+                                        </div>
+                                    </div>                                    
+                                </div>    
+                                <div class="row">
+                                    <div class="col-md-6 form-group mt-2">
+                                        <label for="customer_check_bank_name"><b>Bank Name</b></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="customer_check_bank_name" id="customer_check_bank_name"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 form-group mt-2">
+                                        <label for="customer_check_account_number"><b>Account Number</b></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="customer_check_account_number" id="customer_check_account_number"/>
+                                        </div>
+                                    </div>
+                                </div>                            
+                            </div>
+                        </div>
+                        <div class="grp-billing-ach">                      
+                            <div class="col-md-12 form-group mt-2 group-cc">
+                                <div class="row">                                
+                                    <div class="col-md-6 form-group mt-2">
+                                        <label for="customer_ach_account_number"><b>Account Number</b></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="customer_ach_account_number" id="customer_ach_account_number"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 form-group mt-2">
+                                        <label for="customer_ach_routing_number"><b>Routing Number</b></label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="customer_ach_routing_number" id="customer_ach_routing_number"/>
+                                        </div>
+                                    </div>
+                                </div>                                
                             </div>
                         </div>
                     </div>
@@ -387,7 +455,7 @@
                         <input type="hidden" name="sales_rep" class="form-control" value="<?php echo logged('id'); ?>">
                     </div>
                     <div class="col-md-4">
-                        <b>Cell Phone</b>
+                        <b>Mobile Phone</b>
                         <input type="text" name="sales_rep_no" class="form-control phone_number" value="<?php echo logged('mobile'); ?>" maxlength="12" placeholder="xxx-xxx-xxxx">
                     </div>                       
                     <div class="col-md-4">
@@ -560,12 +628,11 @@ $(document).ready(function(){
                 $("#customer_zip").val(response.zip_code);                
                 $("#customer_zip").val(response.zip_code);
                 $("#business_name").val(response.business_name);
-
-                $("#customer_checking_account_number").val(response.check_num);
-                $("#customer_account_number").val(response.acct_num);
-                $("#customer_routing_number").val(response.routing_number);
-                $("#customer_card_security_code").val(response.cvc);
+                
                 $("#customer_cc_num").val(response.cc_num);
+                $("#customer_cc_expiry_date_month").val(response.cc_exp_month);
+                $("#customer_cc_expiry_date_year").val(response.cc_exp_year);
+                $("#customer_cc_cvc").val(response.cc_cvc);
 
                 var mmr  = parseFloat(response.mmr);
                 var otps = parseFloat(response.otps);
@@ -573,6 +640,33 @@ $(document).ready(function(){
                 $("#service-ticket-otp").val(otps.toFixed(2));
                 $('#span_mmr').html(mmr.toFixed(2));
                 $('#span_otp').html(otps.toFixed(2))
+
+                $("#customer_monitoring_id").val(response.cs_account);
+
+                $("#customer_check_account_number").val(response.acct_num);
+                $("#customer_check_bank_name").val(response.bank_name);
+                $("#customer_check_routing_number").val(response.routing_num);
+                $("#customer_check_number").val(response.check_num);
+
+                $("#customer_ach_account_number").val(response.acct_num);
+                $("#customer_ach_routing_number").val(response.routing_num);
+
+                if( response.bill_method == 'CC' ){
+                    $('#bill_method').val('CC');
+                    $('.grp-billing-cc').show();
+                    $('.grp-billing-check').hide();
+                    $('.grp-billing-ach').hide();
+                }else if( response.bill_method == 'ACH' ){
+                    $('#bill_method').val('ACH');
+                    $('.grp-billing-cc').hide();
+                    $('.grp-billing-check').hide();
+                    $('.grp-billing-ach').show();
+                }else{
+                    $('#bill_method').val('CHECK');
+                    $('.grp-billing-cc').hide();
+                    $('.grp-billing-check').show();
+                    $('.grp-billing-ach').hide();
+                }
 
                 computeGrandTotal();
             },
@@ -833,6 +927,24 @@ $(document).ready(function(){
             }
         }
         return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    });
+
+    $('#bill_method').on('change', function(){
+        var selected = $(this).val();
+
+        if( selected == 'CC' ){
+            $('.grp-billing-cc').show();
+            $('.grp-billing-check').hide();
+            $('.grp-billing-ach').hide();
+        }else if( selected == 'ACH' ){
+            $('.grp-billing-cc').hide();
+            $('.grp-billing-check').hide();
+            $('.grp-billing-ach').show();
+        }else{
+            $('.grp-billing-cc').hide();
+            $('.grp-billing-check').show();
+            $('.grp-billing-ach').hide();
+        }
     });
 });
 </script>
