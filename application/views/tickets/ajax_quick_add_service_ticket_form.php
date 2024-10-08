@@ -668,6 +668,10 @@ $(document).ready(function(){
                     $('.grp-billing-ach').hide();
                 }
 
+                if( response.panel_type != '' ){
+                    $('#panel_type').val(response.panel_type);
+                }
+
                 computeGrandTotal();
             },
             error: function(response){
