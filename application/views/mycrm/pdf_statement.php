@@ -30,7 +30,7 @@
             <table>
                 <tr>
                     <td align="right">Date Issued:</td>
-                    <td align="right"><?php echo date('d-M-Y', strtotime($payment->payment_date)); ?></td>
+                    <td align="right"><?php echo date('m/d/Y', strtotime($payment->payment_date)); ?></td>
                 </tr>
                 <tr>
                     <td align="right">Type:</td>

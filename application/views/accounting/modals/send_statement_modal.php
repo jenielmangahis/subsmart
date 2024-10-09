@@ -5,7 +5,6 @@
         <div class="modal-content" style="height: 100%;">
             <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
                 <h4 class="modal-title">Send Statement</h4>
-                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
             </div>
             <div class="modal-body pb-0">
                 <div class="row">
@@ -43,7 +42,7 @@ Thanks for your business!
             <div class="modal-footer bg-secondary">
                 <div class="row w-100">
                     <div class="col-md-4">
-                        <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-secondary btn-rounded border" data-bs-dismiss="modal">Close</button>
                     </div>
                     <div class="col-md-4">
                         
