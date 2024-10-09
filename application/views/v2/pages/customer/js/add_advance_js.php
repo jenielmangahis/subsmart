@@ -281,7 +281,41 @@
 
 
         hide_all();
-        card_show();
+        load_default_bill_method();
+
+        function load_default_bill_method(){
+            var prof_id = $('#prof_id').val();            
+            if( prof_id > 0 ){
+                var c_type  = $('#default_bill_method').val();
+                if (c_type === 'CC' || c_type === 'DC' || c_type === 'OCCP') {
+                    hide_all();
+                    card_show();
+                } else if (c_type === 'CASH') {
+                    hide_all();
+                } else if (c_type === 'CHECK') {
+                    hide_all();
+                    $("#checkNumber").show("slow");
+                    $("#bankName").show("slow");
+                    route_show();
+                } else if (c_type === 'ACH') {
+                    hide_all();
+                    route_show();
+                } else if (c_type === 'Invoicing') {
+                    hide_all();
+                    $(".invoicing_field").show("slow");
+                } else if (c_type === 'VENMO' || c_type === 'PP' || c_type === 'SQ') {
+                    hide_all();
+                    $(".account_cred").show('slow');
+                } else if (c_type === 'WW' || c_type === 'HOF' || c_type === 'eT' || c_type === 'OPT') {
+                    hide_all();
+                    $(".account_cred").show('slow');
+                    $("#confirmationPD").hide("slow");
+                }
+            }else{
+                card_show();
+            }
+        }
+
         $("#bill_method").on('change', function() {
             var c_type = this.value;
             if (c_type === 'CC' || c_type === 'DC' || c_type === 'OCCP') {
@@ -292,6 +326,7 @@
             } else if (c_type === 'CHECK') {
                 hide_all();
                 $("#checkNumber").show("slow");
+                $("#bankName").show("slow");
                 route_show();
             } else if (c_type === 'ACH') {
                 hide_all();
@@ -329,6 +364,7 @@
             $("#checkNumber").hide("slow");
             $("#routingNumber").hide("slow");
             $("#accountNumber").hide("slow");
+            $("#bankName").hide("slow");
             $("#CCN").hide('slow');
             $("#CCE").hide('slow');
             $(".account_cred").hide('slow');

@@ -2109,38 +2109,51 @@ $(function () {
             $.get(base_url + `accounting/get-item-details/${input.val()}`, function (res) {
                 var result = JSON.parse(res);
 
-                row.children(':nth-child(3)').html('<input type="text" class="form-control" value="' + result.item.description + '">');
+                if( result.item.description == 'null' || result.item.description == null ){
+                    var description = '';
+                }else{
+                    var description = result.item.description;
+                }
+
+                row.children(':nth-child(3)').html('<input type="text" class="form-control" value="' + description + '">');
 
                 var selectElement = row.children(':nth-child(4)').children('select');
                 selectElement.empty();
 
-                result.locations.forEach(function (location) {
-                    if (!location.disabled) {
-                        selectElement.append(`<option value="${location.id}" data-quantity="${location.qty}">${location.name}</option>`);
-                    }
-                });
+                if( result.locations.length > 0 ){
+                    result.locations.forEach(function (location) {
+                        if (!location.disabled) {
+                            selectElement.append(`<option value="${location.id}" data-quantity="${location.qty}">${location.name}</option>`);
+                        }
+                    });
+    
+                    selectElement.on('change', function () {
+                        var selectedOption = $(this).find('option:selected');
+                        var selectedQuantity = selectedOption.data('quantity');
+    
+                        var quantityInput = row.children(':nth-child(6)').children('input');
+                        quantityInput.val(selectedQuantity);
+                    });
+    
+                    selectElement.trigger('change');
+                }else{
+                    var hmtl_quantity = '<span class="span-input">0</span>';
+                    row.children(':nth-child(5)').html(hmtl_quantity);
+                    row.children(':nth-child(6)').children('input').val('0');
+                }
 
-                selectElement.on('change', function () {
-                    var selectedOption = $(this).find('option:selected');
-                    var selectedQuantity = selectedOption.data('quantity');
-
-                    var quantityInput = row.children(':nth-child(6)').children('input');
-                    quantityInput.val(selectedQuantity);
-                });
-
-                selectElement.trigger('change');
-
-                row.children(':nth-child(7)').children('input').val('');
+                row.children(':nth-child(7)').children('input').val('0');
             });
         }
     });
 
     $(document).on('change', '#inventory-adjustments-table select[name="location[]"]', function () {
         var selected = $(this).children('option:selected');
-        var quantity = selected[0].dataset.quantity;
+        var quantity = selected[0].dataset.quantity > 0 ? selected[0].dataset.quantity : 0;
+        var hmtl_quantity = '<span class="span-input">' + quantity + '</span>';
 
         $(this).parent().next().addClass('text-right');
-        $(this).parent().next().html(quantity);
+        $(this).parent().next().html(hmtl_quantity);
         $(this).parent().parent().find('input[name="new_qty[]"]').val(quantity);
         $(this).parent().parent().find('input[name="change_in_qty[]"]').val(0);
     });

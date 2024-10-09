@@ -1612,6 +1612,8 @@ class Tickets extends MY_Controller
 
     public function ajax_create_service_ticket()
     {
+        $this->load->helper(array('stripe_helper'));
+
         $this->load->helper(array('hashids_helper', 'form'));
         $this->load->model('JobSettings_model');
         $this->load->model('Customer_advance_model');
@@ -1623,6 +1625,7 @@ class Tickets extends MY_Controller
 
         $company_id  = getLoggedCompanyID();
         $user_id  = getLoggedUserID();
+        $card_type = '';
 
         if( $this->input->post('customer_id') == '' || $this->input->post('customer_id') == 0 ){
             $msg = 'Please select customer';
@@ -1652,6 +1655,23 @@ class Tickets extends MY_Controller
         if( $this->input->post('item_id') === null ){
             $msg = 'Please select an item';
             $is_valid = 0;   
+        }
+
+        if( $this->input->post('is_with_esign') && $this->input->post('bill_method') == 'CC' ){
+            $card_details = [
+                'card_number' => $this->input->post('customer_cc_num'),
+                'card_month' => $this->input->post('customer_cc_expiry_date_month'),
+                'card_year' => $this->input->post('customer_cc_expiry_date_year'),
+                'card_cvc' => $this->input->post('customer_cc_cvc')
+            ];
+            $helper = new Stripe;
+            $result = $helper->validateCardDetails($card_details);
+            if( !$result['is_valid'] ){
+                $msg = $result['error_mesasge'];
+                $is_valid = 0;
+            }else{
+                $card_type = $result['card']['brand'];
+            }
         }
 
         if( $is_valid == 1 ){
@@ -1827,22 +1847,24 @@ class Tickets extends MY_Controller
                         $cc_exp = $this->input->post('customer_cc_expiry_date_month') . '/' . $this->input->post('customer_cc_expiry_date_year');  
                     }
 
-                    $input_billing['bill_method'] = $this->input->post('bill_method');                    
-                    $input_billing['check_num'] = $this->input->post('customer_check_number');
-                    $input_billing['bank_name'] = $this->input->post('customer_check_bank_name');
+                    $input_billing['bill_method'] = $this->input->post('bill_method');                                        
 
                     if( $this->input->post('bill_method') == 'CHECK' ){
+                        $input_billing['check_num'] = $this->input->post('customer_check_number');
+                        $input_billing['bank_name'] = $this->input->post('customer_check_bank_name');
                         $input_billing['acct_num'] = $this->input->post('customer_check_account_number');
                         $input_billing['routing_num'] = $this->input->post('customer_check_routing_number');
+                    }elseif( $this->input->post('bill_method') == 'CC' ){
+                        $input_billing['credit_card_num'] = $this->input->post('customer_cc_num');
+                        $input_billing['credit_card_exp_mm_yyyy'] = $this->input->post('customer_cc_cvc');
+                        $input_billing['credit_card_exp'] = $cc_exp;
+                        $input_billing['card_type'] = $card_type;
                     }else{
                         $input_billing['acct_num'] = $this->input->post('customer_ach_account_number');
                         $input_billing['routing_num'] = $this->input->post('customer_ach_routing_number');
-                    }
-
-                    $input_billing['credit_card_num'] = $this->input->post('customer_cc_num');
-                    $input_billing['credit_card_exp_mm_yyyy'] = $this->input->post('customer_cc_cvc');
-                    $input_billing['credit_card_exp'] = $cc_exp;
+                    }                    
                     $this->general->update_with_key_field($input_billing, $this->input->post('customer_id'), 'acs_billing', 'fk_prof_id');
+
                 }else{
                     $cc_exp = '';
                     if( $this->input->post('customer_cc_expiry_date_month') != '' && $this->input->post('customer_cc_expiry_date_year') != '' ){
@@ -1860,16 +1882,20 @@ class Tickets extends MY_Controller
                     $input_billing['bill_end_date'] = NULL;
 
                     if( $this->input->post('bill_method') == 'CHECK' ){
+                        $input_billing['check_num'] = $this->input->post('customer_check_number');
+                        $input_billing['bank_name'] = $this->input->post('customer_check_bank_name');
                         $input_billing['acct_num'] = $this->input->post('customer_check_account_number');
                         $input_billing['routing_num'] = $this->input->post('customer_check_routing_number');
+                    }elseif( $this->input->post('bill_method') == 'CC' ){
+                        $input_billing['credit_card_num'] = $this->input->post('customer_cc_num');
+                        $input_billing['credit_card_exp_mm_yyyy'] = $this->input->post('customer_cc_cvc');
+                        $input_billing['credit_card_exp'] = $cc_exp;
+                        $input_billing['card_type'] = $card_type;
                     }else{
                         $input_billing['acct_num'] = $this->input->post('customer_ach_account_number');
                         $input_billing['routing_num'] = $this->input->post('customer_ach_routing_number');
-                    }
+                    }     
                     
-                    $input_billing['credit_card_num'] = $this->input->post('customer_cc_num');
-                    $input_billing['credit_card_exp_mm_yyyy'] = $this->input->post('customer_cc_cvc');
-                    $input_billing['credit_card_exp'] = $cc_exp;
                     $this->general->add_($input_billing, 'acs_billing');
                 } 
             }               
