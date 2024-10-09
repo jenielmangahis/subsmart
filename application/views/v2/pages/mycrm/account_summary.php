@@ -111,7 +111,7 @@
                                         <label class="d-block fw-bold nsm-link default" onclick="location.href='<?php echo url('mycrm/view_payment/'.$p->id); ?>'"><?php echo $p->order_number; ?></label>
                                     </td>
                                     <td><?php echo $p->description; ?></td>
-                                    <td><?php echo date('d/M/Y g:i A', strtotime($p->date_created)); ?></td>
+                                    <td><?php echo date('m/d/Y g:i A', strtotime($p->date_created)); ?></td>
                                     <td>$<?php echo number_format($p->total_amount, 2); ?></td>
                                     <td>
                                         <div class="dropdown table-management">

@@ -513,7 +513,7 @@ class DocuSign extends MYF_Controller
 
         #invoice details
         if( $document->job_id > 0 ){
-            $this->db->select('monthly_monitoring AS inv_monthly_monitoring, program_setup AS inv_program_setup, installation_cost AS inv_installation_cost, taxes AS inv_taxes, sub_total AS inv_subtotal, (sub_total+taxes) AS inv_equipment_cost, grand_total AS inv_grand_total');
+            $this->db->select('monthly_monitoring AS inv_monthly_monitoring, program_setup AS inv_program_setup, installation_cost AS inv_installation_cost, taxes AS inv_taxes, sub_total AS inv_subtotal, TRUNCATE((sub_total+taxes),2) AS inv_equipment_cost, grand_total AS inv_grand_total');
             $this->db->where('job_id', $document->job_id);
             $invoces = $this->db->get('invoices')->row();
 
@@ -735,8 +735,20 @@ class DocuSign extends MYF_Controller
         */    
         
         if( $billing ){
+            if( $billing->bill_method == 'CHECK' ){
+                $billing->credit_card_num = '';
+                $billing->credit_card_exp = '';
+                $billing->credit_card_exp_mm_yyyy = '';
+                $billing->card_fname = '';
+                $billing->card_lname = '';
+            }elseif( $billing->bill_method == 'CC' || $billing->bill_method == 'Credit Card' ){
+                $billing->check_num = '';
+                $billing->routing_num = '';
+                $billing->bank_name = '';
+            }
+
             $billingKeys = [
-                'bill_method', 'check_num', 'routing_num', 'card_fname', 'card_lname', 'acct_num', 'credit_card_num', 'equipment', 'credit_card_exp', 'credit_card_exp_mm_yyyy'
+                'bill_method', 'check_num', 'routing_num', 'bank_name', 'card_fname', 'card_lname', 'acct_num', 'credit_card_num', 'equipment', 'credit_card_exp', 'credit_card_exp_mm_yyyy'
             ];
     
             $filteredBilling = array_filter( (array)$billing , function($v) use ($billingKeys) {
@@ -746,7 +758,8 @@ class DocuSign extends MYF_Controller
             $filteredBilling = [
                 'bill_method' => '', 
                 'check_num' => '', 
-                'routing_num' => '', 
+                'routing_num' => '',
+                'bank_name' => '', 
                 'card_fname' => '', 
                 'card_lname' => '', 
                 'acct_num' => '', 

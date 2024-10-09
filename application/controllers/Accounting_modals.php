@@ -3079,7 +3079,7 @@ class Accounting_modals extends MY_Controller
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
+            $return['message'] = 'Please select at least one recipient before attempting to save.'; //validation_errors(); 
         } else {
             $insertData = [
                 'statement_type' => $data['statement_type'],
