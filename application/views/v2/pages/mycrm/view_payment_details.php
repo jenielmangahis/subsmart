@@ -29,7 +29,7 @@
                   </tr>
                   <tr>
                     <td style="width:200px;">Payment Date:</td>
-                    <td style="font-weight: bold;"><?= date("d-M-Y H:i", strtotime($payment->payment_date)); ?></td>
+                    <td style="font-weight: bold;"><?= date("m/d/Y H:i", strtotime($payment->payment_date)); ?></td>
                   </tr>
                   <tr>
                     <td style="width:200px;">Customer:</td>
