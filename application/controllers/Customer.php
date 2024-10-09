@@ -3950,6 +3950,7 @@ class Customer extends MY_Controller
 
         $input_billing['bill_method'] = $input['bill_method'];
         $input_billing['check_num'] = $input['check_num'];
+        $input_billing['bank_name'] = $input['bank_name'];
         $input_billing['routing_num'] = $input['routing_num'];
         $input_billing['acct_num'] = $input['acct_num'];
         $input_billing['credit_card_num'] = $input['credit_card_num'];
