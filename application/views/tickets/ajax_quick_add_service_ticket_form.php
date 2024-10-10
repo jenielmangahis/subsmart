@@ -198,7 +198,11 @@
                 <div class="row mt-4" style="background-color:white;">
                     <div class="col-md-3 form-group">
                         <label for="zip"><b>Plan Type</b></label>
-                        <input type="text" class="form-control" name="plan_type" id="plan_type" placeholder="Plan Type" />
+                        <select class="form-control" name="plan_type" id="plan_type">
+                            <?php foreach($planTypeOptions as $key => $planType){ ?>
+                                <option value="<?= $key; ?>"><?= $planType; ?></option>
+                            <?php } ?>
+                        </select>
                     </div>
                     <div class="col-md-3 form-group">
                         <label for="zip"><b>Warranty Type</b></label>
