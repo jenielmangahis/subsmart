@@ -569,13 +569,15 @@ echo put_header_assets();
                                                                         <span class="u-ellipsis ng-binding">Name</span>
                                                                     </div>
                                                                 </li>
-
+                                                                
+                                                                <?php if( logged('company_id') == 31 || logged('company_id') == 24 || logged('company_id') == 1 ){ ?>
                                                                 <li class="menu_listItem">
                                                                     <div class="fields menu_item" data-type="default-widget" data-key="Profile Name">
                                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-name"></i></span>
                                                                         <span class="u-ellipsis ng-binding">Name Second Signatory</span>
                                                                     </div>
                                                                 </li>
+                                                                <?php } ?>
 
 
                                                                 <li class="menu_listItem">
@@ -886,6 +888,32 @@ echo put_header_assets();
                                                                         <span class="u-ellipsis ng-binding">Card Security Code</span>
                                                                     </div>
                                                                 </li>
+                                                                
+                                                                <li class="menu_listItem">
+                                                                    <div class="fields menu_item" data-type="default-widget" data-key="Card Visa">
+                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-card_vise"></i></span>
+                                                                        <i class="esign-fa fas fa-credit-card"></i>
+                                                                        <span class="u-ellipsis ng-binding">Card Visa</span>
+                                                                    </div>
+                                                                </li>
+
+                                                                <li class="menu_listItem">
+                                                                    <div class="fields menu_item" data-type="default-widget" data-key="Card Mastercard">
+                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-card_mastercard"></i></span>
+                                                                        <i class="esign-fa fas fa-credit-card"></i>
+                                                                        <span class="u-ellipsis ng-binding">Card Mastercard</span>
+                                                                    </div>
+                                                                </li>
+
+                                                                <li class="menu_listItem">
+                                                                    <div class="fields menu_item" data-type="default-widget" data-key="Card American Express">
+                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-card_american_express"></i></span>
+                                                                        <i class="esign-fa fas fa-credit-card"></i>
+                                                                        <span class="u-ellipsis ng-binding">Card American Express</span>
+                                                                    </div>
+                                                                </li>
+
+                                                                
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -960,42 +988,49 @@ echo put_header_assets();
                                                                     <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
                                                                         <div class="fields menu_item" data-type="default-widget" data-key="Panel 2 GIG Go Panel 2">
                                                                             <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
+                                                                            <i class="esign-fa fa fa-server"></i>
                                                                             <span class="u-ellipsis ng-binding">2 GIG Go Panel 2</span>
                                                                         </div>
                                                                     </li>
                                                                     <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
                                                                         <div class="fields menu_item" data-type="default-widget" data-key="Panel 2 GIG Go Panel 3">
                                                                             <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
+                                                                            <i class="esign-fa fa fa-server"></i>
                                                                             <span class="u-ellipsis ng-binding">2 GIG Go Panel 3</span>
                                                                         </div>
                                                                     </li>
                                                                     <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
                                                                         <div class="fields menu_item" data-type="default-widget" data-key="Panel Lynx3000">
                                                                             <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
+                                                                            <i class="esign-fa fa fa-server"></i>
                                                                             <span class="u-ellipsis ng-binding">Lynx3000</span>
                                                                         </div>
                                                                     </li>
                                                                     <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
                                                                         <div class="fields menu_item" data-type="default-widget" data-key="Panel LynxTouch">
                                                                             <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
+                                                                            <i class="esign-fa fa fa-server"></i>
                                                                             <span class="u-ellipsis ng-binding">LynxTouch</span>
                                                                         </div>
                                                                     </li>
                                                                     <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
                                                                         <div class="fields menu_item" data-type="default-widget" data-key="Panel Vista/SEM">
                                                                             <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
+                                                                            <i class="esign-fa fa fa-server"></i>
                                                                             <span class="u-ellipsis ng-binding">Vista/SEM</span>
                                                                         </div>
                                                                     </li>
                                                                     <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
                                                                         <div class="fields menu_item" data-type="default-widget" data-key="Panel DSC">
                                                                             <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
+                                                                            <i class="esign-fa fa fa-server"></i>
                                                                             <span class="u-ellipsis ng-binding">DSC</span>
                                                                         </div>
                                                                     </li>
                                                                     <li class="menu_listItem <?=$is_self_signing ? "d-none" : ""?>">
                                                                         <div class="fields menu_item" data-type="default-widget" data-key="Panel Other">
                                                                             <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-checkbox"></i></span>
+                                                                            <i class="esign-fa fa fa-server"></i>
                                                                             <span class="u-ellipsis ng-binding">Other</span>
                                                                         </div>
                                                                     </li>

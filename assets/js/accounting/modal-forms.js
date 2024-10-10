@@ -1403,7 +1403,7 @@ $(function () {
 
     $(document).on('change', '#statementModal #startDate, #statementModal #endDate', function () {
         if ($('#statementModal #apply-button').length < 1) {
-            $(this).parent().parent().parent().append(`<div class="col-12 grid-mb"><button type="button" class="nsm-button" id="apply-button">Apply</button></div>`);
+            $(this).parent().parent().parent().append(`<div class="col-12 col-md-2 grid-mb" id="statement-apply-button-container"><label>&nbsp;</label><div class="nsm-field-group"><button type="button" class="nsm-button" id="apply-button">Apply</button></div></div>`);
             $('#statementModal .modal-body div.row div.col').children(':last-child').hide();
         }
     });
@@ -1479,7 +1479,6 @@ $(function () {
 
     $(document).on('click', 'div#statementModal button#apply-button', function (e) {
         e.preventDefault();
-
 
         var statementType = $('div#statementModal select#statementType').val();
         var custBalStatus = $('div#statementModal select#customerBalanceStatus').val();
@@ -1567,6 +1566,7 @@ $(function () {
                 }
 
                 $('div#statementModal div.modal-body button#apply-button').parent().remove();
+                $('div#statementModal div.modal-body div#statement-apply-button-container').hide();
                 $('div#statementModal div.modal-body div.row:last-child()').show();
             }
         });
