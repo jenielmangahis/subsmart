@@ -1293,14 +1293,15 @@ class Accounting_modals extends MY_Controller
             'cust_bal_status' => $input['cust_bal_status'],
             'company_id' => logged('company_id'),
             'start_date' => ($input['statement_type'] === '2') ? date('Y-m-d', strtotime(' -1 year')) : date('Y-m-d', strtotime($input['start_date'])),
-            'end_date' => ($input['statement_type'] === '2') ? date('Y-m-d', strtotime(' -1 year')) : date('Y-m-d', strtotime($input['start_date']))
+            'end_date' => ($input['statement_type'] === '2') ? date('Y-m-d', strtotime(' -1 year')) : date('Y-m-d', strtotime($input['end_date']))
         ];
 
         $rows = [];
         foreach($customers as $customer) {
             $data['customer_id'] = $customer->prof_id;
             if ($input['statement_type'] === '1' || $input['statement_type'] === '2') {
-                $invoices = $this->accounting_invoices_model->getStatementInvoices($data);
+                //$invoices = $this->accounting_invoices_model->getStatementInvoices($data); //note: old method
+                $invoices = $this->accounting_invoices_model->getStatementInvoicesAvailable($data);
             } else {
                 $invoices = $this->accounting_invoices_model->getTransactionInvoices($data);
             }
@@ -3079,7 +3080,7 @@ class Accounting_modals extends MY_Controller
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
+            $return['message'] = 'Please select at least one recipient before attempting to save.'; //validation_errors(); 
         } else {
             $insertData = [
                 'statement_type' => $data['statement_type'],

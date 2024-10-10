@@ -68,7 +68,7 @@
                                         <input type="date" class="form-control nsm-field" name="end_date" id="endDate" value="<?php echo date('Y-m-d'); ?>"/>
                                     </div>
                                 </div>
-                                <div class="col-12 col-md-2 grid-mb">
+                                <div class="col-12 col-md-2 grid-mb" id="statement-apply-button-container">
                                     <label></label>
                                     <div class="nsm-field-group">
                                         <button type="button" class="nsm-button" id="apply-button">Apply</button>

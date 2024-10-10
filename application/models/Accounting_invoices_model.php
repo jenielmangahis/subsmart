@@ -37,6 +37,7 @@ class Accounting_invoices_model extends MY_Model
 
         return $query->result();
     }
+
     public function getCustomerOpenInvoices($data)
     {
         $this->db->select('accounting_invoice.*');
@@ -52,6 +53,7 @@ class Accounting_invoices_model extends MY_Model
 
         return $query->result();
     }
+
     public function getCustomerTransactions($data)
     {
         $this->db->select('accounting_invoice.*');
@@ -67,12 +69,13 @@ class Accounting_invoices_model extends MY_Model
 
         return $query->result();
     }
+
     public function getStatementInvoices($data)
     {
         $this->db->where('company_id', $data['company_id']);
-        $this->db->where('customer_id', $data['customer_id']);
+        $this->db->where('customer_id', $data['customer_id']); 
 
-        if ($data['cust_bal_status'] === 'open') {
+        if ($data['cust_bal_status'] == 'open') {
             $this->db->where_not_in('status', ['Draft', 'Paid']);
             $this->db->where('date_issued >=', $data['start_date']);
             $this->db->where('date_issued <=', $data['end_date']);
@@ -81,15 +84,44 @@ class Accounting_invoices_model extends MY_Model
             $this->db->where('company_id', $data['company_id']);
             $this->db->where('due_date <=', $data['end_date']);
             $this->db->where('customer_id', $data['customer_id']);
-        } elseif ($data['cust_bal_status'] === 'overdue') {
+        } elseif ($data['cust_bal_status'] == 'overdue') {
             $this->db->where_not_in('status', ['Draft', 'Paid']);
             $this->db->where('due_date <=', $data['end_date']);
+        } else {
+            echo 'all';
         }
 
         $query = $this->db->get('invoices');
 
         return $query->result();
     }
+
+    public function getStatementInvoicesAvailable($data)
+    {
+        $this->db->where('company_id', $data['company_id']);
+        $this->db->where('customer_id', $data['customer_id']); 
+
+        if ($data['cust_bal_status'] == 'open') {
+            $this->db->where_not_in('status', ['Draft', 'Paid']);
+
+            //$this->db->where('date_issued >=', $data['start_date']);
+            //$this->db->where('date_issued <=', $data['end_date']);
+            $this->db->where('date_issued >=', date('Y-m-d',strtotime($data['start_date'])));
+            $this->db->where('date_issued <=', date('Y-m-d',strtotime($data['end_date'])));
+
+            //$this->db->or_where_not_in('status', ['Draft', 'Paid']);
+            $this->db->where('company_id', $data['company_id']);
+            $this->db->where('due_date <=', $data['end_date']);
+            $this->db->where('customer_id', $data['customer_id']);
+        } elseif ($data['cust_bal_status'] == 'overdue') {
+            $this->db->where_not_in('status', ['Draft', 'Paid']);
+            $this->db->where('due_date <=', $data['end_date']);
+        }
+
+        $query = $this->db->get('invoices');
+        return $query->result();
+    }    
+
     public function getTransactionInvoices($data)
     {
         $this->db->where('company_id', $data['company_id']);

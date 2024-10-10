@@ -69,6 +69,7 @@
                         </div>
                         <div class="col-md-12">
                             <input type="hidden" value="<?php if(isset($profile_info)){ echo $profile_info->prof_id; } ?>" class="form-control" name="prof_id" id="prof_id" />
+                            <input type="hidden" value="<?php if(isset($billing_info)){ echo $billing_info->bill_method; } ?>" class="form-control" name="default_bill_method" id="default_bill_method" />
                         </div>
                     </div>
                 </form>

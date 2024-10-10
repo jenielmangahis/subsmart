@@ -1403,7 +1403,7 @@ $(function () {
 
     $(document).on('change', '#statementModal #startDate, #statementModal #endDate', function () {
         if ($('#statementModal #apply-button').length < 1) {
-            $(this).parent().parent().parent().append(`<div class="col-12 grid-mb"><button type="button" class="nsm-button" id="apply-button">Apply</button></div>`);
+            $(this).parent().parent().parent().append(`<div class="col-12 col-md-2 grid-mb" id="statement-apply-button-container"><label>&nbsp;</label><div class="nsm-field-group"><button type="button" class="nsm-button" id="apply-button">Apply</button></div></div>`);
             $('#statementModal .modal-body div.row div.col').children(':last-child').hide();
         }
     });
@@ -1480,7 +1480,6 @@ $(function () {
     $(document).on('click', 'div#statementModal button#apply-button', function (e) {
         e.preventDefault();
 
-
         var statementType = $('div#statementModal select#statementType').val();
         var custBalStatus = $('div#statementModal select#customerBalanceStatus').val();
 
@@ -1499,7 +1498,7 @@ $(function () {
         }
 
         $.ajax({
-            url: '/accounting/get-statement-customers',
+            url: base_url + '/accounting/get-statement-customers',
             data: data,
             type: 'post',
             processData: false,
@@ -1567,6 +1566,7 @@ $(function () {
                 }
 
                 $('div#statementModal div.modal-body button#apply-button').parent().remove();
+                $('div#statementModal div.modal-body div#statement-apply-button-container').hide();
                 $('div#statementModal div.modal-body div.row:last-child()').show();
             }
         });
@@ -2109,38 +2109,51 @@ $(function () {
             $.get(base_url + `accounting/get-item-details/${input.val()}`, function (res) {
                 var result = JSON.parse(res);
 
-                row.children(':nth-child(3)').html('<input type="text" class="form-control" value="' + result.item.description + '">');
+                if( result.item.description == 'null' || result.item.description == null ){
+                    var description = '';
+                }else{
+                    var description = result.item.description;
+                }
+
+                row.children(':nth-child(3)').html('<input type="text" class="form-control" value="' + description + '">');
 
                 var selectElement = row.children(':nth-child(4)').children('select');
                 selectElement.empty();
 
-                result.locations.forEach(function (location) {
-                    if (!location.disabled) {
-                        selectElement.append(`<option value="${location.id}" data-quantity="${location.qty}">${location.name}</option>`);
-                    }
-                });
+                if( result.locations.length > 0 ){
+                    result.locations.forEach(function (location) {
+                        if (!location.disabled) {
+                            selectElement.append(`<option value="${location.id}" data-quantity="${location.qty}">${location.name}</option>`);
+                        }
+                    });
+    
+                    selectElement.on('change', function () {
+                        var selectedOption = $(this).find('option:selected');
+                        var selectedQuantity = selectedOption.data('quantity');
+    
+                        var quantityInput = row.children(':nth-child(6)').children('input');
+                        quantityInput.val(selectedQuantity);
+                    });
+    
+                    selectElement.trigger('change');
+                }else{
+                    var hmtl_quantity = '<span class="span-input">0</span>';
+                    row.children(':nth-child(5)').html(hmtl_quantity);
+                    row.children(':nth-child(6)').children('input').val('0');
+                }
 
-                selectElement.on('change', function () {
-                    var selectedOption = $(this).find('option:selected');
-                    var selectedQuantity = selectedOption.data('quantity');
-
-                    var quantityInput = row.children(':nth-child(6)').children('input');
-                    quantityInput.val(selectedQuantity);
-                });
-
-                selectElement.trigger('change');
-
-                row.children(':nth-child(7)').children('input').val('');
+                row.children(':nth-child(7)').children('input').val('0');
             });
         }
     });
 
     $(document).on('change', '#inventory-adjustments-table select[name="location[]"]', function () {
         var selected = $(this).children('option:selected');
-        var quantity = selected[0].dataset.quantity;
+        var quantity = selected[0].dataset.quantity > 0 ? selected[0].dataset.quantity : 0;
+        var hmtl_quantity = '<span class="span-input">' + quantity + '</span>';
 
         $(this).parent().next().addClass('text-right');
-        $(this).parent().next().html(quantity);
+        $(this).parent().next().html(hmtl_quantity);
         $(this).parent().parent().find('input[name="new_qty[]"]').val(quantity);
         $(this).parent().parent().find('input[name="change_in_qty[]"]').val(0);
     });
@@ -11587,7 +11600,7 @@ const makeRecurring = (modalName) => {
                 <div class="col-12 col-md-3 d-flex flex-column p-0 align-items-start">
                     <span>Create &emsp;</span>
                     <div class="d-flex align-items-start justify-content-center"><input type="number" name="days_in_advance" id="dayInAdvance" class="form-control nsm-field w-auto">
-                    <span>&emsp; days in advance</span></div>
+                    <span style="margin-top: 7px;">&emsp; days in advance</span></div>
                 </div>
             </div>
         </div>
@@ -11624,7 +11637,7 @@ const makeRecurring = (modalName) => {
                 </div>
                 <div class="col-12 col-md-4">
                     <div class="row h-100">
-                        <div class="col-1 d-flex align-items-end justify-content-center">on</div>
+                        <div class="col-1 d-flex align-items-end justify-content-center" style="margin-bottom: 7px;">on</div>
                         <div class="col-11 col-md-2 d-flex align-items-end">
                             <select name="recurring_week" class="form-control nsm-field">
                                 <option value="day">day</option>
@@ -11640,11 +11653,11 @@ const makeRecurring = (modalName) => {
                             ${options}
                             </select>
                         </div>
-                        <div class="col-2 d-flex align-items-end justify-content-center">of every</div>
+                        <div class="col-2 d-flex align-items-end justify-content-center" style="margin-bottom: 7px;">of every</div>
                         <div class="col-8 col-md-2 d-flex align-items-end">
                             <input type="number" value="1" class="form-control nsm-field" name="recurr_every">
                         </div>
-                        <div class="col-2 align-items-end d-flex">month(s)</div>
+                        <div class="col-2 align-items-end d-flex" style="margin-bottom: 7px;">month(s)</div>
                     </div>
                 </div>
                 <div class="col-12 col-md-1">

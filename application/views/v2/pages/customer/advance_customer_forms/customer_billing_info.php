@@ -277,6 +277,14 @@
                 <input type="number" class="form-control" name="check_num" id="check_num" value="<?php if(isset($billing_info)){ echo $billing_info->check_num; } ?>"/>
             </div>
         </div>
+        <div class="row form_line" id="bankName">
+            <div class="col-md-6">
+                Bank Name
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" name="bank_name" id="bank_name" value="<?php if(isset($billing_info)){ echo $billing_info->bank_name; } ?>"/>
+            </div>
+        </div>
         <div class="row form_line" id="routingNumber">
             <div class="col-md-6">
                 Routing Number

@@ -94,11 +94,29 @@
                                     <label for="memo">Memo</label>
                                     <textarea name="memo" id="memo" rows="7" class="form-control nsm-field mb-2"><?=$transfer->transfer_memo?></textarea>
                                 </div>
-                                <div class="col-12 col-md-3">
+
+                                <!-- <div class="col-12 col-md-3">
                                     <div class="attachments">
                                         <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
                                         <span>Maximum size: 20MB</span>
-                                        <div id="transfer-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3; background: #ffffff; width: 100%; height: 160px;">
+                                        <div id="transfer-attachments" class="dropzone d-block justify-content-center align-items-center" style="border: 1px solid #e1e2e3; background: #ffffff; width: 100%; height: 160px;">
+                                            <div class="dz-message" style="margin: 20px ;border">
+                                                <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
+                                                <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
+                                        </div>
+                                    </div>
+                                </div> -->
+
+
+                                <div class="col-12 col-md-4">   
+                                    <div class="attachments">
+                                        <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
+                                        <span>Maximum size: 20MB</span>
+                                        <div id="check-attachments" class="dropzone d-block justify-content-center align-items-center" style="border: 1px solid #e1e2e3; background: #ffffff; width: 100%;" data-id="0">
                                             <div class="dz-message" style="margin: 20px;border">
                                                 <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                 <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
@@ -108,7 +126,8 @@
                                             <a href="#" id="show-existing-attachments" class="text-decoration-none">Show existing</a>
                                         </div>
                                     </div>
-                                </div>
+                                </div>                                
+
                             </div>
 
                             <!-- <div class="row">
