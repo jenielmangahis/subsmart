@@ -1594,6 +1594,9 @@ class Tickets extends MY_Controller
             }
         }
 
+        $planTypeOptions = $this->Customer_advance_model->planTypeOptions();
+
+        $this->page_data['planTypeOptions'] = $planTypeOptions;
         $this->page_data['prefix'] = $prefix;
         $this->page_data['next_num'] = $next_num;
         $this->page_data['default_start_date'] = $default_start_date;
