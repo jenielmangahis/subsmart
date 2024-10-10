@@ -83,26 +83,24 @@
 </div>
 <script>
  
- $(function() {
-    $(document).on('keyup', '.payee_phone_number', function(e) {
-        var input = $(this).val();
+    $(function() {
+        $(document).on('keyup', '.payee_phone_number', function(e) {
+            var input = $(this).val();
 
-        // Remove non-numeric characters
-        input = input.replace(/\D/g, '');
+            // Remove non-numeric characters
+            input = input.replace(/\D/g, '');
 
-        // Formatting the phone number (xxx-xxx-xxxx)
-        if (input.length > 3 && input.length <= 6) {
-            input = input.slice(0, 3) + '-' + input.slice(3);
-        } else if (input.length > 6) {
-            input = input.slice(0, 3) + '-' + input.slice(3, 6) + '-' + input.slice(6, 10);
-        }
+            // Formatting the phone number (xxx-xxx-xxxx)
+            if (input.length > 3 && input.length <= 6) {
+                input = input.slice(0, 3) + '-' + input.slice(3);
+            } else if (input.length > 6) {
+                input = input.slice(0, 3) + '-' + input.slice(3, 6) + '-' + input.slice(6, 10);
+            }
 
-        // Set the formatted value back into the input
-        $(this).val(input);
+            // Set the formatted value back into the input
+            $(this).val(input);
+        });
     });
-});
-
-
 </script>
 
 <script>
