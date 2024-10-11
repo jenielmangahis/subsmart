@@ -1657,6 +1657,85 @@ class Settings extends MY_Controller {
         echo json_encode($return);
     }
 
+    public function ajax_update_email_brandingg() 
+    {
+        $is_success = 0;
+        $msg = "Cannot update data.";
+
+        //Update - start
+        postAllowed();
+
+        $user       = $this->session->userdata('logged');
+        $post       = $this->input->post();
+        $company_id = logged('company_id');
+
+        $logo_image = "";
+        /*
+        $config['upload_path'] = 'uploads/email_branding/' . $user['id'];
+
+        if (!is_dir($config['upload_path'])) {
+            mkdir($config['upload_path'], 0777, TRUE);
+        }
+
+        $config['file_name'] = $_FILES['file-logo']['name'];
+        $config['allowed_types'] = 'gif|jpeg|jpg|png';
+
+        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
+
+        if ( !$this->upload->do_upload('file-logo')) {
+            $logo_image = '';
+        } else {
+            $data = array('upload_data' => $this->upload->data());
+            $logo_image = $data['upload_data']['file_name'];
+        }
+        */
+
+        if( !empty($post) ){
+            $this->load->model('SettingEmailBranding_model');
+
+            $settingEmailBranding = $this->SettingEmailBranding_model->findByCompanyId($company_id);
+            if( $settingEmailBranding ){
+                $data = array(
+                    'email_from_name' => post('email_from_name'),
+                    'email_template_footer_text' => post('email_template_footer_text'),
+                    'logo' => $logo_image,
+                    'updated' => date("Y-m-d H:i:s")
+                );
+
+                $this->SettingEmailBranding_model->update($settingEmailBranding->id,$data);
+
+            }else{
+                $data = array(
+                    'company_id' => $company_id,
+                    'user_id' => $user['id'],
+                    'email_from_name' => post('email_from_name'),
+                    'email_template_footer_text' => post('email_template_footer_text'),
+                    'logo' => $logo_image,
+                    'created' => date("Y-m-d H:i:s")
+                );
+
+                $settingEmailBranding = $this->SettingEmailBranding_model->create($data);
+            }
+
+            //Activity Logs
+            $activity_name = 'Your email branding setting was updated'; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg        = $activity_name;            
+
+        }
+        //Update - end 
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
     public function ajax_get_email_template(){
         $this->load->model('EmailTemplate_model');
 
