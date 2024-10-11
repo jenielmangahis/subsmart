@@ -198,7 +198,11 @@
                 <div class="row mt-4" style="background-color:white;">
                     <div class="col-md-3 form-group">
                         <label for="zip"><b>Plan Type</b></label>
-                        <input type="text" class="form-control" name="plan_type" id="plan_type" placeholder="Plan Type" />
+                        <select class="form-control" name="plan_type" id="plan_type">
+                            <?php foreach($planTypeOptions as $key => $planType){ ?>
+                                <option value="<?= $key; ?>"><?= $planType; ?></option>
+                            <?php } ?>
+                        </select>
                     </div>
                     <div class="col-md-3 form-group">
                         <label for="zip"><b>Warranty Type</b></label>
@@ -513,8 +517,8 @@
 
 <!-- Modal -->
 <div class="modal fade" id="quick-add-service-ticket-item-list" tabindex="-1"  aria-labelledby="quickAddServiceTicketLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md" style="margin-top:5%;">
-        <div class="modal-content">
+    <div class="modal-dialog modal-md" style="margin-top:5%;margin-left:31%;">
+        <div class="modal-content" style="width:700px !important;">
             <div class="modal-header">
                 <span class="modal-title content-title" style="font-size: 17px;">Items List</span>
                 <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>

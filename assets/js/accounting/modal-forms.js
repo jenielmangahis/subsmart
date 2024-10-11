@@ -2160,11 +2160,17 @@ $(function () {
 
     $(document).on('change', '#inventory-adjustments-table input[name="new_qty[]"], #inventory-adjustments-table input[name="change_in_qty[]"]', function () {
         var value = $(this).val();
-        if ($(this).attr('name') === 'new_qty[]') {
-            var changeInQty = parseInt(value) - parseInt($(this).parent().prev().html());
+        var qty = $(this).parent().parent().find('td.text-right .span-input').html();
+        if( isNaN(qty) ){
+            var qty = 0;
+        }
+        
+        if ($(this).attr('name') === 'new_qty[]') {            
+            //var changeInQty = parseInt(value) - parseInt($(this).parent().prev().html());
+            var changeInQty = parseInt(value) - parseInt(qty);
             $(this).parent().parent().find('[name="change_in_qty[]"]').val(changeInQty);
         } else {
-            var newQty = parseInt($(this).parent().prev().prev().html()) + parseInt(value);
+            var newQty = parseInt(qty) + parseInt(value);
             $(this).parent().parent().find('[name="new_qty[]"]').val(newQty);
         }
     });

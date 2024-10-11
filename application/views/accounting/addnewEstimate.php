@@ -539,7 +539,7 @@ echo put_header_assets();
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:90%; display:inline-block; border: 1px dashed #d1d1d1">
+                                                <input type="text" name="adjustment_name" id="adjustment_name" placeholder="Adjustment Name" class="form-control" style="width:80%; display:inline-block; border: 1px dashed #d1d1d1">
                                                 <i id="help-popover-adjustment" class='bx bx-fw bx-info-circle ms-2 text-muted' style="margin-top: 0px !important;" data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=""></i> 
                                             </td>
                                             <td colspan="2" style="text-align: right;">
@@ -547,7 +547,7 @@ echo put_header_assets();
                                                     <div class="input-group-prepend">
                                                         <div class="input-group-text">$</div>
                                                     </div>
-                                                    <input type="text" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;text-align: right;padding:0px;">
+                                                    <input type="number" name="adjustment_value" id="adjustment_input" value="0" class="form-control adjustment_input" style="width:50%;display:inline;text-align: right;padding:0px;">
                                                 </div>
                                                 <span id="adjustmentText" style="display: none;">0.00</span>
                                             </td>
@@ -565,7 +565,7 @@ echo put_header_assets();
                                         <tr>
                                             <td>Markup</td>
                                             <td><a href="#" data-bs-toggle="modal" data-bs-target="#modalSetMarkup" style="color:#02A32C;">set markup</a></td>
-                                            <td>
+                                            <td style="text-align:right;">
                                                 <input type="hidden" name="markup_input_form" id="markup_input_form" class="markup_input" value="0">
                                                 <span id="markup_display">$<span id="span_markup_input_form">0.00</span></span>
                                             </td>

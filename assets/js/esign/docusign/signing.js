@@ -1142,7 +1142,7 @@ function Signing(hash) {
       return $element;
     }
 
-    if (["Checkbox", "Radio", "2 GIG Go Panel 2", "2 GIG Go Panel 3", "Lynx3000", "LynxTouch", "Vista/SEM", "DSC", "Other"].includes(field_name)) {
+    if (["Checkbox", "Radio", "2 GIG Go Panel 2", "2 GIG Go Panel 3", "Lynx3000", "LynxTouch", "Vista/SEM", "DSC", "Other", "Card Mastercard", "Card Visa", "Card American Express"].includes(field_name)) {
       let {
         subCheckbox = [],
         isChecked,
@@ -1169,6 +1169,8 @@ function Signing(hash) {
 
       if( field_name === panel_type ){
         isChecked = 'checked';
+      }else{
+        isChecked = '';
       }
 
       if (value.hasOwnProperty("isChecked")) {
@@ -1179,14 +1181,14 @@ function Signing(hash) {
       //console.log('Is Checked' + isChecked);
 
       //const inputType = field_name.toLowerCase();
-      const inputType = field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3" || field_name === "Lynx3000" || field_name === "LynxTouch" || field_name === "Vista/SEM" || field_name === "DSC" || field_name === "Other"
+      const inputType = field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3" || field_name === "Lynx3000" || field_name === "LynxTouch" || field_name === "Vista/SEM" || field_name === "DSC" || field_name === "Other" || field_name === "Card Visa" || field_name === "Card Mastercard" || field_name === "Card American Express"
           ? "checkbox"
           : field_name.toLowerCase();
-      const chkDataFieldType = field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3" || field_name === "Lynx3000" || field_name === "LynxTouch" || field_name === "Vista/SEM" || field_name === "DSC" || field_name === "Other"
+      const chkDataFieldType = field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3" || field_name === "Lynx3000" || field_name === "LynxTouch" || field_name === "Vista/SEM" || field_name === "DSC" || field_name === "Other" || field_name === "Card Visa" || field_name === "Card Mastercard" || field_name === "Card American Express"
           ? "autoPopulatePanelType"
           : 'esign-checkbox';
-      const baseClassName =
-        field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3" || field_name === "Lynx3000" || field_name === "LynxTouch" || field_name === "Vista/SEM" || field_name === "DSC" || field_name === "Other"
+      const baseClassName =1
+        field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3" || field_name === "Lynx3000" || field_name === "LynxTouch" || field_name === "Vista/SEM" || field_name === "DSC" || field_name === "Other" || field_name === "Card Visa" || field_name === "Card Mastercard" || field_name === "Card American Express"
           ? "docusignField__checkbox"
           : "docusignField__radio";
 
@@ -1206,7 +1208,7 @@ function Signing(hash) {
       $element.append(`
             <div class="form-check">
               <input
-                class="form-check-input"
+                class="form-check-input ${field_name}"
                 type="${inputType}"
                 id="${field.unique_key}"
                 ${isChecked ? "checked" : ""}

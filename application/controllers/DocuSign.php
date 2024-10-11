@@ -741,6 +741,7 @@ class DocuSign extends MYF_Controller
                 $billing->credit_card_exp_mm_yyyy = '';
                 $billing->card_fname = '';
                 $billing->card_lname = '';
+                $billing->credit_card_type = '';
             }elseif( $billing->bill_method == 'CC' || $billing->bill_method == 'Credit Card' ){
                 $billing->check_num = '';
                 $billing->routing_num = '';
@@ -748,7 +749,7 @@ class DocuSign extends MYF_Controller
             }
 
             $billingKeys = [
-                'bill_method', 'check_num', 'routing_num', 'bank_name', 'card_fname', 'card_lname', 'acct_num', 'credit_card_num', 'equipment', 'credit_card_exp', 'credit_card_exp_mm_yyyy'
+                'bill_method', 'check_num', 'routing_num', 'bank_name', 'card_fname', 'card_lname', 'acct_num', 'credit_card_type', 'credit_card_num', 'equipment', 'credit_card_exp', 'credit_card_exp_mm_yyyy'
             ];
     
             $filteredBilling = array_filter( (array)$billing , function($v) use ($billingKeys) {

@@ -820,9 +820,9 @@ class Customer extends MY_Controller
         $search = isset($request['search']['value']) ? $request['search']['value'] : '';
         $filter_status = isset($request['filter_status']) ? $request['filter_status'] : '';
 
-     
-        $customers = $this->customer_ad_model->getCustomerLists($search, $start, $length,null,$filter_status == 'All Status' ? '' :$filter_status);
-        $allCustomers = $this->customer_ad_model->getCustomerLists($search, 0, 0,null,$filter_status == 'All Status' ? '' :$filter_status);
+        $param['search'] = $search;
+        $customers = $this->customer_ad_model->getCustomerLists($param, $start, $length,null,$filter_status == 'All Status' ? '' :$filter_status);
+        $allCustomers = $this->customer_ad_model->getCustomerLists($param, 0, 0,null,$filter_status == 'All Status' ? '' :$filter_status);
         $all_customer_ids = [];
 
   

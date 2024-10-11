@@ -22,4 +22,33 @@ class Stripe {
         //Access the connected account id in the response
         print_r($response);
     }
+
+    function validateCardDetails($card_details)
+    {
+        $tokenKey = 'pk_live_51JzxZ0BffKnivrEfPgDmBaGsGTRX9pW75EtMDl4Nw5MJJvbBkPo6yfpZjpQ0Q6WBBmee2iIFAyfMqWksLIvwQiKB00pWAkB9od';
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://api.stripe.com/v1/tokens");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "card[number]={$card_details['card_number']}&card[exp_month]={$card_details['card_month']}&card[exp_year]={$card_details['card_year']}&card[cvc]={$card_details['card_cvc']}");
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_USERPWD, $tokenKey . ":");
+
+        $response = json_decode(curl_exec($ch),true);
+
+        if( isset($response['error']) ){
+            $return = [
+                'is_valid' => false,
+                'error_mesasge' => $response['error']['message']
+            ];
+        }else{
+            $return = [
+                'is_valid' => true,
+                'error_mesasge' => '',
+                'card' => $response['card']
+            ];
+        }
+
+        return $return;
+    }
 }

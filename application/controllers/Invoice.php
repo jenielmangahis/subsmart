@@ -1697,12 +1697,13 @@ class Invoice extends MY_Controller
         $this->page_data['format'] = $format;
         // print_r($this->page_data['users']);
 
+
         if ($format === "pdf") {
             $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
             $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
             $filename = "nSmarTrac_invoice_".$id;
             $this->load->library('pdf');
-            $this->pdf->load_view('invoice/pdf/template', $this->page_data, $filename, "portrait");
+            $this->pdf->load_view('invoice/pdf/standard_template', $this->page_data, $filename, "portrait");
         }elseif($format === "save_pdf"){
             $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
             $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];

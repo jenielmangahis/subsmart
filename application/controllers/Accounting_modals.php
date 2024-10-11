@@ -2670,10 +2670,25 @@ class Accounting_modals extends MY_Controller
 
         $return = [];
 
+        $total_qty = 0;
+        foreach( $data['new_qty'] as $value ){
+            $total_qty += floatval($value);
+        }
+
+        if( $total_qty <= 0 ){
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please select an item to adjust';
+        }  
+
         if ($this->form_validation->run() === false) {
             $return['data'] = null;
             $return['success'] = false;
             $return['message'] = validation_errors();
+        }elseif( $total_qty <= 0 ){           
+            $return['data'] = null;
+            $return['success'] = false;
+            $return['message'] = 'Please select an item to adjust';
         } else {
             $total = 0.00;
 
