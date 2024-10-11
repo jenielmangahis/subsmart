@@ -6798,6 +6798,21 @@ $(function () {
             });
 
             $('#modal-container #payee-modal #add-payee-details').remove();
+
+            $(document).on('keyup', '.phone_number', function(e) {
+                var input = $(this).val();
+                // Remove non-numeric characters
+                input = input.replace(/\D/g, '');
+                // Formatting the phone number (xxx-xxx-xxxx)
+                if (input.length > 3 && input.length <= 6) {
+                    input = input.slice(0, 3) + '-' + input.slice(3);
+                } else if (input.length > 6) {
+                    input = input.slice(0, 3) + '-' + input.slice(3, 6) + '-' + input.slice(6, 10);
+                }
+                // Set the formatted value back into the input
+                $(this).val(input);
+            });
+
         } else {
             $('#modal-container #payee-modal #email').parent().remove();
             $('#modal-container #payee-modal #phone-m').parent().remove();
@@ -13807,6 +13822,8 @@ const clearForm = () => {
     $(modalName).find('.modal-body div.form-group#summary').remove();
     $(modalName).find('.modal-body .transaction-total-amount').html('$0.00');
     $(modalName).find('.modal-body #account-balance').html('$0.00');
+
+    $(modalName).find('.modal-body #amount').val('');
 
     modalAttachmentId = [];
     modalAttachedFiles = [];

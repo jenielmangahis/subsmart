@@ -1711,9 +1711,9 @@ class Accounting_modals extends MY_Controller
         $return = [];
 
         if ($this->form_validation->run() === false) {
-            $return['data'] = null;
+            $return['data']    = null;
             $return['success'] = false;
-            $return['message'] = 'Error';
+            $return['message'] = validation_errors(); //'Error';
         } else {
             $insertData = [
                 'company_id' => logged('company_id'),
