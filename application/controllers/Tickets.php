@@ -1513,17 +1513,24 @@ class Tickets extends MY_Controller
 
     public function ajax_quick_view_details()
     {
+        $this->load->model('User_docflies_model');
+        $this->load->model('Customer_advance_model');
+
         $company_id  = getLoggedCompanyID();
         $user_id     = getLoggedUserID();
         $post        = $this->input->post();
         $id          = $post['appointment_id'];
 
-        $tickets     = $this->tickets_model->get_tickets_data_one($id);
+        $esign   = $this->User_docflies_model->getByTicketId($id);        
+        $tickets = $this->tickets_model->get_tickets_data_one($id);
+        $billing = $this->Customer_advance_model->get_data_by_id('fk_prof_id', $tickets->customer_id, 'acs_billing');
         $ticket_rep  = $tickets->sales_rep;
         
         $this->page_data['reps'] = $this->tickets_model->get_ticket_representative($ticket_rep);
         $this->page_data['ticketsCompany'] = $this->tickets_model->get_tickets_company($tickets->company_id);
         $this->page_data['tickets'] = $tickets;
+        $this->page_data['billing'] = $billing;
+        $this->page_data['esign'] = $esign;
         $this->page_data['items'] = $this->tickets_model->get_ticket_items($id);
         $this->page_data['payment'] = $this->tickets_model->get_ticket_payments($id);
         $this->page_data['clients'] = $this->tickets_model->get_tickets_clients($tickets->company_id);
