@@ -507,16 +507,26 @@ class Customer_advance_model extends MY_Model
         }
         $this->db->where('acs_profile.company_id', $cid);
 
-        if (!empty($search)) {
-            $this->db->group_start(); // Start grouping the OR conditions
-            $this->db->like('acs_profile.last_name', $search, 'both');
-            $this->db->or_like('acs_profile.first_name', $search, 'both');
-            $this->db->or_like('acs_profile.email', $search, 'both');
-            $this->db->or_like('acs_profile.business_name', $search, 'both');
-            $this->db->group_end(); // End grouping
+        // $search = isset($param['search']) ? $param['search'] : '';
+        // if (!empty($search)) {
+        //     $this->db->group_start(); // Start grouping the OR conditions
+        //     $this->db->like('acs_profile.last_name', $search, 'both');
+        //     $this->db->or_like('acs_profile.first_name', $search, 'both');
+        //     $this->db->or_like('acs_profile.email', $search, 'both');
+        //     $this->db->or_like('acs_profile.business_name', $search, 'both');
+        //     $this->db->group_end(); // End grouping
+        // }
+
+        if ($param['search'] != '') {
+            $this->db->group_start();
+            $this->db->or_like('acs_profile.last_name', $param['search'], 'both');
+            $this->db->or_like('acs_profile.first_name', $param['search'], 'both');
+            // $this->db->or_like('acs_profile.email', $param['search'], 'both');
+            $this->db->or_like('acs_profile.business_name', $param['search'], 'both');
+            $this->db->group_end();
         }
     
-      $this->db->where("(acs_profile.first_name != '')");
+        $this->db->where("(acs_profile.first_name != '')");
         $this->db->where("(acs_profile.last_name != '')");
     
     
@@ -1308,5 +1318,20 @@ class Customer_advance_model extends MY_Model
         $query = $this->db->get('ac_leadsource');
 
         return $query->row();
+    }
+
+    public function planTypeOptions()
+    {
+        $options = [
+            'Photo Line' => 'Photo Line',
+            'Wifi Card' => 'Wifi Card',
+            'Cell Primary' => 'Cell Primary',
+            'Basic Interactive' => 'Basic Interactive',
+            'Interactive Automation' => 'Interactive Automation',
+            'Interactive Gold' => 'Interactive Gold',
+            'Interactive Pro Video' => 'Interactive Pro Video'
+        ];
+
+        return $options;
     }
 }
