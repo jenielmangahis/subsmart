@@ -1670,6 +1670,7 @@ class Settings extends MY_Controller {
         $company_id = logged('company_id');
 
         $logo_image = "";
+        
         /*
         $config['upload_path'] = 'uploads/email_branding/' . $user['id'];
 
