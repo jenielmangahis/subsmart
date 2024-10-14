@@ -2013,7 +2013,7 @@ class Tickets extends MY_Controller
             $invoice_id = $this->createInitialInvoice($jobs_id);
 
             if( $this->input->post('is_with_esign') ){
-                $invoice_payment = $this->createInvoicePayment($invoice_id, $this->post());
+                $invoice_payment = $this->createInvoicePayment($invoice_id, $this->input->post());
             }
 
             //Update job settings
@@ -2273,7 +2273,7 @@ class Tickets extends MY_Controller
         $this->load->model('Invoice_model');
 
         $check_number = '';
-        $amount = 0;
+        $amount = $data['grandtotal'];
         $bank_name = '';
         $routing_number = '';
         $account_number = '';
@@ -2281,7 +2281,7 @@ class Tickets extends MY_Controller
         $credit_expiry = '';
         $credit_cvc = '';
         $customer_email = '';
-        $payment_method = $data['payment_method'];
+        $payment_method = $data['bill_method'];
 
         if( $payment_method == 'CC' || $payment_method == 'DEBIT CARD'){
             $credit_number = $data['customer_cc_num'];
