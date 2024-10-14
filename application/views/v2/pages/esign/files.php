@@ -630,7 +630,7 @@ echo put_header_assets();
                                                                     <div class="fields menu_item" data-type="default-widget" data-key="Customer Name">
                                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-subscriber_name"></i></span>
                                                                         <i class="esign-fa fas fa-spell-check"></i>
-                                                                        <span class="u-ellipsis ng-binding">Name</span>
+                                                                        <span class="u-ellipsis ng-binding">Customer Name</span>
                                                                     </div>
                                                                 </li>
                                                                 
@@ -678,7 +678,7 @@ echo put_header_assets();
                                                                     <div class="fields menu_item" data-type="default-widget" data-key="Customer Email">
                                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-subscriber_email"></i></span>
                                                                         <i class="esign-fa far fa-paper-plane"></i>
-                                                                        <span class="u-ellipsis ng-binding">Email</span>
+                                                                        <span class="u-ellipsis ng-binding">Customer Email</span>
                                                                     </div>
                                                                 </li>
 

@@ -43,6 +43,20 @@
     font-size: 15px;
     padding: 10px;
 }
+.ticket-bill-method{
+    display:block;
+    margin-top:10px;
+}
+.clear{
+    clear:both;
+}
+.ticket-bill-method span label{
+    width: 130px;
+    display: inline-block;
+    font-weight: bold;
+    margin-bottom: 3px;
+    /* text-transform: capitalize; */
+}
 </style>
 <div class="nsm-page-content quick-view-schedule-container" style="padding:2%;">
     <input type="hidden" value="<?= $tickets->id ?>" id="esignTicketId" />
@@ -87,61 +101,127 @@
     </div>
     <br />
     <div class="row mt-5">
-        <div class="col-md-8">
-            <h6 class="title-border">FROM :</h6>
-            <div style="font-size:14px;padding:3px;">
-                <span style="font-size:16px;font-weight: bold; display: block; margin-bottom:6px;">
-                    <i class='bx bx-buildings'></i> <?php echo $clients->business_name; ?>
-                </span>
-                <span><?php echo $clients->street .' <br>'. $clients->city .', '. $clients->state .' '. $clients->postal_code; ?></span><br>
-                <?php if( $clients->business_email != '' ){ ?>
-                    <span> Email: <a href="mailto:<?= $clients->business_email; ?>"><?= $clients->business_email; ?></a></span><br />
-                <?php } ?>
-                <span> Contact Number: <?= formatPhoneNumber($clients->business_phone); ?></span>
-            </div>            
-            <h6 class="title-border" style="margin-top: 5px;">TO : </h6>
-            <div style="font-size:14px;padding:3px;">                
-                <?php if( $tickets->customer_type == 'Business' && $tickets->acs_business_name != '' ){ ?>
-                    <span style="font-size:16px;font-weight: bold; display: block; margin-bottom:6px;">
-                        <i class='bx bx-user-circle' ></i> <?php echo $tickets->first_name .' '. $tickets->middle_name .' '. $tickets->last_name; ?> - 
-                        <i class='bx bx-buildings'></i> <?= $tickets->acs_business_name; ?>
-                    </span>
-                <?php }else{ ?>
-                    <span style="font-size:16px;font-weight: bold; display: block; margin-bottom:6px;">
-                        <i class='bx bx-user-circle'></i> <?php echo $tickets->first_name .' '. $tickets->middle_name .' '. $tickets->last_name; ?>
-                    </span>
-                <?php } ?>
-                <span><?php echo $tickets->mail_add .' <br>'. $tickets->city .', '. $tickets->state .' '. $tickets->zip_code; ?></span><br>
-                <?php if( $tickets->email != '' ){ ?>
-                    <span>Email: <a href="mailto:<?php echo $tickets->email; ?>"><?php echo $tickets->email; ?></a></span><br>
-                <?php } ?>
-                <span>Contact Number: <?php echo formatPhoneNumber($tickets->phone_m); ?></span>
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-7">
+                    <h6 class="title-border">FROM :</h6>
+                    <div style="font-size:14px;padding:3px;">
+                        <span style="font-size:16px;font-weight: bold; display: block; margin-bottom:6px;">
+                            <i class='bx bx-buildings'></i> <?php echo $clients->business_name; ?>
+                        </span>
+                        <span><?php echo $clients->street .' <br>'. $clients->city .', '. $clients->state .' '. $clients->postal_code; ?></span><br>
+                        <?php if( $clients->business_email != '' ){ ?>
+                            <span> Email: <a href="mailto:<?= $clients->business_email; ?>"><?= $clients->business_email; ?></a></span><br />
+                        <?php } ?>
+                        <span> Contact Number: <?= formatPhoneNumber($clients->business_phone); ?></span>
+                    </div>  
+                </div>
+                <div class="col-md-5">
+                    <h6 class="title-border">TECHNICIANS :</h6>
+                    <?php 
+                        $assigned_employees = array();
+                        $emp_ids = unserialize($tickets->technicians);
+                        if( is_array($emp_ids) ){
+                            foreach($emp_ids as $eid){
+                                $assigned_employees[] = $eid;    
+                            }
+                        }    
+
+                        if( !empty($assigned_employees) ){
+                            if( !in_array($tickets->sales_rep, $assigned_employees) ){
+                                $assigned_employees[] = $tickets->sales_rep;    
+                            }                            
+                        }else{
+                            $assigned_employees[] = $tickets->sales_rep;    
+                        }
+                    ?>
+                    <?php foreach($assigned_employees as $eid){ ?>
+                        <div class="nsm-list-icon primary" style="background-color:#ffffff;">
+                            <div class="nsm-profile" style="background-image: url('<?= userProfileImage($eid); ?>');" data-img="<?= userProfileImage($eid); ?>"></div>                            
+                        </div>
+                    <?php } ?>
+                    <div class="clear"></div>
+                </div>
             </div>
         </div>
-        <div class="col-md-4">
-            <h6 class="title-border">TECHNICIANS :</h6>
-            <?php 
-                $assigned_employees = array();
-                $emp_ids = unserialize($tickets->technicians);
-                if( is_array($emp_ids) ){
-                    foreach($emp_ids as $eid){
-                        $assigned_employees[] = $eid;    
-                    }
-                }    
 
-                if( !empty($assigned_employees) ){
-                    if( !in_array($tickets->sales_rep, $assigned_employees) ){
-                        $assigned_employees[] = $tickets->sales_rep;    
-                    }                            
-                }else{
-                    $assigned_employees[] = $tickets->sales_rep;    
-                }
-            ?>
-            <?php foreach($assigned_employees as $eid){ ?>
-                <div class="nsm-list-icon primary" style="background-color:#ffffff;">
-                    <div class="nsm-profile" style="background-image: url('<?= userProfileImage($eid); ?>');" data-img="<?= userProfileImage($eid); ?>"></div>                            
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-7">
+                    <h6 class="title-border" style="margin-top: 5px;">TO : </h6>
+                    <div style="font-size:14px;padding:3px;">                
+                        <?php if( $tickets->customer_type == 'Business' && $tickets->acs_business_name != '' ){ ?>
+                            <span style="font-size:16px;font-weight: bold; display: block; margin-bottom:6px;">
+                                <i class='bx bx-user-circle' ></i> <?php echo $tickets->first_name .' '. $tickets->middle_name .' '. $tickets->last_name; ?> - 
+                                <i class='bx bx-buildings'></i> <?= $tickets->acs_business_name; ?>
+                            </span>
+                        <?php }else{ ?>
+                            <span style="font-size:16px;font-weight: bold; display: block; margin-bottom:6px;">
+                                <i class='bx bx-user-circle'></i> <?php echo $tickets->first_name .' '. $tickets->middle_name .' '. $tickets->last_name; ?>
+                            </span>
+                        <?php } ?>
+                        <span><?php echo $tickets->mail_add .' <br>'. $tickets->city .', '. $tickets->state .' '. $tickets->zip_code; ?></span><br>
+                        <?php if( $tickets->email != '' ){ ?>
+                            <span>Email: <a href="mailto:<?php echo $tickets->email; ?>"><?php echo $tickets->email; ?></a></span><br>
+                        <?php } ?>
+                        <span>Contact Number: <?php echo formatPhoneNumber($tickets->phone_m); ?></span>
+                    </div>
                 </div>
-            <?php } ?>
+                <div class="col-md-5">
+                    <?php if( $esign && $billing ){ ?>
+                        <div class="ticket-bill-method">
+                            <h6 class="title-border">BILLING</h6>
+                            <span style="font-size:16px;font-weight: bold; display: block; margin-bottom:6px;">
+                                <?php 
+                                    $billing_method = $billing->bill_method;
+                                    if( $billing_method == 'CC' ){
+                                        $billing_method = 'Credit Card';
+                                    }
+                                    if( $billing_method == 'CHECK' ){
+                                        $billing_method = 'Check';
+                                    }
+                                ?>
+                                <i class='bx bx-spreadsheet'></i> <label><?php echo $billing_method != '' ? $billing_method : '---'; ; ?></label>
+                            </span>   
+                            <?php if( $billing->bill_method == 'CC' ){ ?>     
+                                <span><label>Card Type</label> : <?= $billing->card_type; ?><br /></span>        
+                                <?php 
+                                    if (logged("user_type") == 1){
+                                        $cc_num = $billing->credit_card_num;
+                                    }else{
+                                        $cc_num = strMask($billing->credit_card_num,'X');
+                                    } 
+                                ?>
+                                <span><label>Card Number</label> : <?= $cc_num; ?><br /></span>
+                                <span><label>Card Expiration</label> : <?= $billing->credit_card_exp; ?><br /></span>
+                                <span><label>Card CVC</label> : <?= $billing->credit_card_exp_mm_yyyy; ?><br /></span>
+                            <?php } ?>
+                            <?php if( $billing->bill_method == 'Debit Card' ){ ?>        
+                                <?php 
+                                    if (logged("user_type") == 1){
+                                        $cc_num = $billing->credit_card_num;
+                                    }else{
+                                        $cc_num = strMask($billing->credit_card_num,'X');
+                                    } 
+                                ?>
+                                <span><label>Card Number</label> : <?= $cc_num; ?><br /></span>
+                                <span><label>Card Expiration</label> : <?= $billing->credit_card_exp; ?><br /></span>
+                                <span><label>Card CVC</label> : <?= $billing->credit_card_exp_mm_yyyy; ?><br /></span>
+                            <?php } ?>
+                            <?php if( $billing->bill_method == 'CHECK' ){ ?>  
+                                <span><label>Bank Name</label> : <?= $billing->bank_name; ?><br /></span>
+                                <span><label>Check Number</label> : <?= $billing->check_num; ?><br /></span>
+                                <span><label>Routing Number</label> : <?= $billing->routing_num; ?><br /></span>
+                                <span><label>Account Number</label> : <?= $billing->acct_num; ?><br /></span>
+                            <?php } ?>
+                            <?php if( $billing->bill_method == 'ACH' ){ ?>                                  
+                                <span><label>Routing Number</label> : <?= $billing->routing_num; ?><br /></span>
+                                <span><label>Account Number</label> : <?= $billing->acct_num; ?><br /></span>
+                            <?php } ?>
+                        </div>
+                    <?php } ?>
+                </div>
+            </div>
         </div>
     </div>    
     <br />

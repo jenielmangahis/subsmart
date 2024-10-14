@@ -44,6 +44,15 @@ class User_docflies_model extends MY_Model {
 		return $query->row();
 	}
 
+	public function getByTicketId($ticket_id) 
+	{
+		$this->db->select('*');
+		$this->db->from($this->table);
+		$this->db->where('ticket_id', $ticket_id);
+		$query = $this->db->get();
+		return $query->row();
+	}
+
 	public function getAllDocfileTemplatesByCompanyId($cid)
 	{
 		$this->db->select('*, CONCAT(0) AS is_default');
