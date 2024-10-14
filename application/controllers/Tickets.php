@@ -2012,6 +2012,10 @@ class Tickets extends MY_Controller
             $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
             $invoice_id = $this->createInitialInvoice($jobs_id);
 
+            if( $this->input->post('is_with_esign') ){
+                $invoice_payment = $this->createInvoicePayment($invoice_id, $this->post());
+            }
+
             //Update job settings
             if( $is_with_settings == 1 ){
                 $jobs_settings_data = array(
@@ -2264,6 +2268,67 @@ class Tickets extends MY_Controller
         exit;
     }
 
+    public function createInvoicePayment($invoice_id, $data)
+    {
+        $this->load->model('Invoice_model');
+
+        $check_number = '';
+        $amount = 0;
+        $bank_name = '';
+        $routing_number = '';
+        $account_number = '';
+        $credit_number = '';
+        $credit_expiry = '';
+        $credit_cvc = '';
+        $customer_email = '';
+        $payment_method = $data['payment_method'];
+
+        if( $payment_method == 'CC' || $payment_method == 'DEBIT CARD'){
+            $credit_number = $data['customer_cc_num'];
+            $credit_expiry = $data['customer_cc_expiry_date_month'] . '/' . $data['customer_cc_expiry_date_year'];
+            $credit_cvc = $data['customer_cc_cvc'];
+        }
+
+        if( $payment_method == 'CHECK' ){
+            $account_number = $data['customer_check_account_number'];
+            $check_number = $data['customer_check_number'];
+            $bank_name = $data['customer_check_bank_name'];
+            $routing_number = $data['customer_check_routing_number'];
+        }
+
+        if( $payment_method == 'ACH' ){
+            $account_number = $data['customer_check_account_number'];
+            $routing_number = $data['customer_check_routing_number'];
+        }
+
+
+        $payment_data = [
+            'invoice_id' => $invoice_id,
+            'payment_method' => $payment_method,
+            'amount' => $amount,
+            'check_number' => $check_number,
+            'bank_name' => $bank_name,
+            'routing_number' => $routing_number,
+            'account_number' => $account_number,
+            'credit_number' => $credit_number,
+            'credit_expiry' => $credit_expiry,
+            'credit_cvc' => $credit_cvc,
+            'credit_type' => '',
+            'invoice_date' => date("Y-m-d"),
+            'due_date' => date("Y-m-d"),
+            'invoice_email' => $customer_email,
+            'tip' => 0,
+            'tax' => 0,
+            'is_collected' => 0,
+            'is_document_signed' => 0,
+            'is_paid' => 0,
+            'date_created' => date("Y-m-d H:i:s"),
+            'date_updated' => date("Y-m-d H:i:s")
+        ];
+
+        $this->Invoice_model->createInvoicePayment($payment_data);
+    }
+
     public function createInitialInvoice($job_id)
     {
         $this->load->model('Invoice_model');
@@ -2312,6 +2377,7 @@ class Tickets extends MY_Controller
 
         $new_data = array(
             'customer_id'               => $job->customer_id,
+            'ticket_id'                 => $ticket->id,
             'job_location'              => $job->job_location,
             'job_name'                  => $job->job_name,
             'job_id'                    => $job->id,
