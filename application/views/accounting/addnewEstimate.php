@@ -347,61 +347,70 @@ echo put_header_assets();
                     <div class="card">
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="d-flex justify-content-between">
-                                        <label for="customers" class="required"><b>Customer</b></label>
-                                        <div class="d-flex">
-                                            <a class="nsm-link d-flex align-items-center"  data-bs-toggle="modal" data-bs-target="#new_customer" href="javascript:void(0);">
-                                                <span class="bx bx-plus"></span>Create Customer
-                                            </a>
-                                            <a class="nsm-link d-flex align-items-center" style="margin-left:5px;" data-bs-toggle="modal" data-bs-target="#quick-add-lead" href="javascript:void(0);">
-                                                <span class="bx bx-plus"></span>Create Lead
-                                            </a>
+                                <div class="col-md-5">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="d-flex justify-content-between">
+                                                <label for="customers" class="required"><b>Customer</b></label>
+                                                <div class="d-flex">
+                                                    <a class="nsm-link d-flex align-items-center"  data-bs-toggle="modal" data-bs-target="#new_customer" href="javascript:void(0);">
+                                                        <span class="bx bx-plus"></span>Create Customer
+                                                    </a>
+                                                    <a class="nsm-link d-flex align-items-center" style="margin-left:5px;" data-bs-toggle="modal" data-bs-target="#quick-add-lead" href="javascript:void(0);">
+                                                        <span class="bx bx-plus"></span>Create Lead
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div id="sel-customerdiv">
+                                                <select name="customer_id" id="sel-customer" class="form-control" required>
+                                                    <?php if ($default_customer_id > 0) { ?>
+                                                        <option value="<?php echo $default_customer_id; ?>" selected=""><?php echo $default_customer_name; ?> </option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div id="sel-customerdiv">
-                                        <select name="customer_id" id="sel-customer" class="form-control" required>
-                                            <?php if ($default_customer_id > 0) { ?>
-                                                <option value="<?php echo $default_customer_id; ?>" selected=""><?php echo $default_customer_name; ?> </option>
-                                            <?php } ?>
-                                        </select>
+                                    <div class="row mb-3 mt-2">
+                                        <div class="col-md-6">
+                                            <label for="job_name"><b>Customer Email</b></label>
+                                            <input id="estimate-customer-email" type="text" class="form-control" disabled />
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label for="job_name"><b>Customer Mobile</b></label>
+                                            <input id="estimate-customer-mobile" type="text" class="form-control" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="job_name"><b>Job Name</b> (optional)</label>
+                                            <input type="text" class="form-control" name="job_name" id="job_name" placeholder="Enter Job Name" />
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-md-12">
+                                            <label for="job_location"><b>Job Location</b></label>
+                                            <!-- <input type="text" class="form-control" name="job_location" id="job_location" /> -->
+                                            <textarea class="form-control" name="job_location" id="job_location" style="height:150px;"></textarea>
+
+                                            <!-- <input type="hidden" id="city2" name="city2" />
+                                                <input type="hidden" id="cityLat" name="cityLat" />
+                                                <input type="hidden" id="cityLng" name="cityLng" /> -->
+                                        </div>
+                                    </div>                                    
+                                </div>
+                                <div class="col-md-7">
+                                    <div class="col-md-12 MAP_LOADER_CONTAINER">
+                                        <div class="text-center MAP_LOADER">
+                                            <iframe id="TEMPORARY_MAP_VIEW"
+                                                src="http://maps.google.com/maps?output=embed" height="370" width="100%"
+                                                style=""></iframe>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row mb-3">
-                                <div class="col-md-3">
-                                    <label for="job_name"><b>Customer Email</b></label>
-                                    <input id="estimate-customer-email" type="text" class="form-control" disabled />
-                                </div>
 
-                                <div class="col-md-3">
-                                    <label for="job_name"><b>Customer Mobile</b></label>
-                                    <input id="estimate-customer-mobile" type="text" class="form-control" disabled />
-                                </div>
-                            </div>
-
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="job_location"><b>Job Location</b></label>
-                                    <!-- <input type="text" class="form-control" name="job_location" id="job_location" /> -->
-                                    <input type="text" class="form-control" name="job_location" id="job_location" />
-
-                                    <!-- <input type="hidden" id="city2" name="city2" />
-                                        <input type="hidden" id="cityLat" name="cityLat" />
-                                        <input type="hidden" id="cityLng" name="cityLng" /> -->
-                                </div>
-                                <div class="col-md-3">
-                                    <!-- <br><br><a href="#" id="" style="color:#02A32C;"><i class="fa fa-plus" aria-hidden="true"></i> New Location Address</a> -->
-                                </div>
-                            </div>
-                            <div class="row mb-3">
-                                <div class="col-md-6">
-                                    <label for="job_name"><b>Job Name</b> (optional)</label>
-                                    <input type="text" class="form-control" name="job_name" id="job_name" placeholder="Enter Job Name" />
-                                </div>
-                            </div>
-                            <hr>
-                            <div class="row mb-3" style="background-color:white;">
+                            <div class="row mt-2 mb-3" style="background-color:white;">
                                 <div class="col-md-3">
                                     <label for="estimate_date" class="required"><b>Estimate Date</b></label>
                                     <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
@@ -1147,7 +1156,14 @@ echo put_header_assets();
                         $("#estimate-customer-mobile").val(response.customer.phone_m);
                     }
 
-                    $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+                    $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].city + ', ' + response['customer'].state + ' ' + response['customer'].zip_code);
+
+                    var customer_address = response['customer'].mail_add + ', ' + response['customer'].city + ', ' +
+                        ' ' + response['customer'].state + ' ' + response['customer'].zip_code;
+                    
+                    var map_source = 'http://maps.google.com/maps?q=' + customer_address + '&output=embed';
+                    var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +'" height="370" width="100%" style=""></iframe>';
+                    $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
 
                 },
                 error: function(response) {
