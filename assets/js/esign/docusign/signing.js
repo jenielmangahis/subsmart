@@ -300,7 +300,7 @@ function Signing(hash) {
       }
     }
 
-    if( field_name == "Subscriber Name" ) {      
+    if( field_name == "Subscriber Name" || field_name == "Customer Name" ) {      
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
           return first_name + " " + last_name;
@@ -312,7 +312,7 @@ function Signing(hash) {
       }
     }
 
-    if( field_name == "Subscriber Email" ) {
+    if( field_name == "Subscriber Email" || field_name == "Customer Email" ) {
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
           return email;
