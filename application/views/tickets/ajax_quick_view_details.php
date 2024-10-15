@@ -76,7 +76,7 @@
                 </tr>
                 <tr>
                     <td align="right">Purchase Order No:</td>
-                    <td align="right"><b><?php echo $tickets->purchase_order_no; ?></b></td>
+                    <td align="right"><b><?php echo $tickets->purchase_order_no != '' ? $tickets->purchase_order_no : '---'; ?></b></td>
                 </tr>                               
                 <tr>
                     <td align="right" style="width:47%;">Scheduled Date:</td>
@@ -261,7 +261,7 @@
         </div>
     </div>
     <div class="row mt-3">
-        <div class="col-md-8 paymentArea">   
+        <div class="col-md-6 paymentArea">   
             <table class="table table-bordered">
                 <tr style="font-weight:bold;"><td>Job Description</td></tr>
                 <tr><td><?= $tickets->job_description; ?></td></tr>                
@@ -417,12 +417,30 @@
                 </tr>
             </table> -->
         </div>
-        <div class="col-md-4 summaryArea">
+        <div class="col-md-6 summaryArea">
             <table class="table table-bordered">
                 <tr style="font-weight:bold;">
                     <td>Subtotal</td>
                     <td style="text-align:right;">$<?php echo number_format($tickets->subtotal,2); ?></td>
                 </tr>
+                <?php if( $tickets->otp_setup > 0 ){ ?>
+                <tr style="font-weight:bold;">
+                    <td>One Time (Program and Setup)</td>
+                    <td style="text-align:right;">$<?php echo number_format($tickets->otp_setup,2); ?></td>
+                </tr>
+                <?php } ?>
+                <?php if( $tickets->monthly_monitoring > 0 ){ ?>
+                <tr style="font-weight:bold;">
+                    <td>Monthly Monitoring</td>
+                    <td style="text-align:right;">$<?php echo number_format($tickets->monthly_monitoring,2); ?></td>
+                </tr>
+                <?php } ?>
+                <?php if( $tickets->installation_cost > 0 ){ ?>
+                <tr style="font-weight:bold;">
+                    <td>Installation Cost</td>
+                    <td style="text-align:right;">$<?php echo number_format($tickets->installation_cost,2); ?></td>
+                </tr>
+                <?php } ?>
                 <tr style="font-weight:bold;">
                     <td>Taxes</td>
                     <td style="text-align:right;">$<?php echo number_format($tickets->taxes,2); ?></td>

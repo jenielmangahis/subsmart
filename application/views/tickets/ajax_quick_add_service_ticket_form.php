@@ -39,7 +39,7 @@
         <div class="nsm-card primary">
             <div class="nsm-card-content">
                 <label for="sel-customer_t" class="required"><b>Customer</b></label>
-                    <a class="link-modal-open" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="color:#02A32C;float:right;"><span class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
+                    <a class="link-modal-open nsm-button btn-small" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="float:right;"><span class="fa fa-plus fa-margin-right"></span>New Customer</a>
                     <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
                         <option value="0">- Select Customer -</option>
                         <?php foreach($customers as $c){ ?>
@@ -626,7 +626,9 @@ $(document).ready(function(){
                 }else{
                     $("#ticket_customer_phone").val(response.phone_h);
                 }
-                $("#service_location").val(response.mail_add);
+
+                var service_location = response.mail_add + ' ' + response.city + ', ' + response.state + ' ' + response.zip_code;
+                $("#service_location").val(service_location);
                 $("#customer_city").val(response.city);
                 $("#customer_state").val(response.state);
                 $("#customer_zip").val(response.zip_code);                
