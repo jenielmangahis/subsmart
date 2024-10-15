@@ -1136,7 +1136,9 @@ function Signing(hash) {
           alert('Sign in mobile:'+fid+':'+fieldId+':'+recipient.id+':'+recipient.docfile_id);
         }else{
           $signatureModal.modal("show");
-        }      
+        } 
+             
+        //$signatureModal.modal("show");
              
       });
       return $element;
@@ -2509,6 +2511,11 @@ function Signing(hash) {
       // if( window.__ismobile ){
       //   alert('Mobile signing finished:'+data.data.docfile_id+':'+data.data.id);
       // }
+      if( window.__esigndata.is_finished == 0 ){
+        alert('eSign Status : Awaiting for others');          
+      }else{
+        alert('eSign Status : Completed');          
+      } 
 
       if (data.hash) {
         const queryString = window.location.href;

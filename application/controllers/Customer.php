@@ -112,7 +112,7 @@ class Customer extends MY_Controller
         add_footer_js([
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js',
         ]);
-
+        
         $getCustomerStatus = [
             'select' => '*',
             'table' => 'acs_cust_status',
@@ -162,7 +162,6 @@ class Customer extends MY_Controller
         $this->page_data['customer_status'] = $this->general->get_data_with_param($getCustomerStatusData);
         $this->page_data['salesRep'] = $this->general->get_data_with_param($getSalesRepData);
         $this->page_data['technician'] = $this->general->get_data_with_param($getTechnicianData);
-
         $this->page_data['companyId'] = logged('company_id');
         $this->page_data['enabled_table_headers'] = $enabled_table_headers;
         $this->load->view('v2/pages/customer/list', $this->page_data);
@@ -9478,4 +9477,71 @@ class Customer extends MY_Controller
         header('Content-Disposition: attachment; filename="'.$filename.'";');
         fpassthru($f);
     }
+
+    public function toolContent($tool)
+    {
+        $company_id = logged('company_id');
+        $page = "";
+
+        $getCustomerStatus = [
+            'select' => '*',
+            'table' => 'acs_cust_status',
+            'where' => ['company_id' => $company_id],
+        ];
+
+        $getCustomerGroup = [
+            'select' => '*',
+            'table' => 'customer_groups',
+            'where' => ['company_id' => $company_id],
+        ];
+
+        $getSalesArea = [
+            'select' => '*',
+            'table' => 'ac_salesarea',
+            'where' => ['fk_comp_id' => $company_id],
+        ];
+
+        $getRatePlanData = [
+            'select' => '*',
+            'table' => 'ac_rateplan',
+            'where' => ['company_id' => $company_id],
+        ];
+
+        $getCustomerStatusData = [
+            'select' => '*',
+            'table' => 'acs_cust_status',
+            'where' => ['company_id' => $company_id],
+        ];
+
+        $getSalesRepData = [
+            'select' => '*',
+            'table' => 'users',
+            'where' => ['company_id' => $company_id,],
+        ];
+
+        $getTechnicianData = [
+            'select' => '*',
+            'table' => 'users',
+            'where' => ['company_id' => $company_id,],
+        ];
+
+        switch ($tool) {
+            case 'batchUpdater':
+                $page = "batch_updater_tool";
+                break;
+            case 'duplicateManagement':
+                $page = "duplicate_management_tool";
+                break;
+        }
+
+        $this->page_data['rate_plan'] = $this->general->get_data_with_param($getRatePlanData);
+        $this->page_data['customer_status'] = $this->general->get_data_with_param($getCustomerStatus);
+        $this->page_data['customer_group'] = $this->general->get_data_with_param($getCustomerGroup);
+        $this->page_data['sales_area'] = $this->general->get_data_with_param($getSalesArea);
+        $this->page_data['customer_status'] = $this->general->get_data_with_param($getCustomerStatusData);
+        $this->page_data['salesRep'] = $this->general->get_data_with_param($getSalesRepData);
+        $this->page_data['technician'] = $this->general->get_data_with_param($getTechnicianData);
+        $this->load->view("v2/pages/customer/$page", $this->page_data);
+    }
+
 }

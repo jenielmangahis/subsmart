@@ -41,27 +41,10 @@
                         <td style="width: 50% "  valign="top">    
                             <div style="margin-bottom: 20px;">
                                 <!-- <img class="invoice-print-logo" style="max-width: 230px; max-height: 200px;" src="<?php echo $profile ?>"> -->
-                                <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 150px" />
+                                <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 100px" />
                             </div>
 
-                            <div id="presenter-from">
-                                    <!-- <br> job_location -->
-                                    <p style="margin: 0"><?php echo $invoice->job_name ?></p>
-                                    <p style="margin: 0"> <?php echo $invoice->job_location ?></p>
-                                  
-
-                                    <!-- <table>
-                                        <tbody><tr>
-                                            <td style="vertical-align: top;" valign="top">Phone:&nbsp;</td>
-                                            <td>
-                                                <?php echo strtolower($user->phone) ?><br><br><br>                          
-                                            </td>
-                                        </tr>
-                                    </tbody></table> -->
-
-                                    <br>
-                            </div>
-
+                        
                         </td>
                       
                         <td id="presenter-col-right" class="presenter-col-right" style="width: 25%; text-align: right;" valign="top">
@@ -112,50 +95,44 @@
                 </tbody>
             </table>
             <br><br>
+            <div>
             <table class="table-print" style="width: 100%">
                 <tbody>
                     <tr>
                         <td id="presenter-col-left" class="presenter-col-left" style="width: 50%" valign="top">
                             <p style="margin: 0;font-size:22px"><b>FROM:</b></p>
                             <!-- <br> -->
-                            <p style="margin: 0"><b><?php echo $company->business_name ?></b></p>
+                            <p style="margin: 0"><b><?= strtoupper(trim($company->business_name)); ?></b></p>
                             <!-- <br> -->
-                            <p style="margin: 0"><?php echo $company->street ?></p>
+                            <p style="margin: 0"><?= strtoupper($company->street); ?></p>
                             <!-- <br> -->
-                            <p style="margin: 0"><?php echo $company->city.', '.$company->state.', '.$company->postal_code?></p>
+                            <p style="margin: 0"><?= strtoupper($company->city . ', ' . $company->state . ' ' . $company->postal_code); ?></p>
                             <!-- <br> -->
                             <p style="margin: 0"><?php echo strtolower($company->business_email) ?></p>
                             <!-- <br> -->
-                            <p style="margin: 0"><?php echo strtolower($company->business_phone) ?></p>
+                            <p style="margin: 0">TEL: <?= $company->business_phone; ?></p>
                         </td>
                 
                         <td style="width: 50%" valign="top">
                             <p style="margin: 0;font-size:22px"><b>TO:</b></p>
                             <!-- <br> -->
-                            <p style="margin: 0"><b><?php echo $users->contact_name .''. $users->first_name .' '. $users->middle_name .' '. $users->last_name;?></b>
+                            <p style="margin: 0"><b><?= strtoupper($customer->first_name . ' ' . $customer->last_name); ?></b>
                             <!-- <span class="middot">·</span> -->
                             </p>
                             <!-- <br> -->
-                            <p style="margin: 0"><?php echo $users->cross_street ?></p>
+                            <p style="margin: 0"><?= strtoupper($customer->mail_add); ?></p>
+                            <p style="margin: 0"><?= strtoupper($customer->city . ' ' . $customer->state . ' ' . $customer->zip_code); ?></p>
                             <!-- <br> -->
-                            <p style="margin: 0"><?php echo $users->city.', '.$users->state.', '.$users->zip_code?></p>
-                            <!-- <br> -->
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <td style="vertical-align: top;" valign="top">Phone:&nbsp;</td>
-                                        <td>
-                                            <?php echo $users->phone_m ?><br>
-                                            <?php echo $users->phone_h ?><br>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <p style="margin: 0"><?= strtoupper($customer->city . ' ' . $customer->state . ' ' . $customer->zip_code); ?></p>
+                            <p style="margin: 0">TEL: <?= $customer->phone_m; ?></p>
+                        
                         </td>
                        
                     </tr>
                 </tbody>
             </table>
+            </div>
+           
             
             <?php if($invoice->status === 'Paid') : ?>
             <div id="background">
@@ -168,6 +145,7 @@
             
             <br>
             <br>
+        
             <table class="table-print" style="width: 100%">
             <tbody>
                 <tr>
@@ -193,7 +171,7 @@
                     <tbody>
                         <tr>
                             <td style="width: 10%" >
-                                <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 150px" />
+                                <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 100px" />
                             </td>
                             <td style="width: 55%">
                                 <table>
@@ -288,11 +266,70 @@
                             <td></td>
                             <td style="text-align: right">$<?php echo number_format($invoice->taxes, 2);?></td>
                         </tr>
+                        <?php if( $invoice->installation_cost > 0 ){ ?>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td colspan="2" style="text-align: right"><b>Installation Cost</b></td>
+                                <td></td>
+                                <td style="text-align: right">$<?php echo number_format($invoice->installation_cost, 2);?></td>
+                            </tr>
+                        <?php } ?>
+
+                        <?php if( $invoice->program_setup > 0 ){ ?>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td colspan="2" style="text-align: right"><b>One Time (Program and Setup)</b></td>
+                                <td></td>
+                                <td style="text-align: right">$<?php echo number_format($invoice->program_setup, 2);?></td>
+                            </tr>
+                        <?php } ?>
+                        <?php if( $invoice->monthly_monitoring > 0 ){ ?>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td colspan="2" style="text-align: right"><b>Monthly Monitoring</b></td>
+                                <td></td>
+                                <td style="text-align: right">$<?php echo number_format($invoice->monthly_monitoring, 2);?></td>
+                            </tr>
+                        <?php } ?>
+                      
+                        <?php if( $invoice->adjustment_value > 0 ){ ?>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td colspan="2" style="text-align: right">  <b><?=  $invoice->adjustment_name != '' ? $invoice->adjustment_name : 'ADJUSTMENT' ?></b></td>
+                                <td></td>
+                                <td style="text-align: right">$<?php echo number_format($invoice->adjustment_value, 2);?></td>
+                            </tr>
+                        <?php } ?>
+
+                        <?php if( $invoice->no_tax == 1 ){ ?>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td colspan="2" style="text-align: right"><b>Tax Exempted</b></td>
+                                <td></td>
+                                <td style="text-align: right">YES</td>
+                            </tr>
+                        <?php } ?>
+
+                        <?php if( $invoice->late_fee > 0  ){ ?>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td colspan="2" style="text-align: right"><b>Late Fee</b></td>
+                                <td></td>
+                                <td style="text-align: right">$<?php echo number_format($invoice->late_fee, 2);?></td>
+
+                            </tr>
+                        <?php } ?>
                         <tr>
                             <td colspan="3"></td>
                             <td colspan="2" style="text-align: right; background: #f4f4f4; padding: 8px 0"><b>Grand Total ($)</b></td>
                             <td style="background: #f4f4f4"></td>
                             <td style="text-align: right; background: #f4f4f4; padding: 8px 8px 8px 0;"><b>$<?php echo number_format($invoice->grand_total, 2);?></b></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td colspan="2" style="text-align: right"><b>Deposit</b></td>
+                            <td></td>
+                            <td style="text-align: right">$<?php echo number_format($invoice->deposit_request, 2);?></td>
                         </tr>
                         <tr>
                             <td colspan="3"></td>
@@ -313,6 +350,10 @@
                 All claims must be made within 5 days after receipt of goods. Goods returned without our authorized return number on the carton will be
                 refused. The purchase of products and services are subject to and governed solely by the Terms and Conditions.
             </p>
+            <a href="https://nsmartrac.com/terms-and-condition">https://nsmartrac.com/terms-and-condition</a>
+            <div style="color: red;margin-top:10px">
+                Past due balances may be subject to a Late Charge not to exceed 1.5% per month.
+             </div>
         </div>
     </div>
 </div>
