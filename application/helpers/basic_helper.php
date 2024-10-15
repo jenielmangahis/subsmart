@@ -5397,6 +5397,16 @@ function getUserLocationAddressByLonLat($lon, $lat){
     
 }
 
-function strMask($number, $maskingCharacter = 'X') {
-    return substr($number, 0, 4) . str_repeat($maskingCharacter, strlen($number) - 8) . substr($number, -4);
+function strMask($string, $maskingCharacter = 'X') {
+    if (!$string) {
+        return NULL;
+    }
+
+    if( $maskingCharacter == '' ){
+        $maskingCharacter = '*';
+    }
+    $length = strlen($string);
+    $visibleCount = (int) round($length / 4);
+    $hiddenCount = $length - ($visibleCount * 2);
+    return substr($string, 0, $visibleCount) . str_repeat($maskingCharacter, $hiddenCount) . substr($string, ($visibleCount * -1), $visibleCount);    
 }
