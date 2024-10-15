@@ -1040,7 +1040,6 @@ class Tickets extends MY_Controller
         }
 
         $this->page_data['page']->title = 'Service Tickets';
-
         $this->load->view('tickets/view', $this->page_data);
     }
 
