@@ -85,6 +85,7 @@ $(document).ready(function () {
     drawBezierCurves: true,
     lineTop: 200,
   });
+  
   $("#company_representative_approval_signature").on(
     "click touchstart",
     function () {
@@ -102,6 +103,7 @@ $(document).ready(function () {
     drawBezierCurves: true,
     lineTop: 200,
   });
+  
   $("#primary_account_holder_signature").on("click touchstart", function () {
     var canvas = document.getElementById("primary_account_holder_signature");
     var dataURL = canvas.toDataURL("image/png");
@@ -114,6 +116,7 @@ $(document).ready(function () {
     drawBezierCurves: true,
     lineTop: 200,
   });
+
   $("#secondary_account_holder_signature").on("click touchstart", function () {
     var canvas = document.getElementById("secondary_account_holder_signature");
     var dataURL = canvas.toDataURL("image/png");
