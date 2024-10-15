@@ -509,8 +509,12 @@ class Settings extends MY_Controller {
                 $settingEmailBranding = $this->SettingEmailBranding_model->create($data);
             }
 
-            $this->session->set_flashdata('message', 'Your email branding setting was updated');
-            $this->session->set_flashdata('alert_class', 'alert-success');
+            //Activity Logs
+            $activity_name = 'Updated Email Branding Settings'; 
+            createActivityLog($activity_name);
+
+            // $this->session->set_flashdata('message', 'Your email branding setting was updated');
+            // $this->session->set_flashdata('alert_class', 'alert-success');
         }
 
         redirect('settings/email_branding');
@@ -938,10 +942,50 @@ class Settings extends MY_Controller {
             
             $this->EmailTemplate_model->update($emailTemplate->id, $data);
 
+            //Activity Logs
+            $activity_name = 'Email Template : Updated template ' . $post['title']; 
+            createActivityLog($activity_name);
+
             $is_success = 1;
         }
         
         $json_data  = ['is_success' => $is_success];
+
+        echo json_encode($json_data);
+    }
+
+    public function ajax_delete_email_template()
+    {
+        $this->load->model('EmailTemplate_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $company_id    =  logged('company_id');
+        
+        $get_template_data = array(
+            'where' => array(
+                'id' => $post['tid'],
+                'company_id' => $company_id
+            )
+        );
+
+        $emailTemplate = $this->general_model->get_all_with_keys($get_template_data,'settings_email_template',FALSE);
+
+        if( $emailTemplate ){
+            $this->EmailTemplate_model->delete($post['tid']);
+
+            //Activity Logs
+            $activity_name = 'Email Template : Deleted template ' . $emailTemplate->title; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+        
+        
+        $json_data  = ['is_success' => $is_success, 'msg' => $msg];
 
         echo json_encode($json_data);
     }
@@ -1611,6 +1655,118 @@ class Settings extends MY_Controller {
         ];
 
         echo json_encode($return);
+    }
+
+    public function ajax_update_email_brandingg() 
+    {
+        $is_success = 0;
+        $msg = "Cannot update data.";
+
+        //Update - start
+        postAllowed();
+
+        $user       = $this->session->userdata('logged');
+        $post       = $this->input->post();
+        $company_id = logged('company_id');
+
+        $logo_image = "";
+        
+        /*
+        $config['upload_path'] = 'uploads/email_branding/' . $user['id'];
+
+        if (!is_dir($config['upload_path'])) {
+            mkdir($config['upload_path'], 0777, TRUE);
+        }
+
+        $config['file_name'] = $_FILES['file-logo']['name'];
+        $config['allowed_types'] = 'gif|jpeg|jpg|png';
+
+        $this->load->library('upload', $config);
+        $this->upload->initialize($config);
+
+        if ( !$this->upload->do_upload('file-logo')) {
+            $logo_image = '';
+        } else {
+            $data = array('upload_data' => $this->upload->data());
+            $logo_image = $data['upload_data']['file_name'];
+        }
+        */
+
+        if( !empty($post) ){
+            $this->load->model('SettingEmailBranding_model');
+
+            $settingEmailBranding = $this->SettingEmailBranding_model->findByCompanyId($company_id);
+            if( $settingEmailBranding ){
+                $data = array(
+                    'email_from_name' => post('email_from_name'),
+                    'email_template_footer_text' => post('email_template_footer_text'),
+                    'logo' => $logo_image,
+                    'updated' => date("Y-m-d H:i:s")
+                );
+
+                $this->SettingEmailBranding_model->update($settingEmailBranding->id,$data);
+
+            }else{
+                $data = array(
+                    'company_id' => $company_id,
+                    'user_id' => $user['id'],
+                    'email_from_name' => post('email_from_name'),
+                    'email_template_footer_text' => post('email_template_footer_text'),
+                    'logo' => $logo_image,
+                    'created' => date("Y-m-d H:i:s")
+                );
+
+                $settingEmailBranding = $this->SettingEmailBranding_model->create($data);
+            }
+
+            //Activity Logs
+            $activity_name = 'Your email branding setting was updated'; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg        = $activity_name;            
+
+        }
+        //Update - end 
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_get_email_template(){
+        $this->load->model('EmailTemplate_model');
+
+        $subject = '';
+        $content = '';
+
+        $post = $this->input->post();
+        $emailTemplate = $this->EmailTemplate_model->getById($post['tid']);
+        if( $emailTemplate ){
+            $subject = $emailTemplate->subject;
+            $content = $emailTemplate->email_body;
+        }
+
+        $return = [
+            'subject' => $subject,
+            'content' => $content
+        ];
+
+        echo json_encode($return);
+    
+    }
+
+    public function ajax_preview_email_template(){
+        $this->load->model('EmailTemplate_model');
+
+        $post = $this->input->post();
+        $emailTemplate = $this->EmailTemplate_model->getById($post['tid']);
+
+        $this->page_data['emailTemplate'] = $emailTemplate;
+        $this->load->view('v2/pages/settings/email_templates/email_template_preview', $this->page_data);
     }
 }
 

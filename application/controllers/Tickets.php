@@ -1001,8 +1001,11 @@ class Tickets extends MY_Controller
 
     public function viewDetails($id)
     {
-        $company_id  = getLoggedCompanyID();
-        $user_id  = getLoggedUserID();        
+        //$company_id  = getLoggedCompanyID();
+        //$user_id     = getLoggedUserID();    
+
+        $company_id  = logged('company_id');
+        $user_id     = logged('id');
 
         $tickets = $this->tickets_model->get_tickets_data_one($id);
         $ticket_rep  = $tickets->sales_rep;
@@ -1026,19 +1029,18 @@ class Tickets extends MY_Controller
         // $this->page_data['technicians'] = $custom_html;
 
         $assigned_technician = unserialize($ticketdet->technicians);
-            if(!empty($assigned_technician))
-            {
-                // var_dump($assigned_technician);
-                    foreach($assigned_technician as $eid){
-                        $custom_html = '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 30px;display:inline-block;">'.getUserName($eid).'</div>';
-                    }
-
-            }else
-            {
-                $custom_html = '<span></span>';
+        if(!empty($assigned_technician)) {
+            // var_dump($assigned_technician);
+            foreach($assigned_technician as $eid){
+                $custom_html = '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 30px;display:inline-block;">'.getUserName($eid).'</div>';
             }
 
-        
+        } else {
+            $custom_html = '<span></span>';
+        }
+
+        $this->page_data['page']->title = 'Service Tickets';
+
         $this->load->view('tickets/view', $this->page_data);
     }
 
@@ -2013,7 +2015,7 @@ class Tickets extends MY_Controller
             $invoice_id = $this->createInitialInvoice($jobs_id);
 
             if( $this->input->post('is_with_esign') ){
-                $invoice_payment = $this->createInvoicePayment($invoice_id, $this->post());
+                $invoice_payment = $this->createInvoicePayment($invoice_id, $this->input->post());
             }
 
             //Update job settings
@@ -2273,7 +2275,7 @@ class Tickets extends MY_Controller
         $this->load->model('Invoice_model');
 
         $check_number = '';
-        $amount = 0;
+        $amount = $data['grandtotal'];
         $bank_name = '';
         $routing_number = '';
         $account_number = '';
@@ -2281,7 +2283,7 @@ class Tickets extends MY_Controller
         $credit_expiry = '';
         $credit_cvc = '';
         $customer_email = '';
-        $payment_method = $data['payment_method'];
+        $payment_method = $data['bill_method'];
 
         if( $payment_method == 'CC' || $payment_method == 'DEBIT CARD'){
             $credit_number = $data['customer_cc_num'];

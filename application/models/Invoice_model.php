@@ -4,7 +4,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Invoice_model extends MY_Model
 {
     public $table = 'invoices';
-    public $table_invoice_payments = 'invoice_payments';
 
 
     public function getAll()
@@ -1432,7 +1431,7 @@ class Invoice_model extends MY_Model
 
     public function createInvoicePayment($data)
     {
-        $vendor = $this->db->insert('table_invoice_payments', $data);
+        $this->db->insert('invoice_payments', $data);
 	    $insert = $this->db->insert_id();
 		return  $insert;
     }

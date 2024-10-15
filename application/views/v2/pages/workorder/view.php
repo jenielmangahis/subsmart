@@ -186,7 +186,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </tr>
                         <tr>
                           <td style="text-align:left;">Security Number:</td>
-                          <td style="text-align: right;"><b><?php echo $customer->ssn ?></b></td>
+                          <td style="text-align: right;">
+                            <?php 
+                                if (logged("user_type") == 1){
+                                    $ssn = $customer->ssn;
+                                }else{
+                                    $ssn = strMask($customer->ssn);
+                                } 
+                            ?>
+                            <b><?php echo $ssn; ?></b>
+                          </td>
                         </tr>
 						            <tr>
                           <td style="text-align:left;">Status:</td>

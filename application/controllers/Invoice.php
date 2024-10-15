@@ -1674,14 +1674,26 @@ class Invoice extends MY_Controller
 
     public function preview($id)
     {
+        $this->load->model('general_model');
+        $this->load->model('AcsProfile_model');
         $invoice = get_invoice_by_id($id);
         $user = get_user_by_id(logged('id'));
-        $company = get_company_by_id(logged('company_id'));
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => $invoice->company_id,
+            ),
+            'table' => 'business_profile',
+            'select' => 'id,business_phone,business_name,business_logo,business_email,street,city,postal_code,state,business_image',
+        );
+
+        $company = $this->general_model->get_data_with_param($get_company_info, false);
+        // $company = get_company_by_id(logged('company_id'));
         $this->page_data['invoice'] = $invoice;
         $this->page_data['user'] = $user;
         // $this->page_data['items'] = $user;
         $this->page_data['items'] = $this->invoice_model->getItemsInv($id);
         $this->page_data['users'] = $this->invoice_model->getInvoiceCustomer($id);
+        $this->page_data['customer'] = $this->AcsProfile_model->getByProfId($invoice->customer_id);
 
         if (!empty($invoice)) {
             foreach ($invoice as $key => $value) {
@@ -1696,6 +1708,8 @@ class Invoice extends MY_Controller
         $this->page_data['company'] = $company;
         $this->page_data['format'] = $format;
         // print_r($this->page_data['users']);
+        
+        // $this->load->view('invoice/pdf/standard_template', $this->page_data, $filename, "portrait");
 
 
         if ($format === "pdf") {
