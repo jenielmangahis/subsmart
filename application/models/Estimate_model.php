@@ -69,17 +69,18 @@ class Estimate_model extends MY_Model
     public function getAllByCompanynDraft($company_id)
     {
         $where = [
-            'view_flag' => '0',
-            'company_id' => $company_id,
+            'estimates.view_flag' => '0',
+            'estimates.company_id' => $company_id,
             // 'status'        => 'Submitted',
             // 'status'        => 'Accepted',
             // 'status'        => 'Invoiced',
             // 'status'        => 'Lost',
-            'status !=' => 'Draft',
+            'estimates.status !=' => 'Draft',
           ];
 
-        $this->db->select('*');
+        $this->db->select('estimates.*, users.FName as user_firstname, users.LName as user_lastname');
         $this->db->from($this->table);
+        $this->db->join('users', 'estimates.user_id  = users.id');
         $this->db->where($where);
         $this->db->order_by('id', 'DESC');
 
@@ -90,13 +91,14 @@ class Estimate_model extends MY_Model
 
     public function getAllByCompanyIdAndDateRange($cid, $date_range = [], $filter = [])
     {
-        $this->db->select('*');
+        $this->db->select('estimates.*, users.FName as user_firstname, users.LName as user_lastname');
         $this->db->from($this->table);
-        $this->db->where('company_id', $cid);
+        $this->db->join('users', 'estimates.user_id  = users.id');
+        $this->db->where('estimates.company_id', $cid);
 
         if ($date_range) {
-            $this->db->where('estimate_date >=', $date_range['from']);
-            $this->db->where('estimate_date <=', $date_range['to']);
+            $this->db->where('estimates.estimate_date >=', $date_range['from']);
+            $this->db->where('estimates.estimate_date <=', $date_range['to']);
         }
 
         if ($filter) {
@@ -105,7 +107,7 @@ class Estimate_model extends MY_Model
             }
         }
 
-        $this->db->order_by('id', 'DESC');
+        $this->db->order_by('estimates.id', 'DESC');
 
         $query = $this->db->get();
 
