@@ -31,8 +31,8 @@
                                 </span> <i class='bx bx-fw bx-chevron-down'></i>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end batch-actions">
-                                <li><a class="dropdown-item disabled dropdown-send" href="javascript:void(0);" id="send">Send</a></li>
-                                <li><a class="dropdown-item disabled dropdown-print" href="javascript:void(0);" id="print">Print</a></li>
+                                <!-- <li><a class="dropdown-item disabled dropdown-send" href="javascript:void(0);" id="send">Send</a></li> -->
+                                <!-- <li><a class="dropdown-item disabled dropdown-print" href="javascript:void(0);" id="print">Print</a></li> -->
                                 <li><a class="dropdown-item disabled dropdown-delete" href="javascript:void(0);" id="delete">Delete</a></li>
                             </ul>
                         </div>

@@ -1,4 +1,4 @@
-<div class="nsm-card">
+<div class="nsm-card primary">
     <div class="nsm-card-content">
         <div class="row mb-3">
             <div class="col-12">

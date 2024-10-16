@@ -110,7 +110,7 @@
                             <!-- <br> -->
                             <p style="margin: 0"><?php echo strtolower($company->business_email) ?></p>
                             <!-- <br> -->
-                            <p style="margin: 0">TEL: <?= $company->business_phone; ?></p>
+                            <p style="margin: 0">TEL: <?= formatPhoneNumber($company->business_phone); ?></p>
                         </td>
                 
                         <td style="width: 50%" valign="top">
@@ -123,7 +123,6 @@
                             <p style="margin: 0"><?= strtoupper($customer->mail_add); ?></p>
                             <p style="margin: 0"><?= strtoupper($customer->city . ' ' . $customer->state . ' ' . $customer->zip_code); ?></p>
                             <!-- <br> -->
-                            <p style="margin: 0"><?= strtoupper($customer->city . ' ' . $customer->state . ' ' . $customer->zip_code); ?></p>
                             <p style="margin: 0">TEL: <?= $customer->phone_m; ?></p>
                         
                         </td>

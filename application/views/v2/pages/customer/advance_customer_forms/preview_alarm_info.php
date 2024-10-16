@@ -15,20 +15,20 @@
     margin-top: 9px;
 }
 </style>
-<div class="nsm-card">
+<div class="nsm-card primary">
     <div class="nsm-card-content">
         <div class="row mb-3">
             <div class="col-12">
                 <div class="nsm-card-title">
                     <?php if($companyId == 58): ?>
-                        <span>Solar Information</span>
+                        <span><i class="bx bx-fw bx-user"></i>Solar Information</span>
                         <?php if( $profile_info->adt_sales_project_id > 0 ){ ?>
                             <span class="badge badge-primary" style="font-size:13px; float: right;">ADT Sales Portal Project Data</span>
                         <?php } ?>
                     <?php else: ?>
-                        <span>Alarm Information</span>
+                        <span><i class="bx bx-fw bx-user"></i>Alarm Information</span>
                     <?php endif; ?>  
-                    
+                    <hr />
                 </div>
             </div>
         </div>

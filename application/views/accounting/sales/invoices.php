@@ -216,7 +216,7 @@
                                 <?php
                                     if( $invoice->date_issued != '' ){
                                         $myDateTime = DateTime::createFromFormat('Y-m-d', $invoice->date_issued);
-                                        echo $newDateString = $myDateTime->format('m-d-Y');
+                                        echo $newDateString = $myDateTime->format('m/d/Y');
                                     }else{
                                         echo 'Not Specified';
                                     }                                

@@ -192,6 +192,9 @@ $(document).on("focusout", ".adjustment_input", function () {
   }
   var grand = parseFloat(subtotal) + parseFloat(taxes);
   var new_grand = parseFloat(grand) + parseFloat(adjustment);
+  if( isNaN(new_grand) ){
+    new_grand = 0;
+  }
 
   // alert(adjustment);
   $("#grand_total").text(new_grand.toFixed(2));
@@ -2587,17 +2590,37 @@ function calculation(counter) {
   var tax1 = (((parseFloat(price) * 7.5) / 100) * parseFloat(quantity)).toFixed(
     2
   );
-  var subtotaltax = 0;
-  var stotal_cost = 0;
 
-  if (discount == "") {
-    discount = 0;
+  if( isNaN(tax1) ){
+    tax1 = '0.00';
   }
 
+  if( isNaN(tax) ){
+    tax = '0.00';
+  }
+
+  if( isNaN(price) ){
+    price = '0.00';
+  }
+
+  if( isNaN(quantity) ){
+    quantity = '0.00';
+  }
+
+  if (discount == "" || isNaN(discount)) {
+    discount = '0.00';
+  }
+
+  var subtotaltax = 0;
+  var stotal_cost = 0;
   var total = (
     (parseFloat(price) + parseFloat(tax)) * parseFloat(quantity) -
     parseFloat(discount)
   ).toFixed(2);
+
+  if( isNaN(total) ){
+    total = '0.00';
+  }
 
   // alert( 'yeah ' + price);
 

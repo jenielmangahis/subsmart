@@ -1040,7 +1040,6 @@ class Tickets extends MY_Controller
         }
 
         $this->page_data['page']->title = 'Service Tickets';
-
         $this->load->view('tickets/view', $this->page_data);
     }
 
@@ -1722,6 +1721,7 @@ class Tickets extends MY_Controller
                 'purchase_order_no'         => $this->input->post('purchase_order_no'),
                 'ticket_status'             => $status,
                 'panel_type'                => $this->input->post('panel_type'),
+                'plan_type'                 => $this->input->post('plan_type'),
                 'service_type'              => $this->input->post('service_type'),
                 'warranty_type'             => $this->input->post('warranty_type'),
                 'technicians'               => $techni,
@@ -1775,6 +1775,7 @@ class Tickets extends MY_Controller
                 ];
                 $exist = $this->general->get_data_with_param($check, false);
                 if ($exist) {
+                    $input_alarm['plan_type']  = $this->input->post('plan_type');
                     $input_alarm['panel_type'] = $this->input->post('panel_type');
                     $input_alarm['monthly_monitoring'] = $monthly_monitoring_cost;
                     $input_alarm['otps'] = $otp_cost;   
@@ -1795,6 +1796,7 @@ class Tickets extends MY_Controller
                     $input_alarm['mcn'] = 0;
                     $input_alarm['scn'] = 0;
                     $input_alarm['panel_type'] = $this->input->post('panel_type');
+                    $input_alarm['plan_type']  = $this->input->post('plan_type');
                     $input_alarm['system_type'] = '';
                     $input_alarm['warranty_type'] = $this->input->post('warranty_type');
                     $input_alarm['dealer'] = '';
