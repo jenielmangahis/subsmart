@@ -1,9 +1,10 @@
-<div class="nsm-card">
+<div class="nsm-card primary">
     <div class="nsm-card-content">
         <div class="row mb-3">
             <div class="col-12">
                 <div class="nsm-card-title">
-                    <span>Office Use Information</span>
+                    <span><i class="bx bx-fw bx-user"></i>Office Use Information</span>
+                    <hr />
                 </div>
             </div>
         </div>
