@@ -250,7 +250,7 @@ a.btn-primary.btn-md {
                     </div>
                     <div class="col-md-2" style="display: ;">
                         <label for="job_location" class="required"><b>Customer Phone #</b></label>
-                        <input type="text" class="form-control" name="customer_phone" id="customer_phone" required placeholder="Enter Phone Number"  value="<?php echo $tickets->customer_phone; ?>"/>
+                        <input type="text" class="form-control customer-phone" name="customer_phone" id="customer_phone" required placeholder="Enter Phone Number" value="<?php echo $tickets->customer_phone; ?>"/>
                     </div>
                 </div>
                 <div class="row">
@@ -878,9 +878,9 @@ a.btn-primary.btn-md {
                                 </div>
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-12 form-group">
-                                        <button type="submit" class="btn btn-warning but" style="border-radius: 0 !important;border:solid gray 1px;">Update</button>
-                                        <button type="button" class="nsm-button primary but" style="border-radius: 0 !important;">Preview</button>
-                                        <a href="<?php echo base_url('customer/ticketslist/') ?>" class="btn but-red">Cancel this</a>
+                                        <button type="submit" class="nsm-button primary" style="">Update</button>
+                                        <button type="button" class="nsm-button" style="">Preview</button>
+                                        <a href="<?php echo base_url('customer/ticketslist/') ?>" class="btn">Cancel</a>
                                     </div>
                                 </div>
 
@@ -1491,4 +1491,22 @@ $('#modal_items_list').DataTable({
 $('#ticket_date').datepicker({
     dateFormat: 'yyyy-mm-dd'
 });
+
+
+$(document).ready(function() {       
+    $('#customer_phone').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    });
+}); 
+
 </script>
