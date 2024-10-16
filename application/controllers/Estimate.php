@@ -3102,4 +3102,44 @@ class Estimate extends MY_Controller
         // $this->page_data['checklists_items'] = $checklist;
         echo json_encode($this->page_data);
     }
+
+    public function ajax_delete_selected_estimates()
+    {
+        $is_success = 0;
+        $msg = 'Nothing to delete';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+        $total_deleted = 0;
+
+        if( isset($post['row_estimates']) ){
+            
+            foreach( $post['row_estimates'] as $eid => $value ){
+                $estimate = $this->estimate_model->getById($eid);
+                if( $estimate && $estimate->company_id == $cid ){
+                    $data = ['view_flag' => 1];
+                    $this->estimate_model->update($eid, $data);
+
+                    //Activity Logs
+                    $activity_name = 'Estimates : Deleted estimate number ' . $estimate->estimate_number; 
+                    createActivityLog($activity_name);
+
+                    $total_deleted++;
+                }
+            }
+
+            if( $total_deleted > 0 ){
+                $is_success = 1;
+                $msg = '';
+            }
+        }
+        
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
 }
