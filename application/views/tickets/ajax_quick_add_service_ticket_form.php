@@ -247,7 +247,11 @@
     <div class="row mt-2" id="with-esign-inputs-container" style="display:none;">
         <div class="col-12">
             <div class="nsm-card primary">
-
+                <div class="nsm-card-header">
+                    <div class="nsm-card-title">
+                        <span class="custom-ticket-header"><i class='bx bxs-pen'></i> eSign Information</span>
+                    </div>
+                </div>
                 <div class="row mt-4" style="background-color:white;">
                     <div class="col-md-6 form-group">
                         <div class="row">
@@ -393,12 +397,12 @@
         </div>
     </div>
     
-    <div class="row mt-2">
+    <div class="row mt-2" id="with-esign-emergency-contacts-container" style="display:none;">
         <div class="col-12">
             <div class="nsm-card primary">
                 <div class="nsm-card-header">
                     <div class="nsm-card-title">
-                        <span class="custom-ticket-header"><i class="bx bx-fw bx-user"></i>Emergency Contacts</span>
+                        <span class="custom-ticket-header"><i class="bx bx-fw bx-user"></i> Emergency Contacts</span>
                     </div>
                 </div>
                 <div class="nsm-card-content">
@@ -1156,8 +1160,10 @@ $(document).ready(function(){
     $('#is-with-esign').on('change', function(){
         if( $(this).is(':checked') ){
             $('#with-esign-inputs-container').fadeIn();
+            $('#with-esign-emergency-contacts-container').fadeIn();
         }else{
             $('#with-esign-inputs-container').fadeOut();
+            $('#with-esign-emergency-contacts-container').fadeOut();
         }
     });
 
