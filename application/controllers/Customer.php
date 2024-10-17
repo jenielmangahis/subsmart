@@ -3991,6 +3991,7 @@ class Customer extends MY_Controller
                 return; // ignore empty contact with empty name
             }
 
+            $name = trim($postData['contact_first_name'.$customerNumber]) . ' ' . trim($postData['contact_last_name'.$customerNumber]);
             array_push($payload, [
                 'first_name' => trim($postData['contact_first_name'.$customerNumber]),
                 'last_name' => trim($postData['contact_last_name'.$customerNumber]),
@@ -3998,6 +3999,7 @@ class Customer extends MY_Controller
                 'phone' => $postData['contact_phone'.$customerNumber],
                 'customer_id' => $customerId,
                 'phone_type' => 'mobile',
+                'name' => $name
             ]);
         };
 
