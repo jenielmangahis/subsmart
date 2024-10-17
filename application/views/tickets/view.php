@@ -18,84 +18,84 @@ defined('BASEPATH') or exit('No direct script access allowed');
     <div class="col-12">        
         <div style="float:right;padding-right:10%;">
             <a href="<?= base_url('tickets/editDetails/'.$tickets->id); ?>" class="nsm-button">Edit</a>
-            <a href="<?php echo base_url('share_Link/ticketsPDF/' . $tickets->id) ?>" class="nsm-button success">Download as PDF</a> <a href="#" class="nsm-button success" id="printServiceTicket" onclick="printDiv('printArea')">Print</a>
+            <a href="<?php echo base_url('share_Link/ticketsPDF/' . $tickets->id) ?>" class="nsm-button success">Download as PDF</a> 
+            <a href="#" class="nsm-button success" id="printServiceTicket" onclick="printDiv('printArea')">Print</a>
         </div>
         <div class="nsm-page" style="padding-left:10%;padding-right:10%;padding-top:1%;" id="printArea">
 <style>
-@media print {
-    .mustRight 
-    { 
-        float: right !important; 
-        margin-top:-80px !important;
-        font-size: 12px !important;
-    }
-    .descriptionTags
-    {
-        width:25% !important;
-    }
-    .salesRepArea
-    {
-        width:25% !important;
-        float: right !important; 
-    }
-    .serviceLocDiv
-    {
-        width:75% !important;
-    }
-    .paymentArea
-    {
-        width:60% !important;
-    }
-    .spaceDiv
-    {
-        width:5% !important;
-    }
-    .summaryArea
-    {
-        width:35% !important;
-    }
-    .compLogo
-    {
-        width: 80px; 
-        height: 80px;
-    }
-} 
+    @media print {
+        .mustRight 
+        { 
+            float: right !important; 
+            margin-top:-80px !important;
+            font-size: 12px !important;
+        }
+        .descriptionTags
+        {
+            width:25% !important;
+        }
+        .salesRepArea
+        {
+            width:25% !important;
+            float: right !important; 
+        }
+        .serviceLocDiv
+        {
+            width:75% !important;
+        }
+        .paymentArea
+        {
+            width:60% !important;
+        }
+        .spaceDiv
+        {
+            width:5% !important;
+        }
+        .summaryArea
+        {
+            width:35% !important;
+        }
+        .compLogo
+        {
+            width: 80px; 
+            height: 80px;
+        }
+    } 
 
-@media (max-width: 1366px) {
-    .lamesa { 
-        font-size:9px !important; 
-        width:125% !important;
-        margin-left: -35px !important;
+    @media (max-width: 1366px) {
+        .lamesa { 
+            font-size:9px !important; 
+            width:125% !important;
+            margin-left: -35px !important;
+        }
     }
-}
-
 </style>
             <div class="" style="padding:2%;">
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-md-3">
                        <br>
                         <?php //echo $tickets->id; ?>
                     </div>
-                    <!-- <div class="col-md-6"></div> -->
+                    <div class="col-md-6"></div>
                     <div class="col-md-3">
                         <div class="">
-                            <!-- <div style="text-align: center;border:solid gray 1px;">
+                            <div style="text-align: center;border:solid gray 1px;">
                                 <h5>Ticket no</h5><hr>
                                 <h5><?php //echo $tickets->ticket_no; ?></h5>
-                            </div> -->
+                            </div>
                             <div style="font-size:16px;">
                             
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
                 <div class="row">
                     <div class="col-md-4" style="text-align:center;">
                         <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 130px; max-height: 130px;" class="compLogo"/> 
                     </div>
                     <!-- <div class="col-md-4 spaceDiv"></div> -->
-                    <div class="col-md-8 summaryArea">
+                    <div class="col-md-8">
                         <table class="nsm-table">
                             <tbody>
                                 <tr>
@@ -133,10 +133,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                             </tbody>
 
                         </table>
-                        
                     </div>
                 </div>
                 <br><br>
+
                 <?php if(!empty($clients)) { ?>
 
                     <div class="row">
@@ -409,15 +409,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                     <div class="row" style="font-size:16px;">
                         <div class="col-md-3">
                             <b>Assigned Technicians</b> <br>
-                            <?php //echo $technicians; 
-                            $assigned_technician = unserialize($tickets->technicians);
-                            if($assigned_technician){
-                            // var_dump($assigned_technician);
-                                foreach($assigned_technician as $eid){
-                                    $user = getUserName($eid);
-                                    echo $custom_html = '<img src="'.userProfileImage($eid).'" style="width: 60px; border-radius: 10px;">&nbsp;'.$user['name'].'<br>';
+                            <?php
+                                $assigned_technician = unserialize($tickets->technicians);
+                                if($assigned_technician){
+                                    foreach($assigned_technician as $eid){
+                                        $user = getUserName($eid);
+                                        echo $custom_html = '<img src="'.userProfileImage($eid).'" style="width: 60px; border-radius: 10px;">&nbsp;'.$user['name'].'<br>';
+                                    }
                                 }
-                            }
                             ?>
                         </div>
                     </div>
@@ -458,8 +457,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                     </div>
                 </div>
-
-
 
             </div>
         </div>
