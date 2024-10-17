@@ -2,8 +2,9 @@
 .custom-ticket-header{
     background-color: #6a4a86;
     color: #ffffff;
-    font-size: 15px;
+    font-size: 15px !important;
     padding: 10px;
+    display:block;
 }
 #quick-add-service-ticket-form-container .nsm-table thead td{
     background-color:#6a4a86;
@@ -38,7 +39,7 @@
     <div class="col-md-6">
         <div class="nsm-card primary">
             <div class="nsm-card-content">
-                <label for="sel-customer_t" class="required"><b>Customer</b></label>
+                    <label for="sel-customer_t" class="required"><b>Customer</b></label>
                     <a class="link-modal-open nsm-button btn-small" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="float:right;"><span class="fa fa-plus fa-margin-right"></span>New Customer</a>
                     <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
                         <option value="0">- Select Customer -</option>
@@ -96,12 +97,12 @@
             <div class="nsm-card-content">
                 <div class="row">
                     <div class="col-md-3">
-                        <label for="estimate_date" class="required"><b>Service Ticket No.</b></label>
+                        <label for="ticket_no" class="required"><b>Service Ticket No.</b></label>
                         <input type="text" class="form-control" name="ticket_no" id="ticket_no"
                                 required placeholder="Enter Ticket#" a value="<?= $prefix . $next_num; ?>" readonly="" />
                     </div>
                     <div class="col-md-3">
-                        <label for="estimate_date" class="required"><b>Schedule Date</b></label>
+                        <label for="ticket_date" class="required"><b>Schedule Date</b></label>
                         <div class="input-group date" data-provide="datepicker">
                             <input type="text" class="form-control" value="<?= date("m/d/Y", strtotime($default_start_date)); ?>" name="ticket_date" id="ticket_date"
                                     placeholder="Enter Ticket Date" required>
@@ -111,7 +112,7 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label for="expiry_date" class="required"><b>Schedule Time From</b></label>
+                        <label for="scheduled_time" class="required"><b>Schedule Time From</b></label>
                         <select id="scheduled_time" name="scheduled_time" class="nsm-field form-select" required>
                             <option value="">From</option>
                             <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
@@ -120,7 +121,7 @@
                         </select>
                     </div>
                     <div class="col-md-3">
-                        <label for="expiry_date" class="required"><b>Schedule Time To</b></label>
+                        <label for="scheduled_time_to" class="required"><b>Schedule Time To</b></label>
                         <select id="scheduled_time_to" name="scheduled_time_to" class="nsm-field form-select " required>
                             <option value="">To</option>
                             <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
@@ -137,7 +138,7 @@
                             autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                     </div>
                     <div class="col-md-3">
-                        <label for="zip"><b>Ticket Status</b></label>
+                        <label for="ticket_status"><b>Ticket Status</b></label>
                         <select id="ticket_status" name="ticket_status" class="form-control">
                             <!-- <option value="New">New</option> -->
                             <!-- <option value="Draft">Draft</option> -->
@@ -151,40 +152,40 @@
                         </select>
                     </div>
                     <div class="col-md-3 form-group">
-                        <label for="zip"><b>Panel Type</b></label>
+                        <label for="panel_type"><b>Panel Type</b></label>
                             <select name="panel_type" id="panel_type" class="form-control" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?>  value="0">- none -</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alarm.com'){echo "selected";} } ?> value="Alarm.com">Alarm.com</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alula'){echo "selected";} } ?> value="Alula">Alula</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Bosch'){echo "selected";} } ?> value="Bosch">Bosch</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'DSC'){echo "selected";} } ?> value="DSC">DSC</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'ELK'){echo "selected";} } ?> value="ELK">ELK</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'FBI'){echo "selected";} } ?> value="FBI">FBI</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'GRI'){echo "selected";} } ?> value="GRI">GRI</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'GE'){echo "selected";} } ?> value="GE">GE</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell">Honeywell</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Touch'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell 3000'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista">Honeywell Vista</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Vista with Sem'){echo "selected";} } ?> value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Lyric'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'IEI'){echo "selected";} } ?> value="IEI">IEI</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'MIER'){echo "selected";} } ?> value="MIER">MIER</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG">2 GIG</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG Go Panel 2'){echo "selected";} } ?> value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG Go Panel 3'){echo "selected";} } ?> value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys'){echo "selected";} } ?> value="Qolsyx">Qolsys</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 2'){echo "selected";} } ?> value="Qolsys IQ Panel 2">Qolsys IQ Panel 2</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 2 Plus'){echo "selected";} } ?> value="Qolsys IQ Panel 2 Plus">Qolsys IQ Panel 2 Plus</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 3'){echo "selected";} } ?> value="Qolsys IQ Panel 3">Qolsys IQ Panel 3</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Custom'){echo "selected";} } ?> value="Custom">Custom</option>
-                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Other'){echo "selected";} } ?> value="Other">Other</option>
+                                <option value="None">- None -</option>
+                                <option value="AERIONICS">AERIONICS</option>
+                                <option value="AlarmNet">AlarmNet</option>
+                                <option value="Alarm.com">Alarm.com</option>
+                                <option value="Alula">Alula</option>
+                                <option value="Bosch">Bosch</option>
+                                <option value="DSC">DSC</option>
+                                <option value="ELK">ELK</option>
+                                <option value="FBI">FBI</option>
+                                <option value="GRI">GRI</option>
+                                <option value="GE">GE</option>
+                                <option value="Honeywell">Honeywell</option>
+                                <option value="Honeywell Touch">Honeywell Touch</option>
+                                <option value="Honeywell 3000">Honeywell 3000</option>
+                                <option value="Honeywell Vista">Honeywell Vista</option>
+                                <option value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
+                                <option value="Honeywell Lyric">Honeywell Lyric</option>
+                                <option value="IEI">IEI</option>
+                                <option value="MIER">MIER</option>
+                                <option value="2 GIG">2 GIG</option>
+                                <option value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
+                                <option value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
+                                <option value="Qolsyx">Qolsys</option>
+                                <option value="Qolsys IQ Panel 2">Qolsys IQ Panel 2</option>
+                                <option value="Qolsys IQ Panel 2 Plus">Qolsys IQ Panel 2 Plus</option>
+                                <option value="Qolsys IQ Panel 3">Qolsys IQ Panel 3</option>
+                                <option value="Custom">Custom</option>
+                                <option value="Other">Other</option>
                             </select>
                     </div>
                     <div class="col-md-3" id="technicianDiv">
-                        <label for="zip"><b>Service Type</b></label>
+                        <label for="service_type"><b>Service Type</b></label>
                         <div class="input-group">
                             <select id="service_type" name="service_type" class="form-control">
                                 <option value="Services">Services</option>
@@ -197,16 +198,17 @@
                 </div>
                 <div class="row mt-4" style="background-color:white;">
                     <div class="col-md-3 form-group">
-                        <label for="zip"><b>Plan Type</b></label>
-                        <select class="form-control" name="plan_type" id="plan_type">
+                        <label for="plan_type"><b>Plan Type</b></label>
+                        <select class="form-control" name="plan_type" id="plan_type" required="">
+                            <option value="">Select</option>
                             <?php foreach($planTypeOptions as $key => $planType){ ?>
                                 <option value="<?= $key; ?>"><?= $planType; ?></option>
                             <?php } ?>
                         </select>
                     </div>
                     <div class="col-md-3 form-group">
-                        <label for="zip"><b>Warranty Type</b></label>
-                        <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="form-control" >
+                        <label for="warranty_type"><b>Warranty Type</b></label>
+                        <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="form-control" required="">
                             <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
                             <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited 90 Days</option>
                             <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "1 Year"){ echo 'selected'; } } ?>  value="1 Year">1 Year</option>
@@ -216,231 +218,364 @@
                             <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "None"){ echo 'selected'; } } ?>  value="None">None</option>
                         </select>
                     </div>
-                    <div class="col-md-3 form-group">
-                        <label for="zip"><b>Created By</b></label>                        
-                        <select class="form-control mb-3" name="employee_id">
-                            <option value="0">Select Name</option>
-                            <?php foreach($users_lists as $ulist){ ?>
-                                <option <?php if($ulist->id == logged('id')){ echo "selected";} ?> value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
-                            <?php } ?>
+                    <div class="col-md-6 form-group">
+                        <label for="employee_id"><b>Created By</b></label>                        
+                        <select class="form-control mb-3" name="employee_id" id="employee_id">
+                            <option value="<?= logged('id'); ?>" selected=""><?= logged('FName') . ' ' . logged('LName'); ?></option>
                         </select>
                     </div>                    
                 </div>
                 <div class="row mt-4" style="background-color:white;">
                     <div class="col-md-6 form-group">
-                        <label for=""><b>Assigned Technician</b></label>
+                        <label for="ticket-appointment-user"><b>Assigned Technician</b></label>
                         <select class="form-control nsm-field form-select" name="assign_tech[]" id="ticket-appointment-user" multiple="multiple">
                         </select>
                     </div>
                     <div class="col-md-6 form-group">
-                        <label for="zip"><b>Job Description</b></label>                        
-                        <textarea name="job_description" class="form-control" required="" style="height:100px;"></textarea>
+                        <label for="job_description"><b>Job Description</b></label>                        
+                        <textarea name="job_description" id="job_description" class="form-control" required="" style="height:100px;"></textarea>
                         <div class="form-check mt-2">
                             <input class="form-check-input" type="checkbox" name="is_with_esign" id="is-with-esign" value="1">
-                            <label class="form-check-label" for="is-with-esign">Is with eSign</label>
+                            <label class="form-check-label" for="is-with-esign">eSign Required</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>       
+
+    <div class="row mt-2" id="with-esign-inputs-container" style="display:none;">
+        <div class="col-12">
+            <div class="nsm-card primary">
+
+                <div class="row mt-4" style="background-color:white;">
+                    <div class="col-md-6 form-group">
+                        <div class="row">
+                            <div class="col-md-6 form-group mt-2">
+                                <label for="service-ticket-monthly-monitoring-rate"><b>Change Monthly Monitoring Rate</b></label>
+                                <select style="display:inline-block;" class="form-control nsm-field form-select" name="monthly_monitoring_rate" id="service-ticket-monthly-monitoring-rate">
+                                    <option value="0.00">Select Plan Rate</option>
+                                    <?php foreach( $ratePlans as $rp ){ ?>
+                                        <option value="<?= $rp->amount; ?>"><?= $rp->plan_name; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="col-md-6 form-group mt-2">
+                                <label for=""><b>Monthly Monitoring Rate</b></label>
+                                <input style="display:inline-block;" type="number" id="plan-value" name="monthly_monitoring_rate_value" value="0.00" class="form-control" />
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                    <div class="col-md-6 form-group mt-2" id="service-ticket-esign-template">                            
+                        <label for="esign-template-list"><b>eSign Templates</b></label>
+                        <select class="form-control nsm-field form-select" name="esign_template" id="esign-templates">
+                            <?php foreach($esignTemplates as $e){ ?>
+                                <?php 
+                                    $template_name = $e->name;
+                                    if( $e->is_default == 1 ){
+                                        $template_name = $e->name .'(default)';
+                                    }    
+                                ?>
+                                <option <?= $e->is_default == 1 ? 'selected="selected"' : ''; ?> value="<?= $e->id; ?>"><?= $template_name; ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="col-md-6 form-group mt-2">
+                        <div class="row">
+                            <div class="col-md-6 form-group mt-2">
+                                <label for="service-ticket-installation-cost"><b>Installation Cost</b></label>
+                                <input type="number" step="any" class="form-control" value="0.00" name="installation_cost" id="service-ticket-installation-cost">
+                            </div>
+                            <div class="col-md-6 form-group mt-2">
+                                <label for="service-ticket-otp"><b>One Time (Program and Setup)</b></label>
+                                <input type="number" step="any" class="form-control" value="0.00" name="otp" id="service-ticket-otp">
+                            </div>
+                        </div>
+                    </div>                        
+                </div>
+                <div class="row" style="background-color:white;">                        
+                    <div class="col-md-6 form-group mt-2">
+                        <label for="bill_method"><b>Billing Method</b></label>
+                        <div class="input-group">
+                            <select id="bill_method" name="bill_method" class="form-select">
+                                <option value="CC">Credit Card</option>
+                                <option value="CHECK">Check</option>
+                                <option value="ACH">ACH</option>/option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6 form-group mt-2">
+                        <label for="customer_monitoring_id"><b>Monitoring ID</b></label>
+                        <input type="text" class="form-control" name="customer_monitoring_id" id="customer_monitoring_id"/>
+                    </div>
+                    
+                    <div class="grp-billing-cc">                      
+                        <div class="col-md-12 form-group mt-2 group-cc">
+                            <div class="row">                                
+                                <div class="col-md-6 form-group mt-2">
+                                    <label for="customer_cc_num"><b>Credit Card Number</b></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="customer_cc_num" id="customer_cc_num"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 form-group mt-2">
+                                    <label for="customer_cc_expiry_date_month"><b>Expiry Date</b></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control cc-expiry-month" style="width:60px !important;" maxlength="2" size="2" name="customer_cc_expiry_date_month" id="customer_cc_expiry_date_month" placeholder="MM"/>
+                                        <span class="cc-separator">/</span>
+                                        <input type="text" class="form-control cc-expiry-year" style="width:65px !important;" maxlength="4" size="4" name="customer_cc_expiry_date_year" id="customer_cc_expiry_date_year" placeholder="YYYY"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 form-group mt-2">
+                                    <label for="customer_cc_cvc"><b>CVC</b></label>
+                                    <div class="input-group" style="width:35%;">
+                                        <input type="text" class="form-control cc-cvc" maxlength="3" size="3" name="customer_cc_cvc" id="customer_cc_cvc"/>
+                                    </div>
+                                </div>
+                            </div>                                
+                        </div>
+                    </div>
+                    <div class="grp-billing-check">                      
+                        <div class="col-md-12 form-group mt-2 group-cc">
+                            <div class="row">                                
+                                <div class="col-md-6 form-group mt-2">
+                                    <label for="customer_check_number"><b>Check Number</b></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="customer_check_number" id="customer_check_number"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 form-group mt-2">
+                                    <label for="customer_check_routing_number"><b>Routing Number</b></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="customer_check_routing_number" id="customer_check_routing_number"/>
+                                    </div>
+                                </div>                                    
+                            </div>    
+                            <div class="row">
+                                <div class="col-md-6 form-group mt-2">
+                                    <label for="customer_check_bank_name"><b>Bank Name</b></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="customer_check_bank_name" id="customer_check_bank_name"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 form-group mt-2">
+                                    <label for="customer_check_account_number"><b>Account Number</b></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="customer_check_account_number" id="customer_check_account_number"/>
+                                    </div>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="grp-billing-ach">                      
+                        <div class="col-md-12 form-group mt-2 group-cc">
+                            <div class="row">                                
+                                <div class="col-md-6 form-group mt-2">
+                                    <label for="customer_ach_account_number"><b>Account Number</b></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="customer_ach_account_number" id="customer_ach_account_number"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 form-group mt-2">
+                                    <label for="customer_ach_routing_number"><b>Routing Number</b></label>
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="customer_ach_routing_number" id="customer_ach_routing_number"/>
+                                    </div>
+                                </div>
+                            </div>                                
                         </div>
                     </div>
                 </div>
 
-                <div id="with-esign-inputs-container" style="display:none;">
-                    <div class="row mt-4" style="background-color:white;">
-                        <div class="col-md-6 form-group">
-                            <div class="row">
-                                <div class="col-md-6 form-group mt-2">
-                                    <label for="service-ticket-monthly-monitoring-rate"><b>Change Monthly Monitoring Rate</b></label>
-                                    <select style="display:inline-block;" class="form-control nsm-field form-select" name="monthly_monitoring_rate" id="service-ticket-monthly-monitoring-rate">
-                                        <option value="0.00">Select Plan Rate</option>
-                                        <?php foreach( $ratePlans as $rp ){ ?>
-                                            <option value="<?= $rp->amount; ?>"><?= $rp->plan_name; ?></option>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-2">
+        <div class="col-12">
+            <div class="nsm-card primary">
+                <div class="nsm-card-header">
+                    <div class="nsm-card-title">
+                        <span class="custom-ticket-header"><i class="bx bx-fw bx-user"></i>Emergency Contacts</span>
+                    </div>
+                </div>
+                <div class="nsm-card-content">
+                    <hr>
+                    <div class="row">
+                        <div class="col-md-6">
+                                <div class="row">
+                                    <div class="col-md-4 ">Contact Name 1</div>
+                                    <div class="col-md-8">
+                                        <div class="row">
+                                            <div class="col-6" style="padding-right:2px !important;">
+                                                <input type="text" class="form-control" placeholder="First Name" name="contact_first_name1" id="contact_first_name1" value="" style="margin-bottom: 5px;"/>
+                                            </div>
+                                            <div class="col-6" style="padding-left:2px !important;">
+                                                <input type="text" class="form-control" placeholder="Last Name" name="contact_last_name1" id="contact_last_name1" value="" style="margin-bottom: 5px;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div class="col-md-4 ">Relationship</div>
+                                    <div class="col-md-8">
+                                        <select data-type="emergency_contact_relationship" class="form-control" name="contact_relationship1" id="contact_relationship1">
+                                            <?php foreach($contactRelationshipOptions as $value){ ?>
+                                                <option value="<?= $value; ?>"><?= $value; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">Phone Number</div>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone1" id="contact_phone1" value=""/>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3">
+                                    <div class="col-md-4">Contact Name 2</div>
+                                    <div class="col-md-8">
+                                        <div class="row">
+                                            <div class="col-6" style="padding-right:2px !important;">
+                                                <input type="text" class="form-control" placeholder="First Name" name="contact_first_name2" id="contact_first_name2" value="" style="margin-bottom: 5px;"/>
+                                            </div>
+                                            <div class="col-6" style="padding-left:2px !important;">
+                                                <input type="text" class="form-control" placeholder="Last Name" name="contact_last_name2" id="contact_last_name2" value="" style="margin-bottom: 5px;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4 ">Relationship</div>
+                                    <div class="col-md-8">
+                                        <select data-type="emergency_contact_relationship" class="form-control" name="contact_relationship2" id="contact_relationship2">
+                                            <?php foreach($contactRelationshipOptions as $value){ ?>
+                                                <option value="<?= $value; ?>"><?= $value; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-md-4">Phone Number</div>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone2" id="contact_phone2" value=""/>
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="col-md-6">
+                                
+                            <div class="row mt-2">
+                                <div class="col-md-4">
+                                    Contact Name 3
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="col-6" style="padding-right:2px !important;">
+                                            <input type="text" class="form-control" placeholder="First Name" name="contact_first_name3" id="contact_first_name3" value="" style="margin-bottom: 5px;"/>
+                                        </div>
+                                        <div class="col-6" style="padding-left:2px !important;">
+                                            <input type="text" class="form-control" placeholder="Last Name" name="contact_last_name3" id="contact_last_name3" value="" style="margin-bottom: 5px;" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-4 ">
+                                    Relationship
+                                </div>
+                                <div class="col-md-8">
+                                    <select data-type="emergency_contact_relationship" class="form-control" name="contact_relationship3" id="contact_relationship3">
+                                        <?php foreach($contactRelationshipOptions as $value){ ?>
+                                            <option value="<?= $value; ?>"><?= $value; ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
-                                <div class="col-md-6 form-group mt-2">
-                                    <label for=""><b>Monthly Monitoring Rate</b></label>
-                                    <input style="display:inline-block;" type="text" id="plan-value" name="monthly_monitoring_rate_value" value="0.00" class="form-control" readonly="" />
+                            </div>
+                            <div class="row mt-2">
+                                <div class="col-md-4">
+                                    Phone Number
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="contact_phone3" id="contact_phone3" value=""/>
                                 </div>
                             </div>
-                            
-                            
-                        </div>
-                        <div class="col-md-6 form-group mt-2" id="service-ticket-esign-template">                            
-                            <label for="esign-template-list"><b>eSign Templates</b></label>
-                            <select class="form-control nsm-field form-select" name="esign_template" id="esign-templates">
-                                <?php foreach($esignTemplates as $e){ ?>
-                                    <?php 
-                                        $template_name = $e->name;
-                                        if( $e->is_default == 1 ){
-                                            $template_name = $e->name .'(default)';
-                                        }    
-                                    ?>
-                                    <option <?= $e->is_default == 1 ? 'selected="selected"' : ''; ?> value="<?= $e->id; ?>"><?= $template_name; ?></option>
-                                <?php } ?>
-                            </select>
-                        </div>
-                        <div class="col-md-6 form-group mt-2">
-                            <div class="row">
-                                <div class="col-md-6 form-group mt-2">
-                                    <label for="service-ticket-installation-cost"><b>Installation Cost</b></label>
-                                    <input type="number" step="any" class="form-control" value="0.00" name="installation_cost" id="service-ticket-installation-cost">
-                                </div>
-                                <div class="col-md-6 form-group mt-2">
-                                    <label for="service-ticket-otp"><b>One Time (Program and Setup)</b></label>
-                                    <input type="number" step="any" class="form-control" value="0.00" name="otp" id="service-ticket-otp">
-                                </div>
-                            </div>
-                        </div>                        
-                    </div>
-                    <div class="row" style="background-color:white;">                        
-                        <div class="col-md-6 form-group mt-2">
-                            <label for="bill_method"><b>Billing Method</b></label>
-                            <div class="input-group">
-                                <select id="bill_method" name="bill_method" class="form-select">
-                                    <option value="CC">Credit Card</option>
-                                    <option value="CHECK">Check</option>
-                                    <option value="ACH">ACH</option>/option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6 form-group mt-2">
-                            <label for="customer_monitoring_id"><b>Monitoring ID</b></label>
-                            <input type="text" class="form-control" name="customer_monitoring_id" id="customer_monitoring_id"/>
+
                         </div>
                         
-                        <div class="grp-billing-cc">                      
-                            <div class="col-md-12 form-group mt-2 group-cc">
-                                <div class="row">                                
-                                    <div class="col-md-6 form-group mt-2">
-                                        <label for="customer_cc_num"><b>Credit Card Number</b></label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="customer_cc_num" id="customer_cc_num"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 form-group mt-2">
-                                        <label for="customer_cc_expiry_date_month"><b>Expiry Date</b></label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control cc-expiry-month" maxlength="2" size="2" name="customer_cc_expiry_date_month" id="customer_cc_expiry_date_month" placeholder="MM"/>
-                                            <span class="cc-separator">/</span>
-                                            <input type="text" class="form-control cc-expiry-year" maxlength="4" size="4" name="customer_cc_expiry_date_year" id="customer_cc_expiry_date_year" placeholder="YYYY"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2 form-group mt-2">
-                                        <label for="customer_cc_cvc"><b>CVC</b></label>
-                                        <div class="input-group" style="width:35%;">
-                                            <input type="text" class="form-control cc-cvc" maxlength="3" size="3" name="customer_cc_cvc" id="customer_cc_cvc"/>
-                                        </div>
-                                    </div>
-                                </div>                                
-                            </div>
-                        </div>
-                        <div class="grp-billing-check">                      
-                            <div class="col-md-12 form-group mt-2 group-cc">
-                                <div class="row">                                
-                                    <div class="col-md-6 form-group mt-2">
-                                        <label for="customer_check_number"><b>Check Number</b></label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="customer_check_number" id="customer_check_number"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 form-group mt-2">
-                                        <label for="customer_check_routing_number"><b>Routing Number</b></label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="customer_check_routing_number" id="customer_check_routing_number"/>
-                                        </div>
-                                    </div>                                    
-                                </div>    
-                                <div class="row">
-                                    <div class="col-md-6 form-group mt-2">
-                                        <label for="customer_check_bank_name"><b>Bank Name</b></label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="customer_check_bank_name" id="customer_check_bank_name"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 form-group mt-2">
-                                        <label for="customer_check_account_number"><b>Account Number</b></label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="customer_check_account_number" id="customer_check_account_number"/>
-                                        </div>
-                                    </div>
-                                </div>                            
-                            </div>
-                        </div>
-                        <div class="grp-billing-ach">                      
-                            <div class="col-md-12 form-group mt-2 group-cc">
-                                <div class="row">                                
-                                    <div class="col-md-6 form-group mt-2">
-                                        <label for="customer_ach_account_number"><b>Account Number</b></label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="customer_ach_account_number" id="customer_ach_account_number"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 form-group mt-2">
-                                        <label for="customer_ach_routing_number"><b>Routing Number</b></label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="customer_ach_routing_number" id="customer_ach_routing_number"/>
-                                        </div>
-                                    </div>
-                                </div>                                
-                            </div>
-                        </div>
                     </div>
-                </div>                
+                </div>
+            </div>
+        </div>
+    </div>
 
-                <div class="row mt-4" style="background-color:white;font-size:16px;">
-                    <h6 class='card_header custom-ticket-header'>Service Ticket Items Listing</h6>
-                </div>
-                <div class="row" id="plansItemDiv" style="background-color:white;">
-                    <div class="col-md-12 table-responsive">                        
-                    <input type="hidden" name="count" value="0" id="service-ticket-item-count">
-                        <table class="table" id="service-ticket-add-item-list">                            
-                            <thead>
-                            <tr>
-                                <th style="width:25%;">Name</th>
-                                <th style="width:20%;">Group</th>
-                                <th style="width:10%;">Quantity</th>
-                                <th style="width:10%;">Price</th>
-                                <th style="width:10%;">Discount</th>
-                                <th style="width:10%;">Tax</th>
-                                <th style="width:10%;text-align:right;">Total</th>
-                                <th class=""></th>
-                            </tr>
-                            </thead>
-                            <tbody id="service-ticket-items"></tbody>
-                        </table>
-                        <button class="link-modal-open nsm-button primary small link-modal-open" type="button" id="add-another-items" data-bs-toggle="modal" data-bs-target="#item_list">
-                            <i class='bx bx-plus'></i>Add Items
-                        </button>
+    <div class="row mt-2">
+        <div class="col-12">
+            <div class="nsm-card primary">
+                <div class="nsm-card-header">
+                    <div class="nsm-card-title">
+                        <span class="custom-ticket-header"><i class='bx bx-list-ul'></i> Item List</span>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-8"></div>
-                    <div class="col-md-4">
-                        <table class="table" style="text-align:left;">
-                            <tr>
-                                <td>Subtotal</td>
-                                <td colspan="2" align="right">$ <span id="span_sub_total_invoice">0.00</span> <input type="hidden" name="subtotal" id="item_total"></td>
-                            </tr>
-                            <tr>
-                                <td>Taxes</td>
-                                <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
-                            </tr>
-                            <tr>
-                                <td>Monthly Monitoring Rate</td>
-                                <td colspan="2" align="right">$ <span id="span_mmr">0.00</span></td>
-                            </tr>
-                            <tr>
-                                <td>Installation Cost</td>
-                                <td colspan="2" align="right">$ <span id="span_installation_cost">0.00</span></td>
-                            </tr>
-                            <tr>
-                                <td>One Time (Program and Setup)</td>
-                                <td colspan="2" align="right">$ <span id="span_otp">0.00</span></td>
-                            </tr>
-                            <tr>
-                                <td><b>Grand Total</b></td>
-                                <td></td>
-                                <td align="right"><b>$ <span id="grand_total">0.00</span></b><input type="hidden" name="grandtotal" id="grand_total_input" value='0'></td>
-                            </tr>
-                        </table>
+                <div class="nsm-card-content">
+                    <hr />
+                    <div class="row" id="plansItemDiv" style="background-color:white;">
+                        <div class="col-md-12 table-responsive">                        
+                        <input type="hidden" name="count" value="0" id="service-ticket-item-count">
+                            <table class="table" id="service-ticket-add-item-list">                            
+                                <thead>
+                                <tr>
+                                    <th style="width:25%;">Name</th>
+                                    <th style="width:20%;">Group</th>
+                                    <th style="width:10%;">Quantity</th>
+                                    <th style="width:10%;">Price</th>
+                                    <th style="width:10%;">Discount</th>
+                                    <th style="width:10%;">Tax</th>
+                                    <th style="width:10%;text-align:right;">Total</th>
+                                    <th class=""></th>
+                                </tr>
+                                </thead>
+                                <tbody id="service-ticket-items"></tbody>
+                            </table>
+                            <button class="link-modal-open nsm-button primary small link-modal-open" type="button" id="add-another-items" data-bs-toggle="modal" data-bs-target="#item_list">
+                                <i class='bx bx-plus'></i>Add Items
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8"></div>
+                        <div class="col-md-4">
+                            <table class="table" style="text-align:left;">
+                                <tr>
+                                    <td>Subtotal</td>
+                                    <td colspan="2" align="right">$ <span id="span_sub_total_invoice">0.00</span> <input type="hidden" name="subtotal" id="item_total"></td>
+                                </tr>
+                                <tr>
+                                    <td>Taxes</td>
+                                    <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                </tr>
+                                <tr style="display:none;">
+                                    <td>Monthly Monitoring Rate</td>
+                                    <td colspan="2" align="right">$ <span id="span_mmr">0.00</span></td>
+                                </tr>
+                                <tr style="display:none;">
+                                    <td>Installation Cost</td>
+                                    <td colspan="2" align="right">$ <span id="span_installation_cost">0.00</span></td>
+                                </tr>
+                                <tr style="display:none;">
+                                    <td>One Time (Program and Setup)</td>
+                                    <td colspan="2" align="right">$ <span id="span_otp">0.00</span></td>
+                                </tr>
+                                <tr>
+                                    <td><b>Grand Total</b></td>
+                                    <td></td>
+                                    <td align="right"><b>$ <span id="grand_total">0.00</span></b><input type="hidden" name="grandtotal" id="grand_total_input" value='0'></td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -573,6 +708,36 @@ $(document).ready(function(){
     //     placeholder: 'Select template',
     // });
 
+    $('#employee_id').select2({
+        ajax: {
+            url: base_url + 'autocomplete/_company_users',
+            dataType: 'json',
+            delay: 250,                
+            data: function(params) {
+                return {
+                    q: params.term,
+                    page: params.page
+                };
+            },
+            processResults: function(data, params) {
+                params.page = params.page || 1;
+
+                return {
+                    results: data,
+                };
+            },
+            /*formatResult: function(item) {
+                return '<div>' + item.FName + ' ' + item.LName + '<br />test<small>' + item.email + '</small></div>';
+            },*/
+            cache: true
+        },
+        dropdownParent: $("#modal-quick-add-service-ticket"),
+        placeholder: 'Select User',
+        minimumInputLength: 0,
+        templateResult: formatRepoUser,
+        templateSelection: formatRepoSelectionUser
+    });
+
     $('#ticket-appointment-user').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_users',
@@ -656,6 +821,100 @@ $(document).ready(function(){
 
                 $("#customer_ach_account_number").val(response.acct_num);
                 $("#customer_ach_routing_number").val(response.routing_num);
+
+                if( response.panel_type != '' && response.panel_type != null ){
+                    $('#panel_type').val(response.panel_type);
+                }else{
+                    $('#panel_type').val('None');
+                }
+
+                if( response.plan_type != '' && response.plan_type != null ){
+                    $('#plan_type').val(response.plan_type);
+                }else{
+                    $('#plan_type').val('');
+                }
+
+                if( response.warranty_type != '' && response.warranty_type != null ){
+                    $('#warranty_type').val(response.warranty_type);
+                }else{
+                    $('#warranty_type').val('');
+                }
+
+                //Start Emergency Contacts
+                if( response.ec1_firstname != '' && response.ec1_firstname != null ){
+                    $('#contact_first_name1').val(response.ec1_firstname);
+                }else{
+                    $('#contact_first_name1').val('');
+                }
+
+                if( response.ec1_lastname != '' && response.ec1_lastname != null ){
+                    $('#contact_last_name1').val(response.ec1_lastname);
+                }else{
+                    $('#contact_last_name1').val('');
+                }
+
+                if( response.ec1_phone != '' && response.ec1_phone != null ){
+                    $('#contact_phone1').val(response.ec1_phone);
+                }else{
+                    $('#contact_phone1').val('');
+                }
+
+                if( response.ec1_relationship != '' && response.ec1_relationship != null ){
+                    $('#contact_relationship1').val(response.ec1_relationship);
+                }else{
+                    $('#contact_relationship1').val('');
+                }
+
+
+                if( response.ec2_firstname != '' && response.ec2_firstname != null ){
+                    $('#contact_first_name2').val(response.ec2_firstname);
+                }else{
+                    $('#contact_first_name2').val('');
+                }
+
+                if( response.ec2_lastname != '' && response.ec2_lastname != null ){
+                    $('#contact_last_name2').val(response.ec2_lastname);
+                }else{
+                    $('#contact_last_name2').val('');
+                }
+
+                if( response.ec2_phone != '' && response.ec2_phone != null ){
+                    $('#contact_phone2').val(response.ec2_phone);
+                }else{
+                    $('#contact_phone2').val('');
+                }
+
+                if( response.ec2_relationship != '' && response.ec2_relationship != null ){
+                    $('#contact_relationship2').val(response.ec2_relationship);
+                }else{
+                    $('#contact_relationship2').val('');
+                }
+
+
+                if( response.ec3_firstname != '' && response.ec3_firstname != null ){
+                    $('#contact_first_name3').val(response.ec3_firstname);
+                }else{
+                    $('#contact_first_name3').val('');
+                }
+
+                if( response.ec3_lastname != '' && response.ec3_lastname != null ){
+                    $('#contact_last_name3').val(response.ec3_lastname);
+                }else{
+                    $('#contact_last_name3').val('');
+                }
+
+                if( response.ec3_phone != '' && response.ec3_phone != null ){
+                    $('#contact_phone3').val(response.ec3_phone);
+                }else{
+                    $('#contact_phone3').val('');
+                }
+
+                if( response.ec3_relationship != '' && response.ec3_relationship != null ){
+                    $('#contact_relationship3').val(response.ec3_relationship);
+                }else{
+                    $('#contact_relationship3').val('');
+                }
+                //End Emergency contacts
 
                 if( response.bill_method == 'CC' ){
                     $('#bill_method').val('CC');
@@ -813,10 +1072,16 @@ $(document).ready(function(){
     function computeGrandTotal(){
         var fixedSubtotal = calculateSubtotal();
         var fixedTaxes = calculateTaxes();
-        var otp = $('#service-ticket-otp').val();
+        // var otp = $('#service-ticket-otp').val();
+        // //var mmr = $('#service-ticket-monthly-monitoring-rate').val();
+        // var mmr = $('#plan-value').val();
+        // var installation_cost = $('#service-ticket-installation-cost').val();
+
+        var otp = 0;
         //var mmr = $('#service-ticket-monthly-monitoring-rate').val();
-        var mmr = $('#plan-value').val();
-        var installation_cost = $('#service-ticket-installation-cost').val();
+        var mmr = 0;
+        var installation_cost = 0;
+
         var grandTotal = parseFloat(fixedSubtotal) + parseFloat(fixedTaxes) + parseFloat(otp) + parseFloat(mmr) + parseFloat(installation_cost);
 
         $("#grand_total").text(grandTotal.toFixed(2));
@@ -954,6 +1219,17 @@ $(document).ready(function(){
             $('.grp-billing-cc').hide();
             $('.grp-billing-check').show();
             $('.grp-billing-ach').hide();
+        }
+    });
+
+    $("#scheduled_time").on( 'change', function () {
+        var tag_id = this.value;
+        var end_time = moment.utc(tag_id,'hh:mm a').add(<?= $time_interval; ?>,'hour').format('h:mm a');
+
+        if(end_time === 'Invalid date') {
+            $('#scheduled_time_to').val("");
+        }else{
+            $('#scheduled_time_to').val(end_time);
         }
     });
 });
