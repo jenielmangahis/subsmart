@@ -85,6 +85,8 @@ function Signing(hash) {
 
     const { emergency_secondary_contact_fname, emergency_secondary_contact_lname, emergency_secondary_contact_phone } = window.__esigndata.auto_populate_data.secondary_emergency_contacts;
 
+    const { emergency_third_contact_fname, emergency_third_contact_lname, emergency_third_contact_phone } = window.__esigndata.auto_populate_data.third_emergency_contacts;
+
     const { access_password } = window.__esigndata.auto_populate_data.acs_access;
 
     const { kw_dc, solar_system_size } = window.__esigndata.auto_populate_data.acs_info_solar;
@@ -395,6 +397,54 @@ function Signing(hash) {
 
     if( field_name == "Secondary Contact Number" ){
       return emergency_secondary_contact_phone;
+    }
+
+    if( field_name == "Third Contact Name" ){
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return emergency_third_contact_fname + " " + emergency_third_contact_lname;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return emergency_third_contact_fname + " " + emergency_third_contact_lname;
+      }
+    }
+    
+    if( field_name == "Third Contact First Name" ){
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return emergency_third_contact_fname;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return emergency_third_contact_fname;
+      }
+    }
+    
+    if( field_name == "Third Contact Last Name" ){
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return emergency_third_contact_lname;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return emergency_third_contact_lname;
+      }
+    }
+    
+    if( field_name == "Third Contact Number" ){
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return emergency_third_contact_phone;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return emergency_third_contact_phone;
+      }
     }
 
 
