@@ -1761,38 +1761,40 @@ class Tickets extends MY_Controller
 
             $updateaddQuery = $this->tickets_model->updateTicketsHash_ID($update_data);
 
-            //Emergency Contacts
-            $payload    = [];
-            $postData   = $this->input->post();
-            $customerId = $this->input->post('customer_id');
-            $saveToPayload = function ($customerNumber) use (&$payload, $postData, $customerId) {
-                if (empty(trim($postData['contact_first_name'.$customerNumber]))) {
-                    return; // ignore empty contact with empty name
+            if( $this->input->post('is_with_esign') ){
+                //Emergency Contacts
+                $payload    = [];
+                $postData   = $this->input->post();
+                $customerId = $this->input->post('customer_id');
+                $saveToPayload = function ($customerNumber) use (&$payload, $postData, $customerId) {
+                    if (empty(trim($postData['contact_first_name'.$customerNumber]))) {
+                        return; // ignore empty contact with empty name
+                    }
+        
+                    $name = trim($postData['contact_first_name'.$customerNumber]) . ' ' . trim($postData['contact_last_name'.$customerNumber]);
+                    array_push($payload, [
+                        'first_name' => trim($postData['contact_first_name'.$customerNumber]),
+                        'last_name' => trim($postData['contact_last_name'.$customerNumber]),
+                        'relation' => $postData['contact_relationship'.$customerNumber],
+                        'phone' => $postData['contact_phone'.$customerNumber],
+                        'customer_id' => $customerId,
+                        'phone_type' => 'mobile',
+                        'name' => $name
+                    ]);
+                };
+        
+                $saveToPayload(1);
+                $saveToPayload(2);
+                $saveToPayload(3);
+
+                if (!empty($payload)) {
+                    $this->db->where('customer_id', $customerId);
+                    $this->db->delete('contacts');
+
+                    $this->db->insert_batch('contacts', $payload);
                 }
-    
-                $name = trim($postData['contact_first_name'.$customerNumber]) . ' ' . trim($postData['contact_last_name'.$customerNumber]);
-                array_push($payload, [
-                    'first_name' => trim($postData['contact_first_name'.$customerNumber]),
-                    'last_name' => trim($postData['contact_last_name'.$customerNumber]),
-                    'relation' => $postData['contact_relationship'.$customerNumber],
-                    'phone' => $postData['contact_phone'.$customerNumber],
-                    'customer_id' => $customerId,
-                    'phone_type' => 'mobile',
-                    'name' => $name
-                ]);
-            };
-    
-            $saveToPayload(1);
-            $saveToPayload(2);
-            $saveToPayload(3);
-
-            if (!empty($payload)) {
-                $this->db->where('customer_id', $customerId);
-                $this->db->delete('contacts');
-
-                $this->db->insert_batch('contacts', $payload);
+                //End Emergency Contacts
             }
-            //End Emergency Contacts
 
             //Update customer mmr
             if( $update_customer_mmr == 1 ){
