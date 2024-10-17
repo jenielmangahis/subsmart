@@ -1323,7 +1323,7 @@ class Customer_advance_model extends MY_Model
     public function planTypeOptions()
     {
         $options = [
-            'Photo Line' => 'Photo Line',
+            'Phone Line' => 'Phone Line',
             'Wifi Card' => 'Wifi Card',
             'Cell Primary' => 'Cell Primary',
             'Basic Interactive' => 'Basic Interactive',
