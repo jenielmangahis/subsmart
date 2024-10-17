@@ -246,126 +246,102 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <td style="text-align:;"><?php echo $tickets->billing_date; ?></td>
                                     </tr>
                                     <tr>
-                                        <td colspan="2">
-                                        <?php 
-                                        $payment_method                 = $tickets->payment_method;
-                                        $check_number                   = $payment->check_number;
-                                        $routing_number                 = $payment->routing_number;
-                                        $account_number                 = $payment->account_number;
-                                        $credit_number                  = $payment->credit_number;
-                                        $credit_expiry                  = $payment->credit_expiry;
-                                        $credit_cvc                     = $payment->credit_cvc;
-                                        $account_credentials            = $payment->account_credentials;
-                                        $account_note                   = $payment->account_note;
-                                        $confirmation                   = $payment->confirmation;
-                                        $mail_address                   = $payment->mail_address;
-                                        $mail_locality                  = $payment->mail_locality;
-                                        $mail_state                     = $payment->mail_state;
-                                        $mail_postcode                  = $payment->mail_postcode;
-                                        $mail_cross_street              = $payment->mail_cross_street;
-                                        $billing_date                   = $payment->billing_date;
-                                        $billing_frequency              = $payment->billing_frequency;
+                                        <td><b>Payment Details:</b></td>
+                                        <td>
+                                            <?php 
+                                                $payment_method                 = $tickets->payment_method;
+                                                $check_number                   = $payment->check_number;
+                                                $routing_number                 = $payment->routing_number;
+                                                $account_number                 = $payment->account_number;
+                                                $credit_number                  = $payment->credit_number;
+                                                $credit_expiry                  = $payment->credit_expiry;
+                                                $credit_cvc                     = $payment->credit_cvc;
+                                                $account_credentials            = $payment->account_credentials;
+                                                $account_note                   = $payment->account_note;
+                                                $confirmation                   = $payment->confirmation;
+                                                $mail_address                   = $payment->mail_address;
+                                                $mail_locality                  = $payment->mail_locality;
+                                                $mail_state                     = $payment->mail_state;
+                                                $mail_postcode                  = $payment->mail_postcode;
+                                                $mail_cross_street              = $payment->mail_cross_street;
+                                                $billing_date                   = $payment->billing_date;
+                                                $billing_frequency              = $payment->billing_frequency;
+                                                $payment_ammount                = $payment->billing_frequency != null ? $payment->billing_frequency : '0.00';
 
-                                            if($payment_method ==  'Cash'){
-                                                echo '<b>Payment Details:</b>';
-                                            }
-                                            elseif($payment_method ==  'Check')
-                                            {
-                                                // echo 'Payment Method: Check';
-                                                echo '<b>Payment Details:</b>';
-                                                echo '<br> Check Number: '. $check_number;
-                                                echo '<br> Rounting Number: '. $routing_number;
-                                                echo '<br> Account Number: '. $account_number;
-                                            }
-                                            elseif($payment_method ==  'Credit Card')
-                                            {
-                                                // echo 'Payment Method: Credit Card';
-                                                echo '<b>Payment Details:</b>';
-                                                echo '<br> Credit Number: '. $credit_number;
-                                                echo '<br> Credit Expiry: '. $credit_expiry;
-                                                echo '<br> CVC: '. $credit_cvc;
-                                            }
-                                            elseif($payment_method ==  'Debit Card')
-                                            {
-                                                // echo 'Payment Method: Debit Card';
-                                                echo '<b>Payment Details:</b>';
-                                                echo '<br> Credit Number: '. $credit_number;
-                                                echo '<br> Credit Expiry: '. $credit_expiry;
-                                                echo '<br> CVC: '. $credit_cvc;
-                                            }
-                                            elseif($payment_method ==  'ACH')
-                                            {
-                                                // echo 'Payment Method: Debit Card';
-                                                echo '<b>Payment Details:</b>';
-                                                echo '<br> Routing Number: '. $routing_number;
-                                                echo '<br> Account Number: '. $account_number;
-                                            }
-                                            elseif($payment_method ==  'Venmo')
-                                            {
-                                                // echo 'Payment Method: Venmo';
-                                                echo '<b>Payment Details:</b>';
-                                                echo '<br> Account Credential: '. $account_credentials;
-                                                echo '<br> Account Note: '. $account_note;
-                                                echo '<br> Confirmation: '. $confirmation;
-                                            }
-                                            elseif($payment_method ==  'Paypal')
-                                            {
-                                                // echo 'Payment Method: Paypal';
-                                                echo '<b>Payment Details:</b>';
-                                                echo '<br> Account Credential: '. $account_credentials;
-                                                echo '<br> Account Note: '. $account_note;
-                                                echo '<br> Confirmation: '. $confirmation;
-                                            }
-                                            elseif($payment_method ==  'Square')
-                                            {
-                                                // echo 'Payment Method: Square';
-                                                echo '<b>Payment Details:</b>';
-                                                echo '<br> Account Credential: '. $account_credentials;
-                                                echo '<br> Account Note: '. $account_note;
-                                                echo '<br> Confirmation: '. $confirmation;
-                                            }
-                                            elseif($payment_method ==  'Invoicing')
-                                            {
-                                                // echo 'Payment Method: Invoicing';
-                                                echo '<b>Payment Details:</b>';
-                                                echo '<br> Address: '. $mail_address.' '. $mail_locality.' '. $mail_state.' '. $mail_postcode.' '. $mail_cross_street;
-                                            }
-                                            elseif($payment_method ==  'Warranty Work')
-                                            {
-                                                // echo 'Payment Method: Warranty Work';
-                                                echo '<b>Payment Details:</b>';
-                                                echo '<br> Account Credential: '. $account_credentials;
-                                                echo '<br> Account Note: '. $account_note;
-                                            }
-                                            elseif($payment_method ==  'Home Owner Financing')
-                                            {
-                                                // echo 'Payment Method: Home Owner Financing';
-                                                echo '<b>Payment Details:</b>';
-                                                echo '<br> Account Credential: '. $account_credentials;
-                                                echo '<br> Account Note: '. $account_note;
-                                            }
-                                            elseif($payment_method ==  'e-Transfer')
-                                            {
-                                                // echo 'Payment Method: e-Transfer';
-                                                echo '<b>Payment Details:</b>';
-                                                echo '<br> Account Credential: '. $account_credentials;
-                                                echo '<br> Account Note: '. $account_note;
-                                            }
-                                            elseif($payment_method ==  'Other Credit Card Professor')
-                                            {
-                                                // echo 'Payment Method: Other Credit Card Professor';
-                                                echo '<b>Payment Details:</b>';
-                                                echo '<br> Credit Number: '. $credit_number;
-                                                echo '<br> Credit Expiry: '. $credit_expiry;
-                                                echo '<br> CVC: '. $credit_cvc;
-                                            }
-                                            elseif($payment_method ==  'Other Payment Type')
-                                            {
-                                                // echo 'Payment Method: Other Payment Type';
-                                                echo '<b>Payment Details:</b>';
-                                                echo '<br> Account Credential: '. $account_credentials;
-                                                echo '<br> Account Note: '. $account_note;
-                                            }
+                                                if($payment_method ==  'Cash'){
+                                                    echo 'Amount Paid: '. $payment_ammount;
+                                                }
+                                                elseif($payment_method ==  'Check')
+                                                {
+                                                    echo 'Check Number: '. $check_number;
+                                                    echo '<br> Rounting Number: '. $routing_number;
+                                                    echo '<br> Account Number: '. $account_number;
+                                                }
+                                                elseif($payment_method ==  'Credit Card')
+                                                {
+                                                    echo 'Credit Number: '. $credit_number;
+                                                    echo '<br> Credit Expiry: '. $credit_expiry;
+                                                    echo '<br> CVC: '. $credit_cvc;
+                                                }
+                                                elseif($payment_method ==  'Debit Card')
+                                                {
+                                                    echo 'Credit Number: '. $credit_number;
+                                                    echo '<br> Credit Expiry: '. $credit_expiry;
+                                                    echo '<br> CVC: '. $credit_cvc;
+                                                }
+                                                elseif($payment_method ==  'ACH')
+                                                {
+                                                    echo 'Routing Number: '. $routing_number;
+                                                    echo '<br> Account Number: '. $account_number;
+                                                }
+                                                elseif($payment_method ==  'Venmo')
+                                                {
+                                                    echo 'Account Credential: '. $account_credentials;
+                                                    echo '<br> Account Note: '. $account_note;
+                                                    echo '<br> Confirmation: '. $confirmation;
+                                                }
+                                                elseif($payment_method ==  'Paypal')
+                                                {
+                                                    echo 'Account Credential: '. $account_credentials;
+                                                    echo '<br> Account Note: '. $account_note;
+                                                    echo '<br> Confirmation: '. $confirmation;
+                                                }
+                                                elseif($payment_method ==  'Square')
+                                                {
+                                                    echo 'Account Credential: '. $account_credentials;
+                                                    echo '<br> Account Note: '. $account_note;
+                                                    echo '<br> Confirmation: '. $confirmation;
+                                                }
+                                                elseif($payment_method ==  'Invoicing')
+                                                {
+                                                    echo 'Address: '. $mail_address.' '. $mail_locality.' '. $mail_state.' '. $mail_postcode.' '. $mail_cross_street;
+                                                }
+                                                elseif($payment_method ==  'Warranty Work')
+                                                {
+                                                    echo 'Account Credential: '. $account_credentials;
+                                                    echo '<br> Account Note: '. $account_note;
+                                                }
+                                                elseif($payment_method ==  'Home Owner Financing')
+                                                {
+                                                    echo 'Account Credential: '. $account_credentials;
+                                                    echo '<br> Account Note: '. $account_note;
+                                                }
+                                                elseif($payment_method ==  'e-Transfer')
+                                                {
+                                                    echo 'Account Credential: '. $account_credentials;
+                                                    echo '<br> Account Note: '. $account_note;
+                                                }
+                                                elseif($payment_method ==  'Other Credit Card Professor')
+                                                {
+                                                    echo 'Credit Number: '. $credit_number;
+                                                    echo '<br> Credit Expiry: '. $credit_expiry;
+                                                    echo '<br> CVC: '. $credit_cvc;
+                                                }
+                                                elseif($payment_method ==  'Other Payment Type')
+                                                {
+                                                    echo 'Account Credential: '. $account_credentials;
+                                                    echo '<br> Account Note: '. $account_note;
+                                                }
                                             ?>
                                         </td>
                                     </tr>
