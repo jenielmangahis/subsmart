@@ -9147,7 +9147,7 @@ class Accounting extends MY_Controller
         $filter_from_date = date("Y-m-d");        
         $filter_to_date   = date("Y-m-d");
         $filter_status    = 'all';
-        if( $this->input->get('estimate_from') && $this->input->get('estimate_to') ){
+        if( $this->input->get('estimate_from') && $this->input->get('estimate_to') ){            
             $filter_status = $this->input->get('filter_status');
             $filter_from_date = date("Y-m-d", strtotime($this->input->get('estimate_from')));        
             $filter_to_date   = date("Y-m-d", strtotime($this->input->get('estimate_to')));

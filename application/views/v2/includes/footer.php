@@ -606,7 +606,6 @@ function fetchGraphs(thumbnail) {
     }
 }
 
-
 function updateListView(id, val) {
     $.ajax({
         url: base_url + 'dashboard/updateListView',
@@ -704,7 +703,6 @@ function renderAccountingExpenseGraph(labels, data) {
         },
     });
 }
-
 
 function filterThumbnail(val, id, table) {
     var date = new Date();

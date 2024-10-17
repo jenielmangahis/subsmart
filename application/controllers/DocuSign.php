@@ -603,7 +603,7 @@ class DocuSign extends MYF_Controller
         $autoPopulateData['invoices'] = $filtered_invoice;
 
         #emergency primary contact
-        $this->db->select('first_name AS emergency_primary_contact_fname, last_name AS emergency_primary_contact_lname, phone AS emergency_primary_contact_phone, relation AS emergency_primary_contact_relation');
+        $this->db->select('id, first_name AS emergency_primary_contact_fname, last_name AS emergency_primary_contact_lname, phone AS emergency_primary_contact_phone, relation AS emergency_primary_contact_relation');
         $this->db->where('customer_id', $customer_id);
         $this->db->order_by('id', 'ASC');
         $emergencyPrimaryContact = $this->db->get('contacts')->row();
@@ -630,7 +630,7 @@ class DocuSign extends MYF_Controller
         $autoPopulateData['primary_emergency_contacts'] = $filteredContacts;
 
         #emergency secondary contact
-        $this->db->select('first_name AS emergency_secondary_contact_fname, last_name AS emergency_secondary_contact_lname, phone AS emergency_secondary_contact_phone, relation AS emergency_secondary_contact_relation');
+        $this->db->select('id, first_name AS emergency_secondary_contact_fname, last_name AS emergency_secondary_contact_lname, phone AS emergency_secondary_contact_phone, relation AS emergency_secondary_contact_relation');
         $this->db->where('customer_id', $customer_id);        
         $this->db->order_by('id', 'DESC');
         $emergencySecondaryContact = $this->db->get('contacts')->row();
@@ -656,6 +656,42 @@ class DocuSign extends MYF_Controller
         }
         
         $autoPopulateData['secondary_emergency_contacts'] = $filteredContacts;
+
+        #emergency third contact
+        $this->db->select('id, first_name AS emergency_third_contact_fname, last_name AS emergency_third_contact_lname, phone AS emergency_third_contact_phone, relation AS emergency_third_contact_relation');
+        $this->db->where('customer_id', $customer_id);  
+        if( $emergencyPrimaryContact ){
+            $this->db->where('id !=', $emergencyPrimaryContact->id);        
+        } 
+        
+        if( $emergencySecondaryContact ){
+            $this->db->where('id !=', $emergencySecondaryContact->id);        
+        } 
+        
+        $this->db->order_by('id', 'DESC');
+        $emergencyThirdContact = $this->db->get('contacts')->row();
+        
+        if( $emergencyThirdContact ){
+            $contacts_accessKeys = [
+                'emergency_third_contact_fname',
+                'emergency_third_contact_lname',
+                'emergency_third_contact_phone',
+                'emergency_third_contact_relation'
+            ];
+            
+            $filteredContacts = array_filter( (array)$emergencyThirdContact , function($v) use ($contacts_accessKeys) {
+                return in_array($v, $contacts_accessKeys);
+            }, ARRAY_FILTER_USE_KEY);
+        }else{
+            $filteredContacts = [
+                'emergency_third_contact_fname' => '',
+                'emergency_third_contact_lname' => '',
+                'emergency_third_contact_phone' => '',     
+                'emergency_third_contact_relation' => ''           
+            ];
+        }
+        
+        $autoPopulateData['third_emergency_contacts'] = $filteredContacts;
 
         #password
         $this->db->where('fk_prof_id', $customer_id);

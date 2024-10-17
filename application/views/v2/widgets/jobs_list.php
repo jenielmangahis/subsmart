@@ -245,59 +245,59 @@ endif;
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php
-                                    function getInitials($string = null) {
-                                        return array_reduce(
-                                            explode(' ', $string),
-                                            function ($initials, $word) {
-                                                return strtoupper(sprintf('%s%s', $initials, substr($word, 0, 1)));
-                                            },
-                                            ''
-                                        );
-                                    }
-                                    $VIEW_INFO = "";
-                                    $TECH_BADGE = "";
-                                    $ADDRESS = "";
-                                    $UPDATED = "";
-                                    $JOB_PREVIEW = "";
-                                    foreach($latestJobs as $latestJobs_data){
-                                        ($latestJobs_data->TECH_1 != "") ? $TECH_BADGE .= "<li>$latestJobs_data->TECH_1</li>" : null;
-                                        ($latestJobs_data->TECH_2 != "") ? $TECH_BADGE .= "<li>$latestJobs_data->TECH_2</li>" : null;
-                                        ($latestJobs_data->TECH_3 != "") ? $TECH_BADGE .= "<li>$latestJobs_data->TECH_3</li>" : null;
-                                        ($latestJobs_data->TECH_4 != "") ? $TECH_BADGE .= "<li>$latestJobs_data->TECH_4</li>" : null;
-                                        ($latestJobs_data->TECH_5 != "") ? $TECH_BADGE .= "<li>$latestJobs_data->TECH_5</li>" : null;
-                                        ($latestJobs_data->TECH_6 != "") ? $TECH_BADGE .= "<li>$latestJobs_data->TECH_6</li>" : null;
-
-                                        if ($latestJobs_data->city == "") {
-                                            $ADDRESS = "Not Specified";
-                                        } else {
-                                            $ADDRESS = $latestJobs_data->city . ', ' . $latestJobs_data->state . ' ' . $latestJobs_data->zip_code;
+                                <?php if( $latestJobs ){ ?>
+                                    <?php
+                                        function getInitials($string = null) {
+                                            return array_reduce(
+                                                explode(' ', $string),
+                                                function ($initials, $word) {
+                                                    return strtoupper(sprintf('%s%s', $initials, substr($word, 0, 1)));
+                                                },
+                                                ''
+                                            );
                                         }
+                                        $VIEW_INFO = "";
+                                        $TECH_BADGE = "";
+                                        $ADDRESS = "";
+                                        $UPDATED = "";
+                                        $JOB_PREVIEW = "";                                    
+                                        foreach($latestJobs as $latestJobs_data){
+                                            ($latestJobs_data->TECH_1 != "") ? $TECH_BADGE .= "<li>$latestJobs_data->TECH_1</li>" : null;
+                                            ($latestJobs_data->TECH_2 != "") ? $TECH_BADGE .= "<li>$latestJobs_data->TECH_2</li>" : null;
+                                            ($latestJobs_data->TECH_3 != "") ? $TECH_BADGE .= "<li>$latestJobs_data->TECH_3</li>" : null;
+                                            ($latestJobs_data->TECH_4 != "") ? $TECH_BADGE .= "<li>$latestJobs_data->TECH_4</li>" : null;
+                                            ($latestJobs_data->TECH_5 != "") ? $TECH_BADGE .= "<li>$latestJobs_data->TECH_5</li>" : null;
+                                            ($latestJobs_data->TECH_6 != "") ? $TECH_BADGE .= "<li>$latestJobs_data->TECH_6</li>" : null;
 
-                                        $TECH_BADGE = '<ul>'.$TECH_BADGE.'</ul>';
+                                            if ($latestJobs_data->city == "") {
+                                                $ADDRESS = "Not Specified";
+                                            } else {
+                                                $ADDRESS = $latestJobs_data->city . ', ' . $latestJobs_data->state . ' ' . $latestJobs_data->zip_code;
+                                            }
 
-                                        $UPDATED = date_format(date_create($job->date_updated), 'M').", ".date_format(date_create($job->date_updated), 'd');
-                                        $JOB_PREVIEW = base_url('job/job_preview/').$latestJobs_data->id;
+                                            $TECH_BADGE = '<ul>'.$TECH_BADGE.'</ul>';
 
-                                        $VIEW_INFO = "<strong><i class='bx bx-user-pin' ></i> Customer Name:</strong> $latestJobs_data->first_name, $latestJobs_data->last_name<br><strong><i class='bx bx-map-pin' ></i> Address:</strong> $ADDRESS<br><strong><i class='bx bxs-user-check' ></i> Tech Rep</strong>:$TECH_BADGE<hr /><strong>Amount:</strong> $$latestJobs_data->amount";
-                                ?>  
-                                <tr>
-                                    <td class="JOB_PREVIEW" onclick="location.replace('<?php echo $JOB_PREVIEW; ?>')">
-                                        <div class="table-row-icon">
-                                            <i class='bx bx-briefcase-alt-2' ></i>
-                                        </div>                                        
-                                    </td>     
-                                    <td><b><?php echo $latestJobs_data->job_number; ?></b></td>                               
-                                    <td>
-                                        <?php echo date("M d, Y", strtotime($latestJobs_data->date_updated)); ?>
-                                    </td>                                    
-                                    <td style="text-align:right;"><?php echo ($latestJobs_data->amount ? "$$latestJobs_data->amount" : '$0.00'); ?></td>
-                                    <td style="width: 0%;text-align:right;"><button class="nsm-button small" data-bs-trigger="hover focus" data-bs-toggle="popover" title="<?php echo $latestJobs_data->job_number; ?>" data-bs-content="<?php echo $VIEW_INFO; ?>" data-bs-html="true"><i class='bx bx-search-alt'></i></button></td>
-                                </tr>
-                                <?php 
-                                    $TECH_BADGE = "";
-                                    }
-                                ?>
+                                            $UPDATED = date_format(date_create($job->date_updated), 'M').", ".date_format(date_create($job->date_updated), 'd');
+                                            $JOB_PREVIEW = base_url('job/job_preview/').$latestJobs_data->id;
+
+                                            $VIEW_INFO = "<strong><i class='bx bx-user-pin' ></i> Customer Name:</strong> $latestJobs_data->first_name, $latestJobs_data->last_name<br><strong><i class='bx bx-map-pin' ></i> Address:</strong> $ADDRESS<br><strong><i class='bx bxs-user-check' ></i> Tech Rep</strong>:$TECH_BADGE<hr /><strong>Amount:</strong> $$latestJobs_data->amount";
+                                    ?>  
+                                        <tr>
+                                            <td class="JOB_PREVIEW" onclick="location.replace('<?php echo $JOB_PREVIEW; ?>')">
+                                                <div class="table-row-icon">
+                                                    <i class='bx bx-briefcase-alt-2' ></i>
+                                                </div>                                        
+                                            </td>     
+                                            <td><b><?php echo $latestJobs_data->job_number; ?></b></td>                               
+                                            <td>
+                                                <?php echo date("M d, Y", strtotime($latestJobs_data->date_updated)); ?>
+                                            </td>                                    
+                                            <td style="text-align:right;"><?php echo ($latestJobs_data->amount ? "$$latestJobs_data->amount" : '$0.00'); ?></td>
+                                            <td style="width: 0%;text-align:right;"><button class="nsm-button small" data-bs-trigger="hover focus" data-bs-toggle="popover" title="<?php echo $latestJobs_data->job_number; ?>" data-bs-content="<?php echo $VIEW_INFO; ?>" data-bs-html="true"><i class='bx bx-search-alt'></i></button></td>
+                                        </tr>
+                                    <?php $TECH_BADGE = ""; ?>
+                                    <?php } ?>
+                                <?php } ?>
                             </tbody>
                         </table>
                     </div>  

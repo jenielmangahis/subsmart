@@ -298,6 +298,12 @@ echo put_header_assets();
         .select2-container--default .select2-results__option .select2-results__option{
             padding:0px !important;
         }
+        .custom-header {
+            background-color: #6a4a86;
+            color: #ffffff;
+            font-size: 15px;
+            padding: 10px;
+        }
     </style>
 
     <!-- page wrapper start -->
@@ -415,7 +421,7 @@ echo put_header_assets();
                                     <label for="estimate_date" class="required"><b>Estimate Date</b></label>
                                     <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                     <!-- <div class="input-group date" data-provide="datepicker"> -->
-                                    <input required type="date" class="form-control" name="estimate_date" id="estimate_date_" placeholder="Enter Estimate Date">
+                                    <input required type="date" value="<?= date("Y-m-d"); ?>" class="form-control" name="estimate_date" id="estimate_date_" placeholder="Enter Estimate Date">
                                     <div class="input-group-addon">
                                         <span class="glyphicon glyphicon-th"></span>
                                     </div>
@@ -425,7 +431,7 @@ echo put_header_assets();
                                     <label for="expiry_date" class="required"><b>Expiry Date</b></label>
                                     <!-- <input type="text" class="form-control" name="expiry_date" id="expiry_date" required placeholder="Enter Expiry Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                     <!-- <div class="input-group date" data-provide="datepicker"> -->
-                                    <input required type="date" class="form-control" name="expiry_date" id="expiry_date_" placeholder="Enter Expiry Date">
+                                    <input required type="date" value="<?= date("Y-m-d", strtotime("+5 days")); ?>" class="form-control" name="expiry_date" id="expiry_date_" placeholder="Enter Expiry Date">
                                     <div class="input-group-addon">
                                         <span class="glyphicon glyphicon-th"></span>
                                     </div>
@@ -462,22 +468,10 @@ echo put_header_assets();
                                     </select>
                                 </div>
                             </div>
-
-                            <div class="row mb-3" style="background-color:white;font-size:16px;">
-                                <div class="col-md-3">
-                                    <b>Items Summary</b>
-                                </div>
-                                <div class="col-md-6">
-                                </div>
-                                <!-- <div class="col-md-3" align="right">
-                                    <b>Show qty as: </b>
-                                    <select class="dropdown">
-                                        <option>Quantity</option>
-                                    </select>
-                                </div> -->
-                            </div>
-
                             <div class="row mb-3" id="plansItemDiv" style="background-color:white;">
+                                <div class="col-md-12">
+                                    <h6 class="custom-header">Item List</h6>                                    
+                                </div>
                                 <div class="col-md-12 table-responsive">
                                     <table class="table table-hover">
                                         <input type="hidden" name="count" value="0" id="count">
@@ -816,8 +810,7 @@ echo put_header_assets();
                                             <thead>
                                             <tr>
                                                 <td></td>
-                                                <td>Name</td>
-                                                <td>On Hand</td>                                                
+                                                <td>Name</td>                                              
                                                 <td>Price</td>  
                                                 <td>Type</td>                                              
                                             </tr>
@@ -830,20 +823,9 @@ echo put_header_assets();
                                                         <i class='bx bx-plus-medical'></i>
                                                         </button>
                                                     </td>
-                                                    <td><?php echo $item->title; ?></td>                                                
-                                                    <td>
-                                                    <?php 
-                                                        foreach($itemsLocation as $itemLoc){
-                                                            if($itemLoc->item_id == $item->id){
-                                                                echo "<div class='data-block'>";
-                                                                echo $itemLoc->name. " = " .$itemLoc->qty;
-                                                                echo "</div>";
-                                                            } 
-                                                        }
-                                                    ?>
-                                                    </td>                                                    
-                                                    <td><?php echo $item->price; ?></td>                                                    
+                                                    <td><?php echo $item->title; ?></td>                     
                                                     <td><?php echo $item->type; ?></td>
+                                                    <td style="text-align:right;0">$<?php echo $item->price; ?></td>                                                                                                        
                                                 </tr>
                                                 
                                             <?php } ?>

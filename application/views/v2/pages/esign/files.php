@@ -809,6 +809,38 @@ echo put_header_assets();
                                                                         <span class="u-ellipsis ng-binding">Secondary Contact Number</span>
                                                                     </div>
                                                                 </li>
+
+                                                                <li class="menu_listItem">
+                                                                    <div class="fields menu_item" data-type="default-widget" data-key="Customer Third Contact Name">
+                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact_name"></i></span>
+                                                                        <i class="esign-fa fas fa-user"></i>
+                                                                        <span class="u-ellipsis ng-binding">Third Contact Name</span>
+                                                                    </div>
+                                                                </li>
+
+                                                                <li class="menu_listItem">
+                                                                    <div class="fields menu_item" data-type="default-widget" data-key="Customer Third Contact Firstname">
+                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact_name"></i></span>
+                                                                        <i class="esign-fa fas fa-user"></i>
+                                                                        <span class="u-ellipsis ng-binding">Third Contact First Name</span>
+                                                                    </div>
+                                                                </li>
+
+                                                                <li class="menu_listItem">
+                                                                    <div class="fields menu_item" data-type="default-widget" data-key="Customer Third Contact Lastname">
+                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact_name"></i></span>
+                                                                        <i class="esign-fa fas fa-user"></i>
+                                                                        <span class="u-ellipsis ng-binding">Third Contact Last Name</span>
+                                                                    </div>
+                                                                </li>
+
+                                                                <li class="menu_listItem">
+                                                                    <div class="fields menu_item" data-type="default-widget" data-key="Customer Third Contact Number">
+                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-emergency_contact_number"></i></span>
+                                                                        <i class="esign-fa fas fa-mobile-alt"></i>
+                                                                        <span class="u-ellipsis ng-binding">Third Contact Number</span>
+                                                                    </div>
+                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </div>
