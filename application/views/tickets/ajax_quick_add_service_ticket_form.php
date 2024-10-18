@@ -550,7 +550,19 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-8"></div>
+                        <div class="col-md-8">
+                            <div class="row mt-5">
+                                <div class="col-md-6 form-group">
+                                    <label for="ticket-appointment-user"><b>Adjustment Name</b></label>
+                                    <input type="text" id="adjustment-name" name="adjustment_name" value="" class="form-control" />
+                                    
+                                </div>
+                                <div class="col-md-4 form-group">
+                                    <label for="adjustment-amount"><b>Adjustment Amount</b></label>                        
+                                    <input type="number" id="adjustment-amount" name="adjustment_amount" value="0.00" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-4">
                             <table class="table" style="text-align:left;">
                                 <tr>
@@ -560,6 +572,10 @@
                                 <tr>
                                     <td>Taxes</td>
                                     <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                </tr>
+                                <tr>
+                                    <td>Adjustment</td>
+                                    <td colspan="2" align="right">$ <span id="adjustment_amount">0.00</span></td>
                                 </tr>
                                 <tr style="display:none;">
                                     <td>Monthly Monitoring Rate</td>
@@ -779,6 +795,10 @@ $(document).ready(function(){
 
     $('#add-another-items').on('click', function(){
         $('#quick-add-service-ticket-item-list').modal('show');
+    });
+
+    $('#adjustment-amount').on('input', function(){
+        computeGrandTotal();
     });
 
     $('#sel-customer_t').change(function(){
@@ -1081,12 +1101,16 @@ $(document).ready(function(){
         // var mmr = $('#plan-value').val();
         // var installation_cost = $('#service-ticket-installation-cost').val();
 
-        var otp = 0;
-        //var mmr = $('#service-ticket-monthly-monitoring-rate').val();
+        var otp = 0;        
         var mmr = 0;
         var installation_cost = 0;
+        var adjustment_amount = $('#adjustment-amount').val();
+        
+        if( isNaN(adjustment_amount) || adjustment_amount == '' ){
+            adjustment_amount = 0;
+        }
 
-        var grandTotal = parseFloat(fixedSubtotal) + parseFloat(fixedTaxes) + parseFloat(otp) + parseFloat(mmr) + parseFloat(installation_cost);
+        var grandTotal = parseFloat(fixedSubtotal) + parseFloat(fixedTaxes) + parseFloat(otp) + parseFloat(mmr) + parseFloat(installation_cost) + parseFloat(adjustment_amount);
 
         $("#grand_total").text(grandTotal.toFixed(2));
         $("#grand_total_input").val(grandTotal.toFixed(2));
