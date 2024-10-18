@@ -68,6 +68,7 @@
                             <td class="table-icon"></td>
                             <td data-name="User">User</td>
                             <td data-name="Email">Email</td>
+                            <td data-name="Mobile">Mobile</td>
                             <?php if ($show_pass == 1) : ?>
                                 <td data-name="Password">Password</td>
                             <?php endif; ?>
@@ -110,6 +111,7 @@
                                         <label class="content-subtitle fst-italic d-block">Employee ID: <?php echo $employee_number; ?></label>
                                     </td>
                                     <td><?php echo $row->email ?></td>
+                                    <td><?php echo $row->mobile != '' ? formatPhoneNumber($row->mobile) : '---'; ?></td>
                                     <?php if ($show_pass == 1) : ?>
                                         <td><?php echo $row->password_plain ?></td>
                                     <?php endif; ?>
