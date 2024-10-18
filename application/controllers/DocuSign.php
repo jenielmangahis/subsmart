@@ -630,22 +630,33 @@ class DocuSign extends MYF_Controller
         $autoPopulateData['primary_emergency_contacts'] = $filteredContacts;
 
         #emergency secondary contact
-        $this->db->select('first_name AS emergency_secondary_contact_fname, last_name AS emergency_secondary_contact_lname, phone AS emergency_secondary_contact_phone, relation AS emergency_secondary_contact_relation');
-        $this->db->where('customer_id', $customer_id);        
-        $this->db->order_by('id', 'DESC');
-        $emergencySecondaryContact = $this->db->get('contacts')->row();
-        
-        if( $emergencySecondaryContact ){
-            $contacts_accessKeys = [
-                'emergency_secondary_contact_fname',
-                'emergency_secondary_contact_lname',
-                'emergency_secondary_contact_phone',
-                'emergency_secondary_contact_relation'
-            ];
-            
-            $filteredContacts = array_filter( (array)$emergencySecondaryContact , function($v) use ($contacts_accessKeys) {
-                return in_array($v, $contacts_accessKeys);
-            }, ARRAY_FILTER_USE_KEY);
+        $emergencySecondaryContact = [];
+        if( $emergencyPrimaryContact ){
+            $this->db->select('id, first_name AS emergency_secondary_contact_fname, last_name AS emergency_secondary_contact_lname, phone AS emergency_secondary_contact_phone, relation AS emergency_secondary_contact_relation');
+            $this->db->where('customer_id', $customer_id);        
+            $this->db->where('id !=', $emergencyPrimaryContact->id);        
+            $this->db->order_by('id', 'ASC');
+            $emergencySecondaryContact = $this->db->get('contacts')->row();
+
+            if( $emergencySecondaryContact ){
+                $contacts_accessKeys = [
+                    'emergency_secondary_contact_fname',
+                    'emergency_secondary_contact_lname',
+                    'emergency_secondary_contact_phone',
+                    'emergency_secondary_contact_relation'
+                ];
+                
+                $filteredContacts = array_filter( (array)$emergencySecondaryContact , function($v) use ($contacts_accessKeys) {
+                    return in_array($v, $contacts_accessKeys);
+                }, ARRAY_FILTER_USE_KEY);
+            }else{
+                $filteredContacts = [
+                    'emergency_secondary_contact_fname' => '',
+                    'emergency_secondary_contact_lname' => '',
+                    'emergency_secondary_contact_phone' => '',     
+                    'emergency_secondary_contact_relation' => ''           
+                ];
+            }
         }else{
             $filteredContacts = [
                 'emergency_secondary_contact_fname' => '',
@@ -654,7 +665,6 @@ class DocuSign extends MYF_Controller
                 'emergency_secondary_contact_relation' => ''           
             ];
         }
-        
         $autoPopulateData['secondary_emergency_contacts'] = $filteredContacts;
 
         #password

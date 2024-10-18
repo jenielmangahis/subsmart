@@ -128,12 +128,12 @@
             <button data-action="download" class="btn btn-primary" style="position: absolute;right:1rem;">Download PDF</button>
 
             <div>
-                <button class="btn btn-primary d-flex align-items-center mt-3" data-action="finish">
+                <!-- <button class="btn btn-primary d-flex align-items-center mt-3" data-action="finish">
                     <div class="spinner-border spinner-border-sm m-0 mr-2 d-none" role="status">
                         <span class="sr-only">Loading...</span>
                     </div>
                     <span class="btn-finish-text">Next</span>
-                </button>
+                </button> -->
             </div>
         </div>
 
