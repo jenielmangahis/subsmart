@@ -1636,6 +1636,11 @@ class Tickets extends MY_Controller
             $is_valid = 0;
         }
 
+        if( $this->input->post('adjustment_name') == '' && $this->input->post('adjustment_amount') > 0 ){
+            $msg = 'You have set adjument amount. Please enter adjustment name.';
+            $is_valid = 0;
+        }
+
         /*if( $this->input->post('business_name') == '' ){
             $msg = 'Please specify business name';
             $is_valid = 0;
@@ -1676,6 +1681,11 @@ class Tickets extends MY_Controller
             }else{
                 $card_type = $result['card']['brand'];
             }
+        }
+
+        $payment_method = '';
+        if( $this->input->post('is_with_esign') ){
+            $payment_method = $this->input->post('bill_method');
         }
 
         if( $is_valid == 1 ){
@@ -1722,11 +1732,11 @@ class Tickets extends MY_Controller
                 'technicians'               => $techni,
                 'subtotal'                  => $this->input->post('subtotal'),
                 'taxes'                     => $this->input->post('taxes'),
-                'adjustment'                => '',
-                'adjustment_value'          => 0,
+                'adjustment'                => $this->input->post('adjustment_name'),
+                'adjustment_value'          => $this->input->post('adjustment_amount'),
                 'markup'                    => '',
                 'grandtotal'                => $this->input->post('grandtotal'),
-                'payment_method'            => '',
+                'payment_method'            => $payment_method,
                 'payment_amount'            => 0,
                 'billing_date'              => '',
                 'sales_rep'                 => $this->input->post('sales_rep'),
