@@ -1070,7 +1070,7 @@
                                                                 <label>Installation Cost</label>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input type="number" step="any" min="0" class="form-control" id="adjustment_ic" name="installation_cost" value="<?= isset($job_latest_payment) ? $job_latest_payment->installation_cost : '0.00'; ?>" required="" />
+                                                                <input type="number" step="any" min="0" class="form-control" id="adjustment_ic" name="installation_cost" value="<?= isset($jobs_data) ? $jobs_data->installation_cost : '0.00'; ?>" required="" />
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2">
@@ -1078,7 +1078,7 @@
                                                                 <label>One time (Program and Setup)</label>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input type="number" step="any" min="0" class="form-control" id="adjustment_otps" name="otps" value="<?= isset($job_latest_payment) ? $job_latest_payment->program_setup : '0.00'; ?>" required="" />
+                                                                <input type="number" step="any" min="0" class="form-control" id="adjustment_otps" name="otps" value="<?= isset($jobs_data) ? $jobs_data->program_setup : '0.00'; ?>" required="" />
                                                             </div>
                                                         </div>
                                                         <div class="row mt-2 mb-2">
@@ -1086,7 +1086,7 @@
                                                                 <label>Monthly Monitoring</label>
                                                             </div>
                                                             <div class="col-sm-3">
-                                                                <input type="number" step="any" min="0" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="<?= isset($job_latest_payment) ? $job_latest_payment->monthly_monitoring : '0.00'; ?>" required="" />
+                                                                <input type="number" step="any" min="0" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="<?= isset($jobs_data) ? $jobs_data->monthly_monitoring : '0.00'; ?>" required="" />
                                                             </div>
                                                         </div>
                                                     <?php //} ?>
@@ -1841,6 +1841,7 @@
             </div>
             <div class="modal-body">
                 <form id="update_status_to_omw" method="post">
+                    <input id="default-user-docfile-template-id" type="hidden" value="<?= $default_user_docfile_template_id; ?>" />
                     <div class="row">
                         <div class="col-sm-12 mt-1 mb-1">
                             <label>Electronic signatures, or e-signatures, are transforming the ways companies do business. Not only do they eliminate the hassle of manually routing paper agreements, but they also dramatically speed up the signature and approval process.</label>
