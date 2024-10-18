@@ -85,6 +85,8 @@ function Signing(hash) {
 
     const { emergency_secondary_contact_fname, emergency_secondary_contact_lname, emergency_secondary_contact_phone } = window.__esigndata.auto_populate_data.secondary_emergency_contacts;
 
+    const { emergency_third_contact_fname, emergency_third_contact_lname, emergency_third_contact_phone } = window.__esigndata.auto_populate_data.third_emergency_contacts;
+
     const { access_password } = window.__esigndata.auto_populate_data.acs_access;
 
     const { kw_dc, solar_system_size } = window.__esigndata.auto_populate_data.acs_info_solar;
@@ -377,12 +379,12 @@ function Signing(hash) {
     if( field_name == "Secondary Contact Name" ){
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
-          return emergency_secondary_contact_fname + " " + emergency_primary_contact_lname;
+          return emergency_secondary_contact_fname + " " + emergency_secondary_contact_lname;
         }else{
           return fieldValue['value'];
         }
       }else{
-        return emergency_secondary_contact_fname + " " + emergency_primary_contact_lname;
+        return emergency_secondary_contact_fname + " " + emergency_secondary_contact_lname;
       }      
     }
 
@@ -396,6 +398,54 @@ function Signing(hash) {
 
     if( field_name == "Secondary Contact Number" ){
       return emergency_secondary_contact_phone;
+    }
+
+    if( field_name == "Third Contact Name" ){
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return emergency_third_contact_fname + " " + emergency_third_contact_lname;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return emergency_third_contact_fname + " " + emergency_third_contact_lname;
+      }
+    }
+    
+    if( field_name == "Third Contact First Name" ){
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return emergency_third_contact_fname;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return emergency_third_contact_fname;
+      }
+    }
+    
+    if( field_name == "Third Contact Last Name" ){
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return emergency_third_contact_lname;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return emergency_third_contact_lname;
+      }
+    }
+    
+    if( field_name == "Third Contact Number" ){
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return emergency_third_contact_phone;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return emergency_third_contact_phone;
+      }
     }
 
 
@@ -1144,7 +1194,7 @@ function Signing(hash) {
       return $element;
     }
 
-    if (["Checkbox", "Radio", "2 GIG Go Panel 2", "2 GIG Go Panel 3", "Lynx3000", "LynxTouch", "Vista/SEM", "DSC", "Other"].includes(field_name)) {
+    if (["Checkbox", "Radio", "2 GIG Go Panel 2", "2 GIG Go Panel 3", "Lynx3000", "LynxTouch", "Vista/SEM", "DSC", "Other", "Card Mastercard", "Card Visa", "Card American Express"].includes(field_name)) {
       let {
         subCheckbox = [],
         isChecked,
@@ -1171,6 +1221,8 @@ function Signing(hash) {
 
       if( field_name === panel_type ){
         isChecked = 'checked';
+      }else{
+        isChecked = '';
       }
 
       if (value.hasOwnProperty("isChecked")) {
@@ -1181,14 +1233,14 @@ function Signing(hash) {
       //console.log('Is Checked' + isChecked);
 
       //const inputType = field_name.toLowerCase();
-      const inputType = field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3" || field_name === "Lynx3000" || field_name === "LynxTouch" || field_name === "Vista/SEM" || field_name === "DSC" || field_name === "Other"
+      const inputType = field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3" || field_name === "Lynx3000" || field_name === "LynxTouch" || field_name === "Vista/SEM" || field_name === "DSC" || field_name === "Other" || field_name === "Card Visa" || field_name === "Card Mastercard" || field_name === "Card American Express"
           ? "checkbox"
           : field_name.toLowerCase();
-      const chkDataFieldType = field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3" || field_name === "Lynx3000" || field_name === "LynxTouch" || field_name === "Vista/SEM" || field_name === "DSC" || field_name === "Other"
+      const chkDataFieldType = field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3" || field_name === "Lynx3000" || field_name === "LynxTouch" || field_name === "Vista/SEM" || field_name === "DSC" || field_name === "Other" || field_name === "Card Visa" || field_name === "Card Mastercard" || field_name === "Card American Express"
           ? "autoPopulatePanelType"
           : 'esign-checkbox';
-      const baseClassName =
-        field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3" || field_name === "Lynx3000" || field_name === "LynxTouch" || field_name === "Vista/SEM" || field_name === "DSC" || field_name === "Other"
+      const baseClassName =1
+        field_name === "Checkbox" || field_name === "2 GIG Go Panel 2" || field_name === "2 GIG Go Panel 3" || field_name === "Lynx3000" || field_name === "LynxTouch" || field_name === "Vista/SEM" || field_name === "DSC" || field_name === "Other" || field_name === "Card Visa" || field_name === "Card Mastercard" || field_name === "Card American Express"
           ? "docusignField__checkbox"
           : "docusignField__radio";
 

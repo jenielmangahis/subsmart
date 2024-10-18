@@ -1014,9 +1014,9 @@ class Tickets extends MY_Controller
         // var_dump($ticket_rep);
         
         $this->page_data['ticketsCompany'] = $this->tickets_model->get_tickets_company($tickets->company_id);
-        $this->page_data['tickets'] = $this->tickets_model->get_tickets_data_one($id);
+        $this->page_data['tickets'] = $ticketsD = $this->tickets_model->get_tickets_data_one($id);
         $this->page_data['items'] = $this->tickets_model->get_ticket_items($id);
-        $this->page_data['payment'] = $this->tickets_model->get_ticket_payments($id);
+        $this->page_data['payment'] = $paymentD = $this->tickets_model->get_ticket_payments($id);
         $this->page_data['clients'] = $this->tickets_model->get_tickets_clients($tickets->company_id);
 
         $ticketdet = $this->tickets_model->get_tickets_data_one($id);
@@ -1046,8 +1046,11 @@ class Tickets extends MY_Controller
     public function editDetails($id)
     {
         $this->hasAccessModule(39);
+        
+        $this->load->helper('functions');
         $this->load->model('AcsProfile_model');
         $this->load->model('Job_tags_model');
+        $this->load->model('Customer_advance_model');
         $this->page_data['page']->title = 'Tickets';
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
@@ -1066,24 +1069,10 @@ class Tickets extends MY_Controller
         }
 
         $user_id = logged('id');
-        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
-
-        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
-        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
-        // } else {
-        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
-        // }
-
         $company_id = logged('company_id');
         $role = logged('role');
-        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
-        /*if( $role == 1 || $role == 2 ){
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }else{
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-        }*/
+        
         $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-
         $default_customer_id = 0;
         if( $this->input->get('cus_id') ){
             $default_customer_id = $this->input->get('cus_id');
@@ -1111,6 +1100,8 @@ class Tickets extends MY_Controller
             $redirect_calendar = 1;
         }
 
+        $planTypeOptions = $this->Customer_advance_model->planTypeOptions();
+
         $this->page_data['redirect_calendar'] = $redirect_calendar;
         $this->page_data['default_user'] = $default_user;
         $this->page_data['default_start_date'] = $default_start_date;
@@ -1123,12 +1114,10 @@ class Tickets extends MY_Controller
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
         $this->page_data['serviceType'] = $this->tickets_model->getServiceType($company_id);
         $this->page_data['tickets'] = $this->tickets_model->get_tickets_data_one($id);
-        $this->page_data['itemLists'] = $this->tickets_model->get_ticket_items($id);
-        
-        $this->page_data['itemsLists'] = $this->tickets_model->get_ticket_items($id);
-        
+        $this->page_data['itemLists'] = $this->tickets_model->get_ticket_items($id);        
+        $this->page_data['itemsLists'] = $this->tickets_model->get_ticket_items($id);        
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
-
+        $this->page_data['planTypeOptions'] = $planTypeOptions;
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('tickets/edit_ticket', $this->page_data);
     }
@@ -1545,6 +1534,7 @@ class Tickets extends MY_Controller
         $this->load->model('Job_tags_model');
         $this->load->model('Customer_advance_model');
         $this->load->model('User_docflies_model');
+        $this->load->model('Contacts_model');
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
@@ -1603,6 +1593,7 @@ class Tickets extends MY_Controller
         }
 
         $planTypeOptions = $this->Customer_advance_model->planTypeOptions();
+        $contactRelationshipOptions = $this->Contacts_model->optionRelations();
 
         $this->page_data['planTypeOptions'] = $planTypeOptions;
         $this->page_data['prefix'] = $prefix;
@@ -1618,6 +1609,8 @@ class Tickets extends MY_Controller
         $this->page_data['serviceType'] = $this->tickets_model->getServiceType($company_id);
         $this->page_data['headers'] = $this->tickets_model->getHeaders($company_id);
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
+        $this->page_data['contactRelationshipOptions'] = $contactRelationshipOptions;        
+        $this->page_data['time_interval'] = 2;
         $this->load->view('tickets/ajax_quick_add_service_ticket_form', $this->page_data);
     }
 
@@ -1692,6 +1685,7 @@ class Tickets extends MY_Controller
             $update_customer_billing = 0;
             $installation_cost = 0;
             $otp_cost = 0;
+            $user_docfile_template_id = 0;
             if( $this->input->post('is_with_esign') ){
                 $otp_cost = $this->input->post('otp');
                 $installation_cost = $this->input->post('installation_cost');
@@ -1699,6 +1693,7 @@ class Tickets extends MY_Controller
                 $esign_id = $this->input->post('esign_template');
                 $update_customer_mmr = 1;
                 $update_customer_billing = 1;
+                $user_docfile_template_id = $this->input->post('esign_template');
             }
 
             $techni = serialize($this->input->post('assign_tech'));
@@ -1748,6 +1743,7 @@ class Tickets extends MY_Controller
                 'monthly_monitoring'        => $monthly_monitoring_cost,
                 'otp_setup'                 => $otp_cost,
                 'installation_cost'         => $installation_cost,
+                'user_docfile_template_id'  => $user_docfile_template_id,
                 // 'hash_id'                   => $hasID,
                 'company_id'                => $company_id,
                 'created_at'                => date("Y-m-d H:i:s"),
@@ -1765,6 +1761,41 @@ class Tickets extends MY_Controller
 
             $updateaddQuery = $this->tickets_model->updateTicketsHash_ID($update_data);
 
+            if( $this->input->post('is_with_esign') ){
+                //Emergency Contacts
+                $payload    = [];
+                $postData   = $this->input->post();
+                $customerId = $this->input->post('customer_id');
+                $saveToPayload = function ($customerNumber) use (&$payload, $postData, $customerId) {
+                    if (empty(trim($postData['contact_first_name'.$customerNumber]))) {
+                        return; // ignore empty contact with empty name
+                    }
+        
+                    $name = trim($postData['contact_first_name'.$customerNumber]) . ' ' . trim($postData['contact_last_name'.$customerNumber]);
+                    array_push($payload, [
+                        'first_name' => trim($postData['contact_first_name'.$customerNumber]),
+                        'last_name' => trim($postData['contact_last_name'.$customerNumber]),
+                        'relation' => $postData['contact_relationship'.$customerNumber],
+                        'phone' => $postData['contact_phone'.$customerNumber],
+                        'customer_id' => $customerId,
+                        'phone_type' => 'mobile',
+                        'name' => $name
+                    ]);
+                };
+        
+                $saveToPayload(1);
+                $saveToPayload(2);
+                $saveToPayload(3);
+
+                if (!empty($payload)) {
+                    $this->db->where('customer_id', $customerId);
+                    $this->db->delete('contacts');
+
+                    $this->db->insert_batch('contacts', $payload);
+                }
+                //End Emergency Contacts
+            }
+
             //Update customer mmr
             if( $update_customer_mmr == 1 ){
                 $check = [
@@ -1777,6 +1808,7 @@ class Tickets extends MY_Controller
                 if ($exist) {
                     $input_alarm['plan_type']  = $this->input->post('plan_type');
                     $input_alarm['panel_type'] = $this->input->post('panel_type');
+                    $input_alarm['warranty_type'] = $this->input->post('warranty_type');
                     $input_alarm['monthly_monitoring'] = $monthly_monitoring_cost;
                     $input_alarm['otps'] = $otp_cost;   
                     $input_alarm['monitor_id'] = $this->input->post('customer_monitoring_id');
@@ -2146,6 +2178,7 @@ class Tickets extends MY_Controller
     {
         $this->load->model('AcsProfile_model');
         $this->load->model('Customer_advance_model');
+        $this->load->model('Contacts_model');
 
         $prof_id    = $this->input->post('id');
         $company_id = logged('company_id');
@@ -2166,6 +2199,23 @@ class Tickets extends MY_Controller
             $cc_exp_month = '';
             $cc_exp_year  = '';
             $panel_type = '';
+            $plan_type = '';
+            $warranty_type = '';
+
+            $ec1_firstname = '';
+            $ec1_lastname = '';
+            $ec1_relationship = '';
+            $ec1_phone = '';
+
+            $ec2_firstname = '';
+            $ec2_lastname = '';
+            $ec2_relationship = '';
+            $ec2_phone = '';
+
+            $ec3_firstname = '';
+            $ec3_lastname = '';
+            $ec3_relationship = '';
+            $ec3_phone = '';
 
             $alarm = $this->Customer_advance_model->getCustomerAlarmData($prof_id);
             if( $alarm ){
@@ -2173,7 +2223,53 @@ class Tickets extends MY_Controller
                 $mmr  = $alarm->monthly_monitoring ? $alarm->monthly_monitoring : 0;
                 $cs_account = $alarm->alarm_cs_account;
                 $panel_type = $alarm->panel_type;
-            }                      
+                $plan_type  = $alarm->plan_type;
+                $warranty_type = $alarm->warranty_type;
+            }    
+            
+            //Emergency Contact 1
+            $this->db->select('id, first_name, last_name, phone, relation');
+            $this->db->where('customer_id', $prof_id);
+            $this->db->order_by('id', 'ASC');
+            $emergencyContactA = $this->db->get('contacts')->row();
+
+            if( $emergencyContactA ){
+                $ec1_firstname    = $emergencyContactA->first_name;
+                $ec1_lastname     = $emergencyContactA->last_name;
+                $ec1_relationship = $emergencyContactA->relation;
+                $ec1_phone = $emergencyContactA->phone;
+
+                //Emergency Contact 2
+                $this->db->select('id, first_name, last_name, phone, relation');
+                $this->db->where('customer_id', $prof_id);
+                $this->db->where('id !=', $emergencyContactA->id);
+                $this->db->order_by('id', 'ASC');
+                $emergencyContactB = $this->db->get('contacts')->row();
+
+                if( $emergencyContactB ){
+                    $ec2_firstname    = $emergencyContactB->first_name;
+                    $ec2_lastname     = $emergencyContactB->last_name;
+                    $ec2_relationship = $emergencyContactB->relation;
+                    $ec2_phone = $emergencyContactB->phone;
+                }
+
+                //Emergency Contact 3
+                if( $emergencyContactA && $emergencyContactB){
+                    $this->db->select('id, first_name, last_name, phone, relation');
+                    $this->db->where('customer_id', $prof_id);
+                    $this->db->where('id !=', $emergencyContactA->id);
+                    $this->db->where('id !=', $emergencyContactB->id);
+                    $this->db->order_by('id', 'ASC');
+                    $emergencyContactC = $this->db->get('contacts')->row();
+                    
+                    if( $emergencyContactC ){
+                        $ec3_firstname    = $emergencyContactC->first_name;
+                        $ec3_lastname     = $emergencyContactC->last_name;
+                        $ec3_relationship = $emergencyContactC->relation;
+                        $ec3_phone = $emergencyContactC->phone;
+                    }
+                }
+            } 
 
             $billing = $this->Customer_advance_model->get_data_by_id('fk_prof_id', $prof_id, 'acs_billing');            
             if($billing){                
@@ -2216,8 +2312,22 @@ class Tickets extends MY_Controller
                 'otps' => $otps,
                 'mmr' => $mmr,
                 'cs_account' => $cs_account,
-                'panel_type' => $panel_type
-            ];     
+                'panel_type' => $panel_type,
+                'plan_type' => $plan_type,
+                'warranty_type' => $warranty_type,
+                'ec1_firstname' => $ec1_firstname,
+                'ec1_lastname' => $ec1_lastname,
+                'ec1_relationship' => $ec1_relationship,
+                'ec1_phone' => $ec1_phone,
+                'ec2_firstname' => $ec2_firstname,
+                'ec2_lastname' => $ec2_lastname,
+                'ec2_relationship' => $ec2_relationship,
+                'ec2_phone' => $ec2_phone,
+                'ec3_firstname' => $ec3_firstname,
+                'ec3_lastname' => $ec3_lastname,
+                'ec3_relationship' => $ec3_relationship,
+                'ec3_phone' => $ec3_phone
+            ];  
         }else{
             $json_data = [
                 'mail_add' => '',
@@ -2241,7 +2351,19 @@ class Tickets extends MY_Controller
                 'otps' => 0,
                 'mmr' => 0,
                 'cs_account' => '',
-                'panel_type' => ''
+                'panel_type' => '',
+                'ec1_firstname' => '',
+                'ec1_lastname' => '',
+                'ec1_relationship' => '',
+                'ec1_phone' => '',                
+                'ec2_firstname' => '',
+                'ec2_lastname' => '',
+                'ec2_relationship' => '',
+                'ec2_phone' => '',
+                'ec3_firstname' => '',
+                'ec3_lastname' => '',
+                'ec3_relationship' => '',
+                'ec3_phone' => '',
             ];
         }
         
@@ -2486,6 +2608,49 @@ class Tickets extends MY_Controller
         }
 
         return $invoice_id;
+    }
+
+    public function ajax_create_servicetype()
+    {
+        $this->load->model('ServiceType_model');
+
+        $is_success = 1;
+        $msg = '';
+        $cid = logged('company_id');
+        $service_type = '';
+
+        $post = $this->input->post();
+
+        if( $post['addServiceTypevalue'] == '' ){
+            $is_success = 0;
+            $msg = 'Please enter service type name.';
+        }
+
+        $isExists = $this->ServiceType_model->getByServiceNameAndCompanyId($post['addServiceTypevalue'], $cid);
+        if( $isExists ){
+            $is_success = 0;
+            $msg = 'Service Type already exists.';
+        }
+
+        if( $is_success == 1 ){
+            $data = [
+                'company_id' => $cid,
+                'service_name' => $post['addServiceTypevalue'],
+                'created_at' => date("Y-m-d H:i:s")
+            ];
+
+            $this->ServiceType_model->create($data);
+
+            $service_type = $post['addServiceTypevalue'];
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+            'service_type' => $service_type
+        ];
+
+        echo json_encode($return);
     }
 }
 

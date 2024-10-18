@@ -2867,11 +2867,12 @@
                     }).then((result) => {
                         //reloadCalendar(selected_calendar_view);
                         //loadUpcomingSchedules();
-                        if( data.esign_id > 0 ){
-                            location.href = base_url + 'eSign_v2/templatePrepare?id='+data.esign_id+'&job_id='+data.job_id+'&customer_id='+data.customer_id;
-                        }else{
-                            location.href = base_url + 'job/new_job1/' + data.job_id
-                        }
+                        // if( data.esign_id > 0 ){
+                        //     location.href = base_url + 'eSign_v2/templatePrepare?id='+data.esign_id+'&job_id='+data.job_id+'&customer_id='+data.customer_id;
+                        // }else{
+                        //     location.href = base_url + 'job/new_job1/' + data.job_id
+                        // }
+                        location.href = base_url + 'job/new_job1/' + data.job_id
                     });    
                 }else{
                     Swal.fire({

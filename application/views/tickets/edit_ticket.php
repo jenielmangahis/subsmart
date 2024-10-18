@@ -154,22 +154,59 @@ a.btn-primary.btn-md {
     bottom: 0px;
   }
 }
-</style>
-
-   <style>
-   .but:hover {
+.custom-ticket-header{
+    background-color: #6a4a86;
+    color: #ffffff;
+    font-size: 15px;
+    padding: 10px;
+}
+.but:hover {
     font-weight: 900;
     color:black;
-    }
-    .but-red:hover {
+}
+.but-red:hover {
     font-weight: 900;
     color:red;
-    }
-    .required:after {
+}
+.required:after {
     content:" *";
     color: red;
-    }
-   </style>
+}
+#jobs_items_table_body i{
+    position: relative;
+    top: 0px;
+    left: 2px;
+}
+#jobs_items_table_body .nsm-button{
+    margin: 0 auto;
+    display: block;
+    padding: 4px;
+}
+.span-input{
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    text-align:right;
+    background-color:#E9ECEF;
+}
+.tax_change, .discount, .price {
+    text-align:right;
+}
+#quick-add-item .nsm-table thead td {
+    background-color: #6a4a86;
+    color: #ffffff;
+}
+</style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('customer/addTicket') ?>'">
         <i class="bx bx-note"></i>
@@ -196,80 +233,95 @@ a.btn-primary.btn-md {
                     </div>
                 </div>
                 <input type="hidden" id="redirect-calendar" name="redirect_calendar" value="<?= $redirect_calendar; ?>">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="customers" class="required"><b>Customer</b></label>
-                        <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
-                            <option value="">- Select Customer -</option>
-                            <?php foreach($customers as $c){ ?>
-                                <?php $default_customer_id = $tickets->customer_id;
-                                    //if( $default_customer_id > 0 ){ ?>
-                                    <option <?= $default_customer_id == $c->prof_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
-                                <?php //}else{ ?>
-                                    <!-- <option value="</option> -->
-                                <?php //} ?>                                            
-                            <?php } ?>
-                        </select>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="nsm-card primary">
+                                <div class="nsm-card-content">
+                                    <label for="customers" class="required"><b>Customer</b></label>
+                                    <a class="link-modal-open nsm-button btn-small" href="<?= base_url('customer/add_advance'); ?>" style="float:right;">New Customer</a>
+                                    <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
+                                        <option value="">- Select Customer -</option>
+                                        <?php foreach($customers as $c){ ?>
+                                            <?php $default_customer_id = $tickets->customer_id;
+                                                //if( $default_customer_id > 0 ){ ?>
+                                                <option <?= $default_customer_id == $c->prof_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                                            <?php //}else{ ?>
+                                                <!-- <option value="</option> -->
+                                            <?php //} ?>                                            
+                                        <?php } ?>
+                                    </select>
+                                    <div class="row">
+                                        <div class="col-md-6" style="display: ;">
+                                            <label for="customer_phone" class="required"><b>Mobile Number</b></label>
+                                            <input type="text" class="form-control phone_number" placeholder="xxx-xxx-xxxx" name="customer_phone" id="customer_phone" required  value="<?php echo $tickets->customer_phone; ?>"/>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="business_name"><b>Business Name</b> (optional)</label>
+                                            <input type="text" class="form-control" name="business_name" id="business_name" placeholder="Business Name" value="<?php echo $tickets->business_name; ?>"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12"> 
+                                            <label for="job-tag"><b>Service Tag</b></label>
+                                            <a class="nsm-button btn-small" style="float:right;" target="_new" href="<?= base_url('job/job_tags'); ?>">Manage Tag</a>
+                                            <select class="form-control" name="job_tag" id="job-tag">
+                                                <?php foreach($tags as $t){ ?>
+                                                    <option value="<?= $t->name; ?>" <?php if($t->name == $tickets->job_tag){ echo 'selected'; } ?>><?= $t->name; ?></option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-12 mt-4">
+                                            <label for="job_name"><b>Service description</b> (optional)</label>
+                                            <!-- <input type="text" class="form-control" name="job_name" id="job_name" placeholder="Enter Job Name" required/> -->
+                                            <textarea class="form-control" name="service_description"><?php echo $tickets->service_description; ?></textarea>
+                                        </div>
+                                        <div class="col-md-12 mt-4">
+                                            <label for="job_location" class="required"><b>Service Location</b></label>
+                                            <input type="text" class="form-control" name="service_location" id="service_location"
+                                            required placeholder="Enter Location"
+                                            onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $tickets->service_location; ?>"/>
+                                        </div>
+                                        <div class="row"> 
+                                            <div class="col-md-4">
+                                                <label for="job_location" class="required"><b>City</b></label>
+                                                <input type="text" class="form-control" name="customer_city" id="customer_city"
+                                                        required placeholder="Enter City" 
+                                                        onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $tickets->acs_city; ?>"/>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label for="job_location" class="required"><b>State</b></label>
+                                                <input type="text" class="form-control" name="customer_state" id="customer_state"
+                                                        required placeholder="Enter State" 
+                                                        onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $tickets->acs_state; ?>"/>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label for="job_location" class="required"><b>Zip Code</b></label>
+                                                <input type="text" class="form-control" name="customer_zip" id="customer_zip"
+                                                        required placeholder="Enter Zip Code" 
+                                                        onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $tickets->acs_zip; ?>"/>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-7">
+                            <div class="nsm-card primary">
+                                <div class="nsm-card-content">
+                                    <div class="MAP_LOADER_CONTAINER">
+                                        <div class="text-center MAP_LOADER">
+                                            <iframe id="TEMPORARY_MAP_VIEW"
+                                                src="http://maps.google.com/maps?output=embed" height="470" width="100%"
+                                                style=""></iframe>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-3">
-                        <br><a href="<?= base_url('customer/add_advance'); ?>" class="nsm-button primary" target="_new" id=""><i class='bx bx-plus'></i> New Customer</a>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4 form-group">
-                        <label for="city"><b>Business Name</b> (optional)</label>
-                        <input type="text" class="form-control" name="business_name" id="business_name" placeholder="Business Name" value="<?php echo $tickets->business_name; ?>"/>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4">
-                        <label for="job_location" class="required"><b>Service Location</b></label>
-                        <input type="text" class="form-control" name="service_location" id="service_location"
-                                required placeholder="Enter Location"
-                                onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $tickets->service_location; ?>"/>
-                    </div>
-                    <div class="col-md-2">
-                        <label for="job_location" class="required"><b>City</b></label>
-                        <input type="text" class="form-control" name="customer_city" id="customer_city"
-                                required placeholder="Enter City" 
-                                onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $tickets->acs_city; ?>"/>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label for="job_location" class="required"><b>State</b></label>
-                        <input type="text" class="form-control" name="customer_state" id="customer_state"
-                                required placeholder="Enter State" 
-                                onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $tickets->acs_state; ?>"/>
-                    </div>
-                    <div class="col-md-2">
-                        <label for="job_location" class="required"><b>Zip Code</b></label>
-                        <input type="text" class="form-control" name="customer_zip" id="customer_zip"
-                                required placeholder="Enter Zip Code" 
-                                onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $tickets->acs_zip; ?>"/>
-                    </div>
-                    <div class="col-md-2" style="display: ;">
-                        <label for="job_location" class="required"><b>Customer Phone #</b></label>
-                        <input type="text" class="form-control" name="customer_phone" id="customer_phone" required placeholder="Enter Phone Number"  value="<?php echo $tickets->customer_phone; ?>"/>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="job_name"><b>Service description</b> (optional)</label>
-                        <!-- <input type="text" class="form-control" name="job_name" id="job_name" placeholder="Enter Job Name" required/> -->
-                        <textarea class="form-control" name="service_description"><?php echo $tickets->service_description; ?></textarea>
-                    </div>
-                </div><br>
-                <div class="row">
-                    <div class="col-md-4 form-group">
-                        <label for="city">Service Tag</label><label style="float:right;margin-bottom:10px;"><a class="nsm-button primary" target="_new" href="<?= base_url('job/job_tags'); ?>">Manage Tag</a></label>
-                        <select class="form-control" name="job_tag">
-                            <?php foreach($tags as $t){ ?>
-                                <option value="<?= $t->name; ?>" <?php if($t->name == $tickets->job_tag){ echo 'selected'; } ?>><?= $t->name; ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                </div>
+                
             </div>
                 <div class="row">
                     <div class="col-12">
@@ -390,19 +442,15 @@ a.btn-primary.btn-md {
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row" style="background-color:white;">
-                                    <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Service Type</b></label>
-                                        <div class="input-group">
-                                            <select class="form-control" name="service_type" id="service_type">
-                                                <?php foreach($serviceType as $sType){ ?>
-                                                    <option value="<?php echo $sType->service_name; ?>" <?php if($sType->service_name == $tickets->service_type){ echo 'selected'; } ?>><?php echo $sType->service_name; ?></option>
-                                                <?php } ?>
-                                            </select>
-                                            <span class="input-group-btn">
-                                                <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addServiceType">Add New</a>
-                                            </span>
-                                        </div><!-- /input-group -->
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="service_type"><b>Service Type</b></label>
+                                        <a href="#" class="nsm-button btn-small" style="float:right;" id="btn-quick-add-service-type">Add New</a>
+                                        <select class="form-control" name="service_type" id="service_type">
+                                            <?php foreach($serviceType as $sType){ ?>
+                                                <option value="<?php echo $sType->service_name; ?>" <?php if($sType->service_name == $tickets->service_type){ echo 'selected'; } ?>><?php echo $sType->service_name; ?></option>
+                                            <?php } ?>
+                                        </select>                                        
                                     </div>
                                     <div class="col-md-3 form-group">
                                         <label for="zip"><b>Warranty Type</b></label>
@@ -414,6 +462,14 @@ a.btn-primary.btn-md {
                                             <option <?php if(isset($tickets)){ if($tickets->warranty_type == "$50 Trip and $65 Deductible"){ echo 'selected'; } } ?>  value="$50 Trip and $65 Deductible">$50 Trip and $65 Deductible</option>
                                             <option <?php if(isset($tickets)){ if($tickets->warranty_type == "Extended"){ echo 'selected'; } } ?>  value="Extended">Extended</option>
                                             <option <?php if(isset($tickets)){ if($tickets->warranty_type == "None"){ echo 'selected'; } } ?>  value="None">None</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <label for="zip"><b>Plan Type</b></label>
+                                        <select class="form-control" name="plan_type" id="plan_type">
+                                            <?php foreach($planTypeOptions as $key => $planType){ ?>
+                                                <option <?= $tickets && $tickets->plan_type == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $planType; ?></option>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                     <div class="col-md-3 form-group">
@@ -431,87 +487,38 @@ a.btn-primary.btn-md {
                                         <textarea class="form-control" name="job_description"><?php echo $tickets->job_description; ?></textarea>
                                     </div>
                                 </div>
-                                <div class="row" style="background-color:white;font-size:16px;">
-                                    <div class="col-md-3">
-                                        <a href="#" style="color:#02A32C;"><b>Items list</b></a> | <b>Items Summary</b>
-                                    </div>
-                                    <div class="col-md-6">
-                                    </div>
-                                    <div class="col-md-3" align="right">
-                                        <b>Show qty as: </b>
-                                        <select class="dropdown">
-                                            <option>Quantity</option>
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="row" id="plansItemDiv" style="background-color:white;">
+                                    <h6 class='card_header custom-ticket-header'>Item List</h6>
                                     <div class="col-md-12 table-responsive">
-                                        <!-- <table class="table table-hover">
-                                            <input type="hidden" name="count" value="0" id="count">
-                                            <thead>
-                                            <tr>
-                                                <th>Type</th>
-                                                <th>Description</th>
-                                                <th width="100px">Quantity</th>
-                                                <th>Location</th>
-                                                <th width="100px">Cost</th>
-                                                <th width="100px">Discount</th>
-                                                <th>Tax(%)</th>
-                                                <th>Total</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="table_body">
-                                            <tr>
-                                                <td><select name="item_type[]" class="form-control">
-                                                        <option value="product">Product</option>
-                                                        <option value="material">Material</option>
-                                                        <option value="service">Service</option>
-                                                    </select></td>
-                                                <td><input type="text" class="form-control getItems"
-                                                        onKeyup="getItems(this)" name="item[]">
-                                                    <ul class="suggestions"></ul>
-                                                </td>
-                                                <td><input type="text" class="form-control quantity" name="quantity[]"
-                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                                <td><input type="text" class="form-control" name="location[]"></td>
-                                                <td><input type="number" class="form-control price" name="price[]"
-                                                        data-counter="0" id="price_0" min="0" value="0"></td>
-                                                <td><input type="number" class="form-control discount" name="discount[]"
-                                                        data-counter="0" id="discount_0" min="0" value="0" readonly></td>
-                                                <td><span id="span_tax_0">0.00 (7.5%)</span></td>
-                                                <td><span id="span_total_0">0.00</span></td>
-                                            </tr>
-                                            </tbody>
-                                        </table> -->
                                         <table class="table table-hover">
                                             <thead style="background-color:#E9E8EA;">
                                             <tr>
                                                 <th>Name</th>
-                                                <th>Group</th>
+                                                <th style="width:30%;">Group</th>
                                                 <!-- <th>Description</th> -->
-                                                <th width="150px">Quantity</th>
+                                                <th style="width:8%;">Quantity</th>
                                                 <!-- <th>Location</th> -->
-                                                <th width="150px">Price</th>
-                                                <th class="hidden_mobile_view" width="150px">Discount</th>
-                                                <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th>
-                                                <th class="hidden_mobile_view">Total</th>
-                                                <th class=""></th>
+                                                <th style="width:8%;">Price</th>
+                                                <th class="hidden_mobile_view" style="width:8%;">Discount</th>
+                                                <th class="hidden_mobile_view" style="width:8%;">Tax</th>
+                                                <th class="hidden_mobile_view" style="width:8%;">Total</th>
+                                                <th class="" style="width:3%;"></th>
                                             </tr>
                                             </thead>
                                             <tbody id="jobs_items_table_body">
                                                 <?php
                                                     $i = 0;
-                                                    foreach($itemsLists as $itemL){ ?>
-                                                    <?php //print_r($itemsLists); ?>
-                                                <tr style="display:;">
-                                                    <td width="30%">
+                                                    foreach($itemsLists as $itemL){ 
+                                                ?>
+                                                <tr style="">
+                                                    <td>
                                                         <input type="text" class="form-control getItems" onKeyup="getItems(this)" name="items[]" value="<?php echo $itemL->title; ?>">
                                                         <ul class="suggestions"></ul>
                                                         <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
                                                         <input type="hidden" name="item_id[]" id="itemid" class="itemid" value="<?php echo $itemL->items_id; ?>">
                                                         <input type="hidden" name="packageID[]" value="0">
                                                     </td>
-                                                    <td width="20%">
+                                                    <td>
                                                         <div class="dropdown-wrapper">
                                                             <select name="item_type[]" id="item_typeid" class="form-control">
                                                                 <option <?php if(isset($itemsLists)){ if($itemL->item_type == "product"){ echo 'selected'; } } ?> value="product">Product</option>
@@ -521,22 +528,25 @@ a.btn-primary.btn-md {
                                                             </select>
                                                         </div>
                                                     </td>
-                                                    <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]" data-counter="<?php echo $i; ?>" id="quantity_<?php echo $i; ?>" value="<?php echo $itemL->qty; ?>"></td>
-                                                    <td width="1<?php echo $i; ?>%"><input type="text" class="form-control price price hidden_mobile_view" name="price[]" data-counter="<?php echo $i; ?>" id="price_<?php echo $i; ?>" value="<?php echo $itemL->costing; ?>">
+                                                    <td><input type="number" class="form-control quantity mobile_qty" name="quantity[]" data-counter="<?php echo $i; ?>" id="quantity_<?php echo $i; ?>" value="<?php echo $itemL->qty; ?>"></td>
+
+                                                    <td><input type="number" class="form-control price price hidden_mobile_view" name="price[]" data-counter="<?php echo $i; ?>" id="price_<?php echo $i; ?>" value="<?php echo $itemL->costing; ?>">
                                                         <input type="hidden" class="priceqty" id="priceqty_<?php echo $i; ?>" value="<?php echo $itemL->costing; ?>"> 
                                                         <div class="show_mobile_view"></div>
                                                         <input id="priceM_qty<?php echo $i; ?>" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty">
                                                     </td>
-                                                    <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]" data-counter="<?php echo $i; ?>" id="discount_<?php echo $i; ?>" min="0"  value="<?php echo $itemL->discount; ?>"></td>
-                                                    <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]" data-counter="<?php echo $i; ?>" id="tax1_<?php echo $i; ?>" min="0"  value="<?php echo number_format($itemL->tax,2, '.', ','); ?>" readonly=""></td>
-                                                    <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]" data-counter="<?php echo $i; ?>" id="item_total_<?php echo $i; ?>" min="0"  value="<?php echo $itemL->total; ?>">$<span id="span_total_<?php echo $i; ?>"><?php echo number_format($itemL->total,2, '.', ','); ?></span></td>
-                                                    <td><a href="#" class="remove btn btn-sm btn-danger" id="<?php echo $i; ?>"><i class="fa fa-trash" aria-hidden="true"></i>Remove</a></td>
+                                                    <td class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]" data-counter="<?php echo $i; ?>" id="discount_<?php echo $i; ?>" min="0"  value="<?php echo $itemL->discount; ?>"></td>
+                                                    <td class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]" data-counter="<?php echo $i; ?>" id="tax1_<?php echo $i; ?>" min="0"  value="<?php echo number_format($itemL->tax,2, '.', ','); ?>" readonly=""></td>
+                                                    <td class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]" data-counter="<?php echo $i; ?>" id="item_total_<?php echo $i; ?>" min="0"  value="<?php echo $itemL->total; ?>"><span class="span-input" id="span_total_<?php echo $i; ?>"><?php echo number_format($itemL->total,2, '.', ','); ?></span></td>
+                                                    <td><a href="#" class="remove nsm-button" id="<?php echo $i; ?>"><i class="bx bx-fw bx-trash"></i></a></td>
                                                 </tr>
                                                 <?php  $i++; } ?>
                                             <input type="hidden" name="count" value="<?php echo $i; ?>" id="count">
                                             </tbody>
                                         </table>
-                                        <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a>
+                                        <button class="link-modal-open nsm-button primary small link-modal-open" type="button" id="add_another_items">
+                                            <i class='bx bx-plus'></i>Add Items
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -561,12 +571,17 @@ a.btn-primary.btn-md {
                                             <tr>
                                                 <td>Taxes</td>
                                                 <!-- <td></td> -->
-                                                <td colspan="2" align="right">$ <span id="total_tax_"><?php echo $tickets->taxes; ?></span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                                <td colspan="2" align="right"><span id="total_tax_"><?php echo $tickets->taxes; ?></span><input type="hidden" name="taxes" id="total_tax_input"></td>
                                             </tr>
                                             <tr>
-                                                <td style="width:250px;"><input type="text" class="form-control" placeholder="Adjustment" name="adjustment" value="<?php echo $tickets->adjustment; ?>"></td>
-                                                <td style="width:150px;"><input type="number"  class="form-control adjustment_input" name="adjustment_value" id="adjustment_input" value="<?php echo $tickets->adjustment_value; ?>"></td>
-                                                <td align="right"><?php echo $tickets->adjustment_value; ?></td>
+                                                <td>
+                                                    <input type="text" class="form-control" placeholder="Adjustment" name="adjustment" value="<?php echo $tickets->adjustment; ?>" style="width:80%;display:inline;">
+                                                    <span id="modal-help-popover-adjustment" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span>
+                                                </td>
+                                                <td colspan="2">
+                                                    <input type="number" style="width:50%;float:right;text-align:right;" class="form-control adjustment_input" name="adjustment_value" id="adjustment_input" value="<?php echo $tickets->adjustment_value; ?>">
+                                                </td>
+                                                <!-- <td align="right"><?php echo $tickets->adjustment_value; ?></td> -->
                                             </tr>
                                             <tr>
                                                 <td>Markup</td>
@@ -839,8 +854,8 @@ a.btn-primary.btn-md {
                                         <input type="hidden" name="sales_rep" class="form-control" value="<?php echo $tickets->sales_rep; ?>">
                                     </div>
                                     <div class="col-md-4">
-                                        <b>Cell Phone</b>
-                                        <input type="text" name="sales_rep_no" class="form-control" value="<?php echo $tickets->sales_rep_no; ?>" placeholder="Enter Cellphone Number">
+                                        <b>Mobile Phone</b>
+                                        <input type="text" name="sales_rep_no" class="form-control phone_number" placeholder="xxx-xxx-xxxx" value="<?php echo $tickets->sales_rep_no; ?>">
                                     </div>                       
                                     <div class="col-md-4">
                                         <b>Team Leader / Mentor</b>
@@ -878,9 +893,9 @@ a.btn-primary.btn-md {
                                 </div>
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-12 form-group">
-                                        <button type="submit" class="btn btn-warning but" style="border-radius: 0 !important;border:solid gray 1px;">Update</button>
-                                        <button type="button" class="nsm-button primary but" style="border-radius: 0 !important;">Preview</button>
-                                        <a href="<?php echo base_url('customer/ticketslist/') ?>" class="btn but-red">Cancel this</a>
+                                        <button type="submit" class="nsm-button primary" style="">Update</button>
+                                        <button type="button" class="nsm-button" style="">Preview</button>
+                                        <a href="<?php echo base_url('customer/ticketslist/') ?>" class="btn">Cancel</a>
                                     </div>
                                 </div>
 
@@ -924,30 +939,6 @@ a.btn-primary.btn-md {
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- Modal Additional addServiceType -->
-                                <div class="modal fade" id="addServiceType" tabindex="-1" role="dialog"
-                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title" id="exampleModalLabel">Add Service Type</h5>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                Service Name
-                                                <input type="text" class="form-control" name="addServiceTypevalue" id="addServiceTypevalue" />
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <button type="button" class="btn btn-primary saveServiceType">Save changes</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <div class="modal fade" id="modalAddNewSource" tabindex="-1" role="dialog"
                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog modal-lg" role="document">
@@ -985,54 +976,85 @@ a.btn-primary.btn-md {
 </div>
 
 <?php echo form_close(); ?>
-            <!-- Modal -->
-            <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table id="modal_items_list" class="table-hover" style="width: 100%;">
-                                        <thead>
-                                        <tr>
-                                            <td> Name</td>
-                                            <td> Price</td>
-                                            <td> Action</td>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php foreach($items as $item){ // print_r($item); ?>
-                                            <tr>
-                                                <td><?php echo $item->title; ?></td>                                                
-                                                <td><?php echo $item->price; ?></td>
-                                                <td><button id="<?= $item->id; ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" type="button" data-dismiss="modal" class="btn btn-sm btn-default select_item">Add
-                                                <span class="fa fa-plus"></span>
-                                            </button></td>
-                                            </tr>
-                                            
-                                        <?php } ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer modal-footer-detail">
-                            <div class="button-modal-list">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+<div class="modal fade" id="quick-add-item" tabindex="-1"  aria-labelledby="quickAddServiceTicketLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md" style="margin-top:5%;margin-left:31%;">
+        <div class="modal-content" style="width:700px !important;">
+            <div class="modal-header">
+                <span class="modal-title content-title" style="font-size: 17px;">Items List</span>
+                <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+            </div>
+            <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 col-md-12 grid-mb">
+                            <div class="nsm-field-group search">
+                                <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" for="quick-add-items-list" placeholder="Search List">
                             </div>
                         </div>
                     </div>
-                </div>
+                    <div class="row">                        
+                        <div class="col-sm-12">
+                            <table id="quick-add-items-list" class="nsm-table" style="width: 100%;">
+                                <thead>
+                                <tr>
+                                    <td data-name="Add" style="width: 5% !important;"></td>
+                                    <td data-name="Name"><strong>Name</strong></td>
+                                    <td data-name="Type"><strong>Type</strong></td>
+                                    <td data-name="Qty"><strong>Stock</strong></td>
+                                    <td data-name="Price" style="text-align:right;"><strong>Price</strong></td>                                    
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php foreach($items as $item){ ?>
+                                    <?php $item_qty = get_total_item_qty($item->id); ?>
+                                    <?php //if ($item_qty[0]->total_qty > 0) { ?>
+                                        <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
+                                            <td class="nsm-text-primary">
+                                                <button type="button"  data-dismiss="modal" class='nsm nsm-button default select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
+                                            </td>
+                                            <td class="nsm-text-primary"><?php echo $item->title; ?></td>
+                                            <td class="nsm-text-primary"><?php echo $item->type; ?></td>
+                                            <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : "0"; ?></td>
+                                            <td style="text-align:right;"><?php echo $item->price; ?></td>                                            
+                                        </tr>
+                                    <?php //} ?>
+                                <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
             </div>
+        </div>
+    </div>
+</div>
+
+            
 
 <?php //echo $file_selection; ?>
-
+<!-- Modal Additional addServiceType -->
+<div id="modal-quick-add-service-type" class="modal fade modal-fluid nsm-modal" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <form id="quick-add-service-type-form" class="w-50 m-auto">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Add Service Type</span>
+                    <button type="button" class="cancel-add-payee" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="margin-top:0px;">
+                        <div class="col-md-12">
+                            <label for="name"><span class="text-danger">*</span> Service Name</label>
+                            <input type="text" class="form-control" name="addServiceTypevalue" id="addServiceTypevalue" required="" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button success float-end btn-create-service-type">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
 <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
 <?php include viewPath('v2/includes/footer'); ?>
 <?php //include viewPath('includes/footer'); ?>
@@ -1361,84 +1383,138 @@ document.getElementById("payment_method").onchange = function() {
     }
 }
 </script>
-<script>
-    
-    $(".saveServiceType").on("click", function(e) {
-            let service_name = $("#addServiceTypevalue").val();
-            var $select = $('#service_type');
-
-            e.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: "<?php echo base_url('tickets/saveServiceType'); ?>",
-                data: {
-                    service_name: service_name
-                },
-                dataType: 'json',
-                success: function(response) {
-                    location.reload();
-                    $('#addServiceType').modal('hide');
-                    $select.selectmenu("refresh", true);
-                }
-            });
-        });
-</script>
-
-<script>
-    
+<script>    
 $(document).ready(function(){
+
+    $('#sel-customer_t').select2({     
+        minimumInputLength: 0        
+    });
+
+    $("#quick-add-items-list").nsmPagination({itemsPerPage:10});
+    $("#search_field").on("input", debounce(function() {
+        tableSearch($(this));        
+    }, 1000));
+
+    $('.phone_number').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    });
+
+    $('#add_another_items').on('click', function(){
+        $('#quick-add-item').modal('show');
+    });
+
+    $('#modal-help-popover-adjustment').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
+        }
+    });
  
- $('#sel-customer_t').change(function(){
- var id  = $(this).val();
-//  alert(id);
+    $('#sel-customer_t').change(function(){
+        var id  = $(this).val();
+        $.ajax({
+            type: 'POST',
+            url:"<?php echo base_url(); ?>accounting/addLocationajax",
+            data: {id : id },
+            dataType: 'json',
+            success: function(response){            
+                var phone = response['customer'].phone_h;
+                var mobile = response['customer'].phone_m;
+                var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+                var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+            
+            var service_location = response['customer'].mail_add + ' ' + response['customer'].city + ', ' + response['customer'].state + response['customer'].zip_code;
+            $("#service_location").val(service_location);
+            $("#customer_city").val(response['customer'].city);
+            $("#customer_state").val(response['customer'].state);
+            $("#customer_zip").val(response['customer'].zip_code);
+            $("#customer_phone").val(response['customer'].phone_m);
+            $("#business_name").val(response['customer'].business_name);
 
-     $.ajax({
-         type: 'POST',
-         url:"<?php echo base_url(); ?>accounting/addLocationajax",
-         data: {id : id },
-         dataType: 'json',
-         success: function(response){
-            //  alert('success');
-             // console.log(response['customer']);
-         // $("#job_location").val(response['customer'].mail_add + ' ' + response['customer'].cross_street + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
+            var map_source = 'http://maps.google.com/maps?q=' + service_location +
+                        '&output=embed';
+            var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +
+                '" height="370" width="100%" style=""></iframe>';
+            $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+            
+            //  $("#email").val(response['customer'].email);
+            //  $("#date_of_birth").val(response['customer'].date_of_birth);
+            //  $("#phone_no").val(test_p);
+            //  $("#mobile_no").val(test_m);
+            //  $("#city").val(response['customer'].city);
+            //  $("#state").val(response['customer'].state);
+            //  $("#zip").val(response['customer'].zip_code);
+            //  $("#cross_street").val(response['customer'].cross_street);
+            //  $("#acs_fullname").val(response['customer'].first_name +' '+ response['customer'].last_name);
 
-         // var phone = response['customer'].phone_h;
-         // var new_phone = phone.value.replace(/(\d{3})\-?/g,'$1-');
-         var phone = response['customer'].phone_h;
-             // phone = normalize(phone);
-         
-         var mobile = response['customer'].phone_m;
-             // mobile = normalize(mobile);
+            //  $("#job_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
 
-         var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
-         var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
-         
-         $("#service_location").val(response['customer'].mail_add);
-         $("#customer_city").val(response['customer'].city);
-         $("#customer_state").val(response['customer'].state);
-         $("#customer_zip").val(response['customer'].zip_code);
-         $("#customer_phone").val(response['customer'].phone_h);
-        //  $("#email").val(response['customer'].email);
-        //  $("#date_of_birth").val(response['customer'].date_of_birth);
-        //  $("#phone_no").val(test_p);
-        //  $("#mobile_no").val(test_m);
-        //  $("#city").val(response['customer'].city);
-        //  $("#state").val(response['customer'].state);
-        //  $("#zip").val(response['customer'].zip_code);
-        //  $("#cross_street").val(response['customer'].cross_street);
-        //  $("#acs_fullname").val(response['customer'].first_name +' '+ response['customer'].last_name);
+            //  $("#primary_account_holder_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
+        
+            },
+                error: function(response){
+                //alert('Error'+response);
+        
+                }
+        });
+    });
 
-        //  $("#job_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
+    $('#btn-quick-add-service-type').on('click', function(){
+        $('#modal-quick-add-service-type').modal('show');
+    });
 
-        //  $("#primary_account_holder_name").val(response['customer'].first_name + ' ' + response['customer'].last_name);
-     
-         },
-             error: function(response){
-             //alert('Error'+response);
-    
-             }
-     });
-});
+    $('#quick-add-service-type-form').on('submit',function(e){
+        e.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            url: base_url + "ticket/_create_service_type",
+            dataType: 'json',
+            data: $('#quick-add-service-type-form').serialize(),
+            success: function(data) {    
+                $('.btn-create-service-type').html('Save');                   
+                if (data.is_success) {
+                    $('#modal-quick-add-service-type').modal('hide');
+                    Swal.fire({
+                        text: "Service Type was successfully created",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        //if (result.value) {
+                            $('#service_type').append( new Option(data.service_type,data.service_type) );    
+                            $('#service_type').val(data.service_type);
+                        //}
+                    });                    
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('.btn-create-service-type').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
 });
 </script>
 
@@ -1476,19 +1552,37 @@ $('#scheduled_time_to').timepicker({
 </script>
 <script>
     
-$('#modal_items_list').DataTable({
-    "autoWidth" : false,
-    "columnDefs": [
-    { width: 540, targets: 0 },
-    { width: 100, targets: 0 },
-    { width: 100, targets: 0 }
-    ],
-    "ordering": false,
-});
+// $('#modal_items_list').DataTable({
+//     "autoWidth" : false,
+//     "columnDefs": [
+//     { width: 540, targets: 0 },
+//     { width: 100, targets: 0 },
+//     { width: 100, targets: 0 }
+//     ],
+//     "ordering": false,
+// });
 </script>
 
 <script>
 $('#ticket_date').datepicker({
     dateFormat: 'yyyy-mm-dd'
 });
+
+
+$(document).ready(function() {       
+    $('#customer_phone').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    });
+}); 
+
 </script>

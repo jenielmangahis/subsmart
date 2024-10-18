@@ -378,12 +378,12 @@ function Signing(hash) {
     if( field_name == "Secondary Contact Name" ){
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
-          return emergency_secondary_contact_fname + " " + emergency_primary_contact_lname;
+          return emergency_secondary_contact_fname + " " + emergency_secondary_contact_lname;
         }else{
           return fieldValue['value'];
         }
       }else{
-        return emergency_secondary_contact_fname + " " + emergency_primary_contact_lname;
+        return emergency_secondary_contact_fname + " " + emergency_secondary_contact_lname;
       }      
     }
 
