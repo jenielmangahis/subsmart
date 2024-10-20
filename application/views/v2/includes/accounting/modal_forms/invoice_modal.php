@@ -391,14 +391,14 @@
                                     <div class="row">
                                         <div class="col-12 grid-mb">
                                             <table class="nsm-table" id="item-table">
-                                                <thead>
-                                                    <td data-name="Item" style="width:30%;">ITEM</td>
+                                                <thead style="font-size: 14px !important;">
+                                                    <td data-name="Item" style="width:28%;">ITEM</td>
                                                     <td data-name="Type">TYPE</td>
                                                     <td data-name="Location">LOCATION</td>
                                                     <td data-name="Quantity" style="width:8%;">QUANTITY</td>
                                                     <td data-name="Price" style="width:8%;">PRICE</td>
                                                     <td data-name="Discount" style="width:8%;">DISCOUNT</td>
-                                                    <td data-name="Tax" style="width:8%;">TAX (Change in %)</td>
+                                                    <td data-name="Tax" style="width:10%;">TAX (CHANGE IN %)</td>
                                                     <td data-name="Total" style="width:8%; text-align:right;">TOTAL</td>
                                                     <?php if (isset($invoice) && !is_null($invoice->linked_transacs) || isset($linkedTransac)) : ?>
                                                         <td data-name="Linked"></td>
