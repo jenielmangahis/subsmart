@@ -10,6 +10,15 @@
     .credit-cards {
         margin: 10px 0;
     }
+
+    #invoiceModal .nsm-table thead td{
+        background-color:#6a4a86;
+        color:#ffffff;
+    }    
+
+    #invoiceModal .nsm-table td:nth-child(8){
+    text-align:right !important; 
+    }
 </style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
@@ -295,13 +304,14 @@
                                             <label for="invoice-no">Invoice # </label>
                                             <input type="text" class="form-control nsm-field mb-2" id="invoice-no" name="invoice_no" value="<?= isset($number) ? $invoiceNumber : "INV-" . str_pad(intval($number) + 1, 7, "0", STR_PAD_LEFT) ?>" disabled>
                                         </div>
-                                        <div class="col-12 col-md-2">
+                                        <!-- <div class="col-12 col-md-2">
                                             <label for="job-no">Job # (optional)
                                                 <span id="modal-popover-job-optional" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=""></span>
-                                                <!-- <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Field is auto-populated on create invoice from a Work Order."></span> -->
+                                                <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Field is auto-populated on create invoice from a Work Order."></span>
                                             </label>
                                             <input type="text" class="form-control nsm-field mb-2" id="job-no" name="job_no" value="<?= isset($invoice) ? $invoice->work_order_number : '' ?>">
-                                        </div>
+                                        </div> -->
+                                      
                                         <div class="col-12 col-md-2">
                                             <label for="purchase-order-no">Purchase order # (optional)
                                                 <span id="modal-popover-purchase-order-optional" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=""></span>
@@ -314,6 +324,11 @@
                                             <label for="billing-address">Billing address</label>
                                             <textarea name="billing_address" id="billing-address" class="form-control nsm-field mb-2"><?= isset($invoice) ? str_replace("<br />", "", $invoice->billing_address) : '' ?></textarea>
                                         </div>
+
+                                        <div class="col-12 col-md-2">
+                                            <label for="shipping-to">Shipping to</label>
+                                            <textarea name="shipping_to" id="shipping-to" class="form-control nsm-field mb-2"><?= isset($invoice) ? str_replace("<br />", "", $invoice->shipping_to_address) : '' ?></textarea>
+                                        </div>                                        
                                     </div>
 
                                     <div class="row">
@@ -321,13 +336,13 @@
                                         <div class="col-12 col-md-2">
                                             <label for="date-issued">Date issued <span class="text-danger">*</span></label>
                                             <div class="nsm-field-group calendar">
-                                                <input type="text" name="date_issued" id="date-issued" class="form-control nsm-field mb-2 date" value="<?= isset($invoice) ? date("m/d/Y", strtotime($invoice->date_issued)) : '' ?>">
+                                                <input type="text" name="date_issued" id="date-issued" class="form-control nsm-field mb-2 date" value="<?= isset($invoice) ? date("m/d/Y", strtotime($invoice->date_issued)) : date("m/d/Y") ?>">
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-2">
                                             <label for="due-date">Due date <span class="text-danger">*</span></label>
                                             <div class="nsm-field-group calendar">
-                                                <input type="text" name="due_date" id="due-date" class="form-control nsm-field date" value="<?= isset($invoice) ? date("m/d/Y", strtotime($invoice->due_date)) : '' ?>">
+                                                <input type="text" name="due_date" id="due-date" class="form-control nsm-field date" value="<?= isset($invoice) ? date("m/d/Y", strtotime($invoice->due_date)) : date("m/d/Y") ?>">
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-2">
@@ -343,11 +358,6 @@
                                                 <option value="Declined" <?= isset($invoice) && $invoice->status === 'Declined' ? 'selected' : '' ?>>Declined</option>
                                                 <option value="Schedule" <?= isset($invoice) && $invoice->status === 'Schedule' ? 'selected' : '' ?>>Schedule</option>
                                             </select>
-                                        </div>
-
-                                        <div class="col-12 col-md-2">
-                                            <label for="shipping-to">Shipping to</label>
-                                            <textarea name="shipping_to" id="shipping-to" class="form-control nsm-field mb-2"><?= isset($invoice) ? str_replace("<br />", "", $invoice->shipping_to_address) : '' ?></textarea>
                                         </div>
                                     </div>
 
@@ -382,18 +392,18 @@
                                         <div class="col-12 grid-mb">
                                             <table class="nsm-table" id="item-table">
                                                 <thead>
-                                                    <td data-name="Item">ITEM</td>
+                                                    <td data-name="Item" style="width:30%;">ITEM</td>
                                                     <td data-name="Type">TYPE</td>
                                                     <td data-name="Location">LOCATION</td>
-                                                    <td data-name="Quantity">QUANTITY</td>
-                                                    <td data-name="Price">PRICE</td>
-                                                    <td data-name="Discount">DISCOUNT</td>
-                                                    <td data-name="Tax">TAX (CHANGE IN %)</td>
-                                                    <td data-name="Total">TOTAL</td>
+                                                    <td data-name="Quantity" style="width:8%;">QUANTITY</td>
+                                                    <td data-name="Price" style="width:8%;">PRICE</td>
+                                                    <td data-name="Discount" style="width:8%;">DISCOUNT</td>
+                                                    <td data-name="Tax" style="width:8%;">TAX (Change in %)</td>
+                                                    <td data-name="Total" style="width:8%; text-align:right;">TOTAL</td>
                                                     <?php if (isset($invoice) && !is_null($invoice->linked_transacs) || isset($linkedTransac)) : ?>
                                                         <td data-name="Linked"></td>
                                                     <?php endif; ?>
-                                                    <td data-name="Manage"></td>
+                                                    <td data-name="Manage" style="width:5%;"></td>
                                                 </thead>
                                                 <tbody>
                                                     <?php if (isset($items) && count($items) > 0) : ?>
@@ -622,7 +632,7 @@
                                                 <tfoot>
                                                     <tr>
                                                         <td colspan="10">
-                                                            <div class="nsm-page-buttons page-buttons-container">
+                                                            <div class="nsm-page-buttons page-buttons-container" style="margin-top: 10px;">
                                                                 <button type="button" class="nsm-button" id="add_item">
                                                                     Add items
                                                                 </button>
@@ -897,7 +907,7 @@
                                                     <div class="attachments">
                                                         <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label>
                                                         <span>Maximum size: 20MB</span>
-                                                        <div id="invoice-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                        <div id="invoice-attachments" class="dropzone d-block justify-content-center align-items-center" style="border: 1px solid #e1e2e3; background: #ffffff; width: 100%;">
                                                             <div class="dz-message" style="margin: 20px;border">
                                                                 <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                                 <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
