@@ -506,6 +506,8 @@ $route['accounting/mark-as-paid-transaction/(:any)/(:any)'] = 'accounting_modals
 
 $route['accounting/lists'] = 'accounting/lists';
 
+$route['accounting/apply-for-capitalOld'] = 'accounting/apply_for_capitalOld';
+
 // Accounting attachments
 $route['accounting/attachments'] = 'accounting_controllers/attachments/index';
 $route['accounting/attachments/upload']['post'] = 'accounting_controllers/attachments/upload';
