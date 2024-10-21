@@ -309,8 +309,8 @@ class AcsProfile_model extends MY_Model
         $this->db->select('acs_billing.mmr, acs_profile.prof_id, acs_billing.bill_start_date, acs_office.install_date');
         $this->db->from('acs_billing');
         $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id');
-        $this->db->join('acs_office', 'acs_billing.fk_prof_id = acs_office.fk_prof_id');
         $this->db->where('acs_profile.company_id', $id);
+        
         $query = $this->db->get();
 
         return $query->result();
@@ -319,18 +319,38 @@ class AcsProfile_model extends MY_Model
     public function getSubscription($id)
     {
         $current_date = date('Y-m-d');
-        $this->db->select('acs_billing.mmr, acs_profile.prof_id, acs_billing.bill_start_date, acs_billing.bill_end_date');
-        $this->db->from('acs_billing');
-        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id');
-        $this->db->join('acs_alarm', 'acs_billing.fk_prof_id = acs_alarm.fk_prof_id');
+        $this->db->select('acs_billing.mmr, acs_profile.prof_id, acs_billing.bill_start_date, acs_billing.bill_end_date,acs_profile.status');
+        $this->db->from('acs_profile');
+        $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $id);
-        $this->db->where('acs_profile.status', 'Installed');
-        $this->db->where('STR_TO_DATE(acs_billing.bill_end_date, "%m/%d/%Y") >=', date('Y-m-d', strtotime($current_date)));
-        $this->db->where('STR_TO_DATE(acs_billing.bill_start_date, "%m/%d/%Y") >=', date('Y-m-d', strtotime('01-01-2000')));
+        $this->db->where('DATE(acs_billing.bill_end_date) >=', date('Y-m-d'));
+        $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM']);
         $query = $this->db->get();
 
         return $query->result();
     }
+
+    public function getSubscriptionByStatus($id,$status)
+    {
+        $current_date = date('Y-m-d');
+        $this->db->select('acs_billing.mmr, acs_profile.prof_id, acs_billing.bill_start_date, acs_billing.bill_end_date,acs_profile.status');
+        $this->db->from('acs_profile');
+        $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_profile.company_id', $id);
+        $this->db->where('DATE(acs_billing.bill_end_date) >=', date('Y-m-d'));
+
+        if($status != ''){
+            $this->db->where('acs_profile.status', $status);
+        }else{
+            $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM']);
+        }
+
+        $query = $this->db->get();
+
+        return $query->result();
+    }
+
+    
     public function getCurrentCompanyOpenInvoices($id){
         $this->db->where('company_id', $id);
         $this->db->where('is_recurring', 0);

@@ -123,12 +123,12 @@ class Customer_model extends MY_Model
     public function getAllCommercialCustomers($search = null, $company_id, $customer_type, $filter_status = null) {
         $this->db->select('*, acs_billing.mmr AS customer_mmr, concat(acs_profile.mail_add, " ", acs_profile.city, " ", acs_profile.state," , ",acs_profile.zip_code) AS customer_address');
         $this->db->from($this->table);
-        $this->db->where('company_id', $company_id);
-        $this->db->where('customer_type', $customer_type);
+        $this->db->where('acs_profile.company_id', $company_id);
+        $this->db->where('acs_profile.customer_type', $customer_type);
         $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
     
         if (!empty($filter_status)) {
-            $this->db->where('status', $filter_status); 
+            $this->db->where('acs_profile.status', $filter_status); 
         }
     
         if (!empty($search)) {

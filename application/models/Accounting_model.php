@@ -42,6 +42,39 @@ class Accounting_model extends MY_Model
         $loggedInUser = logged('id');
         $companyID = logged('company_id');
 
+        // Get All Acitve Subscriptions Report data in Database
+        if ($reportType == 'active_subscriptions') {
+            $this->db->select('acs_profile.prof_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, acs_profile.status AS status, acs_billing.bill_start_date AS bill_start_date, acs_billing.bill_end_date AS bill_end_date, acs_billing.mmr AS mmr');
+            $this->db->from('acs_profile');
+            $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+            $this->db->where('company_id', $companyID);
+            $this->db->where_in('acs_profile.status', [
+                'Active w/RAR',
+                'Active w/RMR',
+                'Active w/RQR',
+                'Active w/RYR',
+                'Inactive w/RMM'
+            ]);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            switch ($reportConfig['subscription_period']) {
+                case 'last_7_days':
+                    $this->db->where('acs_billing.bill_start_date >= CURDATE() - INTERVAL 7 DAY');
+                    break;
+                case 'last_14_days':
+                    $this->db->where('acs_billing.bill_start_date >= CURDATE() - INTERVAL 14 DAY');
+                    break;
+                case 'last_30_days':
+                    $this->db->where('acs_billing.bill_start_date >= CURDATE() - INTERVAL 30 DAY');
+                    break;
+                case 'last_60_days':
+                    $this->db->where('acs_billing.bill_start_date >= CURDATE() - INTERVAL 60 DAY');
+                    break;
+            }
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
         // Get Sales Tax Liability Report data in Database
         if ($reportType == 'sales_tax_liability') {
         }
