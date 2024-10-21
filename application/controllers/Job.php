@@ -147,6 +147,7 @@ class Job extends MY_Controller
     {
         $this->load->model('AcsProfile_model');
         $this->load->model('CalendarSettings_model');
+        $this->load->model('Tickets_model');
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
@@ -333,9 +334,18 @@ class Job extends MY_Controller
         $this->page_data['settings'] = unserialize($settings);        
         $this->page_data['time_interval'] = $time_interval;
 
-        $estimate_dp_amount = 0;        
+        $estimate_dp_amount = 0;     
+        $default_user_docfile_template_id = 0;   
         if (!$id == null) {
             $jobs_data = $this->jobs_model->get_specific_job($id);
+
+            if( $jobs_data->ticket_id > 0 ){                
+                $ticket = $this->Tickets_model->get_tickets_data_one($jobs_data->ticket_id);
+                if( $ticket && $ticket->user_docfile_template_id > 0 ){
+                    $default_user_docfile_template_id = $ticket->user_docfile_template_id;
+                }
+            }
+
             if ($jobs_data->estimate_id > 0) {
                 $get_estimate_query = array(
                     'where' => array(
@@ -446,6 +456,7 @@ class Job extends MY_Controller
         $this->page_data['default_start_date'] = $default_start_date;
         $this->page_data['default_start_time'] = $default_start_time;
         $this->page_data['redirect_calendar']  = $redirect_calendar;
+        $this->page_data['default_user_docfile_template_id'] = $default_user_docfile_template_id;
         // $this->page_data['TEST_JOB_INFO'] = $this->jobs_model->GET_JOB_INFO($id);
         $this->page_data['getAllLocation'] = $this->items_model->getAllLocation();
         $this->load->view('v2/pages/job/job_new', $this->page_data);

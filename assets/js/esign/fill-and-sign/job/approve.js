@@ -1,6 +1,7 @@
 window.addEventListener("DOMContentLoaded", () => {
   const $button = document.getElementById("approveThisJob");
   const $modal = document.getElementById("approveThisJobModal");
+  const $defaultUserDocfile = document.getElementById("default-user-docfile-template-id");
   const $loader = $modal.querySelector(".nsm-loader");
   const $empty = $modal.querySelector(".nsm-empty");
   const $esignButton = $modal.querySelector(".approve-and-esign");
@@ -32,7 +33,7 @@ window.addEventListener("DOMContentLoaded", () => {
       return `${template.name} (default)`;
     };
 
-    const response = await fetch("/DocuSign/apiTemplates?all=true");
+    const response = await fetch(base_url + "/DocuSign/apiTemplates?all=true&select_template="+$defaultUserDocfile.value);
     const jsonData = await response.json();
     const templates = jsonData.data;
 
