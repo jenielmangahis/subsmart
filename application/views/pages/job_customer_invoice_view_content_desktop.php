@@ -75,49 +75,50 @@
                                         <b><?= $jobs_data->first_name.' '.$jobs_data->last_name; ?></b><br>
                                         <span><?= $jobs_data->mail_add; ?></span><br>
                                         <span><?= $jobs_data->cust_city.', '.$jobs_data->cust_state.' '.$jobs_data->cust_zip_code ; ?></span><br>
-                                        <span>Email: <?= $jobs_data->cust_email ; ?></span> <a href="mailto:<?= $jobs_data->cust_email ; ?>"></a>
-                                        <?php if($jobs_data->phone_h!="" || $jobs_data->phone_h!=NULL): ?>
+                                        <span>Email: <?= $jobs_data->cust_email ; ?></span> <a href="mailto:<?= $jobs_data->cust_email ; ?>"></a>                                        
+                                        <?php //if($jobs_data->phone_m!="" || $jobs_data->phone_m!=NULL): ?>
                                             <br>
-                                            <span>Phone:  </span>
-                                            <?= formatPhoneNumber($jobs_data->phone_h);  ?>
-                                        <?php endif; ?>
-                                        <?php if($jobs_data->phone_m!="" || $jobs_data->phone_m!=NULL): ?>
-                                            <br>
-                                            <span>Mobile: </span>
+                                            <span>Phone: </span>
                                             <?= formatPhoneNumber($jobs_data->phone_m);  ?>
                                         <?php //else : echo 'N/A';?>
-                                        <?php endif; ?>
+                                        <?php //endif; ?>
                                         <br>
                                     </div>
                                 </div>
                             </div>
 
-                        <div class="col-md-12">
-                            <h6 class="title-border">JOB DETAILS :</h6>
+                        <div class="col-md-12" style="margin-top:30px;">
                             <table class="table table-bordered">
                                 <thead>
                                 <tr>
-                                    <td>Items</td>
-                                    <td>Qty</td>
-                                    <td>Price</td>
-                                    <td>Total</td>
+                                    <td colspan="5" style="background-color:#6a4a86;color:#ffffff;padding:7px;"><span style="font-size:16px;">JOB DETAILS</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Item</td>
+                                    <td style="text-align:center;">Qty</td>
+                                    <td style="text-align:center;">Price</td>
+                                    <td style="text-align:center;">Tax</td>
+                                    <td style="text-align:center;">Total</td>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php
                                 $subtotal = 0.00;
+                                $total_tax = 0;
                                 foreach ($jobs_data_items as $item):
                                     //$total = ($item->cost * $item->qty);
                                     $total = $item->cost;
                                     ?>
                                     <tr>
-                                        <td><?= $item->title; ?></td>
+                                        <td><?= $item->job_item_name; ?></td>
                                         <td><?= $item->qty; ?></td>
-                                        <td>$<?= $item->cost / $item->qty; ?></td>
-                                        <td>$<?= number_format((float)$total,2,'.',','); ?></td>
+                                        <td style="text-align:right;">$<?= $item->cost / $item->qty; ?></td>
+                                        <td style="text-align:right;">$<?= number_format((float)$item->tax,2,'.',','); ?></td>
+                                        <td style="text-align:right;">$<?= number_format((float)$total,2,'.',','); ?></td>
                                     </tr>
                                     <?php
                                     $subtotal = $subtotal + $total;
+                                    $total_tax = $total_tax + (float)$item->tax;
                                 endforeach;
                                 ?>
                                 </tbody>
@@ -127,7 +128,7 @@
                             <b class="right-text">$<?= number_format((float)$subtotal,2,'.',','); ?></b>
                             <br />
                             <b>Tax Amount</b>
-                            <b class="right-text">$<?= number_format((float)$jobs_data->tax_rate,2,'.',','); ?></b>
+                            <b class="right-text">$<?= number_format((float)$total_tax,2,'.',','); ?></b>
                             <br />
                             <?php if( $estimate_deposit_amount > 0 ){ ?>
                             <b>Deposit Amount Paid</b>
@@ -135,13 +136,14 @@
                             <?php } ?>
                             <br><hr>
                             <?php 
-                                $grand_total = ($subtotal + $jobs_data->tax_rate) - $estimate_deposit_amount;
+                                //$grand_total = ($subtotal + $jobs_data->tax_rate) - $estimate_deposit_amount;
+                                $grand_total = ($subtotal + $total_tax) - $estimate_deposit_amount;
                             ?>
 
                             <?php if($jobs_data->tax != NULL): ?>
-                                <b>Tax </b>
+                                <!-- <b>Tax </b>
                                 <i class="right-text">$0.00</i>
-                                <br><hr>
+                                <br><hr> -->
                             <?php endif; ?>
 
                             <?php if($jobs_data->discount != NULL): ?>

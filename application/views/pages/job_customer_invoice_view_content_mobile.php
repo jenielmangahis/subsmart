@@ -107,42 +107,47 @@
                                 <thead>
                                 <tr>
                                     <td>Items</td>
-                                    <td>Qty</td>
-                                    <td>Price</td>
-                                    <td>Total</td>
+                                    <td style="text-align:center;">Qty</td>
+                                    <td style="text-align:center;">Price</td>
+                                    <td style="text-align:center;">Tax</td>
+                                    <td style="text-align:center;">Total</td>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php
                                 $subtotal = 0.00;
+                                $total_tax = 0;
                                 foreach ($jobs_data_items as $item):
                                     //$total = ($item->cost * $item->qty);
                                     $total = $item->cost;
                                     ?>
                                     <tr>
-                                        <td><?= $item->title; ?></td>
+                                        <td><?= $item->job_item_name; ?></td>
                                         <td><?= $item->qty; ?></td>
-                                        <td>$<?= $item->cost / $item->qty; ?></td>
-                                        <td>$<?= number_format((float)$total,2,'.',','); ?></td>
+                                        <td style="text-align:right;">$<?= $item->cost / $item->qty; ?></td>
+                                        <td style="text-align:right;">$<?= number_format((float)$item->tax,2,'.',','); ?></td>
+                                        <td style="text-align:right;">$<?= number_format((float)$total,2,'.',','); ?></td>
                                     </tr>
                                     <?php
                                     $subtotal = $subtotal + $total;
+                                    $total_tax = $total_tax + (float)$item->tax;
                                 endforeach;
                                 ?>
                                 <?php 
-                                    $grand_total = ($subtotal + $jobs_data->tax_rate) - $estimate_deposit_amount;
+                                    //$grand_total = ($subtotal + $jobs_data->tax_rate) - $estimate_deposit_amount;
+                                    $grand_total = ($subtotal + $total_tax) - $estimate_deposit_amount;
                                 ?>
                                 <tr>
-                                    <td colspan="3" class="row-total">Sub Total</td>
+                                    <td colspan="4" class="row-total">Sub Total</td>
                                     <td class="row-total">$<?= number_format((float)$subtotal,2,'.',','); ?></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="3" class="row-total">Tax Amount</td>
-                                    <td class="row-total">$<?= number_format((float)$jobs_data->tax_rate,2,'.',','); ?></td>
+                                    <td colspan="4" class="row-total">Tax Amount</td>
+                                    <td class="row-total">$<?= number_format((float)$total_tax,2,'.',','); ?></td>
                                 </tr>
                                 <?php if( $estimate_deposit_amount > 0 ){ ?>
                                 <tr>
-                                    <td colspan="3" class="row-total">Deposit Amount Paid</td>
+                                    <td colspan="4" class="row-total">Deposit Amount Paid</td>
                                     <td class="row-total">$<?= number_format((float)$estimate_deposit_amount,2,'.',','); ?></td>
                                 </tr>
                                 <?php } ?>
@@ -151,21 +156,21 @@
                                         $jobs_data->tax = 0;
                                     }
                                 ?>
-                                <tr>
+                                <!-- <tr>
                                     <td colspan="3" class="row-total">Tax</td>
                                     <td class="row-total">$<?= number_format($jobs_data->tax,2,'.',','); ?></td>
-                                </tr>
+                                </tr> -->
                                 <?php 
                                     if($jobs_data->discount == NULL){
                                         $jobs_data->discount = 0;
                                     }
                                 ?>
                                 <tr>
-                                    <td colspan="3" class="row-total">Discount</td>
+                                    <td colspan="4" class="row-total">Discount</td>
                                     <td class="row-total">$<?= number_format($jobs_data->discount,2,'.',','); ?></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="3" class="row-total"><b>Grand Total</b></td>
+                                    <td colspan="4" class="row-total"><b>Grand Total</b></td>
                                     <td class="row-total">$<?= number_format((float)$grand_total,2,'.',','); ?></td>
                                 </tr>
                                 </tbody>
