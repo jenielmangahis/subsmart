@@ -2041,6 +2041,11 @@ class Tickets extends MY_Controller
                 'tax_rate' => $this->input->post('taxes'),
                 'employee_id' => $this->input->post('employee_id'),
                 'job_type' => $this->input->post('service_type'),
+                'adjustment_name'  => $this->input->post('adjustment_name'),
+                'adjustment_value'  => $this->input->post('adjustment_amount'),
+                'monthly_monitoring' => $monthly_monitoring_cost,
+                'program_setup'      => $otp_cost,
+                'installation_cost'  => $installation_cost,
                 'date_issued' => date("Y-m-d",strtotime($this->input->post('ticket_date'))),
                 'work_order_id' => 0
             );

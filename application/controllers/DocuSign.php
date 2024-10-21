@@ -387,6 +387,7 @@ class DocuSign extends MYF_Controller
         //$this->db->where('prof_id', 20797);
         $acs_client = $this->db->get('acs_profile')->row();
         if( $acs_client ){
+            $acs_client->mail_add = ucwords($acs_client->mail_add);
             $acs_clientKeys = [
                 'first_name', 'last_name', 'mail_add', 'city', 'state', 'zip_code', 'email', 'phone_h', 'phone_m', 'country', 'county_name', 'date_of_birth', 'ssn'
             ];
@@ -1770,6 +1771,7 @@ class DocuSign extends MYF_Controller
     {
         $sharedOnly = filter_var($this->input->get('shared'), FILTER_VALIDATE_BOOLEAN);
         $sharedAndOwned = filter_var($this->input->get('all'), FILTER_VALIDATE_BOOLEAN);
+        $user_docfile_template_id = $this->input->get('select_template') ? $this->input->get('select_template') : '0';
 
         $getOwned = function () {
             $this->db->where('company_id', logged('company_id'));
@@ -1824,11 +1826,18 @@ class DocuSign extends MYF_Controller
         $this->db->where('company_id', $companyId);
         $default = $this->db->get('user_docfile_template_defaults')->row();
 
-        if ($default) {
+        if( $user_docfile_template_id > 0 ){
             foreach ($records as $record) {
-                $record->is_default = $default->template_id == $record->id;
+                $record->is_default = $user_docfile_template_id == $record->id;
+            }
+        }else{
+            if ($default) {
+                foreach ($records as $record) {
+                    $record->is_default = $default->template_id == $record->id;
+                }
             }
         }
+        
 
         header('content-type: application/json');
         echo json_encode(['data' => $records]);
