@@ -1535,6 +1535,8 @@ class Tickets extends MY_Controller
         $this->load->model('Customer_advance_model');
         $this->load->model('User_docflies_model');
         $this->load->model('Contacts_model');
+        $this->load->model('SettingsPlanType_model');
+        $this->load->model('PanelType_model');
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
         $result_autoincrement = $query_autoincrment->result_array();
@@ -1594,7 +1596,11 @@ class Tickets extends MY_Controller
 
         $planTypeOptions = $this->Customer_advance_model->planTypeOptions();
         $contactRelationshipOptions = $this->Contacts_model->optionRelations();
+        $settingsPlanTypes = $this->SettingsPlanType_model->getAllByCompanyId($company_id);
+        $settingPanelTypes = $this->PanelType_model->getAllByCompanyId($company_id);
 
+        $this->page_data['settingsPlanTypes'] = $settingsPlanTypes;
+        $this->page_data['settingPanelTypes'] = $settingPanelTypes;
         $this->page_data['planTypeOptions'] = $planTypeOptions;
         $this->page_data['prefix'] = $prefix;
         $this->page_data['next_num'] = $next_num;
@@ -2041,6 +2047,11 @@ class Tickets extends MY_Controller
                 'tax_rate' => $this->input->post('taxes'),
                 'employee_id' => $this->input->post('employee_id'),
                 'job_type' => $this->input->post('service_type'),
+                'adjustment_name'  => $this->input->post('adjustment_name'),
+                'adjustment_value'  => $this->input->post('adjustment_amount'),
+                'monthly_monitoring' => $monthly_monitoring_cost,
+                'program_setup'      => $otp_cost,
+                'installation_cost'  => $installation_cost,
                 'date_issued' => date("Y-m-d",strtotime($this->input->post('ticket_date'))),
                 'work_order_id' => 0
             );
@@ -2662,10 +2673,271 @@ class Tickets extends MY_Controller
 
         echo json_encode($return);
     }
+
+    public function settings_panel_types()
+    {
+        $this->load->model('PanelType_model');
+
+        $cid = logged('company_id');
+        $panelTypes = $this->PanelType_model->getAllByCompanyId($cid);
+
+        $this->page_data['panelTypes'] = $panelTypes;
+        $this->page_data['page']->title = 'Panel Types';
+        $this->load->view('v2/pages/tickets/settings/panel_types', $this->page_data);
+    }
+    
+    public function ajax_create_panel_type()
+    {
+        $this->load->model('PanelType_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $cid = logged('company_id');
+
+        $post = $this->input->post();
+        if( $post['panel_type_name'] == '' ){
+            $is_success = 0;
+            $msg = 'Please enter panel type name.';
+        }
+
+        $isPanelTypeExists = $this->PanelType_model->getByNameAndCompanyId($post['panel_type_name'], $cid);
+        if( $isPanelTypeExists ){
+            $is_success = 0;
+            $msg = 'Panel type '. $post['panel_type_name'] .' already exists.';
+        } 
+
+        if( $is_success == 1 ){
+            $data = [
+                'company_id' => $cid,
+                'name' => $post['panel_type_name']
+            ];
+
+            $this->PanelType_model->create($data);
+
+            //Activity Logs
+            $activity_name = 'Panel Type : Created Panel Type ' . $post['panel_type_name']; 
+            createActivityLog($activity_name);
+
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+            'service_type' => $service_type
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_update_panel_type()
+    {
+        $this->load->model('PanelType_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $cid = logged('company_id');
+
+        $post = $this->input->post();
+        if( $post['panel_type_name'] == '' ){
+            $is_success = 0;
+            $msg = 'Please enter panel type name.';
+        }
+
+        $panelType = $this->PanelType_model->getById($post['pid']);
+        
+        if( $panelType && $panelType->company_id == $cid ){
+            $data = [
+                'name' => $post['panel_type_name']
+            ];
+
+            $this->PanelType_model->update($panelType->id, $data);
+
+            //Activity Logs
+            $activity_name = 'Panel Type : Updated Panel Type ' . $post['panel_type_name']; 
+            createActivityLog($activity_name);
+
+        }else{
+            $is_success = 0;
+            $msg = 'Record not found.';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+            'service_type' => $service_type
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_panel_type()
+    {
+        $this->load->model('PanelType_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $cid = logged('company_id');
+
+        $post = $this->input->post();
+        $panelType = $this->PanelType_model->getById($post['pid']);
+        
+        if( $panelType && $panelType->company_id == $cid ){
+
+            //Activity Logs
+            $activity_name = 'Panel Type : Deleted Panel Type ' . $panelType->name; 
+            createActivityLog($activity_name);
+
+            $this->PanelType_model->delete($panelType->id);
+
+
+        }else{
+            $is_success = 0;
+            $msg = 'Record not found.';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function settings_plan_types()
+    {
+        $this->load->model('SettingsPlanType_model');
+
+        $cid = logged('company_id');
+        $planTypes = $this->SettingsPlanType_model->getAllByCompanyId($cid);
+
+        $this->page_data['planTypes'] = $planTypes;
+        $this->page_data['page']->title = 'Plan Types';
+        $this->load->view('v2/pages/tickets/settings/plan_types', $this->page_data);
+    }
+
+    public function ajax_create_plan_type()
+    {
+        $this->load->model('SettingsPlanType_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $cid = logged('company_id');
+
+        $post = $this->input->post();
+        if( $post['plan_type_name'] == '' ){
+            $is_success = 0;
+            $msg = 'Please enter plan type name.';
+        }
+
+        $isPlanTypeExists = $this->SettingsPlanType_model->getByNameAndCompanyId($post['plan_type_name'], $cid);
+        if( $isPlanTypeExists ){
+            $is_success = 0;
+            $msg = 'Plan type '. $post['plan_type_name'] .' already exists.';
+        }
+
+        if( $is_success == 1 ){
+            $data = [
+                'company_id' => $cid,
+                'name' => $post['plan_type_name']
+            ];
+
+            $this->SettingsPlanType_model->create($data);
+
+            //Activity Logs
+            $activity_name = 'Plan Type : Created Plan Type ' . $post['plan_type_name']; 
+            createActivityLog($activity_name);
+
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+            'service_type' => $service_type
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_update_plan_type()
+    {
+        $this->load->model('SettingsPlanType_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $cid = logged('company_id');
+
+        $post = $this->input->post();
+        if( $post['plan_type_name'] == '' ){
+            $is_success = 0;
+            $msg = 'Please enter plan type name.';
+        }
+
+        $planType = $this->SettingsPlanType_model->getById($post['pid']);
+        
+        if( $planType && $planType->company_id == $cid ){
+            $data = [
+                'name' => $post['plan_type_name']
+            ];
+
+            $this->SettingsPlanType_model->update($planType->id, $data);
+
+            //Activity Logs
+            $activity_name = 'Plan Type : Updated Plan Type ' . $post['plan_type_name']; 
+            createActivityLog($activity_name);
+
+        }else{
+            $is_success = 0;
+            $msg = 'Record not found.';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_plan_type()
+    {
+        $this->load->model('SettingsPlanType_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $cid = logged('company_id');
+
+        $post = $this->input->post();
+        $planType = $this->SettingsPlanType_model->getById($post['pid']);
+        
+        if( $planType && $planType->company_id == $cid ){
+
+            //Activity Logs
+            $activity_name = 'Plan Type : Deleted Plan Type ' . $planType->name; 
+            createActivityLog($activity_name);
+
+            $this->SettingsPlanType_model->delete($planType->id);
+
+
+        }else{
+            $is_success = 0;
+            $msg = 'Record not found.';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
 }
 
+/* End of file Tickets.php */
 
-
-/* End of file Workorder.php */
-
-/* Location: ./application/controllers/Workorder.php */
+/* Location: ./application/controllers/Tickets.php */

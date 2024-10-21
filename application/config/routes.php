@@ -1232,6 +1232,7 @@ $route['estimate/_save_estimate_setttings'] = 'Estimate/ajax_save_estimate_settt
 $route['estimate/_update_next_reminder_date'] = 'Estimate/ajax_update_next_reminder_date';
 $route['estimate/_update_estimate_status'] = 'Estimate/ajax_update_estimate_status';
 $route['estimate/_get_package_items'] = 'Estimate/ajax_get_package_items';
+$route['estimate/_delete_selected_estimates'] = 'Estimate/ajax_delete_selected_estimates';
 
 // Credit Notes
 $route['credit_notes'] = 'Credit_Notes/index';
@@ -1753,7 +1754,6 @@ $route['event/_quick_view_event'] = 'Events/ajax_quick_view_event';
 $route['event/_quick_add_event_form'] = 'Events/ajax_quick_add_event_form';
 $route['event/_create_event'] = 'Events/ajax_create_event';
 $route['event/_quick_delete_event'] = 'Events/ajax_quick_delete_event';
-
 $route['docusign/debugGeneratePDF'] = 'DocuSign/debugGeneratePDF';
 
 // Affiliate
@@ -1883,3 +1883,18 @@ $route['timesheet/_update_settings'] = 'Timesheet/ajax_update_settings';
 
 //Employment Details
 $route['accounting/employees/_update_employment_details'] = 'accounting_controllers/Employees/ajax_update_employment_details';
+
+//Tickets
+$route['ticket/_create_service_type'] = 'Tickets/ajax_create_servicetype';
+
+//Setting : Panel Types
+$route['tickets/settings_panel_types'] = 'Tickets/settings_panel_types';
+$route['tickets/_create_panel_type'] = 'Tickets/ajax_create_panel_type';
+$route['tickets/_update_panel_type'] = 'Tickets/ajax_update_panel_type';
+$route['tickets/_delete_panel_type'] = 'Tickets/ajax_delete_panel_type';
+
+//Setting : Panel Types
+$route['tickets/settings_plan_types'] = 'Tickets/settings_plan_types';
+$route['tickets/_create_plan_type'] = 'Tickets/ajax_create_plan_type';
+$route['tickets/_update_plan_type'] = 'Tickets/ajax_update_plan_type';
+$route['tickets/_delete_plan_type'] = 'Tickets/ajax_delete_plan_type';
