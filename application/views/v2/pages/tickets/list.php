@@ -15,6 +15,9 @@
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/service_tickets_tabs'); ?>
     </div>
+    <div class="col-12 mb-3">
+        <?php include viewPath('v2/includes/page_navigations/service_ticket_subtabs'); ?>
+    </div>
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
