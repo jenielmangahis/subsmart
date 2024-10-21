@@ -794,15 +794,43 @@ class Customer_advance_model extends MY_Model
 
     public function countTotalSubscriptionsByCompanyId($company_id = 0)
     {
-        $this->db->select('COALESCE(acs_billing.mmr,0) AS total_amount_subscriptions, COALESCE(COUNT(acs_billing.bill_id),0) AS total_subscriptions');
-        $this->db->from('acs_billing');
-        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->select('SUM(COALESCE(acs_billing.mmr, 0)) AS total_amount_subscriptions, COALESCE(COUNT(acs_billing.bill_id),0) AS total_subscriptions, COUNT(*) AS total_active_subsciption');
+        $this->db->from('acs_profile');
+        $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $company_id);
+        $this->db->where('DATE(acs_billing.bill_end_date) >=', date('Y-m-d'));
+        $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM']);
+        
         $query = $this->db->get();
-
+    
         return $query->row();
     }
 
+    public function getTotalSubscriptionsFilterDate($params = array())
+    {
+        $this->db->select('
+                SUM(COALESCE(acs_billing.mmr, 0)) AS total_amount_subscriptions, 
+                COALESCE(COUNT(acs_billing.bill_id), 0) AS total_subscriptions, 
+                COUNT(acs_billing.bill_id) AS total_active_subscription, 
+             
+            ');
+        $this->db->from('acs_profile');
+        $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        if(array_key_exists("where", $params)){
+            foreach($params['where'] as $key => $val){
+                $this->db->where($key, $val);  
+                
+            }
+        }
+        $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM']);
+
+        
+        $query = $this->db->get();
+        return $query->result();
+    }
+    
+
+    
     public function get_all_subscription_by_company_id($company_id = 0)
     {
         $this->db->select('acs_billing.*, acs_profile.first_name, acs_profile.last_name, acs_profile.company_id, acs_profile.mail_add, acs_profile.city, acs_profile.state, acs_profile.zip_code, acs_profile.phone_m, acs_profile.email');

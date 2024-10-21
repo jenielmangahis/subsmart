@@ -187,7 +187,7 @@
                                                                 <span>Commercial Invoice Default Terms & Conditions</span>
                                                             </div>
                                                             <label class="nsm-subtitle">Your T&C that will appear at the bottom section of the invoice.</label>
-                                                            <textarea name="terms_commercial" id="terms_commercial" cols="40" rows="2" class="form-control nsm-field mt-3" autocomplete="off" placeholder="" required=""><?php echo ($setting) ? $setting->commercial_terms_and_conditions : '' ?></textarea>
+                                                            <textarea name="terms_commercial" id="terms_commercial" cols="40" rows="2" class="form-control nsm-field mt-3" autocomplete="off" placeholder="" ><?php echo ($setting) ? $setting->commercial_terms_and_conditions : '' ?></textarea>
                                                             <span class="validation-error-field hide" data-formerrors-for-name="terms" data-formerrors-message="true"></span>
                                                         </div>
                                                     </div>

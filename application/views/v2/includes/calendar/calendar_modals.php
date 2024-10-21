@@ -760,3 +760,54 @@
         </form>
     </div>
 </div>
+
+<div class="modal fade nsm-modal fade" id="modal-quick-add-panel-type" tabindex="-1" aria-labelledby="modal-quick-add-panel-type-label" aria-hidden="true">
+    <div class="modal-dialog modal-md" style="margin-top:13%;">
+        <form id="quick-add-panel-type-form" method="POST">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title"> Quick Add : Panel Type</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label for="panel-type-name" class="content-subtitle fw-bold d-block mb-2">Name </label>
+                            <input type="text" name="panel_type_name" id="panel-type-name" class="nsm-field form-control" placeholder="" required>
+                        </div>
+                    </div> 
+                </div>
+                <div class="modal-footer">                    
+                    <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary" id="btn-quick-add-panel-type-submit">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="modal fade nsm-modal fade" id="modal-quick-add-plan-type" tabindex="-1" aria-labelledby="modal-quick-add-plan-type-label" aria-hidden="true">
+    <div class="modal-dialog modal-md" style="margin-top:13%;">
+        <form id="quick-add-plan-type-form" method="POST">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title"> Quick Add : Plan Type</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label for="plan-type-name" class="content-subtitle fw-bold d-block mb-2">Name </label>
+                            <input type="text" name="plan_type_name" id="plan-type-name" class="nsm-field form-control" placeholder="" required>
+                        </div>
+                    </div> 
+                </div>
+                <div class="modal-footer">                    
+                    <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary" id="btn-quick-add-plan-type-submit">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

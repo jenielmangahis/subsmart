@@ -35,6 +35,17 @@
 #quick-add-service-ticket-item-list .nsm-table thead tr:not(.nsm-row-collapse) td:not(.show), #quick-add-service-ticket-item-list .nsm-table tbody tr:not(.nsm-row-collapse) td:not(.show) {
     display: revert-layer;
 }
+.block-label{
+    display:block;
+    height:30px;
+}
+.block-label a{
+    float:right;
+}
+.block-label b{
+    position:relative;
+    top:10px;
+}
 </style>
 <input type="hidden" id="siteurl" value="<?=base_url();?>">
 <input type="hidden" id="redirect-calendar" name="redirect_calendar" value="<?= $redirect_calendar; ?>">
@@ -43,7 +54,7 @@
         <div class="nsm-card primary">
             <div class="nsm-card-content">
                     <label for="sel-customer_t" class="required"><b>Customer</b></label>
-                    <a class="link-modal-open nsm-button btn-small" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="float:right;"><span class="fa fa-plus fa-margin-right"></span>New Customer</a>
+                    <a class="link-modal-open nsm-button btn-small" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="float:right;"> Manage</a>
                     <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
                         <option value="0">- Select Customer -</option>
                         <?php foreach($customers as $c){ ?>
@@ -135,13 +146,13 @@
                 </div>
                 <div class="row mt-4">
                     <div class="col-md-3">
-                        <label for="purchase_order_number"><b>Purchase Order#</b></label>
+                        <label for="purchase_order_number" class="block-label"><b>Purchase Order#</b></label>
                         <input type="text" class="form-control" name="purchase_order_no"
                             id="purchase_order_no" placeholder="Enter Purchase Order#"
                             autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
                     </div>
                     <div class="col-md-3">
-                        <label for="ticket_status"><b>Ticket Status</b></label>
+                        <label for="ticket_status" class="block-label"><b>Ticket Status</b></label>
                         <select id="ticket_status" name="ticket_status" class="form-control">
                             <!-- <option value="New">New</option> -->
                             <!-- <option value="Draft">Draft</option> -->
@@ -155,40 +166,15 @@
                         </select>
                     </div>
                     <div class="col-md-3 form-group">
-                        <label for="panel_type"><b>Panel Type</b></label>
+                        <label for="panel_type" class="block-label"><b>Panel Type</b> <a href="javascript:void(0);" id="btn-quick-add-panel-type" class="btn-small nsm-button">Manage</a></label>
                             <select name="panel_type" id="panel_type" class="form-control" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
-                                <option value="None">- None -</option>
-                                <option value="AERIONICS">AERIONICS</option>
-                                <option value="AlarmNet">AlarmNet</option>
-                                <option value="Alarm.com">Alarm.com</option>
-                                <option value="Alula">Alula</option>
-                                <option value="Bosch">Bosch</option>
-                                <option value="DSC">DSC</option>
-                                <option value="ELK">ELK</option>
-                                <option value="FBI">FBI</option>
-                                <option value="GRI">GRI</option>
-                                <option value="GE">GE</option>
-                                <option value="Honeywell">Honeywell</option>
-                                <option value="Honeywell Touch">Honeywell Touch</option>
-                                <option value="Honeywell 3000">Honeywell 3000</option>
-                                <option value="Honeywell Vista">Honeywell Vista</option>
-                                <option value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
-                                <option value="Honeywell Lyric">Honeywell Lyric</option>
-                                <option value="IEI">IEI</option>
-                                <option value="MIER">MIER</option>
-                                <option value="2 GIG">2 GIG</option>
-                                <option value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
-                                <option value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
-                                <option value="Qolsyx">Qolsys</option>
-                                <option value="Qolsys IQ Panel 2">Qolsys IQ Panel 2</option>
-                                <option value="Qolsys IQ Panel 2 Plus">Qolsys IQ Panel 2 Plus</option>
-                                <option value="Qolsys IQ Panel 3">Qolsys IQ Panel 3</option>
-                                <option value="Custom">Custom</option>
-                                <option value="Other">Other</option>
+                                <?php foreach($settingPanelTypes as $panelType){ ?>
+                                    <option value="<?= $panelType->name; ?>"><?= $panelType->name; ?></option>
+                                <?php } ?>
                             </select>
                     </div>
                     <div class="col-md-3" id="technicianDiv">
-                        <label for="service_type"><b>Service Type</b></label>
+                        <label for="service_type" class="block-label"><b>Service Type</b></label>
                         <div class="input-group">
                             <select id="service_type" name="service_type" class="form-control">
                                 <option value="Services">Services</option>
@@ -201,16 +187,16 @@
                 </div>
                 <div class="row mt-4" style="background-color:white;">
                     <div class="col-md-3 form-group">
-                        <label for="plan_type"><b>Plan Type</b></label>
+                        <label for="plan_type" class="block-label"><b>Plan Type</b> <a href="javascript:void(0);" class="btn-small nsm-button" id="btn-quick-add-plan-type">Manage</a></label>
                         <select class="form-control" name="plan_type" id="plan_type" required="">
                             <option value="">Select</option>
-                            <?php foreach($planTypeOptions as $key => $planType){ ?>
-                                <option value="<?= $key; ?>"><?= $planType; ?></option>
+                            <?php foreach($settingsPlanTypes as $planType){ ?>
+                                <option value="<?= $planType->name; ?>"><?= $planType->name; ?></option>
                             <?php } ?>
                         </select>
                     </div>
                     <div class="col-md-3 form-group">
-                        <label for="warranty_type"><b>Warranty Type</b></label>
+                        <label for="warranty_type" class="block-label"><b>Warranty Type</b></label>
                         <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="form-control" required="">
                             <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
                             <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited 90 Days</option>
@@ -222,7 +208,7 @@
                         </select>
                     </div>
                     <div class="col-md-6 form-group">
-                        <label for="employee_id"><b>Created By</b></label>                        
+                        <label for="employee_id" class="block-label"><b>Created By</b></label>                        
                         <select class="form-control mb-3" name="employee_id" id="employee_id">
                             <option value="<?= logged('id'); ?>" selected=""><?= logged('FName') . ' ' . logged('LName'); ?></option>
                         </select>
@@ -1264,6 +1250,90 @@ $(document).ready(function(){
         }else{
             $('#scheduled_time_to').val(end_time);
         }
+    });
+
+    $('#btn-quick-add-plan-type').on('click', function(){
+        $('#plan-type-name').val('');
+        $('#modal-quick-add-plan-type').modal('show');
+    });
+
+    $('#btn-quick-add-panel-type').on('click', function(){
+        $('#panel-type-name').val('');
+        $('#modal-quick-add-panel-type').modal('show');
+    });
+
+    $('#quick-add-panel-type-form').on('submit', function(e){
+        e.preventDefault();
+        var url = base_url + 'tickets/_create_panel_type';
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: $('#quick-add-panel-type-form').serialize(),
+            success: function(data) {    
+                $('#btn-quick-add-panel-type-submit').html('Save');                   
+                if (data.is_success) {
+                    $('#modal-quick-add-panel-type').modal('hide');
+                    var panel_type_name = $('#panel-type-name').val();
+                    $('#panel_type').append($('<option>', {
+                        value: panel_type_name,
+                        text: panel_type_name
+                    }));
+                    $('#panel_type').val(panel_type_name);
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-quick-add-panel-type-submit').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $('#quick-add-plan-type-form').on('submit', function(e){
+        e.preventDefault();
+        var url = base_url + 'tickets/_create_plan_type';
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: $('#quick-add-plan-type-form').serialize(),
+            success: function(data) {    
+                $('#btn-quick-add-plan-type-submit').html('Save');                   
+                if (data.is_success) {
+                    $('#modal-quick-add-plan-type').modal('hide');
+                    var plan_type_name = $('#plan-type-name').val();
+                    $('#plan_type').append($('<option>', {
+                        value: plan_type_name,
+                        text: plan_type_name
+                    }));
+                    $('#plan_type').val(plan_type_name);
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-quick-add-plan-type-submit').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
     });
 });
 </script>
