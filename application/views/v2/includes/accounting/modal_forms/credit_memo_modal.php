@@ -12,6 +12,13 @@
     height: 50px;
     width: 50px;
 }
+#creditMemoModal .nsm-table thead td{
+    background-color:#6a4a86;
+    color:#ffffff;
+} 
+#creditMemoModal .nsm-table td:nth-child(8){
+    text-align:right !important; 
+}
 </style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
@@ -142,7 +149,7 @@
                                 <?php endif; ?>
                                 <div class="col-12 col-md-2">
                                     <label for="billing-address">Billing address</label>
-                                    <textarea name="billing_address" id="billing-address" class="form-control nsm-field mb-2"><?=isset($creditMemo) ? str_replace("<br />", "", $creditMemo->billing_address) : ''?></textarea>
+                                    <textarea name="billing_address" id="billing-address" rows="4" class="form-control nsm-field mb-2"><?=isset($creditMemo) ? str_replace("<br />", "", $creditMemo->billing_address) : ''?></textarea>
                                 </div>
                                 <div class="col-12 col-md-2">
                                     <label for="credit_memo_date">Credit Memo Date</label>
@@ -193,15 +200,15 @@
                                 <div class="col-12 grid-mb">
                                     <table class="nsm-table" id="item-table">
                                         <thead>
-                                            <td data-name="Item">ITEM</td>
+                                            <td data-name="Item" style="width:28%;">ITEM</td>
                                             <td data-name="Type">TYPE</td>
                                             <td data-name="Location">LOCATION</td>
-                                            <td data-name="Quantity">QUANTITY</td>
-                                            <td data-name="Price">PRICE</td>
-                                            <td data-name="Discount">DISCOUNT</td>
-                                            <td data-name="Tax">TAX (CHANGE IN %)</td>
-                                            <td data-name="Total">TOTAL</td>
-                                            <td data-name="Manage"></td>
+                                            <td data-name="Quantity" style="width:8%;">QUANTITY</td>
+                                            <td data-name="Price" style="width:8%;">PRICE</td>
+                                            <td data-name="Discount" style="width:8%;">DISCOUNT</td>
+                                            <td data-name="Tax" style="width:10%;">TAX (CHANGE IN %)</td>
+                                            <td data-name="Total" style="width:8%; text-align:right;">TOTAL</td>
+                                            <td data-name="Manage" style="width:5%;"></td>
                                         </thead>
                                         <tbody>
                                             <?php if(isset($items) && count($items) > 0) : ?>
@@ -323,20 +330,21 @@
                             <div class="row">
                                 <div class="col-12 col-md-6">
                                     <div class="row">
-                                        <div class="col-12 col-md-4">
+                                        <div class="col-6 col-md-4">
                                             <label for="message_credit_memo">Message displayed on credit memo</label>
                                             <textarea name="message_credit_memo" id="message_credit_memo" class="form-control nsm-field mb-2"><?=isset($creditMemo) ? str_replace("<br />", "", $creditMemo->message_credit_memo) : ''?></textarea>
-
+                                        </div>
+                                        <div class="col-6 col-md-4">
                                             <label for="message_on_statement">Message displayed on statement</label>
                                             <textarea name="message_on_statement" id="message_on_statement" class="form-control nsm-field mb-2"><?=isset($creditMemo) ? str_replace("<br />", "", $creditMemo->message_on_statement) : ''?></textarea>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-12 col-md-6">
+                                        <div class="col-12 col-md-8">
                                             <div class="attachments">
                                                 <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label> 
                                                 <span>Maximum size: 20MB</span>
-                                                <div id="credit-memo-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                <div id="credit-memo-attachments" class="dropzone d-block justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                                     <div class="dz-message" style="margin: 20px;border">
                                                         <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                         <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
