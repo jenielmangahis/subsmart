@@ -798,7 +798,6 @@ class Customer_advance_model extends MY_Model
         $this->db->from('acs_profile');
         $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $company_id);
-        $this->db->where('DATE(acs_billing.bill_end_date) >=', date('Y-m-d'));
         $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM']);
         
         $query = $this->db->get();
@@ -808,12 +807,12 @@ class Customer_advance_model extends MY_Model
 
     public function getTotalSubscriptionsFilterDate($params = array())
     {
-        $this->db->select('
-                SUM(COALESCE(acs_billing.mmr, 0)) AS total_amount_subscriptions, 
-                COALESCE(COUNT(acs_billing.bill_id), 0) AS total_subscriptions, 
-                COUNT(acs_billing.bill_id) AS total_active_subscription, 
-             
-            ');
+     
+        if(array_key_exists("select",$params) && $params['select'] != NULL ){
+            $this->db->select($params['select']);
+        }else{
+            $this->db->select('*');
+        }
         $this->db->from('acs_profile');
         $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         if(array_key_exists("where", $params)){
@@ -822,7 +821,14 @@ class Customer_advance_model extends MY_Model
                 
             }
         }
-        $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM']);
+
+        if(array_key_exists("filter", $params)){
+            if($params['filter'] != ''){
+                $this->db->where('acs_profile.status', $params['filter']);
+            }else{
+                $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM']);
+            }
+        }
 
         
         $query = $this->db->get();

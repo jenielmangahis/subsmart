@@ -580,6 +580,7 @@ class Dashboard extends Widgets
         $date_to = post('to_date').' 23:59:59';
         $table = post('table');
         $id = post('id');
+        $filter = post('filter');
 
         $this->db->select('w_list_view');
         $this->db->from('widgets');
@@ -647,20 +648,44 @@ class Dashboard extends Widgets
                 // ];
                 // $total = $this->general->get_data_with_param($total_query);
 
-                $total_query = [
-                    'where' => [
-                    'DATE(acs_billing.bill_start_date) >=' => date('Y-m-d', strtotime($date_from)), 
-                    'DATE(acs_billing.bill_end_date) >=' => date('Y-m-d', strtotime($date_to)),
-                    'acs_profile.company_id' => logged('company_id'),
-                    ],
-                    ];
-            
+                if(  $date_to == '0000-00-00 23:59:59'){
+                    $total_query = [
+                        'filter'=>$filter,
+                        'select'=>' SUM(COALESCE(acs_billing.mmr, 0)) AS total_amount_subscriptions, 
+                                    COALESCE(COUNT(acs_billing.bill_id), 0) AS total_subscriptions, 
+                                    COUNT(acs_billing.bill_id) AS total_active_subscription, '
+                        ];
+                }else{
+                    $total_query = [
+                        'where' => [
+                        'DATE(acs_billing.bill_start_date) >=' => date('Y-m-d', strtotime($date_from)), 
+                        'DATE(acs_billing.bill_end_date) >=' => date('Y-m-d', strtotime($date_to)),
+                        'acs_profile.company_id' => logged('company_id'),
+                        ],
+                        'filter'=>$filter,
+                        'select'=>' SUM(COALESCE(acs_billing.mmr, 0)) AS total_amount_subscriptions, 
+                                    COALESCE(COUNT(acs_billing.bill_id), 0) AS total_subscriptions, 
+                                    COUNT(acs_billing.bill_id) AS total_active_subscription, '
+                        ];
+                }
+              
                 $total = $this->customer_ad_model->getTotalSubscriptionsFilterDate($total_query);
+
+                $mmr_query = [
+                    'where' => [
+                        'DATE(acs_billing.bill_start_date) >=' => date('Y-m-d', strtotime($date_from)), 
+                        'DATE(acs_billing.bill_end_date) >=' => date('Y-m-d', strtotime($date_to)),
+                        'acs_profile.company_id' => logged('company_id'),
+                        ],
+                    'select' => 'acs_billing.*',
+                    'filter'=>$filter,
+                ];
+                $mmr = $this->customer_ad_model->getTotalSubscriptionsFilterDate($mmr_query);
 
      
 
                 // $mmr = $this->AcsProfile_model->getSubscriptionFilter(logged('company_id'), $date_from, $date_to);
-                $this->output->set_output(json_encode(['first' => number_format($total[0]->total_amount_subscriptions, 2), 'second' => null,  'mmr' => $total[0]]));
+                $this->output->set_output(json_encode(['first' => '$'.' '.number_format($total[0]->total_amount_subscriptions, 2), 'second' => number_format($total[0]->total_active_subscription, 0),  'mmr' => $mmr]));
 
                 break;
 

@@ -1085,15 +1085,16 @@ $(document).ready(function(){
     function computeGrandTotal(){
         var fixedSubtotal = calculateSubtotal();
         var fixedTaxes = calculateTaxes();
-        // var otp = $('#service-ticket-otp').val();
-        // //var mmr = $('#service-ticket-monthly-monitoring-rate').val();
-        // var mmr = $('#plan-value').val();
-        // var installation_cost = $('#service-ticket-installation-cost').val();
-
-        var otp = 0;        
-        var mmr = 0;
-        var installation_cost = 0;
+        var otp = $('#service-ticket-otp').val();
+        //var mmr = $('#service-ticket-monthly-monitoring-rate').val();
+        var mmr = $('#plan-value').val();
+        var installation_cost = $('#service-ticket-installation-cost').val();
         var adjustment_amount = $('#adjustment-amount').val();
+
+        // var otp = 0;        
+        // var mmr = 0;
+        // var installation_cost = 0;
+        // var adjustment_amount = $('#adjustment-amount').val();
         
         if( isNaN(adjustment_amount) || adjustment_amount == '' ){
             adjustment_amount = 0;

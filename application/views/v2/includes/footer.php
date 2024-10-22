@@ -659,6 +659,16 @@ function filterAccountingExpenseCategory(selectedCategory) {
 
 }
 
+
+function filterSubscription(){
+    let selectedDateRange = $('.filterSubscriptionDate').val();
+    let selectedDataId = $('.filterSubscriptionDate').attr('data-id');
+    let selectedStatus = $('.filterSubscriptionStatus').val();
+
+    filterThumbnail(selectedDateRange, selectedDataId, 'acs_billing',selectedStatus)
+};
+
+
 function filterSubscriptionStatus(status) {
     // Encode the status to ensure it handles spaces and special characters properly
     const encodedStatus = encodeURIComponent(status);
@@ -742,13 +752,15 @@ function renderAccountingExpenseGraph(labels, data) {
     });
 }
 
-function filterThumbnail(val, id, table) {
+function filterThumbnail(val, id, table,filter) {
     var date = new Date();
     switch (val) {
         case 'all':
-            var from_date = '00-00-0000';
-            var to_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date
-                .getDate()).slice(-2);
+            var from_date = '0000-00-00';
+            // var to_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date
+            //     .getDate()).slice(-2);
+
+            var to_date = '0000-00-00';
 
             if (table == 'accounting_expense') {
                 var pastDate = new Date();
@@ -767,12 +779,12 @@ function filterThumbnail(val, id, table) {
             var from_month = ('0' + (from_date_temp.getMonth() + 1)).slice(-2);
             var from_day = ('0' + from_date_temp.getDate()).slice(-2);
             var from_year = from_date_temp.getFullYear();
-            var from_date = from_month + '/' + from_day + '/' + from_year;
+            var from_date = from_year + '-' + from_month + '-' + from_day;
 
             var to_month = ('0' + (to_date_temp.getMonth() + 1)).slice(-2);
             var to_day = ('0' + to_date_temp.getDate()).slice(-2);
             var to_year = to_date_temp.getFullYear();
-            var to_date = to_month + '/' + to_day + '/' + to_year;
+            var to_date = to_year + '-' + to_month + '-' + to_day;
 
             break;
 
@@ -823,11 +835,11 @@ function filterThumbnail(val, id, table) {
     if (table == 'accounting_expense') {
         $('#AccountingExpenseGraphLoader').show();
     }
-    loadDataFilter(from_date, to_date, table, id);
+    loadDataFilter(from_date, to_date, table, id,filter);
 
 }
 
-function loadDataFilter(from_date, to_date, table, id) {
+function loadDataFilter(from_date, to_date, table, id,filter) {
     $.ajax({
         url: base_url + 'dashboard/loadFilterData',
         method: 'post',
@@ -835,7 +847,8 @@ function loadDataFilter(from_date, to_date, table, id) {
             table: table,
             from_date: from_date,
             to_date: to_date,
-            id: id
+            id: id,
+            filter: filter,
         },
         success: function(response) {
             var data = JSON.parse(response);
@@ -1159,10 +1172,9 @@ function filterSubsciptionThumbnailGraph(mmr) {
     for (var x = 0; x < mmr.length; x++) {
         var installDate = new Date(mmr[x].bill_end_date);
         var month = installDate.getMonth();
-        var amount = parseInt(mmr[x].mmr);
-
-
+        var amount = parseFloat(mmr[x].mmr);
         amountsByMonth[month] += amount;
+
     }
 
     subscriptionChart.data.datasets[0].data = amountsByMonth;

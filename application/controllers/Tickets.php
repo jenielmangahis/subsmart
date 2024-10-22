@@ -2067,6 +2067,33 @@ class Tickets extends MY_Controller
             }
             
             $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
+
+            // insert data to job items table (items_id, qty, jobs_id)
+            $item_id    = $this->input->post('item_id');
+            $item_type  = $this->input->post('item_type');
+            $quantity   = $this->input->post('quantity');
+            $price      = $this->input->post('price');
+            $discount   = $this->input->post('discount');
+            $tax        = $this->input->post('tax');
+            $gtotal     = $this->input->post('total');
+            $item_name  = $this->input->post('items');
+            $i = 0;
+            foreach($item_id as $row){
+                $job_items_data = array();
+                $job_items_data['items_id']   = $item_id[$i];
+                $job_items_data['qty']        = $quantity[$i];
+                $job_items_data['cost']       = $price[$i] * $quantity[$i];
+                $job_items_data['tax']        = $tax[$i];
+                $job_items_data['discount']   = 0;
+                $job_items_data['total']      = $gtotal[$i];
+                $job_items_data['job_id']     = $jobs_id;
+                $job_items_data['location']   = '';
+                $job_items_data['points']     = 0;
+                $job_items_data['item_name']  = $item_name[$i];
+                $this->general->add_($job_items_data, 'job_items');
+                $i++;
+            }
+
             $invoice_id = $this->createInitialInvoice($jobs_id);
 
             if( $this->input->post('is_with_esign') ){
@@ -2097,32 +2124,6 @@ class Tickets extends MY_Controller
 
             //Google Calendar
             createSyncToCalendar($jobs_id, 'job', $company_id);
-
-            // insert data to job items table (items_id, qty, jobs_id)
-            $item_id    = $this->input->post('item_id');
-            $item_type  = $this->input->post('item_type');
-            $quantity   = $this->input->post('quantity');
-            $price      = $this->input->post('price');
-            $discount   = $this->input->post('discount');
-            $tax        = $this->input->post('tax');
-            $gtotal     = $this->input->post('total');
-            $item_name  = $this->input->post('items');
-            $i = 0;
-            foreach($item_id as $row){
-                $job_items_data = array();
-                $job_items_data['items_id']   = $item_id[$i];
-                $job_items_data['qty']        = $quantity[$i];
-                $job_items_data['cost']       = $price[$i] * $quantity[$i];
-                $job_items_data['tax']        = $tax[$i];
-                $job_items_data['discount']   = 0;
-                $job_items_data['total']      = $gtotal[$i];
-                $job_items_data['job_id']     = $jobs_id;
-                $job_items_data['location']   = '';
-                $job_items_data['points']     = 0;
-                $job_items_data['item_name']  = $item_name[$i];
-                $this->general->add_($job_items_data, 'job_items');
-                $i++;
-            }
 
             // insert data to job url links table
             $link = isset($input['link']) ? $input['link'] : 'none';
