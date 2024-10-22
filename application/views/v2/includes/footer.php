@@ -659,6 +659,44 @@ function filterAccountingExpenseCategory(selectedCategory) {
 
 }
 
+function filterSubscriptionStatus(status) {
+    // Encode the status to ensure it handles spaces and special characters properly
+    const encodedStatus = encodeURIComponent(status);
+
+    fetch(`<?php echo base_url('Dashboard/income_subscription_filter_status?status='); ?>${encodedStatus}`, {
+    }).then(response => response.json()).then(response => {
+        var monthlyAmounts = new Array(12).fill(0);
+        var subscriptionTotal = 0;
+
+        var {
+            success,
+            mmr
+        } = response;
+
+        console.log('mmr.length',mmr.length)
+
+        if (mmr) {
+            for (var x = 0; x < mmr.length; x++) {
+                var installDate = mmr[x].bill_end_date;
+                var ins = new Date(installDate);
+                var month = ins.getMonth();
+                monthlyAmounts[month] += parseFloat(mmr[x].mmr);
+                subscriptionTotal += parseFloat(mmr[x].mmr);
+            }
+        }
+
+        subscriptionChart.data.datasets[0].data = monthlyAmounts;
+        subscriptionChart.update();
+
+        $(`.subscription-text`).html(subscriptionTotal.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }));
+
+
+
+    }).catch((error) => {
+        console.log(error);
+    });
+}
+
 function renderAccountingExpenseGraph(labels, data) {
     var new_leads_data = {
         labels: labels,

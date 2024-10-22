@@ -56,6 +56,9 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <option value="two-month">last 60 days </option>
         </select>
     </div>
+    <div  id="filter-subscription-status">
+
+</div>
     <div class="nsm-card-content"
         style="  height: calc(100% - 120px); display: <?php echo $isListView ? 'block' : 'none'; ?>"
         id="thumbnail_content_graph_<?php echo $id; ?>">
@@ -70,8 +73,8 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
                     <label for="">Total Subscription</label>
-                    <h1 id="first_content_<?php echo $id; ?>">
-                        <?php echo number_format($subs->total_subscriptions, 2); ?></h1>
+                    <h1 id="first_content_<?php echo $id; ?>" class="subscription-text">
+                        <?php echo number_format($subs->total_amount_subscriptions, 2); ?></h1>
                 </div>
             </div>
         </div>

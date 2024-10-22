@@ -11,7 +11,7 @@
     
     var setDataTable;
     var currentTable = '<?php echo $tableID; ?>';
-    var reportTables = ['vendorcontactlist_table', 'salesbycustomersummary_table',  'customerbalancesummary_table', 'customercontactlist_table', 'expensesbyvendorsummary_table', 'incomebycustomerysummary_table', 'invoicelistbydate_table', 'openinvoices_table', 'paymentmethodlist_table', 'physicalinventoryworksheet_table', 'productservicelist_table', 'salesbyproductservicesummary_table', 'taxablesalessummary_table', 'vendorbalancesummary_table', 'statementlist_table', 'employeedetails_table', 'accountsreceivableagingsummarylist_table', 'accountlist_table', 'incomebycustomerysummary_table', 'contractorbalancesummary_table', 'transactionlistwithsplits_table', 'transactionlistcustomer_table', 'employeedirectory_table', 'reconciliationreports_table', 'salesbyitems_table', 'accountreceivable_table', 'auditlogs_table'];
+    var reportTables = ['vendorcontactlist_table', 'salesbycustomersummary_table',  'customerbalancesummary_table', 'customercontactlist_table', 'expensesbyvendorsummary_table', 'incomebycustomerysummary_table', 'invoicelistbydate_table', 'openinvoices_table', 'paymentmethodlist_table', 'physicalinventoryworksheet_table', 'productservicelist_table', 'salesbyproductservicesummary_table', 'taxablesalessummary_table', 'vendorbalancesummary_table', 'statementlist_table', 'employeedetails_table', 'accountsreceivableagingsummarylist_table', 'accountlist_table', 'incomebycustomerysummary_table', 'contractorbalancesummary_table', 'transactionlistwithsplits_table', 'transactionlistcustomer_table', 'employeedirectory_table', 'reconciliationreports_table', 'salesbyitems_table', 'accountreceivable_table', 'auditlogs_table', 'active_subscriptions_table'];
     var base_url = window.location.origin;
     var REPORT_CATEGORY = "<?php echo $reportCategory; ?>";
     var REPORT_ID = "<?php echo $reportTypeId; ?>";
@@ -39,6 +39,7 @@
     var pageHeaderRepeat = ($('input[name="pageHeaderRepeat"]').prop('checked') == true) ? 1 : 0;
     var date_from = $('input[name="date_from"]').val();
     var date_to = $('input[name="date_to"]').val();
+    var subscription_period = $('select[name="subscription_period"]').val();
     // =========================
     var reportConfig = {
         businessLogoURL: businessLogoURL,
@@ -52,11 +53,27 @@
         pageHeaderRepeat: pageHeaderRepeat,
         date_from: date_from,
         date_to: date_to,
+        subscription_period: subscription_period,
     };
     // =========================
 
     // Render Report Data Script
     function renderReportList() {
+        subscription_period = $('select[name="subscription_period"]').val();
+        if (subscription_period == "all") {
+            period = " (All)";
+        } else if (subscription_period == "last_7_days") {
+            period = " (Last 7 Days)";
+        } else if (subscription_period == "last_14_days") {
+            period = " (Last 14 Days)";
+        } else if (subscription_period == "last_30_days") {
+            period = " (Last 30 Days)";
+        } else if (subscription_period == "last_60_days") {
+            period = " (Last 60 Days)";
+        } else {
+            period = "";
+        }
+        // =========================
         theadColumnNames = $(`#<?php echo $tableID; ?> th`).map(function() { return $(this).text(); }).get();
         theadTotalColumn = $("#<?php echo $tableID; ?>").find('tr:first th').length;
         businessLogoURL = 'uploads/users/business_profile/<?php echo "$companyInfo->id/$companyInfo->business_image"; ?>';
@@ -91,6 +108,7 @@
             pageHeaderRepeat: pageHeaderRepeat,
             date_from: date_from,
             date_to: date_to,
+            subscription_period: subscription_period,
         };
         // =========================
         (enableDisableBusinessName) ? $("#businessName").text(businessName) : businessName = $("#businessName").html("&nbsp;").html() ;
@@ -123,7 +141,7 @@
                 theadColumnNames: theadColumnNames,
                 theadTotalColumn: theadTotalColumn,
                 businessName: businessName,
-                reportName: reportName, 
+                reportName: reportName + period, 
                 reportDate: reportDate, 
                 filename: filename, 
                 notes: notes, 
@@ -143,6 +161,7 @@
                         "lengthChange": false
                     });
                 }
+                $('#reportName').text(reportName + period);
             }
         });
         // =========================
@@ -164,6 +183,7 @@
                 page_size: page_size,
                 report_date_from_text: date_from,
                 report_date_to_text: date_to,
+                subscription_period: subscription_period,
             },
             success: function(data) {}   
         });

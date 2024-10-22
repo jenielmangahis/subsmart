@@ -444,6 +444,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
         
     });
 </script>
+<script src="<?php echo $url->assets ?>js/jquery.signaturepad.js"></script>
 <?php include viewPath('v2/includes/footer'); ?>
 <?php //include viewPath('includes/footer'); ?>
 

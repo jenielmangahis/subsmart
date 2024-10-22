@@ -821,6 +821,9 @@ fetch('<?php echo base_url('Dashboard/income_subscription'); ?>', {}).then(respo
             success,
             mmr
         } = response;
+        console.log('mmr',mmr)
+
+        let status = [];
 
 
         if (mmr) {
@@ -829,11 +832,26 @@ fetch('<?php echo base_url('Dashboard/income_subscription'); ?>', {}).then(respo
                 if (installDate) {
                     var ins = new Date(installDate);
                     var month = ins.getMonth();
-
-                    monthlyAmounts[month] += parseInt(mmr[x].mmr);
+                    if (!status.includes(mmr[x].status)) {
+                        status.push(mmr[x].status);
+                    }
+                    monthlyAmounts[month] += parseFloat(mmr[x].mmr);
                 }
             }
         }
+
+        let output = '';
+            if (status.length > 0) {
+                output = '<select class="nsm-field form-select" style="width: 90%;border: none;" onChange="filterSubscriptionStatus(this.value)">';
+                output += `<option value="">All Status</option>`;
+                for (var i = 0; i < status.length; i++) {
+                    output += `<option value="${status[i]}">${status[i]}</option>`;
+                }
+                output += '</select>';
+            }
+
+        $('#filter-subscription-status').html(output);
+        
 
         var sales_data = {
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -844,6 +862,8 @@ fetch('<?php echo base_url('Dashboard/income_subscription'); ?>', {}).then(respo
                 data: monthlyAmounts
             }]
         };
+
+        
         $('#IncomeSubscriptioneGraphLoader').hide()
 
 
