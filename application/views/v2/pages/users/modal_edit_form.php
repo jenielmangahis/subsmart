@@ -19,11 +19,11 @@
 <div class="row gy-3 mb-4">
     <div class="col-12 col-md-6">
         <label class="content-subtitle fw-bold d-block mb-2">Mobile Number</label>
-        <input type="text" name="mobile" class="nsm-field form-control" value="<?= $user->mobile; ?>" />
+        <input type="text" name="mobile" class="nsm-field form-control edit_phone_number" value="<?= $user->mobile; ?>" maxlength="12" placeholder="xxx-xxx-xxxx" />
     </div>
     <div class="col-12 col-md-6">
         <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
-        <input type="text" name="phone" class="nsm-field form-control" value="<?= $user->phone; ?>" />
+        <input type="text" name="phone" class="nsm-field form-control edit_phone_number" value="<?= $user->phone; ?>" maxlength="12" placeholder="xxx-xxx-xxxx" />
     </div>
 </div>
 <div class="row gy-3 mb-4">
@@ -227,6 +227,20 @@
         </div>
 </div>
 <script type="text/javascript">
+    $('.edit_phone_number').keydown(function(e) {
+        var key = e.charCode || e.keyCode || 0;
+        $text = $(this);
+        if (key !== 8 && key !== 9) {
+            if ($text.val().length === 3) {
+                $text.val($text.val() + '-');
+            }
+            if ($text.val().length === 7) {
+                $text.val($text.val() + '-');
+            }
+        }
+        return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+    });
+
     function setCommissionPercentage() {
         const selectedValue = $('#empCommission').find('option:selected').val();
         const empCommissionPercentage = $('select[name="empCommissionPercentage"]');
