@@ -842,7 +842,7 @@ fetch('<?php echo base_url('Dashboard/income_subscription'); ?>', {}).then(respo
 
         let output = '';
             if (status.length > 0) {
-                output = '<select class="nsm-field form-select" style="width: 90%;border: none;" onChange="filterSubscriptionStatus(this.value)">';
+                output = '<select class="nsm-field form-select filterSubscriptionStatus" style="width: 90%;border: none;" onChange="filterSubscription()">';
                 output += `<option value="">All Status</option>`;
                 for (var i = 0; i < status.length; i++) {
                     output += `<option value="${status[i]}">${status[i]}</option>`;

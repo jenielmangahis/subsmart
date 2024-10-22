@@ -47,8 +47,8 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         </div>
     </div>
     <div class="mb-2">
-        <select class="nsm-field form-select" style='width: 55%;
-    border: none;' onChange="filterThumbnail(this.value, '<?php echo $id; ?>', 'acs_billing')">
+        <select class="nsm-field form-select filterSubscriptionDate" data-id='<?php echo $id; ?>' onChange="filterSubscription()" style='width: 55%;
+    border: none;' >
             <option value="all">All time</option>
             <option value="week">Last 7 days </option>
             <option value="two-week">last 14 days</option>
@@ -58,7 +58,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
     </div>
     <div  id="filter-subscription-status">
 
-</div>
+    </div>
     <div class="nsm-card-content"
         style="  height: calc(100% - 120px); display: <?php echo $isListView ? 'block' : 'none'; ?>"
         id="thumbnail_content_graph_<?php echo $id; ?>">
@@ -71,10 +71,14 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         id="thumbnail_content_list<?php echo $id; ?>">
         <div class="row ">
             <div class="col-12 col-lg-12 leads-container">
-                <div class="text-start summary-report-body">
-                    <label for="">Total Subscription</label>
-                    <h1 id="first_content_<?php echo $id; ?>" class="subscription-text">
+                <div class="text-start summary-report-body mt-5">
+                    <label for="">Total Subscription Revenue</label>
+                    <h1 id="first_content_<?php echo $id; ?>" class="subscription-text">$
                         <?php echo number_format($subs->total_amount_subscriptions, 2); ?></h1>
+
+                    <label for="">Subscribers</label>
+                    <h1 id="second_content_<?php echo $id; ?>" class="subscription-text">
+                    <?php echo number_format($subs->total_active_subsciption, 0); ?></h1>
                 </div>
             </div>
         </div>
