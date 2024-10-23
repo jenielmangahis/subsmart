@@ -1051,6 +1051,9 @@ class Tickets extends MY_Controller
         $this->load->model('AcsProfile_model');
         $this->load->model('Job_tags_model');
         $this->load->model('Customer_advance_model');
+        $this->load->model('SettingsPlanType_model');
+        $this->load->model('PanelType_model');
+
         $this->page_data['page']->title = 'Tickets';
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
@@ -1101,14 +1104,17 @@ class Tickets extends MY_Controller
         }
 
         $planTypeOptions = $this->Customer_advance_model->planTypeOptions();
+        $settingsPlanTypes = $this->SettingsPlanType_model->getAllByCompanyId($company_id);
+        $settingPanelTypes = $this->PanelType_model->getAllByCompanyId($company_id);
+        $type = $this->input->get('type');
 
         $this->page_data['redirect_calendar'] = $redirect_calendar;
+        $this->page_data['settingsPlanTypes'] = $settingsPlanTypes;
+        $this->page_data['settingPanelTypes'] = $settingPanelTypes;
         $this->page_data['default_user'] = $default_user;
         $this->page_data['default_start_date'] = $default_start_date;
         $this->page_data['default_start_time'] = $default_start_time;
-
         $this->page_data['items'] = $this->items_model->getItemlist();
-        $type = $this->input->get('type');
         $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);
         $this->page_data['type'] = $type;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);

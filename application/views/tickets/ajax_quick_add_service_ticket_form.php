@@ -54,7 +54,7 @@
         <div class="nsm-card primary">
             <div class="nsm-card-content">
                     <label for="sel-customer_t" class="required"><b>Customer</b></label>
-                    <a class="link-modal-open nsm-button btn-small" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="float:right;"> Manage</a>
+                    <a class="link-modal-open nsm-button btn-small" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#modalNewCustomer" style="float:right;"> Add New</a>
                     <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
                         <option value="0">- Select Customer -</option>
                         <?php foreach($customers as $c){ ?>
@@ -166,7 +166,7 @@
                         </select>
                     </div>
                     <div class="col-md-3 form-group">
-                        <label for="panel_type" class="block-label"><b>Panel Type</b> <a href="javascript:void(0);" id="btn-quick-add-panel-type" class="btn-small nsm-button">Manage</a></label>
+                        <label for="panel_type" class="block-label"><b>Panel Type</b> <a href="javascript:void(0);" id="btn-quick-add-panel-type" class="btn-small nsm-button">Add New</a></label>
                             <select name="panel_type" id="panel_type" class="form-control" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
                                 <?php foreach($settingPanelTypes as $panelType){ ?>
                                     <option value="<?= $panelType->name; ?>"><?= $panelType->name; ?></option>
@@ -187,7 +187,7 @@
                 </div>
                 <div class="row mt-4" style="background-color:white;">
                     <div class="col-md-3 form-group">
-                        <label for="plan_type" class="block-label"><b>Plan Type</b> <a href="javascript:void(0);" class="btn-small nsm-button" id="btn-quick-add-plan-type">Manage</a></label>
+                        <label for="plan_type" class="block-label"><b>Plan Type</b> <a href="javascript:void(0);" class="btn-small nsm-button" id="btn-quick-add-plan-type">Add New</a></label>
                         <select class="form-control" name="plan_type" id="plan_type" required="">
                             <option value="">Select</option>
                             <?php foreach($settingsPlanTypes as $planType){ ?>

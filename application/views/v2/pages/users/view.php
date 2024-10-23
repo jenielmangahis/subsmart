@@ -50,12 +50,12 @@
                                   <h4><?= $User->FName . ' ' . $User->LName; ?></h4>
                                   <p class="text-secondary mb-1"><?php echo getUserType($User->user_type); ?></p>
                                   <br />
-                                  <a class="nsm-button primary" href="javascript:void(0)" data-name="<?php echo $User->FName . ' ' . $User->LName; ?>" data-id="<?php echo $User->id ?>" id="changePassword" style="width: 100%; margin-bottom: 10px;">Change Password</a>
-                                  <a class="nsm-button primary" id="editEmployee" data-id="<?= $User->id; ?>" href="javascript:void(0);" style="width: 100%;">Edit Profile</a>
+                                  <a class="nsm-button primary" style="width:152px;display:inline-block;" href="javascript:void(0)" data-name="<?php echo $User->FName . ' ' . $User->LName; ?>" data-id="<?php echo $User->id ?>" id="changePassword" style="width: 100%; margin-bottom: 10px;">Change Password</a>
+                                  <a class="nsm-button primary" style="width:152px;display:inline-block;" id="editEmployee" data-id="<?= $User->id; ?>" href="javascript:void(0);" style="width: 100%;">Edit Profile</a>
                                   <br />
-                                  <?php if ($current_user_id == $User->id): ?>
-                                  <button class="nsm-button mt-3 COMMISSION_HISTORY" data-bs-toggle="modal" data-bs-target="#paycommission_history_modal">Pay / Commission History</button>
-                                  <?php endif; ?>
+                                  <?php //if ($current_user_id == $User->id): ?>
+                                  <!-- <button class="nsm-button mt-3 COMMISSION_HISTORY" data-bs-toggle="modal" data-bs-target="#paycommission_history_modal">Pay / Commission History</button> -->
+                                  <?php //endif; ?>
                                 </div>
                               </div>
                             </div>
@@ -65,29 +65,29 @@
                         <div class="nsm-card primary">
                             <div class="nsm-card-content">
                                 <div class="row mb-4">
-                                    <div class="col-2" style="width:10.666667% !important;"><h6><i class='bx bxs-id-card'></i> Employee Number</h6></div>
-                                    <div class="col-9"><?= $User->employee_number; ?></div>
+                                    <div class="col-2"><h6><i class='bx bxs-id-card'></i> Employee Number</h6></div>
+                                    <div class="col-5"><?= $User->employee_number; ?></div>
                                 </div>
                                 <div class="row mb-4">
-                                    <div class="col-2" style="width:10.666667% !important;"><h6><i class='bx bxs-user' ></i> Name</h6></div>
-                                    <div class="col-9"><?= $User->FName . ' ' . $User->LName; ?></div>
+                                    <div class="col-2"><h6><i class='bx bxs-user' ></i> Name</h6></div>
+                                    <div class="col-5"><?= $User->FName . ' ' . $User->LName; ?></div>
                                 </div>
                                 <div class="row mb-4">
-                                    <div class="col-2" style="width:10.666667% !important;"><h6><i class='bx bxs-envelope' ></i> Email</h6></div>
+                                    <div class="col-2"><h6><i class='bx bxs-envelope' ></i> Email</h6></div>
                                     <div class="col-9"><?= $User->email; ?></div>
                                 </div>
                                 <div class="row mb-4">
-                                    <div class="col-2" style="width:10.666667% !important;"><h6><i class='bx bxs-phone' ></i> Phone</h6></div>
-                                    <div class="col-9"><?= $User->phone ? $User->phone : '---'; ?></div>
+                                    <div class="col-2"><h6><i class='bx bxs-phone' ></i> Phone</h6></div>
+                                    <div class="col-9"><?= $User->phone ? formatPhoneNumber($User->phone) : '---'; ?></div>
                                 </div>
                                 <div class="row mb-4">
-                                    <div class="col-2" style="width:10.666667% !important;"><h6><i class='bx bx-mobile' ></i> Mobile</h6></div>
-                                    <div class="col-9"><?= $User->mobile ? $User->mobile : '---'; ?></div>
+                                    <div class="col-2"><h6><i class='bx bx-mobile' ></i> Mobile</h6></div>
+                                    <div class="col-9"><?= $User->mobile ? formatPhoneNumber($User->mobile) : '---'; ?></div>
                                 </div>                                     
                                 <div class="row mb-4">
-                                    <div class="col-2" style="width:10.666667% !important;"><h6><i class='bx bxs-map-pin' ></i> Address</h6></div>
+                                    <div class="col-2"><h6><i class='bx bxs-map-pin' ></i> Address</h6></div>
                                     <div class="col-9">
-                                            <?= $User->address . '<br />' . $User->city . ", " . $User->state . ' ' . $User->postal_code; ?>
+                                            <?= $User->address . ' ' . $User->city . ", " . $User->state . ' ' . $User->postal_code; ?>
                                             
                                     </div>
                                 </div>
@@ -104,7 +104,6 @@
                                 <table id="dt-activity-logs" class="nsm-table">
                                   <thead>
                                     <tr>
-                                      <td data-name="IP" style="width:10%;">IP Address</td>
                                       <td data-name="Message">Message</td>
                                       <td data-name="DateTime" style="width:15%;">Date Time</td>
                                     </tr>
@@ -112,11 +111,8 @@
                                   <tbody>
                                     <?php foreach ($User->activity as $row) : ?>
                                       <tr>
-                                        <td><?php echo !empty($row->ip_address) ? '<a href="' . url('activity_logs/index?ip=' . urlencode($row->ip_address)) . '">' . $row->ip_address . '</a>' : 'N.A' ?></td>
-                                        <td>
-                                          <a href="<?php echo url('activity_logs/view/' . $row->id) ?>"><?php echo $row->title ?></a>
-                                        </td>
-                                        <td><?php echo date('d M, Y H:i A', strtotime($row->created_at)) ?></td>
+                                        <td><?php echo $row->activity_name ?></td>
+                                        <td><?php echo date('m/d/Y H:i A', strtotime($row->created_at)) ?></td>
                                       </tr>
                                     <?php endforeach ?>
                                   </tbody>
