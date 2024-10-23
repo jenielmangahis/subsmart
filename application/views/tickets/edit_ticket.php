@@ -206,6 +206,17 @@ a.btn-primary.btn-md {
     background-color: #6a4a86;
     color: #ffffff;
 }
+.block-label{
+    display:block;
+    height:30px;
+}
+.block-label a{
+    float:right;
+}
+.block-label b{
+    position:relative;
+    top:10px;
+}
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('customer/addTicket') ?>'">
@@ -238,7 +249,7 @@ a.btn-primary.btn-md {
                             <div class="nsm-card primary">
                                 <div class="nsm-card-content">
                                     <label for="customers" class="required"><b>Customer</b></label>
-                                    <a class="link-modal-open nsm-button btn-small" href="<?= base_url('customer/add_advance'); ?>" style="float:right;">New Customer</a>
+                                    <a class="link-modal-open nsm-button btn-small" href="<?= base_url('customer/add_advance'); ?>" style="float:right;">Add New</a>
                                     <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
                                         <option value="">- Select Customer -</option>
                                         <?php foreach($customers as $c){ ?>
@@ -337,8 +348,8 @@ a.btn-primary.btn-md {
                                         <label for="estimate_date" class="required"><b>Schedule Date</b></label>
                                         <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
                                         <!-- <div class="input-group date" data-provide="datepicker"> -->
-                                            <input type="text" class="form-control" value="<?php echo $tickets->ticket_date; ?>" name="ticket_date" id="ticket_date"
-                                                    placeholder="Enter Ticket Date" data-date-format='yyyy-mm-dd' required>
+                                            <input type="date" class="form-control" value="<?php echo date("Y-m-d",strtotime($tickets->ticket_date)); ?>" name="ticket_date" id="ticket_date"
+                                                    placeholder="Enter Ticket Date" required>
                                             <!-- <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-th"></span>
                                             </div> -->
@@ -370,13 +381,13 @@ a.btn-primary.btn-md {
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <label for="purchase_order_number"><b>Purchase Order#</b></label>
+                                        <label for="purchase_order_number" class="block-label"><b>Purchase Order#</b></label>
                                         <input type="text" class="form-control" name="purchase_order_no"
                                             id="purchase_order_no" placeholder="Enter Purchase Order#"
                                             autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" value="<?php echo $tickets->purchase_order_no; ?>"/>
                                     </div>
                                     <div class="col-md-3">
-                                        <label for="zip"><b>Ticket Status</b></label>
+                                        <label for="ticket_status" class="block-label"><b>Ticket Status</b></label>
                                         <!-- <input type="text" class="form-control" name="ticket_status" id="ticket_status" 
                                             placeholder="Enter Ticket Status" value="<?php //echo $tickets->ticket_status; ?>"/> -->
                                         <select id="ticket_status" name="ticket_status" class="form-control">
@@ -392,40 +403,15 @@ a.btn-primary.btn-md {
                                         </select>
                                     </div>
                                     <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Panel Type</b></label>
-                                            <select name="panel_type" id="panel_type" class="form-control" data-value="<?= isset($tickets) ? $tickets->panel_type : "" ?>">
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == ''){echo "selected";} } ?>  value="0">- none -</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'Alarm.com'){echo "selected";} } ?> value="Alarm.com">Alarm.com</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'Alula'){echo "selected";} } ?> value="Alula">Alula</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'Bosch'){echo "selected";} } ?> value="Bosch">Bosch</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'DSC'){echo "selected";} } ?> value="DSC">DSC</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'ELK'){echo "selected";} } ?> value="ELK">ELK</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'FBI'){echo "selected";} } ?> value="FBI">FBI</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'GRI'){echo "selected";} } ?> value="GRI">GRI</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'GE'){echo "selected";} } ?> value="GE">GE</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell">Honeywell</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'Honeywell Touch'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'Honeywell 3000'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista">Honeywell Vista</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'Honeywell Vista with Sem'){echo "selected";} } ?> value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'Honeywell Lyric'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'IEI'){echo "selected";} } ?> value="IEI">IEI</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'MIER'){echo "selected";} } ?> value="MIER">MIER</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG">2 GIG</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == '2 GIG Go Panel 2'){echo "selected";} } ?> value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == '2 GIG Go Panel 3'){echo "selected";} } ?> value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'Qolsys'){echo "selected";} } ?> value="Qolsyx">Qolsys</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'Qolsys IQ Panel 2'){echo "selected";} } ?> value="Qolsys IQ Panel 2">Qolsys IQ Panel 2</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'Qolsys IQ Panel 2 Plus'){echo "selected";} } ?> value="Qolsys IQ Panel 2 Plus">Qolsys IQ Panel 2 Plus</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'Qolsys IQ Panel 3'){echo "selected";} } ?> value="Qolsys IQ Panel 3">Qolsys IQ Panel 3</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'Custom'){echo "selected";} } ?> value="Custom">Custom</option>
-                                                <option <?php if(isset($tickets)){ if($tickets->panel_type == 'Other'){echo "selected";} } ?> value="Other">Other</option>
-                                            </select>
+                                        <label for="panel_type" class="block-label"><b>Panel Type</b> <a href="javascript:void(0);" id="btn-quick-add-panel-type" class="btn-small nsm-button">Add New</a></label>                                            
+                                        <select name="panel_type" id="panel_type" class="form-control" data-value="<?= isset($tickets) ? $tickets->panel_type : "" ?>">
+                                            <?php foreach($settingPanelTypes as $panelType){ ?>
+                                                <option <?= isset($tickets) && $tickets->panel_type == $panelType->name ? 'selected="selected"' : ''; ?> value="<?= $panelType->name; ?>"><?= $panelType->name; ?></option>
+                                            <?php } ?>
+                                        </select>
                                     </div>
                                     <div class="col-md-3" id="technicianDiv">
-                                        <label for="purchase_order_number"><b>Assigned Technician</b></label>
+                                        <label for="appointment-user" class="block-label"><b>Assigned Technician</b></label>
                                         <!-- <input type="text" class="form-control" name="assign_tech" id="assign_tech" /> -->
                                         <select class="form-control nsm-field form-select" name="assign_tech[]" id="appointment-user" multiple="multiple" tabindex="-1" aria-hidden="true" required>
                                             <?php
@@ -444,8 +430,7 @@ a.btn-primary.btn-md {
                                 </div>
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <label for="service_type"><b>Service Type</b></label>
-                                        <a href="#" class="nsm-button btn-small" style="float:right;" id="btn-quick-add-service-type">Add New</a>
+                                        <label for="service_type" class="block-label"><b>Service Type</b> <a href="#" class="nsm-button btn-small" id="btn-quick-add-service-type">Add New</a></label>
                                         <select class="form-control" name="service_type" id="service_type">
                                             <?php foreach($serviceType as $sType){ ?>
                                                 <option value="<?php echo $sType->service_name; ?>" <?php if($sType->service_name == $tickets->service_type){ echo 'selected'; } ?>><?php echo $sType->service_name; ?></option>
@@ -453,7 +438,7 @@ a.btn-primary.btn-md {
                                         </select>                                        
                                     </div>
                                     <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Warranty Type</b></label>
+                                        <label for="warranty_type" class="block-label"><b>Warranty Type</b></label>
                                         <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="form-control" >
                                             <option <?php if(isset($tickets)){ if($tickets->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
                                             <option <?php if(isset($tickets)){ if($tickets->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited 90 Days</option>
@@ -465,26 +450,26 @@ a.btn-primary.btn-md {
                                         </select>
                                     </div>
                                     <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Plan Type</b></label>
+                                        <label for="plan_type" class="block-label"><b>Plan Type</b> <a href="javascript:void(0);" class="btn-small nsm-button" id="btn-quick-add-plan-type">Add New</a></label>
                                         <select class="form-control" name="plan_type" id="plan_type">
-                                            <?php foreach($planTypeOptions as $key => $planType){ ?>
-                                                <option <?= $tickets && $tickets->plan_type == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $planType; ?></option>
+                                            <?php foreach($settingsPlanTypes as $planType){ ?>
+                                                <option <?= $tickets && $tickets->plan_type == $planType->name ? 'selected="selected"' : ''; ?> value="<?= $planType->name; ?>"><?= $planType->name; ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
                                     <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Employee</b></label>
+                                        <label for="zip" class="block-label"><b>Employee</b></label>
                                         <!-- <input type="text" class="form-control" name="scheduled_time" id="employeeID" /> -->
-                                        <select class="form-control mb-3" name="employee_id">
+                                        <select class="form-control mb-3" name="employee_id" id="employee_id">
                                             <option value="0">Select Name</option>
                                             <?php foreach($users_lists as $ulist){ ?>
                                                 <option <?php if($ulist->id == $tickets->employee_id){ echo "selected";} ?> value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
-                                    <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Job Description</b></label>
-                                        <textarea class="form-control" name="job_description"><?php echo $tickets->job_description; ?></textarea>
+                                    <div class="col-md-3 form-group mt-3">
+                                        <label for="job_description"><b>Job Description</b></label>
+                                        <textarea class="form-control" name="job_description" id="job_description"><?php echo $tickets->job_description; ?></textarea>
                                     </div>
                                 </div>
                                 <div class="row" id="plansItemDiv" style="background-color:white;">
@@ -530,12 +515,12 @@ a.btn-primary.btn-md {
                                                     </td>
                                                     <td><input type="number" class="form-control quantity mobile_qty" name="quantity[]" data-counter="<?php echo $i; ?>" id="quantity_<?php echo $i; ?>" value="<?php echo $itemL->qty; ?>"></td>
 
-                                                    <td><input type="number" class="form-control price price hidden_mobile_view" name="price[]" data-counter="<?php echo $i; ?>" id="price_<?php echo $i; ?>" value="<?php echo $itemL->costing; ?>">
+                                                    <td><input type="number" step="any" class="form-control price price hidden_mobile_view" name="price[]" data-counter="<?php echo $i; ?>" id="price_<?php echo $i; ?>" value="<?php echo $itemL->costing; ?>">
                                                         <input type="hidden" class="priceqty" id="priceqty_<?php echo $i; ?>" value="<?php echo $itemL->costing; ?>"> 
                                                         <div class="show_mobile_view"></div>
                                                         <input id="priceM_qty<?php echo $i; ?>" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty">
                                                     </td>
-                                                    <td class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]" data-counter="<?php echo $i; ?>" id="discount_<?php echo $i; ?>" min="0"  value="<?php echo $itemL->discount; ?>"></td>
+                                                    <td class="hidden_mobile_view"><input type="number" step="any" class="form-control discount" name="discount[]" data-counter="<?php echo $i; ?>" id="discount_<?php echo $i; ?>" min="0"  value="<?php echo $itemL->discount; ?>"></td>
                                                     <td class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]" data-counter="<?php echo $i; ?>" id="tax1_<?php echo $i; ?>" min="0"  value="<?php echo number_format($itemL->tax,2, '.', ','); ?>" readonly=""></td>
                                                     <td class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]" data-counter="<?php echo $i; ?>" id="item_total_<?php echo $i; ?>" min="0"  value="<?php echo $itemL->total; ?>"><span class="span-input" id="span_total_<?php echo $i; ?>"><?php echo number_format($itemL->total,2, '.', ','); ?></span></td>
                                                     <td><a href="#" class="remove nsm-button" id="<?php echo $i; ?>"><i class="bx bx-fw bx-trash"></i></a></td>
@@ -557,12 +542,54 @@ a.btn-primary.btn-md {
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-card primary">
-                            <div class="nsm-card-content">
+                            <div class="nsm-card-content">                                
                                 <div class="row">
                                     <div class="col-md-8">
+                                        <div class="row">
+                                            <div class="form-group col-md-3">
+                                                <div class="select-wrap">
+                                                    <b>Payment Method</b>
+                                                    <select name="payment_method" id="payment_method" class="form-control">
+                                                        <!-- <option value="">Choose method</option> -->
+                                                        <option <?php if(isset($tickets)){ if($tickets->payment_method == "Cash"){ echo 'selected'; } } ?> value="Cash">Cash</option>
+                                                        <option <?php if(isset($tickets)){ if($tickets->payment_method == "Check"){ echo 'selected'; } } ?> value="Check">Check</option>
+                                                        <option <?php if(isset($tickets)){ if($tickets->payment_method == "Credit Card"){ echo 'selected'; } } ?> value="Credit Card">Credit Card</option>
+                                                        <option <?php if(isset($tickets)){ if($tickets->payment_method == "Debit Card"){ echo 'selected'; } } ?> value="Debit Card">Debit Card</option>
+                                                        <option <?php if(isset($tickets)){ if($tickets->payment_method == "ACH"){ echo 'selected'; } } ?> value="ACH">ACH</option>
+                                                        <!-- <option <?php if(isset($tickets)){ if($tickets->payment_method == "Venmo"){ echo 'selected'; } } ?> value="Venmo">Venmo</option> -->
+                                                        <!-- <option <?php if(isset($tickets)){ if($tickets->payment_method == "Paypal"){ echo 'selected'; } } ?> value="Paypal">Paypal</option> -->
+                                                        <!-- <option <?php if(isset($tickets)){ if($tickets->payment_method == "Square"){ echo 'selected'; } } ?> value="Square">Square</option> -->
+                                                        <option <?php if(isset($tickets)){ if($tickets->payment_method == "Invoicing"){ echo 'selected'; } } ?> value="Invoicing">Invoicing</option>
+                                                        <option <?php if(isset($tickets)){ if($tickets->payment_method == "Warranty Work"){ echo 'selected'; } } ?> value="Warranty Work">Warranty Work</option>
+                                                        <option <?php if(isset($tickets)){ if($tickets->payment_method == "Home Owner Financing"){ echo 'selected'; } } ?> value="Home Owner Financing">Home Owner Financing</option>
+                                                        <!-- <option <?php if(isset($tickets)){ if($tickets->payment_method == "e-Transfer"){ echo 'selected'; } } ?> value="e-Transfer">e-Transfer</option> -->
+                                                        <!-- <option <?php if(isset($tickets)){ if($tickets->payment_method == "Other Credit Card Professor"){ echo 'selected'; } } ?> value="Other Credit Card Professor">Other Credit Card Professor</option> -->
+                                                        <option <?php if(isset($tickets)){ if($tickets->payment_method == "Other Payment Type"){ echo 'selected'; } } ?> value="Other Payment Type">Other Payment Type</option>
+                                                    </select>
+                                                </div> 
+                                            </div>     
+                                            <div class="form-group col-md-3">
+                                                <b>Amount</b>
+                                                <input type="number" class="form-control payment_amount" name="payment_amount" id="payment_amount" placeholder="Enter Amount" />
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <b>Billing Date</b>
+                                                <select name="billing_date" id="" class="form-control">
+                                                    <option value="">0</option>
+                                                    <?php for ($i=1; $i<=31; $i++ ) { ?>
+                                                    <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-12 col-md-12">
+                                                <?php include viewPath('tickets/_payment_method_fields'); ?>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <table class="table" style="text-align:left;">
+                                        <table class="table table-borderless" style="text-align:left;">
                                             <tr>
                                                 <td>Subtotal</td>
                                                 <!-- <td></td> -->
@@ -596,256 +623,14 @@ a.btn-primary.btn-md {
                                         </table>
                                     </div>
                                 </div>
-                                <div class="row">                   
-                                    <div class="form-group col-md-4">
-                                        <div class="select-wrap">
-                                            <b>Payment Method</b>
-                                                <select name="payment_method" id="payment_method" class="form-control">
-                                                    <!-- <option value="">Choose method</option> -->
-                                                    <option <?php if(isset($tickets)){ if($tickets->payment_method == "Cash"){ echo 'selected'; } } ?> value="Cash">Cash</option>
-                                                    <option <?php if(isset($tickets)){ if($tickets->payment_method == "Check"){ echo 'selected'; } } ?> value="Check">Check</option>
-                                                    <option <?php if(isset($tickets)){ if($tickets->payment_method == "Credit Card"){ echo 'selected'; } } ?> value="Credit Card">Credit Card</option>
-                                                    <option <?php if(isset($tickets)){ if($tickets->payment_method == "Debit Card"){ echo 'selected'; } } ?> value="Debit Card">Debit Card</option>
-                                                    <option <?php if(isset($tickets)){ if($tickets->payment_method == "ACH"){ echo 'selected'; } } ?> value="ACH">ACH</option>
-                                                    <option <?php if(isset($tickets)){ if($tickets->payment_method == "Venmo"){ echo 'selected'; } } ?> value="Venmo">Venmo</option>
-                                                    <option <?php if(isset($tickets)){ if($tickets->payment_method == "Paypal"){ echo 'selected'; } } ?> value="Paypal">Paypal</option>
-                                                    <option <?php if(isset($tickets)){ if($tickets->payment_method == "Square"){ echo 'selected'; } } ?> value="Square">Square</option>
-                                                    <option <?php if(isset($tickets)){ if($tickets->payment_method == "Invoicing"){ echo 'selected'; } } ?> value="Invoicing">Invoicing</option>
-                                                    <option <?php if(isset($tickets)){ if($tickets->payment_method == "Warranty Work"){ echo 'selected'; } } ?> value="Warranty Work">Warranty Work</option>
-                                                    <option <?php if(isset($tickets)){ if($tickets->payment_method == "Home Owner Financing"){ echo 'selected'; } } ?> value="Home Owner Financing">Home Owner Financing</option>
-                                                    <option <?php if(isset($tickets)){ if($tickets->payment_method == "e-Transfer"){ echo 'selected'; } } ?> value="e-Transfer">e-Transfer</option>
-                                                    <option <?php if(isset($tickets)){ if($tickets->payment_method == "Other Credit Card Professor"){ echo 'selected'; } } ?> value="Other Credit Card Professor">Other Credit Card Professor</option>
-                                                    <option <?php if(isset($tickets)){ if($tickets->payment_method == "Other Payment Type"){ echo 'selected'; } } ?> value="Other Payment Type">Other Payment Type</option>
-                                                </select>
-                                            </div> 
-                                        </div>     
-                                        <div class="form-group col-md-4">
-                                            <b>Amount<small class="help help-sm"> ( $ )</small></b>
-                                            <input type="text" class="form-control payment_amount" name="payment_amount" id="payment_amount" placeholder="Enter Amount" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <b>Billing Date</b>
-                                            <!-- <input type="date" class="form-control input-element border-top-0 border-right-0 border-left-0" name="billing_date" id=""  /> -->
-                                            <select name="billing_date" id="" class="form-control">
-                                                    <option value="">0</option>
-                                                    <?php for ($i=1; $i<=31; $i++ ) { ?>
-                                                    <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-                                                    <?php } ?>
-                                                </select>
-                                        </div>
-                                </div>
-                                
-                                <div class="row">                   
-                                    <div class="col-md-12">
-                                                <div id="invoicing" style="display:none;">
-                                                    <!-- <input type="checkbox" id="same_as"> <b>Same as above Address</b> <br><br> -->
-                                                    <div class="row">                   
-                                                        <div class="col-md-6 form-group">
-                                                            <label for="monitored_location" class="label-element">Mail Address</label>
-                                                            <input type="text" class="form-control input-element" name="mail-address"
-                                                                id="mail-address" placeholder="Monitored Location"/>
-                                                        </div>
-                                                        <div class="col-md-6 form-group">
-                                                            <label for="city" class="label-element">City</label>
-                                                                <input type="text" class="form-control input-element" name="mail_locality" id="mail_locality" placeholder="Enter Name" />
-                                                        </div>
-                                                        <div class="col-md-6 form-group">
-                                                            <label for="state" class="label-element">State</label>
-                                                            <input type="text" class="form-control input-element" name="mail_state"
-                                                                id="mail_state" 
-                                                                placeholder="Enter State"/>
-                                                        </div>
-                                                    <!-- </div>
-                                                    <div class="row">   -->
-                                                        <div class="col-md-6 form-group">
-                                                            <label for="zip" class="label-element">ZIP</label> 
-                                                                <input type="text" id="mail_postcode" name="mail_postcode" class="form-control input-element"  placeholder="Enter Zip"/>
-                                                        </div>
-
-                                                        <div class="col-md-6 form-group">
-                                                            <label for="cross_street" class="label-element">Cross Street</label>
-                                                            <input type="text" class="form-control input-element" name="mail_cross_street"
-                                                                id="mail_cross_street" 
-                                                                placeholder="Cross Street"/>
-                                                        </div>                                        
-                                                    </div>
-                                                </div>
-                                            <div id="check_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Check Number</label>
-                                                        <input type="text" class="form-control input-element" name="check_number" id="check_number"/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Routing Number</label>
-                                                        <input type="text" class="form-control input-element" name="routing_number" id="routing_number"/>
-                                                    </div>                                             
-                                                </div>
-                                                <div class="row">
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Number</label>
-                                                        <input type="text" class="form-control input-element" name="account_number" id="account_number"/>
-                                                    </div>                                       
-                                                </div>
-                                            </div>
-                                            <div id="credit_card" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Credit Card Number</label>
-                                                        <input type="text" class="form-control input-element" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
-                                                        <input type="text" class="form-control input-element" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
-                                                    </div>  
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">CVC</label>
-                                                        <input type="text" class="form-control input-element" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
-                                                    </div>                                             
-                                                </div>
-                                            </div>
-                                            <div id="debit_card" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Credit Card Number</label>
-                                                        <input type="text" class="form-control input-element" name="debit_credit_number" id="credit_number2" placeholder="0000 0000 0000 000" />
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
-                                                        <input type="text" class="form-control input-element" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
-                                                    </div>  
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">CVC</label>
-                                                        <input type="text" class="form-control input-element" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
-                                                    </div>                                            
-                                                </div>
-                                            </div>
-                                            <div id="ach_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Routing Number</label>
-                                                        <input type="text" class="form-control input-element" name="ach_routing_number" id="ach_routing_number" />
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Number</label>
-                                                        <input type="text" class="form-control input-element" name="ach_account_number" id="ach_account_number" />
-                                                    </div>  
-                                                </div>
-                                            </div>
-                                            <div id="venmo_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Credential</label>
-                                                        <input type="text" class="form-control input-element" name="account_credentials" id="account_credentials"/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Note</label>
-                                                        <input type="text" class="form-control input-element" name="account_note" id="account_note"/>
-                                                    </div>  
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Confirmation</label>
-                                                        <input type="text" class="form-control input-element" name="confirmation" id="confirmation"/>
-                                                    </div>                                            
-                                                </div>
-                                            </div>
-                                            <div id="paypal_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Credential</label>
-                                                        <input type="text" class="form-control input-element" name="paypal_account_credentials" id="paypal_account_credentials"/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Note</label>
-                                                        <input type="text" class="form-control input-element" name="paypal_account_note" id="paypal_account_note"/>
-                                                    </div>  
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Confirmation</label>
-                                                        <input type="text" class="form-control input-element" name="paypal_confirmation" id="paypal_confirmation"/>
-                                                    </div>                                            
-                                                </div>
-                                            </div>
-                                            <div id="square_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Credential</label>
-                                                        <input type="text" class="form-control input-element" name="square_account_credentials" id="square_account_credentials"/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Note</label>
-                                                        <input type="text" class="form-control input-element" name="square_account_note" id="square_account_note"/>
-                                                    </div>  
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Confirmation</label>
-                                                        <input type="text" class="form-control input-element" name="square_confirmation" id="square_confirmation"/>
-                                                    </div>                                            
-                                                </div>
-                                            </div>
-                                            <div id="warranty_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Credential</label>
-                                                        <input type="text" class="form-control input-element" name="warranty_account_credentials" id="warranty_account_credentials"/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Note</label>
-                                                        <input type="text" class="form-control input-element" name="warranty_account_note" id="warranty_account_note"/>
-                                                    </div>                                         
-                                                </div>
-                                            </div>
-                                            <div id="home_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Credential</label>
-                                                        <input type="text" class="form-control input-element" name="home_account_credentials" id="home_account_credentials"/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Note</label>
-                                                        <input type="text" class="form-control input-element" name="home_account_note" id="home_account_note"/>
-                                                    </div>                                         
-                                                </div>
-                                            </div>
-                                            <div id="e_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Credential</label>
-                                                        <input type="text" class="form-control input-element" name="e_account_credentials" id="e_account_credentials"/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Note</label>
-                                                        <input type="text" class="form-control input-element" name="e_account_note" id="e_account_note"/>
-                                                    </div>                                         
-                                                </div>
-                                            </div>
-                                            <div id="other_credit_card" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Credit Card Number</label>
-                                                        <input type="text" class="form-control input-element" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
-                                                        <input type="text" class="form-control input-element" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
-                                                    </div>  
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">CVC</label>
-                                                        <input type="text" class="form-control input-element" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
-                                                    </div>                                             
-                                                </div>
-                                            </div>
-                                            <div id="other_payment_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type">Account Credential</label>
-                                                        <input type="text" class="form-control input-element" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type">Account Note</label>
-                                                        <input type="text" class="form-control input-element" name="other_payment_account_note" id="other_payment_account_note"/>
-                                                    </div>                                         
-                                                </div>
-                                            </div>
-                                    </div>
-                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="nsm-card primary">
+                            <div class="nsm-card-content">
                                 <div class="row">
                                 <!-- <div class="form-group col-md-12"> -->
                                     <div class="col-md-4">
@@ -1027,17 +812,66 @@ a.btn-primary.btn-md {
     </div>
 </div>
 
-            
+<div class="modal fade nsm-modal fade" id="modal-quick-add-panel-type" tabindex="-1" aria-labelledby="modal-quick-add-panel-type-label" aria-hidden="true">
+    <div class="modal-dialog modal-md" style="margin-top:13%;">
+        <form id="quick-add-panel-type-form" method="POST">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title"> Quick Add : Panel Type</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label for="panel-type-name" class="content-subtitle fw-bold d-block mb-2">Name </label>
+                            <input type="text" name="panel_type_name" id="panel-type-name" class="nsm-field form-control" placeholder="" required>
+                        </div>
+                    </div> 
+                </div>
+                <div class="modal-footer">                    
+                    <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary" id="btn-quick-add-panel-type-submit">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="modal fade nsm-modal fade" id="modal-quick-add-plan-type" tabindex="-1" aria-labelledby="modal-quick-add-plan-type-label" aria-hidden="true">
+    <div class="modal-dialog modal-md" style="margin-top:13%;">
+        <form id="quick-add-plan-type-form" method="POST">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title"> Quick Add : Plan Type</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label for="plan-type-name" class="content-subtitle fw-bold d-block mb-2">Name </label>
+                            <input type="text" name="plan_type_name" id="plan-type-name" class="nsm-field form-control" placeholder="" required>
+                        </div>
+                    </div> 
+                </div>
+                <div class="modal-footer">                    
+                    <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary" id="btn-quick-add-plan-type-submit">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>      
 
 <?php //echo $file_selection; ?>
 <!-- Modal Additional addServiceType -->
-<div id="modal-quick-add-service-type" class="modal fade modal-fluid nsm-modal" role="dialog">
-    <div class="modal-dialog modal-lg">
-        <form id="quick-add-service-type-form" class="w-50 m-auto">
+<div class="modal fade nsm-modal fade" id="modal-quick-add-service-type" tabindex="-1" aria-labelledby="modal-quick-add-service-type-label" aria-hidden="true">
+    <div class="modal-dialog modal-md" style="margin-top:13%;">
+        <form id="quick-add-service-type-form">
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="modal-title content-title">Add Service Type</span>
-                    <button type="button" class="cancel-add-payee" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
+                    <span class="modal-title content-title"> Quick Add : Service Type</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body">
                     <div class="row" style="margin-top:0px;">
@@ -1045,16 +879,16 @@ a.btn-primary.btn-md {
                             <label for="name"><span class="text-danger">*</span> Service Name</label>
                             <input type="text" class="form-control" name="addServiceTypevalue" id="addServiceTypevalue" required="" />
                         </div>
-                    </div>
+                    </div> 
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="nsm-button success float-end btn-create-service-type">Save</button>
+                <div class="modal-footer">                    
+                    <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="nsm-button primary btn-create-service-type">Save</button>
                 </div>
             </div>
         </form>
     </div>
-</div>
+</div>  
 <script src="<?php echo $url->assets ?>dashboard/js/bootstrap.bundle.min.js"></script>
 <?php include viewPath('v2/includes/footer'); ?>
 <?php //include viewPath('includes/footer'); ?>
@@ -1390,6 +1224,90 @@ $(document).ready(function(){
         minimumInputLength: 0        
     });
 
+    $('#btn-quick-add-plan-type').on('click', function(){
+        $('#plan-type-name').val('');
+        $('#modal-quick-add-plan-type').modal('show');
+    });
+
+    $('#btn-quick-add-panel-type').on('click', function(){
+        $('#panel-type-name').val('');
+        $('#modal-quick-add-panel-type').modal('show');
+    });
+
+    $('#quick-add-panel-type-form').on('submit', function(e){
+        e.preventDefault();
+        var url = base_url + 'tickets/_create_panel_type';
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: $('#quick-add-panel-type-form').serialize(),
+            success: function(data) {    
+                $('#btn-quick-add-panel-type-submit').html('Save');                   
+                if (data.is_success) {
+                    $('#modal-quick-add-panel-type').modal('hide');
+                    var panel_type_name = $('#panel-type-name').val();
+                    $('#panel_type').append($('<option>', {
+                        value: panel_type_name,
+                        text: panel_type_name
+                    }));
+                    $('#panel_type').val(panel_type_name);
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-quick-add-panel-type-submit').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $('#quick-add-plan-type-form').on('submit', function(e){
+        e.preventDefault();
+        var url = base_url + 'tickets/_create_plan_type';
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: $('#quick-add-plan-type-form').serialize(),
+            success: function(data) {    
+                $('#btn-quick-add-plan-type-submit').html('Save');                   
+                if (data.is_success) {
+                    $('#modal-quick-add-plan-type').modal('hide');
+                    var plan_type_name = $('#plan-type-name').val();
+                    $('#plan_type').append($('<option>', {
+                        value: plan_type_name,
+                        text: plan_type_name
+                    }));
+                    $('#plan_type').val(plan_type_name);
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-quick-add-plan-type-submit').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
     $("#quick-add-items-list").nsmPagination({itemsPerPage:10});
     $("#search_field").on("input", debounce(function() {
         tableSearch($(this));        
@@ -1564,7 +1482,7 @@ $('#scheduled_time_to').timepicker({
 </script>
 
 <script>
-$('#ticket_date').datepicker({
+$('#ticket_date1').datepicker({
     dateFormat: 'yyyy-mm-dd'
 });
 
