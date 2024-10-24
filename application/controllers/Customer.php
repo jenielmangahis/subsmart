@@ -3196,11 +3196,12 @@ class Customer extends MY_Controller
         add_css([
             'assets/css/customer/add_advance/add_advance.css',
         ]);
+
         $this->page_data['sales_tech_paid'] = $this->customer_ad_model->getJobSalesTechPaid($id);
         $this->page_data['sales_tech_commission'] = $this->customer_ad_model->getJobSalesTechCommission($id)[0];
         $this->page_data['industryTypes'] = $this->IndustryType_model->getAll();
         $this->page_data['company_id'] = logged('company_id'); // Company ID of the logged in USER
-        $this->page_data['LEAD_SOURCE_OPTION'] = $this->customer_ad_model->getLeadSourceData();
+        $this->page_data['LEAD_SOURCE_OPTION'] = $this->customer_ad_model->getAllSettingsLeadSourceByCompanyId(logged('company_id'));
         $this->load->view('v2/pages/customer/add', $this->page_data);
     }
 
@@ -4847,8 +4848,14 @@ class Customer extends MY_Controller
         $cid = logged('company_id');
         $input = $this->input->post();
 
-        $isNameExists = $this->customer_ad_model->getLeadSourceByNameAndCompanyId(trim($input['ls_name']), $cid);
+        $isNameExists = $this->customer_ad_model->getLeadSourceByNameAndCompanyId(trim($input['ls_name']), $cid);        
         if( $isNameExists && ($isNameExists->ls_id !=  $input['ls_id']) ){
+            $is_success = 0;
+            $msg = 'Lead source name already exists.';
+        }
+
+        $isDefaultExists = $this->customer_ad_model->getDEfaultLeadSourceByName(trim($input['ls_name']));
+        if( $isDefaultExists ){
             $is_success = 0;
             $msg = 'Lead source name already exists.';
         }
