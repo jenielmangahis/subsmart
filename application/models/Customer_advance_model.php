@@ -88,6 +88,7 @@ class Customer_advance_model extends MY_Model
     {
         $this->db->select('*');
         $this->db->where('fk_company_id', $company_id);
+        $this->db->or_where('fk_company_id', 0);
         $this->db->order_by('ls_id', 'DESC');
         $query = $this->db->get('ac_leadsource');
 
@@ -1349,6 +1350,16 @@ class Customer_advance_model extends MY_Model
         $this->db->select('*');
         $this->db->where('ls_name', $name);
         $this->db->where('fk_company_id', $cid);
+        $query = $this->db->get('ac_leadsource');
+
+        return $query->row();
+    }
+
+    public function getDEfaultLeadSourceByName($name)
+    {
+        $this->db->select('*');
+        $this->db->where('ls_name', $name);
+        $this->db->where('fk_company_id', 0);
         $query = $this->db->get('ac_leadsource');
 
         return $query->row();
