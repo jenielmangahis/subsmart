@@ -62,7 +62,15 @@
                                         </tr>
                                         <tr>
                                             <td style="text-align: left;"><?php echo $invoice->invoice_number ?></td>
-                                            <td style="text-align: left;"> <?php echo date('m/d/Y', strtotime($invoice->date_issued)) ?></td>
+                                            <td style="text-align: left;">   <?php 
+                                            $dateIssued = $invoice->date_issued;
+                                            
+                                            if ($dateIssued !== '0000-00-00' && strtotime($dateIssued) !== false) {
+                                                echo date('m/d/Y', strtotime($dateIssued));
+                                            } else {
+                                                echo '--'; 
+                                            }
+                                            ?></td>
 
                                         </tr>
                                       
@@ -93,33 +101,31 @@
             <table class="table-print" style="width: 100%">
                 <tbody>
                     <tr>
-                        <td id="presenter-col-left" class="presenter-col-left" style="width: 50%" valign="top">
-                            <p style="margin: 0;font-size:22px"><b>FROM:</b></p>
-                            <!-- <br> -->
-                            <p style="margin: 0"><b><?= strtoupper(trim($company->business_name)); ?></b></p>
-                            <!-- <br> -->
-                            <p style="margin: 0"><?= strtoupper($company->street); ?></p>
-                            <!-- <br> -->
-                            <p style="margin: 0"><?= strtoupper($company->city . ', ' . $company->state . ' ' . $company->postal_code); ?></p>
-                            <!-- <br> -->
-                            <p style="margin: 0"><?php echo strtolower($company->business_email) ?></p>
-                            <!-- <br> -->
-                            <p style="margin: 0">TEL: <?= formatPhoneNumber($company->business_phone); ?></p>
-                        </td>
-                
-                        <td style="width: 50%" valign="top">
-                            <p style="margin: 0;font-size:22px"><b>TO:</b></p>
-                            <!-- <br> -->
-                            <p style="margin: 0"><b><?= strtoupper($customer->first_name . ' ' . $customer->last_name); ?></b>
-                            <!-- <span class="middot">·</span> -->
-                            </p>
-                            <!-- <br> -->
-                            <p style="margin: 0"><?= strtoupper($customer->mail_add); ?></p>
-                            <p style="margin: 0"><?= strtoupper($customer->city . ' ' . $customer->state . ' ' . $customer->zip_code); ?></p>
-                            <!-- <br> -->
-                            <p style="margin: 0">TEL: <?= $customer->phone_m; ?></p>
-                        
-                        </td>
+                    <td id="presenter-col-left" class="presenter-col-left" style="width: 50%" valign="top">
+                        <p style="margin: 0;font-size:22px"><b>FROM:</b></p>
+                        <!-- <br> -->
+                        <p style="margin: 0"><b><?= (!empty($company->business_name) && strtoupper(trim($company->business_name)) !== 'NA') ? strtoupper(trim($company->business_name)) : ''; ?></b></p>
+                        <!-- <br> -->
+                        <p style="margin: 0"><?= (!empty($company->street) && strtoupper($company->street) !== 'NA') ? strtoupper($company->street) : ''; ?></p>
+                        <!-- <br> -->
+                        <p style="margin: 0"><?= (!empty($company->city) && !empty($company->state) && !empty($company->postal_code) && strtoupper($company->city . ', ' . $company->state . ' ' . $company->postal_code) !== 'NA') ? strtoupper($company->city . ', ' . $company->state . ' ' . $company->postal_code) : ''; ?></p>
+                        <!-- <br> -->
+                        <p style="margin: 0"><?= (!empty($company->business_email) && strtolower($company->business_email) !== 'na') ? strtolower($company->business_email) : ''; ?></p>
+                        <!-- <br> -->
+                        <p style="margin: 0">TEL: <?= (!empty($company->business_phone) && $company->business_phone !== 'NA') ? formatPhoneNumber($company->business_phone) : '--'; ?></p>
+                    </td>
+
+                    <td style="width: 50%" valign="top">
+                        <p style="margin: 0;font-size:22px"><b>TO:</b></p>
+                        <!-- <br> -->
+                        <p style="margin: 0"><b><?= (!empty($customer->first_name) && !empty($customer->last_name) && strtoupper($customer->first_name . ' ' . $customer->last_name) !== 'NA') ? strtoupper($customer->first_name . ' ' . $customer->last_name) : ''; ?></b></p>
+                        <!-- <br> -->
+                        <p style="margin: 0"><?= (!empty($customer->mail_add) && strtoupper($customer->mail_add) !== 'NA') ? strtoupper($customer->mail_add) : ''; ?></p>
+                        <p style="margin: 0"><?= (!empty($customer->city) && !empty($customer->state) && !empty($customer->zip_code) && strtoupper($customer->city . ' ' . $customer->state . ' ' . $customer->zip_code) !== 'NA') ? strtoupper($customer->city . ' ' . $customer->state . ' ' . $customer->zip_code) : ''; ?></p>
+                        <!-- <br> -->
+                        <p style="margin: 0">TEL: <?= (!empty($customer->phone_m) && $customer->phone_m !== 'NA') ? $customer->phone_m : '--'; ?></p>
+                    </td>
+
                        
                     </tr>
                 </tbody>
@@ -314,7 +320,7 @@
                         <tr>
                             <td colspan="3"></td>
                             <td colspan="3" style="text-align: right; background: #f4f4f4; padding: 8px 0"><b>Grand Total ($)</b></td>
-                            <td style="text-align: right; background: #f4f4f4; padding: 8px 8px 8px 0;"><b>$<?php echo number_format($invoice->grand_total, 2);?></b></td>
+                            <td style="text-align: right; background: #f4f4f4"><b>$<?php echo number_format($invoice->grand_total, 2);?></b></td>
                         </tr>
                         <tr>
                             <td colspan="3"></td>
