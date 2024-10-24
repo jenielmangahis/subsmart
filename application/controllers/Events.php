@@ -401,7 +401,7 @@ class Events extends MY_Controller
         );
         $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
         if($id!=NULL){
-            $this->page_data['jobs_data'] = $this->event_model->get_specific_event($id);
+            $this->page_data['jobs_data'] = $jobs_d = $this->event_model->get_specific_event($id);
             $this->page_data['event_items'] = $this->event_model->get_specific_event_items($id);
             //print_r($this->page_data['event_items']);
         }
@@ -694,7 +694,7 @@ class Events extends MY_Controller
         $this->load->view('job/job_settings/job_time_settings', $this->page_data);
     }
 
-    public function event_save () {
+    public function event_save() {
         $USER_ID = logged('id');
         $COMPANY_ID = logged('company_id');
 

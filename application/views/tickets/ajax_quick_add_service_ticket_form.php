@@ -255,7 +255,7 @@
                             </div>
                             <div class="col-md-6 form-group mt-2">
                                 <label for=""><b>Monthly Monitoring Rate</b></label>
-                                <input style="display:inline-block;" type="number" id="plan-value" name="monthly_monitoring_rate_value" value="0.00" class="form-control" />
+                                <input style="display:inline-block;" type="number" step="any" id="plan-value" name="monthly_monitoring_rate_value" value="0.00" class="form-control" />
                             </div>
                         </div>
                         
@@ -548,7 +548,7 @@
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <label for="adjustment-amount"><b>Adjustment Amount</b></label>                        
-                                    <input type="number" id="adjustment-amount" name="adjustment_amount" value="0.00" class="form-control" />
+                                    <input type="number" step="any" id="adjustment-amount" name="adjustment_amount" value="0.00" class="form-control" />
                                 </div>
                             </div>
                         </div>
