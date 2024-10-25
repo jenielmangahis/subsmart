@@ -137,7 +137,7 @@
                         </div>
                     </div>
 
-                    <div class="documents-loader d-flex align-items-center justify-content-center" style="padding-top: 1rem;">
+                    <div class="documents-loader d-flex align-items-center justify-content-center" style="padding-top: 1rem;display:none !important;">
                         <div class="spinner-border" role="status"></div>
                     </div>
 
@@ -187,11 +187,11 @@
                             </button>                            
                         </div>
 
-                        <div class="col-6 col-md-6 mb-2">
+                        <!-- <div class="col-6 col-md-6 mb-2">
                             <button type="submit" class="nsm-button w-100 ms-0 amt-3" id="managecustomerdocumentsbtn--download">
                                 <i class='bx bx-fw bx-import'></i> Download Selected
                             </button>
-                        </div>
+                        </div> -->
                         <div class="col-6 col-md-6">
                             <button type="button" class="nsm-button w-100 ms-0 btn-delete-selected" id="managecustomerdocumentsbtn--delete">
                                 <i class='bx bx-fw bx-trash'></i>
@@ -479,7 +479,7 @@
 </div>
 <script>
 $(function(){
-    load_esign_doc();
+    load_esign_doc('');
     function load_esign_doc(search_query){
         var cid = "<?= $customer_id; ?>";
         var url = "<?= base_url('customer/_load_esign_doc') ?>";

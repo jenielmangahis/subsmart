@@ -186,7 +186,15 @@
                                             <td style="margin-right:20px;width:45%">
                                                 <p style="margin: 0;"><b>INVOICE DATE</b></p>
                                                 <div style="border: 1px solid #000;padding: 10px">
-                                                    <?php echo date('m/d/Y', strtotime($invoice->date_issued))  ?>
+                                                    <?php 
+                                                        $dateIssued = $invoice->date_issued;
+                                                        
+                                                        if ($dateIssued !== '0000-00-00' && strtotime($dateIssued) !== false) {
+                                                            echo date('m/d/Y', strtotime($dateIssued));
+                                                        } else {
+                                                            echo '--'; 
+                                                        }
+                                                    ?>
                                                 </div>
                                             </td>
                                         </tr>
