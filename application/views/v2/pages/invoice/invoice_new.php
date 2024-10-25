@@ -148,12 +148,13 @@
                         <tr>
                             <td class="table-icon"></td>
                             <td data-name="Invoice Number">Invoice Number</td>
+                            <td data-name="Job Number">Job Number</td>
                             <td data-name="Date Issued">Date Issued</td>
-                            <td data-name="Date Due">Date Due</td>
-                            <td data-name="Job & Customer">Job & Customer</td>
+                            <td data-name="Date Due">Date Due</td>                            
+                            <td data-name="Customer">Customer</td>
                             <td data-name="Status">Status</td>
-                            <td data-name="Amount">Amount</td>
-                            <td data-name="Amount">Balance</td>
+                            <td data-name="Amount" style="text-align:right;">Amount</td>
+                            <td data-name="Amount" style="text-align:right;">Balance</td>
                             <td data-name="Manage"></td>
                         </tr>
                     </thead>
@@ -202,14 +203,25 @@
                                             <i class='bx bx-receipt'></i>
                                         </div>
                                     </td>
-                                    <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('invoice/genview/' . $invoice->id) ?>'"><?= formatInvoiceNumber($invoice->invoice_number) ?></td>
+                                    <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('invoice/genview/' . $invoice->id) ?>'"><?= formatInvoiceNumber($invoice->invoice_number) ?>
+                                    </td>
+                                    <td class="nsm-text-primary nsm-link default view-job-row" data-id="<?= $invoice->job_id; ?>">
+                                            <?php echo $invoice->job_number != '' ? $invoice->job_number : '---';  ?>
+                                    </td>
                                     <td><?php echo get_format_date($invoice->date_issued) ?></td>
                                     <td><?php echo get_format_date($invoice->due_date) ?></td>
                                     <td>
-                                        <label class="d-block"><?php echo $invoice->first_name . ' ' . $invoice->last_name; ?></label>
-                                        <a class="nsm-link" href="<?php echo base_url('customer/genview/' . $invoice->customer_id) ?>">
-                                            <?php echo $invoice->job_name ?>
-                                        </a>
+                                        <label class="d-block">
+                                        <?php 
+                                            if( trim($invoice->first_name != '') || trim($invoice->last_name != '') ){
+                                                $customer_name = $invoice->first_name . ' ' . $invoice->last_name;
+                                            }else{
+                                                $customer_name = '---';
+                                            }
+                                            
+                                            echo $customer_name;
+                                        ?>
+                                        </label>
                                     </td>
                                     <td>
                                         <span class="status-label nsm-badge <?= $badge ?>">
@@ -222,8 +234,8 @@
                                             ?>                                            
                                         </span>
                                     </td>
-                                    <td>$<?php echo number_format((float)$invoice->grand_total,2); ?></td>
-                                    <td>$<?php echo number_format((float)$invoice->balance,2); ?></td>
+                                    <td style="text-align:right;">$<?php echo number_format((float)$invoice->grand_total,2); ?></td>
+                                    <td style="text-align:right;">$<?php echo number_format((float)$invoice->balance,2); ?></td>
                                     <td>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -307,6 +319,20 @@
                 </div>
             </div>
 
+            <div class="modal fade nsm-modal fade" id="modal-quick-view-job" data-source="" tabindex="-1" aria-labelledby="modal-quick-view-upcoming-schedule-label" aria-hidden="true">
+                <div class="modal-dialog modal-lg">        
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title">View Job</span>
+                            <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                        </div>
+                        <div class="modal-body" style="max-height:700px; overflow: auto;">
+                            <div class="view-schedule-container row"></div>
+                        </div>                                    
+                    </div>        
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -320,6 +346,35 @@
 
             _form.submit();
         }, 1500));
+
+        $('.view-job-row').on('click', function(){
+            var appointment_id = $(this).attr('data-id');
+            var url = base_url + "job/_quick_view_details";  
+
+            if( appointment_id > 0 ){
+                $('#modal-quick-view-job').modal('show');
+                showLoader($(".view-schedule-container")); 
+
+                setTimeout(function () {
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: {appointment_id:appointment_id},
+                    success: function(o)
+                    {          
+                        $(".view-schedule-container").html(o);
+                    }
+                });
+                }, 500);
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: 'Job number not found.'
+                });
+            }
+            
+        });
 
         $(document).on('click touchstart', '#resend-invoice-late-fee', function(){
             var invoice_id = $(this).attr('data-id');    
