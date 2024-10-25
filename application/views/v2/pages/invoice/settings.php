@@ -94,6 +94,30 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-12">
+                                <div class="nsm-card primary">
+                                    <div class="nsm-card-header d-block">
+                                        <div class="nsm-card-title">
+                                            <span>Invoice PDF</span>
+                                        </div>
+                                        <label class="nsm-subtitle">Select invoice template you want to use.</label>
+                                    </div>
+                                    <div class="nsm-card-content">
+                                        <div class="row g-2">
+                                            <div class="col-12 col-md-12">
+                                                <div class="input-group mb-3">
+                                                <select class="nsm-field form-select" name="invoice_template">
+                                                    <option value="1" <?php echo $setting->invoice_template == 1 ? 'selected' : ''; ?>>Standard</option>
+                                                    <option value="2" <?php echo $setting->invoice_template == 2 ? 'selected' : ''; ?>>Mailing</option>
+                                                    <option value="3" <?php echo $setting->invoice_template == 3 ? 'selected' : ''; ?>>Mobile</option>
+                                                </select>
+                                                </div>
+                                            </div>
+                                        
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <!-- <div class="col-12">
                                 <div class="nsm-card">
                                     <div class="nsm-card-content text-center">

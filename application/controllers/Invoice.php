@@ -1711,13 +1711,21 @@ class Invoice extends MY_Controller
         
         // $this->load->view('invoice/pdf/standard_template', $this->page_data, $filename, "portrait");
 
+        $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
+
+    
 
         if ($format === "pdf") {
             $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
             $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
             $filename = "nSmarTrac_invoice_".$id;
             $this->load->library('pdf');
-            $this->pdf->load_view('invoice/pdf/standard_template', $this->page_data, $filename, "portrait");
+            if($setting[0]->invoice_template == 1){
+              $this->pdf->load_view('invoice/pdf/standard_template', $this->page_data, $filename, "portrait");
+            }
+            if($setting[0]->invoice_template == 3){
+                $this->pdf->load_view('invoice/pdf/template', $this->page_data, $filename, "portrait");
+              }
         }elseif($format === "save_pdf"){
             $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
             $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
@@ -1817,6 +1825,7 @@ class Invoice extends MY_Controller
                     'accept_direct_deposit' => post('payment_deposit') ? post('payment_deposit') : 0,
                     'accept_credit' => 0,
                     'mobile_payment' => post('payment_mobile_status') ? post('payment_mobile_status') : 0,
+                    'invoice_template' => post('invoice_template') ? post('invoice_template') : 0,
                 ]);
     
                 $this->activity_model->add('Created Invoice Settings ' . $user->id . ' Created by User:' . logged('name'), logged('id'));
@@ -1854,6 +1863,7 @@ class Invoice extends MY_Controller
                     'accept_direct_deposit' => post('payment_deposit') ? post('payment_deposit') : 0,
                     'accept_credit' => 0,
                     'mobile_payment' => post('payment_mobile_status') ? post('payment_mobile_status') : 0,
+                    'invoice_template' => post('invoice_template') ? post('invoice_template') : 0,
                 ]);
     
                 $this->activity_model->add('Updated Invoice Settings ' . $user->id . ' Updated by User:' . logged('name'), logged('id'));
