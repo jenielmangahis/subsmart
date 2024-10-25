@@ -556,7 +556,6 @@ $("#start_date").change(function (event) {
     $("#end_date").val($("#start_date").val());
 });
 
-
 $(function () {
     $("#start_time, #end_time, #customer_reminder, #inputState").select2();
     $('#employee_id').select2({

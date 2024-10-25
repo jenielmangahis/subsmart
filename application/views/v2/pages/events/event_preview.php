@@ -40,8 +40,8 @@ add_css(array(
         right: 0;
         bottom: 10px;
     }
-    #map{
-        height: 210px;
+    #event-map-preview{
+        height: 310px;
     }
     .title-border{
         border-bottom: 2px solid rgba(0,0,0,.1);
@@ -138,11 +138,9 @@ add_css(array(
                                                 <!-- <h6 class="title-border">Created By :<i><?php //echo $created_by->FName.' '.$created_by->LName  ?></i> </h6> -->
                                                 <h6 class="title-border">Created By : <?= $created_by;  ?></h6>
                                                 <div class="row">
-                                                    <div class="col-md-4">
-
-                                                    </div>
-                                                    <div id="map" class="col-md-4"></div>
-                                                    <div id="streetViewBody" class="col-md-4"></div>
+                                                    <div id="event-map-preview" class="event-map-preview"></div>
+                                                    <!-- <div id="map" class="col-md-4"></div> -->
+                                                    <!-- <div id="streetViewBody" class="col-md-4"></div> -->
                                                 </div>
                                             </div>
                                         <?php endif; ?>
@@ -291,58 +289,49 @@ add_footer_js(array(
 <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<?= google_credentials()['api_key'] ?>&callback=initMap&libraries=&v=weekly"></script>
+
+<!-- Map files -->
+<script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
+<script type="text/javascript" src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.umd.js"></script>
+<link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
+<script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/styles/minimal.css" />
+<script src="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/dist/index.min.js"></script>
+<!-- End Map files -->
 
 <script>
-    var geocoder;
-    function initMap(address=null) {
-        address = '<?php echo $jobs_data->event_address;  ?>';
-        if(address == null){
-            address = '6866 Pine Forest Rd Pensacola FL 32526';
-        }
-        const myLatLng = { lat: -25.363, lng: 131.044 };
-        const map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 12,
-            height:220,
-            center: myLatLng,
-        });
-        new google.maps.Marker({
-            position: myLatLng,
-            map,
-            title: "Hello World!",
-        });
-        geocoder = new google.maps.Geocoder();
-        codeAddress(geocoder, map,address);
-        loadStreetView(address);
-    }
+    var myAPIKey       = "<?= GEOAPIKEY ?>";  
+    <?php if($default_lat != "" && $default_lon != "") { ?>
+            var default_lat    = '<?php echo $default_lat; ?>';
+            var default_lon    = '<?php echo $default_lon; ?>';        
+            var map_zoom_level = '11';  
+    <?php } else { ?>
+            var default_lat    = '39.7837304';
+            var default_lon    = '-100.445882';   
+            var map_zoom_level = '5';    
+    <?php } ?>
 
-    function codeAddress(geocoder, map,address) {
-        geocoder.geocode({'address': address}, function(results, status) {
-            if (status === 'OK') {
-                map.setCenter(results[0].geometry.location);
-                var marker = new google.maps.Marker({
-                    map: map,
-                    position: results[0].geometry.location
-                });
-            } else {
-                console.log(status);
-                console.log('Geocode was not successful for the following reason: ' + status);
-            }
-        });
-    }
+    var map_style = 'osm-bright';
 
-    function loadStreetView(address)
-    {
-        $.ajax({
-            type: "POST",
-            url: "<?= base_url() ?>job/loadStreetView",
-            data: {address : address}, // serializes the form's elements.
-            success: function(data)
-            {
-                $('#streetViewBody').html(data);
-            }
-        });
-    }
+    var center = {
+        lat: default_lat,
+        lon: default_lon
+    };        
+
+    var geoMap = new maplibregl.Map({
+    center: [center.lon, center.lat],
+    zoom: map_zoom_level,
+    container: 'event-map-preview',
+    style: `https://maps.geoapify.com/v1/styles/${map_style}/style.json?apiKey=${myAPIKey}`,
+    });
+    geoMap.addControl(new maplibregl.NavigationControl()); 
+    var currentMarkers=[];          
+
 </script>
 
 <?php include viewPath('v2/includes/footer'); ?>
