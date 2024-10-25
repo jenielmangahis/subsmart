@@ -75,70 +75,68 @@ add_css(array(
                         <div class="col-md-2"></div>
                         <div class="col-md-7">
                             <div class="card">
-                                <div class="card-header">
-                                    <div class="right-text">
-                                    <p class="page-title" style="font-weight: 700;font-size: 16px; margin-top: 10%; margin-right: 4px;"><?=  $jobs_data->event_number; ?> </p>
+                                <div class="card-header">                                
+                                    <div class="right-text" style="margin-right: 4.5rem;">
+                                        <p class="page-title" style="font-weight: 700;font-size: 16px; margin-top: 10%; margin-right: 4px;"><?=  $jobs_data->event_number; ?> </p>
                                     </div>
                                     <hr>
                                 </div>
+
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-4">
-                                            <?php if($company_info->business_image != "" ): ?>
-                                                <img style="width: 100px" id="attachment-image" alt="Attachment" src="<?= businessProfileImage($company_info->id); ?> ">
-                                            <?php endif; ?>
-                                        </div>
-                                        <div class="col-md-4" style="margin-left: -7px;">
-                                            <table class="right-text">
-                                                <tbody>
-                                                    <tr>
-                                                        <td align="right">Event Type :</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="right" >Event Tags :</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td align="right" >Date :</td>
-                                                     </tr>
-                                                    <tr>
-                                                        <td align="right" >Status :</td>
-                                                     </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <table class="right-text">
-                                                <tbody>
-                                                <tr>
-                                                    <td align="right" ><?= $jobs_data->event_type;  ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td align="right" ><?= $jobs_data->event_tag;  ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td align="right"><?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?></td>
-                                                </tr>
-                                                <tr>
-                                                    <td align="right" style="font-weight: 600;"><?=  $jobs_data->status;  ?></td>
-                                                </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                        
+                                        <div class="col-md-11" style="margin-left: 2rem;">
 
+                                            <table class="table">
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <?php if($company_info->business_image != "" ): ?>
+                                                                <img style="width: 100px" id="attachment-image" alt="Attachment" src="<?= businessProfileImage($company_info->id); ?> ">
+                                                            <?php endif; ?>                                                            
+                                                        </td>
+                                                        <td>
+                                                            <table class="right-text">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td style="width: 110px;">Event Type :</td>
+                                                                        <td align="right" style="width: 180px;"><?= $jobs_data->event_type;  ?></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="width: 110px;">Event Tags :</td>
+                                                                        <td align="right" style="width: 180px;"><?= $jobs_data->event_tag;  ?></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="width: 110px;">Date :</td>
+                                                                        <td align="right" style="width: 180px;"><?= isset($jobs_data) ?  date('m/d/Y', strtotime($jobs_data->start_date)) : '';  ?></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td style="width: 110px;">Status :</td>
+                                                                        <td align="right" style="width: 180px;"><strong><?=  $jobs_data->status;  ?></strong></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>                                        
+                                            
+                                        </div>
 
                                         <?php if($jobs_data->event_type == 'Estimate'): ?>
-                                        <div class="col-md-12">
-                                            <h6 class="title-border">FROM :</h6>
-                                            <b><?= $company_info->business_name; ?></b><br>
-                                            <span><?= $company_info->street; ?></span><br>
-                                            <span><?= $company_info->city.' '.$company_info->state.' '.$company_info->postal_code ; ?></span><br>
-                                            <span> Phone: <?= $company_info->business_phone ; ?></span>
-                                        </div>
 
-                                        <?php else: $created_by = get_employee_name($jobs_data->created_by); echo     "<p style='margin-left: 6px'>".$created_by."</p>";?>
-                                            <div class="col-md-11" style="margin-left: 1.5rem;">
-                                                <br>
-                                                <h6 class="title-border">Created By :<i><?= $created_by->FName.' '.$created_by->LName  ?></i> </h6>
+                                            <div class="col-md-11" style="margin-left: 2rem;">
+                                                <h6 class="title-border">FROM :</h6>
+                                                <b><?= $company_info->business_name; ?></b><br>
+                                                <span><?= $company_info->street; ?></span><br>
+                                                <span><?= $company_info->city.' '.$company_info->state.' '.$company_info->postal_code ; ?></span><br>
+                                                <span> Phone: <?= $company_info->business_phone ; ?></span>
+                                            </div>
+
+                                        <?php else: $created_by = get_employee_name($jobs_data->created_by);?>
+                                            <div class="col-md-11" style="margin-left: 2rem;">
+                                                <!-- <h6 class="title-border">Created By :<i><?php //echo $created_by->FName.' '.$created_by->LName  ?></i> </h6> -->
+                                                <h6 class="title-border">Created By : <?= $created_by;  ?></h6>
                                                 <div class="row">
                                                     <div class="col-md-4">
 
@@ -173,69 +171,72 @@ add_css(array(
                                         </div>
                                         <?php endif; ?>
                                         <div class="row" style="margin-left: 2rem; margin-top: 1rem;">
-                                        <div class="col-md-11">
-                                            <h6 class="title-border">Event Details :</h6>
-                                            <table class="table table-bordered">
-                                                <thead>
-                                                    <tr>
-                                                        <td>Items</td>
-                                                        <td>Qty</td>
-                                                        <td>Price</td>
-                                                        <td>Total</td>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php
-                                                        $subtotal = 0.00;
-                                                        foreach ($event_items as $item):
-                                                        $total = $item->item_price * $item->qty;
-                                                    ?>
+                                            <!--     
+                                            <div class="col-md-11">
+                                                <h6 class="title-border">Event Details :</h6>
+                                                <table class="table table-bordered">
+                                                    <thead>
                                                         <tr>
-                                                            <td><?= $item->title; ?></td>
-                                                            <td><?= $item->qty; ?></td>
-                                                            <td>$<?= $item->item_price; ?></td>
-                                                            <td>$<?= number_format((float)$total,2,'.',','); ?></td>
+                                                            <td>Items</td>
+                                                            <td>Qty</td>
+                                                            <td>Price</td>
+                                                            <td>Total</td>
                                                         </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php
+                                                            $subtotal = 0.00;
+                                                            foreach ($event_items as $item):
+                                                            $total = $item->item_price * $item->qty;
+                                                        ?>
+                                                            <tr>
+                                                                <td><?= $item->title; ?></td>
+                                                                <td><?= $item->qty; ?></td>
+                                                                <td>$<?= $item->item_price; ?></td>
+                                                                <td>$<?= number_format((float)$total,2,'.',','); ?></td>
+                                                            </tr>
+                                                    <?php
+                                                        $subtotal = $subtotal + $total;
+                                                        endforeach;
+                                                    ?>
+                                                    </tbody>
+                                                </table>
+                                                <hr>
+                                                <b>Sub Total</b>
+                                                <b class="right-text">$<?= number_format((float)$subtotal,2,'.',','); ?></b>
+                                                <br><hr>
+
+                                                <?php if($jobs_data->tax != NULL): ?>
+                                                    <b>Tax </b>
+                                                    <i class="right-text">$0.00</i>
+                                                    <br><hr>
+                                                <?php endif; ?>
+
+                                                <?php if($jobs_data->discount != NULL): ?>
+                                                    <b>Discount </b>
+                                                    <i class="right-text">$0.00</i>
+                                                    <br><hr>
+                                                <?php endif; ?>
+
+                                                <b>Grand Total</b>
+                                                <b class="right-text">$<?= number_format((float)$subtotal,2,'.',','); ?></b>
+                                            </div>
+                                            -->
+
+                                            <div class="col-md-11">
+                                                <br><br>
+                                                <h6 class="title-border">Notes :</h6>
+                                                <span><?=  $jobs_data->notes; ?></span>
+                                            </div>
+
+                                            <!-- <div class="col-md-11">
+                                                <br>
+                                                <h6 class="title-border">Assigned To :</h6>
                                                 <?php
-                                                    $subtotal = $subtotal + $total;
-                                                    endforeach;
+                                                    //$employee_date = get_employee_name($jobs_data->employee_id)
                                                 ?>
-                                                </tbody>
-                                            </table>
-                                            <hr>
-                                            <b>Sub Total</b>
-                                            <b class="right-text">$<?= number_format((float)$subtotal,2,'.',','); ?></b>
-                                            <br><hr>
-
-                                            <?php if($jobs_data->tax != NULL): ?>
-                                                <b>Tax </b>
-                                                <i class="right-text">$0.00</i>
-                                                <br><hr>
-                                            <?php endif; ?>
-
-                                            <?php if($jobs_data->discount != NULL): ?>
-                                                <b>Discount </b>
-                                                <i class="right-text">$0.00</i>
-                                                <br><hr>
-                                            <?php endif; ?>
-
-                                            <b>Grand Total</b>
-                                            <b class="right-text">$<?= number_format((float)$subtotal,2,'.',','); ?></b>
-                                        </div>
-                                        <div class="col-md-11">
-                                            <br><br>
-                                            <h6 class="title-border">Notes :</h6>
-                                            <span><?=  $jobs_data->notes; ?></span>
-                                        </div>
-
-                                        <div class="col-md-11">
-                                            <br>
-                                            <h6 class="title-border">Assigned To :</h6>
-                                            <?php
-                                                $employee_date = get_employee_name($jobs_data->employee_id)
-                                            ?>
-                                            <span><?= $employee_date->FName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span>
-                                        </div>
+                                                <span><?php //echo $employee_date->FName; ?></span> <span class="fa fa-envelope-open-text icon_preview"></span>
+                                            </div> -->
 
                                         <div class="col-md-11">
                                             <br>

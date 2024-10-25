@@ -545,6 +545,33 @@ a.btn-primary.btn-md {
                             <div class="nsm-card-content">                                
                                 <div class="row">
                                     <div class="col-md-8">
+                                        <?php if( $tickets->user_docfile_template_id > 0 ){ ?>
+                                            <div class="row">
+                                                <div class="col-md-3 form-group mt-2">
+                                                    <label for="service-ticket-monthly-monitoring-rate"><b>Change Monthly Monitoring Rate</b></label>
+                                                    <select style="display:inline-block;" class="form-control nsm-field form-select" name="monthly_monitoring_rate" id="service-ticket-monthly-monitoring-rate">
+                                                        <option value="0.00">Select Plan Rate</option>
+                                                        <?php foreach( $ratePlans as $rp ){ ?>
+                                                            <option value="<?= $rp->amount; ?>"><?= $rp->plan_name; ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-3 form-group mt-2">
+                                                    <label for=""><b>Monthly Monitoring Rate</b></label>
+                                                    <input style="display:inline-block;" type="number" id="plan-value" name="monthly_monitoring_rate_value" value="<?= $tickets->monthly_monitoring > 0 ? number_format($tickets->monthly_monitoring,2,".","") : '0.00'; ?>" class="form-control" />
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-3 form-group mt-2">
+                                                    <label for="service-ticket-installation-cost"><b>Installation Cost</b></label>
+                                                    <input type="number" step="any" class="form-control" value="<?= $tickets->installation_cost > 0 ? number_format($tickets->monthly_monitoring,2,".","") : '0.00'; ?>" name="installation_cost" id="service-ticket-installation-cost">
+                                                </div>
+                                                <div class="col-md-3 form-group mt-2">
+                                                    <label for="service-ticket-otp"><b>One Time (Program and Setup)</b></label>
+                                                    <input type="number" step="any" class="form-control" value="<?= $tickets->otp_setup > 0 ? number_format($tickets->monthly_monitoring,2,".","") : '0.00'; ?>" name="otp" id="service-ticket-otp">
+                                                </div>
+                                            </div>
+                                        <?php } ?>
                                         <div class="row">
                                             <div class="form-group col-md-3">
                                                 <div class="select-wrap">
@@ -593,12 +620,12 @@ a.btn-primary.btn-md {
                                             <tr>
                                                 <td>Subtotal</td>
                                                 <!-- <td></td> -->
-                                                <td colspan="2" align="right"><span id="span_sub_total_invoice"> <?php echo $tickets->subtotal; ?> </span> <input type="hidden" name="subtotal" id="item_total"></td>
+                                                <td colspan="2" align="right"><span id="span_sub_total_invoice"> <?php echo $tickets->subtotal > 0 ? number_format($tickets->subtotal,2,".","") : '0.00'; ?> </span> <input type="hidden" name="subtotal" id="item_total"></td>
                                             </tr>
                                             <tr>
                                                 <td>Taxes</td>
                                                 <!-- <td></td> -->
-                                                <td colspan="2" align="right"><span id="total_tax_"><?php echo $tickets->taxes; ?></span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                                <td colspan="2" align="right"><span id="total_tax_"><?php echo $tickets->taxes > 0 ? number_format($tickets->taxes,2,".","") : '0.00'; ?></span><input type="hidden" name="taxes" id="total_tax_input"></td>
                                             </tr>
                                             <tr>
                                                 <td>
@@ -606,19 +633,19 @@ a.btn-primary.btn-md {
                                                     <span id="modal-help-popover-adjustment" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span>
                                                 </td>
                                                 <td colspan="2">
-                                                    <input type="number" style="width:50%;float:right;text-align:right;" class="form-control adjustment_input" name="adjustment_value" id="adjustment_input" value="<?php echo $tickets->adjustment_value; ?>">
+                                                    <input type="number" step="any" style="width:50%;float:right;text-align:right;" class="form-control adjustment_input" name="adjustment_value" id="adjustment_input" value="<?php echo $tickets->adjustment_value > 0 ? number_format($tickets->adjustment_value,2,".","") : '0.00'; ?>">
                                                 </td>
                                                 <!-- <td align="right"><?php echo $tickets->adjustment_value; ?></td> -->
                                             </tr>
                                             <tr>
                                                 <td>Markup</td>
-                                                <td><a href="#" style="color:#02A32C;">set markup</a></td>
-                                                <td align="right"><?php echo $tickets->markup; ?><input type="hidden" name="markup" id="markup_input_form" class="markup_input" value="<?php echo $tickets->markup; ?>"></td>
+                                                <td><a href="#" style="color:#02A32C;display:none;">set markup</a></td>
+                                                <td align="right"><?php echo $tickets->markup > 0 ? number_format($tickets->markup, 2, ".", "") : '0.00'; ?><input type="hidden" name="markup" id="markup_input_form" class="markup_input" value="<?php echo $tickets->markup > 0 ? number_format($tickets->markup, 2, ".", "") : '0.00'; ?>"></td>
                                             </tr>
                                             <tr>
                                                 <td><b>Grand Total ($)</b></td>
                                                 <td></td>
-                                                <td align="right"><b><span id="grand_total"><?php echo $tickets->grandtotal; ?></span></b><input type="hidden" name="grandtotal" id="grand_total_input" value='<?php echo $tickets->grandtotal; ?>'></td>
+                                                <td align="right"><b><span id="grand_total"><?php echo $tickets->grandtotal > 0 ? number_format($tickets->grandtotal,2,".","") : '0.00'; ?></span></b><input type="hidden" name="grandtotal" id="grand_total_input" value='<?php echo $tickets->grandtotal; ?>'></td>
                                             </tr>
                                         </table>
                                     </div>
@@ -1232,6 +1259,13 @@ $(document).ready(function(){
     $('#btn-quick-add-panel-type').on('click', function(){
         $('#panel-type-name').val('');
         $('#modal-quick-add-panel-type').modal('show');
+    });
+
+    $('#service-ticket-monthly-monitoring-rate').on('change', function(){
+        var selected = $(this).val();
+        $('#plan-value').val(selected);
+        //$('#span_mmr').html(selected);
+        //computeGrandTotal();
     });
 
     $('#quick-add-panel-type-form').on('submit', function(e){

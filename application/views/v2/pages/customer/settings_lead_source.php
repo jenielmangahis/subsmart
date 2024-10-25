@@ -57,6 +57,7 @@
                                     <td class="fw-bold nsm-text-primary"><?= $source->ls_name; ?></td>
                                     <td><?= date("m/d/Y h:i A",strtotime($source->date_created)); ?></td>
                                     <td>
+                                        <?php if( $source->fk_company_id > 0 ){ ?>
                                         <div class="dropdown table-management">
                                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
                                                 <i class='bx bx-fw bx-dots-vertical-rounded'></i>
@@ -70,6 +71,7 @@
                                                 </li>
                                             </ul>
                                         </div>
+                                        <?php } ?>
                                     </td>
                                 </tr>
                             <?php
