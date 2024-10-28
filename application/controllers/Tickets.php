@@ -1363,12 +1363,17 @@ class Tickets extends MY_Controller
 
     public function deleteTicket()
     {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        $cid = logged('company_id');
+
         $ticketID = $this->input->post('tkID');
         
         $user_login = logged('FName') . ' ' . logged('LName');
         
-        $ticketInfo = $this->tickets_model->getTicketInfo($ticketID);
-        // Record Job delete to Customer Activities Module in Customer Dashboard
+        $ticketInfo = $this->tickets_model->getByIdAndCompanyId($ticketID,$cid);
+        if( $ticketInfo ){
+            // Record Job delete to Customer Activities Module in Customer Dashboard
             $action = "$user_login deleted a service ticket. $ticketInfo->ticket_no";
 
             $customerLogPayload = array(
@@ -1379,8 +1384,22 @@ class Tickets extends MY_Controller
             );
             $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogPayload);
 
-        $is_success =  $this->tickets_model->delete_tickets($ticketID);
-        echo json_encode($is_success);
+            //Activity Logs
+            $activity_name = 'Service Ticket : Deleted Ticket # ' . $ticketInfo->ticket_no; 
+            createActivityLog($activity_name);
+
+            $result =  $this->tickets_model->delete_tickets($ticketID);
+
+            $is_success = 1;
+            $msg = '';
+        }
+        
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
     }
 
     public function saveTickets()
@@ -2993,6 +3012,44 @@ class Tickets extends MY_Controller
         }
 
         if( $total_deleted > 0 ){
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_update_status_selected_tickets()
+    {
+        $is_success = 0;
+        $msg = 'Please select data';
+        $cid = logged('company_id');
+
+        $post = $this->input->post();
+        $total_updated = 0;
+        
+        if( count($post['tickets']) > 0 ){
+            foreach($post['tickets'] as $tid){
+                $ticket = $this->tickets_model->getByIdAndCompanyId($tid, $cid);
+                if( $ticket ){
+                    $data = ['ticket_status' => $post['change_status']];
+                    $this->tickets_model->update($ticket->id, $data);
+
+                    //Activity Logs
+                    $activity_name = 'Service Ticket : Changed ticket # status from ' . $ticket->ticket_status . ' to ' . $post['change_status']; 
+                    createActivityLog($activity_name);
+                    
+                    $total_updated++;
+                }
+            }
+        }
+
+        if( $total_updated > 0 ){
             $is_success = 1;
             $msg = '';
         }
