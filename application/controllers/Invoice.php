@@ -1713,8 +1713,6 @@ class Invoice extends MY_Controller
 
         $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
-    
-
         if ($format === "pdf") {
             $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
             $this->page_data['profile'] = $img[2] . "/" . $img[3] . "/" . $img[4];
