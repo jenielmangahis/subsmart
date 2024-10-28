@@ -1937,7 +1937,11 @@ class Tickets extends MY_Controller
                         $cc_exp = $this->input->post('customer_cc_expiry_date_month') . '/' . $this->input->post('customer_cc_expiry_date_year');  
                     }
 
-                    $input_billing['bill_method'] = $this->input->post('bill_method');                                        
+                    $input_billing['bill_method'] = $this->input->post('bill_method');   
+                    if( $billing->bill_start_date == NULL ||  $billing->bill_start_date == '1970-01-01'){
+                        $input_billing['bill_start_date'] = date("Y-m-d");
+                        $input_billing['bill_end_date'] = date("Y-m-d");
+                    }                                                          
 
                     if( $this->input->post('bill_method') == 'CHECK' ){
                         $input_billing['check_num'] = $this->input->post('customer_check_number');
@@ -1946,8 +1950,8 @@ class Tickets extends MY_Controller
                         $input_billing['routing_num'] = $this->input->post('customer_check_routing_number');
                     }elseif( $this->input->post('bill_method') == 'CC' ){
                         $input_billing['credit_card_num'] = $this->input->post('customer_cc_num');
-                        $input_billing['credit_card_exp_mm_yyyy'] = $this->input->post('customer_cc_cvc');
-                        $input_billing['credit_card_exp'] = $cc_exp;
+                        $input_billing['credit_card_exp_mm_yyyy'] = $cc_exp;
+                        $input_billing['credit_card_exp'] = $this->input->post('customer_cc_cvc');
                         $input_billing['credit_card_type'] = $card_type;
                     }else{
                         $input_billing['acct_num'] = $this->input->post('customer_ach_account_number');
@@ -1968,8 +1972,8 @@ class Tickets extends MY_Controller
                     $input_billing['state'] = $this->input->post('customer_state');
                     $input_billing['zip'] = $this->input->post('customer_zip');
                     $input_billing['mmr'] = $monthly_monitoring_cost;
-                    $input_billing['bill_start_date'] = NULL;
-                    $input_billing['bill_end_date'] = NULL;
+                    $input_billing['bill_start_date'] = date("Y-m-d");
+                    $input_billing['bill_end_date'] = date("Y-m-d");
 
                     if( $this->input->post('bill_method') == 'CHECK' ){
                         $input_billing['check_num'] = $this->input->post('customer_check_number');
@@ -1980,7 +1984,7 @@ class Tickets extends MY_Controller
                         $input_billing['credit_card_num'] = $this->input->post('customer_cc_num');
                         $input_billing['credit_card_exp_mm_yyyy'] = $cc_exp;
                         $input_billing['credit_card_exp'] = $this->input->post('customer_cc_cvc');
-                        $input_billing['card_type'] = $card_type;
+                        $input_billing['credit_card_type'] = $card_type;
                     }else{
                         $input_billing['acct_num'] = $this->input->post('customer_ach_account_number');
                         $input_billing['routing_num'] = $this->input->post('customer_ach_routing_number');
