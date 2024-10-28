@@ -47,7 +47,7 @@ class Accounting_model extends MY_Model
             $this->db->select('acs_profile.prof_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, acs_profile.status AS status, acs_billing.bill_start_date AS bill_start_date, acs_billing.bill_end_date AS bill_end_date, acs_billing.mmr AS mmr');
             $this->db->from('acs_profile');
             $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
-            $this->db->where('company_id', $companyID);
+            $this->db->where('acs_profile.company_id', $companyID);
             $this->db->where_in('acs_profile.status', [
                 'Active w/RAR',
                 'Active w/RMR',
@@ -75,6 +75,90 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
 
+        // Get Earned data for Today's Widget Report in Database
+        if ($reportType == 'earned') {
+            $this->db->select('invoices.id AS id, invoices.company_id AS company_id,invoices.invoice_number AS number, invoices.job_name AS description, invoices.status AS status, invoices.due_date AS due_date, invoices.grand_total AS total');
+            $this->db->from('invoices');
+            $this->db->where('invoices.status', "Paid");
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Invoice Amount data for Today's Widget Report in Database
+        if ($reportType == 'invoice_amount') {
+            $this->db->select('invoices.id AS id, invoices.company_id AS company_id,invoices.invoice_number AS number, invoices.job_name AS description, invoices.status AS status, invoices.due_date AS due_date,invoices.grand_total AS total');
+            $this->db->from('invoices');
+            $this->db->where('invoices.status !=', "Draft");
+            $this->db->where('invoices.status !=', "");
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+         // Get Jobs Completed data for Today's Widget Report in Database
+         if ($reportType == 'jobs_completed') {
+            $this->db->select('id, company_id, number, type, description, customer, status, date');
+            $this->db->from('jobs_completed_view');
+            $this->db->where_in('status', [
+                'Finished',
+                'Completed',
+            ]);
+            $this->db->where('company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get New Jobs data for Today's Widget Report in Database
+        if ($reportType == 'new_jobs') {
+            $this->db->select('jobs.id AS id,jobs.company_id AS company_id,jobs.job_number AS number,jobs.job_type AS type,jobs.job_description AS description,CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer,jobs.status AS status,jobs.date_issued AS date');
+            $this->db->from('jobs');
+            $this->db->where('jobs.status', "Scheduled");
+            $this->db->where('jobs.company_id', $companyID);
+            $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Lost Accounts data for Today's Widget Report in Database
+        if ($reportType == 'lost_accounts') {
+            $this->db->select('acs_profile.prof_id AS id,acs_profile.company_id AS company_id,CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer,acs_profile.customer_type AS customer_type,acs_profile.status AS status,acs_profile.email AS email,acs_profile.phone_h AS phone,acs_profile.phone_m AS mobile,acs_office.cancel_date AS cancel_date,acs_office.cancel_reason AS cancel_reason');
+            $this->db->from('acs_profile');
+            $this->db->where('acs_profile.status', "Cancelled");
+            $this->db->where('acs_profile.company_id', $companyID);
+            $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Service Projective Income data for Today's Widget Report in Database
+        if ($reportType == 'service_projective_income') {
+            $this->db->select('jobs.id AS id,jobs.company_id AS company_id,jobs.job_number AS number,jobs.job_type AS type,jobs.job_description AS description,CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer,jobs.status AS status,jobs.date_issued AS date, job_payments.amount AS total');
+            $this->db->from('jobs');
+            $this->db->where('jobs.job_type', "Service");
+            $this->db->where_in('jobs.status', [
+                'Finished',
+                'Completed',
+            ]);
+            $this->db->where('jobs.company_id', $companyID);
+            $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
+            $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
         // Get Sales Tax Liability Report data in Database
         if ($reportType == 'sales_tax_liability') {
         }
@@ -87,7 +171,6 @@ class Accounting_model extends MY_Model
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
-
             return $data->result();
         }
 

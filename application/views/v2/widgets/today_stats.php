@@ -48,7 +48,7 @@ endif;
                     </div>
                     <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                         <h3 id="collected"></h3>
-                        <span>Collected</span>
+                        <span>Invoice Amount</span>
                     </div>
                 </div>
             </div>
@@ -74,7 +74,7 @@ endif;
                     </div>
                     <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                         <h2 id="jobs_added"></h2>
-                        <span>New Jobs Booked Online</span>
+                        <span>New Jobs</span>
                     </div>
                 </div>
             </div>
@@ -100,7 +100,7 @@ endif;
                     </div>
                     <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
                         <h2 id="collections"></h2>
-                        <span>Collections</span>
+                        <span>Service Projective Income</span>
                     </div>
                 </div>
             </div>
