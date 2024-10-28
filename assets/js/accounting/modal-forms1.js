@@ -16,6 +16,13 @@ $(document).ready(function () {
         initializeDropzone();
     });
 
+    $(document).on('change', '#invoiceModal #customer', function () {
+        var vendor_id = $(this).val();
+        $(`.attachments .dropzone`).attr('data-id', vendor_id);
+        modalAttachments.destroy();
+        initializeDropzone();
+    });
+
     $(document).on('change', '#expenseModal #payee', function () {
         var split = $(this).val().split('-');
         vendorIdTemp = split[1]

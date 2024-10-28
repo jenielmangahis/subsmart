@@ -3,7 +3,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Invoice_model extends MY_Model
 {
-    public $table = 'invoices';
+    public $table = 'invoices'; 
+    public $table_invoice_payment = 'invoice_payments';
 
 
     public function getAll()
@@ -234,6 +235,16 @@ class Invoice_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);   
         $this->db->where('id', $id);
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+    public function getByTicketId($tid)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);   
+        $this->db->where('ticket_id', $tid);
 
         $query = $this->db->get();
         return $query->row();
@@ -1434,6 +1445,16 @@ class Invoice_model extends MY_Model
         $this->db->insert('invoice_payments', $data);
 	    $insert = $this->db->insert_id();
 		return  $insert;
+    }
+
+    public function getInvoicePaymentByInvoiceId($invoice_id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table_invoice_payment);   
+        $this->db->where('invoice_id', $invoice_id);
+
+        $query = $this->db->get();
+        return $query->row();
     }
 }
 

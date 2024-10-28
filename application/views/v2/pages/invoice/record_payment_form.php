@@ -51,7 +51,7 @@
                 <div class="input-group mb-3">
                     <input type="text" name="date_payment" id="date_payment" class="form-control" value="<?= date("Y-m-d"); ?>">
                     <div class="input-group-append" data-for="date_payment">
-                        <span class="input-group-text"><span class="fa fa-calendar"></span></span>
+                        <span class="input-group-text" style="height:33px;"><span class="fa fa-calendar"></span></span>
                     </div>
                 </div>
             </div>

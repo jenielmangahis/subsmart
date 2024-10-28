@@ -357,26 +357,21 @@ a.btn-primary.btn-md {
                                     </div>
                                     <div class="col-md-3">
                                         <label for="expiry_date" class="required"><b>Schedule Time From</b></label>
-                                        <!-- <input type="text" class="form-control" name="expiry_date" id="expiry_date" required placeholder="Enter Expiry Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
-                                        <!-- <div class="input-group date" data-provide="datepicker">
-                                            <input type="text" class="form-control" name="expiry_date" id="expiry_date"
-                                                    placeholder="Enter Expiry Date">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div> -->
-                                        <input type="text" class="form-control" name="scheduled_time" id="scheduled_time"  value="<?php echo $tickets->scheduled_time; ?>" />
-                                        <!-- <select id="scheduled_time" name="scheduled_time" class="form-control">
-                                            <option value="8-10">8-10</option>
-                                            <option value="10-12">10-12</option>
-                                            <option value="12-2">12-2</option>
-                                            <option value="2-4">2-4</option>
-                                            <option value="4-6">4-6</option>
-                                        </select> -->
+                                        <select id="scheduled_time" name="scheduled_time" class="nsm-field form-select" required>
+                                            <option value="">From</option>
+                                            <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                                                <option <?= $tickets->scheduled_time == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                            <?php } ?>
+                                        </select>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="expiry_date" class="required"><b>Schedule Time To</b></label>
-                                        <input type="text" class="form-control" name="scheduled_time_to" id="scheduled_time_to"  value="<?php echo $tickets->scheduled_time_to; ?>" />
+                                        <select id="scheduled_time_to" name="scheduled_time_to" class="nsm-field form-select " required>
+                                            <option value="">To</option>
+                                            <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                                                <option <?= $tickets->scheduled_time_to == time_availability($x) ?  'selected' : '';  ?> value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                            <?php } ?>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -458,7 +453,7 @@ a.btn-primary.btn-md {
                                         </select>
                                     </div>
                                     <div class="col-md-3 form-group">
-                                        <label for="zip" class="block-label"><b>Employee</b></label>
+                                        <label for="zip" class="block-label"><b>Created By</b></label>
                                         <!-- <input type="text" class="form-control" name="scheduled_time" id="employeeID" /> -->
                                         <select class="form-control mb-3" name="employee_id" id="employee_id">
                                             <option value="0">Select Name</option>
@@ -475,7 +470,7 @@ a.btn-primary.btn-md {
                                 <div class="row" id="plansItemDiv" style="background-color:white;">
                                     <h6 class='card_header custom-ticket-header'>Item List</h6>
                                     <div class="col-md-12 table-responsive">
-                                        <table class="table table-hover">
+                                        <table class="table table-hover table-borderless">
                                             <thead style="background-color:#E9E8EA;">
                                             <tr>
                                                 <th>Name</th>
@@ -609,7 +604,7 @@ a.btn-primary.btn-md {
                                                 </select>
                                             </div>                                            
                                         </div>
-                                        <div class="row">
+                                        <div class="row" style="">
                                             <div class="col-12 col-md-12">
                                                 <?php include viewPath('tickets/_payment_method_fields'); ?>
                                             </div>
@@ -661,7 +656,7 @@ a.btn-primary.btn-md {
                                 <div class="row">
                                 <!-- <div class="form-group col-md-12"> -->
                                     <div class="col-md-4">
-                                        <b>Sales Rep's Name</b>
+                                        <b>Sales Representative</b>
                                         <input type="text" name="sales_rep_view" class="form-control" value="<?php echo logged('FName').' '.logged('LName'); ?>">
                                         <input type="hidden" name="sales_rep" class="form-control" value="<?php echo $tickets->sales_rep; ?>">
                                     </div>
@@ -677,7 +672,7 @@ a.btn-primary.btn-md {
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><h6>Instructions: </h6></label><br> <span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
+                                            <label><h6><b>Instructions / Notes </b><span style="margin-left:10px;" class="bx bxs-help-circle" id="help-popover-instructions"></span></h6></label>
                                             <textarea name="instructions" cols="40" rows="2" class="form-control"><?php echo $tickets->instructions; ?></textarea>
                                         </div>
                                     </div>
@@ -685,28 +680,26 @@ a.btn-primary.btn-md {
                                 <div class="row">
                                     <div class="col-md-6 col-sm-12">
                                         <div class="form-group">
-                                            <label><h6>Message to Customer</h6></label><br> <span class="help help-sm help-block">Add a message that will be displayed on the Ticket.</span>
+                                            <label><h6><b>Message to Customer</b><span style="margin-left:10px;" class="bx bxs-help-circle" id="help-popover-message-to-customer"></span></h6></label>
                                             <textarea name="message" cols="40" rows="4" class="form-control"><?php echo $tickets->message; ?></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-12">
                                         <div class="form-group">
-                                            <label><h6>Terms &amp; Conditions</h6></label><br> <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the Ticket.</span>
+                                            <label><h6><b>Terms &amp; Conditions</b><span style="margin-left:10px;" class="bx bxs-help-circle" id="help-popover-terms-conditions"></span></h6></label>
                                             <textarea name="terms_conditions" cols="40" rows="4" class="form-control"><?php echo $tickets->terms_conditions; ?></textarea>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-4">
-                                        <label for="billing_date"><h6>Attachments</h6></label><br> 
-                                        <span class="help help-sm help-block">Optionally attach files to this invoice. Allowed type: pdf, doc, dock, png, jpg, gif</span>
+                                        <label for="billing_date"><h6>Attachments <span style="margin-left:10px;" class="bx bxs-help-circle" id="help-popover-attachment"></span></h6></label>
                                         <input type="file" name="attachments" id="attachments" class="form-control"/>
                                     </div>
                                 </div>
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-12 form-group">
-                                        <button type="submit" class="nsm-button primary" style="">Update</button>
-                                        <button type="button" class="nsm-button" style="">Preview</button>
+                                        <button type="submit" class="nsm-button primary" style="">Update</button>                                        
                                         <a href="<?php echo base_url('customer/ticketslist/') ?>" class="btn">Cancel</a>
                                     </div>
                                 </div>
@@ -1268,6 +1261,42 @@ $(document).ready(function(){
         //computeGrandTotal();
     });
 
+    $('#help-popover-message-to-customer').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Add a message that will be displayed on the Ticket.';
+        } 
+    });
+
+    $('#help-popover-terms-conditions').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return "Mention your company's T&amp;C that will appear on the Ticket.";
+        } 
+    });
+
+    $('#help-popover-instructions').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return "Optional internal notes, will not appear to customer";
+        } 
+    });
+
+    $('#help-popover-attachment').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return "Optional attach files to this invoice. Allowed type: pdf, doc, dock, png, jpg, gif";
+        } 
+    });    
+
     $('#quick-add-panel-type-form').on('submit', function(e){
         e.preventDefault();
         var url = base_url + 'tickets/_create_panel_type';
@@ -1427,6 +1456,18 @@ $(document).ready(function(){
         $('#modal-quick-add-service-type').modal('show');
     });
 
+    
+    $("#scheduled_time").on( 'change', function () {
+        var tag_id = this.value;
+        var end_time = moment.utc(tag_id,'hh:mm a').add(<?= $time_interval; ?>,'hour').format('h:mm a');
+
+        if(end_time === 'Invalid date') {
+            $('#scheduled_time_to').val("");
+        }else{
+            $('#scheduled_time_to').val(end_time);
+        }
+    });
+
     $('#quick-add-service-type-form').on('submit',function(e){
         e.preventDefault();
 
@@ -1473,7 +1514,7 @@ $(document).ready(function(){
 <script src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css" rel="stylesheet" />
 <script>
-$('#scheduled_time').timepicker({
+$('#scheduled_time1').timepicker({
   timeFormat: 'hh:mm a',
   interval: 30,
   minTime: '8',
@@ -1484,14 +1525,14 @@ $('#scheduled_time').timepicker({
   scrollbar: true
 });
 
-$('#scheduled_time')
+$('#scheduled_time1')
   .timepicker('option', 'change', function(time) {
     var later = new Date(time.getTime() + (2 * 60 * 60 * 1000));
     $('#scheduled_time_to').timepicker('option', 'minTime', time);
     $('#scheduled_time_to').timepicker('setTime', later);
   });
 
-$('#scheduled_time_to').timepicker({
+$('#scheduled_time_to1').timepicker({
   timeFormat: 'hh:mm a',
   interval: 30,
   maxTime: '11:00 PM',
@@ -1500,7 +1541,6 @@ $('#scheduled_time_to').timepicker({
   dropdown: true,
   scrollbar: true
 });
-
 </script>
 <script>
     

@@ -6550,6 +6550,11 @@ class Accounting_modals extends MY_Controller
             $this->form_validation->set_message('check_grand_total', 'The total amount is required.');
             return false;
         }
+
+        if (floatval(str_replace(',', '', $amount)) < 0) {
+            $this->form_validation->set_message('check_grand_total', 'Invalid total amount.');
+            return false;
+        }
         return true;
     }
 

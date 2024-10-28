@@ -598,7 +598,7 @@
             <div class="nsm-card-content">                                
                 <div class="row mt-4">
                     <div class="col-md-4">
-                        <b>Sales Rep's Name</b>
+                        <b>Sales Representative</b>
                         <input type="text" name="sales_rep_view" class="form-control" value="<?php echo logged('FName').' '.logged('LName'); ?>">
                         <input type="hidden" name="sales_rep" class="form-control" value="<?php echo logged('id'); ?>">
                     </div>
@@ -614,13 +614,13 @@
                 <div class="row mt-4">
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group">
-                            <label><h6>Message to Customer</h6></label><br> <span class="help help-sm help-block">Add a message that will be displayed on the Ticket.</span>
+                            <label><h6><b>Message to Customer</b><span style="margin-left:10px;" class="bx bxs-help-circle" id="help-popover-message-to-customer"></span></h6></label>
                             <textarea name="message" cols="40" rows="4" class="form-control">I would be happy to have an opportunity to work with you.</textarea>
                         </div>
                     </div>
                     <div class="col-md-6 col-sm-12">
                         <div class="form-group">
-                            <label><h6>Terms &amp; Conditions</h6></label><br> <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the Ticket.</span>
+                            <label><h6><b>Terms &amp; Conditions</b><span style="margin-left:10px;" class="bx bxs-help-circle" id="help-popover-terms-conditions"></span></h6></label>
                             <textarea name="terms_conditions" cols="40" rows="4" class="form-control">YOU EXPRESSLY AUTHORIZE ADI AND ITS AFFILIATES TO RECEIVE PAYMENT FOR THE LISTED SERVICES ABOVE. BY SIGNING BELOW BUYER AGREES TO THE TERMS OF YOUR SERVICE AGREEMENT AND ACKNOWLEDGES RECEIPT OF A COPY OF THIS SERVICE AGREEMENT.</textarea>
                         </div>
                     </div>
@@ -628,7 +628,7 @@
                 <div class="row mt-2" style="background-color:white;">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label><h6>Instructions / Notes: </h6></label><br> <span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
+                            <label><h6><b>Instructions / Notes </b><span style="margin-left:10px;" class="bx bxs-help-circle" id="help-popover-instructions"></span></h6></label>
                             <textarea name="instructions" cols="40" rows="2"
                                     class="form-control"></textarea>
                         </div>
@@ -745,6 +745,33 @@ $(document).ready(function(){
         minimumInputLength: 0,
         templateResult: formatRepoUser,
         templateSelection: formatRepoSelectionUser
+    });
+
+    $('#help-popover-message-to-customer').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Add a message that will be displayed on the Ticket.';
+        } 
+    });
+
+    $('#help-popover-terms-conditions').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return "Mention your company's T&amp;C that will appear on the Ticket.";
+        } 
+    });
+
+    $('#help-popover-instructions').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return "Optional internal notes, will not appear to customer";
+        } 
     });
 
     $('#ticket-appointment-user').select2({

@@ -701,6 +701,7 @@ class Tickets extends MY_Controller
             'job_description'           => $this->input->post('job_description'),
             'ticket_status'             => $status,
             'panel_type'                => $this->input->post('panel_type'),
+            'plan_type'                 => $this->input->post('plan_type'),
             'service_type'              => $this->input->post('service_type'),
             'warranty_type'             => $this->input->post('warranty_type'),
             'technicians'               => $techni,
@@ -739,42 +740,43 @@ class Tickets extends MY_Controller
         
         if($this->input->post('payment_method') == 'Cash'){
             $payment_data = array(
-            
                 'payment_method'    => $this->input->post('payment_method'),
                 'amount'            => $this->input->post('payment_amount'),
                 'is_collected'      => '1',
-                'ticket_id'         => $id,
+                //'ticket_id'         => $id,
                 'date_updated'      => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->tickets_model->update_cash($payment_data);
+            //$pay = $this->tickets_model->update_cash($payment_data);
+            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
         }
         elseif($this->input->post('payment_method') == 'Check'){
             $payment_data = array(
-            
                 'payment_method'    => $this->input->post('payment_method'),
                 'amount'            => $this->input->post('payment_amount'),
                 'check_number'      => $this->input->post('check_number'),
                 'routing_number'    => $this->input->post('routing_number'),
-                'ticket_id'         => $id,
+                'bank_name'         => $this->input->post('bank_name'),
+                //'ticket_id'         => $id,
                 'date_updated'      => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->tickets_model->update_check($payment_data);
+            //$pay = $this->tickets_model->update_check($payment_data);
+            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
         }
-        elseif($this->input->post('payment_method') == 'Credit Card'){
-            $payment_data = array(
-            
+        elseif($this->input->post('payment_method') == 'Credit Card'){            
+            $payment_data = array(            
                 'payment_method'    => $this->input->post('payment_method'),
                 'amount'            => $this->input->post('payment_amount'),
                 'credit_number'     => $this->input->post('credit_number'),
                 'credit_expiry'     => $this->input->post('credit_expiry'),
                 'credit_cvc'        => $this->input->post('credit_cvc'),
-                'ticket_id'         => $id,
+                //'ticket_id'         => $id,
                 'date_updated'      => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->tickets_model->update_creditCard($payment_data);
+            //$pay = $this->tickets_model->update_creditCard($payment_data);
+            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
         }
         elseif($this->input->post('payment_method') == 'Debit Card'){
             $payment_data = array(
@@ -788,7 +790,8 @@ class Tickets extends MY_Controller
                 'date_updated'      => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->tickets_model->update_debitCard($payment_data);
+            //$pay = $this->tickets_model->update_debitCard($payment_data);
+            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
         }
         elseif($this->input->post('payment_method') == 'ACH'){
             $payment_data = array(
@@ -801,7 +804,8 @@ class Tickets extends MY_Controller
                 'date_updated'      => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->tickets_model->update_ACH($payment_data);
+            //$pay = $this->tickets_model->update_ACH($payment_data);
+            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
         }
         elseif($this->input->post('payment_method') == 'Venmo'){
             $payment_data = array(
@@ -815,7 +819,8 @@ class Tickets extends MY_Controller
                 'date_updated'          => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->tickets_model->update_Venmo($payment_data);
+            //$pay = $this->tickets_model->update_Venmo($payment_data);
+            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
         }
         elseif($this->input->post('payment_method') == 'Paypal'){
             $payment_data = array(
@@ -829,7 +834,8 @@ class Tickets extends MY_Controller
                 'date_updated'          => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->tickets_model->update_Paypal($payment_data);
+            //$pay = $this->tickets_model->update_Paypal($payment_data);
+            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
         }
         elseif($this->input->post('payment_method') == 'Square'){
             $payment_data = array(
@@ -843,7 +849,8 @@ class Tickets extends MY_Controller
                 'date_updated'          => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->tickets_model->update_Square($payment_data);
+            //$pay = $this->tickets_model->update_Square($payment_data);
+            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
         }
         elseif($this->input->post('payment_method') == 'Warranty Work'){
             $payment_data = array(
@@ -856,7 +863,8 @@ class Tickets extends MY_Controller
                 'date_updated'          => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->tickets_model->update_Warranty($payment_data);
+            //$pay = $this->tickets_model->update_Warranty($payment_data);
+            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
         }
         elseif($this->input->post('payment_method') == 'Home Owner Financing'){
             $payment_data = array(
@@ -869,7 +877,8 @@ class Tickets extends MY_Controller
                 'date_updated'          => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->tickets_model->update_Home($payment_data);
+            //$pay = $this->tickets_model->update_Home($payment_data);
+            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
         }
         elseif($this->input->post('payment_method') == 'e-Transfer'){
             $payment_data = array(
@@ -882,7 +891,8 @@ class Tickets extends MY_Controller
                 'date_updated'          => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->tickets_model->update_Transfer($payment_data);
+            //$pay = $this->tickets_model->update_Transfer($payment_data);
+            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
         }
         elseif($this->input->post('payment_method') == 'Other Credit Card Professor'){
             $payment_data = array(
@@ -896,7 +906,8 @@ class Tickets extends MY_Controller
                 'date_updated'          => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->tickets_model->update_Professor($payment_data);
+            //$pay = $this->tickets_model->update_Professor($payment_data);
+            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
         }
         elseif($this->input->post('payment_method') == 'Other Payment Type'){
             $payment_data = array(
@@ -909,7 +920,8 @@ class Tickets extends MY_Controller
                 'date_updated'          => date("Y-m-d H:i:s")
             );
 
-            $pay = $this->tickets_model->update_Other($payment_data);
+            //$pay = $this->tickets_model->update_Other($payment_data);
+            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
         }
 
         $ticket_id = $this->input->post('ticketID');
@@ -1106,9 +1118,9 @@ class Tickets extends MY_Controller
 
         $invoice = $this->Invoice_model->getByTicketId($id);
         $invoicePayment = [];
-        // if( $invoice ){
-        //     $invoicePayment
-        // }
+        if( $invoice ){            
+            $invoicePayment = $this->Invoice_model->getInvoicePaymentByInvoiceId($invoice->id);
+        }
 
         $planTypeOptions = $this->Customer_advance_model->planTypeOptions();
         $settingsPlanTypes = $this->SettingsPlanType_model->getAllByCompanyId($company_id);
@@ -1134,6 +1146,7 @@ class Tickets extends MY_Controller
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
         $this->page_data['planTypeOptions'] = $planTypeOptions;
         $this->page_data['time_interval'] = 2;
+        $this->page_data['invoicePayment'] = $invoicePayment;
         // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
         $this->load->view('tickets/edit_ticket', $this->page_data);
     }
@@ -1350,12 +1363,17 @@ class Tickets extends MY_Controller
 
     public function deleteTicket()
     {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        $cid = logged('company_id');
+
         $ticketID = $this->input->post('tkID');
         
         $user_login = logged('FName') . ' ' . logged('LName');
         
-        $ticketInfo = $this->tickets_model->getTicketInfo($ticketID);
-        // Record Job delete to Customer Activities Module in Customer Dashboard
+        $ticketInfo = $this->tickets_model->getByIdAndCompanyId($ticketID,$cid);
+        if( $ticketInfo ){
+            // Record Job delete to Customer Activities Module in Customer Dashboard
             $action = "$user_login deleted a service ticket. $ticketInfo->ticket_no";
 
             $customerLogPayload = array(
@@ -1366,8 +1384,22 @@ class Tickets extends MY_Controller
             );
             $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogPayload);
 
-        $is_success =  $this->tickets_model->delete_tickets($ticketID);
-        echo json_encode($is_success);
+            //Activity Logs
+            $activity_name = 'Service Ticket : Deleted Ticket # ' . $ticketInfo->ticket_no; 
+            createActivityLog($activity_name);
+
+            $result =  $this->tickets_model->delete_tickets($ticketID);
+
+            $is_success = 1;
+            $msg = '';
+        }
+        
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
     }
 
     public function saveTickets()
@@ -1924,7 +1956,11 @@ class Tickets extends MY_Controller
                         $cc_exp = $this->input->post('customer_cc_expiry_date_month') . '/' . $this->input->post('customer_cc_expiry_date_year');  
                     }
 
-                    $input_billing['bill_method'] = $this->input->post('bill_method');                                        
+                    $input_billing['bill_method'] = $this->input->post('bill_method');   
+                    if( $billing->bill_start_date == NULL ||  $billing->bill_start_date == '1970-01-01'){
+                        $input_billing['bill_start_date'] = date("Y-m-d");
+                        $input_billing['bill_end_date'] = date("Y-m-d");
+                    }                                                          
 
                     if( $this->input->post('bill_method') == 'CHECK' ){
                         $input_billing['check_num'] = $this->input->post('customer_check_number');
@@ -1933,8 +1969,8 @@ class Tickets extends MY_Controller
                         $input_billing['routing_num'] = $this->input->post('customer_check_routing_number');
                     }elseif( $this->input->post('bill_method') == 'CC' ){
                         $input_billing['credit_card_num'] = $this->input->post('customer_cc_num');
-                        $input_billing['credit_card_exp_mm_yyyy'] = $this->input->post('customer_cc_cvc');
-                        $input_billing['credit_card_exp'] = $cc_exp;
+                        $input_billing['credit_card_exp_mm_yyyy'] = $cc_exp;
+                        $input_billing['credit_card_exp'] = $this->input->post('customer_cc_cvc');
                         $input_billing['credit_card_type'] = $card_type;
                     }else{
                         $input_billing['acct_num'] = $this->input->post('customer_ach_account_number');
@@ -1955,8 +1991,8 @@ class Tickets extends MY_Controller
                     $input_billing['state'] = $this->input->post('customer_state');
                     $input_billing['zip'] = $this->input->post('customer_zip');
                     $input_billing['mmr'] = $monthly_monitoring_cost;
-                    $input_billing['bill_start_date'] = NULL;
-                    $input_billing['bill_end_date'] = NULL;
+                    $input_billing['bill_start_date'] = date("Y-m-d");
+                    $input_billing['bill_end_date'] = date("Y-m-d");
 
                     if( $this->input->post('bill_method') == 'CHECK' ){
                         $input_billing['check_num'] = $this->input->post('customer_check_number');
@@ -1967,7 +2003,7 @@ class Tickets extends MY_Controller
                         $input_billing['credit_card_num'] = $this->input->post('customer_cc_num');
                         $input_billing['credit_card_exp_mm_yyyy'] = $cc_exp;
                         $input_billing['credit_card_exp'] = $this->input->post('customer_cc_cvc');
-                        $input_billing['card_type'] = $card_type;
+                        $input_billing['credit_card_type'] = $card_type;
                     }else{
                         $input_billing['acct_num'] = $this->input->post('customer_ach_account_number');
                         $input_billing['routing_num'] = $this->input->post('customer_ach_routing_number');
@@ -2942,6 +2978,80 @@ class Tickets extends MY_Controller
         }else{
             $is_success = 0;
             $msg = 'Record not found.';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_delete_selected_tickets()
+    { 
+        $is_success = 0;
+        $msg = 'Please select data to delete';
+        $cid = logged('company_id');
+
+        $post = $this->input->post();
+        $total_deleted = 0;
+        
+        if( count($post['tickets']) > 0 ){
+            foreach($post['tickets'] as $tid){
+                $ticket = $this->tickets_model->getByIdAndCompanyId($tid, $cid);
+                if( $ticket ){
+                    //Activity Logs
+                    $activity_name = 'Service Ticket : Deleted Ticket # ' . $ticket->ticket_no; 
+                    createActivityLog($activity_name);
+
+                    $this->tickets_model->delete($tid);
+                    $total_deleted++;
+                }
+            }
+        }
+
+        if( $total_deleted > 0 ){
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_update_status_selected_tickets()
+    {
+        $is_success = 0;
+        $msg = 'Please select data';
+        $cid = logged('company_id');
+
+        $post = $this->input->post();
+        $total_updated = 0;
+        
+        if( count($post['tickets']) > 0 ){
+            foreach($post['tickets'] as $tid){
+                $ticket = $this->tickets_model->getByIdAndCompanyId($tid, $cid);
+                if( $ticket ){
+                    $data = ['ticket_status' => $post['change_status']];
+                    $this->tickets_model->update($ticket->id, $data);
+
+                    //Activity Logs
+                    $activity_name = 'Service Ticket : Changed ticket # status from ' . $ticket->ticket_status . ' to ' . $post['change_status']; 
+                    createActivityLog($activity_name);
+                    
+                    $total_updated++;
+                }
+            }
+        }
+
+        if( $total_updated > 0 ){
+            $is_success = 1;
+            $msg = '';
         }
 
         $return = [
