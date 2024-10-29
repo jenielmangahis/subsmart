@@ -366,7 +366,7 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-12 col-md-8 grid-mb">
+                                        <div class="col-4 col-md-4 grid-mb">
                                             <div id="label">
                                                 <label for="tags">Tags</label>
                                                 <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
