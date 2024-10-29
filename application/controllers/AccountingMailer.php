@@ -181,6 +181,17 @@ class AccountingMailer extends MY_Controller
             "percent_sales_commission_list",
             "retirements_detail",
             "active_subscriptions",
+            "earned",
+            "invoice_amount",
+            "jobs_completed",
+            "new_jobs",
+            "lost_accounts",
+            "service_projective_income",
+            "customer_groups",
+            "job_status",
+            "estimates",
+            "job_tags",
+            "lead_source",
         );
 
         // Conditional Statements on the array

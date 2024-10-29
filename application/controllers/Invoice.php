@@ -1710,6 +1710,7 @@ class Invoice extends MY_Controller
         // print_r($this->page_data['users']);
         
         // $this->load->view('invoice/pdf/standard_template', $this->page_data, $filename, "portrait");
+        // $this->load->view('invoice/pdf/template', $this->page_data, $filename, "portrait");
 
         $setting = $this->invoice_settings_model->getAllByCompany(logged('company_id'));
 
