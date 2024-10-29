@@ -159,6 +159,67 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
 
+        // Get Customer Groups data in Database
+        if ($reportType == 'customer_groups') {
+            $this->db->select('customer_groups.id AS id, customer_groups.company_id AS company_id, customer_groups.title AS title_group, CONCAT(users.FName, " ", users.LName) AS added_by, customer_groups.date_added AS date ');
+            $this->db->from('customer_groups');
+            $this->db->where('customer_groups.company_id', $companyID);
+            $this->db->join('users', 'users.id = customer_groups.user_id', 'left');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Job Status data in Database
+        if ($reportType == 'job_status') {
+            $this->db->select('jobs.id AS id, jobs.company_id AS company_id, jobs.job_number AS number, jobs.job_description AS description, jobs.status AS status, jobs.date_created AS date');
+            $this->db->from('jobs');
+            $this->db->where('jobs.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Estimates data in Database
+        if ($reportType == 'estimates') {
+            $this->db->select('estimates.id AS id, estimates.company_id AS company_id, estimates.estimate_number AS number, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, estimates.job_name AS job, estimates.job_location AS location, estimates.status AS status, estimates.estimate_date AS date, estimates.grand_total AS total');
+            $this->db->from('estimates');
+            $this->db->where('estimates.company_id', $companyID);
+            $this->db->join('acs_profile', 'acs_profile.prof_id = estimates.customer_id', 'left');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Job Tags data in Database
+        if ($reportType == 'job_tags') {
+            $this->db->select('job_tags.id AS id, job_tags.company_id AS company_id, job_tags.name AS tag, job_tags.created_at AS date');
+            $this->db->from('job_tags');
+            $this->db->where('job_tags.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Lead Source data in Database
+        if ($reportType == 'lead_source') {
+            $this->db->select('ac_leadsource.ls_id AS id, ac_leadsource.fk_company_id AS company_id, ac_leadsource.ls_name AS lead_source, ac_leadsource.date_created AS date');
+            $this->db->from('ac_leadsource');
+            $this->db->where('ac_leadsource.fk_company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+        
+
+        // ==========================================
+
+
         // Get Sales Tax Liability Report data in Database
         if ($reportType == 'sales_tax_liability') {
         }

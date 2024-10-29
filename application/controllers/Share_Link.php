@@ -1569,6 +1569,12 @@ class Share_Link extends MY_P_Controller
         $rep         = $this->tickets_model->getUserDetails($tickets->sales_rep);
 
         $payment     = $this->tickets_model->get_ticket_payments($tickets->id);
+        $invoiceD    = $this->invoice_model->getByTicketId($tkID);
+
+        $installation_cost = 0;
+        if($invoiceD) {
+            $installation_cost = $invoiceD->installation_cost != null ? $invoiceD->installation_cost : 0;
+        }
 
         $data = array(
             //customer details
@@ -1580,55 +1586,53 @@ class Share_Link extends MY_P_Controller
             'zip_code'          => $tickets->zip_code,
             'email'             => $tickets->email,
             'phone_h'           => $tickets->phone_h,
-
             //clients details
-            'bname'                 => $clients->business_name,
-            'baddress'              => $clients->street,
-            'bcity'                 => $clients->city,
-            'bstate'                => $clients->state,
-            'bzip_code'             => $clients->postal_code,
-            'bemail'                => $clients->business_email,
-            'bphone_h'              => $clients->business_phone,
-
+            'bname'             => $clients->business_name,
+            'baddress'          => $clients->street,
+            'bcity'             => $clients->city,
+            'bstate'            => $clients->state,
+            'bzip_code'         => $clients->postal_code,
+            'bemail'            => $clients->business_email,
+            'bphone_h'          => $clients->business_phone,
             //tickets details
-            'service_location'              => $tickets->service_location,
-            'service_description'           => $tickets->service_description,
-            'job_tag'                       => $tickets->job_tag,
-            'ticket_no'                     => $tickets->ticket_no,
-            'ticket_date'                   => $tickets->ticket_date,
-            'scheduled_time'                => $tickets->scheduled_time,
-            'scheduled_time_to'             => $tickets->scheduled_time_to,
-            'technicians'                   => $tickets->technicians,
-            'purchase_order_no'             => $tickets->purchase_order_no,
-            'ticket_status'                 => $tickets->ticket_status,
-            'panel_type'                    => $tickets->panel_type,
-            'service_type'                  => $tickets->service_type,
-            'warranty_type'                 => $tickets->warranty_type,
-            'customer_phone'                => $tickets->customer_phone,
-            'subtotal'                      => $tickets->subtotal,
-            'taxes'                         => $tickets->taxes,
-            'adjustment'                    => $tickets->adjustment,
-            'adjustment_value'              => $tickets->adjustment_value,
-            'markup'                        => $tickets->markup,
-            'grandtotal'                    => $tickets->grandtotal,
-            'payment_method'                => $tickets->payment_method,
-            'billing_date'                  => $tickets->billing_date,
-            'sales_rep'                     => $tickets->sales_rep,
-            'sales_rep_no'                  => $tickets->sales_rep_no,
-            'tl_mentor'                     => $tickets->tl_mentor,
-            'message'                       => $tickets->message,
-            'terms_conditions'              => $tickets->terms_conditions,
-            'attachments'                   => $tickets->attachments,
-            'instructions'                  => $tickets->instructions,
-            'header'                        => $header->content,
-            'items'                         => $items,
-            'repsName'                      => $rep->FName.' '.$rep->LName,
-            'payment'                       => $payment,
+            'service_location'        => $tickets->service_location,
+            'service_description'     => $tickets->service_description,
+            'job_tag'                 => $tickets->job_tag,
+            'ticket_no'               => $tickets->ticket_no,
+            'ticket_date'             => $tickets->ticket_date,
+            'scheduled_time'          => $tickets->scheduled_time,
+            'scheduled_time_to'       => $tickets->scheduled_time_to,
+            'technicians'             => $tickets->technicians,
+            'purchase_order_no'       => $tickets->purchase_order_no,
+            'ticket_status'           => $tickets->ticket_status,
+            'panel_type'              => $tickets->panel_type,
+            'service_type'            => $tickets->service_type,
+            'warranty_type'           => $tickets->warranty_type,
+            'customer_phone'          => $tickets->customer_phone,
+            'subtotal'                => $tickets->subtotal,
+            'taxes'                   => $tickets->taxes,
+            'adjustment'              => $tickets->adjustment,
+            'adjustment_value'        => $tickets->adjustment_value,
+            'markup'                  => $tickets->markup,
+            'grandtotal'              => $tickets->grandtotal,
+            'payment_method'          => $tickets->payment_method,
+            'billing_date'            => $tickets->billing_date,
+            'sales_rep'               => $tickets->sales_rep,
+            'sales_rep_no'            => $tickets->sales_rep_no,
+            'tl_mentor'               => $tickets->tl_mentor,
+            'message'                 => $tickets->message,
+            'terms_conditions'        => $tickets->terms_conditions,
+            'attachments'             => $tickets->attachments,
+            'instructions'            => $tickets->instructions,
+            'header'                  => $header->content,
+            'items'                   => $items,
+            'repsName'                => $rep->FName.' '.$rep->LName,
+            'payment'                 => $payment,
+            'installation_cost'       => $installation_cost,
         );
-            
+
         $filename = "nSmarTrac_Service_Ticket_".$tkID."000";
         $this->load->library('pdf');
-
         $this->pdf->load_view('tickets/tickets_pdf', $data, $filename, "portrait");
     }
 

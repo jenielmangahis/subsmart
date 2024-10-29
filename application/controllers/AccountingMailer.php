@@ -187,6 +187,11 @@ class AccountingMailer extends MY_Controller
             "new_jobs",
             "lost_accounts",
             "service_projective_income",
+            "customer_groups",
+            "job_status",
+            "estimates",
+            "job_tags",
+            "lead_source",
         );
 
         // Conditional Statements on the array
