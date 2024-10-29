@@ -253,7 +253,7 @@
                             <tr>
                                 <td colspan="2" style="text-align: left"><b>Others: </b</td>
                                 <td colspan="2" style="text-align: left">
-                        
+                               
                                 </td>
                                 <td colspan="2" style="text-align: right"><b>Markup</b></td>
                                 <td style="text-align: right">$<?php echo number_format($markup,2); ?></td>
