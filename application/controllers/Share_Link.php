@@ -1551,7 +1551,7 @@ class Share_Link extends MY_P_Controller
         // $this->pdf->load_view('workorder/send_email_acs_alarm', $data, $filename, "portrait");
         $this->load->library('pdf');
 
-        $this->pdf->load_view('tickets/tickets_pdf', $data, $filename, "portrait");
+        $this->pdf->load_view('tickets/tickets_pdf-backup2', $data, $filename, "portrait");
         // $this->pdf->render();
     }
 
