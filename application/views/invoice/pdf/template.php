@@ -47,15 +47,15 @@
                             <div id="presenter-from">
                                     <p style="margin: 0"><b>FROM:</b></p>
                                     <!-- <br> -->
-                                    <p style="margin: 0"><b><?php echo $company->business_name ?></b></p>
+                                    <p style="margin: 0"><b><?php echo $company->business_name; ?></b></p>
                                     <!-- <br> -->
-                                    <p style="margin: 0"><?php echo $company->street ?></p>
+                                    <p style="margin: 0"><?php echo $company->street; ?></p>
                                     <!-- <br> -->
-                                    <p style="margin: 0"><?php echo $company->city.', '.$company->state.', '.$company->postal_code?></p>
+                                    <p style="margin: 0"><?php echo $company->city.', '.$company->state.' '.$company->postal_code; ?></p>
                                     <!-- <br> -->
-                                    <p style="margin: 0">Email: <?php echo strtolower($company->business_email) ?></p>
+                                    <p style="margin: 0">Email: <?php echo strtolower($company->business_email); ?></p>
                                     <!-- <br> -->
-                                    <p style="margin: 0">Phone: <?php echo strtolower($company->business_phone) ?></p>
+                                    <p style="margin: 0">Phone: <?php echo strtolower(formatPhoneNumber($company->business_phone)); ?></p>
 
                                     <!-- <table>
                                         <tbody><tr>
@@ -91,27 +91,26 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="text-align: right;">Type:</td>
-                                            <td style="width: 160px; text-align: right;" class="text-right"><?php echo $invoice->invoice_type ?></td>
-                                        </tr>
-                                                                    <tr>
-                                            <td style="text-align: right;">Work Order#:</td>
-                                            <td style="width: 160px; text-align: right;" class="text-right"><?php echo $invoice->work_order_number ?></td>
+                                            <td style="text-align: right;">Status:</td>
+                                            <td style="width: 160px; text-align: right;" class="text-right"><?php echo $invoice->status; ?></td>
                                         </tr>
                                         <tr>
                                             <td style="text-align: right;">Check Payable To:</td>
-                                            <td style="width: 160px; text-align: right;" class="text-right"><?php echo $company->business_name ?></td>
+                                            <td style="width: 160px; text-align: right;" class="text-right"><?php echo $company->business_name; ?></td>
                                         </tr>
                                         <tr>
                                             <td style="text-align: right;"><b>Balance Due:</b></td>
-                                            <td style="width: 160px; text-align: right;" class="text-right"><b>
-                                            <?php if($invoice->invoice_type == 'Total Due'){
-                                                echo '$ '.number_format($invoice->grand_total, 2);
-                                            } else{
-                                                echo "$0.00";
-                                            } ?>
-                                            
-                                            </b></td>
+                                            <td style="width: 160px; text-align: right;" class="text-right">
+                                                <b>
+                                                <?php 
+                                                    if( $invoice->status == 'Paid' ){ 
+                                                        echo "$0.00";
+                                                    }else{
+                                                        echo '$ '.number_format($invoice->grand_total, 2);
+                                                    }
+                                                ?>
+                                                </b>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -158,15 +157,14 @@
                             <!-- <br> -->
                             <p style="margin: 0"><?php echo $users->cross_street ?></p>
                             <!-- <br> -->
-                            <p style="margin: 0"><?php echo $users->city.', '.$users->state.', '.$users->zip_code?></p>
+                            <p style="margin: 0"><?php echo $users->city.', '.$users->state.' '.$users->zip_code?></p>
                             <!-- <br> -->
                             <table>
                                 <tbody>
                                     <tr>
                                         <td style="vertical-align: top;" valign="top">Phone:&nbsp;</td>
                                         <td>
-                                            <?php echo $users->phone_m ?><br>
-                                            <?php echo $users->phone_h ?><br>
+                                            <?php echo formatPhoneNumber($users->phone_m); ?><br>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -186,13 +184,7 @@
 
             <br><br>
             <?php endif; ?>
-            <br><br>
-            <p style="margin:0"><b>JOB:</b></p>
-            <!-- <br> job_location -->
-            <p style="margin: 0">Job Name: <?php echo $invoice->job_name ?></p>
-            <p style="margin: 0">Job Location: <?php echo $invoice->job_location ?></p>
-            <br>
-            <br>
+            <br><br>            
             <!-- <br> -->
             <div class="table-items-container">
                 <?php $total_tax = 0; ?>
@@ -237,7 +229,7 @@
                             <td></td>
                             <td colspan="6"></td>
                         </tr>
-                        <?php } ?>
+                        <?php $key++;} ?>
                     </tbody>
                     <tfoot>
                         <tr>
@@ -262,7 +254,9 @@
                             <td colspan="3"></td>
                             <td colspan="2" style="text-align: right"><b>Balance Due</b></td>
                             <td></td>
-                            <td style="text-align: right"><b><?php echo $invoice->invoice_type === 'Total Due' ? '$'.number_format($invoice->grand_total, 2) : '$0.00' ?></b></td>
+                            <td style="text-align: right">
+                                <b><?php echo $invoice->invoice_type === 'Total Due' ? '$'.number_format($invoice->grand_total, 2) : '$0.00' ?></b>
+                            </td>
                         </tr>
                     </tfoot>
                 </table>
