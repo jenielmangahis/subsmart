@@ -6504,6 +6504,10 @@ class Customer extends MY_Controller
         $this->hasAccessModule(39);
         $this->load->model('AcsProfile_model');
         $this->load->model('Job_tags_model');
+        $this->load->model('SettingsPlanType_model');
+        $this->load->model('PanelType_model');
+        $this->load->model('Customer_advance_model');
+
         $this->page_data['page']->title = 'Tickets';
 
         $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
@@ -6520,22 +6524,9 @@ class Customer extends MY_Controller
         }
 
         $user_id = logged('id');
-        // $parent_id = $this->db->query("select parent_id from users where id=$user_id")->row();
-
-        // if ($parent_id->parent_id == 1) { // ****** if user is company ******//
-        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($user_id);
-        // } else {
-        //     $this->page_data['users'] = $this->users_model->getAllUsersByCompany($parent_id->parent_id, $user_id);
-        // }
-
         $company_id = logged('company_id');
         $role = logged('role');
-        // $this->page_data['workstatus'] = $this->Workstatus_model->getByWhere(['company_id'=>$company_id]);
-        /*if( $role == 1 || $role == 2 ){
-            $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
-        }else{
-            $this->page_data['customers'] = $this->AcsProfile_model->getAll();
-        }*/
+        
         $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
 
         $default_customer_id = 0;
@@ -6574,26 +6565,27 @@ class Customer extends MY_Controller
             $val = $arr[1];
 
             $next_num = $val + 1;
-            // dd($next_num);
         } else {
             $next_num = 1;
         }
 
         $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
 
-        // dd($next_num);
+        $settingsPlanTypes = $this->SettingsPlanType_model->getAllByCompanyId($company_id);
+        $settingPanelTypes = $this->PanelType_model->getAllByCompanyId($company_id);
+        $ratePlans = $this->Customer_advance_model->getAllSettingsRatePlansByCompanyId($company_id);
+        $type = $this->input->get('type');
 
         $this->page_data['prefix'] = $prefix;
         $this->page_data['next_num'] = $next_num;
-
+        $this->page_data['settingsPlanTypes'] = $settingsPlanTypes;
+        $this->page_data['settingPanelTypes'] = $settingPanelTypes;
         $this->page_data['redirect_calendar'] = $redirect_calendar;
         $this->page_data['default_user'] = $default_user;
         $this->page_data['default_start_date'] = $default_start_date;
         $this->page_data['default_start_time'] = $default_start_time;
-
         $this->page_data['clients'] = $this->workorder_model->getclientsById();
-        $this->page_data['items'] = $this->items_model->getItemlist();
-        $type = $this->input->get('type');
+        $this->page_data['items'] = $this->items_model->getItemlist();        
         $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);
         $this->page_data['type'] = $type;
         $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
@@ -6601,8 +6593,7 @@ class Customer extends MY_Controller
         $this->page_data['headers'] = $this->tickets_model->getHeaders($company_id);
         $this->page_data['companyName'] = $this->tickets_model->getCompany($company_id);
         $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
-
-        // $this->page_data['file_selection'] = $this->load->view('modals/file_vault_selection', array(), TRUE);
+        $this->page_data['time_interval'] = 2;
         $this->load->view('tickets/add', $this->page_data);
     }
 

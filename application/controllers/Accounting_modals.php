@@ -24813,6 +24813,7 @@ class Accounting_modals extends MY_Controller
 
     public function print_invoice($invoiceId)
     {
+        $this->load->model('Jobs_model');
         $this->load->helper('string');
         $this->load->library('pdf');
         $view = 'invoice/pdf/template';
@@ -24826,11 +24827,12 @@ class Accounting_modals extends MY_Controller
         } while ($exists);
 
         $invoice = $this->invoice_model->getinvoice($invoiceId);
-
+        $job     = $this->Jobs_model->GET_JOB_INFO($invoice->job_id);
         $img = explode("/", parse_url((companyProfileImage(logged('company_id'))) ? companyProfileImage(logged('company_id')) : $url->assets)['path']);
 
         $pdfData = [
             'invoice' => $invoice,
+            'job' => $job,
             'items' => $this->invoice_model->getItemsInv($invoice->id),
             'user' => get_user_by_id(logged('id')),
             'users' => $this->invoice_model->getInvoiceCustomer($invoice->id),
