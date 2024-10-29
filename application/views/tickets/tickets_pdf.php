@@ -226,12 +226,24 @@
                                 <td colspan="2" style="text-align: right"><b>Subtotal</b></td>
                                 <td style="text-align: right">$<?php echo number_format($subtotal,2); ?></td>
                             </tr>
+                            <?php 
+                                $payment_amount = $payment->billing_frequency != null ? $payment->billing_frequency : '0.00'; 
+                            ?>                            
+                            <?php if($payment_amount != '0.00') { ?>
                             <tr>
                                 <td colspan="2" style="text-align: left"><b>Payment Amount: </b</td>
                                 <td colspan="2" style="text-align: left">$<?php echo number_format($payment_amount,2); ?></td>
                                 <td colspan="2" style="text-align: right"><b>Taxes</b></td>
                                 <td style="text-align: right">$<?php echo number_format($taxes,2); ?></td>
                             </tr>
+                            <?php } else { ?>
+                                <tr>
+                                    <td colspan="2" style="text-align: left"><b>Installation Cost: </b</td>
+                                    <td colspan="2" style="text-align: left">$<?php echo number_format($installation_cost,2); ?></td>
+                                    <td colspan="2" style="text-align: right"><b>Taxes</b></td>
+                                    <td style="text-align: right">$<?php echo number_format($taxes,2); ?></td>
+                                </tr>
+                            <?php } ?>
                             <tr>
                                 <td colspan="2" style="text-align: left"><b>Billing Date: </b</td>
                                 <td colspan="2" style="text-align: left"><?php echo $billing_date ? $billing_date : '-'; ?></td>
@@ -259,11 +271,11 @@
                                         $mail_cross_street              = $payment->mail_cross_street;
                                         $billing_date                   = $payment->billing_date;
                                         $billing_frequency              = $payment->billing_frequency;
-                                        $payment_ammount                = $payment->billing_frequency != null ? $payment->billing_frequency : '0.00';
+                                        $payment_amount                 = $payment->billing_frequency != null ? $payment->billing_frequency : '0.00';
 
                                         if($payment_method ==  'Cash'){
                                             //echo '<b>Payment Details:</b>';
-                                            echo 'Amount Paid: '. $payment_ammount;
+                                            echo 'Amount Paid: '. $payment_amount;
                                         }
                                         elseif($payment_method ==  'Check')
                                         {
