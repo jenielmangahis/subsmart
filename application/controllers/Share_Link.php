@@ -1571,10 +1571,11 @@ class Share_Link extends MY_P_Controller
         $payment     = $this->tickets_model->get_ticket_payments($tickets->id);
         $invoiceD    = $this->invoice_model->getByTicketId($tkID);
 
-
         $installation_cost = 0;
+        $mmr_total = 0;
         if($invoiceD) {
             $installation_cost = $invoiceD->installation_cost != null ? $invoiceD->installation_cost : 0;
+            $mmr_total = $invoiceD->monthly_monitoring != null ? $invoiceD->monthly_monitoring : 0;
         }
 
         $data = array(
@@ -1630,6 +1631,7 @@ class Share_Link extends MY_P_Controller
             'repsName'                => $rep->FName.' '.$rep->LName,
             'payment'                 => $payment,
             'installation_cost'       => $installation_cost,
+            'mmr_total'               => $mmr_total,
         );
 
         $filename = "nSmarTrac_Service_Ticket_".$tkID."000";

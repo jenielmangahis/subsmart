@@ -1030,6 +1030,7 @@ class Tickets extends MY_Controller
         $this->page_data['items'] = $this->tickets_model->get_ticket_items($id);
         $this->page_data['payment'] = $paymentD = $this->tickets_model->get_ticket_payments($id);
         $this->page_data['clients'] = $this->tickets_model->get_tickets_clients($tickets->company_id);
+        $this->page_data['invoiceD'] = $invD = $this->invoice_model->getByTicketId($id);
 
         $ticketdet = $this->tickets_model->get_tickets_data_one($id);
             // $tech = explode(",", $tick->technicians);
