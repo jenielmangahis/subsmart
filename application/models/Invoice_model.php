@@ -174,9 +174,10 @@ class Invoice_model extends MY_Model
 
     public function getAllActiveByCompanyId($comp_id, $type, $filter = array())
     {
-        $this->db->select('invoices.*, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');        
+        $this->db->select('invoices.*, jobs.job_number AS jobnumber, acs_profile.prof_id, acs_profile.first_name, acs_profile.last_name, invoices.status AS INV_status');        
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'invoices.customer_id = acs_profile.prof_id', 'LEFT');        
+        $this->db->join('jobs', 'invoices.job_id = jobs.id', 'LEFT');        
         $this->db->where('invoices.company_id', $comp_id);
         $this->db->where('invoices.view_flag', 0);
 
@@ -1017,42 +1018,44 @@ class Invoice_model extends MY_Model
 
     public function filterBy($filters = array(), $company_id = 0, $type)
     {
-        $this->db->select('*');
+        $this->db->select('*, jobs.job_number AS jobnumber');
         $this->db->from($this->table);
-        $this->db->where('is_recurring', $type);
+        $this->db->join('jobs', 'invoices.job_id = jobs.id', 'LEFT');      
+        $this->db->where('invoices.is_recurring', $type);
 
         if (!empty($filters)) {
             if (isset($filters['status'])) {
                 switch ($filters['status']) {
                     case 2:
                         $today = date("Y-m-d");
-                        $this->db->where('due_date', $today);
+                        $this->db->where('invoices.due_date', $today);
                         break;
 
                     case 3:
                         $today = date("Y-m-d");
-                        $this->db->where('due_date <', $today);
+                        $this->db->where('invoices.due_date <', $today);
                         break;
 
                     case 4:
-                        $this->db->where('status', 'Partial Paid');
+                        $this->db->where('invoices.status', 'Partial Paid');
                         break;
 
                     case 5:
-                        $this->db->where('status', 'Paid');
+                        $this->db->where('invoices.status', 'Paid');
                         break;
 
                     case 6:
-                        $this->db->where('status', 'Draft');
+                        $this->db->where('invoices.status', 'Draft');
                         break;
 
                     default:
-                    $this->db->where('status', $filters['status']);
+                    $this->db->where('invoices.status', $filters['status']);
                     break;
                 }
             } elseif (isset($filters['search'])) {
                 $this->db->group_start();
                 $this->db->or_like('invoices.invoice_number', $filters['search']);
+                $this->db->or_like('jobs.job_number', $filters['search']);
                 $this->db->or_like('invoices.job_name', $filters['search']);
                 $this->db->or_like('invoices.job_location', $filters['search']);
                 $this->db->group_end();
@@ -1061,57 +1064,57 @@ class Invoice_model extends MY_Model
 
         //
         if (isset($company_id)) {
-            $this->db->where('company_id', $company_id);
+            $this->db->where('invoices.company_id', $company_id);
         } else {
-            $this->db->where('user_id', getLoggedUserID());
+            $this->db->where('invoices.user_id', getLoggedUserID());
         }
 
         if (!empty($filters['order'])) {
             switch ($filters['order']) {
 
                 case 'date_created-asc':
-                    $this->db->order_by('date_created', 'asc');
+                    $this->db->order_by('invoices.date_created', 'asc');
                     break;
 
                 case 'date_created-desc':
-                    $this->db->order_by('date_created', 'desc');
+                    $this->db->order_by('invoices.date_created', 'desc');
                     break;
 
                 case 'invoice_number-asc':                    
-                    $this->db->order_by('invoice_number', 'asc');
+                    $this->db->order_by('invoices.invoice_number', 'asc');
                     break;
 
                 case 'invoice_number-desc':
-                    $this->db->order_by('invoice_number', 'desc');
+                    $this->db->order_by('invoices.invoice_number', 'desc');
                     break;
 
                         
                 case 'last-created_at-asc':
-                    $this->db->order_by("(SUBSTR(date_created, INSTR(created_at, ' ')))", '');
+                    $this->db->order_by("(SUBSTR(invoices.date_created, INSTR(invoices.created_at, ' ')))", '');
                     break;
 
                 case 'last-created_at-desc':
-                    $this->db->order_by("(SUBSTR(date_created, INSTR(created_at, ' '))) DESC", '');
+                    $this->db->order_by("(SUBSTR(invoices.date_created, INSTR(invoices.created_at, ' '))) DESC", '');
                     break;
 
                 case 'email-asc':
-                    $this->db->order_by('contact_email', 'asc');
+                    $this->db->order_by('invoices.contact_email', 'asc');
                     break;
 
                 case 'email-desc':
-                    $this->db->order_by('contact_email', 'desc');
+                    $this->db->order_by('invoices.contact_email', 'desc');
                     break;
 
                 case 'grand_total-asc':
-                    $this->db->order_by('grand_total', 'asc');
+                    $this->db->order_by('invoices.grand_total', 'asc');
                     break;
 
                 case 'grand_total-desc':
-                    $this->db->order_by('grand_total', 'desc');
+                    $this->db->order_by('invoices.grand_total', 'desc');
                     break;
             }
         }else{
-            $this->db->order_by('id', 'DESC');
+            $this->db->order_by('invoices.id', 'DESC');
         }
         
         $query = $this->db->get();
