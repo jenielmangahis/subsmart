@@ -91,8 +91,17 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td style="text-align: right;">Status:</td>
-                                            <td style="width: 160px; text-align: right;" class="text-right"><?php echo $invoice->status; ?></td>
+                                            <td style="text-align: right;">Type:</td>
+                                            <td style="width: 160px; text-align: right;" class="text-right">
+                                                <?= (!empty($invoice->invoice_type) && $invoice->invoice_type !== 'NA') ? $invoice->invoice_type : '--'; ?>
+                                            </td>
+                                        </tr>
+                                                                    <tr>
+                                            <td style="text-align: right;">Job Number #:</td>
+                                            <td style="width: 160px; text-align: right;" class="text-right">
+                                                <?= (!empty($invoice->job_number) && $invoice->job_number !== 'NA') ? $invoice->job_number : '--'; ?>
+                                            </td>
+
                                         </tr>
                                         <tr>
                                             <td style="text-align: right;">Check Payable To:</td>
@@ -100,15 +109,8 @@
                                         </tr>
                                         <tr>
                                             <td style="text-align: right;"><b>Balance Due:</b></td>
-                                            <td style="width: 160px; text-align: right;" class="text-right">
-                                                <b>
-                                                <?php 
-                                                    if( $invoice->status == 'Paid' ){ 
-                                                        echo "$0.00";
-                                                    }else{
-                                                        echo '$ '.number_format($invoice->grand_total, 2);
-                                                    }
-                                                ?>
+                                            <td style="width: 160px; text-align: right;" class="text-right"><b>
+                                                $<?= number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2); ?>
                                                 </b>
                                             </td>
                                         </tr>
@@ -184,7 +186,14 @@
 
             <br><br>
             <?php endif; ?>
-            <br><br>            
+            <br><br>
+
+            <!-- <p style="margin:0"><b>JOB:</b></p>
+            <br> job_location 
+            <p style="margin: 0">Job Name: <?php echo $invoice->job_name ?></p>
+            <p style="margin: 0">Job Location: <?php echo $invoice->job_location ?></p>
+            <br>
+            <br> -->
             <!-- <br> -->
             <div class="table-items-container">
                 <?php $total_tax = 0; ?>
@@ -201,10 +210,11 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <?php $count = 1?>
                         <?php foreach ($items as $item ) { ?>
                         <tr class="table-items__tr">
                             <td style="width:30px; text-align:center;" valign="top">
-                                <?php echo intval($key) + 1 ?>
+                                <?php echo intval($count++) ?>
                             </td>
                             <td valign="top">
                                 <?php echo $item->title; ?>
@@ -244,6 +254,54 @@
                             <td></td>
                             <td style="text-align: right">$<?php echo number_format($invoice->taxes, 2);?></td>
                         </tr>
+                        <?php if( $invoice->installation_cost > 0 ){ ?>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td colspan="3" style="text-align: right"><b>Installation Cost</b></td>
+                                <td style="text-align: right">$<?php echo number_format($invoice->installation_cost, 2);?></td>
+                            </tr>
+                        <?php } ?>
+                        <?php if( $invoice->program_setup > 0 ){ ?>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td colspan="3" style="text-align: right"><b>One Time (Program and Setup)</b></td>
+                                <td style="text-align: right">$<?php echo number_format($invoice->program_setup, 2);?></td>
+                            </tr>
+                        <?php } ?>
+                        <?php if( $invoice->monthly_monitoring > 0 ){ ?>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td colspan="3" style="text-align: right"><b>Monthly Monitoring</b></td>
+                                <td style="text-align: right">$<?php echo number_format($invoice->monthly_monitoring, 2);?></td>
+                            </tr>
+                        <?php } ?>
+                        <?php if( $invoice->adjustment_value > 0 ){ ?>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td colspan="3" style="text-align: right">  <b><?=  $invoice->adjustment_name != '' ? $invoice->adjustment_name : 'Adjustment' ?></b></td>
+                                <td style="text-align: right">$<?php echo number_format($invoice->adjustment_value, 2);?></td>
+                            </tr>
+                        <?php } ?>
+                        <?php if( $invoice->no_tax == 1 ){ ?>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td colspan="3" style="text-align: right"><b>Tax Exempted</b></td>
+                                <td style="text-align: right">YES</td>
+                            </tr>
+                        <?php } ?>
+                        <?php if( $invoice->late_fee > 0  ){ ?>
+                            <tr>
+                                <td colspan="3"></td>
+                                <td colspan="3" style="text-align: right"><b>Late Fee</b></td>
+                                <td style="text-align: right">$<?php echo number_format($invoice->late_fee, 2);?></td>
+
+                            </tr>
+                        <?php } ?>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td colspan="3" style="text-align: right; background: #f4f4f4; padding: 8px 0"><b>Grand Total ($)</b></td>
+                            <td style="text-align: right; background: #f4f4f4"><b>$<?php echo number_format($invoice->grand_total, 2);?></b></td>
+                        </tr>
                         <tr>
                             <td colspan="3"></td>
                             <td colspan="2" style="text-align: right; background: #f4f4f4; padding: 8px 0"><b>Grand Total ($)</b></td>
@@ -252,10 +310,11 @@
                         </tr>
                         <tr>
                             <td colspan="3"></td>
-                            <td colspan="2" style="text-align: right"><b>Balance Due</b></td>
-                            <td></td>
+                            <td colspan="3" style="text-align: right"><b>Balance Due</b></td>
                             <td style="text-align: right">
-                                <b><?php echo $invoice->invoice_type === 'Total Due' ? '$'.number_format($invoice->grand_total, 2) : '$0.00' ?></b>
+                                <b>  
+                                    <?= number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2); ?>
+                                </b>
                             </td>
                         </tr>
                     </tfoot>
