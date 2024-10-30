@@ -1151,6 +1151,105 @@ class Tickets extends MY_Controller
         $this->load->view('tickets/edit_ticket', $this->page_data);
     }
 
+    public function addTicket()
+    {
+        $this->hasAccessModule(39);
+        $this->load->helper('functions_helper');
+        $this->load->model('AcsProfile_model');
+        $this->load->model('Job_tags_model');
+        $this->load->model('SettingsPlanType_model');
+        $this->load->model('PanelType_model');
+        $this->load->model('Customer_advance_model');
+
+        $this->page_data['page']->title = 'Tickets';
+
+        $query_autoincrment = $this->db->query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE table_name = 'customer_groups'");
+        $result_autoincrement = $query_autoincrment->result_array();
+
+        if (count($result_autoincrement)) {
+            if ($result_autoincrement[0]['AUTO_INCREMENT']) {
+                $this->page_data['auto_increment_estimate_id'] = 1;
+            } else {
+                $this->page_data['auto_increment_estimate_id'] = $result_autoincrement[0]['AUTO_INCREMENT'];
+            }
+        } else {
+            $this->page_data['auto_increment_estimate_id'] = 0;
+        }
+
+        $user_id = logged('id');
+        $company_id = logged('company_id');
+        $role = logged('role');
+        
+        $this->page_data['customers'] = $this->AcsProfile_model->getAllByCompanyId($company_id);
+
+        $default_customer_id = 0;
+        if ($this->input->get('cus_id')) {
+            $default_customer_id = $this->input->get('cus_id');
+        }
+
+        $this->page_data['default_customer_id'] = $default_customer_id;
+
+        $default_start_date = date('Y-m-d');
+        $default_start_time = '';
+        $default_user = 0;
+        $redirect_calendar = 0;
+
+        if ($this->input->get('start_date')) {
+            $default_start_date = $this->input->get('start_date');
+            $redirect_calendar = 1;
+        }
+
+        if ($this->input->get('start_time')) {
+            $default_start_time = $this->input->get('start_time');
+            $redirect_calendar = 1;
+        }
+
+        if ($this->input->get('user')) {
+            $default_user = $this->input->get('user');
+            $redirect_calendar = 1;
+        }
+
+        // Settings
+        $prefix = 'SERVICE-';
+        $lastInserted = $this->tickets_model->getlastInsert($company_id);
+        if ($lastInserted) {
+            $next = $lastInserted->ticket_no;
+            $arr = explode('-', $next);
+            $val = $arr[1];
+
+            $next_num = $val + 1;
+        } else {
+            $next_num = 1;
+        }
+
+        $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+
+        $settingsPlanTypes = $this->SettingsPlanType_model->getAllByCompanyId($company_id);
+        $settingPanelTypes = $this->PanelType_model->getAllByCompanyId($company_id);
+        $ratePlans = $this->Customer_advance_model->getAllSettingsRatePlansByCompanyId($company_id);
+        $type = $this->input->get('type');
+
+        $this->page_data['prefix'] = $prefix;
+        $this->page_data['next_num'] = $next_num;
+        $this->page_data['settingsPlanTypes'] = $settingsPlanTypes;
+        $this->page_data['settingPanelTypes'] = $settingPanelTypes;
+        $this->page_data['redirect_calendar'] = $redirect_calendar;
+        $this->page_data['default_user'] = $default_user;
+        $this->page_data['default_start_date'] = $default_start_date;
+        $this->page_data['default_start_time'] = $default_start_time;
+        $this->page_data['clients'] = $this->workorder_model->getclientsById();
+        $this->page_data['items'] = $this->items_model->getItemlist();        
+        $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($company_id);
+        $this->page_data['type'] = $type;
+        $this->page_data['plans'] = $this->plans_model->getByWhere(['company_id' => $company_id]);
+        $this->page_data['serviceType'] = $this->tickets_model->getServiceType($company_id);
+        $this->page_data['headers'] = $this->tickets_model->getHeaders($company_id);
+        $this->page_data['companyName'] = $this->tickets_model->getCompany($company_id);
+        $this->page_data['users_lists'] = $this->users_model->getAllUsersByCompanyID($company_id);
+        $this->page_data['time_interval'] = 2;
+        $this->load->view('tickets/add', $this->page_data);
+    }
+
     
     public function addTicketCust($id)
     {

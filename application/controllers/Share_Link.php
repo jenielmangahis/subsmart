@@ -1551,7 +1551,7 @@ class Share_Link extends MY_P_Controller
         // $this->pdf->load_view('workorder/send_email_acs_alarm', $data, $filename, "portrait");
         $this->load->library('pdf');
 
-        $this->pdf->load_view('tickets/tickets_pdf', $data, $filename, "portrait");
+        $this->pdf->load_view('tickets/tickets_pdf-backup2', $data, $filename, "portrait");
         // $this->pdf->render();
     }
 
@@ -1561,8 +1561,8 @@ class Share_Link extends MY_P_Controller
         $user_id     = logged('id');
 
         $tickets     = $this->tickets_model->get_tickets_data_one($tkID);
-        $ticket_rep  = $tickets->sales_rep;        
-
+        $ticket_rep  = $tickets->sales_rep;  
+        
         $header      = $this->tickets_model->get_tickets_header($tickets->company_id);
         $clients     = $this->tickets_model->get_tickets_clients($tickets->company_id);
         $items       = $this->tickets_model->get_ticket_items($tickets->id);
@@ -1570,6 +1570,7 @@ class Share_Link extends MY_P_Controller
 
         $payment     = $this->tickets_model->get_ticket_payments($tickets->id);
         $invoiceD    = $this->invoice_model->getByTicketId($tkID);
+
 
         $installation_cost = 0;
         if($invoiceD) {

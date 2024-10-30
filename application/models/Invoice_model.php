@@ -1456,6 +1456,13 @@ class Invoice_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function updateInvoiceDataByInvoiceId($invoice_id, $data)
+    {
+        $this->db->where('invoice_id', $invoice_id);
+        $this->db->update($this->table_invoice_payment, $data);
+        return true;
+    }
 }
 
 /* End of file Invoice_model.php */

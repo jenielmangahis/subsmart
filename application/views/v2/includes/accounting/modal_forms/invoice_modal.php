@@ -241,7 +241,7 @@
                                             </div>
                                         <?php endif; ?>
                                         <div class="col-12 col-md-2">
-                                            <label for="job-location" style="font-size: 10px;">Job location (optional, select, or add new one)</label>
+                                            <label for="job-location">Job location (optional)</label>
                                             <input type="text" class="form-control nsm-field mb-2" id="job-location" name="job_location" value="<?= isset($invoice) ? $invoice->job_location : '' ?>">
                                         </div>
                                         <div class="col-12 col-md-2">
@@ -366,10 +366,10 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-12 col-md-8 grid-mb">
+                                        <div class="col-4 col-md-4 grid-mb">
                                             <div id="label">
                                                 <label for="tags">Tags</label>
-                                                <span class="float-end"><a href="#" class="text-decoration-none" id="open-tags-modal">Manage tags</a></span>
+                                                <span class="float-end"><a href="#" class="nsm-button btn-small" id="open-tags-modal">Manage tags</a></span>
                                             </div>
                                             <select name="tags[]" id="tags" class="form-control" multiple="multiple">
                                                 <?php if (isset($tags) && count($tags) > 0) : ?>
