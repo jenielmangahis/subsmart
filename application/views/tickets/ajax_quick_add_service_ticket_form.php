@@ -603,7 +603,7 @@
                         <input type="hidden" name="sales_rep" class="form-control" value="<?php echo logged('id'); ?>">
                     </div>
                     <div class="col-md-4">
-                        <b>Mobile Phone</b>
+                        <b>Mobile Number</b>
                         <input type="text" name="sales_rep_no" class="form-control phone_number" value="<?php echo logged('mobile'); ?>" maxlength="12" placeholder="xxx-xxx-xxxx">
                     </div>                       
                     <div class="col-md-4">

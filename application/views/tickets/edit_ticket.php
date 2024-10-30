@@ -217,6 +217,11 @@ a.btn-primary.btn-md {
     position:relative;
     top:10px;
 }
+#jobs_items_table_body .remove i{
+    position: relative;
+    top: 1px;
+    left: 7px;
+}
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('customer/addTicket') ?>'">
@@ -525,7 +530,7 @@ a.btn-primary.btn-md {
                                             </tbody>
                                         </table>
                                         <button class="link-modal-open nsm-button primary small link-modal-open" type="button" id="add_another_items">
-                                            <i class='bx bx-plus'></i>Add Items
+                                            <i class='bx bx-plus'></i>Add Item
                                         </button>
                                     </div>
                                 </div>
@@ -1416,7 +1421,7 @@ $(document).ready(function(){
                 var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
                 var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
             
-            var service_location = response['customer'].mail_add + ' ' + response['customer'].city + ', ' + response['customer'].state + response['customer'].zip_code;
+            var service_location = response['customer'].mail_add + ' ' + response['customer'].city + ', ' + response['customer'].state + ' ' + response['customer'].zip_code;
             $("#service_location").val(service_location);
             $("#customer_city").val(response['customer'].city);
             $("#customer_state").val(response['customer'].state);
