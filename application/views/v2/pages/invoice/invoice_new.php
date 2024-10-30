@@ -206,7 +206,7 @@
                                     <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo base_url('invoice/genview/' . $invoice->id) ?>'"><?= formatInvoiceNumber($invoice->invoice_number) ?>
                                     </td>
                                     <td class="nsm-text-primary nsm-link default view-job-row" data-id="<?= $invoice->job_id; ?>">
-                                            <?php echo $invoice->job_number != '' ? $invoice->job_number : '---';  ?>
+                                            <?php echo $invoice->jobnumber != '' ? $invoice->jobnumber : '---';  ?>
                                     </td>
                                     <td><?php echo get_format_date($invoice->date_issued) ?></td>
                                     <td><?php echo get_format_date($invoice->due_date) ?></td>
