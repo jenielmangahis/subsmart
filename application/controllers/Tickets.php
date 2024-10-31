@@ -738,191 +738,191 @@ class Tickets extends MY_Controller
         $this->Activity_model->add($activity_name,$user_id);
 
         
-        if($this->input->post('payment_method') == 'Cash'){
-            $payment_data = array(
-                'payment_method'    => $this->input->post('payment_method'),
-                'amount'            => $this->input->post('payment_amount'),
-                'is_collected'      => '1',
-                //'ticket_id'         => $id,
-                'date_updated'      => date("Y-m-d H:i:s")
-            );
+        // if($this->input->post('payment_method') == 'Cash'){
+        //     $payment_data = array(
+        //         'payment_method'    => $this->input->post('payment_method'),
+        //         'amount'            => $this->input->post('payment_amount'),
+        //         'is_collected'      => '1',
+        //         //'ticket_id'         => $id,
+        //         'date_updated'      => date("Y-m-d H:i:s")
+        //     );
 
-            //$pay = $this->tickets_model->update_cash($payment_data);
-            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        }
-        elseif($this->input->post('payment_method') == 'Check'){
-            $payment_data = array(
-                'payment_method'    => $this->input->post('payment_method'),
-                'amount'            => $this->input->post('payment_amount'),
-                'check_number'      => $this->input->post('check_number'),
-                'routing_number'    => $this->input->post('routing_number'),
-                'bank_name'         => $this->input->post('bank_name'),
-                //'ticket_id'         => $id,
-                'date_updated'      => date("Y-m-d H:i:s")
-            );
+        //     //$pay = $this->tickets_model->update_cash($payment_data);
+        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Check'){
+        //     $payment_data = array(
+        //         'payment_method'    => $this->input->post('payment_method'),
+        //         'amount'            => $this->input->post('payment_amount'),
+        //         'check_number'      => $this->input->post('check_number'),
+        //         'routing_number'    => $this->input->post('routing_number'),
+        //         'bank_name'         => $this->input->post('bank_name'),
+        //         //'ticket_id'         => $id,
+        //         'date_updated'      => date("Y-m-d H:i:s")
+        //     );
 
-            //$pay = $this->tickets_model->update_check($payment_data);
-            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        }
-        elseif($this->input->post('payment_method') == 'Credit Card'){            
-            $payment_data = array(            
-                'payment_method'    => $this->input->post('payment_method'),
-                'amount'            => $this->input->post('payment_amount'),
-                'credit_number'     => $this->input->post('credit_number'),
-                'credit_expiry'     => $this->input->post('credit_expiry'),
-                'credit_cvc'        => $this->input->post('credit_cvc'),
-                //'ticket_id'         => $id,
-                'date_updated'      => date("Y-m-d H:i:s")
-            );
+        //     //$pay = $this->tickets_model->update_check($payment_data);
+        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Credit Card'){            
+        //     $payment_data = array(            
+        //         'payment_method'    => $this->input->post('payment_method'),
+        //         'amount'            => $this->input->post('payment_amount'),
+        //         'credit_number'     => $this->input->post('credit_number'),
+        //         'credit_expiry'     => $this->input->post('credit_expiry'),
+        //         'credit_cvc'        => $this->input->post('credit_cvc'),
+        //         //'ticket_id'         => $id,
+        //         'date_updated'      => date("Y-m-d H:i:s")
+        //     );
 
-            //$pay = $this->tickets_model->update_creditCard($payment_data);
-            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        }
-        elseif($this->input->post('payment_method') == 'Debit Card'){
-            $payment_data = array(
+        //     //$pay = $this->tickets_model->update_creditCard($payment_data);
+        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Debit Card'){
+        //     $payment_data = array(
             
-                'payment_method'    => $this->input->post('payment_method'),
-                'amount'            => $this->input->post('payment_amount'),
-                'credit_number'     => $this->input->post('debit_credit_number'),
-                'credit_expiry'     => $this->input->post('debit_credit_expiry'),
-                'credit_cvc'        => $this->input->post('debit_credit_cvc'),
-                'ticket_id'         => $id,
-                'date_updated'      => date("Y-m-d H:i:s")
-            );
+        //         'payment_method'    => $this->input->post('payment_method'),
+        //         'amount'            => $this->input->post('payment_amount'),
+        //         'credit_number'     => $this->input->post('debit_credit_number'),
+        //         'credit_expiry'     => $this->input->post('debit_credit_expiry'),
+        //         'credit_cvc'        => $this->input->post('debit_credit_cvc'),
+        //         'ticket_id'         => $id,
+        //         'date_updated'      => date("Y-m-d H:i:s")
+        //     );
 
-            //$pay = $this->tickets_model->update_debitCard($payment_data);
-            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        }
-        elseif($this->input->post('payment_method') == 'ACH'){
-            $payment_data = array(
+        //     //$pay = $this->tickets_model->update_debitCard($payment_data);
+        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'ACH'){
+        //     $payment_data = array(
             
-                'payment_method'    => $this->input->post('payment_method'),
-                'amount'            => $this->input->post('payment_amount'),
-                'routing_number'    => $this->input->post('ach_routing_number'),
-                'account_number'    => $this->input->post('ach_account_number'),
-                'ticket_id'         => $id,
-                'date_updated'      => date("Y-m-d H:i:s")
-            );
+        //         'payment_method'    => $this->input->post('payment_method'),
+        //         'amount'            => $this->input->post('payment_amount'),
+        //         'routing_number'    => $this->input->post('ach_routing_number'),
+        //         'account_number'    => $this->input->post('ach_account_number'),
+        //         'ticket_id'         => $id,
+        //         'date_updated'      => date("Y-m-d H:i:s")
+        //     );
 
-            //$pay = $this->tickets_model->update_ACH($payment_data);
-            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        }
-        elseif($this->input->post('payment_method') == 'Venmo'){
-            $payment_data = array(
+        //     //$pay = $this->tickets_model->update_ACH($payment_data);
+        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Venmo'){
+        //     $payment_data = array(
             
-                'payment_method'        => $this->input->post('payment_method'),
-                'amount'                => $this->input->post('payment_amount'),
-                'account_credentials'   => $this->input->post('account_credentials'),
-                'account_note'          => $this->input->post('account_note'),
-                'confirmation'          => $this->input->post('confirmation'),
-                'ticket_id'             => $id,
-                'date_updated'          => date("Y-m-d H:i:s")
-            );
+        //         'payment_method'        => $this->input->post('payment_method'),
+        //         'amount'                => $this->input->post('payment_amount'),
+        //         'account_credentials'   => $this->input->post('account_credentials'),
+        //         'account_note'          => $this->input->post('account_note'),
+        //         'confirmation'          => $this->input->post('confirmation'),
+        //         'ticket_id'             => $id,
+        //         'date_updated'          => date("Y-m-d H:i:s")
+        //     );
 
-            //$pay = $this->tickets_model->update_Venmo($payment_data);
-            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        }
-        elseif($this->input->post('payment_method') == 'Paypal'){
-            $payment_data = array(
+        //     //$pay = $this->tickets_model->update_Venmo($payment_data);
+        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Paypal'){
+        //     $payment_data = array(
             
-                'payment_method'        => $this->input->post('payment_method'),
-                'amount'                => $this->input->post('payment_amount'),
-                'account_credentials'   => $this->input->post('paypal_account_credentials'),
-                'account_note'          => $this->input->post('paypal_account_note'),
-                'confirmation'          => $this->input->post('paypal_confirmation'),
-                'ticket_id'             => $id,
-                'date_updated'          => date("Y-m-d H:i:s")
-            );
+        //         'payment_method'        => $this->input->post('payment_method'),
+        //         'amount'                => $this->input->post('payment_amount'),
+        //         'account_credentials'   => $this->input->post('paypal_account_credentials'),
+        //         'account_note'          => $this->input->post('paypal_account_note'),
+        //         'confirmation'          => $this->input->post('paypal_confirmation'),
+        //         'ticket_id'             => $id,
+        //         'date_updated'          => date("Y-m-d H:i:s")
+        //     );
 
-            //$pay = $this->tickets_model->update_Paypal($payment_data);
-            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        }
-        elseif($this->input->post('payment_method') == 'Square'){
-            $payment_data = array(
+        //     //$pay = $this->tickets_model->update_Paypal($payment_data);
+        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Square'){
+        //     $payment_data = array(
             
-                'payment_method'        => $this->input->post('payment_method'),
-                'amount'                => $this->input->post('payment_amount'),
-                'account_credentials'   => $this->input->post('square_account_credentials'),
-                'account_note'          => $this->input->post('square_account_note'),
-                'confirmation'          => $this->input->post('square_confirmation'),
-                'ticket_id'             => $id,
-                'date_updated'          => date("Y-m-d H:i:s")
-            );
+        //         'payment_method'        => $this->input->post('payment_method'),
+        //         'amount'                => $this->input->post('payment_amount'),
+        //         'account_credentials'   => $this->input->post('square_account_credentials'),
+        //         'account_note'          => $this->input->post('square_account_note'),
+        //         'confirmation'          => $this->input->post('square_confirmation'),
+        //         'ticket_id'             => $id,
+        //         'date_updated'          => date("Y-m-d H:i:s")
+        //     );
 
-            //$pay = $this->tickets_model->update_Square($payment_data);
-            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        }
-        elseif($this->input->post('payment_method') == 'Warranty Work'){
-            $payment_data = array(
+        //     //$pay = $this->tickets_model->update_Square($payment_data);
+        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Warranty Work'){
+        //     $payment_data = array(
             
-                'payment_method'        => $this->input->post('payment_method'),
-                'amount'                => $this->input->post('payment_amount'),
-                'account_credentials'   => $this->input->post('warranty_account_credentials'),
-                'account_note'          => $this->input->post('warranty_account_note'),
-                'ticket_id'             => $id,
-                'date_updated'          => date("Y-m-d H:i:s")
-            );
+        //         'payment_method'        => $this->input->post('payment_method'),
+        //         'amount'                => $this->input->post('payment_amount'),
+        //         'account_credentials'   => $this->input->post('warranty_account_credentials'),
+        //         'account_note'          => $this->input->post('warranty_account_note'),
+        //         'ticket_id'             => $id,
+        //         'date_updated'          => date("Y-m-d H:i:s")
+        //     );
 
-            //$pay = $this->tickets_model->update_Warranty($payment_data);
-            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        }
-        elseif($this->input->post('payment_method') == 'Home Owner Financing'){
-            $payment_data = array(
+        //     //$pay = $this->tickets_model->update_Warranty($payment_data);
+        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Home Owner Financing'){
+        //     $payment_data = array(
             
-                'payment_method'        => $this->input->post('payment_method'),
-                'amount'                => $this->input->post('payment_amount'),
-                'account_credentials'   => $this->input->post('home_account_credentials'),
-                'account_note'          => $this->input->post('home_account_note'),
-                'ticket_id'             => $id,
-                'date_updated'          => date("Y-m-d H:i:s")
-            );
+        //         'payment_method'        => $this->input->post('payment_method'),
+        //         'amount'                => $this->input->post('payment_amount'),
+        //         'account_credentials'   => $this->input->post('home_account_credentials'),
+        //         'account_note'          => $this->input->post('home_account_note'),
+        //         'ticket_id'             => $id,
+        //         'date_updated'          => date("Y-m-d H:i:s")
+        //     );
 
-            //$pay = $this->tickets_model->update_Home($payment_data);
-            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        }
-        elseif($this->input->post('payment_method') == 'e-Transfer'){
-            $payment_data = array(
+        //     //$pay = $this->tickets_model->update_Home($payment_data);
+        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'e-Transfer'){
+        //     $payment_data = array(
             
-                'payment_method'        => $this->input->post('payment_method'),
-                'amount'                => $this->input->post('payment_amount'),
-                'account_credentials'   => $this->input->post('e_account_credentials'),
-                'account_note'          => $this->input->post('e_account_note'),
-                'ticket_id'             => $id,
-                'date_updated'          => date("Y-m-d H:i:s")
-            );
+        //         'payment_method'        => $this->input->post('payment_method'),
+        //         'amount'                => $this->input->post('payment_amount'),
+        //         'account_credentials'   => $this->input->post('e_account_credentials'),
+        //         'account_note'          => $this->input->post('e_account_note'),
+        //         'ticket_id'             => $id,
+        //         'date_updated'          => date("Y-m-d H:i:s")
+        //     );
 
-            //$pay = $this->tickets_model->update_Transfer($payment_data);
-            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        }
-        elseif($this->input->post('payment_method') == 'Other Credit Card Professor'){
-            $payment_data = array(
+        //     //$pay = $this->tickets_model->update_Transfer($payment_data);
+        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Other Credit Card Professor'){
+        //     $payment_data = array(
             
-                'payment_method'        => $this->input->post('payment_method'),
-                'amount'                => $this->input->post('payment_amount'),
-                'credit_number'         => $this->input->post('other_credit_number'),
-                'credit_expiry'         => $this->input->post('other_credit_expiry'),
-                'credit_cvc'            => $this->input->post('other_credit_cvc'),
-                'ticket_id'             => $id,
-                'date_updated'          => date("Y-m-d H:i:s")
-            );
+        //         'payment_method'        => $this->input->post('payment_method'),
+        //         'amount'                => $this->input->post('payment_amount'),
+        //         'credit_number'         => $this->input->post('other_credit_number'),
+        //         'credit_expiry'         => $this->input->post('other_credit_expiry'),
+        //         'credit_cvc'            => $this->input->post('other_credit_cvc'),
+        //         'ticket_id'             => $id,
+        //         'date_updated'          => date("Y-m-d H:i:s")
+        //     );
 
-            //$pay = $this->tickets_model->update_Professor($payment_data);
-            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        }
-        elseif($this->input->post('payment_method') == 'Other Payment Type'){
-            $payment_data = array(
+        //     //$pay = $this->tickets_model->update_Professor($payment_data);
+        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
+        // }
+        // elseif($this->input->post('payment_method') == 'Other Payment Type'){
+        //     $payment_data = array(
             
-                'payment_method'        => $this->input->post('payment_method'),
-                'amount'                => $this->input->post('payment_amount'),
-                'account_credentials'   => $this->input->post('other_payment_account_credentials'),
-                'account_note'          => $this->input->post('other_payment_account_note'),
-                'ticket_id'             => $id,
-                'date_updated'          => date("Y-m-d H:i:s")
-            );
+        //         'payment_method'        => $this->input->post('payment_method'),
+        //         'amount'                => $this->input->post('payment_amount'),
+        //         'account_credentials'   => $this->input->post('other_payment_account_credentials'),
+        //         'account_note'          => $this->input->post('other_payment_account_note'),
+        //         'ticket_id'             => $id,
+        //         'date_updated'          => date("Y-m-d H:i:s")
+        //     );
 
-            //$pay = $this->tickets_model->update_Other($payment_data);
-            $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        }
+        //     //$pay = $this->tickets_model->update_Other($payment_data);
+        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
+        // }
 
         $ticket_id = $this->input->post('ticketID');
         //Google Calendar

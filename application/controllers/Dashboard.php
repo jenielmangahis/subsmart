@@ -1175,10 +1175,20 @@ class Dashboard extends Widgets
         $invoicePaid = $this->Invoice_model->getCompanyTotalAmountPaidInvoices($cid, ['from' => $date_from, 'to' => $date_to]);
         $total_amount_paid = $invoicePaid->total_paid;
 
+        $service_project_income = $this->Invoice_model->gerServiceProjectvieIncome($cid);
+        $invoice_amount = $this->Invoice_model->getInvoiceAmount($cid);
+        $jobs_completed = $this->Invoice_model->getJobsCompleted($cid);
+        // $jobs_completed = 0;
+        $new_jobs = $this->Invoice_model->getNewJobs($cid);
+        $earned = $this->Invoice_model->getEarned($cid);
+        $lost_accounts = $this->Invoice_model->getLostAccounts($cid);
+
         $collectedAccounts = $this->event_model->getAccountSituation('Collections'); // collection account count, if Collection Date Office Info is set
         $lostAccounts = $this->event_model->getAccountSituation('Cancelled'); // lost account count, if Cancel Date Office Info is set
         $onlineBookingCount = $this->event_model->getLeadSource('Online Booking');
-        $data_arr = ['success' => true, 'data' => $payment, 'paymentInvoice' => $paymentInvoices, 'onlineBooking' => $onlineBookingCount, 'jobsCompleted' => $total_jobs_done, 'lostAccount' => $lostAccounts, 'collectedAccounts' => $collectedAccounts, 'invoice_amount_due' => $total_amount_due, 'collected_amount' => $total_amount_paid];
+        $data_arr = ['success' => true, 'data' => $payment, 'paymentInvoice' => $paymentInvoices, 'onlineBooking' => $onlineBookingCount, 'jobsCompleted' => $total_jobs_done, 'lostAccount' => $lostAccounts, 'collectedAccounts' => $collectedAccounts, 'invoice_amount_due' => $total_amount_due, 
+        'collected_amount' => $total_amount_paid , 'service_project_income'=>$service_project_income, 'invoice_amount'=>$invoice_amount, 'jobs_completed'=>$jobs_completed,
+        'new_jobs'=> $new_jobs, 'earned'=>$earned,'lost_accounts'=>$lost_accounts];
         exit(json_encode($data_arr));
     }
 

@@ -47,8 +47,8 @@ endif;
                         <i class='bx bx-box'></i>
                     </div>
                     <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                        <h3 id="collected"></h3>
-                        <span>Collected</span>
+                        <h3 id="invoice_amount"></h3>
+                        <span>Invoice Amount</span>
                     </div>
                 </div>
             </div>
@@ -99,8 +99,8 @@ endif;
                         <i class='bx bx-box'></i>
                     </div>
                     <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                        <h2 id="collections"></h2>
-                        <span>Collections</span>
+                        <h2 id="service_project_income"></h2>
+                        <span>Service Projective Income</span>
                     </div>
                 </div>
             </div>
