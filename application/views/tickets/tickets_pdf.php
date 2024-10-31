@@ -208,21 +208,12 @@
                             <?php 
                                 $payment_amount = $payment->billing_frequency != null ? $payment->billing_frequency : '0.00'; 
                             ?>                            
-                            <?php if($payment_amount != '0.00') { ?>
                             <tr>
                                 <td colspan="2" style="text-align: left"><b>Payment Amount: </b</td>
                                 <td colspan="2" style="text-align: left">$<?php echo number_format($payment_amount,2); ?></td>
                                 <td colspan="2" style="text-align: right"><b>Taxes</b></td>
                                 <td style="text-align: right">$<?php echo number_format($taxes,2); ?></td>
                             </tr>
-                            <?php } else { ?>
-                                <tr>
-                                    <td colspan="2" style="text-align: left"><b>Installation Cost: </b</td>
-                                    <td colspan="2" style="text-align: left">$<?php echo number_format($installation_cost,2); ?></td>
-                                    <td colspan="2" style="text-align: right"><b>Taxes</b></td>
-                                    <td style="text-align: right">$<?php echo number_format($taxes,2); ?></td>
-                                </tr>
-                            <?php } ?>
                             <tr>
                                 <td colspan="2" style="text-align: left"><!-- <b>Billing Date: </b--></td>
                                 <td colspan="2" style="text-align: left"><?php //echo $billing_date ? $billing_date : '-'; ?></td>
@@ -332,10 +323,30 @@
                                 <td colspan="2" style="text-align: right"><b>Markup</b></td>
                                 <td style="text-align: right">$<?php echo number_format($markup,2); ?></td>
                             </tr>
+                            <?php $icost = 0; ?>
+                            <?php if($installation_cost != null && $installation_cost > 0) { $icost = $installation_cost; ?>
+                            <tr>
+                                <td colspan="2" style="text-align: left"></td>
+                                <td colspan="2" style="text-align: left">                             
+                                </td>
+                                <td colspan="2" style="text-align: right"><b>installation Cost</b></td>
+                                <td style="text-align: right">$<?php echo number_format($installation_cost,2); ?></td>
+                            </tr>
+                            <?php } ?>
+                            <?php $mmr = 0; ?>
+                            <?php if($mmr_total != null && $mmr_total > 0) { $mmr = $mmr_total; ?>
+                            <tr>
+                                <td colspan="2" style="text-align: left"></td>
+                                <td colspan="2" style="text-align: left">                             
+                                </td>
+                                <td colspan="2" style="text-align: right"><b>MMR</b></td>
+                                <td style="text-align: right">$<?php echo number_format($mmr_total,2); ?></td>
+                            </tr>
+                            <?php } ?>
                             <tr>
                                 <td colspan="4"></td>
                                 <td colspan="2" style="text-align: right; background: #f4f4f4; padding: 8px 0"><b>Grand Total</b></td>
-                                <td style="text-align: right; background: #f4f4f4; padding: 8px 8px 8px 0;"><b>$<?php echo number_format($grandtotal,2); ?></b></td>
+                                <td style="text-align: right; background: #f4f4f4; padding: 8px 8px 8px 0;"><b>$<?php echo number_format($grandtotal + $icost + $mmr,2); ?></b></td>
                             </tr>
                         </tfoot>
                     </table>
