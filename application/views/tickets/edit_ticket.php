@@ -237,6 +237,7 @@ a.btn-primary.btn-md {
     <input type="hidden" id="siteurl" value="<?=base_url();?>">
     <?php echo form_open_multipart('tickets/saveUpdateTicket', [ 'class' => 'form-validate', 'autocomplete' => 'off' ]); ?> 
     <input type="hidden" name="ticketID" value="<?php echo $tickets->id; ?>">
+    <input type="hidden" name="invoiceID" value="<?php echo $invoicePayment ? $invoicePayment->invoice_id : '0'; ?>">
     <div class="col-12">
         <div class="nsm-page">
             <div class="nsm-page-content">
@@ -597,7 +598,7 @@ a.btn-primary.btn-md {
                                             </div>     
                                             <div class="form-group col-md-3">
                                                 <b>Amount</b>
-                                                <input type="number" class="form-control payment_amount" name="payment_amount" id="payment_amount" placeholder="Enter Amount" />
+                                                <input type="number" class="form-control payment_amount" value="<?= $invoicePayment && $invoicePayment->amount > 0 ? number_format($invoicePayment->amount,2,".","") : '0.00'; ?>" name="payment_amount" id="payment_amount" placeholder="Enter Amount" />
                                             </div>
                                             <div class="form-group col-md-3">
                                                 <b>Billing Date</b>
