@@ -1214,7 +1214,7 @@ echo put_header_assets();
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="readOnlyText" value="" id="readOnlyText">
                                 <label class="form-check-label" for="readOnlyText">
-                                    Required Field
+                                    Readonly Field
                                 </label>
                             </div>
                             <hr />

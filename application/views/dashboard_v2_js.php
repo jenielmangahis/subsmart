@@ -114,8 +114,15 @@ $(document).ready(function() {
             lostAccount,
             collectedAccounts,
             invoice_amount_due,
-            collected_amount
+            collected_amount,
+            service_project_income,
+            invoice_amount,
+            jobs_completed,
+            new_jobs,
+            earned,
+            lost_accounts
         } = response;
+
 
         if (success) {
             var totalPayments = 0;
@@ -125,7 +132,13 @@ $(document).ready(function() {
             var lostAcc = lostAccount == '' ? '0' : lostAccount[0]['total'];
             var collectedAcc = collectedAccounts == '' ? '0' : collectedAccounts[0]['total'];
             var onlineBookingCount = onlineBooking == '' ? '0' : onlineBooking[0]['total'];
-
+            var service_project_incomeData = service_project_income == null ? '0' :parseFloat(service_project_income.total).toFixed(2);
+            var invoice_amountData = invoice_amount == null ? '0' : parseFloat(invoice_amount.total).toFixed(2);
+            var jobs_completedData = jobs_completed == '' ? '0' : jobs_completed.total;
+            var new_jobsData = new_jobs == '' ? '0' : new_jobs.total;
+            var lost_accountsData = lost_accounts == '' ? '0' : lost_accounts.total;
+            var earnedData = earned == null ? '0' : parseFloat(earned.total).toFixed(2);
+            
             var today = new Date();
             var dd = String(today.getDate()).padStart(2, '0');
             var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -135,12 +148,12 @@ $(document).ready(function() {
             var total_invoice_amount_due = parseFloat(invoice_amount_due).toFixed(2);
             var total_collected_amount = parseFloat(collected_amount).toFixed(2);
 
-            $("#earned").text('$' + total_invoice_amount_due); // total earned
-            $("#jobs_completed").text(jobsCompleted); // total jobs completed
-            $("#jobs_added").text(onlineBookingCount); // total jobs added
-            $("#lost_accounts").text(lostAcc); // total lost account
-            $("#collections").text(collectedAcc); // total collected account
-            $("#collected").text('$' + total_collected_amount); // total earned
+            $("#earned").text('$' + earnedData); // total earned
+            $("#jobs_completed").text(jobs_completedData); // total jobs completed
+            $("#jobs_added").text(new_jobsData); // total jobs added
+            $("#lost_accounts").text(lost_accountsData); // total lost account
+            $("#service_project_income").text('$' + service_project_incomeData); 
+            $("#invoice_amount").text('$' + invoice_amountData); // total earned
         }
     }).catch((error) => {
         console.log('Error:', error);
