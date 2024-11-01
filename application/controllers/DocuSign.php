@@ -1683,6 +1683,7 @@ class DocuSign extends MYF_Controller
             'completed_message' => $completedMessage,
             'user_id' => logged('id'),
             'company_id' => logged('company_id'),
+            'created_at' => date("Y-m-d H:i:s")
         ];
 
         $isCreated = false;

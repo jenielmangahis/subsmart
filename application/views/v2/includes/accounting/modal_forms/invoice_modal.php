@@ -19,6 +19,10 @@
     #invoiceModal .nsm-table td:nth-child(8){
     text-align:right !important; 
     }
+    .errorMessagePSM {
+        color: red;
+        font-size: 12px;
+    }
 </style>
 <!-- Modal for bank deposit-->
 <div class="full-screen-modal">
@@ -676,8 +680,10 @@
                                                             </div>
                                                             <div class="col-md-3 mb-3">
                                                                 <label for="payment-schedule-months" class="form-label">Months to pay:</label>
-                                                                <select class="form-select nsm-field" id="payment-schedule-months">
-                                                                        <option value="">Select month</option>
+                                                                <input type="number" step="1" min="1" max="24" required class="form-control nsm-field" id="payment-schedule-months" name="payment-schedule-months">
+                                                                <div id="errorMessagePSM" class="errorMessagePSM"></div>
+                                                                <!-- <select class="form-select nsm-field" id="payment-schedule-months">
+                                                                    <option value="">Select month</option>
                                                                     <option value="1">1 month</option>
                                                                     <option value="2">2 months</option>
                                                                     <option value="3">3 months</option>
@@ -702,11 +708,10 @@
                                                                     <option value="22">22 months</option>
                                                                     <option value="23">23 months</option>
                                                                     <option value="24">24 months</option>
-                                                                 
-                                                                </select>
+                                                                </select> -->
                                                             </div>
                                                         </div>
-                                                     
+
                                                         <span>Monthly payment:</span>
                                                         <span id="monthly_amount">$0.00</span>
                                                     </div>
@@ -1063,8 +1068,7 @@
 </script>
 <script>
    
-
-    $(document).ready(function() {
+$(document).ready(function() {
      $('#manage-payment-schedule').on('click', function(event) {
         event.preventDefault();
         var paymentScheduleContainer = $('#payment-schedule-input');
@@ -1079,30 +1083,45 @@
       $(this).html('<i class="bx bx-fw bxs-plus-square" aria-hidden="true"></i> Manage payment schedule');
   
     });
-  $('#transaction-grand-total').on('DOMSubtreeModified', function() {
-    var grandTotal = parseFloat($(this).text().replace(/[^0-9.-]+/g, ""));
-    var selectedMonths = $('#payment-schedule-months').val();
-     if(selectedMonths === ''){
-        $('#monthly_amount').html('$'+grandTotal);
-     }
 
-    if (!isNaN(grandTotal) && !isNaN(selectedMonths) && selectedMonths !== '') {
-      var monthlyPayment = grandTotal / selectedMonths;
-      $('#monthly_amount').html('$'+monthlyPayment.toFixed(2));
-    } 
-  });
+    $('#transaction-grand-total').on('DOMSubtreeModified', function() {
+        var grandTotal = parseFloat($(this).text().replace(/[^0-9.-]+/g, ""));
+        var selectedMonths = $('#payment-schedule-months').val();
+        if(selectedMonths === ''){
+            $('#monthly_amount').html('$'+grandTotal);
+        }
 
-  $('#payment-schedule-months').on('change', function() {
-    var selectedMonths = $(this).val();
-    var grandTotal = parseFloat($('#transaction-grand-total').text().replace(/[^0-9.-]+/g, ""));
-     
-    if (!isNaN(grandTotal) && !isNaN(selectedMonths) && selectedMonths !== '') {
-      var monthlyPayment = grandTotal / selectedMonths;
-      $('#monthly_amount').html('$'+monthlyPayment.toFixed(2));
-    }
- 
-  })
+        if (!isNaN(grandTotal) && !isNaN(selectedMonths) && selectedMonths !== '') {
+        var monthlyPayment = grandTotal / selectedMonths;
+        $('#monthly_amount').html('$'+monthlyPayment.toFixed(2));
+        } 
+    });
+
+    $('#payment-schedule-months').on('change', function() {
+        var selectedMonths = $(this).val();
+        var grandTotal = parseFloat($('#transaction-grand-total').text().replace(/[^0-9.-]+/g, ""));
+        
+        if (!isNaN(grandTotal) && !isNaN(selectedMonths) && selectedMonths !== '') {
+        var monthlyPayment = grandTotal / selectedMonths;
+        $('#monthly_amount').html('$'+monthlyPayment.toFixed(2));
+        }
+    
+    })
+    
 });
+
+$(document).ready(function() {
+    $('#payment-schedule-months').on('input', function() {
+        let value = $(this).val();
+        if (value < 1 || value > 24 || value === "") {
+            $('#errorMessagePSM').html('Please enter a num. between 1 and 24.');
+            $("#payment-schedule-months").val("");
+        } else {
+            $('#errorMessagePSM').html('');
+        }
+        
+    });
+});  
 
 
 </script>

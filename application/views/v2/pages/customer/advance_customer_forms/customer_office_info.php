@@ -132,32 +132,18 @@
             </div>
             <div class="col-md-6">
                 <select id="lead_source" name="lead_source" data-customer-source="dropdown" class="input_select" required=""> 
-                    <option value selected hidden disabled>Select Lead Source</option>
-
-                    <?php foreach ($LEAD_SOURCE_OPTION AS $LEAD_SOURCE) { if ($office_info->lead_source == $LEAD_SOURCE->ls_name) { ?>
-                        <option selected value="<?php echo $LEAD_SOURCE->ls_name ?>"><?php echo $LEAD_SOURCE->ls_name ?></option>
-                    <?php } else { ?>
-                        <option value="<?php echo $LEAD_SOURCE->ls_name ?>"><?php echo $LEAD_SOURCE->ls_name ?></option>
-                    <?php } } ?>
-
-                    <!-- <option <?php if(isset($office_info)){ if($office_info->lead_source == ""){ echo 'selected'; } } ?> value="">Select</option>
-                    <option <?php if(isset($office_info)){ if($office_info->lead_source == "Customer Referral"){ echo 'selected'; } } ?> value="Customer Referral">Customer Referral</option>
-                    <option <?php if(isset($office_info)){ if($office_info->lead_source == "Door"){ echo 'selected'; } } ?> value="Door">Door</option>
-                    <option <?php if(isset($office_info)){ if($office_info->lead_source == "Door Hanger"){ echo 'selected'; } } ?> value="Door Hanger">Door Hanger</option>
-                    <option <?php if(isset($office_info)){ if($office_info->lead_source == "Flyer Mail Outs"){ echo 'selected'; } } ?> value="Flyer Mail Outs">Flyer Mail Outs</option>
-                    <option <?php if(isset($office_info)){ if($office_info->lead_source == "Outbound Calls"){ echo 'selected'; } } ?> value="Outbound Calls">Outbound Calls</option>
-                    <option <?php if(isset($office_info)){ if($office_info->lead_source == "Phone"){ echo 'selected'; } } ?> value="Phone">Phone</option>
-                    <option <?php if(isset($office_info)){ if($office_info->lead_source == "Radio Ad"){ echo 'selected'; } } ?> value="Radio Ad">Radio Ad</option>
-                    <option <?php if(isset($office_info)){ if($office_info->lead_source == "Social Media"){ echo 'selected'; } } ?> value="Social Media">Social Media</option>
-                    <option <?php if(isset($office_info)){ if($office_info->lead_source == "TV Ad"){ echo 'selected'; } } ?> value="TV Ad">TV Ad</option>
-                    <option <?php if(isset($office_info)){ if($office_info->lead_source == "Unknown"){ echo 'selected'; } } ?>value="Unknown">Unknown</option>
-                    <option <?php if(isset($office_info)){ if($office_info->lead_source == "Website"){ echo 'selected'; } } ?> value="Website">Website</option>
-                    <option <?php if(isset($office_info)){ if($office_info->lead_source == "Yard Sign"){ echo 'selected'; } } ?> value="Yard Sign">Yard Sign</option>
-                    <option <?php if(isset($office_info)){ if($office_info->lead_source == "Affiliates"){ echo 'selected'; } } ?> value="Affiliates">Affiliates</option>
-                    <?php if($company_id == 58): ?>
-                    <option <?php if(isset($office_info)){ if($office_info->lead_source == "Lender Loan"){ echo 'selected'; } } ?> value="Lender Loan">Lender Loan</option>
-                    <option <?php if(isset($office_info)){ if($office_info->lead_source == "Security Client"){ echo 'selected'; } } ?> value="Security Client">Security Client</option>
-                    <?php endif; ?> -->
+                    <?php
+                        foreach($LEAD_SOURCE_OPTION as $lead_source) {
+                            if ($lead_source->ls_name == $office_info->lead_source) {
+                                echo "<option value='$lead_source->ls_name' selected>$lead_source->ls_name</option>";
+                            } else if ($office_info->lead_source == "") {
+                                echo "<option value selected hidden disabled>Select Lead Source</option>";
+                                echo "<option value='$lead_source->ls_name'>$lead_source->ls_name</option>";
+                            } else {
+                                echo "<option value='$lead_source->ls_name'>$lead_source->ls_name</option>";
+                            }
+                        }
+                    ?>
                 </select>
             </div>
         </div>

@@ -39,8 +39,8 @@
                                 <div id="presenter-from">
                                     <p style="margin: 0"><b><?php echo $bname; ?></b></p>
                                     <p style="margin: 0"><?php echo $baddress; ?></p>
-                                    <p style="margin: 0"><?php echo $bcity; ?></p>
-                                    <p style="margin: 0">Email: <?php echo strtolower($bemail); ?></p>
+                                    <p style="margin: 0"><?php echo $bcity; ?>, <?php echo $bstate; ?> <?php echo $bzip_code; ?></p>
+                                    <p style="margin: 0">Email: <?php echo strtolower($bemail) != 'not specified' ? strtolower($bemail) : ''; ?></p>
                                     <p style="margin: 0">Phone: <?php echo strtolower(formatPhoneNumber($bphone_h)); ?></p>
                                     <br>
                                 </div>
@@ -97,8 +97,8 @@
                             <td style="width: 30%" valign="top">
                                 <p style="margin: 0"><b><?php echo $name; ?></b></p>
                                 <p style="margin: 0"><?php echo $mail_add; ?></p>
-                                <p style="margin: 0"><?php echo $city; ?></span>, <span><?php echo $state; ?></span>, <span><?php echo $zip_code; ?></p>
-                                <p style="margin: 0"><?php echo $email; ?></p>
+                                <p style="margin: 0"><?php echo $city; ?></span>, <span><?php echo $state; ?></span> <span><?php echo $zip_code; ?></p>
+                                <p style="margin: 0">Email: <?php echo strtolower($email) != 'not specified' ? strtolower($email) : ''; ?></p>
                                 <p style="margin: 0">Phone: <?php echo formatPhoneNumber($phone_h); ?></p>
                             </td>
                             <td style="width: 70%" valign="top"></td>
@@ -208,32 +208,23 @@
                             <?php 
                                 $payment_amount = $payment->billing_frequency != null ? $payment->billing_frequency : '0.00'; 
                             ?>                            
-                            <?php if($payment_amount != '0.00') { ?>
                             <tr>
                                 <td colspan="2" style="text-align: left"><b>Payment Amount: </b</td>
                                 <td colspan="2" style="text-align: left">$<?php echo number_format($payment_amount,2); ?></td>
                                 <td colspan="2" style="text-align: right"><b>Taxes</b></td>
                                 <td style="text-align: right">$<?php echo number_format($taxes,2); ?></td>
                             </tr>
-                            <?php } else { ?>
-                                <tr>
-                                    <td colspan="2" style="text-align: left"><b>Installation Cost: </b</td>
-                                    <td colspan="2" style="text-align: left">$<?php echo number_format($installation_cost,2); ?></td>
-                                    <td colspan="2" style="text-align: right"><b>Taxes</b></td>
-                                    <td style="text-align: right">$<?php echo number_format($taxes,2); ?></td>
-                                </tr>
-                            <?php } ?>
                             <tr>
-                                <td colspan="2" style="text-align: left"><b>Billing Date: </b</td>
-                                <td colspan="2" style="text-align: left"><?php echo $billing_date ? $billing_date : '-'; ?></td>
+                                <td colspan="2" style="text-align: left"><!-- <b>Billing Date: </b--></td>
+                                <td colspan="2" style="text-align: left"><?php //echo $billing_date ? $billing_date : '-'; ?></td>
                                 <td colspan="2" style="text-align: right"><b>Adjustment<?php echo $adjustment ? ': ' . $adjustment : ''; ?></b></td>
                                 <td style="text-align: right">$<?php echo number_format($adjustment_value,2); ?></td>
                             </tr>
                             <tr>
-                                <td colspan="2" style="text-align: left"><b>Others: </b</td>
+                                <td colspan="2" style="text-align: left"><!-- <b>Others: </b--></td>
                                 <td colspan="2" style="text-align: left">
                                     <?php 
-                                        $check_number                   = $payment->check_number;
+                                        /*$check_number                   = $payment->check_number;
                                         $routing_number                 = $payment->routing_number;
                                         $account_number                 = $payment->account_number;
                                         $credit_number                  = $payment->credit_number;
@@ -252,115 +243,110 @@
                                         $payment_amount                 = $payment->billing_frequency != null ? $payment->billing_frequency : '0.00';
 
                                         if($payment_method == 'Cash'){
-                                            //echo '<b>Payment Details:</b>';
+                         
                                             echo 'Amount Paid: '. $payment_amount;
                                         }
                                         elseif($payment_method == 'Check')
                                         {
-                                            // echo 'Payment Method: Check';
-                                            //echo '<b>Payment Details:</b>';
                                             echo '<br> Check Number: '. $check_number;
                                             echo '<br> Rounting Number: '. $routing_number;
                                             echo '<br> Account Number: '. $account_number;
                                         }
                                         elseif($payment_method == 'Credit Card')
                                         {
-                                            // echo 'Payment Method: Credit Card';
-                                            //echo '<b>Payment Details:</b>';
                                             echo '<br> Credit Number: '. $credit_number;
                                             echo '<br> Credit Expiry: '. $credit_expiry;
                                             echo '<br> CVC: '. $credit_cvc;
                                         }
                                         elseif($payment_method == 'Debit Card')
                                         {
-                                            // echo 'Payment Method: Debit Card';
-                                            //echo '<b>Payment Details:</b>';
                                             echo '<br> Credit Number: '. $credit_number;
                                             echo '<br> Credit Expiry: '. $credit_expiry;
                                             echo '<br> CVC: '. $credit_cvc;
                                         }
                                         elseif($payment_method == 'ACH')
                                         {
-                                            // echo 'Payment Method: Debit Card';
-                                            //echo '<b>Payment Details:</b>';
+                       
                                             echo '<br> Routing Number: '. $routing_number;
                                             echo '<br> Account Number: '. $account_number;
                                         }
                                         elseif($payment_method == 'Venmo')
                                         {
-                                            // echo 'Payment Method: Venmo';
-                                            //echo '<b>Payment Details:</b>';
                                             echo '<br> Account Credential: '. $account_credentials;
                                             echo '<br> Account Note: '. $account_note;
                                             echo '<br> Confirmation: '. $confirmation;
                                         }
                                         elseif($payment_method == 'Paypal')
                                         {
-                                            // echo 'Payment Method: Paypal';
-                                            //echo '<b>Payment Details:</b>';
                                             echo '<br> Account Credential: '. $account_credentials;
                                             echo '<br> Account Note: '. $account_note;
                                             echo '<br> Confirmation: '. $confirmation;
                                         }
                                         elseif($payment_method == 'Square')
                                         {
-                                            // echo 'Payment Method: Square';
-                                            //echo '<b>Payment Details:</b>';
                                             echo '<br> Account Credential: '. $account_credentials;
                                             echo '<br> Account Note: '. $account_note;
                                             echo '<br> Confirmation: '. $confirmation;
                                         }
                                         elseif($payment_method == 'Invoicing')
                                         {
-                                            // echo 'Payment Method: Invoicing';
-                                            //echo '<b>Payment Details:</b>';
                                             echo '<br> Address: '. $mail_address.' '. $mail_locality.' '. $mail_state.' '. $mail_postcode.' '. $mail_cross_street;
                                         }
                                         elseif($payment_method == 'Warranty Work')
                                         {
-                                            // echo 'Payment Method: Warranty Work';
-                                            //echo '<b>Payment Details:</b>';
                                             echo '<br> Account Credential: '. $account_credentials;
                                             echo '<br> Account Note: '. $account_note;
                                         }
                                         elseif($payment_method == 'Home Owner Financing')
                                         {
-                                            // echo 'Payment Method: Home Owner Financing';
-                                            //echo '<b>Payment Details:</b>';
                                             echo '<br> Account Credential: '. $account_credentials;
                                             echo '<br> Account Note: '. $account_note;
                                         }
                                         elseif($payment_method == 'e-Transfer')
                                         {
-                                            // echo 'Payment Method: e-Transfer';
-                                            //echo '<b>Payment Details:</b>';
                                             echo '<br> Account Credential: '. $account_credentials;
                                             echo '<br> Account Note: '. $account_note;
                                         }
                                         elseif($payment_method == 'Other Credit Card Professor')
                                         {
-                                            // echo 'Payment Method: Other Credit Card Professor';
-                                            //echo '<b>Payment Details:</b>';
                                             echo '<br> Credit Number: '. $credit_number;
                                             echo '<br> Credit Expiry: '. $credit_expiry;
                                             echo '<br> CVC: '. $credit_cvc;
                                         }
                                         elseif($payment_method == 'Other Payment Type')
                                         {
-                                            // echo 'Payment Method: Other Payment Type';
-                                            //echo '<b>Payment Details:</b>';
                                             echo '<br> Account Credential: '. $account_credentials;
                                             echo '<br> Account Note: '. $account_note;
-                                        }
+                                        }*/
                                     ?>                                
                                 </td>
                                 <td colspan="2" style="text-align: right"><b>Markup</b></td>
                                 <td style="text-align: right">$<?php echo number_format($markup,2); ?></td>
                             </tr>
+                            <?php $icost = 0; ?>
+                            <?php if($installation_cost != null && $installation_cost > 0) { $icost = $installation_cost; ?>
+                            <tr>
+                                <td colspan="2" style="text-align: left"></td>
+                                <td colspan="2" style="text-align: left">                             
+                                </td>
+                                <td colspan="2" style="text-align: right"><b>installation Cost</b></td>
+                                <td style="text-align: right">$<?php echo number_format($installation_cost,2); ?></td>
+                            </tr>
+                            <?php } ?>
+                            <?php $mmr = 0; ?>
+                            <?php if($mmr_total != null && $mmr_total > 0) { $mmr = $mmr_total; ?>
+                            <tr>
+                                <td colspan="2" style="text-align: left"></td>
+                                <td colspan="2" style="text-align: left">                             
+                                </td>
+                                <td colspan="2" style="text-align: right"><b>MMR</b></td>
+                                <td style="text-align: right">$<?php echo number_format($mmr_total,2); ?></td>
+                            </tr>
+                            <?php } ?>
                             <tr>
                                 <td colspan="4"></td>
                                 <td colspan="2" style="text-align: right; background: #f4f4f4; padding: 8px 0"><b>Grand Total</b></td>
-                                <td style="text-align: right; background: #f4f4f4; padding: 8px 8px 8px 0;"><b>$<?php echo number_format($grandtotal,2); ?></b></td>
+                                <td style="text-align: right; background: #f4f4f4; padding: 8px 8px 8px 0;"><b>$<?php echo number_format($grandtotal + $icost + $mmr,2); ?></b></td>
                             </tr>
                         </tfoot>
                     </table>

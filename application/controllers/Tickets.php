@@ -737,192 +737,195 @@ class Tickets extends MY_Controller
         $activity_name = 'Updated Service Ticket Number ' . $this->input->post('ticket_no'); 
         $this->Activity_model->add($activity_name,$user_id);
 
-        
-        // if($this->input->post('payment_method') == 'Cash'){
-        //     $payment_data = array(
-        //         'payment_method'    => $this->input->post('payment_method'),
-        //         'amount'            => $this->input->post('payment_amount'),
-        //         'is_collected'      => '1',
-        //         //'ticket_id'         => $id,
-        //         'date_updated'      => date("Y-m-d H:i:s")
-        //     );
-
-        //     //$pay = $this->tickets_model->update_cash($payment_data);
-        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        // }
-        // elseif($this->input->post('payment_method') == 'Check'){
-        //     $payment_data = array(
-        //         'payment_method'    => $this->input->post('payment_method'),
-        //         'amount'            => $this->input->post('payment_amount'),
-        //         'check_number'      => $this->input->post('check_number'),
-        //         'routing_number'    => $this->input->post('routing_number'),
-        //         'bank_name'         => $this->input->post('bank_name'),
-        //         //'ticket_id'         => $id,
-        //         'date_updated'      => date("Y-m-d H:i:s")
-        //     );
-
-        //     //$pay = $this->tickets_model->update_check($payment_data);
-        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        // }
-        // elseif($this->input->post('payment_method') == 'Credit Card'){            
-        //     $payment_data = array(            
-        //         'payment_method'    => $this->input->post('payment_method'),
-        //         'amount'            => $this->input->post('payment_amount'),
-        //         'credit_number'     => $this->input->post('credit_number'),
-        //         'credit_expiry'     => $this->input->post('credit_expiry'),
-        //         'credit_cvc'        => $this->input->post('credit_cvc'),
-        //         //'ticket_id'         => $id,
-        //         'date_updated'      => date("Y-m-d H:i:s")
-        //     );
-
-        //     //$pay = $this->tickets_model->update_creditCard($payment_data);
-        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        // }
-        // elseif($this->input->post('payment_method') == 'Debit Card'){
-        //     $payment_data = array(
-            
-        //         'payment_method'    => $this->input->post('payment_method'),
-        //         'amount'            => $this->input->post('payment_amount'),
-        //         'credit_number'     => $this->input->post('debit_credit_number'),
-        //         'credit_expiry'     => $this->input->post('debit_credit_expiry'),
-        //         'credit_cvc'        => $this->input->post('debit_credit_cvc'),
-        //         'ticket_id'         => $id,
-        //         'date_updated'      => date("Y-m-d H:i:s")
-        //     );
-
-        //     //$pay = $this->tickets_model->update_debitCard($payment_data);
-        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        // }
-        // elseif($this->input->post('payment_method') == 'ACH'){
-        //     $payment_data = array(
-            
-        //         'payment_method'    => $this->input->post('payment_method'),
-        //         'amount'            => $this->input->post('payment_amount'),
-        //         'routing_number'    => $this->input->post('ach_routing_number'),
-        //         'account_number'    => $this->input->post('ach_account_number'),
-        //         'ticket_id'         => $id,
-        //         'date_updated'      => date("Y-m-d H:i:s")
-        //     );
-
-        //     //$pay = $this->tickets_model->update_ACH($payment_data);
-        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        // }
-        // elseif($this->input->post('payment_method') == 'Venmo'){
-        //     $payment_data = array(
-            
-        //         'payment_method'        => $this->input->post('payment_method'),
-        //         'amount'                => $this->input->post('payment_amount'),
-        //         'account_credentials'   => $this->input->post('account_credentials'),
-        //         'account_note'          => $this->input->post('account_note'),
-        //         'confirmation'          => $this->input->post('confirmation'),
-        //         'ticket_id'             => $id,
-        //         'date_updated'          => date("Y-m-d H:i:s")
-        //     );
-
-        //     //$pay = $this->tickets_model->update_Venmo($payment_data);
-        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        // }
-        // elseif($this->input->post('payment_method') == 'Paypal'){
-        //     $payment_data = array(
-            
-        //         'payment_method'        => $this->input->post('payment_method'),
-        //         'amount'                => $this->input->post('payment_amount'),
-        //         'account_credentials'   => $this->input->post('paypal_account_credentials'),
-        //         'account_note'          => $this->input->post('paypal_account_note'),
-        //         'confirmation'          => $this->input->post('paypal_confirmation'),
-        //         'ticket_id'             => $id,
-        //         'date_updated'          => date("Y-m-d H:i:s")
-        //     );
-
-        //     //$pay = $this->tickets_model->update_Paypal($payment_data);
-        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        // }
-        // elseif($this->input->post('payment_method') == 'Square'){
-        //     $payment_data = array(
-            
-        //         'payment_method'        => $this->input->post('payment_method'),
-        //         'amount'                => $this->input->post('payment_amount'),
-        //         'account_credentials'   => $this->input->post('square_account_credentials'),
-        //         'account_note'          => $this->input->post('square_account_note'),
-        //         'confirmation'          => $this->input->post('square_confirmation'),
-        //         'ticket_id'             => $id,
-        //         'date_updated'          => date("Y-m-d H:i:s")
-        //     );
-
-        //     //$pay = $this->tickets_model->update_Square($payment_data);
-        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        // }
-        // elseif($this->input->post('payment_method') == 'Warranty Work'){
-        //     $payment_data = array(
-            
-        //         'payment_method'        => $this->input->post('payment_method'),
-        //         'amount'                => $this->input->post('payment_amount'),
-        //         'account_credentials'   => $this->input->post('warranty_account_credentials'),
-        //         'account_note'          => $this->input->post('warranty_account_note'),
-        //         'ticket_id'             => $id,
-        //         'date_updated'          => date("Y-m-d H:i:s")
-        //     );
-
-        //     //$pay = $this->tickets_model->update_Warranty($payment_data);
-        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        // }
-        // elseif($this->input->post('payment_method') == 'Home Owner Financing'){
-        //     $payment_data = array(
-            
-        //         'payment_method'        => $this->input->post('payment_method'),
-        //         'amount'                => $this->input->post('payment_amount'),
-        //         'account_credentials'   => $this->input->post('home_account_credentials'),
-        //         'account_note'          => $this->input->post('home_account_note'),
-        //         'ticket_id'             => $id,
-        //         'date_updated'          => date("Y-m-d H:i:s")
-        //     );
-
-        //     //$pay = $this->tickets_model->update_Home($payment_data);
-        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        // }
-        // elseif($this->input->post('payment_method') == 'e-Transfer'){
-        //     $payment_data = array(
-            
-        //         'payment_method'        => $this->input->post('payment_method'),
-        //         'amount'                => $this->input->post('payment_amount'),
-        //         'account_credentials'   => $this->input->post('e_account_credentials'),
-        //         'account_note'          => $this->input->post('e_account_note'),
-        //         'ticket_id'             => $id,
-        //         'date_updated'          => date("Y-m-d H:i:s")
-        //     );
-
-        //     //$pay = $this->tickets_model->update_Transfer($payment_data);
-        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        // }
-        // elseif($this->input->post('payment_method') == 'Other Credit Card Professor'){
-        //     $payment_data = array(
-            
-        //         'payment_method'        => $this->input->post('payment_method'),
-        //         'amount'                => $this->input->post('payment_amount'),
-        //         'credit_number'         => $this->input->post('other_credit_number'),
-        //         'credit_expiry'         => $this->input->post('other_credit_expiry'),
-        //         'credit_cvc'            => $this->input->post('other_credit_cvc'),
-        //         'ticket_id'             => $id,
-        //         'date_updated'          => date("Y-m-d H:i:s")
-        //     );
-
-        //     //$pay = $this->tickets_model->update_Professor($payment_data);
-        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        // }
-        // elseif($this->input->post('payment_method') == 'Other Payment Type'){
-        //     $payment_data = array(
-            
-        //         'payment_method'        => $this->input->post('payment_method'),
-        //         'amount'                => $this->input->post('payment_amount'),
-        //         'account_credentials'   => $this->input->post('other_payment_account_credentials'),
-        //         'account_note'          => $this->input->post('other_payment_account_note'),
-        //         'ticket_id'             => $id,
-        //         'date_updated'          => date("Y-m-d H:i:s")
-        //     );
-
-        //     //$pay = $this->tickets_model->update_Other($payment_data);
-        //     $pay = $this->invoice_modal->updateInvoiceDataByInvoiceId($payment_data);
-        // }
+        $invoice_id = $this->input->post('invoiceID');
+        if( $invoice_id > 0 ){
+            if($this->input->post('payment_method') == 'Cash'){
+                $payment_data = array(
+                    'payment_method'    => $this->input->post('payment_method'),
+                    'amount'            => $this->input->post('payment_amount'),
+                    'is_collected'      => '1',
+                    //'ticket_id'         => $id,
+                    'date_updated'      => date("Y-m-d H:i:s")
+                );
+    
+                //$pay = $this->tickets_model->update_cash($payment_data);
+                $pay = $this->invoice_model->updateInvoiceDataByInvoiceId($invoice_id, $payment_data);
+            }
+            elseif($this->input->post('payment_method') == 'Check'){
+                $payment_data = array(
+                    'payment_method'    => $this->input->post('payment_method'),
+                    'amount'            => $this->input->post('payment_amount'),
+                    'check_number'      => $this->input->post('check_number'),
+                    'account_number'    => $this->input->post('account_number'),
+                    'routing_number'    => $this->input->post('routing_number'),
+                    'bank_name'         => $this->input->post('bank_name'),
+                    //'ticket_id'         => $id,
+                    'date_updated'      => date("Y-m-d H:i:s")
+                );
+    
+                //$pay = $this->tickets_model->update_check($payment_data);
+                $pay = $this->invoice_model->updateInvoiceDataByInvoiceId($invoice_id, $payment_data);
+            }
+            elseif($this->input->post('payment_method') == 'Credit Card'){        
+                $cc_exp = $this->input->post('customer_cc_expiry_date_month') . '/' . $this->input->post('customer_cc_expiry_date_year');     
+                $payment_data = array(            
+                    'payment_method'    => $this->input->post('payment_method'),
+                    'amount'            => $this->input->post('payment_amount'),
+                    'credit_number'     => $this->input->post('credit_number'),
+                    'credit_expiry'     => $cc_exp,
+                    'credit_cvc'        => $this->input->post('customer_cc_cvc'),
+                    'date_updated'      => date("Y-m-d H:i:s")
+                );
+    
+                //$pay = $this->tickets_model->update_creditCard($payment_data);
+                $pay = $this->invoice_model->updateInvoiceDataByInvoiceId($invoice_id, $payment_data);
+            }
+            elseif($this->input->post('payment_method') == 'Debit Card'){
+                $payment_data = array(
+                
+                    'payment_method'    => $this->input->post('payment_method'),
+                    'amount'            => $this->input->post('payment_amount'),
+                    'credit_number'     => $this->input->post('debit_credit_number'),
+                    'credit_expiry'     => $this->input->post('debit_credit_expiry'),
+                    'credit_cvc'        => $this->input->post('debit_credit_cvc'),
+                    'ticket_id'         => $id,
+                    'date_updated'      => date("Y-m-d H:i:s")
+                );
+    
+                //$pay = $this->tickets_model->update_debitCard($payment_data);
+                $pay = $this->invoice_model->updateInvoiceDataByInvoiceId($invoice_id, $payment_data);
+            }
+            elseif($this->input->post('payment_method') == 'ACH'){
+                $payment_data = array(
+                
+                    'payment_method'    => $this->input->post('payment_method'),
+                    'amount'            => $this->input->post('payment_amount'),
+                    'routing_number'    => $this->input->post('ach_routing_number'),
+                    'account_number'    => $this->input->post('ach_account_number'),
+                    'ticket_id'         => $id,
+                    'date_updated'      => date("Y-m-d H:i:s")
+                );
+    
+                //$pay = $this->tickets_model->update_ACH($payment_data);
+                $pay = $this->invoice_model->updateInvoiceDataByInvoiceId($invoice_id, $payment_data);
+            }
+            elseif($this->input->post('payment_method') == 'Venmo'){
+                $payment_data = array(
+                
+                    'payment_method'        => $this->input->post('payment_method'),
+                    'amount'                => $this->input->post('payment_amount'),
+                    'account_credentials'   => $this->input->post('account_credentials'),
+                    'account_note'          => $this->input->post('account_note'),
+                    'confirmation'          => $this->input->post('confirmation'),
+                    'ticket_id'             => $id,
+                    'date_updated'          => date("Y-m-d H:i:s")
+                );
+    
+                //$pay = $this->tickets_model->update_Venmo($payment_data);
+                $pay = $this->invoice_model->updateInvoiceDataByInvoiceId($invoice_id, $payment_data);
+            }
+            elseif($this->input->post('payment_method') == 'Paypal'){
+                $payment_data = array(
+                
+                    'payment_method'        => $this->input->post('payment_method'),
+                    'amount'                => $this->input->post('payment_amount'),
+                    'account_credentials'   => $this->input->post('paypal_account_credentials'),
+                    'account_note'          => $this->input->post('paypal_account_note'),
+                    'confirmation'          => $this->input->post('paypal_confirmation'),
+                    'ticket_id'             => $id,
+                    'date_updated'          => date("Y-m-d H:i:s")
+                );
+    
+                //$pay = $this->tickets_model->update_Paypal($payment_data);
+                $pay = $this->invoice_model->updateInvoiceDataByInvoiceId($invoice_id, $payment_data);
+            }
+            elseif($this->input->post('payment_method') == 'Square'){
+                $payment_data = array(
+                
+                    'payment_method'        => $this->input->post('payment_method'),
+                    'amount'                => $this->input->post('payment_amount'),
+                    'account_credentials'   => $this->input->post('square_account_credentials'),
+                    'account_note'          => $this->input->post('square_account_note'),
+                    'confirmation'          => $this->input->post('square_confirmation'),
+                    'ticket_id'             => $id,
+                    'date_updated'          => date("Y-m-d H:i:s")
+                );
+    
+                //$pay = $this->tickets_model->update_Square($payment_data);
+                $pay = $this->invoice_model->updateInvoiceDataByInvoiceId($invoice_id, $payment_data);
+            }
+            elseif($this->input->post('payment_method') == 'Warranty Work'){
+                $payment_data = array(
+                
+                    'payment_method'        => $this->input->post('payment_method'),
+                    'amount'                => $this->input->post('payment_amount'),
+                    'account_credentials'   => $this->input->post('warranty_account_credentials'),
+                    'account_note'          => $this->input->post('warranty_account_note'),
+                    'ticket_id'             => $id,
+                    'date_updated'          => date("Y-m-d H:i:s")
+                );
+    
+                //$pay = $this->tickets_model->update_Warranty($payment_data);
+                $pay = $this->invoice_model->updateInvoiceDataByInvoiceId($invoice_id, $payment_data);
+            }
+            elseif($this->input->post('payment_method') == 'Home Owner Financing'){
+                $payment_data = array(
+                
+                    'payment_method'        => $this->input->post('payment_method'),
+                    'amount'                => $this->input->post('payment_amount'),
+                    'account_credentials'   => $this->input->post('home_account_credentials'),
+                    'account_note'          => $this->input->post('home_account_note'),
+                    'ticket_id'             => $id,
+                    'date_updated'          => date("Y-m-d H:i:s")
+                );
+    
+                //$pay = $this->tickets_model->update_Home($payment_data);
+                $pay = $this->invoice_model->updateInvoiceDataByInvoiceId($invoice_id, $payment_data);
+            }
+            elseif($this->input->post('payment_method') == 'e-Transfer'){
+                $payment_data = array(
+                
+                    'payment_method'        => $this->input->post('payment_method'),
+                    'amount'                => $this->input->post('payment_amount'),
+                    'account_credentials'   => $this->input->post('e_account_credentials'),
+                    'account_note'          => $this->input->post('e_account_note'),
+                    'ticket_id'             => $id,
+                    'date_updated'          => date("Y-m-d H:i:s")
+                );
+    
+                //$pay = $this->tickets_model->update_Transfer($payment_data);
+                $pay = $this->invoice_model->updateInvoiceDataByInvoiceId($invoice_id, $payment_data);
+            }
+            elseif($this->input->post('payment_method') == 'Other Credit Card Professor'){
+                $payment_data = array(
+                
+                    'payment_method'        => $this->input->post('payment_method'),
+                    'amount'                => $this->input->post('payment_amount'),
+                    'credit_number'         => $this->input->post('other_credit_number'),
+                    'credit_expiry'         => $this->input->post('other_credit_expiry'),
+                    'credit_cvc'            => $this->input->post('other_credit_cvc'),
+                    'ticket_id'             => $id,
+                    'date_updated'          => date("Y-m-d H:i:s")
+                );
+    
+                //$pay = $this->tickets_model->update_Professor($payment_data);
+                $pay = $this->invoice_model->updateInvoiceDataByInvoiceId($invoice_id, $payment_data);
+            }
+            elseif($this->input->post('payment_method') == 'Other Payment Type'){
+                $payment_data = array(
+                
+                    'payment_method'        => $this->input->post('payment_method'),
+                    'amount'                => $this->input->post('payment_amount'),
+                    'account_credentials'   => $this->input->post('other_payment_account_credentials'),
+                    'account_note'          => $this->input->post('other_payment_account_note'),
+                    'ticket_id'             => $id,
+                    'date_updated'          => date("Y-m-d H:i:s")
+                );
+    
+                //$pay = $this->tickets_model->update_Other($payment_data);
+                $pay = $this->invoice_model->updateInvoiceDataByInvoiceId($invoice_id, $payment_data);
+            }
+        }        
 
         $ticket_id = $this->input->post('ticketID');
         //Google Calendar
@@ -2138,207 +2141,23 @@ class Tickets extends MY_Controller
                     $addQuery2 = $this->tickets_model->add_ticket_items($data);
                     $i++;
                 }
-            }
 
-            //Auto create job             
-            $get_job_settings = array(
-                'where' => array(
-                    'company_id' => $company_id
-                ),
-                'table' => 'job_settings',
-                'select' => '*',
-            );
-            $job_settings     = $this->general->get_data_with_param($get_job_settings);
-            $is_with_settings = 0;
-            if ($job_settings) {
-                $is_with_settings = 1;    
-                $prefix   = $job_settings[0]->job_num_prefix;
-                $next_num = str_pad($job_settings[0]->job_num_next, 5, '0', STR_PAD_LEFT);
-            }else{
-                 $prefix = 'JOB-';
-                 $lastId = $this->jobs_model->getlastInsert($company_id);
-                if ($lastId) {
-                    $next_num = $lastId->id + 1;
-                    $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
-                }else {
-                    $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
-                }
-            }
-            $job_number = $prefix . $next_num;
-
-            // get customer info
-            $get_customer_info = array(
-                'where' => array(
-                    'prof_id' => $this->input->post('customer_id'),
-                ),
-                'table' => 'acs_profile',
-                'select' => 'prof_id,first_name,last_name,mail_add,city,state,city,zip_code,email,phone_m',
-            );
-            $customer = $this->general->get_data_with_param($get_customer_info, false);
-            $job_location = $customer->mail_add;
-            $job_description = $this->input->post('job_description');
+                $invoice_id = $this->createInitialInvoiceTicket($addQuery);
             
-            $jobs_data = array(
-                'job_number' => $job_number,
-                'customer_id' => $this->input->post('customer_id'),
-                'ticket_id' => $addQuery,
-                'employee_id' => $this->input->post('employee_id'),
-                'job_location' => $job_location,
-                'job_description' => $job_description,
-                'created_by' => logged('id'),
-                'start_date' => date("Y-m-d",strtotime($this->input->post('ticket_date'))),
-                'end_date' => date("Y-m-d",strtotime($this->input->post('ticket_date'))),
-                'start_time' => $this->input->post('scheduled_time'),
-                'event_color' => 0,
-                'end_time' => $this->input->post('scheduled_time_to'),
-                'tags' => $this->input->post('job_tag'),
-                'status' => $this->input->post('ticket_status'),
-                'company_id' => $company_id,
-                'date_created' => date('Y-m-d H:i:s'),
-                'tax_rate' => $this->input->post('taxes'),
-                'employee_id' => $this->input->post('employee_id'),
-                'job_type' => $this->input->post('service_type'),
-                'adjustment_name'  => $this->input->post('adjustment_name'),
-                'adjustment_value'  => $this->input->post('adjustment_amount'),
-                'monthly_monitoring' => $monthly_monitoring_cost,
-                'program_setup'      => $otp_cost,
-                'installation_cost'  => $installation_cost,
-                'date_issued' => date("Y-m-d",strtotime($this->input->post('ticket_date'))),
-                'work_order_id' => 0
-            );
-            
-            $assign_techs =  $this->input->post('assign_tech');
-            if(!empty($assign_techs)){
-                for($x = 0; $x < (count($assign_techs)); $x++){
-                    $jobs_data['employee'.($x+2).'_id'] = $assign_techs[$x];
-                }
-            }
-            if (!empty($this->input->post('message'))) {
-                $jobs_data['message'] = $this->input->post('message');
-            }
-            
-            $jobs_id = $this->general->add_return_id($jobs_data, 'jobs');
 
-            // insert data to job items table (items_id, qty, jobs_id)
-            $item_id    = $this->input->post('item_id');
-            $item_type  = $this->input->post('item_type');
-            $quantity   = $this->input->post('quantity');
-            $price      = $this->input->post('price');
-            $discount   = $this->input->post('discount');
-            $tax        = $this->input->post('tax');
-            $gtotal     = $this->input->post('total');
-            $item_name  = $this->input->post('items');
-            $i = 0;
-            foreach($item_id as $row){
-                $job_items_data = array();
-                $job_items_data['items_id']   = $item_id[$i];
-                $job_items_data['qty']        = $quantity[$i];
-                $job_items_data['cost']       = $price[$i] * $quantity[$i];
-                $job_items_data['tax']        = $tax[$i];
-                $job_items_data['discount']   = 0;
-                $job_items_data['total']      = $gtotal[$i];
-                $job_items_data['job_id']     = $jobs_id;
-                $job_items_data['location']   = '';
-                $job_items_data['points']     = 0;
-                $job_items_data['item_name']  = $item_name[$i];
-                $this->general->add_($job_items_data, 'job_items');
-                $i++;
-            }
-
-            $invoice_id = $this->createInitialInvoice($jobs_id);
-
-            if( $this->input->post('is_with_esign') ){
-                $invoice_payment = $this->createInvoicePayment($invoice_id, $this->input->post());
-            }
-
-            //Update job settings
-            if( $is_with_settings == 1 ){
-                $jobs_settings_data = array(
-                    'job_num_next' => $job_settings[0]->job_num_next + 1
+                // SERVICE TICKET CUSTOMER ACTIVITY LOG RECORDING
+                $customerLogsRecording = array(
+                    'date' => date('m/d/Y')."<br>".date('h:i A'),
+                    'customer_id' => $this->input->post('customer_id'),
+                    'user_id' => logged('id'),
+                    'logs' => "$getUserInfo->FName $getUserInfo->LName created a service ticket with you. <a href='#' onclick='window.open(`".base_url('tickets/viewDetails/').$addQuery."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>".$this->input->post('ticket_no')."</a>"
                 );
-                $this->general->update_with_key($jobs_settings_data, $job_settings[0]->id, 'job_settings');
-            }else{
-                $data_job_settings = [
-                    'company_id' => $company_id,
-                    'job_num_prefix' => $prefix,
-                    'job_num_next' => $lastId->id + 1
-                ];
+                $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogsRecording);
 
-                $this->JobSettings_model->create($data_job_settings);
+                //Activity Logs
+                $activity_name = 'Created Caledar Schedule ' . $this->input->post('ticket_no'); 
+                createActivityLog($activity_name);
             }
-
-            //Create hash_id
-            $job_hash_id = hashids_encrypt($jobs_id, '', 15);
-            $this->jobs_model->update($jobs_id, ['hash_id' => $job_hash_id]);
-            
-            customerAuditLog(logged('id'), $this->input->post('customer_id'), $jobs_id, 'Jobs', 'Added New Job #' . $job_number);
-
-            //Google Calendar
-            createSyncToCalendar($jobs_id, 'job', $company_id);
-
-            // insert data to job url links table
-            $link = isset($input['link']) ? $input['link'] : 'none';
-            $jobs_links_data = array(
-                'link' => 'none',
-                'job_id' => $jobs_id,
-            );
-            $this->general->add_($jobs_links_data, 'job_url_links');
-
-            // insert data to jobs approval table
-            /*$jobs_approval_data = array(
-                'authorize_name' => $input['authorize_name'],
-                'signature_link' => $input['signature_link'],
-                'datetime_signed' => $input['datetime_signed'],
-                'jobs_id' => $jobs_id,
-            );
-            $this->general->add_($jobs_approval_data, 'jobs_approval');*/
-
-            // insert data to job payments table
-            $job_payment_query = array(
-                'amount' => $this->input->post('grandtotal'),
-                'job_id' => $jobs_id,
-            );
-            $this->general->add_($job_payment_query, 'job_payments');
-
-            createCronAutoSmsNotification($company_id, $jobs_id, 'job', 'Scheduled', $this->input->post('employee_id'), $this->input->post('employee_id'), 0);
-            foreach($assign_techs as $uid){
-                createCronAutoSmsNotification($company_id, $jobs_id, 'job', 'Scheduled', 0, $uid, 0);
-            }
-
-            // GET CUSTOMER AND USER INFO
-            $getUserInfo = array(
-                'where' => array('id' => logged('id')),
-                'table' => 'users'
-            );
-            $getUserInfo = $this->general->get_data_with_param($getUserInfo, false);
-
-            $getCustomerInfo = array(
-                'where' => array('prof_id' => $this->input->post('customer_id')),
-                'table' => 'acs_profile'
-            );
-            $getCustomerInfo = $this->general->get_data_with_param($getCustomerInfo, false);
-
-            // JOB CUSTOMER ACTIVITY LOG RECORDING
-            $customerLogsRecording = array(
-                'date' => date('m/d/Y')."<br>".date('h:i A'),
-                'customer_id' => $this->input->post('customer_id'),
-                'user_id' => logged('id'),
-                'logs' => "$getUserInfo->FName $getUserInfo->LName scheduled a job with you. <a href='#' onclick='window.open(`".base_url('job/new_job1/').$jobs_id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>$job_number</a>"
-            );
-            $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogsRecording);
-
-            // SERVICE TICKET CUSTOMER ACTIVITY LOG RECORDING
-            $customerLogsRecording = array(
-                'date' => date('m/d/Y')."<br>".date('h:i A'),
-                'customer_id' => $this->input->post('customer_id'),
-                'user_id' => logged('id'),
-                'logs' => "$getUserInfo->FName $getUserInfo->LName created a service ticket with you. <a href='#' onclick='window.open(`".base_url('tickets/viewDetails/').$addQuery."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>".$this->input->post('ticket_no')."</a>"
-            );
-            $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogsRecording);
-
-            //Activity Logs
-            $activity_name = 'Created Caledar Schedule ' . $this->input->post('ticket_no'); 
-            createActivityLog($activity_name);
         }
 
         $json_data = ['is_success' => $is_valid, 'msg' => $msg, 'job_id' => $jobs_id, 'esign_id' => $esign_id, 'customer_id' => $this->input->post('customer_id')];
@@ -2448,8 +2267,8 @@ class Tickets extends MY_Controller
             if($billing){                
                 $cvc = $billing->credit_card_exp_mm_yyyy;
                 $cc_num = $billing->credit_card_num;
-                $cc_exp = $billing->credit_card_exp;
-                $cc_cvc = $billing->credit_card_exp_mm_yyyy;
+                $cc_exp = $billing->credit_card_exp_mm_yyyy;
+                $cc_cvc = $billing->credit_card_exp;
                 
                 if( $cc_exp != '' ){
                     $exp_dates = explode("/", $cc_exp);
@@ -2628,7 +2447,7 @@ class Tickets extends MY_Controller
         $this->Invoice_model->createInvoicePayment($payment_data);
     }
 
-    public function createInitialInvoice($job_id)
+    public function createInitialInvoiceJob($job_id)
     {
         $this->load->model('Invoice_model');
         $this->load->model('Invoice_settings_model');
@@ -2770,6 +2589,155 @@ class Tickets extends MY_Controller
             $invoice_item_data = [
                 'invoice_id' => $invoice_id,
                 'items_id' => $item->fk_item_id,
+                'qty' => $item->qty,
+                'cost' => $item->cost,
+                'tax' => $item->tax,
+                'discount' => $item->discount,
+                'total' => $item->total
+            ];
+
+            $this->Invoice_model->add_invoice_details($invoice_item_data);
+        }
+
+        return $invoice_id;
+    }
+
+    public function createInitialInvoiceTicket($ticket_id)
+    {
+        $this->load->model('Invoice_model');
+        $this->load->model('Invoice_settings_model');
+
+        $company_id = logged('company_id');
+        
+        $this->db->where('id', $ticket_id);
+        $ticket = $this->db->get('tickets')->row();
+
+        $this->db->where('prof_id', $ticket->customer_id);
+        $customer = $this->db->get('acs_profile')->row();
+
+        $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($company_id);
+        if( $invoiceSettings ){            
+            $next_number = (int) $invoiceSettings->invoice_num_next;     
+            $prefix      = $invoiceSettings->invoice_num_prefix;        
+        }else{
+            $lastInsert = $this->Invoice_model->getLastInsertByCompanyId($company_id);
+            $prefix     = 'INV-';
+            if( $lastInsert ){
+                $next_number   = $lastInsert->id + 1;
+            }else{
+                $next_number   = 1;
+            }
+        }
+
+        $invoiceNumber = formatInvoiceNumberV2($prefix, $next_number);        
+
+        $monthly_monitoring = $ticket->monthly_monitoring;
+        $program_setup      = $ticket->otp_setup;
+        $installation_cost  = $ticket->installation_cost;
+
+        $grand_total = $ticket->grandtotal;
+        $sub_total   = $ticket->subtotal;
+        $tax         = $ticket->taxes;
+
+        $new_data = array(
+            'customer_id'               => $ticket->customer_id,
+            'ticket_id'                 => $ticket->id,
+            'job_location'              => $ticket->service_location,
+            'job_name'                  => $ticket->service_description,
+            'job_id'                    => 0,
+            'job_number'                => $ticket->ticket_no,
+            'business_name'             => $customer->business_name,
+            'customer_email'            => $customer->email,
+            'tags'                      => $ticket->job_tag,
+            'invoice_type'              => 'Total Due',
+            'work_order_number'         => '',
+            'purchase_order'            => $ticket->purchase_order_no,
+            'invoice_number'            => $invoiceNumber,
+            'date_issued'               => date("Y-m-d"),
+            'customer_email'            => $customer->email,
+            'online_payments'           => '',
+            'billing_address'           => $customer->mail_add,
+            'shipping_to_address'       => $customer->mail_add,
+            'ship_via'                  => '',
+            'shipping_date'             => '',
+            'tracking_number'           => '',
+            'terms'                     => 0,     
+            'tip'                       => 0,       
+            'due_date'                  => date("Y-m-d", strtotime("+5 days")),
+            'location_scale'            => '',
+            'message_to_customer'       => '',
+            'terms_and_conditions'      => '',            
+            'attachments'               => '',
+            'status'                    => 'Unpaid',
+            'company_id'                => $company_id,
+            'deposit_request_type'      => '$',
+            'deposit_request'           => '0',
+            'monthly_monitoring'        => $monthly_monitoring,
+            'program_setup'             => $program_setup,
+            'installation_cost'         => $installation_cost,
+            'payment_methods'           => $ticket->payment_method,
+            'sub_total'                 => $sub_total,
+            'taxes'                     => $tax,
+            'adjustment_name'           => $ticket->adjustment,
+            'adjustment_value'          => $ticket->adjustment_value,
+            'total_due'                 => $grand_total,
+            'balance'                   => $grand_total,
+            'grand_total'               => $grand_total,
+            'user_id'                   => logged('id'),
+            'date_created'              => date("Y-m-d H:i:s"),
+            'date_updated'              => date("Y-m-d H:i:s")
+        );
+
+        $invoice_id = $this->Invoice_model->createInvoice($new_data);
+
+        //Update invoice settings
+        if( $invoiceSettings ){
+            $invoice_settings_data = ['invoice_num_next' => $next_number + 1];
+            $this->Invoice_settings_model->update($invoiceSettings->id, $invoice_settings_data);
+        }else{
+            $invoice_settings_data = [
+                'invoice_num_prefix' => $prefix,
+                'invoice_num_next' => $next_number,
+                'check_payable_to' => '',
+                'accept_credit_card' => 1,
+                'accept_check' => 0,
+                'accept_cash'  => 1,
+                'accept_direct_deposit' => 0,
+                'accept_credit' => 0,
+                'mobile_payment' => 1,
+                'capture_customer_signature' => 1,
+                'hide_item_price' => 0,
+                'hide_item_qty' => 0,
+                'hide_item_tax' => 0,
+                'hide_item_discount' => 0,
+                'hide_item_total' => 0,
+                'hide_from_email' => 0,
+                'hide_item_subtotal' => 0,
+                'hide_business_phone' => 0,
+                'hide_office_phone' => 0,
+                'accept_tip' => 0,
+                'due_terms' => '',
+                'auto_convert_completed_work_order' => 0,
+                'message' => 'Thank you for your business.',
+                'terms_and_conditions' => 'Thank you for your business.',
+                'company_id' => $company_id,
+                'commercial_message' => 'Thank you for your business.',
+                'commercial_terms_and_conditions' => 'Thank you for your business.',
+                'logo' => '',
+                'payment_fee_percent' => '',
+                'payment_fee_amount' => '',
+                'recurring' => ''
+            ];
+
+            $this->Invoice_settings_model->create($invoice_settings_data);
+        }
+
+        //Ticket Items
+        $ticketItems = $this->tickets_model->get_ticket_items_by_ticket_id($job->id);
+        foreach( $ticketItems as $item ){
+            $invoice_item_data = [
+                'invoice_id' => $invoice_id,
+                'items_id' => $item->items_id,
                 'qty' => $item->qty,
                 'cost' => $item->cost,
                 'tax' => $item->tax,

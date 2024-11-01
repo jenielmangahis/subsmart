@@ -1,3 +1,4 @@
+
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
@@ -19,61 +20,61 @@ defined('BASEPATH') or exit('No direct script access allowed');
         <div style="float:right;padding-right:10%;">
             <a href="<?= base_url('tickets/editDetails/'.$tickets->id); ?>" class="nsm-button">Edit</a>
             <a href="<?php echo base_url('share_Link/ticketsPDF/' . $tickets->id) ?>" class="nsm-button success">Download as PDF</a> 
-            <a href="#" class="nsm-button success" id="printServiceTicket" onclick="printDiv('printArea')">Print</a>
+            <a href="#" class="nsm-button success" id="printServiceTicket" onclick="printDiv('printableArea')">Print</a>
         </div>
         <div class="nsm-page" style="padding-left:10%;padding-right:10%;padding-top:1%;" id="printArea">
-<style>
-    @media print {
-        .mustRight 
-        { 
-            float: right !important; 
-            margin-top:-80px !important;
-            font-size: 12px !important;
-        }
-        .descriptionTags
-        {
-            width:25% !important;
-        }
-        .salesRepArea
-        {
-            width:25% !important;
-            float: right !important; 
-        }
-        .serviceLocDiv
-        {
-            width:75% !important;
-        }
-        .paymentArea
-        {
-            width:60% !important;
-        }
-        .spaceDiv
-        {
-            width:5% !important;
-        }
-        .summaryArea
-        {
-            width:35% !important;
-        }
-        .compLogo
-        {
-            width: 80px; 
-            height: 80px;
-        }
-    } 
+            <style>
+                @media print {
+                    .mustRight 
+                    { 
+                        float: right !important; 
+                        margin-top:-80px !important;
+                        font-size: 12px !important;
+                    }
+                    .descriptionTags
+                    {
+                        width:25% !important;
+                    }
+                    .salesRepArea
+                    {
+                        width:25% !important;
+                        float: right !important; 
+                    }
+                    .serviceLocDiv
+                    {
+                        width:75% !important;
+                    }
+                    .paymentArea
+                    {
+                        width:60% !important;
+                    }
+                    .spaceDiv
+                    {
+                        width:5% !important;
+                    }
+                    .summaryArea
+                    {
+                        width:35% !important;
+                    }
+                    .compLogo
+                    {
+                        width: 80px; 
+                        height: 80px;
+                    }
+                } 
 
-    @media (max-width: 1366px) {
-        .lamesa { 
-            font-size:9px !important; 
-            width:125% !important;
-            margin-left: -35px !important;
-        }
-    }
-</style>
+                @media (max-width: 1366px) {
+                    .lamesa { 
+                        font-size:9px !important; 
+                        width:125% !important;
+                        margin-left: -35px !important;
+                    }
+                }
+            </style>
             <div class="" style="padding:2%;">
                 <!-- <div class="row">
                     <div class="col-md-3">
-                       <br>
+                        <br>
                         <?php //echo $tickets->id; ?>
                     </div>
                     <div class="col-md-6"></div>
@@ -435,6 +436,480 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
 
             </div>
+
+            <div id="printableArea" class="" style="width:100% !important; display:none;">
+                <div class="invoice-paper" id="presenter-paper">
+                    <div id="" style="width:100%">
+                    
+                        <style>
+                            #background
+                            {
+                                position:absolute;
+                                z-index:0;
+                                display:block;
+                                margin-top: -100px;
+                                margin-left: 20%;
+                                color:yellow;
+                            }
+
+                            #bg-text
+                            {
+                                color:lightgreen;
+                                font-size:150px;
+                                transform:rotate(300deg);
+                                -webkit-transform:rotate(300deg);
+                                opacity: 0.4;
+                            }
+
+                            #tbl-sales-rep #td-sales-rep {
+                                text-align: center; background: #f4f4f4 !important; padding: 8px 0;
+                            }
+                        </style>
+
+                        <div class="presenter-paper-sm" id="presenter-paper-sm"></div>
+                        <div class="invoice-print" style="background: #ffffff;">
+                            <table class="table-print" style="width: 100%; margin-bottom: 10px;">
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <div style="margin-bottom: 20px;">
+                                                <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="max-width: 150px" />
+                                            </div>
+
+                                            <div id="presenter-from">
+                                                <p style="margin: 0"><b><?php echo $clients->business_name; ?></b></p>
+                                                <p style="margin: 0"><?php echo $clients->street; ?></p>
+                                                <p style="margin: 0"><?php echo $clients->city; ?>, <?php echo $clients->state; ?> <?php echo $clients->postal_code; ?></p>
+                                                <p style="margin: 0">Email: <?php echo strtolower($clients->business_email) != 'not specified' ? strtolower($clients->business_email) : ''; ?></p>
+                                                <p style="margin: 0">Phone: <?php echo strtolower(formatPhoneNumber($clients->business_phone)); ?></p>
+                                                <br>
+                                            </div>
+
+                                        </td>
+                                        <td id="presenter-col-right" class="presenter-col-right" style="width: 50%; text-align: right;" valign="top">
+                                            <div id="presenter-title-container" class="presenter-title-container" style="margin-top: 10px; margin-bottom: 20px;">
+                                                <span class="presenter-title" style="font-size: 25pt;color:#8c97c0;">Service Ticket</span><br>
+                                            </div>
+                                            <div id="presenter-summary" class="presenter-summary">
+                                                <table style="width: 100%">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="text-align: right;">Ticket No:</td>
+                                                            <td style="width: 160px; text-align: right;" class="text-right">
+                                                                <?php echo $tickets->ticket_no ? $tickets->ticket_no : '-';; ?>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: right;">Scheduled Date:</td>
+                                                            <td style="width: 160px; text-align: right;" class="text-right">
+                                                                <?php 
+                                                                    $date = '-';
+                                                                    if( strtotime($tickets->ticket_date) > 0 ){
+                                                                        $date =  date("m/d/Y", strtotime($tickets->ticket_date)); 
+                                                                    }
+                                                                ?>
+                                                                <?php echo $date ? $date : '-'; ?>                                               
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: right;">Scheduled Time:</td>
+                                                            <td style="width: 160px; text-align: right;" class="text-right"><?php echo $tickets->scheduled_time.' to '.$tickets->scheduled_time_to; ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: right;">Purchase Order No:</td>
+                                                            <td style="width: 160px; text-align: right;" class="text-right"><?php echo $tickets->purchase_order_no ? $tickets->purchase_order_no : '-'; ?></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: right;"><b>Status:</b></td>
+                                                            <td style="width: 160px; text-align: right;" class="text-right"><b><?php echo $tickets->ticket_status ? $tickets->ticket_status : '-'; ?></b></td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="text-align: right;"><b>Business Name:</b></td>
+                                                            <td style="width: 160px; text-align: right;" class="text-right"><b><?php echo $tickets->business_name ? $tickets->business_name : '-'; ?></b></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br><br>
+                            <table class="table-print" style="width: 100%;margin-top: -60px;">
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 30%" valign="top">
+                                            <p style="margin: 0"><b><?php echo $tickets->first_name .' '. $tickets->middle_name .' '. $tickets->last_name; ?></b></p>
+                                            <p style="margin: 0"><?php echo $tickets->mail_add; ?></p>
+                                            <p style="margin: 0"><?php echo $tickets->city; ?></span>, <span><?php echo $tickets->state; ?></span> <span><?php echo $tickets->zip_code; ?></p>
+                                            <p style="margin: 0">Email: <?php echo strtolower($tickets->email) != 'not specified' ? strtolower($tickets->email) : ''; ?></p>
+                                            <p style="margin: 0">Phone: <?php echo formatPhoneNumber($tickets->phone_m); ?></p>
+                                        </td>
+                                        <td style="width: 70%" valign="top"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <div id="background">
+                                <p id="bg-text"><?php echo $tickets->ticket_status; ?></p>
+                            </div>
+
+                            <br><br>
+
+                            <br><br>
+                            <div class="table-items-container">
+                                <table class="table-print table-items tbl-sales-rep" id="tbl-sales-rep" style="width: 100%; border-collapse: collapse; font-size: 12px">
+                                    <tbody>
+                                        <tr class="table-items__tr">
+                                            <td colspan="4" style="text-align: left; background: #ffffff !important; padding: 8px 0;" >
+                                                <p><b>Service Location: </b><br />
+                                                <?php echo $tickets->service_location; ?></p>
+                                            </td>
+                                            <td colspan="1" id="td-sales-rep" class="td-sales-rep" style="" >
+                                                <b>Sales Representative</b> <br>
+                                                <?php echo $reps->FName.' '.$reps->LName; ?><br>
+                                                <?php echo formatPhoneNumber($tickets->sales_rep_no); ?><br>
+                                                <span>Team Lead/Mentor</span>: 
+                                                <?php echo $tickets->tl_mentor; ?>                                               
+                                            </td>
+                                        </tr>  
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br>
+                            <br>
+
+                            <div class="table-items-container">
+                                <table class="table-print table-items" style="width: 100%; border-collapse: collapse; font-size: 12px">
+                                    <thead>
+                                        <tr>
+                                            <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">Job Tag</th>
+                                            <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">Panel Type</th>
+                                            <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">Service Type</th>
+                                            <th style="background: #f4f4f4; text-align: center; padding: 5px 0;">Warranty Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="table-items__tr">
+                                            <td style="text-align:center;" valign="top">
+                                                <?php echo $tickets->job_tag ? $tickets->job_tag : '-'; ?>
+                                            </td>
+                                            <td style="text-align: center;" valign="top">
+                                                <?php echo $tickets->panel_type ? $tickets->panel_type : '-'; ?>
+                                            </td>
+                                            <td style="text-align: center;" valign="top">
+                                                <?php echo $tickets->service_type ? $tickets->service_type : '-'; ?>                  
+                                            </td>
+                                            <td style="text-align: center;" valign="top">
+                                                <?php echo $tickets->warranty_type ? $tickets->warranty_type : '-'; ?>               
+                                            </td>
+                                        </tr>  
+                                    </tbody>
+                                </table>
+                            </div>
+                            <br><br>
+
+                            <div class="table-items-container">
+                                <?php $total_tax = 0; ?>
+                                <table class="table table-bordered lamesa" style="width: 100%; border-collapse: collapse; font-size: 12px">
+                                    <thead style="">
+                                        <tr>
+                                            <th style="background: #f4f4f4; text-align: center;">#</th>
+                                            <th style="background: #f4f4f4; text-align: left;">Items</th>
+                                            <th style="background: #f4f4f4; text-align: left; ">Item Type</th>
+                                            <th style="background: #f4f4f4; text-align: center;">Price</th>
+                                            <th style="background: #f4f4f4; text-align: center;">Qty</th>
+                                            <th style="background: #f4f4f4; text-align: center;">Discount</th>
+                                            <th style="background: #f4f4f4; text-align: right;" class="text-right">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php $i = 1; ?>
+                                        <?php foreach($items as $item){ ?>
+                                            <tr class="table-items__tr">
+                                                <td style="text-align:center;" valign="top"><?php echo $i; ?></td>
+                                                <td style="text-align: left;" valign="top"><?php echo $item->title; ?></td>
+                                                <td style="text-align: left;" valign="top"><?php echo $item->item_type; ?></td>
+                                                <td style="text-align: center;" valign="top">$<?php echo number_format($item->costing,2); ?></td>
+                                                <td style="text-align: center;" valign="top"><?php echo $item->qty; ?></td>
+                                                <td style="text-align: center;" valign="top">$<?php echo number_format($item->discount,2); ?></td>
+                                                <td style="text-align: right;" valign="top">$<?php echo number_format($item->total,2); ?></td>
+                                            </tr>
+                                            <tr class="table-items__tr-last">
+                                                <td></td>
+                                                <td colspan="6"></td>
+                                            </tr>
+                                        <?php $i++; ?>
+                                        <?php } ?>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="2" style="text-align: left"><b>Payment Method: </b</td>
+                                            <td colspan="2" style="text-align: left"><?php echo $tickets->payment_method; ?></td>
+                                            <td colspan="2" style="text-align: right"><b>Subtotal</b></td>
+                                            <td style="text-align: right">$<?php echo number_format($tickets->subtotal,2); ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="text-align: left"><b>Payment Amount: </b</td>
+                                            <td colspan="2" style="text-align: left">$<?php echo number_format($tickets->payment_amount,2); ?></td>
+                                            <td colspan="2" style="text-align: right"><b>Taxes</b></td>
+                                            <td style="text-align: right">$<?php if(empty($tickets->taxes)){ echo '0';} echo number_format($tickets->taxes,2); ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="text-align: left"><!-- <b>Billing Date: </b>--></td>
+                                            <td colspan="2" style="text-align: left"><?php //echo $tickets->billing_date ? $tickets->billing_date : '-'; ?></td>
+                                            <td colspan="2" style="text-align: right"><b>Adjustment<?php echo $tickets->adjustment ? ': ' . $tickets->adjustment : ''; ?></b></td>
+                                            <td style="text-align: right">$<?php echo number_format($tickets->adjustment_value,2); ?></td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="text-align: left"><!-- <b>Others: </b--></td>
+                                            <td colspan="2" style="text-align: left">                              
+                                            </td>
+                                            <td colspan="2" style="text-align: right"><b>Markup</b></td>
+                                            <td style="text-align: right">$<?php echo number_format($tickets->markup,2); ?></td>
+                                        </tr>
+                                        <?php $mmr = 0; ?>
+                                        <?php if($invoiceD->monthly_monitoring != null && $invoiceD->monthly_monitoring > 0) { $mmr = $invoiceD->monthly_monitoring?>
+                                        <tr>
+                                            <td colspan="2" style="text-align: left"></td>
+                                            <td colspan="2" style="text-align: left">                              
+                                            </td>
+                                            <td colspan="2" style="text-align: right"><b>MMR</b></td>
+                                            <td style="text-align: right">$<?php echo number_format($invoiceD->monthly_monitoring,2); ?></td>
+                                        </tr>
+                                        <?php } ?>
+                                        <?php $icost = 0; ?>
+                                        <?php if($invoiceD->installation_cost != null && $invoiceD->installation_cost > 0) { $icost = $invoiceD->installation_cost; ?>
+                                        <tr>
+                                            <td colspan="2" style="text-align: left"></td>
+                                            <td colspan="2" style="text-align: left">                              
+                                            </td>
+                                            <td colspan="2" style="text-align: right"><b>Installation Cost</b></td>
+                                            <td style="text-align: right">$<?php echo number_format($invoiceD->installation_cost,2); ?></td>
+                                        </tr>
+                                        <?php } ?>
+                                        <tr>
+                                            <td colspan="4"></td>
+                                            <td colspan="2" style="text-align: right; background: #f4f4f4;"><b>Grand Total</b></td>
+                                            <td style="text-align: right; background: #f4f4f4;"><b>$<?php echo number_format($tickets->grandtotal + $mmr + $icost,2); ?></b></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                            <br><br>
+                            <hr style="border-color:#eaeaea;">
+                            <div id="techArea" style="">
+                                <b>Assigned Technicians</b> <br><br>
+                                <?php
+                                $assigned_technician = unserialize($tickets->technicians);
+                                if($assigned_technician) {
+                                    foreach($assigned_technician as $eid){
+                                        $user = getUserName($eid);
+                                        echo $custom_html = '<div style="vertical-align: middle"><img src="'.userProfileImage($eid).'" style="width: 40px; border-radius: 10px;">&nbsp;'.$user['name'].'</div>';
+                                    }                    
+                                } else {
+                                    echo "-";                    
+                                }
+                                ?>
+                            </div>
+                                        
+                            <br><br>
+                            <hr style="border-color:#eaeaea;">
+                            <p style="color:#888; margin: 0">
+                                Business powered by nSmarTrac
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <style>
+                .print {
+                    width: 43%;
+                    margin: auto;
+                }
+
+                .print-body {
+                    padding: 20px;
+                }
+
+                .phone-input {
+                margin-bottom: 8px;
+                }
+
+                .phone-input>.input-group-btn>button.dropdown-toggle {
+
+                height: 46px !important;
+                background: #fff;
+                border: 2px solid #e0e0e0;
+                border-right: 0;
+                }
+
+                .phone-input>.input-group-btn>.dropdown-menu {
+
+                padding: 15px;
+                }
+
+                .invoice-paper {
+                box-shadow: 0 0 6px #ccc;
+                position: relative;
+                margin-bottom: 5px;
+                font-size: 10.5pt;
+                font-family: Sans-Serif;
+                }
+
+                .invoice-print,
+                .invoice-print table {
+                font-size: 10.5pt;
+                font-family: Sans-Serif;
+                }
+
+                .table-items .table-items__tr td {
+                padding: 8px 0;
+                background: #ffffff;
+                border: none;
+                font-family: Sans-Serif;
+                }
+
+                .table-items .table-items__tr-last td {
+                background: #ffffff;
+                border-bottom: 1px solid #eaeaea;
+                color: #555;
+                height: 1px;
+                padding: 0;
+                font-family: Sans-Serif;
+                }
+
+                .table-items .table-items__tr-last-border td {
+                padding: 8px 0;
+                background: #ffffff;
+                border-bottom: 1px solid #eaeaea;
+                }
+                /*** ribbon ***/
+                .ribbon {
+                position: absolute;
+                left: -8px;
+                top: -8px;
+                z-index: 1;
+                overflow: hidden;
+                width: 100px;
+                height: 100px;
+                text-align: right;
+                }
+
+                .ribbon span {
+                font-size: 10px;
+                font-weight: bold;
+                color: #FFF;
+                text-transform: uppercase;
+                text-align: center;
+                line-height: 26px;
+                transform: rotate(-45deg);
+                -webkit-transform: rotate(-45deg);
+                width: 130px;
+                display: block;
+                position: absolute;
+                top: 24px;
+                left: -28px;
+                background: #9BC90D;
+                }
+
+                .ribbon span::before {
+                content: "";
+                position: absolute;
+                left: 0px;
+                top: 100%;
+                z-index: -1;
+                border: 5px solid #79A70A;
+                border-left-color: #79A70A;
+                border-right-color: transparent;
+                border-bottom-color: transparent;
+                border-top-color: #79A70A;
+                }
+
+                .ribbon span::after {
+                content: "";
+                position: absolute;
+                right: 0px;
+                top: 100%;
+                z-index: -1;
+                border: 5px solid #79A70A;
+                border-left-color: transparent;
+                border-bottom-color: transparent;
+                border-right-color: #79A70A;
+                border-top-color: #79A70A;
+                }
+
+                .ribbon-pending span,
+                .ribbon-draft span {
+                color: #415667;
+                background: #bdc4ce;
+                }
+
+                .ribbon-pending span::before,
+                .ribbon-draft span::before {
+                border-left-color: #acb5c1;
+                border-top-color: #acb5c1;
+                }
+
+                .ribbon-pending span::after,
+                .ribbon-draft span::after {
+                border-right-color: #acb5c1;
+                border-top-color: #acb5c1;
+                }
+
+                .ribbon-overdue span,
+                .ribbon-canceled span {
+                color: #6b5426;
+                background: #f0a528;
+                }
+
+                .ribbon-overdue span::before,
+                .ribbon-canceled span::before {
+                border-left-color: #ef9d14;
+                border-top-color: #ef9d14;
+                }
+
+                .ribbon-overdue span::after,
+                .ribbon-canceled span::after {
+                border-right-color: #ef9d14;
+                border-top-color: #ef9d14;
+                }
+
+                .ribbon-paid span {
+                color: #275025;
+                background: #86c365;
+                }
+
+                .ribbon-paid span::before {
+                border-left-color: #7fbf5c;
+                border-top-color: #7fbf5c;
+                }
+
+                .ribbon-paid span::after {
+                border-right-color: #7fbf5c;
+                border-top-color: #7fbf5c;
+                }
+
+                .panel-info {
+                background: #f2f2f2;
+                border-top: 1px solid #eaeaea;
+                border-bottom: 1px solid #eaeaea;
+                padding: 20px 30px;
+                }
+
+                .btn-print {
+                    display: inline-block;
+                    padding: 7px 25px;
+                    background: #fff;
+                    border: 1px solid #cccccc;
+                    color: #333;
+                    text-decoration: none;
+                    border-radius: 2px;
+                    font-size: 16px;
+                    font-family: Sans-Serif;
+                }
+            </style>              
+
         </div>
     </div>
 </div>

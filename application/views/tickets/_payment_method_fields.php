@@ -17,32 +17,27 @@
     <div class="row">                   
         <div class="col-md-6 form-group">
             <label for="monitored_location" class="label-element">Mail Address</label>
-            <input type="text" class="form-control input-element" name="mail-address"
-                id="mail-address" placeholder="Mail Address"/>
+            <input type="text" class="form-control input-element" value="<?= $invoicePayment ? $invoicePayment->mail_address : ''; ?>" name="mail-address" id="mail-address" placeholder="Mail Address"/>
         </div>
         <div class="col-md-3 form-group">
             <label for="city" class="label-element">City</label>
-                <input type="text" class="form-control input-element" name="mail_locality" id="mail_locality" placeholder="Enter City" />
+            <input type="text" class="form-control input-element" value="<?= $invoicePayment ? $invoicePayment->mail_locality : ''; ?>" name="mail_locality" id="mail_locality" placeholder="Enter City" />
         </div>
     </div>
     <div class="row">        
         <div class="col-md-6 form-group">
             <label for="cross_street" class="label-element">Cross Street</label>
-            <input type="text" class="form-control input-element" name="mail_cross_street"
-                id="mail_cross_street" 
-                placeholder="Cross Street"/>
+            <input type="text" class="form-control input-element" name="mail_cross_street" value="<?= $invoicePayment ? $invoicePayment->mail_cross_street : ''; ?>" id="mail_cross_street" placeholder="Cross Street"/>
         </div>            
     </div>
     <div class="row">        
         <div class="col-md-3 form-group">
             <label for="state" class="label-element">State</label>
-            <input type="text" class="form-control input-element" name="mail_state"
-                id="mail_state" 
-                placeholder="Enter State"/>
+            <input type="text" class="form-control input-element" name="mail_state" id="mail_state" value="<?= $invoicePayment ? $invoicePayment->mail_state : ''; ?>" placeholder="Enter State"/>
         </div>
         <div class="col-md-2 form-group">
             <label for="zip" class="label-element">ZIP</label> 
-                <input type="text" id="mail_postcode" name="mail_postcode" class="form-control input-element"  placeholder="Enter Zip"/>
+                <input type="text" id="mail_postcode" name="mail_postcode" class="form-control input-element" value="<?= $invoicePayment ? $invoicePayment->mail_postcode : ''; ?>"  placeholder="Enter Zip"/>
         </div>                           
     </div>
 </div>

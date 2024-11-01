@@ -712,6 +712,8 @@
 </div>
 <script>
 $(document).ready(function(){
+
+    var is_with_esign = 0;
     // $('#esign-templates').select2({
     //     dropdownParent: $("#service-ticket-esign-template"),
     //     placeholder: 'Select template',
@@ -1112,16 +1114,19 @@ $(document).ready(function(){
     function computeGrandTotal(){
         var fixedSubtotal = calculateSubtotal();
         var fixedTaxes = calculateTaxes();
-        var otp = $('#service-ticket-otp').val();
-        //var mmr = $('#service-ticket-monthly-monitoring-rate').val();
-        var mmr = $('#plan-value').val();
-        var installation_cost = $('#service-ticket-installation-cost').val();
-        var adjustment_amount = $('#adjustment-amount').val();
 
-        // var otp = 0;        
-        // var mmr = 0;
-        // var installation_cost = 0;
-        // var adjustment_amount = $('#adjustment-amount').val();
+        if( is_with_esign == 0 ){
+            var otp = 0;        
+            var mmr = 0;
+            var installation_cost = 0;
+            var adjustment_amount = $('#adjustment-amount').val();
+        }else{
+            var otp = $('#service-ticket-otp').val();
+            //var mmr = $('#service-ticket-monthly-monitoring-rate').val();
+            var mmr = $('#plan-value').val();
+            var installation_cost = $('#service-ticket-installation-cost').val();
+            var adjustment_amount = $('#adjustment-amount').val();
+        }
         
         if( isNaN(adjustment_amount) || adjustment_amount == '' ){
             adjustment_amount = 0;
@@ -1200,12 +1205,16 @@ $(document).ready(function(){
 
     $('#is-with-esign').on('change', function(){
         if( $(this).is(':checked') ){
+            is_with_esign = 1;
             $('#with-esign-inputs-container').fadeIn();
             $('#with-esign-emergency-contacts-container').fadeIn();
         }else{
+            is_with_esign = 0;
             $('#with-esign-inputs-container').fadeOut();
             $('#with-esign-emergency-contacts-container').fadeOut();
         }
+
+        computeGrandTotal();
     });
 
     $('#service-ticket-monthly-monitoring-rate').on('change', function(){
