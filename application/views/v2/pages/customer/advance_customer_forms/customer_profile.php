@@ -43,9 +43,18 @@
             </div>
             <div class="col-md-8">
                 <select id="customer_group" name="customer_group" data-customer-source="dropdown" class="form-controls input_select">
-                    <?php foreach($customerGroups as $cg){ ?>
-                        <option value="<?= $cg->id; ?>"><?= $cg->title; ?></option>
-                    <?php } ?>
+                    <?php
+                        foreach($customerGroups as $customer_groups) {
+                            if ($customer_groups->id == $profile_info->customer_group_id) {
+                                echo "<option value='$customer_groups->id' selected>$customer_groups->title</option>";
+                            } else if ($profile_info->customer_group_id == "") {
+                                echo "<option value selected hidden disabled>Select Lead Source</option>";
+                                echo "<option value='$lead_source->ls_name'>$lead_source->ls_name</option>";
+                            } else {
+                                echo "<option value='$customer_groups->id'>$customer_groups->title</option>";
+                            }
+                        }
+                    ?>
                 </select>
                 <a href="javascript:void(0);" onclick="window.open('<?= base_url('customer/group') ?>', '_blank', 'location=yes,height=1080,width=1500,scrollbars=yes,status=yes');" style="color:#58bc4f;font-size: 10px;"><span class="fa fa-plus"></span> Manage Customer Group</a>&nbsp;&nbsp;
             </div>
