@@ -1890,6 +1890,7 @@ $route['accounting/employees/_update_employment_details'] = 'accounting_controll
 $route['ticket/_create_service_type'] = 'Tickets/ajax_create_servicetype';
 $route['tickets/_delete_selected_tickets'] = 'Tickets/ajax_delete_selected_tickets';
 $route['tickets/_update_status_selected_tickets'] = 'Tickets/ajax_update_status_selected_tickets';
+$route['ticket/add'] = 'Tickets/addTicket';
 
 //Setting : Panel Types
 $route['tickets/settings_panel_types'] = 'Tickets/settings_panel_types';
