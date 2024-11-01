@@ -2733,7 +2733,7 @@ class Tickets extends MY_Controller
         }
 
         //Ticket Items
-        $ticketItems = $this->tickets_model->get_ticket_items_by_ticket_id($job->id);
+        $ticketItems = $this->tickets_model->get_ticket_items_by_ticket_id($ticket->id);
         foreach( $ticketItems as $item ){
             $invoice_item_data = [
                 'invoice_id' => $invoice_id,
