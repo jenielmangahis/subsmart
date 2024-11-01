@@ -2141,20 +2141,23 @@ class Tickets extends MY_Controller
                     $addQuery2 = $this->tickets_model->add_ticket_items($data);
                     $i++;
                 }
+
+                $invoice_id = $this->createInitialInvoiceTicket($addQuery);
+            
+
+                // SERVICE TICKET CUSTOMER ACTIVITY LOG RECORDING
+                $customerLogsRecording = array(
+                    'date' => date('m/d/Y')."<br>".date('h:i A'),
+                    'customer_id' => $this->input->post('customer_id'),
+                    'user_id' => logged('id'),
+                    'logs' => "$getUserInfo->FName $getUserInfo->LName created a service ticket with you. <a href='#' onclick='window.open(`".base_url('tickets/viewDetails/').$addQuery."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>".$this->input->post('ticket_no')."</a>"
+                );
+                $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogsRecording);
+
+                //Activity Logs
+                $activity_name = 'Created Caledar Schedule ' . $this->input->post('ticket_no'); 
+                createActivityLog($activity_name);
             }
-
-            // SERVICE TICKET CUSTOMER ACTIVITY LOG RECORDING
-            $customerLogsRecording = array(
-                'date' => date('m/d/Y')."<br>".date('h:i A'),
-                'customer_id' => $this->input->post('customer_id'),
-                'user_id' => logged('id'),
-                'logs' => "$getUserInfo->FName $getUserInfo->LName created a service ticket with you. <a href='#' onclick='window.open(`".base_url('tickets/viewDetails/').$addQuery."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>".$this->input->post('ticket_no')."</a>"
-            );
-            $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogsRecording);
-
-            //Activity Logs
-            $activity_name = 'Created Caledar Schedule ' . $this->input->post('ticket_no'); 
-            createActivityLog($activity_name);
         }
 
         $json_data = ['is_success' => $is_valid, 'msg' => $msg, 'job_id' => $jobs_id, 'esign_id' => $esign_id, 'customer_id' => $this->input->post('customer_id')];
@@ -2444,7 +2447,7 @@ class Tickets extends MY_Controller
         $this->Invoice_model->createInvoicePayment($payment_data);
     }
 
-    public function createInitialInvoice($job_id)
+    public function createInitialInvoiceJob($job_id)
     {
         $this->load->model('Invoice_model');
         $this->load->model('Invoice_settings_model');
@@ -2586,6 +2589,155 @@ class Tickets extends MY_Controller
             $invoice_item_data = [
                 'invoice_id' => $invoice_id,
                 'items_id' => $item->fk_item_id,
+                'qty' => $item->qty,
+                'cost' => $item->cost,
+                'tax' => $item->tax,
+                'discount' => $item->discount,
+                'total' => $item->total
+            ];
+
+            $this->Invoice_model->add_invoice_details($invoice_item_data);
+        }
+
+        return $invoice_id;
+    }
+
+    public function createInitialInvoiceTicket($ticket_id)
+    {
+        $this->load->model('Invoice_model');
+        $this->load->model('Invoice_settings_model');
+
+        $company_id = logged('company_id');
+        
+        $this->db->where('id', $ticket_id);
+        $ticket = $this->db->get('tickets')->row();
+
+        $this->db->where('prof_id', $ticket->customer_id);
+        $customer = $this->db->get('acs_profile')->row();
+
+        $invoiceSettings =  $this->Invoice_settings_model->getByCompanyId($company_id);
+        if( $invoiceSettings ){            
+            $next_number = (int) $invoiceSettings->invoice_num_next;     
+            $prefix      = $invoiceSettings->invoice_num_prefix;        
+        }else{
+            $lastInsert = $this->Invoice_model->getLastInsertByCompanyId($company_id);
+            $prefix     = 'INV-';
+            if( $lastInsert ){
+                $next_number   = $lastInsert->id + 1;
+            }else{
+                $next_number   = 1;
+            }
+        }
+
+        $invoiceNumber = formatInvoiceNumberV2($prefix, $next_number);        
+
+        $monthly_monitoring = $ticket->monthly_monitoring;
+        $program_setup      = $ticket->otp_setup;
+        $installation_cost  = $ticket->installation_cost;
+
+        $grand_total = $ticket->grandtotal;
+        $sub_total   = $ticket->subtotal;
+        $tax         = $ticket->taxes;
+
+        $new_data = array(
+            'customer_id'               => $ticket->customer_id,
+            'ticket_id'                 => $ticket->id,
+            'job_location'              => $ticket->service_location,
+            'job_name'                  => $ticket->service_description,
+            'job_id'                    => 0,
+            'job_number'                => $ticket->ticket_no,
+            'business_name'             => $customer->business_name,
+            'customer_email'            => $customer->email,
+            'tags'                      => $ticket->job_tag,
+            'invoice_type'              => 'Total Due',
+            'work_order_number'         => '',
+            'purchase_order'            => $ticket->purchase_order_no,
+            'invoice_number'            => $invoiceNumber,
+            'date_issued'               => date("Y-m-d"),
+            'customer_email'            => $customer->email,
+            'online_payments'           => '',
+            'billing_address'           => $customer->mail_add,
+            'shipping_to_address'       => $customer->mail_add,
+            'ship_via'                  => '',
+            'shipping_date'             => '',
+            'tracking_number'           => '',
+            'terms'                     => 0,     
+            'tip'                       => 0,       
+            'due_date'                  => date("Y-m-d", strtotime("+5 days")),
+            'location_scale'            => '',
+            'message_to_customer'       => '',
+            'terms_and_conditions'      => '',            
+            'attachments'               => '',
+            'status'                    => 'Unpaid',
+            'company_id'                => $company_id,
+            'deposit_request_type'      => '$',
+            'deposit_request'           => '0',
+            'monthly_monitoring'        => $monthly_monitoring,
+            'program_setup'             => $program_setup,
+            'installation_cost'         => $installation_cost,
+            'payment_methods'           => $ticket->payment_method,
+            'sub_total'                 => $sub_total,
+            'taxes'                     => $tax,
+            'adjustment_name'           => $ticket->adjustment,
+            'adjustment_value'          => $ticket->adjustment_value,
+            'total_due'                 => $grand_total,
+            'balance'                   => $grand_total,
+            'grand_total'               => $grand_total,
+            'user_id'                   => logged('id'),
+            'date_created'              => date("Y-m-d H:i:s"),
+            'date_updated'              => date("Y-m-d H:i:s")
+        );
+
+        $invoice_id = $this->Invoice_model->createInvoice($new_data);
+
+        //Update invoice settings
+        if( $invoiceSettings ){
+            $invoice_settings_data = ['invoice_num_next' => $next_number + 1];
+            $this->Invoice_settings_model->update($invoiceSettings->id, $invoice_settings_data);
+        }else{
+            $invoice_settings_data = [
+                'invoice_num_prefix' => $prefix,
+                'invoice_num_next' => $next_number,
+                'check_payable_to' => '',
+                'accept_credit_card' => 1,
+                'accept_check' => 0,
+                'accept_cash'  => 1,
+                'accept_direct_deposit' => 0,
+                'accept_credit' => 0,
+                'mobile_payment' => 1,
+                'capture_customer_signature' => 1,
+                'hide_item_price' => 0,
+                'hide_item_qty' => 0,
+                'hide_item_tax' => 0,
+                'hide_item_discount' => 0,
+                'hide_item_total' => 0,
+                'hide_from_email' => 0,
+                'hide_item_subtotal' => 0,
+                'hide_business_phone' => 0,
+                'hide_office_phone' => 0,
+                'accept_tip' => 0,
+                'due_terms' => '',
+                'auto_convert_completed_work_order' => 0,
+                'message' => 'Thank you for your business.',
+                'terms_and_conditions' => 'Thank you for your business.',
+                'company_id' => $company_id,
+                'commercial_message' => 'Thank you for your business.',
+                'commercial_terms_and_conditions' => 'Thank you for your business.',
+                'logo' => '',
+                'payment_fee_percent' => '',
+                'payment_fee_amount' => '',
+                'recurring' => ''
+            ];
+
+            $this->Invoice_settings_model->create($invoice_settings_data);
+        }
+
+        //Ticket Items
+        $ticketItems = $this->tickets_model->get_ticket_items_by_ticket_id($job->id);
+        foreach( $ticketItems as $item ){
+            $invoice_item_data = [
+                'invoice_id' => $invoice_id,
+                'items_id' => $item->items_id,
                 'qty' => $item->qty,
                 'cost' => $item->cost,
                 'tax' => $item->tax,
