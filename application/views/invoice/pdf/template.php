@@ -302,12 +302,12 @@
                             <td colspan="3" style="text-align: right; background: #f4f4f4; padding: 8px 0"><b>Grand Total ($)</b></td>
                             <td style="text-align: right; background: #f4f4f4"><b>$<?php echo number_format($invoice->grand_total, 2);?></b></td>
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <td colspan="3"></td>
                             <td colspan="2" style="text-align: right; background: #f4f4f4; padding: 8px 0"><b>Grand Total ($)</b></td>
                             <td style="background: #f4f4f4"></td>
                             <td style="text-align: right; background: #f4f4f4; padding: 8px 8px 8px 0;"><b>$<?php echo number_format($invoice->grand_total, 2);?></b></td>
-                        </tr>
+                        </tr> -->
                         <tr>
                             <td colspan="3"></td>
                             <td colspan="3" style="text-align: right"><b>Balance Due</b></td>
