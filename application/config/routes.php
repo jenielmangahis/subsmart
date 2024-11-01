@@ -1552,6 +1552,7 @@ $route['customer/_check_customer_esign_pdf'] = 'Customer/ajax_check_customer_esi
 $route['customer/download_esign_doc'] = 'Customer/downloadEsignDoc';
 $route['customer/_load_customer_sms_messages'] = 'Customer/ajax_load_customer_sms_messages';
 $route['customer/_load_all_subscriptions'] = 'Customer/ajax_load_all_subscriptions';
+$route['customer/_quick_search'] = 'Customer/ajax_quick_search';
 
 // Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';
