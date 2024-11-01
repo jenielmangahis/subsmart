@@ -2847,13 +2847,14 @@
         
         var url  = base_url + 'ticket/_create_service_ticket';
         var form = $(this);
+        
         $.ajax({
             type: "POST",
             url: url,
             dataType:'json',
             data: form.serialize(),
             success: function(data) {
-                if( data.is_success == 1 && data.job_id > 0 ){
+                if( data.is_success == 1 ){
                     $('#modal-quick-add-service-ticket').modal('hide');                   
 
                     Swal.fire({
@@ -2865,14 +2866,14 @@
                         cancelButtonColor: '#d33',
                         confirmButtonText: 'Ok'
                     }).then((result) => {
-                        //reloadCalendar(selected_calendar_view);
+                        reloadCalendar(selected_calendar_view);
                         //loadUpcomingSchedules();
                         // if( data.esign_id > 0 ){
                         //     location.href = base_url + 'eSign_v2/templatePrepare?id='+data.esign_id+'&job_id='+data.job_id+'&customer_id='+data.customer_id;
                         // }else{
                         //     location.href = base_url + 'job/new_job1/' + data.job_id
                         // }
-                        location.href = base_url + 'job/new_job1/' + data.job_id
+                        //location.href = base_url + 'job/new_job1/' + data.job_id
                     });    
                 }else{
                     Swal.fire({
