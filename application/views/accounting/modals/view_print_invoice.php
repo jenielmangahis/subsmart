@@ -35,12 +35,11 @@
                         <div class="col-md-4 d-flex"></div>
                         <div class="col-md-4">
                             <a href="javascript:void(0);" class="nsm-button primary float-right mr-1" id="preview-and-print">Print</a>
-                            <a href="/accounting/download-invoice-pdf/<?=$invoice->id?>" class="nsm-button primary float-right mr-1" id="download-pdf">Download</a>
+                            <a href="/accounting/download-invoice-pdf/<?=$invoice->id?>" class="nsm-button primary float-right mr-1" id="download-pdf">Download</a>                            
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
     <!--end of modal-->
