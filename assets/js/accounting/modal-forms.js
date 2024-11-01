@@ -14475,7 +14475,7 @@ const loadPaymentCredits = (paymentdata) => {
 const printPreviewInvoice = () => {
     var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
-    $.get('/accounting/print-invoice-modal/' + split[1], function (result) {
+    $.get(base_url + 'accounting/print-invoice-modal/' + split[1], function (result) {
         $('div#modal-container').append(result);
 
         $('#viewPrintInvoiceModal').modal('show');
