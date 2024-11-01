@@ -283,10 +283,11 @@
                                             <input type="text" class="form-control nsm-field mb-2" id="tracking-no" name="tracking_no" value="<?= isset($invoice) ? $invoice->tracking_number : '' ?>">
                                         </div>
 
-                                        <div class="col-12 col-md-2">
+                                        <div class="col-12 col-md-2 ship-via-container">
                                             <label for="ship-via">Ship via</label>
                                             <input type="text" class="form-control nsm-field mb-2" id="ship-via" name="ship_via" value="<?= isset($invoice) ? $invoice->ship_via : '' ?>">
                                         </div>
+
                                         <div class="col-12 col-md-2">
                                             <label for="shipping-date">Shipping date</label>
                                             <div class="nsm-field-group calendar">
@@ -316,7 +317,7 @@
                                             <input type="text" class="form-control nsm-field mb-2" id="job-no" name="job_no" value="<?= isset($invoice) ? $invoice->work_order_number : '' ?>">
                                         </div> -->
                                       
-                                        <div class="col-12 col-md-2">
+                                        <div class="col-12 col-md-2 purchase-order">
                                             <label for="purchase-order-no">Purchase order # (optional)
                                                 <span id="modal-popover-purchase-order-optional" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content=""></span>
                                                 <!-- <span class="bx bx-fw bx-help-circle" data-bs-toggle="popover" data-bs-placement="top" data-bs-trigger="hover" data-bs-content="Optional if you want to display the purchase order number on invoice."></span> -->

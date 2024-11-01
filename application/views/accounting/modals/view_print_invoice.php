@@ -34,10 +34,10 @@
                         </div>
                         <div class="col-md-4 d-flex"></div>
                         <div class="col-md-4">
-                            <a href="#" class="btn btn-success float-right" id="preview-and-print">
+                            <a href="#" class="nsm-button primary float-right" id="preview-and-print">
                                 Print
                             </a>
-                            <a href="/accounting/download-invoice-pdf/<?=$invoice->id?>" class="btn btn-secondary float-right mr-1" id="download-pdf">
+                            <a href="/accounting/download-invoice-pdf/<?=$invoice->id?>" class="nsm-button secondary float-right mr-1" id="download-pdf">
                                 Download
                             </a>
                         </div>
