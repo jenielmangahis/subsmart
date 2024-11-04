@@ -39,26 +39,26 @@
                                     <div class="reportTitleInfo">
                                         <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?></h3>
                                         <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
-                                        <h5><small id="reportDate">As of <?php echo date('F d, Y'); ?></small></h5>
+                                        <h5><small id="reportDate"><span id="date_from_text"></span> &mdash; <span id="date_to_text"></span></small></h5>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <?php 
-                                        $tableID = "serviceprojectiveincome_table"; 
-                                        $reportCategory = "service_projective_income"; 
+                                        $tableID = "openinvoices_table"; 
+                                        $reportCategory = "open_invoices"; 
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
-                                                <th>NUMBER</th>
-                                                <th>TYPE</th>
-                                                <th>DESCRIPTION</th>
-                                                <th>CUSTOMER</th>
-                                                <th>STATUS</th>
-                                                <th>DATE CREATED</th>
-                                                <th style="text-align:right;">TOTAL</th>
+                                                <th>NAME</th>
+                                                <th>DATE</th>
+                                                <th>TRANSACTION</th>
+                                                <th>NUM</th>
+                                                <th>TERMS</th>
+                                                <th>DUE DATE</th>
+                                                <th class="text-end">OPEN BALANCE</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -182,14 +182,11 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="number" <?php echo ($reportSettings->sort_by == "number") ? "selected" : "" ?>>Number</option>
-                                                <option value="type" <?php echo ($reportSettings->sort_by == "type") ? "selected" : "" ?>>Type</option>
-                                                <option value="description" <?php echo ($reportSettings->sort_by == "description") ? "selected" : "" ?>>Description</option>
-                                                <option value="customer" <?php echo ($reportSettings->sort_by == "customer") ? "selected" : "" ?>>Customer</option>
-                                                <option value="status" <?php echo ($reportSettings->sort_by == "status") ? "selected" : "" ?>>Status</option>
-                                                <option value="date" <?php echo ($reportSettings->sort_by == "date") ? "selected" : "" ?>>Date Issued</option>
-                                                <option value="total" <?php echo ($reportSettings->sort_by == "total") ? "selected" : "" ?>>Total</option>
-                                               
+                                                <option value="num" <?php echo ($reportSettings->sort_by == "num") ? "selected" : "" ?>>Num</option>
+                                                <option value="date" <?php echo ($reportSettings->sort_by == "date") ? "selected" : "" ?>>Date</option>
+                                                <option value="name" <?php echo ($reportSettings->sort_by == "name") ? "selected" : "" ?>>Name</option>
+                                                <option value="due_date" <?php echo ($reportSettings->sort_by == "due_date") ? "selected" : "" ?>>Due Date</option>
+                                                <option value="open_balance" <?php echo ($reportSettings->sort_by == "open_balance") ? "selected" : "" ?>>Open Balance</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
@@ -197,6 +194,14 @@
                                             </select>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="col-md-12"><hr class="mt-0"></div>
+                                <div class="col-md-5 mb-3">
+                                    <label class="mb-1 fw-xnormal">Date Range <small class="text-muted">(From &mdash; To)</small></label>
+                                    <div class="input-group">
+                                        <input name="date_from" class="form-control mt-0" type="date" value="<?php echo (isset($reportSettings->report_date_from_text)) ? $reportSettings->report_date_from_text : date('Y').'-01-01'; ?>">
+                                        <input name="date_to" class="form-control mt-0" type="date" value="<?php echo (isset($reportSettings->report_date_to_text)) ? $reportSettings->report_date_to_text : date('Y-m-d'); ?>">
+                                    </div> 
                                 </div>
                             </div>
                         </div>
@@ -209,7 +214,6 @@
                             </div>
                             <div class="float-end">
                                 <button type="submit" class="nsm-button primary settingsApplyButton">Apply</button>
-                                <!-- <button type="button" class="nsm-button primary printPDF">Print</button> -->
                             </div>
                         </div>
                     </div>
@@ -219,7 +223,6 @@
     </div>
 </div>
 <!-- Modal for Report Settings -->
-
 <!-- START: PRINT/SAVE MODAL -->
 <div class="modal fade" id="printPreviewModal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="true">
     <div class="modal-dialog modal-xl">
@@ -241,8 +244,8 @@
                             </select>
                         </div>
                         <!-- <div class="form-check">
-                            <input id="pageHeaderRepeat" name="pageHeaderRepeat" class="form-check-input" type="checkbox">
-                            <label class="form-check-label" for="pageHeaderRepeat">Repeat Page Header</label>
+                            <input id="pageHeaderRepeat" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                            <label class="form-check-label" for="flexCheckDefault">Repeat Page Header</label>
                         </div> -->
                     </div>
                     <div class="col-sm-9">

@@ -123,6 +123,9 @@ $(document).ready(function() {
             lost_accounts
         } = response;
 
+        console.log('earned',earned)
+        console.log('invoice_amount',invoice_amount)
+
 
         if (success) {
             var totalPayments = 0;
@@ -133,11 +136,11 @@ $(document).ready(function() {
             var collectedAcc = collectedAccounts == '' ? '0' : collectedAccounts[0]['total'];
             var onlineBookingCount = onlineBooking == '' ? '0' : onlineBooking[0]['total'];
             var service_project_incomeData = service_project_income == null ? '0' :parseFloat(service_project_income.total).toFixed(2);
-            var invoice_amountData = invoice_amount == null ? '0' : parseFloat(invoice_amount.total).toFixed(2);
+            var invoice_amountData = invoice_amount.total == null ? '0' : parseFloat(invoice_amount.total).toFixed(2);
             var jobs_completedData = jobs_completed == '' ? '0' : jobs_completed.total;
             var new_jobsData = new_jobs == '' ? '0' : new_jobs.total;
             var lost_accountsData = lost_accounts == '' ? '0' : lost_accounts.total;
-            var earnedData = earned == null ? '0' : parseFloat(earned.total).toFixed(2);
+            var earnedData = earned.total == null ? '0' : parseFloat(earned.total).toFixed(2);
             
             var today = new Date();
             var dd = String(today.getDate()).padStart(2, '0');
@@ -863,7 +866,7 @@ fetch('<?php echo base_url('Dashboard/income_subscription'); ?>', {}).then(respo
                 output += '</select>';
             }
 
-        $('#filter-subscription-status').html(output);
+        // $('#filter-subscription-status').html(output);
         
 
         var sales_data = {
