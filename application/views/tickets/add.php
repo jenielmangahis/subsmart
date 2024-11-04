@@ -158,22 +158,70 @@ a.btn-primary.btn-md {
 #new_customer .row{
     margin-top:0px !important;
 }
-</style>
-
-   <style>
-   .but:hover {
+#quick-add-item .nsm-table thead td {
+    background-color: #6a4a86;
+    color: #ffffff;
+}
+.block-label{
+    display:block;
+    height:30px;
+}
+.block-label a{
+    float:right;
+}
+.block-label b{
+    position:relative;
+    top:10px;
+}
+.but:hover {
     font-weight: 900;
     color:black;
-    }
-    .but-red:hover {
+}
+.but-red:hover {
     font-weight: 900;
     color:red;
-    }
-    .required:after {
+}
+.required:after {
     content:" *";
     color: red;
-    }
-   </style>
+}
+.custom-ticket-header{
+    background-color: #6a4a86;
+    color: #ffffff;
+    font-size: 15px;
+    padding: 10px;
+}
+#jobs_items_table_body .remove i{
+    position: relative;
+    top: 1px;
+    left: 7px;
+}
+#jobs_items_table_body .nsm-button {
+    margin: 0 auto;
+    display: block;
+    padding: 4px;
+}
+.tax_change, .discount, .price {
+    text-align: right;
+}
+.span-input {
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    text-align: right;
+    background-color: #E9ECEF;
+}
+</style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo base_url('customer/addTicket') ?>'">
         <i class="bx bx-note"></i>
@@ -204,145 +252,140 @@ a.btn-primary.btn-md {
                 </div>
                 <input type="hidden" id="redirect-calendar" name="redirect_calendar" value="<?= $redirect_calendar; ?>">
                 <div class="row">
-                    <div class="col-md-4">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="content-subtitle fw-bold d-block mb-2">Customer</label>
-                            </div>                                                            
-                            <div class="col-8">
-                                <select class="nsm-field form-select select2" name="customer_id" id="sel-customer_t">
-                                    <?php if( $default_customer_id > 0 ){ ?>
-                                        <option <?= $default_customer_id == $c->prof_id ? 'selected="selected"' : ''; ?> value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
+                    <div class="col-md-5">
+                        <div class="nsm-card primary">
+                            <div class="nsm-card-content">
+                                <label for="customers" class="required"><b>Customer</b></label>
+                                <a class="link-modal-open nsm-button btn-small" href="<?= base_url('customer/add_advance'); ?>" style="float:right;">Add New</a>
+                                <select id="sel-customer_t" name="customer_id" data-customer-source="dropdown" required="" class="form-control searchable-dropdown" placeholder="Select">
+                                    <option value="">- Select Customer -</option>
+                                    <?php foreach($customers as $c){ ?>                                        
+                                            <option value="<?= $c->prof_id; ?>"><?= $c->first_name . ' ' . $c->last_name; ?></option>
                                     <?php } ?>
                                 </select>
+                                <div class="row">
+                                    <div class="col-md-6" style="display: ;">
+                                        <label for="customer_phone" class="required"><b>Mobile Number</b></label>
+                                        <input type="text" class="form-control phone_number" placeholder="xxx-xxx-xxxx" name="customer_phone" id="customer_phone" required  value=""/>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="business_name"><b>Business Name</b> (optional)</label>
+                                        <input type="text" class="form-control" name="business_name" id="business_name" placeholder="Business Name" value=""/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"> 
+                                        <label for="job-tag"><b>Service Tag</b></label>
+                                        <a class="nsm-button btn-small" style="float:right;" target="_new" href="<?= base_url('job/job_tags'); ?>">Manage Tag</a>
+                                        <select class="form-control" name="job_tag" id="job-tag">
+                                            <?php foreach($tags as $t){ ?>
+                                                <option value="<?= $t->name; ?>"><?= $t->name; ?></option>
+                                            <?php } ?>
+                                        </select>
+                                    </div>
+                                    <!-- <div class="col-md-12 mt-4">
+                                        <label for="job_name"><b>Service description</b> (optional)</label>                                        
+                                        <textarea class="form-control" name="service_description"></textarea>
+                                    </div> -->
+                                    <div class="col-md-12 mt-4">
+                                        <label for="job_location" class="required"><b>Service Location</b></label>
+                                        <input type="text" class="form-control" name="service_location" id="service_location"
+                                        required placeholder="Enter Location"
+                                        onChange="jQuery('#customer_name').text(jQuery(this).val());" value=""/>
+                                    </div>
+                                    <div class="row"> 
+                                        <div class="col-md-4">
+                                            <label for="job_location" class="required"><b>City</b></label>
+                                            <input type="text" class="form-control" name="customer_city" id="customer_city"
+                                                    required placeholder="Enter City" 
+                                                    onChange="jQuery('#customer_name').text(jQuery(this).val());" value=""/>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <label for="job_location" class="required"><b>State</b></label>
+                                            <input type="text" class="form-control" name="customer_state" id="customer_state"
+                                                    required placeholder="Enter State" 
+                                                    onChange="jQuery('#customer_name').text(jQuery(this).val());" value=""/>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label for="job_location" class="required"><b>Zip Code</b></label>
+                                            <input type="text" class="form-control" name="customer_zip" id="customer_zip"
+                                                    required placeholder="Enter Zip Code" 
+                                                    onChange="jQuery('#customer_name').text(jQuery(this).val());" value=""/>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
                             </div>
-                            <div class="col-3">
-                                <button type="button" id="" data-bs-toggle="modal" data-bs-target="#new_customer" class="nsm-button small text-end" ><strong>Add New Customer</strong></button>                                                    
+                        </div>
+                    </div>
+
+                    <div class="col-md-7">
+                        <div class="nsm-card primary">
+                            <div class="nsm-card-content">
+                                <div class="MAP_LOADER_CONTAINER">
+                                    <div class="text-center MAP_LOADER">
+                                        <iframe id="TEMPORARY_MAP_VIEW"
+                                            src="http://maps.google.com/maps?output=embed" height="470" width="100%"
+                                            style=""></iframe>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-5 form-group">
-                        <label for="city"><b>Business Name</b> (optional)</label>
-                        <input type="text" class="form-control" name="business_name" id="business_name" placeholder="Business Name" value="" />
-                    </div>                    
-                </div>
-                <div class="row"> 
-                    <div class="col-md-5">
-                        <label for="job_location" class="required"><b>Service Location</b></label>
-                        <input type="text" class="form-control" name="service_location" id="service_location"
-                                required placeholder="Enter Location"
-                                onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
-                    </div>                                                                             
-                </div>
-                <div class="row">
-                    <div class="col-md-2">
-                        <label for="job_location" class="required"><b>City</b></label>
-                        <input type="text" class="form-control" name="customer_city" id="customer_city"
-                                required placeholder="Enter City" 
-                                onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
-                    </div>  
-                    <div class="col-md-2">
-                        <label for="job_location" class="required"><b>State</b></label>
-                        <input type="text" class="form-control" name="customer_state" id="customer_state"
-                                required placeholder="Enter State" 
-                                onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
-                    </div>
-                    <div class="col-md-1">
-                        <label for="job_location" class="required"><b>Zip Code</b></label>
-                        <input type="text" class="form-control" name="customer_zip" id="customer_zip"
-                                required placeholder="Enter Zip Code" 
-                                onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
-                    </div>                    
-                </div>
-                <div class="row">                    
-                    <div class="col-md-2">
-                        <label for="job_location" class="required"><b>Phone Number</b></label>
-                        <input type="text" class="form-control" name="customer_phone" id="customer_phone" required placeholder="Enter Phone Number" />
-                        <br />
-                        <label for="job_location" class="required"><b>Mobile Number</b></label>
-                        <input type="text" class="form-control" name="customer_mobile" id="customer_mobile" required placeholder="Enter Phone Number" />
-                    </div>
-                    <div class="col-md-3">
-                        <label for="job_name"><b>Service description</b> (optional)</label>
-                        <!-- <input type="text" class="form-control" name="job_name" id="job_name" placeholder="Enter Job Name" required/> -->
-                        <textarea class="form-control" name="service_description" style="height:110px;"></textarea>
-                    </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-md-5 form-group">
-                        <label for="city">Service Tag</label>
-                        <a class="" href="javascript:void(0)" target="_new" style="color:#02A32C;float:right;" href="<?= base_url('job/job_tags'); ?>"><span class="bx bx-plus" style="color:#02A32C;"></span>Manage Tag</a>
-                        <select class="form-control" name="job_tag">
-                            <?php foreach($tags as $t){ ?>
-                                <option value="<?= $t->name; ?>"><?= $t->name; ?></option>
-                            <?php } ?>
-                        </select>
-                    </div>
-                </div>
+                
             </div>
                 <div class="row">
                     <div class="col-12">
                         <div class="nsm-card primary">
                             <div class="nsm-card-content">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <label for="estimate_date" class="required"><b>Service Ticket No.</b></label>
-                                        <input type="text" class="form-control" name="ticket_no" id="ticket_no"
-                                                required placeholder="Enter Ticket#" a value="<?= $prefix . $next_num; ?>" />
-                                    </div>
+                            <div class="row">
                                     <div class="col-md-3">
                                         <label for="estimate_date" class="required"><b>Schedule Date</b></label>
-                                        <!-- <input type="text" class="form-control" name="estimate_date" id="estimate_date" required placeholder="Enter Estimate Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
-                                        <div class="input-group date" data-provide="datepicker">
-                                            <input type="text" class="form-control" value="<?= date("m/d/Y", strtotime($default_start_date)); ?>" name="ticket_date" id="ticket_date"
-                                                    placeholder="Enter Ticket Date" required>
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div>
+                                        <input type="date" class="form-control" value="<?php echo date("Y-m-d"); ?>" name="ticket_date" id="ticket_date" placeholder="Enter Ticket Date" required>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="expiry_date" class="required"><b>Schedule Time From</b></label>
-                                        <!-- <input type="text" class="form-control" name="expiry_date" id="expiry_date" required placeholder="Enter Expiry Date" autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" /> -->
-                                        <!-- <div class="input-group date" data-provide="datepicker">
-                                            <input type="text" class="form-control" name="expiry_date" id="expiry_date"
-                                                    placeholder="Enter Expiry Date">
-                                            <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-th"></span>
-                                            </div>
-                                        </div> -->
-                                        <input type="text" class="form-control" name="scheduled_time" id="scheduled_time" required />
-                                        <!-- <select id="scheduled_time" name="scheduled_time" class="form-control">
-                                            <option value="8-10">8-10</option>
-                                            <option value="10-12">10-12</option>
-                                            <option value="12-2">12-2</option>
-                                            <option value="2-4">2-4</option>
-                                            <option value="4-6">4-6</option>
-                                        </select> -->
+                                        <select id="scheduled_time" name="scheduled_time" class="nsm-field form-select" required>
+                                            <option value="">From</option>
+                                            <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                                                <option value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                            <?php } ?>
+                                        </select>
                                     </div>
                                     <div class="col-md-3">
                                         <label for="expiry_date" class="required"><b>Schedule Time To</b></label>
-                                        <input type="text" class="form-control" name="scheduled_time_to" id="scheduled_time_to" required />
+                                        <select id="scheduled_time_to" name="scheduled_time_to" class="nsm-field form-select " required>
+                                            <option value="">To</option>
+                                            <?php for($x=0;$x<time_availability(0,TRUE);$x++){ ?>
+                                                <option value="<?= time_availability($x); ?>"><?= time_availability($x); ?></option>
+                                            <?php } ?>
+                                        </select>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-md-3">
                                         <label for="purchase_order_number"><b>Purchase Order#</b></label>
                                         <input type="text" class="form-control" name="purchase_order_no"
                                             id="purchase_order_no" placeholder="Enter Purchase Order#"
-                                            autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                                            autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());" value=""/>
                                     </div>
+                                </div>
+                                <div class="row">        
                                     <div class="col-md-3">
-                                        <label for="zip"><b>Ticket Status</b></label>
+                                        <label for="service_type" class="block-label"><b>Service Type</b> <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-add-service-type">Add New</a></label>
+                                        <select class="form-control" name="service_type" id="service_type">
+                                            <?php foreach($serviceType as $sType){ ?>
+                                                <option value="<?php echo $sType->service_name; ?>"><?php echo $sType->service_name; ?></option>
+                                            <?php } ?>
+                                        </select>                                        
+                                    </div>                            
+                                    <div class="col-md-3">
+                                        <label for="ticket_status" class="block-label"><b>Ticket Status</b></label>
                                         <!-- <input type="text" class="form-control" name="ticket_status" id="ticket_status" 
-                                            placeholder="Enter Ticket Status"/> -->
+                                            placeholder="Enter Ticket Status" value="<?php //echo $tickets->ticket_status; ?>"/> -->
                                         <select id="ticket_status" name="ticket_status" class="form-control">
-                                            <!-- <option value="New">New</option> -->
+                                            <option value="New">New</option>
                                             <option value="Draft">Draft</option>
-                                            <option value="Scheduled" selected="">Scheduled</option>
+                                            <option value="Scheduled">Scheduled</option>
                                             <option value="Arrived">Arrived</option>
                                             <option value="Started">Started</option>
                                             <option value="Approved">Approved</option>
@@ -352,201 +395,80 @@ a.btn-primary.btn-md {
                                         </select>
                                     </div>
                                     <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Panel Type</b></label>
-                                            <select name="panel_type" id="panel_type" class="form-control" data-value="<?= isset($alarm_info) ? $alarm_info->panel_type : "" ?>">
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == ''){echo "selected";} } ?>  value="0">- none -</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AERIONICS'){echo "selected";} } ?> value="AERIONICS">AERIONICS</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'AlarmNet'){echo "selected";} } ?> value="AlarmNet">AlarmNet</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alarm.com'){echo "selected";} } ?> value="Alarm.com">Alarm.com</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Alula'){echo "selected";} } ?> value="Alula">Alula</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Bosch'){echo "selected";} } ?> value="Bosch">Bosch</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'DSC'){echo "selected";} } ?> value="DSC">DSC</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'ELK'){echo "selected";} } ?> value="ELK">ELK</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'FBI'){echo "selected";} } ?> value="FBI">FBI</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'GRI'){echo "selected";} } ?> value="GRI">GRI</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'GE'){echo "selected";} } ?> value="GE">GE</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell">Honeywell</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Touch'){echo "selected";} } ?> value="Honeywell Touch">Honeywell Touch</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell 3000'){echo "selected";} } ?> value="Honeywell 3000">Honeywell 3000</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell'){echo "selected";} } ?> value="Honeywell Vista">Honeywell Vista</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Vista with Sem'){echo "selected";} } ?> value="Honeywell Vista with Sem">Honeywell Vista with Sem</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Honeywell Lyric'){echo "selected";} } ?> value="Honeywell Lyric">Honeywell Lyric</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'IEI'){echo "selected";} } ?> value="IEI">IEI</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'MIER'){echo "selected";} } ?> value="MIER">MIER</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG'){echo "selected";} } ?> value="2 GIG">2 GIG</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG Go Panel 2'){echo "selected";} } ?> value="2 GIG Go Panel 2">2 GIG Go Panel 2</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == '2 GIG Go Panel 3'){echo "selected";} } ?> value="2 GIG Go Panel 3">2 GIG Go Panel 3</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys'){echo "selected";} } ?> value="Qolsyx">Qolsys</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 2'){echo "selected";} } ?> value="Qolsys IQ Panel 2">Qolsys IQ Panel 2</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 2 Plus'){echo "selected";} } ?> value="Qolsys IQ Panel 2 Plus">Qolsys IQ Panel 2 Plus</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Qolsys IQ Panel 3'){echo "selected";} } ?> value="Qolsys IQ Panel 3">Qolsys IQ Panel 3</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Custom'){echo "selected";} } ?> value="Custom">Custom</option>
-                                                <option <?php if(isset($alarm_info)){ if($alarm_info->panel_type == 'Other'){echo "selected";} } ?> value="Other">Other</option>
-                                            </select>
+                                        <label for="panel_type" class="block-label"><b>Panel Type</b> <a href="javascript:void(0);" id="btn-quick-add-panel-type" class="btn-small nsm-button">Add New</a></label>                                            
+                                        <select name="panel_type" id="panel_type" class="form-control" data-value="">
+                                            <?php foreach($settingPanelTypes as $panelType){ ?>
+                                                <option value="<?= $panelType->name; ?>"><?= $panelType->name; ?></option>
+                                            <?php } ?>
+                                        </select>
                                     </div>
                                     <div class="col-md-3" id="technicianDiv">
-                                        <label for="purchase_order_number"><b>Assigned Technician</b></label>
+                                        <label for="appointment-user" class="block-label"><b>Assigned Technician</b></label>
                                         <!-- <input type="text" class="form-control" name="assign_tech" id="assign_tech" /> -->
-                                        <select class="form-control nsm-field form-select" name="assign_tech[]" id="appointment-user" multiple="multiple" >
+                                        <select class="form-control nsm-field form-select" name="assign_tech[]" id="appointment-user" multiple="multiple" tabindex="-1" aria-hidden="true" required>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row" style="background-color:white;">
+                                <div class="row">                                    
                                     <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Service Type</b></label>
-                                        <div class="input-group">
-                                            <!-- <select class="form-control" name="service_type" id="service_type">
-                                                <?php //foreach($serviceType as $sType){ ?>
-                                                    <option value="<?php //echo $sType->service_name; ?>"><?php //echo $sType->service_name; ?></option> -->
-                                                <?php //} ?>
-                                            <!-- </select> -->
-                                            <select id="service_type" name="service_type" class="form-control">
-                                                <option value="Services">Services</option>
-                                                <option value="Event">Event</option>
-                                                <option value="Estimate">Estimate</option>
-                                                <option value="Job">Job</option>
-                                            </select>
-                                            <!-- <span class="input-group-btn">
-                                                <a href="#" class="btn btn-success" data-toggle="modal" data-target="#addServiceType">Add New</a>
-                                            </span> -->
-                                        </div><!-- /input-group -->
-                                    </div>
-                                    <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Warranty Type</b></label>
+                                        <label for="warranty_type" class="block-label"><b>Warranty Type</b></label>
                                         <select id="warranty_type" name="warranty_type" data-customer-source="dropdown" class="form-control" >
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == ""){ echo 'selected'; } } ?> value="">Select</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Limited. 90 Days"){ echo 'selected'; } } ?> value="Limited. 90 Days">Limited 90 Days</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "1 Year"){ echo 'selected'; } } ?>  value="1 Year">1 Year</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "$25 Trip"){ echo 'selected'; } } ?>  value="$25 Trip">$25 Trip</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "$50 Trip and $65 Deductible"){ echo 'selected'; } } ?>  value="$50 Trip and $65 Deductible">$50 Trip and $65 Deductible</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "Extended"){ echo 'selected'; } } ?>  value="Extended">Extended</option>
-                                            <option <?php if(isset($alarm_info)){ if($alarm_info->warranty_type == "None"){ echo 'selected'; } } ?>  value="None">None</option>
+                                            <option value="">Select</option>
+                                            <option value="Limited. 90 Days">Limited 90 Days</option>
+                                            <option value="1 Year">1 Year</option>
+                                            <option value="$25 Trip">$25 Trip</option>
+                                            <option value="$50 Trip and $65 Deductible">$50 Trip and $65 Deductible</option>
+                                            <option value="Extended">Extended</option>
+                                            <option value="None">None</option>
                                         </select>
                                     </div>
                                     <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Created By</b></label>
-                                        <!-- <input type="text" class="form-control" name="scheduled_time" id="employeeID" /> -->
-                                        <select class="form-control mb-3" name="employee_id">
-                                            <option value="0">Select Name</option>
-                                            <?php foreach($users_lists as $ulist){ ?>
-                                                <option <?php if($ulist->id == logged('id')){ echo "selected";} ?> value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                        <label for="plan_type" class="block-label"><b>Plan Type</b> <a href="javascript:void(0);" class="btn-small nsm-button" id="btn-quick-add-plan-type">Add New</a></label>
+                                        <select class="form-control" name="plan_type" id="plan_type">
+                                            <?php foreach($settingsPlanTypes as $planType){ ?>
+                                                <option value="<?= $planType->name; ?>"><?= $planType->name; ?></option>
                                             <?php } ?>
                                         </select>
                                     </div>
                                     <div class="col-md-3 form-group">
-                                        <label for="zip"><b>Job Description</b></label>
-                                        <textarea class="form-control" name="job_description"></textarea>
-                                    </div>
-                                </div>
-                                <div class="row" style="background-color:white;font-size:16px;">
-                                    <div class="col-md-3">
-                                        <a href="#" style="color:#02A32C;"><b>Items list</b></a> | <b>Items Summary</b>
-                                    </div>
-                                    <div class="col-md-6">
-                                    </div>
-                                    <div class="col-md-3" align="right">
-                                        <b>Show qty as: </b>
-                                        <select class="dropdown">
-                                            <option>Quantity</option>
+                                        <label for="zip" class="block-label"><b>Created By</b></label>
+                                        <!-- <input type="text" class="form-control" name="scheduled_time" id="employeeID" /> -->
+                                        <select class="form-control mb-3" name="employee_id" id="employee_id">
+                                            <option value="0">Select Name</option>
+                                            <?php foreach($users_lists as $ulist){ ?>
+                                                <option value="<?php echo $ulist->id ?>"><?php echo $ulist->FName .' '.$ulist->LName; ?></option>
+                                            <?php } ?>
                                         </select>
                                     </div>
+                                    <!-- <div class="col-md-3 form-group mt-3">
+                                        <label for="job_description"><b>Job Description</b></label>
+                                        <textarea class="form-control" name="job_description" id="job_description"></textarea>
+                                    </div> -->
                                 </div>
                                 <div class="row" id="plansItemDiv" style="background-color:white;">
+                                    <h6 class='card_header custom-ticket-header'>Item List</h6>
                                     <div class="col-md-12 table-responsive">
-                                        <!-- <table class="table table-hover">
-                                            <input type="hidden" name="count" value="0" id="count">
-                                            <thead>
-                                            <tr>
-                                                <th>Type</th>
-                                                <th>Description</th>
-                                                <th width="100px">Quantity</th>
-                                                <th>Location</th>
-                                                <th width="100px">Cost</th>
-                                                <th width="100px">Discount</th>
-                                                <th>Tax(%)</th>
-                                                <th>Total</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="table_body">
-                                            <tr>
-                                                <td><select name="item_type[]" class="form-control">
-                                                        <option value="product">Product</option>
-                                                        <option value="material">Material</option>
-                                                        <option value="service">Service</option>
-                                                    </select></td>
-                                                <td><input type="text" class="form-control getItems"
-                                                        onKeyup="getItems(this)" name="item[]">
-                                                    <ul class="suggestions"></ul>
-                                                </td>
-                                                <td><input type="text" class="form-control quantity" name="quantity[]"
-                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                                <td><input type="text" class="form-control" name="location[]"></td>
-                                                <td><input type="number" class="form-control price" name="price[]"
-                                                        data-counter="0" id="price_0" min="0" value="0"></td>
-                                                <td><input type="number" class="form-control discount" name="discount[]"
-                                                        data-counter="0" id="discount_0" min="0" value="0" readonly></td>
-                                                <td><span id="span_tax_0">0.00 (7.5%)</span></td>
-                                                <td><span id="span_total_0">0.00</span></td>
-                                            </tr>
-                                            </tbody>
-                                        </table> -->
-                                        <table class="table table-hover">
-                                            <input type="hidden" name="count" value="0" id="count">
+                                        <input type="hidden" name="count" value="0" id="count">
+                                        <table class="table table-hover table-borderless">
                                             <thead style="background-color:#E9E8EA;">
                                             <tr>
                                                 <th>Name</th>
-                                                <th>Group</th>
+                                                <th style="width:20%;">Group</th>
                                                 <!-- <th>Description</th> -->
-                                                <th width="150px">Quantity</th>
+                                                <th style="width:8%;">Quantity</th>
                                                 <!-- <th>Location</th> -->
-                                                <th width="150px">Price</th>
-                                                <th class="hidden_mobile_view" width="150px">Discount</th>
-                                                <th class="hidden_mobile_view" width="150px">Tax (Change in %)</th>
-                                                <th class="hidden_mobile_view">Total</th>
-                                                <th class=""></th>
+                                                <th style="width:8%;">Price</th>
+                                                <th class="hidden_mobile_view" style="width:8%;">Discount</th>
+                                                <th class="hidden_mobile_view" style="width:8%;">Tax</th>
+                                                <th class="hidden_mobile_view" style="width:8%;">Total</th>
+                                                <th class="" style="width:3%;"></th>
                                             </tr>
                                             </thead>
-                                            <tbody id="jobs_items_table_body">
-                                            <!-- <tr style="display:;">
-                                                <td width="30%">
-                                                    <input type="text" class="form-control getItems"
-                                                        onKeyup="getItems(this)" name="items[]">
-                                                    <ul class="suggestions"></ul>
-                                                    <div class="show_mobile_view"><span class="getItems_hidden"></span></div>
-                                                    <input type="hidden" name="item_id[]" id="itemid" class="itemid" value="0">
-                                                    <input type="hidden" name="packageID[]" value="0">
-                                                </td>
-                                                <td width="20%">
-                                                <div class="dropdown-wrapper">
-                                                    <select name="item_type[]" id="item_typeid" class="form-control">
-                                                        <option value="product">Product</option>
-                                                        <option value="material">Material</option>
-                                                        <option value="service">Service</option>
-                                                        <option value="fee">Fee</option>
-                                                    </select>
-                                                </div>
-
-                                                    </td>
-                                                <td width="10%"><input type="number" class="form-control quantity mobile_qty" name="quantity[]"
-                                                        data-counter="0" id="quantity_0" value="1"></td>
-                                                <td width="10%"><input type="text" class="form-control price price hidden_mobile_view" name="price[]"
-                                                        data-counter="0" id="price_0" min="0" value="0"> <input type="hidden" class="priceqty" id="priceqty_0" value="0"> 
-                                                        <div class="show_mobile_view">
-                                                        </div><input id="priceM_qty0" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty"></td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="number" class="form-control discount" name="discount[]"
-                                                        data-counter="0" id="discount_0" min="0" value="0"></td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]"
-                                                        data-counter="0" id="tax1_0" min="0" value="0" >
-                                                        </td>
-                                                <td width="10%" class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]"
-                                                        data-counter="0" id="item_total_0" min="0" value="0">
-                                                        $<span id="span_total_0">0.00</span></td>
-                                                <td><a href="#" class="remove btn btn-sm btn-danger" id="0"><i class="fa fa-trash" aria-hidden="true"></i>Remove</a></td>
-                                            </tr> -->
-                                            </tbody>
+                                            <tbody id="jobs_items_table_body"></tbody>
                                         </table>
-                                        <a class="link-modal-open" href="#" id="add_another_items" data-toggle="modal" data-target="#item_list"><span class="fa fa-plus-square fa-margin-right"></span>Add Items</a> &emsp;
-                                        <span class="link-modal-open nsm-link" id="createNewItem" style="border:solid white 1px;background-color:white;"><span class="fa fa-plus-square fa-margin-right"></span> Create New Item</span>
+                                        <button class="link-modal-open nsm-button primary small link-modal-open" type="button" id="add_another_items">
+                                            <i class='bx bx-plus'></i>Add Item
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -560,50 +482,89 @@ a.btn-primary.btn-md {
                             <div class="nsm-card-content">
                                 <div class="row">
                                     <div class="col-md-8">
+                                        <div class="row">
+                                            <div class="form-group col-md-3">
+                                                <div class="select-wrap">
+                                                    <b>Payment Method</b>
+                                                    <select name="payment_method" id="payment_method" class="form-control">
+                                                        <!-- <option value="">Choose method</option> -->
+                                                        <option value="Cash">Cash</option>
+                                                        <option value="Check">Check</option>
+                                                        <option value="Credit Card">Credit Card</option>
+                                                        <option value="Debit Card">Debit Card</option>
+                                                        <option value="ACH">ACH</option>
+                                                        <option value="Invoicing">Invoicing</option>
+                                                        <option value="Warranty Work">Warranty Work</option>
+                                                        <option value="Home Owner Financing">Home Owner Financing</option>
+                                                        <option value="Other Payment Type">Other Payment Type</option>
+                                                    </select>
+                                                </div> 
+                                            </div>     
+                                            <div class="form-group col-md-3">
+                                                <b>Amount</b>
+                                                <input type="number" class="form-control payment_amount" name="payment_amount" id="payment_amount" placeholder="Enter Amount" />
+                                            </div>
+                                            <div class="form-group col-md-3">
+                                                <b>Billing Date</b>
+                                                <select name="billing_date" id="" class="form-control">
+                                                    <option value="">0</option>
+                                                    <?php for ($i=1; $i<=31; $i++ ) { ?>
+                                                    <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                                                    <?php } ?>
+                                                </select>
+                                            </div>                                            
+                                        </div>
+                                        <div class="row" style="">
+                                            <div class="col-12 col-md-12">
+                                                <?php include viewPath('tickets/_payment_method_fields'); ?>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <table class="table" style="text-align:left;">
+                                        <table class="table table-borderless" style="text-align:left;">
                                             <tr>
                                                 <td>Subtotal</td>
                                                 <!-- <td></td> -->
-                                                <td colspan="2" align="right"><span id="span_sub_total_invoice">0.00</span> <input type="hidden" name="subtotal" id="item_total" value="0"></td>
+                                                <td colspan="2" align="right"><span id="span_sub_total_invoice">0.00</span> <input type="hidden" name="subtotal" id="item_total" value="0.00"></td>
                                             </tr>
                                             <tr>
                                                 <td>Taxes</td>
                                                 <!-- <td></td> -->
-                                                <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input" value="0"></td>
+                                                <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input" value="0.00"></td>
                                             </tr>
                                             <tr>
                                                 <td colspan="2">Installation Cost</td>
                                                 <!-- <td></td> -->
                                                 <td align="right">
-                                                    <input type="number" step="any" min="0" class="form-control" id="adjustment_ic" name="installation_cost" value="0" required="" style="text-align:right;" />
+                                                    <input type="number" step="any" min="0" class="form-control" id="adjustment_ic" name="installation_cost" value="0.00" required="" style="text-align:right;width:50%;" />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="2">One time (Program and Setup)</td>
                                                 <!-- <td></td> -->
                                                 <td align="right">
-                                                    <input type="number" style="text-align:right;" step="any" min="0" class="form-control" id="otps" name="otps" value="0" required="" />
+                                                    <input type="number" style="text-align:right;width:50%;" step="any" min="0" class="form-control" id="otps" name="otps" value="0.00" required="" />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="2">Monthly Monitoring</td>
                                                 <!-- <td></td> -->
                                                 <td align="right">
-                                                    <input type="number" style="text-align:right;" step="any" min="0" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="0" required="" />
+                                                    <input type="number" style="text-align:right;width:50%;" step="any" min="0" class="form-control" id="adjustment_mm" name="monthly_monitoring" value="0.00" required="" />
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="2"><input type="text" class="form-control" placeholder="Adjustment" name="adjustment"></td>
-                                                <td align="right">
-                                                    <input type="number" style="text-align:right;" min="0"  class="form-control" name="adjustment_value" id="adjustment_input" value="0">
+                                                <td colspan="2">
+                                                    <input type="text" class="form-control" placeholder="Adjustment" name="adjustment" value="" style="width:80%;display:inline;">
+                                                    <span id="modal-help-popover-adjustment" class='bx bx-fw bx-help-circle' data-bs-trigger="hover" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="" style="margin-right: -19px;"></span>
                                                 </td>
-                                                
+                                                <td align="right">
+                                                    <input type="number" step="any" style="width:50%;float:right;text-align:right;" class="form-control adjustment_input" name="adjustment_value" id="adjustment_input" value="0.00">
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Markup</td>
-                                                <td><a href="#" style="color:#02A32C;">set markup</a></td>
+                                                <td></td>
                                                 <td align="right">0.00<input type="hidden" name="markup" id="markup_input_form" class="markup_input" value="0"></td>
                                             </tr>
                                             <tr>
@@ -614,265 +575,23 @@ a.btn-primary.btn-md {
                                         </table>
                                     </div>
                                 </div>
-                                <div class="row">                   
-                                    <div class="form-group col-md-4">
-                                        <div class="select-wrap">
-                                            <b>Payment Method</b>
-                                                <select name="payment_method" id="payment_method" class="form-control">
-                                                    <!-- <option value="">Choose method</option> -->
-                                                    <option value="Cash">Cash</option>
-                                                    <option value="Check">Check</option>
-                                                    <option value="Credit Card">Credit Card</option>
-                                                    <option value="Debit Card">Debit Card</option>
-                                                    <option value="ACH">ACH</option>
-                                                    <option value="Venmo">Venmo</option>
-                                                    <option value="Paypal">Paypal</option>
-                                                    <option value="Square">Square</option>
-                                                    <option value="Invoicing">Invoicing</option>
-                                                    <option value="Warranty Work">Warranty Work</option>
-                                                    <option value="Home Owner Financing">Home Owner Financing</option>
-                                                    <option value="e-Transfer">e-Transfer</option>
-                                                    <option value="Other Credit Card Professor">Other Credit Card Professor</option>
-                                                    <option value="Other Payment Type">Other Payment Type</option>
-                                                </select>
-                                            </div> 
-                                        </div>     
-                                        <div class="form-group col-md-4">
-                                            <b>Amount<small class="help help-sm"> ( $ )</small></b>
-                                            <input type="text" class="form-control payment_amount" name="payment_amount" id="payment_amount" placeholder="Enter Amount" />
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <b>Billing Date</b>
-                                            <!-- <input type="date" class="form-control input-element border-top-0 border-right-0 border-left-0" name="billing_date" id=""  /> -->
-                                            <select name="billing_date" id="" class="form-control">
-                                                    <option value="">0</option>
-                                                    <?php for ($i=1; $i<=31; $i++ ) { ?>
-                                                    <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-                                                    <?php } ?>
-                                                </select>
-                                        </div>
-                                </div>
-                                
-                                <div class="row">                   
-                                    <div class="col-md-12">
-                                                <div id="invoicing" style="display:none;">
-                                                    <!-- <input type="checkbox" id="same_as"> <b>Same as above Address</b> <br><br> -->
-                                                    <div class="row">                   
-                                                        <div class="col-md-6 form-group">
-                                                            <label for="monitored_location" class="label-element">Mail Address</label>
-                                                            <input type="text" class="form-control input-element" name="mail-address"
-                                                                id="mail-address" placeholder="Monitored Location"/>
-                                                        </div>
-                                                        <div class="col-md-6 form-group">
-                                                            <label for="city" class="label-element">City</label>
-                                                                <input type="text" class="form-control input-element" name="mail_locality" id="mail_locality" placeholder="Enter Name" />
-                                                        </div>
-                                                        <div class="col-md-6 form-group">
-                                                            <label for="state" class="label-element">State</label>
-                                                            <input type="text" class="form-control input-element" name="mail_state"
-                                                                id="mail_state" 
-                                                                placeholder="Enter State"/>
-                                                        </div>
-                                                    <!-- </div>
-                                                    <div class="row">   -->
-                                                        <div class="col-md-6 form-group">
-                                                            <label for="zip" class="label-element">ZIP</label> 
-                                                                <input type="text" id="mail_postcode" name="mail_postcode" class="form-control input-element"  placeholder="Enter Zip"/>
-                                                        </div>
-
-                                                        <div class="col-md-6 form-group">
-                                                            <label for="cross_street" class="label-element">Cross Street</label>
-                                                            <input type="text" class="form-control input-element" name="mail_cross_street"
-                                                                id="mail_cross_street" 
-                                                                placeholder="Cross Street"/>
-                                                        </div>                                        
-                                                    </div>
-                                                </div>
-                                            <div id="check_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Check Number</label>
-                                                        <input type="text" class="form-control input-element" name="check_number" id="check_number"/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Routing Number</label>
-                                                        <input type="text" class="form-control input-element" name="routing_number" id="routing_number"/>
-                                                    </div>                                             
-                                                </div>
-                                                <div class="row">
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Number</label>
-                                                        <input type="text" class="form-control input-element" name="account_number" id="account_number"/>
-                                                    </div>                                       
-                                                </div>
-                                            </div>
-                                            <div id="credit_card" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Credit Card Number</label>
-                                                        <input type="text" class="form-control input-element" name="credit_number" id="credit_number" placeholder="0000 0000 0000 000" />
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
-                                                        <input type="text" class="form-control input-element" name="credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
-                                                    </div>  
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">CVC</label>
-                                                        <input type="text" class="form-control input-element" name="credit_cvc" id="credit_cvc" placeholder="CVC"/>
-                                                    </div>                                             
-                                                </div>
-                                            </div>
-                                            <div id="debit_card" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Credit Card Number</label>
-                                                        <input type="text" class="form-control input-element" name="debit_credit_number" id="credit_number2" placeholder="0000 0000 0000 000" />
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
-                                                        <input type="text" class="form-control input-element" name="debit_credit_expiry" id="credit_expiry" placeholder="MM/YYYY"/>
-                                                    </div>  
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">CVC</label>
-                                                        <input type="text" class="form-control input-element" name="debit_credit_cvc" id="credit_cvc" placeholder="CVC"/>
-                                                    </div>                                            
-                                                </div>
-                                            </div>
-                                            <div id="ach_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Routing Number</label>
-                                                        <input type="text" class="form-control input-element" name="ach_routing_number" id="ach_routing_number" />
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Number</label>
-                                                        <input type="text" class="form-control input-element" name="ach_account_number" id="ach_account_number" />
-                                                    </div>  
-                                                </div>
-                                            </div>
-                                            <div id="venmo_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Credential</label>
-                                                        <input type="text" class="form-control input-element" name="account_credentials" id="account_credentials"/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Note</label>
-                                                        <input type="text" class="form-control input-element" name="account_note" id="account_note"/>
-                                                    </div>  
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Confirmation</label>
-                                                        <input type="text" class="form-control input-element" name="confirmation" id="confirmation"/>
-                                                    </div>                                            
-                                                </div>
-                                            </div>
-                                            <div id="paypal_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Credential</label>
-                                                        <input type="text" class="form-control input-element" name="paypal_account_credentials" id="paypal_account_credentials"/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Note</label>
-                                                        <input type="text" class="form-control input-element" name="paypal_account_note" id="paypal_account_note"/>
-                                                    </div>  
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Confirmation</label>
-                                                        <input type="text" class="form-control input-element" name="paypal_confirmation" id="paypal_confirmation"/>
-                                                    </div>                                            
-                                                </div>
-                                            </div>
-                                            <div id="square_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Credential</label>
-                                                        <input type="text" class="form-control input-element" name="square_account_credentials" id="square_account_credentials"/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Note</label>
-                                                        <input type="text" class="form-control input-element" name="square_account_note" id="square_account_note"/>
-                                                    </div>  
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Confirmation</label>
-                                                        <input type="text" class="form-control input-element" name="square_confirmation" id="square_confirmation"/>
-                                                    </div>                                            
-                                                </div>
-                                            </div>
-                                            <div id="warranty_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Credential</label>
-                                                        <input type="text" class="form-control input-element" name="warranty_account_credentials" id="warranty_account_credentials"/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Note</label>
-                                                        <input type="text" class="form-control input-element" name="warranty_account_note" id="warranty_account_note"/>
-                                                    </div>                                         
-                                                </div>
-                                            </div>
-                                            <div id="home_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Credential</label>
-                                                        <input type="text" class="form-control input-element" name="home_account_credentials" id="home_account_credentials"/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Note</label>
-                                                        <input type="text" class="form-control input-element" name="home_account_note" id="home_account_note"/>
-                                                    </div>                                         
-                                                </div>
-                                            </div>
-                                            <div id="e_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Credential</label>
-                                                        <input type="text" class="form-control input-element" name="e_account_credentials" id="e_account_credentials"/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Account Note</label>
-                                                        <input type="text" class="form-control input-element" name="e_account_note" id="e_account_note"/>
-                                                    </div>                                         
-                                                </div>
-                                            </div>
-                                            <div id="other_credit_card" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Credit Card Number</label>
-                                                        <input type="text" class="form-control input-element" name="other_credit_number" id="other_credit_number" placeholder="0000 0000 0000 000" />
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">Credit Card Expiration</label>
-                                                        <input type="text" class="form-control input-element" name="other_credit_expiry" id="other_credit_expiry" placeholder="MM/YYYY"/>
-                                                    </div>  
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type" class="label-element">CVC</label>
-                                                        <input type="text" class="form-control input-element" name="other_credit_cvc" id="other_credit_cvc" placeholder="CVC"/>
-                                                    </div>                                             
-                                                </div>
-                                            </div>
-                                            <div id="other_payment_area" style="display:none;">
-                                                <div class="row">                   
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type">Account Credential</label>
-                                                        <input type="text" class="form-control input-element" name="other_payment_account_credentials" id="other_payment_account_credentials"/>
-                                                    </div>
-                                                    <div class="form-group col-md-6">
-                                                        <label for="job_type">Account Note</label>
-                                                        <input type="text" class="form-control input-element" name="other_payment_account_note" id="other_payment_account_note"/>
-                                                    </div>                                         
-                                                </div>
-                                            </div>
-                                    </div>
-                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="nsm-card primary">
+                            <div class="nsm-card-content">
                                 <div class="row">
                                 <!-- <div class="form-group col-md-12"> -->
                                     <div class="col-md-4">
-                                        <b>Sales Rep's Name</b>
+                                        <b>Sales Representative Name</b>
                                         <input type="text" name="sales_rep_view" class="form-control" value="<?php echo logged('FName').' '.logged('LName'); ?>">
                                         <input type="hidden" name="sales_rep" class="form-control" value="<?php echo logged('id'); ?>">
                                     </div>
                                     <div class="col-md-4">
-                                        <b>Cell Phone</b>
+                                        <b>Mobile Number</b>
                                         <input type="text" name="sales_rep_no" class="form-control" value="<?php echo logged('mobile'); ?>" placeholder="Enter Cellphone Number">
                                     </div>                       
                                     <div class="col-md-4">
@@ -883,7 +602,7 @@ a.btn-primary.btn-md {
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label><h6>Instructions: </h6></label><br> <span class="help help-sm help-block">Optional internal notes, will not appear to customer</span>
+                                            <label><h6><b>Instructions / Notes </b><span style="margin-left:10px;" class="bx bxs-help-circle" id="help-popover-instructions"></span></h6></label>   
                                             <textarea name="instructions" cols="40" rows="2" class="form-control"></textarea>
                                         </div>
                                     </div>
@@ -891,21 +610,20 @@ a.btn-primary.btn-md {
                                 <div class="row">
                                     <div class="col-md-6 col-sm-12">
                                         <div class="form-group">
-                                            <label><h6>Message to Customer</h6></label><br> <span class="help help-sm help-block">Add a message that will be displayed on the Ticket.</span>
+                                            <label><h6><b>Message to Customer</b><span style="margin-left:10px;" class="bx bxs-help-circle" id="help-popover-message-to-customer"></span></h6></label>
                                             <textarea name="message" cols="40" rows="4" class="form-control">I would be happy to have an opportunity to work with you.</textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-12">
                                         <div class="form-group">
-                                            <label><h6>Terms &amp; Conditions</h6></label><br> <span class="help help-sm help-block">Mention your company's T&amp;C that will appear on the Ticket.</span>
+                                        <label><h6><b>Terms &amp; Conditions</b><span style="margin-left:10px;" class="bx bxs-help-circle" id="help-popover-terms-conditions"></span></h6></label>
                                             <textarea name="terms_conditions" cols="40" rows="4" class="form-control">YOU EXPRESSLY AUTHORIZE ADI AND ITS AFFILIATES TO RECEIVE PAYMENT FOR THE LISTED SERVICES ABOVE. BY SIGNING BELOW BUYER AGREES TO THE TERMS OF YOUR SERVICE AGREEMENT AND ACKNOWLEDGES RECEIPT OF A COPY OF THIS SERVICE AGREEMENT.</textarea>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="row" style="background-color:white;">
                                     <div class="col-md-6">
-                                        <label for="billing_date"><h6>Attachments</h6></label><br> 
-                                        <span class="help help-sm help-block">Optionally attach files to this invoice. Allowed type: pdf, doc, dock, png, jpg, gif</span>
+                                        <label for="billing_date"><h6>Attachments <span style="margin-left:10px;" class="bx bxs-help-circle" id="help-popover-attachment"></span></h6></label>
                                         <input type="file" name="attachments" id="attachments"
                                                 class="form-control"/>
                                     </div>
@@ -1055,57 +773,56 @@ a.btn-primary.btn-md {
 </div>
 
 <?php echo form_close(); ?>
-            <!-- Modal -->
-            <div class="modal fade" id="item_list" tabindex="-1" role="dialog" aria-labelledby="newcustomerLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="newcustomerLabel">Item Lists</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
+        <div class="modal fade" id="quick-add-item" tabindex="-1"  aria-labelledby="quickAddServiceTicketLabel" aria-hidden="true">
+            <div class="modal-dialog modal-md" style="margin-top:5%;margin-left:31%;">
+                <div class="modal-content" style="width:700px !important;">
+                    <div class="modal-header">
+                        <span class="modal-title content-title" style="font-size: 17px;">Items List</span>
+                        <i class="bx bx-fw bx-x m-0 text-muted" data-bs-dismiss="modal" aria-label="name-button" name="name-button" style="cursor: pointer;"></i>
+                    </div>
+                    <div class="modal-body">
                             <div class="row">
-                                <div class="col-md-12">
-                                    <table id="modal_items_list" class="table-hover" style="width: 100%;">
+                                <div class="col-12 col-md-12 grid-mb">
+                                    <div class="nsm-field-group search">
+                                        <input type="text" class="nsm-field nsm-search form-control mb-2" id="search_field" for="quick-add-items-list" placeholder="Search List">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">                        
+                                <div class="col-sm-12">
+                                    <table id="quick-add-items-list" class="nsm-table" style="width: 100%;">
                                         <thead>
                                         <tr>
-                                            <td> Action</td>
-                                            <td> Name</td>
-                                            <td> On Hand</td>
-                                            <td> Price</td>
+                                            <td data-name="Add" style="width: 5% !important;"></td>
+                                            <td data-name="Name"><strong>Name</strong></td>
+                                            <td data-name="Type"><strong>Type</strong></td>
+                                            <td data-name="Qty"><strong>Stock</strong></td>
+                                            <td data-name="Price" style="text-align:right;"><strong>Price</strong></td>                                    
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <?php foreach($items as $item){ // print_r($item);
-                                                $item_qty = get_total_item_qty($item->id);    
-                                        ?>
-                                            <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
-                                                    <td style="width: 0% !important;">
-                                                        <button type="button"  data-dismiss="modal" class='btn btn-sm btn-light border-1 select_item2a' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>" data-location_name="<?= $item->location_name; ?>" data-location_id="<?= $item->location_id; ?>"><i class='bx bx-plus-medical'></i></button>
+                                        <?php foreach($items as $item){ ?>
+                                            <?php $item_qty = get_total_item_qty($item->id); ?>
+                                            <?php //if ($item_qty[0]->total_qty > 0) { ?>
+                                                <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
+                                                    <td class="nsm-text-primary">
+                                                        <button type="button"  data-dismiss="modal" class='nsm nsm-button default select_item' id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item_qty[0]->total_qty; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
                                                     </td>
-                                                    <td><?php echo $item->title; ?></td>
+                                                    <td class="nsm-text-primary"><?php echo $item->title; ?></td>
+                                                    <td class="nsm-text-primary"><?php echo $item->type; ?></td>
                                                     <td><?php echo $item_qty[0]->total_qty > 0 ? $item_qty[0]->total_qty : "0"; ?></td>
-                                                    <td><?php echo $item->price; ?></td>
+                                                    <td style="text-align:right;"><?php echo $item->price; ?></td>                                            
                                                 </tr>
-                                            
+                                            <?php //} ?>
                                         <?php } ?>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal-footer modal-footer-detail">
-                            <div class="button-modal-list">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
-
-            
+        </div>          
 
         <!-- Modal New Customer -->
         <div class="modal fade nsm-modal" id="modalNewCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -1126,6 +843,84 @@ a.btn-primary.btn-md {
                 </div>
             </div>
         </div>
+
+        <div class="modal fade nsm-modal fade" id="modal-quick-add-panel-type" tabindex="-1" aria-labelledby="modal-quick-add-panel-type-label" aria-hidden="true">
+            <div class="modal-dialog modal-md" style="margin-top:13%;">
+                <form id="quick-add-panel-type-form" method="POST">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title"> Quick Add : Panel Type</span>
+                            <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label for="panel-type-name" class="content-subtitle fw-bold d-block mb-2">Name </label>
+                                    <input type="text" name="panel_type_name" id="panel-type-name" class="nsm-field form-control" placeholder="" required>
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="modal-footer">                    
+                            <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="nsm-button primary" id="btn-quick-add-panel-type-submit">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+        <div class="modal fade nsm-modal fade" id="modal-quick-add-plan-type" tabindex="-1" aria-labelledby="modal-quick-add-plan-type-label" aria-hidden="true">
+            <div class="modal-dialog modal-md" style="margin-top:13%;">
+                <form id="quick-add-plan-type-form" method="POST">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title"> Quick Add : Plan Type</span>
+                            <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label for="plan-type-name" class="content-subtitle fw-bold d-block mb-2">Name </label>
+                                    <input type="text" name="plan_type_name" id="plan-type-name" class="nsm-field form-control" placeholder="" required>
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="modal-footer">                    
+                            <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="nsm-button primary" id="btn-quick-add-plan-type-submit">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>      
+
+        <?php //echo $file_selection; ?>
+        <!-- Modal Additional addServiceType -->
+        <div class="modal fade nsm-modal fade" id="modal-quick-add-service-type" tabindex="-1" aria-labelledby="modal-quick-add-service-type-label" aria-hidden="true">
+            <div class="modal-dialog modal-md" style="margin-top:13%;">
+                <form id="quick-add-service-type-form">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title"> Quick Add : Service Type</span>
+                            <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row" style="margin-top:0px;">
+                                <div class="col-md-12">
+                                    <label for="name"><span class="text-danger">*</span> Service Name</label>
+                                    <input type="text" class="form-control" name="addServiceTypevalue" id="addServiceTypevalue" required="" />
+                                </div>
+                            </div> 
+                        </div>
+                        <div class="modal-footer">                    
+                            <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="nsm-button primary btn-create-service-type">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div> 
 
 <?php //echo $file_selection; ?>
 <?php include viewPath('v2/pages/job/modals/new_customer'); ?>
@@ -1251,14 +1046,6 @@ a.btn-primary.btn-md {
     $(document).ready(function () {
         $('#sel-customer').select2();
         var customer_id = "<?php echo isset($_GET['customer_id']) ? $_GET['customer_id'] : '' ?>";
-
-        /*$('#customers')
-            .empty() //empty select
-            .append($("<option/>") //add option tag in select
-                .val(customer_id) //set value for option to post it
-                .text("<?php echo get_customer_by_id($_GET['customer_id'])->contact_name ?>")) //set a text for show in select
-            .val(customer_id) //select option of select2
-            .trigger("change"); //apply to select2*/
     });
 </script>
 <script type="module"  src="<?= base_url("assets/js/customer/dashboard/index.js") ?>"></script>
@@ -1549,10 +1336,223 @@ document.getElementById("payment_method").onchange = function() {
 <script>
     
 $(document).ready(function(){
- 
+
+    $("#quick-add-items-list").nsmPagination({itemsPerPage:10});
+    $("#search_field").on("input", debounce(function() {
+        tableSearch($(this));        
+    }, 1000));
+
+    $('#btn-quick-add-plan-type').on('click', function(){
+        $('#plan-type-name').val('');
+        $('#modal-quick-add-plan-type').modal('show');
+    });
+
+    $('#btn-quick-add-panel-type').on('click', function(){
+        $('#panel-type-name').val('');
+        $('#modal-quick-add-panel-type').modal('show');
+    });
+
+    $('#btn-quick-add-service-type').on('click', function(){
+        $('#modal-quick-add-service-type').modal('show');
+    });
+
+    $("#scheduled_time").on( 'change', function () {
+        var tag_id = this.value;
+        var end_time = moment.utc(tag_id,'hh:mm a').add(<?= $time_interval; ?>,'hour').format('h:mm a');
+
+        if(end_time === 'Invalid date') {
+            $('#scheduled_time_to').val("");
+        }else{
+            $('#scheduled_time_to').val(end_time);
+        }
+    });
+
+    $('#add_another_items').on('click', function(){
+        $('#quick-add-item').modal('show');
+    });
+
+    $('#quick-add-panel-type-form').on('submit', function(e){
+        e.preventDefault();
+        var url = base_url + 'tickets/_create_panel_type';
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: $('#quick-add-panel-type-form').serialize(),
+            success: function(data) {    
+                $('#btn-quick-add-panel-type-submit').html('Save');                   
+                if (data.is_success) {
+                    $('#modal-quick-add-panel-type').modal('hide');
+                    var panel_type_name = $('#panel-type-name').val();
+                    $('#panel_type').append($('<option>', {
+                        value: panel_type_name,
+                        text: panel_type_name
+                    }));
+                    $('#panel_type').val(panel_type_name);
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-quick-add-panel-type-submit').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $('#quick-add-plan-type-form').on('submit', function(e){
+        e.preventDefault();
+        var url = base_url + 'tickets/_create_plan_type';
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: $('#quick-add-plan-type-form').serialize(),
+            success: function(data) {    
+                $('#btn-quick-add-plan-type-submit').html('Save');                   
+                if (data.is_success) {
+                    $('#modal-quick-add-plan-type').modal('hide');
+                    var plan_type_name = $('#plan-type-name').val();
+                    $('#plan_type').append($('<option>', {
+                        value: plan_type_name,
+                        text: plan_type_name
+                    }));
+                    $('#plan_type').val(plan_type_name);
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-quick-add-plan-type-submit').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $('#quick-add-service-type-form').on('submit',function(e){
+        e.preventDefault();
+
+        $.ajax({
+            type: "POST",
+            url: base_url + "ticket/_create_service_type",
+            dataType: 'json',
+            data: $('#quick-add-service-type-form').serialize(),
+            success: function(data) {    
+                $('.btn-create-service-type').html('Save');                   
+                if (data.is_success) {
+                    $('#modal-quick-add-service-type').modal('hide');
+                    $('#service_type').append( new Option(data.service_type,data.service_type) );    
+                    $('#service_type').val(data.service_type);                 
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('.btn-create-service-type').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $('#modal-help-popover-adjustment').popover({
+        placement: 'top',
+        html: true,
+        trigger: "hover focus",
+        content: function() {
+            return 'Optional it allows you to adjust the total amount Eg. +10 or -10.';
+        }
+    });
+
+    $('#help-popover-message-to-customer').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return 'Add a message that will be displayed on the Ticket.';
+        } 
+    });
+
+    $('#help-popover-terms-conditions').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return "Mention your company's T&amp;C that will appear on the Ticket.";
+        } 
+    });
+
+    $('#help-popover-instructions').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return "Optional internal notes, will not appear to customer";
+        } 
+    });
+
+    $('#help-popover-attachment').popover({
+        placement: 'top',
+        html : true, 
+        trigger: "hover focus",
+        content: function() {
+            return "Optional attach files to this invoice. Allowed type: pdf, doc, dock, png, jpg, gif";
+        } 
+    });   
+
     $('#sel-customer_t').change(function(){
-        var customer_selected = $(this).val();
-        load_customer_data(customer_selected);
+        var id  = $(this).val();
+        $.ajax({
+            type: 'POST',
+            url:"<?php echo base_url(); ?>accounting/addLocationajax",
+            data: {id : id },
+            dataType: 'json',
+            success: function(response){            
+                var phone = response['customer'].phone_h;
+                var mobile = response['customer'].phone_m;
+                var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+                var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+            
+            var service_location = response['customer'].    l_add + ' ' + response['customer'].city + ', ' + response['customer'].state + ' ' + response['customer'].zip_code;
+            $("#service_location").val(service_location);
+            $("#customer_city").val(response['customer'].city);
+            $("#customer_state").val(response['customer'].state);
+            $("#customer_zip").val(response['customer'].zip_code);
+            $("#customer_phone").val(response['customer'].phone_m);
+            $("#business_name").val(response['customer'].business_name);
+
+            var map_source = 'http://maps.google.com/maps?q=' + service_location +
+                        '&output=embed';
+            var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +
+                '" height="370" width="100%" style=""></iframe>';
+            $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
+        
+            },error: function(response){
+        
+            }
+        });
     });
 
     $("#new_customer_form").submit(function(e) {    
@@ -1656,33 +1656,33 @@ $(document).ready(function(){
 <script src="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css" rel="stylesheet" />
 <script>
-$('#scheduled_time').timepicker({
-  timeFormat: 'h:mm a',
-  interval: 30,
-  minTime: '8',
-  maxTime: '11:00 PM',
-  startTime: '8:00 AM',
-  dynamic: false, 
-  dropdown: true,
-  scrollbar: true
-});
+// $('#scheduled_time').timepicker({
+//   timeFormat: 'h:mm a',
+//   interval: 30,
+//   minTime: '8',
+//   maxTime: '11:00 PM',
+//   startTime: '8:00 AM',
+//   dynamic: false, 
+//   dropdown: true,
+//   scrollbar: true
+// });
 
-$('#scheduled_time')
-  .timepicker('option', 'change', function(time) {
-    var later = new Date(time.getTime() + (2 * 60 * 60 * 1000));
-    $('#scheduled_time_to').timepicker('option', 'minTime', time);
-    $('#scheduled_time_to').timepicker('setTime', later);
-  });
+// $('#scheduled_time')
+//   .timepicker('option', 'change', function(time) {
+//     var later = new Date(time.getTime() + (2 * 60 * 60 * 1000));
+//     $('#scheduled_time_to').timepicker('option', 'minTime', time);
+//     $('#scheduled_time_to').timepicker('setTime', later);
+//   });
 
-$('#scheduled_time_to').timepicker({
-  timeFormat: 'hh:mm a',
-  interval: 30,
-  maxTime: '11:00 PM',
-  startTime: '08:00 AM',
-  dynamic: false,
-  dropdown: true,
-  scrollbar: true
-});
+// $('#scheduled_time_to').timepicker({
+//   timeFormat: 'hh:mm a',
+//   interval: 30,
+//   maxTime: '11:00 PM',
+//   startTime: '08:00 AM',
+//   dynamic: false,
+//   dropdown: true,
+//   scrollbar: true
+// });
 
 </script>
 <script>
@@ -1696,10 +1696,6 @@ $('#modal_items_list').DataTable({
     ],
     "ordering": false,
 });
-</script>
-
-<script>
-    CKEDITOR.replace('editor');
 </script>
 <script>
 
