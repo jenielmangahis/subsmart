@@ -12,7 +12,7 @@ class Action
     }
 }
 
-class CustomerDashboardQuickActions extends MY_Controller
+class CustomerDashboardQuickActions extends MYF_Controller
 {
     const ONE_MB = 1048576;
 

@@ -57,7 +57,14 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         </select>
     </div>
     <div  id="filter-subscription-status">
-
+    <select class="nsm-field form-select filterSubscriptionStatus" style="width: 90%;border: none;" onChange="filterSubscription()">
+            <option value="">All Status</option>
+            <option value="Active w/RAR">Active w/RAR</option>
+            <option value="Active w/RQR">Active w/RQR</option>
+            <option value="Active w/RMR">Active w/RMR</option>
+            <option value="Active w/RYR">Active w/RYR</option>
+            <option value="Inactive w/RMM">Inactive w/RMM</option>
+        </select>
     </div>
     <div class="nsm-card-content"
         style="  height: calc(100% - 120px); display: <?php echo $isListView ? 'block' : 'none'; ?>"

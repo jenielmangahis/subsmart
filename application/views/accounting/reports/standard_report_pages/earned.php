@@ -56,6 +56,7 @@
                                                 <th>DESCRIPTION</th>
                                                 <th>STATUS</th>
                                                 <th>DUE DATE</th>
+                                                <th>DATE CREATED</th>
                                                 <th style="text-align:right;">TOTAL</th>
                                             </tr>
                                         </thead>
@@ -183,6 +184,7 @@
                                                 <option value="number" <?php echo ($reportSettings->sort_by == "number") ? "selected" : "" ?>>Number</option>
                                                 <option value="status" <?php echo ($reportSettings->sort_by == "status") ? "selected" : "" ?>>Status</option>
                                                 <option value="due_date" <?php echo ($reportSettings->sort_by == "due_date") ? "selected" : "" ?>>Due Date</option>
+                                                <option value="date_created" <?php echo ($reportSettings->sort_by == "date_created") ? "selected" : "" ?>>Date Created</option>
                                                 <option value="total" <?php echo ($reportSettings->sort_by == "total") ? "selected" : "" ?>>Total</option>
                                                
                                             </select>

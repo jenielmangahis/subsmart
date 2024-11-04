@@ -358,7 +358,7 @@ class Invoice_model extends MY_Model
 
     public function getInvoiceAmount($cid)
     {
-        $this->db->select('invoices.id AS id, invoices.company_id AS company_id,invoices.invoice_number AS number, invoices.job_name AS description, invoices.status AS status, invoices.due_date AS due_date,invoices.grand_total AS total');
+        $this->db->select('SUM(invoices.grand_total) AS total');
         $this->db->from('invoices');
         $this->db->where('invoices.status !=', "Draft");
         $this->db->where('invoices.status !=', "");
@@ -399,7 +399,7 @@ class Invoice_model extends MY_Model
 
     public function getEarned($cid)
     {
-        $this->db->select('invoices.id AS id, invoices.company_id AS company_id,invoices.invoice_number AS number, invoices.job_name AS description, invoices.status AS status, invoices.due_date AS due_date, invoices.grand_total AS total');
+        $this->db->select('SUM(invoices.grand_total) AS total');
         $this->db->from('invoices');
         $this->db->where('invoices.status', "Paid");
         $this->db->where('invoices.company_id', $cid);

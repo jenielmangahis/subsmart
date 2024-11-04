@@ -57,7 +57,7 @@
                                                 <th>DESCRIPTION</th>
                                                 <th>CUSTOMER</th>
                                                 <th>STATUS</th>
-                                                <th>DATE</th>
+                                                <th>DATE CREATED</th>
                                             </tr>
                                         </thead>
                                         <tbody>

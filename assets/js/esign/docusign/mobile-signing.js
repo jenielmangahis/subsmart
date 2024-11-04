@@ -303,7 +303,7 @@ function Signing(hash) {
       }
     }
 
-    if( field_name == "Subscriber Name" ) {      
+    if( field_name == "Subscriber Name" || field_name == "Customer Name" ) {   
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
           return first_name + " " + last_name;
@@ -315,7 +315,7 @@ function Signing(hash) {
       }
     }
 
-    if( field_name == "Subscriber Email" ) {
+    if( field_name == "Subscriber Email" || field_name == "Customer Email" ) {
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
           return email;
@@ -1158,7 +1158,7 @@ function Signing(hash) {
         }
 
         const valueHtml = `
-              <div class="fillAndSign__signatureContainer">
+              <div class="mobile-signature-container fillAndSign__signatureContainer">
                 <img class="fillAndSign__signatureDraw" src="${value}"/>
                 ${
                   dateTime
@@ -2210,7 +2210,7 @@ function Signing(hash) {
       // const dateTimeFormatted = dateTime.format("MMMM Do YYYY, h:mm:ss A");
 
       const html = `
-        <div class="fillAndSign__signatureContainer">
+        <div class="mobile-signature-container fillAndSign__signatureContainer">
           <img class="fillAndSign__signatureDraw" src="${signatureDataUrl}"/>
           ${
             dateTimeFormatted

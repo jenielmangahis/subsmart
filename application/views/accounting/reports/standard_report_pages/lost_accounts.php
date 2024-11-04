@@ -60,6 +60,7 @@
                                                 <th>MOBILE</th>
                                                 <th>CANCEL DATE</th>
                                                 <th>REASON</th>
+                                                <th>UPDATED AT</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -190,6 +191,7 @@
                                                 <option value="phone" <?php echo ($reportSettings->sort_by == "phone") ? "selected" : "" ?>>Phone</option>
                                                 <option value="mobile" <?php echo ($reportSettings->sort_by == "mobile") ? "selected" : "" ?>>Mobile</option>
                                                 <option value="cancel_date" <?php echo ($reportSettings->sort_by == "cancel_date") ? "selected" : "" ?>>Cancel Date</option>
+                                                <option value="updated_at" <?php echo ($reportSettings->sort_by == "updated_at") ? "selected" : "" ?>>Updated At</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="ASC" <?php echo ($reportSettings->sort_asc_desc== "ASC") ? "selected" : "" ?>>ASC</option>

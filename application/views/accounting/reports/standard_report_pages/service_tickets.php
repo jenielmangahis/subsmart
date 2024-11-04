@@ -46,18 +46,20 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <?php 
-                                        $tableID = "serviceprojectiveincome_table"; 
-                                        $reportCategory = "service_projective_income"; 
+                                        $tableID = "servicetickets_table"; 
+                                        $reportCategory = "service_tickets"; 
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
                                                 <th>NUMBER</th>
-                                                <th>TYPE</th>
+                                                <th>TAG</th>
+                                                <th>SERVICE TYPE</th>
                                                 <th>DESCRIPTION</th>
-                                                <th>CUSTOMER</th>
                                                 <th>STATUS</th>
+                                                <th>CUSTOMER</th>
                                                 <th>DATE CREATED</th>
+                                                <th>PAYMENT METHOD</th>
                                                 <th style="text-align:right;">TOTAL</th>
                                             </tr>
                                         </thead>
@@ -182,14 +184,14 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                                <option value="date_created" <?php echo ($reportSettings->sort_by == "date_created") ? "selected" : "" ?>>Date Created</option>
                                                 <option value="number" <?php echo ($reportSettings->sort_by == "number") ? "selected" : "" ?>>Number</option>
-                                                <option value="type" <?php echo ($reportSettings->sort_by == "type") ? "selected" : "" ?>>Type</option>
-                                                <option value="description" <?php echo ($reportSettings->sort_by == "description") ? "selected" : "" ?>>Description</option>
-                                                <option value="customer" <?php echo ($reportSettings->sort_by == "customer") ? "selected" : "" ?>>Customer</option>
+                                                <option value="tag" <?php echo ($reportSettings->sort_by == "tag") ? "selected" : "" ?>>Tag</option>
+                                                <option value="service_type" <?php echo ($reportSettings->sort_by == "service_type") ? "selected" : "" ?>>Service Type</option>
                                                 <option value="status" <?php echo ($reportSettings->sort_by == "status") ? "selected" : "" ?>>Status</option>
-                                                <option value="date" <?php echo ($reportSettings->sort_by == "date") ? "selected" : "" ?>>Date Issued</option>
+                                                <option value="customer" <?php echo ($reportSettings->sort_by == "customer") ? "selected" : "" ?>>Customer</option>
+                                                <option value="payment_method" <?php echo ($reportSettings->sort_by == "payment_method") ? "selected" : "" ?>>Payment Method</option>
                                                 <option value="total" <?php echo ($reportSettings->sort_by == "total") ? "selected" : "" ?>>Total</option>
-                                               
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
@@ -236,8 +238,8 @@
                         <div class="form-group mb-2">
                             <label>Orientation</label>
                             <select id="pageOrientation" name="pageOrientation" class="form-select">
-                                <option value="P" selected>Portrait</option>
-                                <option value="L">Landscape</option>
+                                <option value="P">Portrait</option>
+                                <option value="L" selected>Landscape</option>
                             </select>
                         </div>
                         <!-- <div class="form-check">

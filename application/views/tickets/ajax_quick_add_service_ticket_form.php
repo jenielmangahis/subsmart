@@ -66,16 +66,23 @@
                     
                     <label for="ticket_customer_phone" class="required mt-2"><b>Customer Phone Number</b></label>
                     <input type="text" class="form-control phone_number" name="customer_phone" id="ticket_customer_phone" required maxlength="12" placeholder="xxx-xxx-xxxx" />
+                    
+                    <label for="customer_city" class="required"><b>City</b></label>
+                    <input type="text" class="form-control" name="customer_city" id="customer_city"
+                            required placeholder="Enter City" 
+                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+                    <label for="customer_state" class="required mt-2"><b>State</b></label>
+                    <input type="text" class="form-control" name="customer_state" id="customer_state"
+                            required placeholder="Enter State" 
+                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
 
-                    <label for="job_tag" class="mt-2"><b>Service Tag</b></label>
-                    <select class="form-control" name="job_tag" id="job_tag">
-                        <?php foreach($tags as $t){ ?>
-                            <option value="<?= $t->name; ?>"><?= $t->name; ?></option>
-                        <?php } ?>
-                    </select>
+                    <label for="customer_zip" class="required mt-2"><b>Zip Code</b></label>
+                    <input type="text" class="form-control" name="customer_zip" id="customer_zip"
+                            required placeholder="Enter Zip Code" 
+                            onChange="jQuery('#customer_name').text(jQuery(this).val());"/>             
 
-                    <label for="service_description" class="mt-2"><b>Service description</b> (optional)</label>
-                    <textarea class="form-control" name="service_description" id="service_description" style="height:100px;"></textarea>
+                    <!-- <label for="service_description" class="mt-2"><b>Service description</b> (optional)</label>
+                    <textarea class="form-control" name="service_description" id="service_description" style="height:100px;"></textarea> -->
                     
             </div>
         </div>        
@@ -83,23 +90,16 @@
 
     <div class="col-md-6">
         <div class="nsm-card primary">
-            <div class="nsm-card-content">                
-                <label for="customer_city" class="required"><b>City</b></label>
-                <input type="text" class="form-control" name="customer_city" id="customer_city"
-                        required placeholder="Enter City" 
-                        onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
+            <div class="nsm-card-content">    
+                <label for="job_tag" class="mt-2"><b>Service Tag</b></label>
+                <select class="form-control" name="job_tag" id="job_tag">
+                    <?php foreach($tags as $t){ ?>
+                        <option value="<?= $t->name; ?>"><?= $t->name; ?></option>
+                    <?php } ?>
+                </select>                            
                 <label for="service_location" class="required mt-2"><b>Service Location</b></label>
-                <textarea class="form-control" name="service_location" id="service_location" style="height:100px;" required></textarea>
-                
-                <label for="customer_state" class="required mt-2"><b>State</b></label>
-                <input type="text" class="form-control" name="customer_state" id="customer_state"
-                        required placeholder="Enter State" 
-                        onChange="jQuery('#customer_name').text(jQuery(this).val());"/>
-
-                <label for="customer_zip" class="required mt-2"><b>Zip Code</b></label>
-                <input type="text" class="form-control" name="customer_zip" id="customer_zip"
-                        required placeholder="Enter Zip Code" 
-                        onChange="jQuery('#customer_name').text(jQuery(this).val());"/>                
+                <textarea class="form-control" name="service_location" id="service_location" style="height:160px;" required></textarea>
+                   
             </div>
         </div>        
     </div>
@@ -219,15 +219,16 @@
                         <label for="ticket-appointment-user"><b>Assigned Technician</b></label>
                         <select class="form-control nsm-field form-select" name="assign_tech[]" id="ticket-appointment-user" multiple="multiple">
                         </select>
-                    </div>
-                    <div class="col-md-6 form-group">
-                        <label for="job_description"><b>Job Description</b></label>                        
-                        <textarea name="job_description" id="job_description" class="form-control" required="" style="height:100px;"></textarea>
                         <div class="form-check mt-2">
                             <input class="form-check-input" type="checkbox" name="is_with_esign" id="is-with-esign" value="1">
                             <label class="form-check-label" for="is-with-esign">eSign Required</label>
                         </div>
                     </div>
+                    <!-- <div class="col-md-6 form-group">
+                        <label for="job_description"><b>Job Description</b></label>                        
+                        <textarea name="job_description" id="job_description" class="form-control" required="" style="height:100px;"></textarea>
+                        
+                    </div> -->
                 </div>
             </div>
         </div>

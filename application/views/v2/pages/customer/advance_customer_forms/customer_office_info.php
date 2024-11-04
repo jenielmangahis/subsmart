@@ -136,9 +136,6 @@
                         foreach($LEAD_SOURCE_OPTION as $lead_source) {
                             if ($lead_source->ls_name == $office_info->lead_source) {
                                 echo "<option value='$lead_source->ls_name' selected>$lead_source->ls_name</option>";
-                            } else if ($office_info->lead_source == "") {
-                                echo "<option value selected hidden disabled>Select Lead Source</option>";
-                                echo "<option value='$lead_source->ls_name'>$lead_source->ls_name</option>";
                             } else {
                                 echo "<option value='$lead_source->ls_name'>$lead_source->ls_name</option>";
                             }
