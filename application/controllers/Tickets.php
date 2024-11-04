@@ -74,7 +74,7 @@ class Tickets extends MY_Controller
             'customer_id'               => $this->input->post('customer_id'),
             'business_name'             => $this->input->post('business_name'),
             'service_location'          => $this->input->post('service_location'),
-            'service_description'       => $this->input->post('service_description'),
+            'service_description'       => '',
             'acs_city'                  => $this->input->post('customer_city'),
             'acs_state'                 => $this->input->post('customer_state'),
             'acs_zip'                   => $this->input->post('customer_zip'),
@@ -88,7 +88,7 @@ class Tickets extends MY_Controller
             'panel_type'                => $this->input->post('panel_type'),
             'service_type'              => $this->input->post('service_type'),
             'warranty_type'             => $this->input->post('warranty_type'),
-            'job_description'           => $this->input->post('job_description'),
+            'job_description'           => '',
             'technicians'               => $techni,
             'subtotal'                  => $this->input->post('subtotal'),
             'taxes'                     => $this->input->post('taxes'),
@@ -679,16 +679,12 @@ class Tickets extends MY_Controller
             $techni = serialize($this->input->post('assign_tech'));
         }
         
-        // dd($techni);
-        // dd($status);
-
-        // dd($this->input->post());
         $update_data = array(
             'id'                        => $this->input->post('ticketID'),
             'customer_id'               => $this->input->post('customer_id'),
             'business_name'             => $this->input->post('business_name'),
             'service_location'          => $this->input->post('service_location'),
-            'service_description'       => $this->input->post('service_description'),
+            'service_description'       => '',
             'acs_city'                  => $this->input->post('customer_city'),
             'acs_state'                 => $this->input->post('customer_state'),
             'acs_zip'                   => $this->input->post('customer_zip'),
@@ -698,7 +694,7 @@ class Tickets extends MY_Controller
             'scheduled_time'            => $this->input->post('scheduled_time'),
             'scheduled_time_to'         => $this->input->post('scheduled_time_to'),
             'purchase_order_no'         => $this->input->post('purchase_order_no'),
-            'job_description'           => $this->input->post('job_description'),
+            'job_description'           => '',
             'ticket_status'             => $status,
             'panel_type'                => $this->input->post('panel_type'),
             'plan_type'                 => $this->input->post('plan_type'),
@@ -1871,7 +1867,7 @@ class Tickets extends MY_Controller
                 'customer_id'               => $this->input->post('customer_id'),
                 'business_name'             => $this->input->post('business_name'),
                 'service_location'          => $this->input->post('service_location'),
-                'service_description'       => $this->input->post('service_description'),
+                'service_description'       => '',
                 'acs_city'                  => $this->input->post('customer_city'),
                 'acs_state'                 => $this->input->post('customer_state'),
                 'acs_zip'                   => $this->input->post('customer_zip'),
@@ -1903,7 +1899,7 @@ class Tickets extends MY_Controller
                 'terms_conditions'          => $this->input->post('terms_conditions'),
                 'attachments'               => '',
                 'instructions'              => $this->input->post('instructions'),
-                'job_description'           => $this->input->post('job_description'),
+                'job_description'           => '',
                 'customer_phone'            => $this->input->post('customer_phone'),
                 'employee_id'               => $this->input->post('employee_id'),
                 'created_by'                => logged('id'),
