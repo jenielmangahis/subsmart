@@ -224,11 +224,11 @@
                             <label class="form-check-label" for="is-with-esign">eSign Required</label>
                         </div>
                     </div>
-                    <div class="col-md-6 form-group">
+                    <!-- <div class="col-md-6 form-group">
                         <label for="job_description"><b>Job Description</b></label>                        
                         <textarea name="job_description" id="job_description" class="form-control" required="" style="height:100px;"></textarea>
                         
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -1122,11 +1122,15 @@ $(document).ready(function(){
             var installation_cost = 0;
             var adjustment_amount = $('#adjustment-amount').val();
         }else{
-            var otp = $('#service-ticket-otp').val();
-            //var mmr = $('#service-ticket-monthly-monitoring-rate').val();
-            var mmr = $('#plan-value').val();
-            var installation_cost = $('#service-ticket-installation-cost').val();
+            var otp = 0;        
+            var mmr = 0;
+            var installation_cost = 0;
             var adjustment_amount = $('#adjustment-amount').val();
+            
+            // var otp = $('#service-ticket-otp').val();            
+            // var mmr = $('#plan-value').val();
+            // var installation_cost = $('#service-ticket-installation-cost').val();
+            // var adjustment_amount = $('#adjustment-amount').val();
         }
         
         if( isNaN(adjustment_amount) || adjustment_amount == '' ){
