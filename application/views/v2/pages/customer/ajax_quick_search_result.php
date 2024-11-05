@@ -33,7 +33,7 @@
             <tr>
                 <td colspan="3">
                     <div class="nsm-empty">
-                        <span>No results found.</span>
+                        <span>No results found</span>
                     </div>
                 </td>
             </tr>
