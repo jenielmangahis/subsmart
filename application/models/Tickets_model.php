@@ -222,7 +222,7 @@ class Tickets_model extends MY_Model
 
         $this->db->select('*, tickets_items.cost AS costing');
         $this->db->from('tickets_items');
-        $this->db->join('items', 'tickets_items.items_id  = items.id');
+        $this->db->join('items', 'tickets_items.items_id = items.id');
 		$this->db->where($where);
         $query = $this->db->get();
         return $query->result();
