@@ -2442,7 +2442,6 @@ class Customer extends MY_Controller
                 $enable_ringcentral_call = true;
             }
         }
-
         // Sms Template
         $this->load->model('SmsTemplate_model');
         $smsTemplates = $this->SmsTemplate_model->getAllByCompanyId($cid);
