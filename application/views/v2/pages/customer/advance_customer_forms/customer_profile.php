@@ -47,9 +47,6 @@
                         foreach($customerGroups as $customer_groups) {
                             if ($customer_groups->id == $profile_info->customer_group_id) {
                                 echo "<option value='$customer_groups->id' selected>$customer_groups->title</option>";
-                            } else if ($profile_info->customer_group_id == "") {
-                                echo "<option value selected hidden disabled>Select Lead Source</option>";
-                                echo "<option value='$lead_source->ls_name'>$lead_source->ls_name</option>";
                             } else {
                                 echo "<option value='$customer_groups->id'>$customer_groups->title</option>";
                             }

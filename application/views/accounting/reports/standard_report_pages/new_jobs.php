@@ -56,7 +56,7 @@
                                                 <th>TYPE</th>
                                                 <th>DESCRIPTION</th>
                                                 <th>CUSTOMER</th>
-                                                <th>DATE</th>
+                                                <th>DATE CREATED</th>
                                             </tr>
                                         </thead>
                                         <tbody>

@@ -795,11 +795,11 @@ class Customer_advance_model extends MY_Model
 
     public function countTotalSubscriptionsByCompanyId($company_id = 0)
     {
-        $this->db->select('SUM(COALESCE(acs_billing.mmr, 0)) AS total_amount_subscriptions, COALESCE(COUNT(acs_billing.bill_id),0) AS total_subscriptions, COUNT(*) AS total_active_subsciption');
+        $this->db->select('SUM(COALESCE(acs_billing.mmr, 0)) AS total_amount_subscriptions, COALESCE(COUNT(acs_billing.bill_id),0) AS total_subscriptions, COUNT(acs_profile.prof_id) AS total_active_subsciption');
         $this->db->from('acs_profile');
         $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $company_id);
-        $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM']);
+        $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR','Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
         
         $query = $this->db->get();
     

@@ -68,7 +68,7 @@ class AccountingMailer extends MY_Controller
             "estimates_by_customer",
             "invoice_list_by_date",
             "payment_method_list",
-            "open_invoices",
+            // "open_invoices",
             "product_service_list",
             "sales_by_product_service_summary",
             "taxable_sales_detail",
@@ -192,6 +192,18 @@ class AccountingMailer extends MY_Controller
             "estimates",
             "job_tags",
             "lead_source",
+            "paid_invoices",
+            "open_invoices",
+            "past_due_invoices",
+            "overdue_invoices",
+            "unpaid_invoices",
+            "taskhub",
+            "open_estimates",
+            "timesheet",
+            "recent_leads",
+            "customer_status",
+            "service_tickets",
+            "bank_accounts",
         );
 
         // Conditional Statements on the array

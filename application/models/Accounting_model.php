@@ -77,7 +77,7 @@ class Accounting_model extends MY_Model
 
         // Get Earned data for Today's Widget Report in Database
         if ($reportType == 'earned') {
-            $this->db->select('invoices.id AS id, invoices.company_id AS company_id,invoices.invoice_number AS number, invoices.job_name AS description, invoices.status AS status, invoices.due_date AS due_date, invoices.grand_total AS total');
+            $this->db->select('invoices.id AS id, invoices.company_id AS company_id,invoices.invoice_number AS number, invoices.job_name AS description, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
             $this->db->from('invoices');
             $this->db->where('invoices.status', "Paid");
             $this->db->where('invoices.company_id', $companyID);
@@ -89,7 +89,7 @@ class Accounting_model extends MY_Model
 
         // Get Invoice Amount data for Today's Widget Report in Database
         if ($reportType == 'invoice_amount') {
-            $this->db->select('invoices.id AS id, invoices.company_id AS company_id,invoices.invoice_number AS number, invoices.job_name AS description, invoices.status AS status, invoices.due_date AS due_date,invoices.grand_total AS total');
+            $this->db->select('invoices.id AS id, invoices.company_id AS company_id,invoices.invoice_number AS number, invoices.job_name AS description, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
             $this->db->from('invoices');
             $this->db->where('invoices.status !=', "Draft");
             $this->db->where('invoices.status !=', "");
@@ -117,7 +117,7 @@ class Accounting_model extends MY_Model
 
         // Get New Jobs data for Today's Widget Report in Database
         if ($reportType == 'new_jobs') {
-            $this->db->select('jobs.id AS id,jobs.company_id AS company_id,jobs.job_number AS number,jobs.job_type AS type,jobs.job_description AS description,CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer,jobs.status AS status,jobs.date_issued AS date');
+            $this->db->select('jobs.id AS id,jobs.company_id AS company_id,jobs.job_number AS number,jobs.job_type AS type,jobs.job_description AS description,CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer,jobs.status AS status, jobs.date_issued AS date, jobs.date_created AS date_created');
             $this->db->from('jobs');
             $this->db->where('jobs.status', "Scheduled");
             $this->db->where('jobs.company_id', $companyID);
@@ -130,7 +130,7 @@ class Accounting_model extends MY_Model
 
         // Get Lost Accounts data for Today's Widget Report in Database
         if ($reportType == 'lost_accounts') {
-            $this->db->select('acs_profile.prof_id AS id,acs_profile.company_id AS company_id,CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer,acs_profile.customer_type AS customer_type,acs_profile.status AS status,acs_profile.email AS email,acs_profile.phone_h AS phone,acs_profile.phone_m AS mobile,acs_office.cancel_date AS cancel_date,acs_office.cancel_reason AS cancel_reason');
+            $this->db->select('acs_profile.prof_id AS id,acs_profile.company_id AS company_id,CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer,acs_profile.customer_type AS customer_type,acs_profile.status AS status,acs_profile.email AS email,acs_profile.phone_h AS phone,acs_profile.phone_m AS mobile,acs_office.cancel_date AS cancel_date,acs_office.cancel_reason AS cancel_reason, acs_profile.updated_at AS updated_at');
             $this->db->from('acs_profile');
             $this->db->where('acs_profile.status', "Cancelled");
             $this->db->where('acs_profile.company_id', $companyID);
@@ -143,7 +143,7 @@ class Accounting_model extends MY_Model
 
         // Get Service Projective Income data for Today's Widget Report in Database
         if ($reportType == 'service_projective_income') {
-            $this->db->select('jobs.id AS id,jobs.company_id AS company_id,jobs.job_number AS number,jobs.job_type AS type,jobs.job_description AS description,CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer,jobs.status AS status,jobs.date_issued AS date, job_payments.amount AS total');
+            $this->db->select('jobs.id AS id,jobs.company_id AS company_id,jobs.job_number AS number,jobs.job_type AS type,jobs.job_description AS description,CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer,jobs.status AS status,jobs.date_issued AS date, jobs.date_created AS date_created, job_payments.amount AS total');
             $this->db->from('jobs');
             $this->db->where('jobs.job_type', "Service");
             $this->db->where_in('jobs.status', [
@@ -216,9 +216,161 @@ class Accounting_model extends MY_Model
             return $data->result();
         }
         
+        // Get Paid Invoices data in Database
+        if ($reportType == 'paid_invoices') {
+            $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, invoices.job_name AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
+            $this->db->from('invoices');
+            $this->db->where('invoices.status', "Paid");
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
 
-        // ==========================================
+        // Get Open Invoices data in Database
+        if ($reportType == 'open_invoices') {
+            $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, invoices.job_name AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
+            $this->db->from('invoices');
+            $this->db->where('invoices.status !=', "Paid");
+            $this->db->where('invoices.status !=', "");
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
 
+        // Get Past Due Invoices data in Database
+        if ($reportType == 'past_due_invoices') {
+            $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, invoices.job_name AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
+            $this->db->from('invoices');
+            $this->db->where('invoices.status !=', "Paid");
+            $this->db->where('invoices.status !=', "");
+            $this->db->where('invoices.due_date < CURDATE()');
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Overdue Invoices data in Database
+        if ($reportType == 'overdue_invoices') {
+            $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, invoices.job_name AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
+            $this->db->from('invoices');
+            $this->db->where('invoices.status !=', "Paid");
+            $this->db->where('invoices.status !=', "");
+            $this->db->where('invoices.due_date < CURDATE() - INTERVAL 15 DAY');
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Unpaid Invoices data in Database
+        if ($reportType == 'unpaid_invoices') {
+            $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, invoices.job_name AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
+            $this->db->from('invoices');
+            $this->db->where('invoices.status', "Unpaid");
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        
+        // Get Taskhub data in Database
+        if ($reportType == 'taskhub') {
+            $this->db->select('tasks.task_id AS id, tasks.company_id AS company_id, tasks.title AS task, tasks.status AS status, tasks.priority AS priority, tasks.date_due AS date_due, tasks.date_created AS date_created');
+            $this->db->from('tasks');
+            $this->db->where('tasks.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Open Estimates data in Database
+        if ($reportType == 'open_estimates') {
+            $this->db->select('estimates.id AS id, estimates.company_id AS company_id, estimates.estimate_number AS number, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, estimates.job_name AS job, estimates.job_location AS location, estimates.status AS status, estimates.estimate_date AS date_created, estimates.grand_total AS total');
+            $this->db->from('estimates');
+            $this->db->where_in('estimates.status', [
+                'Draft',
+                'Pending',
+            ]);
+            $this->db->where('estimates.company_id', $companyID);
+            $this->db->join('acs_profile', 'acs_profile.prof_id = estimates.customer_id', 'left');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+         // Get Timesheet data in Database
+         if ($reportType == 'timesheet') {
+            $this->db->select('timesheet_attendance.id AS id, users.company_id AS company_id, CONCAT(users.FName, " ", users.LName) AS employee, timesheet_attendance.shift_duration AS shift_duration, timesheet_attendance.break_duration AS break_duration, timesheet_attendance.overtime AS overtime_duration, timesheet_attendance.overtime_status AS overtime_status, timesheet_attendance.date_created AS date_created');
+            $this->db->from('timesheet_attendance');
+            $this->db->where('users.company_id', $companyID);
+            $this->db->join('users', 'users.id = timesheet_attendance.user_id', 'left');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Recent Leads data in Database
+        if ($reportType == 'recent_leads') {
+            $this->db->select('ac_leads.leads_id AS id, ac_leads.company_id AS company_id, CONCAT(ac_leads.firstname, " ", ac_leads.lastname) AS lead, ac_leadtypes.lead_name AS lead_type, ac_leads.status AS status, ac_leads.date_created AS date_created');
+            $this->db->from('ac_leads');
+            $this->db->where('ac_leads.company_id', $companyID);
+            $this->db->join('ac_leadtypes', 'ac_leadtypes.lead_id = ac_leads.fk_lead_type_id', 'left');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Customer Status data in Database
+        if ($reportType == 'customer_status') {
+            $this->db->select('acs_profile.prof_id AS id, acs_profile.company_id AS company_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, acs_profile.customer_type AS customer_type, acs_profile.status AS status, acs_profile.updated_at AS updated_at');
+            $this->db->from('acs_profile');
+            $this->db->where('acs_profile.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Service Tickets data in Database
+        if ($reportType == 'service_tickets') {
+            $this->db->select('tickets.id AS id, tickets.company_id AS company_id, tickets.ticket_no AS number, tickets.job_tag AS tag, tickets.service_type AS service_type, tickets.service_description AS description, tickets.ticket_status AS status, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, tickets.ticket_date AS date_created, tickets.payment_method AS payment_method, tickets.grandtotal AS total');
+            $this->db->from('tickets');
+            $this->db->where('tickets.company_id', $companyID);
+            $this->db->join('acs_profile', 'acs_profile.prof_id = tickets.customer_id', 'left');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Bank Accounts data in Database
+        if ($reportType == 'bank_accounts') {
+            $this->db->select('accounting_check.id AS id, accounting_check.company_id AS company_id, accounting_check.check_no AS number, accounting_check.payee_type AS payee_type, accounting_check.memo AS description, accounting_check.payment_date AS payment_date, accounting_check.created_at AS date_created, accounting_check.total_amount AS total');
+            $this->db->from('accounting_check');
+            $this->db->where('accounting_check.company_id', $companyID);
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
 
         // Get Sales Tax Liability Report data in Database
         if ($reportType == 'sales_tax_liability') {
@@ -943,25 +1095,25 @@ class Accounting_model extends MY_Model
             return $query->result();
         }
 
-        // Get Open Invoices Date data in Database
-        if ($reportType == 'open_invoices') {
-            $this->db->select('invoices.id AS invoices_id, invoices.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS name, DATE_FORMAT(invoices.date_created,"%Y-%m-%d") AS date, "Invoice" AS transaction_type, invoices.invoice_number AS num, "" AS terms, invoices.due_date AS due_date, IFNULL(SUM((items.price * invoices_items.qty) + invoices_items.tax), 0) AS open_balance');
-            $this->db->from('invoices');
-            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
-            $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
-            $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
-            $this->db->where('acs_profile.first_name !=', '');
-            $this->db->where('acs_profile.last_name !=', '');
-            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
-            $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
-            $this->db->where('invoices.company_id', $companyID);
-            $this->db->group_by('invoices.customer_id');
-            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
-            $this->db->limit($reportConfig['page_size']);
-            $query = $this->db->get();
+        // // Get Open Invoices Date data in Database
+        // if ($reportType == 'open_invoices') {
+        //     $this->db->select('invoices.id AS invoices_id, invoices.customer_id AS customer_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS name, DATE_FORMAT(invoices.date_created,"%Y-%m-%d") AS date, "Invoice" AS transaction_type, invoices.invoice_number AS num, "" AS terms, invoices.due_date AS due_date, IFNULL(SUM((items.price * invoices_items.qty) + invoices_items.tax), 0) AS open_balance');
+        //     $this->db->from('invoices');
+        //     $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        //     $this->db->join('invoices_items', 'invoices_items.invoice_id = invoices.id', 'left');
+        //     $this->db->join('items', 'items.id = invoices_items.items_id', 'left');
+        //     $this->db->where('acs_profile.first_name !=', '');
+        //     $this->db->where('acs_profile.last_name !=', '');
+        //     $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') >= '$reportConfig[date_from]'");
+        //     $this->db->where("DATE_FORMAT(invoices.date_created,'%Y-%m-%d') <= '$reportConfig[date_to]'");
+        //     $this->db->where('invoices.company_id', $companyID);
+        //     $this->db->group_by('invoices.customer_id');
+        //     $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+        //     $this->db->limit($reportConfig['page_size']);
+        //     $query = $this->db->get();
 
-            return $query->result();
-        }
+        //     return $query->result();
+        // }
 
         // Get Product/Service list data in Database
         if ($reportType == 'product_service_list') {

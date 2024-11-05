@@ -323,7 +323,6 @@ class AcsProfile_model extends MY_Model
         $this->db->from('acs_profile');
         $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $id);
-        $this->db->where('DATE(acs_billing.bill_end_date) >=', date('Y-m-d'));
         $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM']);
         $query = $this->db->get();
 

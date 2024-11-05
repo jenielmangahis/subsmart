@@ -1598,6 +1598,9 @@ class Share_Link extends MY_P_Controller
             'bphone_h'          => $clients->business_phone,
             //tickets details
             'service_location'        => $tickets->service_location,
+            'acs_city'                => $tickets->acs_city,
+            'acs_state'               => $tickets->acs_state,
+            'acs_zip'                 => $tickets->acs_zip,
             'service_description'     => $tickets->service_description,
             'job_tag'                 => $tickets->job_tag,
             'ticket_no'               => $tickets->ticket_no,

@@ -303,7 +303,7 @@ function Signing(hash) {
       }
     }
 
-    if( field_name == "Subscriber Name" ) {      
+    if( field_name == "Subscriber Name" || field_name == "Customer Name" ) {   
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
           return first_name + " " + last_name;
@@ -315,7 +315,7 @@ function Signing(hash) {
       }
     }
 
-    if( field_name == "Subscriber Email" ) {
+    if( field_name == "Subscriber Email" || field_name == "Customer Email" ) {
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
           return email;
@@ -1158,7 +1158,7 @@ function Signing(hash) {
         }
 
         const valueHtml = `
-              <div class="fillAndSign__signatureContainer">
+              <div class="mobile-signature-container fillAndSign__signatureContainer">
                 <img class="fillAndSign__signatureDraw" src="${value}"/>
                 ${
                   dateTime
@@ -2047,6 +2047,18 @@ function Signing(hash) {
     });
   }
 
+  async function generateFileVault(downloadEsignQueryString) {
+    const endpointDownloadEsign = `${prefixURL}/CustomerDashboardQuickActions/mobileDownloadCustomerDocument?${downloadEsignQueryString}`;
+    const response = await fetch(endpointDownloadEsign);
+    data = await response.json();
+
+    if( data.is_success == 1 ){
+      alert('File is downloaded into file vault.');
+    }else{
+      alert(data.msg);
+    }
+  }
+
   async function storeFieldValue({ id, value, force = false }) {
     const { recipient } = data;
     const { id: recipient_id } = recipient;
@@ -2210,7 +2222,7 @@ function Signing(hash) {
       // const dateTimeFormatted = dateTime.format("MMMM Do YYYY, h:mm:ss A");
 
       const html = `
-        <div class="fillAndSign__signatureContainer">
+        <div class="mobile-signature-container fillAndSign__signatureContainer">
           <img class="fillAndSign__signatureDraw" src="${signatureDataUrl}"/>
           ${
             dateTimeFormatted
@@ -2665,15 +2677,13 @@ function Signing(hash) {
     if (data.generated_pdf) {
       // download link
       $("[data-action=download]").on("click touchstart", function () {
-        const queryString = new URLSearchParams({
+        let downloadEsignQueryString = new URLSearchParams({
           document_type: "esign",
           generated_esign_id: data.generated_pdf.docfile_id,
+          //generated_esign_id: 1643, //For debugging
         }).toString();
 
-        window.open(
-          `${prefixURL}/CustomerDashboardQuickActions/downloadCustomerDocument?${queryString}`,
-          "_blank"
-        );
+        generateFileVault(downloadEsignQueryString);        
       });
     }
 

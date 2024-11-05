@@ -119,7 +119,7 @@
                             <tr class="table-items__tr">
                                 <td colspan="4" style="text-align: left; background: #ffffff; padding: 8px 0;" >
                                     <p><b>Service Location: </b><br />
-                                    <?php echo $service_location; ?></p>
+                                    <?php echo $service_location .' '. $acs_city .', '. $acs_state .' '. $acs_zip; ?>
                                 </td>
                                 <td colspan="1" style="text-align: center; background: #f4f4f4; padding: 8px 0;" >
                                     <b>Sales Representative</b> <br>
@@ -220,8 +220,9 @@
                                 <td colspan="2" style="text-align: right"><b>Adjustment<?php echo $adjustment ? ': ' . $adjustment : ''; ?></b></td>
                                 <td style="text-align: right">$<?php echo number_format($adjustment_value,2); ?></td>
                             </tr>
-                            <tr>
-                                <td colspan="2" style="text-align: left"><!-- <b>Others: </b--></td>
+
+                            <!-- <tr>
+                                <td colspan="2" style="text-align: left"><b>Others: </b></td>
                                 <td colspan="2" style="text-align: left">
                                     <?php 
                                         /*$check_number                   = $payment->check_number;
@@ -321,28 +322,30 @@
                                     ?>                                
                                 </td>
                                 <td colspan="2" style="text-align: right"><b>Markup</b></td>
-                                <td style="text-align: right">$<?php echo number_format($markup,2); ?></td>
-                            </tr>
+                                <td style="text-align: right">$<?php //echo number_format($markup,2); ?></td>
+                            </tr> -->
+
                             <?php $icost = 0; ?>
-                            <?php if($installation_cost != null && $installation_cost > 0) { $icost = $installation_cost; ?>
-                            <tr>
-                                <td colspan="2" style="text-align: left"></td>
-                                <td colspan="2" style="text-align: left">                             
-                                </td>
-                                <td colspan="2" style="text-align: right"><b>installation Cost</b></td>
-                                <td style="text-align: right">$<?php echo number_format($installation_cost,2); ?></td>
-                            </tr>
-                            <?php } ?>
+                            <?php //if($installation_cost != null && $installation_cost > 0) { $icost = $installation_cost; ?>
+                                <!-- <tr>
+                                    <td colspan="2" style="text-align: left"></td>
+                                    <td colspan="2" style="text-align: left">                             
+                                    </td>
+                                    <td colspan="2" style="text-align: right"><b>installation Cost</b></td>
+                                    <td style="text-align: right">$<?php //echo number_format($installation_cost,2); ?></td>
+                                </tr> -->
+                            <?php //} ?>
+
                             <?php $mmr = 0; ?>
-                            <?php if($mmr_total != null && $mmr_total > 0) { $mmr = $mmr_total; ?>
-                            <tr>
-                                <td colspan="2" style="text-align: left"></td>
-                                <td colspan="2" style="text-align: left">                             
-                                </td>
-                                <td colspan="2" style="text-align: right"><b>MMR</b></td>
-                                <td style="text-align: right">$<?php echo number_format($mmr_total,2); ?></td>
-                            </tr>
-                            <?php } ?>
+                            <?php //if($mmr_total != null && $mmr_total > 0) { $mmr = $mmr_total; ?>
+                                <!-- <tr>
+                                    <td colspan="2" style="text-align: left"></td>
+                                    <td colspan="2" style="text-align: left">                             
+                                    </td>
+                                    <td colspan="2" style="text-align: right"><b>MMR</b></td>
+                                    <td style="text-align: right">$<?php //echo number_format($mmr_total,2); ?></td>
+                                </tr> -->
+                            <?php //} ?>
                             <tr>
                                 <td colspan="4"></td>
                                 <td colspan="2" style="text-align: right; background: #f4f4f4; padding: 8px 0"><b>Grand Total</b></td>

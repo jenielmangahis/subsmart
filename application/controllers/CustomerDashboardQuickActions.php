@@ -12,7 +12,7 @@ class Action
     }
 }
 
-class CustomerDashboardQuickActions extends MY_Controller
+class CustomerDashboardQuickActions extends MYF_Controller
 {
     const ONE_MB = 1048576;
 
@@ -475,5 +475,74 @@ class CustomerDashboardQuickActions extends MY_Controller
 
         $this->db->where('id', $currDocument->id);
         $this->respond(['data' => $this->db->get('acs_customer_documents')->row()]);
+    }
+
+    public function mobileDownloadCustomerDocument()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+        
+        $documentTypes = explode(',', $this->input->get('document_type', true));
+        if (in_array('esign', $documentTypes)) {
+            $id = $this->input->get('generated_esign_id', true);
+            $this->db->where('docfile_id', $id);
+            $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
+            $generatedPDFPath = FCPATH . ltrim($generatedPDF->path, '/');
+
+            if (!file_exists($generatedPDFPath)) {
+                $msg = 'File does not exists.';
+            }
+
+            $file = $generatedPDFPath;
+            $fileName = explode('/', $generatedPDF->path);
+            $fileName = 'esign_' . end(array_values($fileName));
+
+            $this->db->where('id', $generatedPDF->docfile_id);
+            $userDocfile = $this->db->get('user_docfile')->row();
+            if( $userDocfile ){
+                $esign_filename = explode('/', $generatedPDF->path);
+                $esign_filename = end(array_values($esign_filename));
+                $vault_location = FCPATH . 'uploads/filevault_v2/'.$userDocfile->company_id.'/'.$esign_filename;
+                $vault_location_db = 'filevault_v2/'.$userDocfile->company_id.'/'.$esign_filename;
+
+                if (!file_exists($vault_location)) {          
+                    $file_size = filesize($generatedPDFPath);          
+                    copy($generatedPDFPath, $vault_location);
+
+                    $this->db->insert('filevault_v2', [
+                        'name' => $esign_filename,
+                        'file_path' => $vault_location_db,
+                        'file_size' => $file_size,
+                        'file_type' => 'pdf',
+                        'created_by' => $userDocfile->user_id,
+                        'date_created' => date("Y-m-d H:i:s"),
+                        'date_modified' => date("Y-m-d H:i:s"),
+                        'last_action_performed' => 'Created',
+                        'last_action_performed_by' => $userDocfile->user_id,
+                        'is_folder' => 0,
+                        'folder_color' => '#9A9A9A',
+                        'parent_id' => 0,
+                        'is_shared' => 0,
+                        'is_starred' => 0,
+                        'company_id' => $userDocfile->company_id,
+                        'downloads_count' => 0,
+                        'previews_count' => 0,
+                        'softdelete' => 0,
+                        'softdelete_date' => NULL,
+                        'softdelete_by' => 0
+                    ]);
+                }
+
+                $is_success = 1;
+                $msg = '';
+            }
+        } 
+
+        echo json_encode([
+            'is_success' => $is_success,
+            'msg' => $msg
+        ]);
+
+        exit;
     }
 }

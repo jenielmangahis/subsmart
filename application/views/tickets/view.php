@@ -167,7 +167,8 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         <div class="row">
                             <div class="col-md-8 serviceLocDiv">
                                 <b>Service Location: </b> <br>
-                                <?php echo $tickets->service_location; ?>
+                                <?php //echo $tickets->service_location; ?>
+                                <?php echo $tickets->service_location .' '. $tickets->acs_city .', '. $tickets->acs_state .' '. $tickets->acs_zip; ?>
                             </div>
                             <div class="col-md-4 salesRepArea" style="text-align:center;border:solid #6a4a86 1px;">
                                 <b>Sales Representative</b> <br>
@@ -242,10 +243,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <td><b>Payment Amount: </b></td>
                                         <td style="text-align:;">$<?php echo number_format($tickets->payment_amount,2); ?></td>
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                         <td><b>Billing Date: </b></td>
-                                        <td style="text-align:;"><?php echo $tickets->billing_date; ?></td>
-                                    </tr>
+                                        <td style="text-align:;"><?php //echo $tickets->billing_date; ?></td>
+                                    </tr> -->
                                     <tr>
                                         <td><b>Payment Details:</b></td>
                                         <td>
@@ -365,10 +366,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <td>Adjustment: <?php echo $tickets->adjustment; ?></td>
                                         <td style="text-align:right;">$<?php if(empty($tickets->adjustment_value)){ echo '0';} echo number_format($tickets->adjustment_value,2); ?></td>
                                     </tr>
-                                    <tr style="font-weight:bold;">
+                                    <!-- <tr style="font-weight:bold;">
                                         <td>Markup</td>
-                                        <td style="text-align:right;">$<?php if(empty($tickets->markup)){ echo '0';} echo number_format($tickets->markup,2); ?></td>
-                                    </tr>
+                                        <td style="text-align:right;">$<?php //if(empty($tickets->markup)){ echo '0';} echo number_format($tickets->markup,2); ?></td>
+                                    </tr> -->
                                     <tr style="font-weight:bold;">
                                         <td>Grand Total</td>
                                         <td style="text-align:right;">$<?php echo number_format($tickets->grandtotal,2); ?></td>
@@ -398,12 +399,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                         </div>
                     </div>
                     <hr />
-                    <div class="row" style="font-size:16px;">
+                    <!-- <div class="row" style="font-size:16px;">
                         <div class="col-md-12">
-                            <b>Service Description:</u></b> <br> <?php if(empty($tickets->service_description)){ echo 'N/A'; }else{ echo $tickets->service_description; } ?>
+                            <b>Service Description:</u></b> <br> <?php //if(empty($tickets->service_description)){ echo 'N/A'; }else{ echo $tickets->service_description; } ?>
                         </div>
                     </div>
-                    <hr />
+                    <hr /> -->
                     <div class="row" style="font-size:16px;">
                         <div class="col-md-12">
                             <b>Message:</u></b> <br><?php if(empty($tickets->message)){ echo 'N/A'; }else{ echo $tickets->message; } ?>
@@ -563,7 +564,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tr class="table-items__tr">
                                             <td colspan="4" style="text-align: left; background: #ffffff !important; padding: 8px 0;" >
                                                 <p><b>Service Location: </b><br />
-                                                <?php echo $tickets->service_location; ?></p>
+                                                <?php //echo $tickets->service_location; ?>
+                                                <?php echo $tickets->service_location .' '. $tickets->acs_city .', '. $tickets->acs_state .' '. $tickets->acs_zip; ?>
+                                                </p>
                                             </td>
                                             <td colspan="1" id="td-sales-rep" class="td-sales-rep" style="" >
                                                 <b>Sales Representative</b> <br>
@@ -661,38 +664,38 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <td colspan="2" style="text-align: right"><b>Adjustment<?php echo $tickets->adjustment ? ': ' . $tickets->adjustment : ''; ?></b></td>
                                             <td style="text-align: right">$<?php echo number_format($tickets->adjustment_value,2); ?></td>
                                         </tr>
-                                        <tr>
-                                            <td colspan="2" style="text-align: left"><!-- <b>Others: </b--></td>
+                                        <!-- <tr>
+                                            <td colspan="2" style="text-align: left"><b>Others: </b></td>
                                             <td colspan="2" style="text-align: left">                              
                                             </td>
                                             <td colspan="2" style="text-align: right"><b>Markup</b></td>
-                                            <td style="text-align: right">$<?php echo number_format($tickets->markup,2); ?></td>
-                                        </tr>
+                                            <td style="text-align: right">$<?php //echo number_format($tickets->markup,2); ?></td>
+                                        </tr> -->
                                         <?php $mmr = 0; ?>
-                                        <?php if($invoiceD->monthly_monitoring != null && $invoiceD->monthly_monitoring > 0) { $mmr = $invoiceD->monthly_monitoring?>
-                                        <tr>
-                                            <td colspan="2" style="text-align: left"></td>
-                                            <td colspan="2" style="text-align: left">                              
-                                            </td>
-                                            <td colspan="2" style="text-align: right"><b>MMR</b></td>
-                                            <td style="text-align: right">$<?php echo number_format($invoiceD->monthly_monitoring,2); ?></td>
-                                        </tr>
-                                        <?php } ?>
+                                        <?php //if($invoiceD->monthly_monitoring != null && $invoiceD->monthly_monitoring > 0) { $mmr = $invoiceD->monthly_monitoring?>
+                                            <!-- <tr>
+                                                <td colspan="2" style="text-align: left"></td>
+                                                <td colspan="2" style="text-align: left">                              
+                                                </td>
+                                                <td colspan="2" style="text-align: right"><b>MMR</b></td>
+                                                <td style="text-align: right">$<?php //echo number_format($invoiceD->monthly_monitoring,2); ?></td>
+                                            </tr> -->
+                                        <?php //} ?>
                                         <?php $icost = 0; ?>
-                                        <?php if($invoiceD->installation_cost != null && $invoiceD->installation_cost > 0) { $icost = $invoiceD->installation_cost; ?>
-                                        <tr>
-                                            <td colspan="2" style="text-align: left"></td>
-                                            <td colspan="2" style="text-align: left">                              
-                                            </td>
-                                            <td colspan="2" style="text-align: right"><b>Installation Cost</b></td>
-                                            <td style="text-align: right">$<?php echo number_format($invoiceD->installation_cost,2); ?></td>
-                                        </tr>
-                                        <?php } ?>
-                                        <tr>
-                                            <td colspan="4"></td>
-                                            <td colspan="2" style="text-align: right; background: #f4f4f4;"><b>Grand Total</b></td>
-                                            <td style="text-align: right; background: #f4f4f4;"><b>$<?php echo number_format($tickets->grandtotal + $mmr + $icost,2); ?></b></td>
-                                        </tr>
+                                        <?php //if($invoiceD->installation_cost != null && $invoiceD->installation_cost > 0) { $icost = $invoiceD->installation_cost; ?>
+                                            <!-- <tr>
+                                                <td colspan="2" style="text-align: left"></td>
+                                                <td colspan="2" style="text-align: left">                              
+                                                </td>
+                                                <td colspan="2" style="text-align: right"><b>Installation Cost</b></td>
+                                                <td style="text-align: right">$<?php //echo number_format($invoiceD->installation_cost,2); ?></td>
+                                            </tr> -->
+                                        <?php //} ?>
+                                            <tr>
+                                                <td colspan="4"></td>
+                                                <td colspan="2" style="text-align: right; background: #f4f4f4;"><b>Grand Total</b></td>
+                                                <td style="text-align: right; background: #f4f4f4;"><b>$<?php echo number_format($tickets->grandtotal + $mmr + $icost,2); ?></b></td>
+                                            </tr>
                                     </tfoot>
                                 </table>
                             </div>

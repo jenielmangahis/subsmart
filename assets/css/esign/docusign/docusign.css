@@ -298,3 +298,8 @@ select.docusignField__dropdown--isRequired {
   text-transform: capitalize !important;
 }
 /*# sourceMappingURL=docusign.css.map */
+
+.mobile-signature-container{
+  position:relative;
+  left:22px;
+}
