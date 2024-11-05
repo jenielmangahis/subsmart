@@ -73,13 +73,20 @@
 
                 <div class="row mt-5">
                     <div class="col-12 col-md-4">
-                        <form action="<?php echo base_url('estimate') ?>" method="GET">
                             <div class="nsm-field-group search">
                                 <input type="text" class="nsm-field nsm-search form-control mb-2" id="custom-ticket-searchbar" name="search" placeholder="Search Tickets" value="<?php echo (!empty($search)) ? $search : '' ?>">
                             </div>
-                        </form>
                     </div>
                     <div class="col-12 col-md-8 grid-mb text-end">
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
+                                With Selected  <i class='bx bx-fw bx-chevron-down'></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end select-filter">
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-change-status" href="javascript:void(0);" data-action="pause">Change Status</a></li>                          
+                                <li><a class="dropdown-item btn-with-selected" id="with-selected-delete" href="javascript:void(0);" data-action="delete">Delete</a></li>                                
+                            </ul>
+                        </div>
                         <div class="dropdown d-inline-block">
                             <button type="button" class="dropdown-toggle nsm-button" data-bs-toggle="dropdown">
                                 <span>Sort by Newest First</span> <i class='bx bx-fw bx-chevron-down'></i>
@@ -96,72 +103,135 @@
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('customer/addTicket') ?>'">
-                                <i class='bx bx-fw bx-note'></i> Add Tickets
+                            <button type="button" class="nsm-button" onclick="location.href='<?php echo base_url('ticket/add') ?>'">
+                                <i class='bx bx-fw bx-note'></i> New Ticket
                             </button>
                         </div>
                     </div>
                 </div>
+                <form id="frm-with-selected">
+                    <input type="hidden" value="" id="change-status" name="change_status" />
+                    <table class="nsm-table" id="ticket-list-table">
+                        <thead>
+                            <tr>
+                                <td class="table-icon text-center">
+                                    <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
+                                </td>
+                                <td class="table-icon"></td>
+                                <td data-name="Work Order Number">Ticket No.</td>
+                                <td data-name="Customer">Customer</td>
+                                <td data-name="Date Issued">Date</td>
+                                <td data-name="Time From">Time</td>                            
+                                <td data-name="Status">Status</td>
+                                <td data-name="Amount" style="width:8%; !important;text-align:right;">Amount</td>
+                                <td data-name="Manage" style="width:3%;"></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($tickets as $ticket){ ?>
+                            <tr>
+                                <td style="text-align:center;"><input class="form-check-input row-select table-select" name="tickets[]" type="checkbox" name="id_selector" value="<?= $ticket->id; ?>"></td>
+                                <td><div class="table-row-icon"><i class='bx bx-briefcase'></i></div></td>
+                                <td><b><?php echo $ticket->ticket_no; ?></b></td>
+                                <td><?php echo $ticket->first_name.' '.$ticket->last_name; ?></td>
+                                <td>
+                                    <?php 
+                                        $date = '---';
+                                        if( strtotime($ticket->ticket_date) > 0 ){
+                                            $date =  date("m/d/Y", strtotime($ticket->ticket_date)); 
+                                        }
 
-                <table class="nsm-table" id="ticket-list-table">
-                    <thead>
-                        <tr>
-                            <td class="table-icon text-center">
-                                <input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0" id="select-all">
-                            </td>
-                            <td class="table-icon"></td>
-                            <td data-name="Work Order Number">Ticket No.</td>
-                            <td data-name="Date Issued">Ticket Date</td>
-                            <td data-name="Customer">Customer</td>
-                            <td data-name="Status">Status</td>
-                            <td data-name="Amount" style="width:10%; !important;">Amount</td>
-                            <td data-name="Manage" style="width:5%;"></td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach($tickets as $ticket){ ?>
-                        <tr>
-                            <td style="text-align:center;"><input class="form-check-input select-all table-select" type="checkbox" name="id_selector" value="0"></td>
-                            <td><div class="table-row-icon"><i class='bx bx-briefcase'></i></div></td>
-                            <td><b><?php echo $ticket->ticket_no; ?></b></td>
-                            <td>
-                                <?php 
-                                    $date = '---';
-                                    if( strtotime($ticket->ticket_date) > 0 ){
-                                        $date =  date("m/d/Y", strtotime($ticket->ticket_date)); 
-                                    }
+                                        echo $date;
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php 
+                                        $ticket_time = '---';
+                                        if( $ticket->scheduled_time != '' && $ticket->scheduled_time_to != '' ){
+                                            $time_from =  date("G:i A", strtotime($ticket->scheduled_time)); 
+                                            $time_to =  date("G:i A", strtotime($ticket->scheduled_time_to)); 
+                                            $ticket_time = $time_from . ' to ' . $time_to;
+                                        }
 
-                                    echo $date;
-                                ?>
-                            </td>
-                            <td><?php echo $ticket->first_name.' '.$ticket->last_name; ?></td>
-                            <td><?php echo $ticket->ticket_status; ?></td>
-                            <td>$<?php echo number_format($ticket->grandtotal,2); ?></td>
-                            <td>
-                                <div class="dropdown table-management">
-                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
-                                        <i class='bx bx-fw bx-dots-vertical-rounded'></i>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
-                                            <a class="dropdown-item" href="<?php echo base_url('tickets/viewDetails/' . $ticket->id) ?>">View</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" tabindex="-1" href="<?php echo base_url('tickets/editDetails/' . $ticket->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item delete-ticket" href="javascript:void(0);" data-tk-id="<?php echo $ticket->id; ?>">Delete</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </td>
-                        </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
+                                        echo $ticket_time;
+                                    ?>
+                                </td>                            
+                                <td><?php echo $ticket->ticket_status; ?></td>
+                                <td style="width:8%; !important;text-align:right;">$<?php echo number_format($ticket->grandtotal,2); ?></td>
+                                <td>
+                                    <div class="dropdown table-management">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
+                                            <i class='bx bx-fw bx-dots-vertical-rounded'></i>
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item row-view-ticket" href="javascript:void(0);" data-id="<?= $ticket->id; ?>">View</a></li>
+                                            <li><a class="dropdown-item" tabindex="-1" href="<?php echo base_url('tickets/editDetails/' . $ticket->id) ?>"><span class="fa fa-pencil-square-o icon"></span> Edit</a></li>
+                                            <li><a class="dropdown-item delete-ticket" href="javascript:void(0);" data-tk-id="<?php echo $ticket->id; ?>">Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                        </tbody>
+                    </table>
+                </form>
             </div>
         </div>
     </div>
+    
+    <div class="modal fade nsm-modal fade" id="modal-with-change-status" tabindex="-1" aria-labelledby="modal-with-change-status-label" aria-hidden="true">
+        <div class="modal-dialog modal-md" style="margin-top:13%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title"> Change Status</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-12 mb-3">
+                            <label for="plan-type-name" class="content-subtitle fw-bold d-block mb-2">Change status to </label>
+                            <select id="ticket-status" class="form-control">
+                                <option value="New">New</option>
+                                <option value="Draft">Draft</option>
+                                <option value="Scheduled">Scheduled</option>
+                                <option value="Arrived">Arrived</option>
+                                <option value="Started">Started</option>
+                                <option value="Approved">Approved</option>
+                                <option value="Finished">Finished</option>
+                                <option value="Invoiced">Invoiced</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+                        </div>
+                    </div> 
+                </div>
+                <div class="modal-footer">                    
+                    <button type="button" class="nsm-button primary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="nsm-button primary" id="btn-change-status-submit">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade nsm-modal fade" id="modal-view-ticket" tabindex="-1" aria-labelledby="modal-view-ticket_label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">View Service Ticket</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" style="max-height:700px;overflow:auto;">
+                    <input type="hidden" id="view-ticket-id" value="" />
+                    <div class="row g-3" id="view_ticket_container"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="nsm-button primary" id="btn-download-pdf">Download PDF</button>
+                    <button type="button" class="nsm-button primary" id="btn-edit-ticket">Edit Ticket</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 
 <script type="text/javascript">
@@ -180,26 +250,30 @@
 </script>
 <?php //include viewPath('includes/footer'); ?>
 <script>
-    $(document).on('click', '.delete-ticket', function(){
-        var tkID = $(this).attr('data-tk-id');
-            Swal.fire({
-                title: 'Delete Service Ticket',
-                text: "Are you sure you want to delete this Ticket?",
-                icon: 'question',
-                confirmButtonText: 'Proceed',
-                showCancelButton: true,
-                cancelButtonText: "Cancel"
-            }).then((result) => {
-                if (result.value) {
-                    $.ajax({
-                        method: 'POST',
-                        url: '<?php echo base_url(); ?>tickets/deleteTicket',
-                        dataType: 'json',
-                        data: {tkID: tkID},
-                        success: function(result) {
+    $(document).on('change', '#select-all', function(){
+        $('.row-select:checkbox').prop('checked', this.checked);  
+    });
+
+    $(document).on('click', '#with-selected-delete', function(){
+        Swal.fire({
+            title: 'Delete Service Ticket',
+            text: "Are you sure you want to delete selected data?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    method: 'POST',
+                    url: base_url + 'tickets/_delete_selected_tickets',
+                    dataType: 'json',
+                    data: $('#frm-with-selected').serialize(),
+                    success: function(result) {                        
+                        if( result.is_success == 1 ) {
                             Swal.fire({
-                                title: 'Good job!',
-                                text: "Data Deleted Successfully!",
+                                title: 'Delete Service Ticket',
+                                text: "Data deleted successfully!",
                                 icon: 'success',
                                 showCancelButton: false,
                                 confirmButtonText: 'Okay'
@@ -208,28 +282,147 @@
                                     location.reload();
                                 }
                             });
-                        },
-                    });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    },
+                });
 
-                }
-            });
+            }
         });
+    });
+    
+    $(document).on('click', '.delete-ticket', function(){
+        var tkID = $(this).attr('data-tk-id');
+        Swal.fire({
+            title: 'Delete Service Ticket',
+            text: "Are you sure you want to delete this selected ticket?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    method: 'POST',
+                    url: base_url + 'tickets/deleteTicket',
+                    dataType: 'json',
+                    data: {tkID: tkID},
+                    success: function(result) {
+                        if( result.is_success == 1 ) {
+                            Swal.fire({
+                                title: 'Delete Service Ticket',
+                                text: "Data deleted successfully!",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                if (result.value) {
+                                    location.reload();
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    },
+                });
+
+            }
+        });
+    });
+
+    $(document).on('click', '#with-selected-change-status', function(){
+        $('#modal-with-change-status').modal('show');
+    });
+
+    $(document).on('click', '#btn-change-status-submit', function(e){
+        e.preventDefault();
+        var status = $('#ticket-status').val();
+        $('#change-status').val(status);
+
+        $.ajax({
+            url: base_url + 'tickets/_update_status_selected_tickets',
+            method: 'post', 
+            data: $('#frm-with-selected').serialize(),           
+            dataType:'json',
+            success: function (response) {
+                $('#modal-with-change-status').modal('hide');
+                $('#btn-change-status-submit').html('Save');
+                if( response.is_success == 1 ){
+                    Swal.fire({
+                        title: 'Change Status',
+                        text: "Data updated successfully!",
+                        icon: 'success',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        if (result.value) {
+                            location.reload();
+                        }
+                    });
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Cannot find data',
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-change-status-submit').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });   
+    });
+
+    $(document).on('click', '.row-view-ticket', function(){
+        var appointment_id = $(this).attr('data-id');
+        var url = base_url + 'ticket/_quick_view_details';
+
+        $('#view-ticket-id').val(appointment_id);
+        $('#modal-view-ticket').modal('show');
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: {appointment_id: appointment_id},
+            success: function(result) {
+                $("#view_ticket_container").html(result);
+            },
+            beforeSend: function() {
+                $('#view_ticket_container').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $(document).on('click', '#btn-download-pdf', function(){
+        var tid = $('#view-ticket-id').val();
+
+        location.href = base_url + 'share_Link/ticketsPDF/' + tid;
+    });
 
         
-        function sucess(information,$id){
-            Swal.fire({
-                title: 'OK!',
-                text: information,
-                icon: 'success',
-                showCancelButton: false,
-                confirmButtonColor: '#32243d',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ok'
-            }).then((result) => {
-                if (result.value) {
-                    location.reload();
-                }
-            });
-        }
+    function sucess(information,$id){
+        Swal.fire({
+            title: 'OK!',
+            text: information,
+            icon: 'success',
+            showCancelButton: false,
+            confirmButtonColor: '#32243d',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ok'
+        }).then((result) => {
+            if (result.value) {
+                location.reload();
+            }
+        });
+    }
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
