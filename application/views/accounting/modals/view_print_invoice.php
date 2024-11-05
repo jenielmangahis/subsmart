@@ -5,8 +5,8 @@
             <!-- Modal content-->
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
-                    <h4 class="modal-title">Print Preview</h4>
-                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                    <h4 class="modal-title">Print Preview</h4>                    
+                    <!-- <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button> -->
                 </div>
                 <div class="modal-body">
                     <div class="row" style="min-height: 100%">
@@ -30,21 +30,16 @@
                 <div class="modal-footer">
                     <div class="row w-100">
                         <div class="col-md-4">
-                            <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
+                            <button type="button" class="nsm-button primary" data-bs-dismiss="modal" aria-label="Close">Close</button>
                         </div>
                         <div class="col-md-4 d-flex"></div>
                         <div class="col-md-4">
-                            <a href="#" class="btn btn-success float-right" id="preview-and-print">
-                                Print
-                            </a>
-                            <a href="/accounting/download-invoice-pdf/<?=$invoice->id?>" class="btn btn-secondary float-right mr-1" id="download-pdf">
-                                Download
-                            </a>
+                            <a href="javascript:void(0);" class="nsm-button primary float-right mr-1" id="preview-and-print">Print</a>
+                            <a href="/accounting/download-invoice-pdf/<?=$invoice->id?>" class="nsm-button primary float-right mr-1" id="download-pdf">Download</a>                            
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
     <!--end of modal-->
