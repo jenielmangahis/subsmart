@@ -1620,4 +1620,38 @@ class Pages extends MYF_Controller {
             return $this->load->view('v2/pages/invoice/front-invoice-template', $this->page_data, true);
         }        
     }
+
+	public function viewTicketDetails($id)
+    {
+		$this->load->model('Tickets_model');
+		$this->load->model('Invoice_model');
+
+        $tickets = $this->Tickets_model->get_tickets_data_one($id);
+        $ticket_rep  = $tickets->sales_rep;
+
+        $this->page_data['reps'] = $this->Tickets_model->get_ticket_representative($ticket_rep);
+        // var_dump($ticket_rep);
+        
+        $this->page_data['ticketsCompany'] = $this->Tickets_model->get_tickets_company($tickets->company_id);
+        $this->page_data['tickets'] = $ticketsD = $this->Tickets_model->get_tickets_data_one($id);
+        $this->page_data['items'] = $this->Tickets_model->get_ticket_items($id);
+        $this->page_data['payment'] = $paymentD = $this->Tickets_model->get_ticket_payments($id);
+        $this->page_data['clients'] = $this->Tickets_model->get_tickets_clients($tickets->company_id);
+        $this->page_data['invoiceD'] = $invD = $this->Invoice_model->getByTicketId($id);
+
+        $ticketdet = $this->Tickets_model->get_tickets_data_one($id);
+        $assigned_technician = unserialize($ticketdet->technicians);
+        if(!empty($assigned_technician)) {
+            // var_dump($assigned_technician);
+            foreach($assigned_technician as $eid){
+                $custom_html = '<div class="nsm-profile me-3 calendar-tile-assigned-tech" style="background-image: url(\''.userProfileImage($eid).'\'); width: 30px;display:inline-block;">'.getUserName($eid).'</div>';
+            }
+
+        } else {
+            $custom_html = '<span></span>';
+        }
+
+        $this->page_data['page']->title = 'Service Tickets';
+        $this->load->view('pages/ticket_customer_view', $this->page_data);
+    }
 }
