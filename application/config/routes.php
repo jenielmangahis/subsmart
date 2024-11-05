@@ -1636,6 +1636,9 @@ $route['booking/_set_booking_schedule'] = 'Pages/ajax_user_set_schedule';
 $route['booking/product_booking_form/(:any)'] = 'Pages/front_booking_form/$1';
 $route['booking/save_booking_inquiry'] = 'Pages/save_product_booking';
 
+// Front View Ticket
+$route['view_service_ticket/(:num)/(:num)'] = 'Pages/viewTicketDetails/$1/$2';
+
 // Taskhub
 $route['taskhub/_load_taskhub_list'] = 'Taskhub/ajax_load_company_list';
 $route['taskhub/_add_new_task'] = 'Taskhub/ajax_add_new_task';
