@@ -440,10 +440,10 @@ a.btn-primary.btn-md {
                                             <?php } ?>
                                         </select>
                                     </div>
-                                    <!-- <div class="col-md-3 form-group mt-3">
+                                    <div class="col-md-3 form-group mt-3">
                                         <label for="job_description"><b>Job Description</b></label>
                                         <textarea class="form-control" name="job_description" id="job_description"></textarea>
-                                    </div> -->
+                                    </div>
                                 </div>
                                 <div class="row" id="plansItemDiv" style="background-color:white;">
                                     <h6 class='card_header custom-ticket-header'>Item List</h6>
