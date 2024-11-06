@@ -1950,6 +1950,8 @@ class Job extends MY_Controller
 
     public function job_tags()
     {
+        $this->load->model('Icons_model');
+        
         $this->page_data['page']->title = 'Job Tags';
         $this->page_data['page']->parent = 'Sales';
 
@@ -1964,6 +1966,10 @@ class Job extends MY_Controller
                 'ordering' => 'DESC',
             ),
         );
+
+        $icons = $this->Icons_model->getAll();
+
+        $this->page_data['icons'] = $icons;
         $this->page_data['job_tags'] = $this->general->get_data_with_param($get_job_settings);
         $this->load->view('v2/pages/job/job_tags', $this->page_data);
     }

@@ -2442,7 +2442,6 @@ class Customer extends MY_Controller
                 $enable_ringcentral_call = true;
             }
         }
-
         // Sms Template
         $this->load->model('SmsTemplate_model');
         $smsTemplates = $this->SmsTemplate_model->getAllByCompanyId($cid);
@@ -9542,6 +9541,21 @@ class Customer extends MY_Controller
         $this->page_data['salesRep'] = $this->general->get_data_with_param($getSalesRepData);
         $this->page_data['technician'] = $this->general->get_data_with_param($getTechnicianData);
         $this->load->view("v2/pages/customer/$page", $this->page_data);
+    }
+
+    public function ajax_quick_search()
+    {
+        $this->load->model('Customer_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $query['q'] = $post['customer_query'];
+        $customers = $this->Customer_model->getAllByCompany($cid,$query);
+
+        $this->page_data['customers'] = $customers;
+        $this->load->view("v2/pages/customer/ajax_quick_search_result", $this->page_data);
+
     }
 
 }

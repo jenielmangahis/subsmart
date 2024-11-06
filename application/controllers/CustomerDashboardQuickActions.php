@@ -479,6 +479,8 @@ class CustomerDashboardQuickActions extends MYF_Controller
 
     public function mobileDownloadCustomerDocument()
     {
+        $this->load->model('FileVault_model');
+
         $is_success = 0;
         $msg = 'Cannot find data';
         
@@ -505,7 +507,9 @@ class CustomerDashboardQuickActions extends MYF_Controller
                 $vault_location = FCPATH . 'uploads/filevault_v2/'.$userDocfile->company_id.'/'.$esign_filename;
                 $vault_location_db = 'filevault_v2/'.$userDocfile->company_id.'/'.$esign_filename;
 
-                if (!file_exists($vault_location)) {          
+                $isFileExists = $this->FileVault_model->getByNameAndCompanyId($esign_filename, $userDocfile->company_id);
+                //if (!file_exists($vault_location)) {          
+                if( !$isFileExists ){
                     $file_size = filesize($generatedPDFPath);          
                     copy($generatedPDFPath, $vault_location);
 
@@ -532,6 +536,7 @@ class CustomerDashboardQuickActions extends MYF_Controller
                         'softdelete_by' => 0
                     ]);
                 }
+                //}
 
                 $is_success = 1;
                 $msg = '';

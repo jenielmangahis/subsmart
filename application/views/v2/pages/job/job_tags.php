@@ -1,35 +1,26 @@
 <?php include viewPath('v2/includes/header'); ?>
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">
-<script type="text/javascript" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-
 <style>
-    .nsm-table {
-        /*display: none;*/
-    }
-    .nsm-badge.primary-enhanced {
-        background-color: #6a4a86;
-    }
-        table {
-        width: 100% !important;
-    }
-    .dataTables_filter, .dataTables_length{
-        display: none;
-    }
-    table.dataTable thead th, table.dataTable thead td {
-    padding: 10px 18px;
-    border-bottom: 1px solid lightgray;
+#input-upload-image, #icon-pick-name {
+    width: 300px;
+    display: inline-block;
 }
-table.dataTable.no-footer {
-     border-bottom: 0px solid #111; 
-     margin-bottom: 10px;
+.list-icon{
+    list-style: none;
+    height: 400px;
+    overflow: auto;
+    padding: 6px;
 }
-.nsm-button:hover {
-     border-color: gray !important; 
-     background-color: white !important; 
-     color: black !important; 
+.list-icon li{
+    display: inline-block;
+    /*width: 30%;*/
+    height:100px;
+    margin: 3px;
+}
+.icon-image{
+    height: 50px;
+    width: 50px;    
 }
 </style>
-
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?= base_url('job/add_new_job_tag'); ?>'">
         <i class='bx bx-tag'></i>
@@ -62,16 +53,14 @@ table.dataTable.no-footer {
                     </div>
                     <div class="col-sm-6 grid-mb text-end">
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?= base_url('job/add_new_job_tag'); ?>'">
-                            <i class='bx bx-fw bx-tag'></i> New Tag
-                            </button>
+                            <button type="button" class="nsm-button primary" id="btn-add-new-tag"><i class='bx bx-plus-medical'></i> Add New</button>
                         </div>
                     </div>
                 </div>
-                <table id="JOB_TAG_TABLE" class="nsm-table">
+                <table class="nsm-table" id="job-tags-table">
                     <thead>
                         <tr>
-                            <td class="table-icon"></td>
+                            <td class="table-icon" style="width:5%;"></td>
                             <td data-name="Name">Name</td>
                             <td data-name="Manage"></td>
                         </tr>
@@ -96,7 +85,7 @@ table.dataTable.no-footer {
                                     ?>
                                 <div class="table-row-icon img" style="background-image: url('<?php echo $marker ?>')"></div>
                             </td>
-                            <td class="fw-bold nsm-text-primary"><?= $tag->name; ?></td>
+                            <td class="nsm-text-primary"><?= $tag->name != '' ? $tag->name : '---'; ?></td>
                             <td>
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">
@@ -119,25 +108,110 @@ table.dataTable.no-footer {
             </div>
         </div>
     </div>
+    
+    <div class="modal fade nsm-modal fade" id="modal-create-tags" tabindex="-1" aria-labelledby="modal-create-tags_label" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <form method="post" id="tags_form">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title content-title">Create Job Tags</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Tag Name</label>
+                                <input type="text" name="job_tag_name" value="" class="form-control" required="" autocomplete="off" />
+                            </div>
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Tag Icon / Marker</label>
+                                <input type="file" name="image" value="" class="form-control" id="input-upload-image" autocomplete="off" />
+                                <input type="text" name="default-icon-name" disabled="" value="" class="form-control" style="display:none;" id="icon-pick-name" /><br />
+                                <div class="form-check" style="margin-top: 10px;">
+                                    <input class="form-check-input" type="checkbox" name="is_default_icon" value="1" id="iconList" />
+                                    <label class="form-check-label">
+                                        Pick from list
+                                    </label>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="nsm-button primary">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade nsm-modal fade" id="modalIconList" tabindex="-1" aria-labelledby="modalIconListLabel" aria-hidden="true">
+        <div style="max-width: 1000px;" class="modal-dialog modal-lg">
+        <input type="hidden" name="pid" id="priority_id" value="" />
+        <div class="modal-content">
+            <div class="modal-header">
+            <span class="modal-title content-title">Icon List</span>
+            <button onclick='$("#iconList").prop("checked", false);' type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
+            </div>
+            <div class="modal-body">
+            <div class="col-md-12">
+                <div class="row">
+                <ul class="list-icon">
+                    <?php foreach($icons as $i){ ?>
+                    <li>
+                    <a href="javascript:void(0);" data-name="<?= $i->image; ?>" data-id="<?= $i->id; ?>" class="a-icon hvr-float-shadow hvr-icon-bounce">
+                        <img src="<?= base_url('uploads/icons/' . $i->image); ?>" class="icon-image hvr-icon" />
+                    </a>
+                    </li>
+                    <?php } ?>
+                </ul>
+                </div>
+            </div>
+            </div>
+            <div class="modal-footer modal-footer-detail">
+            <div class="button-modal-list">
+                <button onclick='$("#iconList").prop("checked", false);' type="button" class="nsm-button" data-bs-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+
 </div>
 
 
 <script type="text/javascript">
-var JOB_TAG_TABLE = $("#JOB_TAG_TABLE").DataTable({
-    "ordering": false,
-    language: {
-        processing: '<span>Fetching data...</span>'
-    },
-});
-
-$("#CUSTOM_TAG_SEARCHBAR").keyup(function() {
-    JOB_TAG_TABLE.search($(this).val()).draw()
-});
-JOB_TAG_TABLE_SETTINGS = JOB_TAG_TABLE.settings();
-
-
     $(document).ready(function() {
-        // $(".nsm-table").nsmPagination();
+        $("#job-tags-table").nsmPagination({itemsPerPage:10});
+        $("#CUSTOM_TAG_SEARCHBAR").on("input", debounce(function() { 
+            tableSearch($(this));            
+        }, 1000));
+
+        $('#btn-add-new-tag').on('click', function(){
+            $('#modal-create-tags').modal('show');
+        });
+
+        $(".a-icon").click(function(){
+            var icon_name = $(this).attr("data-name");
+            var icon_id   = $(this).attr("data-id");
+
+            $("#input-upload-image").hide();
+            $("#icon-pick-name").show();
+            $("#icon-pick-name").val(icon_name);
+            $("#modalIconList").modal('hide');
+            $("#default-icon-id").val(icon_id);
+        });
+
+        $("#iconList").on('change', function(){
+            if ($(this).is(':checked')) {
+                $("#modalIconList").modal('show');
+            }else{
+                $("#input-upload-image").show();
+                $("#icon-pick-name").hide();
+                $("#default-icon-id").val("");
+            }
+        });
 
         $(document).on("click", ".delete-item", function( event ) {
             var ID = $(this).attr("data-id");

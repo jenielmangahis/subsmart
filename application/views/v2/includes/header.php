@@ -115,6 +115,11 @@ if ($this->session->userdata('usertimezone') == null) {
         #sidebar-persons-counter .badge-primary, #sidebar-company-counter .badge-primary{
             background-color:#6a4a86 !important;
         }
+        #quick-customer-search-result-container{
+            display: block;
+            padding: 10px;
+            margin-top: 7px;
+        }
     </style>
     <script>
         var baseURL = '<?php echo base_url(); ?>';
@@ -151,7 +156,11 @@ $hdrCompanyData = getCompanyData($cid, $fields);
                         <div id="hdr-multi-account-list"></div>
                     </li>
                 <?php } ?>
-
+                <li>
+                    <a href="javascript:void(0);" id="left-nav-customer-search">
+                        <i class='bx bx-fw bx-search'></i> Search Customer
+                    </a>
+                </li>
                 <?php 
                     if( $hdr_menu_settings ){
                         include viewPath('v2/includes/left_nav_settings');
@@ -876,6 +885,27 @@ if (is_null($image)) {
     </div>
 </div>
 
+<!-- Customer Search -->
+<div class="modal fade nsm-modal fade" id="modal-quick-customer-search" tabindex="-1" aria-labelledby="modal-customize-menuLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="modal-title content-title" id=""><i class='bx bx-search'></i> Search Customer</span>
+                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+            </div>            
+            <div class="modal-body">
+                <form id="frm-left-nav-quick-search-customer">
+                <div class="input-group">
+                    <input type="text" name="customer_query" class="form-control rounded" placeholder="Search" />
+                    <button type="submit" class="nsm nsm-button primary" style="margin-bottom:0px;">search</button>
+                </div>
+                </form>
+                <div id="quick-customer-search-result-container"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $('.openChatbotButton').click(function (e) { 
         $('.techSupportMenu').hide();
@@ -915,6 +945,27 @@ if (is_null($image)) {
                 $('.chatbox_header').attr('data-bgcolor', response[0]['color']);
                 $('.chaticon').show();
             }
+        });
+
+        $(document).on('click', '#left-nav-customer-search', function(){
+            $('#modal-quick-customer-search').modal('show');
+        });
+
+        $(document).on('submit', '#frm-left-nav-quick-search-customer', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + "customer/_quick_search",
+                data: $('#frm-left-nav-quick-search-customer').serialize(),
+                beforeSend: function() {
+                    $('#quick-customer-search-result-container').html('<span class="bx bx-loader bx-spin"></span>');
+                    
+                },
+                success: function(html) {
+                    $('#quick-customer-search-result-container').html(html);
+                }
+            });
         });
 
         $(document).on('submit', '#sendchat_form', function(e) {

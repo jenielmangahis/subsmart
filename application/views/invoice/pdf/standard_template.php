@@ -87,8 +87,8 @@
                                         </tr>
                                         <tr>
                                             <td style="text-align: left;">   
-                                                <?php if($invoice->status == 'Paid'){
-                                                        echo '$ '.number_format($invoice->grand_total, 2);
+                                                <?php if($invoice->status !== 'Paid'){
+                                                        echo '$ '.number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2); 
                                                     } else{
                                                     echo "$0.00";
                                                 } ?>
@@ -338,13 +338,11 @@
                         <tr>
                             <td colspan="3"></td>
                             <td colspan="3" style="text-align: right"><b>Balance Due</b></td>
-                            <td style="text-align: right"><b>
-                                <?php if($invoice->status == 'Paid'){
-                                        echo '$ '.number_format($invoice->grand_total, 2);
-                                    } else{
-                                    echo "$0.00";
-                                } ?>
-                            </b></td>
+                            <td style="text-align: right">
+                                <b>  
+                                    <?= number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2); ?>
+                                </b>
+                            </td>
                         </tr>
                     </tfoot>
                 </table>

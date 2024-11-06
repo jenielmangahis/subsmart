@@ -101,8 +101,8 @@
                                             <td style="text-align: right;"><b>Balance Due:</b></td>
                                             <td style="width: 160px; text-align: right;" class="text-right">
                                                 <b>
-                                                <?php if($invoice->status == 'Paid'){
-                                                        echo '$ '.number_format($invoice->grand_total, 2);
+                                                <?php if($invoice->status !== 'Paid'){
+                                                        echo '$ '.number_format((float) ($invoice->grand_total - $invoice->deposit_request), 2);
                                                     } else{
                                                     echo "$0.00";
                                                 } ?>

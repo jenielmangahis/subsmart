@@ -1552,6 +1552,7 @@ $route['customer/_check_customer_esign_pdf'] = 'Customer/ajax_check_customer_esi
 $route['customer/download_esign_doc'] = 'Customer/downloadEsignDoc';
 $route['customer/_load_customer_sms_messages'] = 'Customer/ajax_load_customer_sms_messages';
 $route['customer/_load_all_subscriptions'] = 'Customer/ajax_load_all_subscriptions';
+$route['customer/_quick_search'] = 'Customer/ajax_quick_search';
 
 // Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';
@@ -1634,6 +1635,9 @@ $route['booking/_load_week_schedule'] = 'Pages/ajax_load_week_schedule';
 $route['booking/_set_booking_schedule'] = 'Pages/ajax_user_set_schedule';
 $route['booking/product_booking_form/(:any)'] = 'Pages/front_booking_form/$1';
 $route['booking/save_booking_inquiry'] = 'Pages/save_product_booking';
+
+// Front View Ticket
+$route['view_service_ticket/(:num)/(:num)'] = 'Pages/viewTicketDetails/$1/$2';
 
 // Taskhub
 $route['taskhub/_load_taskhub_list'] = 'Taskhub/ajax_load_company_list';
@@ -1890,6 +1894,7 @@ $route['accounting/employees/_update_employment_details'] = 'accounting_controll
 $route['ticket/_create_service_type'] = 'Tickets/ajax_create_servicetype';
 $route['tickets/_delete_selected_tickets'] = 'Tickets/ajax_delete_selected_tickets';
 $route['tickets/_update_status_selected_tickets'] = 'Tickets/ajax_update_status_selected_tickets';
+$route['ticket/add'] = 'Tickets/addTicket';
 
 //Setting : Panel Types
 $route['tickets/settings_panel_types'] = 'Tickets/settings_panel_types';
