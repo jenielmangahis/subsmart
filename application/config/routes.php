@@ -1278,6 +1278,7 @@ $route['job/edit_job_type/(:num)'] = 'Job/edit_job_type/$1';
 $route['job/update_job_type'] = 'Job/update_job_type';
 $route['job/_update_job_type'] = 'Job/ajax_update_job_type';
 $route['job/delete_job_type'] = 'Job/delete_job_type';
+$route['job/_delete_job_type'] = 'Job/ajax_delete_job_type';
 
 // Event Tags
 $route['events/add_new_event_tag'] = 'Events/add_new_event_tag';
