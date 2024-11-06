@@ -527,7 +527,7 @@ class CustomerDashboardQuickActions extends MYF_Controller
                         'is_folder' => 0,
                         'folder_color' => '#9A9A9A',
                         'parent_id' => 0,
-                        'is_shared' => 0,
+                        'is_shared' => 1,
                         'is_starred' => 0,
                         'company_id' => $userDocfile->company_id,
                         'downloads_count' => 0,
