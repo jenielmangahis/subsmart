@@ -236,9 +236,9 @@ class CustomerDashboardQuickActions extends MYF_Controller
         $this->respond(['data' => $customer]);
     }
 
-    private function getCustomerDocumentPath()
+    private function getCustomerDocumentPath($customer_id)
     {
-        $filePath = FCPATH . (implode(DIRECTORY_SEPARATOR, ['uploads', 'customerdocuments']) . DIRECTORY_SEPARATOR);
+        $filePath = FCPATH . (implode(DIRECTORY_SEPARATOR, ['uploads', 'customerdocuments', $customer_id]) . DIRECTORY_SEPARATOR);
         if (!file_exists($filePath)) {
             mkdir($filePath, 0777, true);
         }
@@ -252,10 +252,10 @@ class CustomerDashboardQuickActions extends MYF_Controller
             $this->respond(['success' => false]);
         }
 
-        $filePath = $this->getCustomerDocumentPath();
-
         $document = $_FILES['document'];
         ['document_type' => $documentType, 'customer_id' => $customerId, 'document_label' => $documentLabel] = $this->input->post();
+
+        $filePath = $this->getCustomerDocumentPath($customerId);
 
         $maxSizeInMB = 8;
         if ($document['size'] > self::ONE_MB * $maxSizeInMB) {
@@ -297,6 +297,7 @@ class CustomerDashboardQuickActions extends MYF_Controller
                 'document_type' => $documentType,
                 'document_label' => $documentLabel,
                 'is_predefined' => in_array(strtolower($documentType), $predefinedTypes),
+                'date_created' => date("Y-m-d H:i:s")
             ];
 
             $this->db->insert('acs_customer_documents', $row);
@@ -315,10 +316,10 @@ class CustomerDashboardQuickActions extends MYF_Controller
             $this->respond(['success' => false]);
         }
 
-        $filePath = $this->getCustomerDocumentPath();
-
         $payload = json_decode(file_get_contents('php://input'), true);
         ['document_type' => $documentType, 'customer_id' => $customerId] = $payload;
+
+        $filePath = $this->getCustomerDocumentPath($customerId);
 
         $this->db->where('customer_id', $customerId);
         $this->db->where('document_type', $documentType);
@@ -347,10 +348,10 @@ class CustomerDashboardQuickActions extends MYF_Controller
     public function downloadCustomerDocument()
     {
 
-        $filePath = $this->getCustomerDocumentPath();
-
         $customerId = $this->input->get('customer_id', true);
         $documentTypes = explode(',', $this->input->get('document_type', true));
+
+        $filePath = $this->getCustomerDocumentPath($customerId);
 
         if (in_array('esign', $documentTypes)) {
             $id = $this->input->get('generated_esign_id', true);
@@ -479,6 +480,8 @@ class CustomerDashboardQuickActions extends MYF_Controller
 
     public function mobileDownloadCustomerDocument()
     {
+        $this->load->model('FileVault_model');
+
         $is_success = 0;
         $msg = 'Cannot find data';
         
@@ -505,7 +508,9 @@ class CustomerDashboardQuickActions extends MYF_Controller
                 $vault_location = FCPATH . 'uploads/filevault_v2/'.$userDocfile->company_id.'/'.$esign_filename;
                 $vault_location_db = 'filevault_v2/'.$userDocfile->company_id.'/'.$esign_filename;
 
-                if (!file_exists($vault_location)) {          
+                $isFileExists = $this->FileVault_model->getByNameAndCompanyId($esign_filename, $userDocfile->company_id);
+                //if (!file_exists($vault_location)) {          
+                if( !$isFileExists ){
                     $file_size = filesize($generatedPDFPath);          
                     copy($generatedPDFPath, $vault_location);
 
@@ -532,6 +537,7 @@ class CustomerDashboardQuickActions extends MYF_Controller
                         'softdelete_by' => 0
                     ]);
                 }
+                //}
 
                 $is_success = 1;
                 $msg = '';
