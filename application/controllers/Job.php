@@ -5653,6 +5653,34 @@ class Job extends MY_Controller
 
         echo json_encode($return);
     }
+
+    public function ajax_delete_job_type()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $jobType = $this->JobType_model->getById($post['jtid']);
+        if( $jobType && $jobType->company_id == $cid ){
+            //Activity Logs
+            $activity_name = 'Job Type : Deleted Job Type '.$jobType->title; 
+            createActivityLog($activity_name);
+
+            $this->JobType_model->delete($post['jtid']);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
 }
 
 /* End of file Job.php */
