@@ -186,8 +186,9 @@ function createElementFromHTML(htmlString) {
 }
 
 export function onClickDownload() {
-  const customerId = getCustomerIdFromUrl();
+  //const customerId = getCustomerIdFromUrl();
   const documentType = getButtonDocumentType(this);
+  const customerId = this.getAttribute('data-id');
 
   const params = {
     customer_id: customerId,

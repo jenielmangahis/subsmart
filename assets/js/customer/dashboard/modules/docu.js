@@ -72,6 +72,9 @@ $fileInput.addEventListener("change", async function () {
     window.setTimeout(() => $error.classList.add("d-none"), 3500);
   } else {
     const $uploadBtn = $wrapper.querySelector("[data-action=upload]");
+    const dataType   = $uploadBtn.getAttribute('data-type');
+    const $chkBox    = document.getElementById(dataType);
+    $chkBox.checked = true;
     const prevText = $uploadBtn.textContent;
     $uploadBtn.textContent = "Uploading...";
     $uploadBtn.setAttribute("disabled", true);
@@ -81,6 +84,7 @@ $fileInput.addEventListener("change", async function () {
       const $buttons = $wrapper.querySelector(".buttons");
       $buttons.classList.add("has-document");
     } catch (error) {
+      $chkBox.checked = false;
       console.error(error);
     } finally {
       $uploadBtn.textContent = prevText;
