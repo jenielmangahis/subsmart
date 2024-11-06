@@ -224,11 +224,11 @@
                             <label class="form-check-label" for="is-with-esign">eSign Required</label>
                         </div>
                     </div>
-                    <!-- <div class="col-md-6 form-group">
+                    <div class="col-md-6 form-group">
                         <label for="job_description"><b>Job Description</b></label>                        
                         <textarea name="job_description" id="job_description" class="form-control" required="" style="height:100px;"></textarea>
                         
-                    </div> -->
+                    </div>
                 </div>
             </div>
         </div>
