@@ -45,17 +45,17 @@
                         <div class="row g-2 align-items-center">
                             <div class="col-12 col-md-6 position-relative">
                                 <div class="form-check d-inline-block">
-                                    <input class="form-check-input" type="checkbox" value="1" id="client_agreement" name="client_agreement">
+                                    <input class="form-check-input docu-chk" type="checkbox" <?= $__documentExists('client_agreement') ? 'checked="checked"' : ''; ?> value="1" id="client_agreement" name="client_agreement">
                                     <label class="form-check-label" for="client_agreement" data-type="document_label">
                                         Client Agreement
                                     </label>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 text-end buttons <?= $__documentExists('client_agreement') ? 'has-document' : ''; ?>">
-                                <button type="button" class="nsm-button btn-sm" data-action="upload">
+                                <button type="button" class="nsm-button btn-sm" data-action="upload" data-type="client_agreement">
                                     Upload
                                 </button>
-                                <button type="button" class="nsm-button btn-sm" data-action="download">
+                                <button type="button" class="nsm-button btn-sm" data-action="download" data-id="<?= $cus_id; ?>">
                                     Download
                                 </button>
                                 <button type="button" class="nsm-button error btn-sm" data-action="delete">
@@ -69,17 +69,17 @@
                         <div class="row g-2 align-items-center">
                             <div class="col-12 col-md-6 position-relative">
                                 <div class="form-check d-inline-block">
-                                    <input class="form-check-input" type="checkbox" value="1" id="photo_id_copy" name="photo_id_copy">
+                                    <input class="form-check-input docu-chk" <?= $__documentExists('photo_id_copy') ? 'checked="checked"' : ''; ?> type="checkbox" value="1" id="photo_id_copy" name="photo_id_copy">
                                     <label class="form-check-label" for="photo_id_copy" data-type="document_label">
                                         Photo ID Copy
                                     </label>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 text-end buttons <?= $__documentExists('photo_id_copy') ? 'has-document' : ''; ?>">
-                                <button type="button" class="nsm-button btn-sm" data-action="upload">
+                                <button type="button" class="nsm-button btn-sm" data-action="upload" data-type="photo_id_copy">
                                     Upload
                                 </button>
-                                <button type="button" class="nsm-button btn-sm" data-action="download">
+                                <button type="button" class="nsm-button btn-sm" data-action="download" data-id="<?= $cus_id; ?>">
                                     Download
                                 </button>
                                 <button type="button" class="nsm-button error btn-sm" data-action="delete">
@@ -93,17 +93,17 @@
                         <div class="row g-2 align-items-center">
                             <div class="col-12 col-md-6 position-relative">
                                 <div class="form-check d-inline-block">
-                                    <input class="form-check-input" type="checkbox" value="1" id="proof_of_residency" name="proof_of_residency">
+                                    <input class="form-check-input docu-chk" type="checkbox" <?= $__documentExists('proof_of_residency') ? 'checked="checked"' : ''; ?> value="1" id="proof_of_residency" name="proof_of_residency">
                                     <label class="form-check-label" for="proof_of_residency" data-type="document_label">
                                         Proof of Residency
                                     </label>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 text-end buttons <?= $__documentExists('proof_of_residency') ? 'has-document' : ''; ?>">
-                                <button type="button" class="nsm-button btn-sm" data-action="upload">
+                                <button type="button" class="nsm-button btn-sm" data-action="upload" data-type="proof_of_residency">
                                     Upload
                                 </button>
-                                <button type="button" class="nsm-button btn-sm" data-action="download">
+                                <button type="button" class="nsm-button btn-sm" data-action="download" data-id="<?= $cus_id; ?>">
                                     Download
                                 </button>
                                 <button type="button" class="nsm-button error btn-sm" data-action="delete">
@@ -117,17 +117,17 @@
                         <div class="row g-2 align-items-center">
                             <div class="col-12 col-md-6 position-relative">
                                 <div class="form-check d-inline-block">
-                                    <input class="form-check-input" type="checkbox" value="1" id="personal_guarantee" name="personal_guarantee">
+                                    <input class="form-check-input docu-chk" type="checkbox" <?= $__documentExists('personal_guarantee') ? 'checked="checked"' : ''; ?> value="1" id="personal_guarantee" name="personal_guarantee">
                                     <label class="form-check-label" for="personal_guarantee" data-type="document_label">
                                         Personal Guarantee
                                     </label>
                                 </div>
                             </div>
                             <div class="col-12 col-md-6 text-end buttons <?= $__documentExists('personal_guarantee') ? 'has-document' : ''; ?>">
-                                <button type="button" class="nsm-button btn-sm" data-action="upload">
+                                <button type="button" class="nsm-button btn-sm" data-action="upload" data-type="personal_guarantee">
                                     Upload
                                 </button>
-                                <button type="button" class="nsm-button btn-sm" data-action="download">
+                                <button type="button" class="nsm-button btn-sm" data-action="download" data-id="<?= $cus_id; ?>">
                                     Download
                                 </button>
                                 <button type="button" class="nsm-button error btn-sm" data-action="delete">
@@ -137,7 +137,7 @@
                         </div>
                     </div>
 
-                    <div class="documents-loader d-flex align-items-center justify-content-center" style="padding-top: 1rem;">
+                    <div class="documents-loader d-flex align-items-center justify-content-center" style="padding-top: 1rem;display:none !important;">
                         <div class="spinner-border" role="status"></div>
                     </div>
 
@@ -187,11 +187,11 @@
                             </button>                            
                         </div>
 
-                        <div class="col-6 col-md-6 mb-2">
+                        <!-- <div class="col-6 col-md-6 mb-2">
                             <button type="submit" class="nsm-button w-100 ms-0 amt-3" id="managecustomerdocumentsbtn--download">
                                 <i class='bx bx-fw bx-import'></i> Download Selected
                             </button>
-                        </div>
+                        </div> -->
                         <div class="col-6 col-md-6">
                             <button type="button" class="nsm-button w-100 ms-0 btn-delete-selected" id="managecustomerdocumentsbtn--delete">
                                 <i class='bx bx-fw bx-trash'></i>
@@ -479,7 +479,10 @@
 </div>
 <script>
 $(function(){
-    load_esign_doc();
+    load_esign_doc('');
+
+    $(".docu-chk").click(function() { return false; });
+
     function load_esign_doc(search_query){
         var cid = "<?= $customer_id; ?>";
         var url = "<?= base_url('customer/_load_esign_doc') ?>";
