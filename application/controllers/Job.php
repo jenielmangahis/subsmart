@@ -1976,6 +1976,8 @@ class Job extends MY_Controller
 
     public function job_types()
     {
+        $this->load->model('Icons_model');
+
         $this->hasAccessModule(26);
         $this->page_data['page']->title = 'Job Types';
         $this->page_data['page']->parent = 'Sales';
@@ -1992,6 +1994,9 @@ class Job extends MY_Controller
                 'ordering' => 'DESC',
             ),
         );
+
+        $icons = $this->Icons_model->getAll();
+        $this->page_data['icons'] = $icons;
         $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
         $this->load->view('v2/pages/job/job_types', $this->page_data);
     }
@@ -5506,6 +5511,147 @@ class Job extends MY_Controller
         ];
 
         echo json_encode($json_data);
+    }
+
+    public function ajax_create_job_type()
+    {
+        $this->load->model('Icons_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+        $post    = $this->input->post();
+
+        if ($post['job_type_name'] == '') {
+            $is_success = 0;
+            $msg = 'Please enter job type name';
+        }
+
+        if( $post['job_type_name'] != '' ){
+            $isJobTypeExists = $this->JobType_model->getByTitleAndCompanyId($post['job_type_name'], $comp_id);
+            if( $isJobTypeExists ){
+                $is_success = 0;
+                $msg = 'Job type already exists';
+            }
+        }
+
+        if( $is_success == 1 ){
+            if (isset($post['is_default_icon'])) {
+                $icon = $this->Icons_model->getById($post['default_icon_id']);
+                $marker_icon = $icon->image;
+                $data_job_type = [
+                    'user_id' => $user_id,
+                    'company_id' => $comp_id,
+                    'title' => $post['job_type_name'],
+                    'icon_marker' => $marker_icon,
+                    'is_marker_icon_default_list' => 1,
+                    'status' => 1,
+                    'created_at' => date("Y-m-d H:i:s")
+                ];
+
+                $job_type_id = $this->JobType_model->create($data_job_type);
+                if ($job_type_id > 0) {
+                    //Activity Logs
+                    $activity_name = 'Job Type : Created Job Type '. $post['job_type_name']; 
+                    createActivityLog($activity_name);
+
+                    $msg = '';
+                }
+            } else {
+                if (!empty($_FILES['image']['name'])) {
+                    $marker_icon = $this->moveUploadedFile();
+                    $data_job_type = [
+                        'user_id' => $user_id,
+                        'company_id' => $comp_id,
+                        'title' => $post['job_type_name'],
+                        'icon_marker' => $marker_icon,
+                        'is_marker_icon_default_list' => 0,
+                        'status' => 1,
+                        'created_at' => date("Y-m-d H:i:s")
+                    ];
+
+                    $job_type_id = $this->JobType_model->create($data_job_type);
+                    if ($job_type_id > 0) {
+                        //Activity Logs
+                        $activity_name = 'Job Type : Created Job Type '. $post['job_type_name']; 
+                        createActivityLog($activity_name);
+
+                        $msg = '';
+                    } 
+                } else {
+                    $is_success = 0;
+                    $msg = 'Please specify job type icon / marker image';
+                }
+            }
+        }
+        
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
+    }
+
+    public function ajax_update_job_type()
+    {
+        $this->load->model('Icons_model');
+
+        $is_success = 1;
+        $msg = '';
+
+        $comp_id = logged('company_id');
+        $post    = $this->input->post();
+
+        if ($post['job_type_name'] == '') {
+            $is_success = 0;
+            $msg = 'Please enter job type name';
+        }
+
+        if( $is_success == 1 ){
+            $jobType = $this->JobType_model->getById($post['jtid']);
+            if ($jobType) {
+                $marker_icon = $jobType->icon_marker;
+                $is_marker_icon_default_list = $jobType->is_marker_icon_default_list;
+                if (isset($post['is_default_icon'])) {
+                    if ($post['default_icon_id'] > 0) {
+                        $icon = $this->Icons_model->getById($post['default_icon_id']);
+                        $marker_icon = $icon->image;
+                        $is_marker_icon_default_list = 1;
+                    }
+                } else {
+                    if ($_FILES['image']['size'] > 0) {
+                        $marker_icon = $this->moveUploadedFile();
+                        $is_marker_icon_default_list = 0;
+                    }
+                }
+
+                $data_job_type = [
+                    'title' => $post['job_type_name'],
+                    'icon_marker' => $marker_icon,
+                    'is_marker_icon_default_list' => $is_marker_icon_default_list
+                ];
+
+                $this->JobType_model->updateJobTypeById($post['jtid'], $data_job_type);
+
+                //Activity Logs
+                $activity_name = 'Job Type : Updated Job Type '.$post['job_type_name']; 
+                createActivityLog($activity_name);
+                
+            } else {
+                $is_success = 0;
+                $msg = 'Record not found';
+            }
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
     }
 }
 
