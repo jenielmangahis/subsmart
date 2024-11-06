@@ -45,6 +45,25 @@ class FileVault_model extends MY_Model
         $query = $this->db->get();
         return $query->row();
     }
+
+    public function getAllByParentIdAndCompanyId($pid, $cid)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('parent_id', $pid);
+        $this->db->where('company_id', $cid);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    public function saveData($data)
+    {
+        $this->db->insert($this->table, $data);
+        $last_id = $this->db->insert_id();
+     
+        return  $last_id;
+    }
 }
 
 
