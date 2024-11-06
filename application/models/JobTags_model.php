@@ -48,6 +48,21 @@ class JobTags_model extends MY_Model
         return $query;
     }
 
+    public function getByIdAndCompanyId($id, $company_id)
+    {
+        $user_id = logged('id');
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        $this->db->where('id', $id);
+        $this->db->where('company_id', $company_id);
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+
     public function getByNameAndCompanyId($name, $company_id)
     {
         $this->db->select('*');
