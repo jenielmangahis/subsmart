@@ -287,10 +287,10 @@ a.btn-primary.btn-md {
                                                 <?php } ?>
                                             </select>
                                         </div>
-                                        <!-- <div class="col-md-12 mt-4">
+                                        <div class="col-md-12 mt-4">
                                             <label for="job_name"><b>Service description</b> (optional)</label>                                            
                                             <textarea class="form-control" name="service_description"><?php echo $tickets->service_description; ?></textarea>
-                                        </div> -->
+                                        </div>
                                         <div class="col-md-12 mt-4">
                                             <label for="job_location" class="required"><b>Service Location</b></label>
                                             <input type="text" class="form-control" name="service_location" id="service_location"
@@ -467,10 +467,10 @@ a.btn-primary.btn-md {
                                             <?php } ?>
                                         </select>
                                     </div>
-                                    <div class="col-md-3 form-group mt-3">
+                                    <!-- <div class="col-md-3 form-group mt-3">
                                         <label for="job_description"><b>Job Description</b></label>
                                         <textarea class="form-control" name="job_description" id="job_description"><?php echo $tickets->job_description; ?></textarea>
-                                    </div>
+                                    </div> -->
                                 </div>
                                 <div class="row" id="plansItemDiv" style="background-color:white;">
                                     <h6 class='card_header custom-ticket-header'>Item List</h6>
