@@ -34,7 +34,7 @@ class UserCustomerDocfile_model extends MY_Model
     {
         $this->db->select('user_customer_docfile.*,user_docfile.name AS docfile_name,jobs.job_number');
         $this->db->from($this->table);  
-        $this->db->join('user_docfile', 'user_customer_docfile.docfile_id = user_docfile.id', 'left');
+        $this->db->join('user_docfile', 'user_customer_docfile.docfile_id = user_docfile.id', 'right');
         $this->db->join('jobs', 'user_docfile.job_id = jobs.id', 'left');
         $this->db->where('user_customer_docfile.customer_id', $customer_id);      
 

@@ -40,6 +40,7 @@
     var date_from = $('input[name="date_from"]').val();
     var date_to = $('input[name="date_to"]').val();
     var subscription_period = $('select[name="subscription_period"]').val();
+    var filter_by = $('select[name="filter_by"]').val();
     // =========================
     var reportConfig = {
         businessLogoURL: businessLogoURL,
@@ -54,12 +55,14 @@
         date_from: date_from,
         date_to: date_to,
         subscription_period: subscription_period,
+        filter_by: filter_by,
     };
     // =========================
 
     // Render Report Data Script
     function renderReportList() {
         subscription_period = $('select[name="subscription_period"]').val();
+        filter_by = $('select[name="filter_by"]').val();
         if (subscription_period == "all") {
             period = " (All)";
         } else if (subscription_period == "last_7_days") {
@@ -73,6 +76,15 @@
         } else {
             period = "";
         }
+
+        if (filter_by == "current_month") {
+            $("#filter_by_text").text("Filtered by Current Month (<?php echo date('M Y'); ?>)");
+        } else if (filter_by == "current_year") {
+            $("#filter_by_text").text("Filtered by Current Year (<?php echo date('Y'); ?>)");
+        } else {
+            $("#filter_by_text").text("As of <?php echo date('F d, Y'); ?>");
+        }
+        
         // =========================
         theadColumnNames = $(`#<?php echo $tableID; ?> th`).map(function() { return $(this).text(); }).get();
         theadTotalColumn = $("#<?php echo $tableID; ?>").find('tr:first th').length;
@@ -109,6 +121,7 @@
             date_from: date_from,
             date_to: date_to,
             subscription_period: subscription_period,
+            filter_by: filter_by,
         };
         // =========================
         (enableDisableBusinessName) ? $("#businessName").text(businessName) : businessName = $("#businessName").html("&nbsp;").html() ;
@@ -184,6 +197,7 @@
                 report_date_from_text: date_from,
                 report_date_to_text: date_to,
                 subscription_period: subscription_period,
+                filter_by: filter_by,
             },
             success: function(data) {}   
         });

@@ -177,6 +177,17 @@ class Accounting_model extends MY_Model
             $this->db->from('jobs');
             $this->db->where('jobs.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            switch ($reportConfig['filter_by']) {
+                case 'current_month':
+                    $this->db->where("DATE_FORMAT(jobs.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    break;
+                case 'current_year':
+                    $this->db->where("YEAR(jobs.date_created) = YEAR(CURDATE())");
+                    break;
+                case 'get_all':
+                    // Do nothing...
+                    break;
+            }
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
@@ -184,7 +195,7 @@ class Accounting_model extends MY_Model
 
         // Get Estimates data in Database
         if ($reportType == 'estimates') {
-            $this->db->select('estimates.id AS id, estimates.company_id AS company_id, estimates.estimate_number AS number, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, estimates.job_name AS job, estimates.job_location AS location, estimates.status AS status, estimates.estimate_date AS date, estimates.grand_total AS total');
+            $this->db->select('estimates.id AS id, estimates.company_id AS company_id, estimates.estimate_number AS number, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, estimates.job_name AS job, estimates.job_location AS location, estimates.status AS status, estimates.created_at AS date, estimates.grand_total AS total');
             $this->db->from('estimates');
             $this->db->where('estimates.company_id', $companyID);
             $this->db->join('acs_profile', 'acs_profile.prof_id = estimates.customer_id', 'left');
