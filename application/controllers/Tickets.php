@@ -2075,7 +2075,12 @@ class Tickets extends MY_Controller
                     }else{
                         $input_billing['acct_num'] = $this->input->post('customer_ach_account_number');
                         $input_billing['routing_num'] = $this->input->post('customer_ach_routing_number');
-                    }                    
+                    }             
+                    
+                    if( $this->input->post('is_with_esign') ){
+                        $input_billing['mmr'] = $monthly_monitoring_cost;
+                    }
+
                     $this->general->update_with_key_field($input_billing, $this->input->post('customer_id'), 'acs_billing', 'fk_prof_id');
 
                 }else{
@@ -2107,7 +2112,11 @@ class Tickets extends MY_Controller
                     }else{
                         $input_billing['acct_num'] = $this->input->post('customer_ach_account_number');
                         $input_billing['routing_num'] = $this->input->post('customer_ach_routing_number');
-                    }     
+                    }
+                    
+                    if( $this->input->post('is_with_esign') ){
+                        $input_billing['mmr'] = $monthly_monitoring_cost;
+                    }
                     
                     $this->general->add_($input_billing, 'acs_billing');
                 } 
