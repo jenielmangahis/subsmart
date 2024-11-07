@@ -81,8 +81,8 @@
                             required placeholder="Enter Zip Code" 
                             onChange="jQuery('#customer_name').text(jQuery(this).val());"/>             
 
-                    <!-- <label for="service_description" class="mt-2"><b>Service description</b> (optional)</label>
-                    <textarea class="form-control" name="service_description" id="service_description" style="height:100px;"></textarea> -->
+                    <label for="service_description" class="mt-2"><b>Service description</b> (optional)</label>
+                    <textarea class="form-control" name="service_description" id="service_description" style="height:100px;"></textarea>
                     
             </div>
         </div>        
