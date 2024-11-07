@@ -39,7 +39,7 @@
                                     <div class="reportTitleInfo">
                                         <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?></h3>
                                         <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
-                                        <h5><small id="reportDate">As of <?php echo date('F d, Y'); ?></small></h5>
+                                        <h5><small id="reportDate"><span id="filter_by_text"></span></small></h5>
                                     </div>
                                 </div>
                             </div>
@@ -190,10 +190,19 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-12"><hr class="mt-0"></div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="mb-1 fw-xnormal">Filter By</label>
+                                    <select name="filter_by" id="filter-by" class="nsm-field form-select">
+                                        <option value="get_all" <?php echo ($reportSettings->filter_by == "get_all") ? "selected" : "" ?>>None</option>
+                                        <option value="current_month" <?php echo ($reportSettings->filter_by == "current_month") ? "selected" : "" ?>>This Month (<?php echo date('M'); ?>)</option>
+                                        <option value="current_year" <?php echo ($reportSettings->filter_by == "current_year") ? "selected" : "" ?>>This Year (<?php echo date('Y'); ?>)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-12"><hr class="mt-0"></div>
                             </div>
                         </div>
                     </div>
-                    <hr class="mt-0">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="float-start">

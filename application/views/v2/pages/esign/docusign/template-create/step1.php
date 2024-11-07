@@ -1,4 +1,4 @@
-<form class="form" id="templateForm" style="min-width: 800px;">
+<form class="form" id="templateForm" style="min-width: 800px;" autocomplete="off">
     <div id="templateInfo">
         <h2 class="form__title">Template Name and Description</h2>
         <div class="form-group mb-2">
