@@ -1,6 +1,6 @@
 <?php include viewPath('v2/includes/header'); ?>
 <style>
-#input-upload-image, #icon-pick-name {
+#input-upload-image, #icon-pick-name, #edit-icon-pick-name, #edit-input-upload-image {
     width: 300px;
     display: inline-block;
 }
@@ -93,7 +93,8 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
-                                            <a class="dropdown-item" href="<?= base_url("job/edit_job_tag/" . $tag->id); ?>">Edit</a>
+                                            <!--<a class="dropdown-item" href="<?= base_url("job/edit_job_tag/" . $tag->id); ?>">Edit Page</a> -->
+                                            <a class="dropdown-item row-edit-job-tag" data-id="<?= $tag->id; ?>" data-title="<?= $tag->name; ?>" data-marker="<?= $tag->marker_icon; ?>" href="javascript:void(0);">Edit</a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $tag->id; ?>">Delete</a>
@@ -111,7 +112,7 @@
     
     <div class="modal fade nsm-modal fade" id="modal-create-tags" tabindex="-1" aria-labelledby="modal-create-tags_label" aria-hidden="true">
         <div class="modal-dialog modal-md">
-            <form method="post" id="tags_form">
+            <form method="post" id="tagsCreateForm" class="tags-create-form">
                 <div class="modal-content">
                     <div class="modal-header">
                         <span class="modal-title content-title">Create Job Tags</span>
@@ -128,12 +129,87 @@
                                 <input type="file" name="image" value="" class="form-control" id="input-upload-image" autocomplete="off" />
                                 <input type="text" name="default-icon-name" disabled="" value="" class="form-control" style="display:none;" id="icon-pick-name" /><br />
                                 <div class="form-check" style="margin-top: 10px;">
-                                    <input class="form-check-input" type="checkbox" name="is_default_icon" value="1" id="iconList" />
+                                    <input class="form-check-input iconList" id="chk-add-default-icon" type="checkbox" name="is_default_icon" value="1" data-action="add" />
                                     <label class="form-check-label">
                                         Pick from list
                                     </label>
                                 </div>
                             </div>                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" id="tags-create-button" class="nsm-button primary tags-create-button">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade nsm-modal fade" id="modalIconList" tabindex="-1" aria-labelledby="modalIconListLabel" aria-hidden="true">
+        <input type="hidden" id="form-action" value="" />
+        <div style="max-width: 1000px;" class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Icon List</span>
+                    <button onclick='$("#iconList").prop("checked", false);' type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
+                </div>
+                <div class="modal-body">
+                    <div class="col-md-12">
+                        <div class="row">
+                        <ul class="list-icon">
+                            <?php foreach($icons as $i){ ?>
+                            <li>
+                            <a href="javascript:void(0);" data-name="<?= $i->image; ?>" data-id="<?= $i->id; ?>" class="a-icon hvr-float-shadow hvr-icon-bounce">
+                                <img src="<?= base_url('uploads/icons/' . $i->image); ?>" class="icon-image hvr-icon" />
+                            </a>
+                            </li>
+                            <?php } ?>
+                        </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer modal-footer-detail">
+                    <div class="button-modal-list">
+                        <button onclick='$("#iconList").prop("checked", false);' type="button" class="nsm-button" data-bs-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade nsm-modal fade" id="modal-edit-job-tag" tabindex="-1" aria-labelledby="modal-edit-job-tag_label" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <form method="post" id="frm-update-job-tag">
+                <input type="hidden" name="default_icon_id" id="default-icon-id" value="">
+                <input type="hidden" name="jid" id="edit-jid" value="">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title content-title">Edit Job Tag</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Name</label>
+                                <input type="text" name="job_tag_name" id="edit-job-tag-name" value="" class="form-control" required="" autocomplete="off" />
+                            </div>
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Current Icon / Marker</label>
+                                <input type="text" class="form-control" id="edit-current-marker" readonly="" disabled="" />
+                            </div>                             
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Change Icon / Marker</label>
+                                <input type="file" name="image" value="" class="form-control" id="edit-input-upload-image" autocomplete="off" />
+                                <input type="text" name="default-icon-name" disabled="" value="" class="form-control" style="display:none;" id="edit-icon-pick-name" /><br />
+                                <div class="form-check" style="margin-top: 10px;">
+                                    <input class="form-check-input iconList" id="chk-edit-default-icon" type="checkbox" name="is_default_icon" value="1" data-action="edit" />
+                                    <label class="form-check-label">
+                                        Pick from list
+                                    </label>
+                                </div>
+                            </div> 
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -145,44 +221,125 @@
         </div>
     </div>
 
-    <div class="modal fade nsm-modal fade" id="modalIconList" tabindex="-1" aria-labelledby="modalIconListLabel" aria-hidden="true">
-        <div style="max-width: 1000px;" class="modal-dialog modal-lg">
-        <input type="hidden" name="pid" id="priority_id" value="" />
-        <div class="modal-content">
-            <div class="modal-header">
-            <span class="modal-title content-title">Icon List</span>
-            <button onclick='$("#iconList").prop("checked", false);' type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="bx bx-fw bx-x m-0"></i></button>
-            </div>
-            <div class="modal-body">
-            <div class="col-md-12">
-                <div class="row">
-                <ul class="list-icon">
-                    <?php foreach($icons as $i){ ?>
-                    <li>
-                    <a href="javascript:void(0);" data-name="<?= $i->image; ?>" data-id="<?= $i->id; ?>" class="a-icon hvr-float-shadow hvr-icon-bounce">
-                        <img src="<?= base_url('uploads/icons/' . $i->image); ?>" class="icon-image hvr-icon" />
-                    </a>
-                    </li>
-                    <?php } ?>
-                </ul>
-                </div>
-            </div>
-            </div>
-            <div class="modal-footer modal-footer-detail">
-            <div class="button-modal-list">
-                <button onclick='$("#iconList").prop("checked", false);' type="button" class="nsm-button" data-bs-dismiss="modal"><span class="fa fa-remove"></span> Close</button>
-            </div>
-            </div>
-        </div>
-        </div>
-    </div>
-
-
 </div>
 
 
 <script type="text/javascript">
     $(document).ready(function() {
+
+        $(document).on('submit', '#tagsCreateForm', function (e) {
+            e.preventDefault();
+            var data = new FormData(this);
+            if(!$('#input-upload-image').val() && !$('#chk-add-default-icon').is(':checked')){
+                e.preventDefault();      
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Please specify job tag icon/marker image.',
+                    icon: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                });                         
+            }else{
+                $.ajax({
+                    url: base_url + 'job/ajax_create_new_job_tag',
+                    data: data,
+                    type: 'post',
+                    processData: false,
+                    contentType: false,
+                    success: function (result) {
+
+                        var res = JSON.parse(result);
+                        if(res.success == true) {
+
+                            Swal.fire({
+                                title: 'New Job Tags',
+                                text: "Job tag successfully created.",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                if (result.value) {
+                                    location.reload();
+                                }
+                            });                             
+
+                            /*Swal.fire(
+                                'New Job Tags',
+                                'New Job Tag Successfully Created.',
+                                'success'
+                            );  
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1000);*/
+
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: res.msg,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });                            
+                        }
+
+                    }
+                })       
+            }
+        });
+
+        $("#frm-update-job-tag").submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: base_url + 'job/ajax_update_job_tag',
+                type:"post",
+                data:new FormData(this),
+                processData:false,
+                contentType:false,
+                cache:false,
+                async:false,
+                dataType:'json',
+                success: function(result){
+
+                    console.log('jen message: ');
+                    console.log(result.message);
+
+                    if (result.success == true) {
+                        Swal.fire({
+                            title: 'Edit Job Tag',
+                            text: "Job tag was successfully updated",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        });            
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+                }
+            });
+        })        
+
+        $('.row-edit-job-tag').on('click', function(){
+            var jid   = $(this).attr('data-id');
+            var title  = $(this).attr('data-title');
+            var marker = $(this).attr('data-marker');
+
+            $('#edit-job-tag-name').val(title);
+            $('#edit-jid').val(jid);
+            $('#edit-current-marker').val(marker);
+
+            $('#modal-edit-job-tag').modal('show');
+        });        
+
         $("#job-tags-table").nsmPagination({itemsPerPage:10});
         $("#CUSTOM_TAG_SEARCHBAR").on("input", debounce(function() { 
             tableSearch($(this));            
@@ -195,31 +352,47 @@
         $(".a-icon").click(function(){
             var icon_name = $(this).attr("data-name");
             var icon_id   = $(this).attr("data-id");
-
-            $("#input-upload-image").hide();
-            $("#icon-pick-name").show();
-            $("#icon-pick-name").val(icon_name);
+            var form_action = $('#form-action').val();
+            
             $("#modalIconList").modal('hide');
-            $("#default-icon-id").val(icon_id);
+            if( form_action == 'add' ){
+                $("#input-upload-image").hide();
+                $("#icon-pick-name").show();
+                $("#icon-pick-name").val(icon_name);
+                $("#default-icon-id").val(icon_id);
+            }else{
+                $("#edit-input-upload-image").hide();
+                $("#edit-icon-pick-name").show();
+                $("#edit-icon-pick-name").val(icon_name);
+                $("#edit-default-icon-id").val(icon_id);
+            }
         });
 
-        $("#iconList").on('change', function(){
+        $(".iconList").on('change', function(){
+            var form_action = $(this).attr('data-action');        
+            $('#form-action').val(form_action);
             if ($(this).is(':checked')) {
                 $("#modalIconList").modal('show');
             }else{
-                $("#input-upload-image").show();
-                $("#icon-pick-name").hide();
-                $("#default-icon-id").val("");
+                if(form_action == 'add'){
+                    $("#input-upload-image").show();
+                    $("#icon-pick-name").hide();
+                    $("#default-icon-id").val("");
+                }else{
+                    alert('edit');
+                    $("#edit-input-upload-image").show();
+                    $("#edit-icon-pick-name").hide();
+                    $("#edit-default-icon-id").val("");
+                }
             }
         });
 
         $(document).on("click", ".delete-item", function( event ) {
             var ID = $(this).attr("data-id");
-
             Swal.fire({
                 title: 'Continue to REMOVE tag?',
                 text: "",
-                icon: 'warning',
+                icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
                 cancelButtonText: 'No',
@@ -241,6 +414,7 @@
                 }
             });
         });
+
     });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>

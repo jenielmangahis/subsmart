@@ -1298,6 +1298,10 @@ $route['job/save_job_tag'] = 'Job/create_new_job_tag';
 $route['job/edit_job_tag/(:any)'] = 'Job/edit_job_tag/$1';
 $route['job/update_job_tag'] = 'Job/update_job_tag';
 
+//$route['job/ajax_create_new_job_tag'] = 'Job/ajax_create_new_job_tag';
+$route['job/ajax_create_new_job_tag']['post'] = 'job/ajax_create_new_job_tag';
+$route['job/ajax_update_job_tag']['post'] = 'job/ajax_update_job_tag';
+
 // Forgot Password
 $route['login/_check_user_id_exists'] = 'Login/ajax_check_user_id_exists';
 $route['login/_update_user_password'] = 'Login/ajax_update_user_password';

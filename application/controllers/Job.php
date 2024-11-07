@@ -2010,6 +2010,7 @@ class Job extends MY_Controller
     public function delete_tag()
     {
         $this->load->model('JobTags_model');
+        $company_id = logged('company_id');
 
         $remove_tag = array(
             'where' => array(
@@ -2018,14 +2019,12 @@ class Job extends MY_Controller
             'table' => 'job_tags'
         );
 
-        $jobTag = $this->JobTags_model->getById($_POST['tag_id']);
-
+        $jobTag = $this->JobTags_model->getByIdAndCompanyId($_POST['tag_id'], $company_id);
         if ($this->general->delete_($remove_tag)) {
             
             //Activity Logs
             $activity_name = 'Deleted Job Tag '.$jobTag->name; 
             createActivityLog($activity_name);
-
             echo '1';
         }
     }
@@ -3761,6 +3760,126 @@ class Job extends MY_Controller
         $this->session->set_flashdata('alert_class', 'alert-success');
 
         redirect('job/job_tags');
+    }
+
+    public function ajax_create_new_job_tag() 
+    {
+        $this->load->model('JobTags_model');
+        $this->load->model('Icons_model');
+
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+
+        if (isset($post['is_default_icon'])) {
+            $icon = $this->Icons_model->getById($post['default_icon_id']);
+            $marker_icon = $icon->image;
+            $data = [
+                'name' => $post['job_tag_name'],
+                'company_id' => $company_id,
+                'marker_icon' => $marker_icon,
+                'is_marker_icon_default_list' => 1
+            ];
+
+            $this->JobTags_model->create($data);
+
+            //Activity Logs
+            $activity_name = 'Created Job Tag '.$post['job_tag_name']; 
+            createActivityLog($activity_name);
+
+        } else {
+            $marker_icon = $this->jobTagsMoveUploadedFile();
+            if ($marker_icon != '') {
+                $data = [
+                    'name' => $post['job_tag_name'],
+                    'company_id' => $company_id,
+                    'marker_icon' => $marker_icon,
+                    'is_marker_icon_default_list' => 0
+                ];
+
+                $this->JobTags_model->create($data);
+
+                //Activity Logs
+                $activity_name = 'Created Job Tag '.$post['job_tag_name']; 
+                createActivityLog($activity_name);
+
+            } else {
+                $return = [
+                    'data' => null,
+                    'success' => false,
+                    'message' => 'Cannot update job tag'
+                ]; 
+                echo json_encode($return);     
+                exit;               
+            }
+        }
+
+        $return = [
+            'data' => null,
+            'success' => true,
+            'message' => 'Add new job tag was successful'
+        ];
+
+        echo json_encode($return);        
+
+    }
+
+    public function ajax_update_job_tag()
+    {
+        $this->load->model('JobTags_model');
+        $this->load->model('Icons_model');
+    
+        $post = $this->input->post();
+        $company_id = logged('company_id');
+    
+        $jobTag = $this->JobTags_model->getById($post['jid']);
+        if ($jobTag) {
+            $marker_icon = $jobTag->marker_icon;
+            $is_marker_icon_default_list = $jobTag->is_marker_icon_default_list;
+            if (isset($post['is_default_icon'])) {
+                if ($post['default_icon_id'] > 0) {
+                    $icon = $this->Icons_model->getById($post['default_icon_id']);
+                    $marker_icon = $icon->image;
+                    $is_marker_icon_default_list = 1;
+                }
+            } else {
+                if ($_FILES['image']['size'] > 0) {
+                    $marker_icon = $this->jobTagMoveUploadedFile();
+                    $is_marker_icon_default_list = 0;
+                }
+            }
+    
+            $data = [
+                'name' => $post['job_tag_name'],
+                'marker_icon' => $marker_icon,
+                'is_marker_icon_default_list' => $is_marker_icon_default_list
+            ];
+    
+            $this->JobTags_model->update($post['jid'], $data);
+    
+            //Activity Logs
+            $activity_name = 'Updated Job Tag '.$post['job_tag_name']; 
+            createActivityLog($activity_name);
+    
+            $this->session->set_flashdata('message', 'Update job tag was successful');
+            $this->session->set_flashdata('alert_class', 'alert-success');
+
+            $return = [
+                'data' => null,
+                'success' => true,
+                'message' => 'Update job tag was successful'
+            ];
+    
+            echo json_encode($return);   
+
+        } else {
+            $return = [
+                'data' => null,
+                'success' => false,
+                'message' => 'Record not found'
+            ]; 
+            echo json_encode($return);     
+            exit;               
+        }
     }
 
     public function update_job_tag()

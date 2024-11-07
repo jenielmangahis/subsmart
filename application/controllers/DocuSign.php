@@ -266,6 +266,39 @@ class DocuSign extends MYF_Controller
         $this->db->where('docfile_id', $documentId);
         $generatedPDF = $this->db->get('user_docfile_generated_pdfs')->row();
 
+        $customer_doc_generated = '';
+        if( $is_finished == 1 && $generatedPDF ){
+            $esign_filename = explode('/', $generatedPDF->path);
+            $esign_filename = end(array_values($esign_filename));
+            $generatedPDFPath = FCPATH . ltrim($generatedPDF->path, '/');
+
+            $this->db->where('customer_id', $customer_id);
+            $this->db->where('file_name', $esign_filename);
+            $this->db->where('document_type', 'client_agreement');
+            $customerDocument = $this->db->get('acs_customer_documents')->row();
+            if( !$customerDocument ){  
+                $documentFilePath = FCPATH . (implode(DIRECTORY_SEPARATOR, ['uploads', 'customerdocuments', $customer_id]) . DIRECTORY_SEPARATOR);
+                if (!file_exists($documentFilePath)) {
+                    mkdir($documentFilePath, 0777, true);
+                }
+
+                $customer_document_location = $documentFilePath.$esign_filename;
+                copy($generatedPDFPath, $customer_document_location);
+                $customer_doc_generated = $customer_document_location;
+
+                $this->db->insert('acs_customer_documents', [
+                    'customer_id' => $customer_id,
+                    'file_name' => $esign_filename,
+                    'document_type' => 'client_agreement',
+                    'document_label' => 'pdf',
+                    'is_predefined' => 1,
+                    'is_active' => 1,
+                    'date_created' => date("Y-m-d H:i:s")
+                ]);
+            }
+    
+        }
+
         $autoPopulateData = [];
         $acscustomer_first_name;
         $acscustomer_last_name;
@@ -874,6 +907,7 @@ class DocuSign extends MYF_Controller
             'recipient' => $recipient,
             'fields' => $fields,
             'files' => $files,
+            'customer_doc_generated' => $customer_doc_generated,
             'workorder_recipient' => $workorderRecipient,
             'job_recipient' => $jobRecipient,
             'co_recipients' => $coRecipientFields,
@@ -4118,6 +4152,40 @@ SQL;
         // $pdf->Output('I');
 
         $pdf->Output($uploadFilePath, 'F');
+
+        //Create customer document
+        $pdf_generated_path = str_replace(FCPATH, '/', $uploadFilePath);
+        $esign_filename = explode('/', $pdf_generated_path);
+        $esign_filename = end(array_values($esign_filename));
+        $customer_id = $document->customer_id;
+
+        $this->db->where('customer_id', $customer_id);
+        $this->db->where('file_name', $esign_filename);
+        $this->db->where('document_type', 'client_agreement');
+        $customerDocument = $this->db->get('acs_customer_documents')->row();
+        $customer_doc_generated = '';
+        if( !$customerDocument ){           
+            $generatedPDFPath = FCPATH . ltrim($pdf_generated_path, '/');
+            $documentFilePath = FCPATH . (implode(DIRECTORY_SEPARATOR, ['uploads', 'customerdocuments', $customer_id]) . DIRECTORY_SEPARATOR);
+            if (!file_exists($documentFilePath)) {
+                mkdir($documentFilePath, 0777, true);
+            }
+
+            $customer_document_location = $documentFilePath.$esign_filename;
+            copy($generatedPDFPath, $customer_document_location);
+            $customer_doc_generated = $customer_document_location;
+
+            $this->db->insert('acs_customer_documents', [
+                'customer_id' => $customer_id,
+                'file_name' => $esign_filename,
+                'document_type' => 'client_agreement',
+                'document_label' => 'pdf',
+                'is_predefined' => 1,
+                'is_active' => 1,
+                'date_created' => date("Y-m-d H:i:s")
+            ]);
+        }
+
         return $pdf->Output(null, 'S');
     }
 
