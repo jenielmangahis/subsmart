@@ -31,9 +31,13 @@ async function onClickDelete() {
   const $wrapper = $section.querySelector(`[data-document-type="${documentType}"]`); // prettier-ignore
 
   const $deleteBtn = $wrapper.querySelector("[data-action=delete]");
+  const dataType   = $deleteBtn.getAttribute('data-type');
   const prevText = $deleteBtn.textContent;
   $deleteBtn.textContent = "Deleting...";
   $deleteBtn.setAttribute("disabled", true);
+
+  const $chkBox    = document.getElementById(dataType);
+  $chkBox.checked = false;
 
   try {
     const payload = {

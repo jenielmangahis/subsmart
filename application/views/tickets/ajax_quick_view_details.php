@@ -62,10 +62,10 @@
     <input type="hidden" value="<?= $tickets->id ?>" id="esignTicketId" />
     <input type="hidden" value="<?= $tickets->customer_id; ?>" id="ticket_customer_id">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-5">
             <img src="<?= getCompanyBusinessProfileImage(); ?>"  style="margin-top: 33px; max-width: 130px; max-height: 130px;" class="compLogo"/> 
         </div>
-        <div class="col-md-6">
+        <div class="col-md-7">
             <table class="table-borderless mustRight" style="width:100%;">
                 <tr>
                     <td colspan="2"><h1 style="text-align:right;"><b><?= $tickets->ticket_no; ?></b></h1></td>
@@ -77,7 +77,11 @@
                 <tr>
                     <td align="right">Purchase Order No:</td>
                     <td align="right"><b><?php echo $tickets->purchase_order_no != '' ? $tickets->purchase_order_no : '---'; ?></b></td>
-                </tr>                               
+                </tr>                 
+                <tr>
+                    <td align="right">Panel Type:</td>
+                    <td align="right"><b><?php echo $tickets->panel_type != '' ? $tickets->panel_type : '---'; ?></b></td>
+                </tr>                
                 <tr>
                     <td align="right" style="width:47%;">Scheduled Date:</td>
                     <td align="right"><?php echo date('m/d/Y', strtotime($tickets->ticket_date)); ?></td>
@@ -136,7 +140,7 @@
                         }
                     ?>
                     <?php foreach($assigned_employees as $eid){ ?>
-                        <div class="nsm-list-icon primary" style="background-color:#ffffff;">
+                        <div class="nsm-list-icon primary" style="background-color:#ffffff;display:inline-block;float:none !important;">
                             <div class="nsm-profile" style="background-image: url('<?= userProfileImage($eid); ?>');" data-img="<?= userProfileImage($eid); ?>"></div>                            
                         </div>
                     <?php } ?>
@@ -248,10 +252,10 @@
                         <td><?php echo $i; ?></td>
                         <td><?php echo $item->title; ?></td>
                         <td><?php echo $item->item_type; ?></td>
-                        <td style="text-align:center;">$<?php echo number_format($item->costing,2); ?></td>
+                        <td style="text-align:right;">$<?php echo number_format($item->costing,2); ?></td>
                         <td style="text-align:center;"><?php echo $item->qty; ?></td>
-                        <td style="text-align:center;">$<?php echo number_format($item->discount,2); ?></td>
-                        <td style="text-align:center;">$<?php echo number_format($item->total,2); ?></td>
+                        <td style="text-align:right;">$<?php echo number_format($item->discount,2); ?></td>
+                        <td style="text-align:right;">$<?php echo number_format($item->total,2); ?></td>
                     </tr>
                     <?php 
                         $i++;
@@ -262,12 +266,30 @@
     </div>
     <div class="row mt-3">
         <div class="col-md-6 paymentArea">   
-            <table class="table table-bordered">
-                <tr style="font-weight:bold;"><td>Job Description</td></tr>
-                <tr><td><?= $tickets->job_description; ?></td></tr>                
-                <tr style="font-weight:bold;"><td>Instructions / Notes</td></tr>
+            <table class="table table-bordered">                
+                <?php if( $tickets->otp_setup > 0 ){ ?>
+                <tr style="font-weight:bold;">
+                    <td>One Time (Program and Setup)</td>
+                    <td style="text-align:right;">$<?php echo number_format($tickets->otp_setup,2); ?></td>
+                </tr>
+                <?php } ?>
+                <?php if( $tickets->monthly_monitoring > 0 ){ ?>
+                <tr style="font-weight:bold;">
+                    <td>Monthly Monitoring</td>
+                    <td style="text-align:right;">$<?php echo number_format($tickets->monthly_monitoring,2); ?></td>
+                </tr>
+                <?php } ?>
+                <?php if( $tickets->installation_cost > 0 ){ ?>
+                <tr style="font-weight:bold;">
+                    <td>Installation Cost</td>
+                    <td style="text-align:right;">$<?php echo number_format($tickets->installation_cost,2); ?></td>
+                </tr>
+                <?php } ?>
+                <tr style="font-weight:bold;"><td colspan="2">Service Description</td></tr>
+                <tr><td colspan="2"><?= $tickets->service_description; ?></td></tr>
+                <tr style="font-weight:bold;"><td colspan="2">Instructions / Notes</td></tr>
                 <tr>
-                    <td>
+                    <td colspan="2">
                         <?php 
                             if( $tickets->instructions != '' ){
                                 echo  $tickets->instructions;
@@ -276,6 +298,10 @@
                             }
                         ?>
                     </td>
+                </tr>
+                <tr style="font-weight:bold;"><td colspan="2">URL</td></tr>
+                <tr>
+                    <td colspan="2"><a target="_new" href="<?= base_url('view_service_ticket/'.$tickets->company_id.'/'.$tickets->id); ?>"><?= base_url('view_service_ticket/'.$tickets->company_id.'/'.$tickets->id); ?></a></td>
                 </tr>
             </table>         
             <!-- <table class="table table-borderless">
@@ -422,25 +448,7 @@
                 <tr style="font-weight:bold;">
                     <td>Subtotal</td>
                     <td style="text-align:right;">$<?php echo number_format($tickets->subtotal,2); ?></td>
-                </tr>
-                <?php if( $tickets->otp_setup > 0 ){ ?>
-                <tr style="font-weight:bold;">
-                    <td>One Time (Program and Setup)</td>
-                    <td style="text-align:right;">$<?php echo number_format($tickets->otp_setup,2); ?></td>
-                </tr>
-                <?php } ?>
-                <?php if( $tickets->monthly_monitoring > 0 ){ ?>
-                <tr style="font-weight:bold;">
-                    <td>Monthly Monitoring</td>
-                    <td style="text-align:right;">$<?php echo number_format($tickets->monthly_monitoring,2); ?></td>
-                </tr>
-                <?php } ?>
-                <?php if( $tickets->installation_cost > 0 ){ ?>
-                <tr style="font-weight:bold;">
-                    <td>Installation Cost</td>
-                    <td style="text-align:right;">$<?php echo number_format($tickets->installation_cost,2); ?></td>
-                </tr>
-                <?php } ?>
+                </tr>                
                 <tr style="font-weight:bold;">
                     <td>Taxes</td>
                     <td style="text-align:right;">$<?php echo number_format($tickets->taxes,2); ?></td>

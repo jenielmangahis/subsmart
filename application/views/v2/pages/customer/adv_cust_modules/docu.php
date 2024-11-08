@@ -58,7 +58,7 @@
                                 <button type="button" class="nsm-button btn-sm" data-action="download" data-id="<?= $cus_id; ?>">
                                     Download
                                 </button>
-                                <button type="button" class="nsm-button error btn-sm" data-action="delete">
+                                <button type="button" class="nsm-button error btn-sm" data-action="delete" data-type="client_agreement">
                                     Delete
                                 </button>
                             </div>
@@ -82,7 +82,7 @@
                                 <button type="button" class="nsm-button btn-sm" data-action="download" data-id="<?= $cus_id; ?>">
                                     Download
                                 </button>
-                                <button type="button" class="nsm-button error btn-sm" data-action="delete">
+                                <button type="button" class="nsm-button error btn-sm" data-action="delete" data-type="photo_id_copy">
                                     Delete
                                 </button>
                             </div>
@@ -106,7 +106,7 @@
                                 <button type="button" class="nsm-button btn-sm" data-action="download" data-id="<?= $cus_id; ?>">
                                     Download
                                 </button>
-                                <button type="button" class="nsm-button error btn-sm" data-action="delete">
+                                <button type="button" class="nsm-button error btn-sm" data-action="delete" data-type="proof_of_residency">
                                     Delete
                                 </button>
                             </div>
@@ -130,7 +130,7 @@
                                 <button type="button" class="nsm-button btn-sm" data-action="download" data-id="<?= $cus_id; ?>">
                                     Download
                                 </button>
-                                <button type="button" class="nsm-button error btn-sm" data-action="delete">
+                                <button type="button" class="nsm-button error btn-sm" data-action="delete" data-type="personal_guarantee">
                                     Delete
                                 </button>
                             </div>
