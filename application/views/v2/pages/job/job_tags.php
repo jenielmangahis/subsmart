@@ -97,7 +97,7 @@
                                             <a class="dropdown-item row-edit-job-tag" data-id="<?= $tag->id; ?>" data-title="<?= $tag->name; ?>" data-marker="<?= $tag->marker_icon; ?>" href="javascript:void(0);">Edit</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?= $tag->id; ?>">Delete</a>
+                                            <a class="dropdown-item delete-item" href="javascript:void(0);" data-title="<?= $tag->name; ?>" data-id="<?= $tag->id; ?>">Delete</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -113,6 +113,7 @@
     <div class="modal fade nsm-modal fade" id="modal-create-tags" tabindex="-1" aria-labelledby="modal-create-tags_label" aria-hidden="true">
         <div class="modal-dialog modal-md">
             <form method="post" id="tagsCreateForm" class="tags-create-form">
+                <input type="hidden" name="default_icon_id" id="default-icon-id" value="">
                 <div class="modal-content">
                     <div class="modal-header">
                         <span class="modal-title content-title">Create Job Tags</span>
@@ -140,6 +141,48 @@
                     <div class="modal-footer">
                         <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" id="tags-create-button" class="nsm-button primary tags-create-button">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal fade nsm-modal fade" id="modal-edit-job-tag" tabindex="-1" aria-labelledby="modal-edit-job-tag_label" aria-hidden="true">
+        <div class="modal-dialog modal-md">
+            <form method="post" id="frm-update-job-tag">
+                <input type="hidden" name="default_icon_id" id="edit-default-icon-id" value="">
+                <input type="hidden" name="jid" id="edit-jid" value="">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="modal-title content-title">Edit Job Tag</span>
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Name</label>
+                                <input type="text" name="job_tag_name" id="edit-job-tag-name" value="" class="form-control" required="" autocomplete="off" />
+                            </div>
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Current Icon / Marker</label>
+                                <input type="text" class="form-control" id="edit-current-marker" readonly="" disabled="" />
+                            </div>                             
+                            <div class="col-12">
+                                <label class="content-subtitle fw-bold d-block mb-2">Change Icon / Marker</label>
+                                <input type="file" name="image" value="" class="form-control" id="edit-input-upload-image" autocomplete="off" />
+                                <input type="text" name="default-icon-name" disabled="" value="" class="form-control" style="display:none;" id="edit-icon-pick-name" /><br />
+                                <div class="form-check" style="margin-top: 10px;">
+                                    <input class="form-check-input iconList" id="chk-edit-default-icon" type="checkbox" name="is_default_icon" value="1" data-action="edit" />
+                                    <label class="form-check-label">
+                                        Pick from list
+                                    </label>
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="nsm-button primary">Save</button>
                     </div>
                 </div>
             </form>
@@ -176,157 +219,13 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="modal fade nsm-modal fade" id="modal-edit-job-tag" tabindex="-1" aria-labelledby="modal-edit-job-tag_label" aria-hidden="true">
-        <div class="modal-dialog modal-md">
-            <form method="post" id="frm-update-job-tag">
-                <input type="hidden" name="default_icon_id" id="default-icon-id" value="">
-                <input type="hidden" name="jid" id="edit-jid" value="">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <span class="modal-title content-title">Edit Job Tag</span>
-                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="content-subtitle fw-bold d-block mb-2">Name</label>
-                                <input type="text" name="job_tag_name" id="edit-job-tag-name" value="" class="form-control" required="" autocomplete="off" />
-                            </div>
-                            <div class="col-12">
-                                <label class="content-subtitle fw-bold d-block mb-2">Current Icon / Marker</label>
-                                <input type="text" class="form-control" id="edit-current-marker" readonly="" disabled="" />
-                            </div>                             
-                            <div class="col-12">
-                                <label class="content-subtitle fw-bold d-block mb-2">Change Icon / Marker</label>
-                                <input type="file" name="image" value="" class="form-control" id="edit-input-upload-image" autocomplete="off" />
-                                <input type="text" name="default-icon-name" disabled="" value="" class="form-control" style="display:none;" id="edit-icon-pick-name" /><br />
-                                <div class="form-check" style="margin-top: 10px;">
-                                    <input class="form-check-input iconList" id="chk-edit-default-icon" type="checkbox" name="is_default_icon" value="1" data-action="edit" />
-                                    <label class="form-check-label">
-                                        Pick from list
-                                    </label>
-                                </div>
-                            </div> 
-
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="nsm-button" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="nsm-button primary">Save</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
+    </div>    
 
 </div>
 
 
 <script type="text/javascript">
-    $(document).ready(function() {
-
-        $(document).on('submit', '#tagsCreateForm', function (e) {
-            e.preventDefault();
-            var data = new FormData(this);
-            if(!$('#input-upload-image').val() && !$('#chk-add-default-icon').is(':checked')){
-                e.preventDefault();      
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Please specify job tag icon/marker image.',
-                    icon: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'Okay'
-                });                         
-            }else{
-                $.ajax({
-                    url: base_url + 'job/ajax_create_new_job_tag',
-                    data: data,
-                    type: 'post',
-                    processData: false,
-                    contentType: false,
-                    success: function (result) {
-
-                        var res = JSON.parse(result);
-                        if(res.success == true) {
-
-                            Swal.fire({
-                                title: 'New Job Tags',
-                                text: "Job tag successfully created.",
-                                icon: 'success',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            }).then((result) => {
-                                if (result.value) {
-                                    location.reload();
-                                }
-                            });                             
-
-                            /*Swal.fire(
-                                'New Job Tags',
-                                'New Job Tag Successfully Created.',
-                                'success'
-                            );  
-                            setTimeout(function () {
-                                location.reload();
-                            }, 1000);*/
-
-                        } else {
-                            Swal.fire({
-                                title: 'Error',
-                                text: res.msg,
-                                icon: 'error',
-                                showCancelButton: false,
-                                confirmButtonText: 'Okay'
-                            });                            
-                        }
-
-                    }
-                })       
-            }
-        });
-
-        $("#frm-update-job-tag").submit(function(e) {
-            e.preventDefault();
-            $.ajax({
-                url: base_url + 'job/ajax_update_job_tag',
-                type:"post",
-                data:new FormData(this),
-                processData:false,
-                contentType:false,
-                cache:false,
-                async:false,
-                dataType:'json',
-                success: function(result){
-
-                    console.log('jen message: ');
-                    console.log(result.message);
-
-                    if (result.success == true) {
-                        Swal.fire({
-                            title: 'Edit Job Tag',
-                            text: "Job tag was successfully updated",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        }).then((result) => {
-                            if (result.value) {
-                                location.reload();
-                            }
-                        });            
-                    }else{
-                        Swal.fire({
-                            title: 'Error',
-                            text: result.msg,
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonText: 'Okay'
-                        });
-                    }
-                }
-            });
-        })        
+    $(document).ready(function() {    
 
         $('.row-edit-job-tag').on('click', function(){
             var jid   = $(this).attr('data-id');
@@ -379,7 +278,6 @@
                     $("#icon-pick-name").hide();
                     $("#default-icon-id").val("");
                 }else{
-                    alert('edit');
                     $("#edit-input-upload-image").show();
                     $("#edit-icon-pick-name").hide();
                     $("#edit-default-icon-id").val("");
@@ -387,11 +285,101 @@
             }
         });
 
+        $("#tagsCreateForm").submit(function(e) {
+            e.preventDefault();
+            var data = new FormData(this);
+            if(!$('#input-upload-image').val() && !$('#chk-add-default-icon').is(':checked')){
+                e.preventDefault();      
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Please specify job tag icon/marker image.',
+                    icon: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Okay'
+                });                         
+            }else{
+                $.ajax({
+                    url: base_url + 'job/ajax_create_new_job_tag',
+                    data: data,
+                    type: 'post',
+                    processData: false,
+                    contentType: false,
+                    success: function (result) {
+
+                        var res = JSON.parse(result);
+                        if(res.success == true) {
+
+                            Swal.fire({
+                                title: 'New Job Tags',
+                                text: "Job tag successfully created.",
+                                icon: 'success',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            }).then((result) => {
+                                if (result.value) {
+                                    location.reload();
+                                }
+                            });
+
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: res.message,
+                                icon: 'error',
+                                showCancelButton: false,
+                                confirmButtonText: 'Okay'
+                            });                            
+                        }
+
+                    }
+                })       
+            }
+        });
+
+        $("#frm-update-job-tag").submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: base_url + 'job/ajax_update_job_tag',
+                type:"post",
+                data:new FormData(this),
+                processData:false,
+                contentType:false,
+                cache:false,
+                async:false,
+                dataType:'json',
+                success: function(result){
+                    if (result.success == true) {
+                        Swal.fire({
+                            title: 'Edit Job Tag',
+                            text: "Job tag was successfully updated",
+                            icon: 'success',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            if (result.value) {
+                                location.reload();
+                            }
+                        });            
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: result.message,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        });
+                    }
+                }
+            });
+        })            
+
         $(document).on("click", ".delete-item", function( event ) {
-            var ID = $(this).attr("data-id");
+            var tag_id = $(this).attr("data-id");
+            var title  = $(this).attr('data-title');
+
             Swal.fire({
-                title: 'Continue to REMOVE tag?',
-                text: "",
+                title: "Delete Job Tag",
+                html: 'Are you sure to delete job tag <b>' + title + '</b>?',                
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
@@ -400,19 +388,34 @@
                 if (result.value) {
                     $.ajax({
                         type: "POST",
-                        url: "<?= base_url('job/delete_tag') ?>",
-                        data: {tag_id : ID}, // serializes the form's elements.
-                        success: function(data)
-                        {
-                            if(data === "1"){
-                                window.location.reload();
+                        url: base_url + "job/_delete_job_tag",
+                        data: {tag_id : tag_id}, 
+                        dataType: "json",
+                        success: function(result){
+                            if( result.is_success ){
+                                Swal.fire({
+                                    title: 'Delete Job Tag',
+                                    text: "Data was successfully deleted",
+                                    icon: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                }).then((result) => {
+                                    location.reload();
+                                });
                             }else{
-                                alert(data);
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: result.msg,
+                                    icon: 'error',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'Okay'
+                                });
                             }
                         }
                     });
                 }
-            });
+            });            
+
         });
 
     });
