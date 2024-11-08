@@ -302,7 +302,7 @@ class Jobs_model extends MY_Model
             $this->db->where('company_id', $currentCompanyId);
             $matchedItemsQuery = $this->db->get();
             $matchedItems = $matchedItemsQuery->result();
-
+            
             $items = [];
             $updatedMatchedItemIds = [];
 
@@ -364,6 +364,7 @@ class Jobs_model extends MY_Model
 
                 $currentProductMatchedItem->price = $currentProduct->price ? $currentProduct->price : 0;
                 $currentProductMatchedItem->qty = $currentProduct->qty;
+                $currentProductMatchedItem->is_alarm_item = 1;
                 $items[] = $currentProductMatchedItem;
             }
 
