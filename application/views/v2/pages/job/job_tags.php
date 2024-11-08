@@ -322,8 +322,10 @@
                             });
 
                             setTimeout(function () {
-                                location.reload();
-                            }, 1500);                            
+                                //location.reload();
+                                $('#modal-create-tags').modal('hide');
+                                $('#modal-edit-job-tag').modal('hide');                                
+                            }, 500);                         
 
                         } else {
                             Swal.fire({
@@ -366,8 +368,11 @@
                         });         
                         
                         setTimeout(function () {
-                            location.reload();
-                        }, 1500);                               
+                            //location.reload();
+                            $('#modal-create-tags').modal('hide');
+                            $('#modal-edit-job-tag').modal('hide');                                
+                        }, 500);      
+
                     }else{
                         Swal.fire({
                             title: 'Error',
