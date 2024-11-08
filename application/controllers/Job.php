@@ -679,10 +679,22 @@ class Job extends MY_Controller
             $event_settings_data = array(
                 'job_num_prefix' => 'JOB',
                 'job_num_next' => 1,
+                'job_account_next_num' => 1,
                 'company_id' => $comp_id,
             );
             $this->general->add_($event_settings_data, 'job_settings');
+
+            $job_account_next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+            $lastId = $this->jobs_model->getlastInsert($comp_id);
+            if ($lastId) {
+                $job_account_next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
+            }
+        }else{
+            $job_account_next_num = str_pad($event_settings->job_account_next_num, 5, '0', STR_PAD_LEFT);
         }
+
+        $default_job_account_number = $comp_id . '-' . $job_account_next_num;
+        $this->page_data['default_job_account_number'] = $default_job_account_number;
 
         $get_employee = array(
             'where' => array(
@@ -4577,6 +4589,7 @@ class Job extends MY_Controller
     public function ajax_quick_add_job_form()
     {
         $this->load->model('CalendarSettings_model');
+        $this->load->model('User_docflies_model');
 
         $this->load->helper('functions');
         $comp_id = logged('company_id');
@@ -4716,6 +4729,7 @@ class Job extends MY_Controller
             $default_start_date = $this->input->get('date_selected');
         }
 
+        $esignTemplates  = $this->User_docflies_model->getAllDocfileTemplatesByCompanyId($company_id);
         $this->page_data['default_start_date'] = $default_start_date;
         $this->load->view('v2/pages/job/ajax_quick_add_job_form', $this->page_data);
     }
