@@ -142,8 +142,8 @@
 }
 
 .summary-report-body h1 {
-    font-size: 36px;
-    font-weight: 600;
+    font-size: 26px;
+    font-weight: 500;
 }
 
 .nsm-card-footer {

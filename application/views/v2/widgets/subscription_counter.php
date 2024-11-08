@@ -2,6 +2,25 @@
 if (!is_null($dynamic_load) && $dynamic_load == true) {
 }
 ?>
+<style>
+    .plus_text{
+        background-color: #6ba77c33;
+        color: #198754;
+        padding: 6px;
+        border-radius: 20px;
+        font-size: 12px;
+    }
+    .subscription-text{
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        justify-content: center;
+        margin-bottom: 5px
+    }
+    .subscription-text h1{
+        margin: 0 !important;
+    }
+</style>
 
 
 <div class="<?php echo $class; ?>" data-id="<?php echo $id; ?>" id="thumbnail_<?php echo $id; ?>" draggable="true">
@@ -80,12 +99,34 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body mt-5">
                     <label for="">Total Subscription Revenue</label>
-                    <h1 id="first_content_<?php echo $id; ?>" class="subscription-text">$
-                        <?php echo number_format($subs->total_amount_subscriptions, 2); ?></h1>
+                    <div class="subscription-text">
+                        <h1 id="first_content_<?php echo $id; ?>" >$
+                            <?php echo number_format($subs->total_amount_subscriptions, 2); ?> 
+                        </h1>
+                        <?php if($subs->total_current_amount_subscriptions > 0){  ?>
+                            <span class="plus_text plus_text_content" data-bs-toggle="popover" data-bs-html="true" title="Details" data-item="<?php echo $subsContent; ?>">
+                                <?php     
+                                    echo '+ $'.number_format($subs->total_current_amount_subscriptions, 2);
+                                    }
+                                ?>
+                            </span>
+                    </div>
+                   
 
                     <label for="">Subscribers</label>
-                    <h1 id="second_content_<?php echo $id; ?>" class="subscription-text">
-                    <?php echo number_format($subs->total_active_subsciption, 0); ?></h1>
+                    <div class="subscription-text">
+                        <h1 id="second_content_<?php echo $id; ?>" >
+                            <?php echo number_format($subs->total_active_subscription, 0); ?>
+                        </h1>
+
+                        <?php if($subs->total_current_active_subscription > 0){  ?>
+                            <span class="plus_text"> + <?= number_format($subs->total_current_active_subscription, 0); ?>
+                            </span>
+                            <?php     
+                                }
+                            ?>
+                    </div>
+                   
                 </div>
             </div>
         </div>
@@ -93,7 +134,27 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
 
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const popoverTriggerList = document.querySelectorAll('.plus_text');
+    const content = $('.plus_text_content').attr('data-item');
 
+    popoverTriggerList.forEach(function (popoverTriggerEl) {
+        // Initialize the popover without data-bs-content
+        const popover = new bootstrap.Popover(popoverTriggerEl, {
+            html: true,
+            title: 'Details',
+            content: function () {
+                return content;
+            },
+            placement: 'top',
+            trigger: 'hover' 
+        });
+    });
+});
+
+
+</script>
 <?php
 if (!is_null($dynamic_load) && $dynamic_load == true) {
 }
