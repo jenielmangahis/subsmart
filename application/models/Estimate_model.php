@@ -402,7 +402,7 @@ class Estimate_model extends MY_Model
     {
         $this->db->select('estimates.*, acs_profile.first_name, acs_profile.last_name');
         $this->db->from($this->table);
-        $this->db->join('acs_profile', 'estimates.customer_id  = acs_profile.prof_id');
+        $this->db->join('acs_profile', 'estimates.customer_id  = acs_profile.prof_id','left');
         $this->db->where('estimates.company_id', $company_id);
         $this->db->where('estimates.status !=', 'Lost');
         $this->db->where('estimates.status !=', 'Invoiced');
@@ -422,7 +422,7 @@ class Estimate_model extends MY_Model
         $this->db->where('estimates.company_id', $company_id);
         // $this->db->where('estimates.status =', 'Lost');
         // $this->db->or_where('estimates.status =', 'Cancelled');
-        $this->db->where('estimates.expiry_date <=', date('Y-m-d'));
+        $this->db->where('DATE(estimates.created_at) <=', date('Y-m-d'));
         $this->db->where('estimates.view_flag', '0');
         $this->db->order_by('estimates.id', 'DESC');
         $query = $this->db->get();

@@ -669,6 +669,7 @@ function filterSubscription(){
 };
 
 
+
 function filterSubscriptionStatus(status) {
     // Encode the status to ensure it handles spaces and special characters properly
     const encodedStatus = encodeURIComponent(status);
@@ -752,15 +753,32 @@ function renderAccountingExpenseGraph(labels, data) {
     });
 }
 
+function handleHideCurrentSub(isShow){
+
+    if(isShow){
+        $('.plus_text').show();
+    }else{
+        $('.plus_text').hide();
+    }
+    
+
+}
+
 function filterThumbnail(val, id, table,filter) {
     var date = new Date();
+    handleHideCurrentSub(true);
     switch (val) {
         case 'all':
             var from_date = '0000-00-00';
-            // var to_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date
-            //     .getDate()).slice(-2);
+            if(table == 'acs_billing'){
+                var to_date = '0000-00-00';
+            }else{
+                var to_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date
+                .getDate()).slice(-2);
+            }
+     
 
-            var to_date = '0000-00-00';
+            // var to_date = '0000-00-00';
 
             if (table == 'accounting_expense') {
                 var pastDate = new Date();
@@ -771,6 +789,9 @@ function filterThumbnail(val, id, table,filter) {
 
             break;
         case 'week':
+            if(table == 'acs_billing'){
+                handleHideCurrentSub(false);
+            }
             var today = new Date();
             var from_date_temp = new Date(today.getFullYear(), today.getMonth(), today.getDate() -
                 6);
@@ -790,6 +811,9 @@ function filterThumbnail(val, id, table,filter) {
 
 
         case 'two-week':
+            if(table == 'acs_billing'){
+                handleHideCurrentSub(false);
+            }
             var endDate = new Date();
             var startDate = new Date(endDate);
 
@@ -801,6 +825,9 @@ function filterThumbnail(val, id, table,filter) {
                 endDate.getDate()).padStart(2, '0');
             break;
         case 'month':
+            if(table == 'acs_billing'){
+                handleHideCurrentSub(false);
+            }
             var endDate = new Date();
             var startDate = new Date(endDate);
 
@@ -812,6 +839,9 @@ function filterThumbnail(val, id, table,filter) {
                 endDate.getDate()).padStart(2, '0');
             break;
         case 'two-month':
+            if(table == 'acs_billing'){
+                handleHideCurrentSub(false);
+            }
             var endDate = new Date();
             var startDate = new Date(endDate);
 

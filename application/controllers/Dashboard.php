@@ -207,7 +207,20 @@ class Dashboard extends Widgets
         $this->page_data['overdueInvoices'] = $this->Invoice_model->getCompanyOverDueInvoices($companyId);
         // $this->page_data['subs'] = $this->event_model->getAllsubsByCompanyId($companyId)
         $this->page_data['subs'] = $this->Customer_advance_model->countTotalSubscriptionsByCompanyId($companyId);
-     
+        $subsContent =  $this->Customer_advance_model->countCurrentTotalSubscriptionsByCompanyId($companyId);
+
+        $output = 'Recent Subscription Update <br>';
+
+       if(count($subsContent) > 0 ){
+        foreach ($subsContent as $item) {
+            $output .= "<br> subscriber : <b>".$item->first_name." ".$item->last_name."</b> <br> amount <b>$".$item->mmr."</b>,";
+        }
+       }
+
+       $this->page_data['subsContent'] = $output;
+
+        
+        
         $past_due = $this->widgets_model->getCurrentCompanyOverdueInvoices2();
         $invoices_total_due = 0;
         foreach ($past_due as $total_due) {
@@ -593,13 +606,14 @@ class Dashboard extends Widgets
                 $total_query = [
                     'where' => ['estimates.company_id' => logged('company_id'), 'estimates.status !=' => 'Lost',
                 'estimates.status !=' => 'Invoiced', 'estimates.view_flag' => '0', 'estimates.status !=' => 'Declined By Customer',
-                'estimates.estimate_date >=' => date('Y-m-d', strtotime($date_from)), 'estimates.estimate_date <=' => date('Y-m-d', strtotime($date_to))],
+                'DATE(estimates.created_at)  >=' => date('Y-m-d', strtotime($date_from)),
+                 'DATE(estimates.created_at)  <=' => date('Y-m-d', strtotime($date_to))],
                     'table' => 'estimates',
                     'join' => [
                        [
                         'table' => 'acs_profile',
                         'statement' => 'estimates.customer_id = acs_profile.prof_id',
-                        'join_as' => 'right',
+                        'join_as' => 'left',
                        ],
                     ],
                     'select' => 'estimates.*',
@@ -610,8 +624,8 @@ class Dashboard extends Widgets
                     'where' => ['estimates.company_id' => logged('company_id'),
                                 'estimates.expiry_date <=' => date('Y-m-d', strtotime($date_to)),
                                  'estimates.view_flag' => '0',
-                                 'estimates.estimate_date >=' => date('Y-m-d', strtotime($date_from)),
-                                 'estimates.estimate_date <=' => date('Y-m-d', strtotime($date_to)),
+                                 'DATE(estimates.created_at)  >=' => date('Y-m-d', strtotime($date_from)),
+                                 'DATE(estimates.created_at)  <=' => date('Y-m-d', strtotime($date_to)),
                     ],
                     'table' => 'estimates',
                     'join' => [
@@ -651,9 +665,12 @@ class Dashboard extends Widgets
                 if(  $date_to == '0000-00-00 23:59:59'){
                     $total_query = [
                         'filter'=>$filter,
-                        'select'=>' SUM(COALESCE(acs_billing.mmr, 0)) AS total_amount_subscriptions, 
-                                    COALESCE(COUNT(acs_billing.bill_id), 0) AS total_subscriptions, 
-                                    COUNT(acs_billing.bill_id) AS total_active_subscription, '
+                        'select'=>' SUM(CASE WHEN DATE(acs_billing.bill_start_date) < CURDATE() THEN COALESCE(acs_billing.mmr, 0) ELSE 0 END) AS total_amount_subscriptions,
+                                    COUNT(CASE WHEN DATE(acs_billing.bill_start_date) < CURDATE() THEN acs_billing.bill_id END) AS total_subscriptions,
+                                    COUNT(CASE WHEN DATE(acs_billing.bill_start_date) < CURDATE() THEN acs_profile.prof_id END) AS total_active_subscription,
+                                    
+                                    SUM(CASE WHEN DATE(acs_billing.bill_start_date) = CURDATE() THEN COALESCE(acs_billing.mmr, 0) ELSE 0 END) AS total_current_amount_subscriptions,
+                                    COUNT(CASE WHEN DATE(acs_billing.bill_start_date) = CURDATE() THEN acs_profile.prof_id END) AS total_current_active_subscription'
                         ];
                 }else{
                     $total_query = [

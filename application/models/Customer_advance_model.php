@@ -795,7 +795,15 @@ class Customer_advance_model extends MY_Model
 
     public function countTotalSubscriptionsByCompanyId($company_id = 0)
     {
-        $this->db->select('SUM(COALESCE(acs_billing.mmr, 0)) AS total_amount_subscriptions, COALESCE(COUNT(acs_billing.bill_id),0) AS total_subscriptions, COUNT(acs_profile.prof_id) AS total_active_subsciption');
+        $this->db->select("
+            SUM(CASE WHEN DATE(acs_billing.bill_start_date) < CURDATE() THEN COALESCE(acs_billing.mmr, 0) ELSE 0 END) AS total_amount_subscriptions,
+            COUNT(CASE WHEN DATE(acs_billing.bill_start_date) < CURDATE() THEN acs_billing.bill_id END) AS total_subscriptions,
+            COUNT(CASE WHEN DATE(acs_billing.bill_start_date) < CURDATE() THEN acs_profile.prof_id END) AS total_active_subscription,
+            
+            SUM(CASE WHEN DATE(acs_billing.bill_start_date) = CURDATE() THEN COALESCE(acs_billing.mmr, 0) ELSE 0 END) AS total_current_amount_subscriptions,
+            COUNT(CASE WHEN DATE(acs_billing.bill_start_date) = CURDATE() THEN acs_profile.prof_id END) AS total_current_active_subscription
+        ");
+        
         $this->db->from('acs_profile');
         $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $company_id);
@@ -805,6 +813,22 @@ class Customer_advance_model extends MY_Model
     
         return $query->row();
     }
+
+    public function countCurrentTotalSubscriptionsByCompanyId($company_id = 0)
+    {
+        $this->db->select("*");
+        $this->db->from('acs_profile');
+        $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_profile.company_id', $company_id);
+        $this->db->where('DATE(acs_billing.bill_start_date)', date('Y-m-d') );
+        $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR','Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
+        
+        $query = $this->db->get();
+    
+        return $query->result();
+    }
+    
+
 
     public function getTotalSubscriptionsFilterDate($params = array())
     {
