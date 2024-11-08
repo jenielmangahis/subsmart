@@ -596,7 +596,7 @@
                                             <select id="inputState" name="timezone" class="form-control ">
                                                 <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
                                                     <option value="<?php echo $key ?>">
-                                                        <?php echo $key ?>
+                                                        <?php echo $zone ?>
                                                     </option>
                                                 <?php } ?>
                                                 <!-- <option value="utc5">Central Time (UTC -5)</option> -->
@@ -773,14 +773,8 @@
                                                 </div>
                                             </div> -->
                                             <div class="col-md-12">
-                                                <div class="col-md-12">
-                                                        <h6>Job Account Number</h6>
-                                                        <input value="<?php echo ($workorder->job_account_number) ? $workorder->job_account_number : ""; ?>" type="text" class="form-control" name="job_account_number">
-                                                    </div>
-                                                <div class="col-md-12">
-                                                    <hr>
-                                                </div>
-                                                <div class="row">
+                                                <hr />
+                                                <div class="row">                                                    
                                                     <div class="col-md-6">
                                                         <div class="mb-3">
                                                             <div class="d-flex justify-content-between">
@@ -817,8 +811,12 @@
                                                             </select>
                                                         </div>
                                                     </div>
-                                                    <div class="col-md-12">
-                                                        <h6>Description of Job</h6>
+                                                    <div class="col-md-6">
+                                                        <h6>Job Account Number</h6>
+                                                        <input value="<?php echo ($workorder->job_account_number && trim($workorder->job_account_number) != '') ? $workorder->job_account_number : $default_job_account_number; ?>" type="text" class="form-control" name="job_account_number" disabled="">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <h6>Job Description</h6>
                                                         <textarea name="job_description" class="form-control" required=""><?= isset($workorder) ? $workorder->job_description : ''; ?></textarea>
                                                     </div>
                                                     <div class="col-md-12">
@@ -834,9 +832,16 @@
                                                 <?php
                                                     $subtotal = 0.00;
                                                     foreach ($workorder_items as $item):
-                                                    $item_price = $item->price / $item->qty;
+                                                    if( $item->is_alarm_item && $item->is_alarm_item == 1 ){
+                                                        $item_price = $item->price / $item->qty;
+                                                        $total = $item->price;
+                                                    }else{
+                                                        $item_price = $item->price;
+                                                        $total = $item->total - $item->tax;
+                                                    }
+                                                    
                                                     //$total = $item->price;
-                                                    $total = $item->total - $item->tax;
+                                                    
                                                     $hideSelectedItems .= "#ITEMLIST_PRODUCT_$item->id {display: none;}"; 
                                                 ?>
                                                    <tr id=ss>
@@ -848,10 +853,10 @@
                                                             <input data-itemid='<?= $item->id ?>'  id='<?= $item->id ?>' value='<?= $item->qty; ?>' type="number" name="item_qty[]" class="form-control qty item-qty-<?= $item->id; ?>">
                                                         </td>
                                                         <td class="d-none"><small>Original Price</small>
-                                                            <input readonly id='cost<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->cost; ?>'  type="number" name="item_original_price[]" class="form-control item-original-price" placeholder="Cost">
+                                                            <input readonly id='cost<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item_price; ?>'  type="number" name="item_original_price[]" class="form-control item-original-price" placeholder="Cost">
                                                         </td>
                                                         <td><small>Unit Price</small>
-                                                            <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->cost; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
+                                                            <input id='price<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item_price; ?>'  type="number" name="item_price[]" class="form-control item-price" placeholder="Unit Price">
                                                         </td>
                                                         <td class="d-none"><small>Commission</small>
                                                             <input readonly step="any" id='commission<?= $item->id ?>' data-id="<?= $item->id; ?>" value='<?= $item->commission; ?>'  type="number" name="item_commission[]" class="form-control item-commission" placeholder="Commission">
@@ -937,13 +942,13 @@
                                                             <select id="tax_rate" name="tax_percentage" class="form-control" data-value="<?= $workorder->tax_rate; ?>">
                                                                 <option value="0.0">None</option>
                                                                 <?php foreach ($tax_rates as $rate) { ?>
-                                                                    <option value="<?= $rate->rate; ?>"><?= $rate->name; ?></option>
+                                                                    <option value="<?= $rate->rate; ?>" <?= $rate->rate == '7.5' ? 'selected="selected"' : ''; ?>><?= $rate->name; ?></option>
                                                                 <?php } ?>
                                                             </select>
                                                             </div>                                                                                                                     
                                                         <div class="col-sm-6 align-right">
-                                                            <label class="total-summary" id="invoice_tax_total"><?= isset($workorder->tax_rate) ? number_format((float)$workorder->tax_rate, 2,'.',',') : '0.00'; ?></label>
-                                                            <input type="hidden" name="tax" id="tax_total_form_input" value="<?= isset($workorder->tax_rate) ? number_format((float)$workorder->tax_rate, 2,'.',',') : '0.00'; ?>">
+                                                            <label class="total-summary" id="invoice_tax_total"><?= isset($workorder->taxes) ? number_format((float)$workorder->taxes, 2,'.',',') : '0.00'; ?></label>
+                                                            <input type="hidden" name="tax" id="tax_total_form_input" value="<?= isset($workorder->taxes) ? number_format((float)$workorder->taxes, 2,'.',',') : '0.00'; ?>">
                                                         </div>
                                                     </div>
                                                     <?php if( in_array($cid, adi_company_ids()) ){ ?>
@@ -1073,16 +1078,16 @@
                                                         <div class="col-sm-12">
                                                             <?php 
                                                                 if (isset($workorder)) { 
-                                                                    $MESSAGE = "$workorder->message"; 
+                                                                    $instructions = "$workorder->instructions"; 
                                                                 } else { 
                                                                     //$MESSAGE = "Thank you for your business, Please call $company_info->business_name at $company_info->business_phone for quality customer service";                                                                
-                                                                    $MESSAGE = '';
+                                                                    $instructions = '';
                                                                 } 
                                                             ?>
                                                             <div id="Message_Editor">
-                                                                <?php echo $MESSAGE; ?>
+                                                                <?php echo $instructions; ?>
                                                             </div>
-                                                            <input class="d-none customer_message_input" name="message" value="<?php echo $MESSAGE; ?>">
+                                                            <input class="d-none customer_message_input" name="message" value="<?php echo $instructions; ?>">
                                                         </div>
                                                     </div>
                                                 </div>
