@@ -321,6 +321,10 @@
                                 }
                             });
 
+                            setTimeout(function () {
+                                location.reload();
+                            }, 1500);                            
+
                         } else {
                             Swal.fire({
                                 title: 'Error',
@@ -359,7 +363,11 @@
                             if (result.value) {
                                 location.reload();
                             }
-                        });            
+                        });         
+                        
+                        setTimeout(function () {
+                            location.reload();
+                        }, 1500);                               
                     }else{
                         Swal.fire({
                             title: 'Error',
