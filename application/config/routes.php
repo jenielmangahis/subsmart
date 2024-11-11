@@ -1917,3 +1917,7 @@ $route['tickets/settings_plan_types'] = 'Tickets/settings_plan_types';
 $route['tickets/_create_plan_type'] = 'Tickets/ajax_create_plan_type';
 $route['tickets/_update_plan_type'] = 'Tickets/ajax_update_plan_type';
 $route['tickets/_delete_plan_type'] = 'Tickets/ajax_delete_plan_type';
+
+//Customer Dashboard
+$route['customer/download_document/(:any)?'] = 'CustomerDashboardQuickActions/downloadDocument/$1';
+$route['customer/_delete_client_agreement']  = 'CustomerDashboardQuickActions/ajaxDeleteClientAgreement';
