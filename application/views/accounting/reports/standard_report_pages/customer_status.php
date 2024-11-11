@@ -191,10 +191,42 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-12"><hr class="mt-0"></div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="mb-1 fw-xnormal">Status Filter</label>
+                                    <select name="status_filter" id="status-filter" class="nsm-field form-select">
+                                        <option value="">None</option>
+                                        <option value="Acceptance Pending">Acceptance Pending</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Active w/RAR">Active w/RAR</option>
+                                        <option value="Active w/RMR">Active w/RMR</option>
+                                        <option value="Active w/RQR">Active w/RQR</option>
+                                        <option value="Active w/RYR">Active w/RYR</option>
+                                        <option value="CAD/Permitting">CAD/Permitting</option>
+                                        <option value="Cancel Pending">Cancel Pending</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                        <option value="Charge Back">Charge Back</option>
+                                        <option value="Collection">Collection</option>
+                                        <option value="Competition Lost">Competition Lost</option>
+                                        <option value="Contract Review">Contract Review</option>
+                                        <option value="Design Team/Engineering Stamps">Design Team/Engineering Stamps</option>
+                                        <option value="Funded">Funded</option>
+                                        <option value="Inactive">Inactive</option>
+                                        <option value="Inactive w/RMM">Inactive w/RMM</option>
+                                        <option value="Inspection ">Inspection </option>
+                                        <option value="Installed">Installed</option>
+                                        <option value="Interconnection ">Interconnection </option>
+                                        <option value="Lead">Lead</option>
+                                        <option value="Loan Documents to be Executed">Loan Documents to be Executed</option>
+                                        <option value="New">New</option>
+                                        <option value="Proposal ">Proposal </option>
+                                        <option value="Site Survey">Site Survey</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-12"><hr class="mt-0"></div>
                             </div>
                         </div>
                     </div>
-                    <hr class="mt-0">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="float-start">
