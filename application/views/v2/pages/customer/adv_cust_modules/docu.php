@@ -1,3 +1,12 @@
+<style>
+.client-agreement-list ul{
+    list-style: none;
+    margin: 10px 0px;
+}
+.client-agreement-list ul li button{
+    
+}
+</style>
 <div class="col-12 col-md-4" data-id="<?= $id ?>" id="<?= $id ?>" module-id="profiledocuments">
     <div class="nsm-card nsm-grid">
         <div class="nsm-card-header d-block">
@@ -24,9 +33,9 @@
             ?>
             <style>
                 .buttons.has-document [data-action=upload] {
-                    opacity: 0.3;
+                    /* opacity: 0.3;
                     pointer-events: none;
-                    user-select: none;
+                    user-select: none; */
                 }
                 .buttons:not(.has-document) [data-action=download],
                 .buttons:not(.has-document) [data-action=delete] {
@@ -45,22 +54,43 @@
                         <div class="row g-2 align-items-center">
                             <div class="col-12 col-md-6 position-relative">
                                 <div class="form-check d-inline-block">
-                                    <input class="form-check-input docu-chk" type="checkbox" <?= $__documentExists('client_agreement') ? 'checked="checked"' : ''; ?> value="1" id="client_agreement" name="client_agreement">
+                                    <input class="form-check-input docu-chk" type="checkbox" <?= count($customer_client_agreements) > 0 ? 'checked="checked"' : ''; ?> value="1" id="client_agreement" name="client_agreement">
                                     <label class="form-check-label" for="client_agreement" data-type="document_label">
                                         Client Agreement
-                                    </label>
-                                </div>
+                                    </label>                                    
+                                </div>                                
                             </div>
                             <div class="col-12 col-md-6 text-end buttons <?= $__documentExists('client_agreement') ? 'has-document' : ''; ?>">
                                 <button type="button" class="nsm-button btn-sm" data-action="upload" data-type="client_agreement">
                                     Upload
                                 </button>
-                                <button type="button" class="nsm-button btn-sm" data-action="download" data-id="<?= $cus_id; ?>">
+                                <!-- <button type="button" class="nsm-button btn-sm" data-action="download" data-id="<?= $cus_id; ?>">
                                     Download
                                 </button>
                                 <button type="button" class="nsm-button error btn-sm" data-action="delete" data-type="client_agreement">
                                     Delete
-                                </button>
+                                </button> -->
+                            </div>
+                            <div class="client-agreement-list">
+                                <?php if( $customer_client_agreements ){ ?>
+                                    <ul>
+                                        <?php foreach($customer_client_agreements as $ca){ ?>
+                                            <li>
+                                                <div class="row">
+                                                    <div class="col-md-6"><span><?= $ca['file_name']; ?></span></div>
+                                                    <div class="col-md-6 text-end buttons has-document">
+                                                        <button type="button" class="nsm-button btn-sm download-client-agreement" data-id="<?= $ca['id']; ?>">
+                                                            Download
+                                                        </button>
+                                                        <button type="button" class="nsm-button error btn-sm delete-client-agreement" data-id="<?= $ca['id']; ?>">
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        <?php } ?>
+                                    </ul>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
@@ -192,12 +222,12 @@
                                 <i class='bx bx-fw bx-import'></i> Download Selected
                             </button>
                         </div> -->
-                        <div class="col-6 col-md-6">
+                        <!-- <div class="col-6 col-md-6">
                             <button type="button" class="nsm-button w-100 ms-0 btn-delete-selected" id="managecustomerdocumentsbtn--delete">
                                 <i class='bx bx-fw bx-trash'></i>
                                 <span class="text">Delete Selected</span>
                             </button>
-                        </div>
+                        </div> -->
                         <div class="col-6 col-6 col-md-6">
                             <button type="button" class="nsm-button w-100 ms-0" data-action="import_esign" data-bs-toggle="modal" data-bs-target="#searchesignmodal">
                                 <i class='bx bx-fw bx-import'></i>
@@ -485,7 +515,7 @@ $(function(){
 
     function load_esign_doc(search_query){
         var cid = "<?= $customer_id; ?>";
-        var url = "<?= base_url('customer/_load_esign_doc') ?>";
+        var url = base_url + "customer/_load_esign_doc";
         var _container = $("#esign-container");
 
         showLoader(_container);
@@ -500,6 +530,36 @@ $(function(){
             },
         });
     }
+
+    $(document).on('click', '.download-client-agreement', function(){
+        var cdi = $(this).attr('data-id');
+        window.open(
+        `${base_url}customer/download_document/${cdi}`,
+        "_blank"
+        );
+    });
+
+    $(document).on('click', '.delete-client-agreement', function(){
+        var cdi = $(this).attr('data-id');
+
+        $.ajax({
+            type: 'POST',
+            url: base_url + "customer/_delete_client_agreement",
+            data: {cdi:cdi},
+            dataType: 'json',            
+            success: function(o) {
+                if( o.is_success == 1 ){   
+                    location.reload();
+                }else{
+                    Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: o.msg
+                    });
+                }
+            },
+        });
+    });
 
     $(document).on("click", '.btn-delete-selected', function(e){
         var asmsid = $(this).attr("data-id");
