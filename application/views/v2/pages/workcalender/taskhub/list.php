@@ -244,7 +244,7 @@
                                 <td data-name="Assigned" style="width:20%;">Assigned To</td>           
                                 <td data-name="Priority">Priority</td>
                                 <td data-name="Status">Status</td>
-                                <td data-name="Date Started">Date Started</td>
+                                <td data-name="Due Date">Due Date</td>
                                 <td data-name="Date Completion">Completion Date</td>
                                 <td data-name="Date Created">Date Created</td>
                                 <td data-name="Manage" style="width:2%;"></td>
@@ -349,13 +349,13 @@
                                         <td>
                                             <?php //echo date("F d, Y", strtotime($row->date_started)); ?>
                                             <?php 
-                                                $date_started = "--";
-                                                if($row->date_started != null) {
-                                                    $date_started = date("F d, Y", strtotime($row->date_started));
+                                                $dude_date = "--";
+                                                if($row->date_due != NULL) {
+                                                    $dude_date = date("F d, Y", strtotime($row->date_due));
                                                 } else {
-                                                    $date_started = date("F d, Y", strtotime($row->date_created));
+                                                    //$dude_date = date("F d, Y", strtotime($row->date_due));
                                                 }
-                                                echo $date_started;
+                                                echo $dude_date;
                                             ?>
                                         </td>
                                         <td>
