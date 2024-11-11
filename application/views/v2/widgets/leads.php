@@ -26,7 +26,7 @@ endif;
     </div>
     <div class="nsm-card-content">
         <div class="nsm-widget-table">
-            <div id="recent-leads-container">
+            <div id="recent-leads-container" style=" height: 100%;">
                 <div class="nsm-loader">
                     <i class='bx bx-loader-alt bx-spin'></i>
                 </div>

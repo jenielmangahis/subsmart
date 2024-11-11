@@ -219,22 +219,34 @@ $(document).ready(function() {
         } = response;
         $("#recent-leads-container").html('');
         if (success == 1) {
-            for (var j = 0; j < recentLeads.length; j++) {
-                var nn = "NN";
-                if (recentLeads[j].lastname[0]) {
-                    nn = recentLeads[j].lastname[0] + '' + recentLeads[j].firstname[0];
+            if(recentLeads.length > 0) {
+                for (var j = 0; j < recentLeads.length; j++) {
+                    var nn = "NN";
+                    if (recentLeads[j].lastname[0]) {
+                        nn = recentLeads[j].lastname[0] + '' + recentLeads[j].firstname[0];
+                    }
+                    $("#recent-leads-container").append(
+                        '<div class="widget-item cursor-pointer" onclick="location.href=`/customer/add_lead/' +
+                        recentLeads[j].leads_id + '`"><div class="nsm-profile"><span>' + nn +
+                        '</span></div><div class="content ms-2"><div class="details"><span class="content-title">' +
+                        recentLeads[j].lastname + ' ' + recentLeads[j].firstname +
+                        '</span><span class="content-subtitle d-block">' + recentLeads[j].city + ', ' +
+                        recentLeads[j].state + ' ' + recentLeads[j].zip +
+                        '</span></div><div class="controls"><span class="content-subtitle d-block mt-1">' +
+                        recentLeads[j].email_add + '</span></div></div></div>'
+                    )
                 }
-                $("#recent-leads-container").append(
-                    '<div class="widget-item cursor-pointer" onclick="location.href=`/customer/add_lead/' +
-                    recentLeads[j].leads_id + '`"><div class="nsm-profile"><span>' + nn +
-                    '</span></div><div class="content ms-2"><div class="details"><span class="content-title">' +
-                    recentLeads[j].lastname + ' ' + recentLeads[j].firstname +
-                    '</span><span class="content-subtitle d-block">' + recentLeads[j].city + ', ' +
-                    recentLeads[j].state + ' ' + recentLeads[j].zip +
-                    '</span></div><div class="controls"><span class="content-subtitle d-block mt-1">' +
-                    recentLeads[j].email_add + '</span></div></div></div>'
-                )
+            }else{
+                $("#recent-leads-container").html(`<div class="nsm-empty">
+                    <i class="bx bx-meh-blank"></i>
+                    <span>There is no recent leads.</span>
+                </div>`);
             }
+        }else{
+            $("#recent-leads-container").html(`<div class="nsm-empty">
+                    <i class="bx bx-meh-blank"></i>
+                    <span>There is no recent leads.</span>
+                </div>`);
         }
 
     }).catch((error) => {

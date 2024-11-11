@@ -40,23 +40,18 @@ class Widgets_model extends MY_Model
             acs_profile.last_name,
             acs_profile.fk_user_id as user_id,
             invoices.grand_total,
-            invoices.grand_total - COALESCE(SUM(accounting_receive_payment_invoices.payment_amount), 0) as balance
+            invoices.grand_total  as balance
         ');
-        $this->db->join('accounting_receive_payment_invoices', 'accounting_receive_payment_invoices.invoice_id = invoices.id', 'left');
         $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        $this->db->where('invoices.status !=', "Paid");
+        $this->db->where('invoices.status !=', "");
+        $this->db->where('invoices.due_date < CURDATE() - INTERVAL 15 DAY');
         $this->db->where('invoices.company_id', $company_id);
-        $this->db->where('invoices.grand_total >', 0);
-        $this->db->where_in('invoices.status', ['Submitted', 'Partially Paid', 'Due', 'Overdue', 'Approved', 'Schedule']);
-        $this->db->where('invoices.due_date !=', null);
-        $this->db->where("STR_TO_DATE(invoices.due_date, '%Y-%m-%d') < CURRENT_DATE()");
-        $this->db->group_by('invoices.id');
-        $this->db->order_by("STR_TO_DATE(invoices.due_date, '%Y-%m-%d') ASC");
+        $this->db->order_by("invoice_number DESC");
         $query = $this->db->get();
-        $results = $query->result();
+        return $results = $query->result();
 
-        return array_filter($results, function ($result) {
-            return $result->balance > 0;
-        });
+      
     }
 
     public function getCurrentCompanyOverdueInvoices2()
@@ -73,25 +68,18 @@ class Widgets_model extends MY_Model
             acs_profile.last_name,
             acs_profile.fk_user_id as user_id,
             invoices.grand_total,
-            invoices.grand_total - COALESCE(SUM(accounting_receive_payment_invoices.payment_amount), 0) as balance
+            invoices.grand_total as balance
         ');
-        $this->db->join('accounting_receive_payment_invoices', 'accounting_receive_payment_invoices.invoice_id = invoices.id', 'left');
         $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        $this->db->where('invoices.status !=', "Paid");
+        $this->db->where('invoices.status !=', "");
+        $this->db->where('invoices.due_date < CURDATE()');
         $this->db->where('invoices.company_id', $company_id);
-        $this->db->where('invoices.grand_total >', 0);
-        $this->db->where('invoices.status !=', 'Paid');
-        $this->db->where('invoices.due_date !=', null);
-        $current_date = date('Y-m-d');
-        $this->db->where('invoices.due_date <', $current_date);
-        $this->db->where('invoices.view_flag', 0);
-        $this->db->group_by('invoices.id');
-        $this->db->order_by("STR_TO_DATE(invoices.due_date, '%Y-%m-%d') ASC");
+        $this->db->order_by("invoices.invoice_number DESC");
         $query = $this->db->get();
-        $results = $query->result();
+        return $results = $query->result();
 
-        return array_filter($results, function ($result) {
-            return $result->balance > 0;
-        });
+      
     }
 
     public function getTags()

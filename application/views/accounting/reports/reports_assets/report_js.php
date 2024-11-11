@@ -41,6 +41,7 @@
     var date_to = $('input[name="date_to"]').val();
     var subscription_period = $('select[name="subscription_period"]').val();
     var filter_by = $('select[name="filter_by"]').val();
+    var status_filter = $('select[name="status_filter"]').val();
     // =========================
     var reportConfig = {
         businessLogoURL: businessLogoURL,
@@ -56,6 +57,7 @@
         date_to: date_to,
         subscription_period: subscription_period,
         filter_by: filter_by,
+        status_filter: status_filter,
     };
     // =========================
 
@@ -63,28 +65,155 @@
     function renderReportList() {
         subscription_period = $('select[name="subscription_period"]').val();
         filter_by = $('select[name="filter_by"]').val();
-        if (subscription_period == "all") {
-            period = " (All)";
-        } else if (subscription_period == "last_7_days") {
-            period = " (Last 7 Days)";
-        } else if (subscription_period == "last_14_days") {
-            period = " (Last 14 Days)";
-        } else if (subscription_period == "last_30_days") {
-            period = " (Last 30 Days)";
-        } else if (subscription_period == "last_60_days") {
-            period = " (Last 60 Days)";
-        } else {
-            period = "";
+        status_filter = $('select[name="status_filter"]').val();
+
+        switch (subscription_period) {
+            case "all":
+                period = " (All)";
+                break;
+            case "last_7_days":
+                period = " (Last 7 Days)";
+                break;
+            case "last_14_days":
+                period = " (Last 14 Days)";
+                break;
+            case "last_30_days":
+                period = " (Last 30 Days)";
+                break;
+            case "last_60_days":
+                period = " (Last 60 Days)";
+                break;
+            default:
+                period = "";
         }
 
-        if (filter_by == "current_month") {
-            $("#filter_by_text").text("Filtered by Current Month (<?php echo date('M Y'); ?>)");
-        } else if (filter_by == "current_year") {
-            $("#filter_by_text").text("Filtered by Current Year (<?php echo date('Y'); ?>)");
-        } else {
-            $("#filter_by_text").text("As of <?php echo date('F d, Y'); ?>");
+        switch (filter_by) {
+            case "current_month":
+                $("#filter_by_text").text("Filtered by Current Month (<?php echo date('M Y'); ?>)");
+                break;
+            case "current_year":
+                $("#filter_by_text").text("Filtered by Current Year (<?php echo date('Y'); ?>)");
+                break;
+            default:
+                $("#filter_by_text").text("As of <?php echo date('F d, Y'); ?>");
         }
-        
+
+        switch (status_filter) {
+            case "Draft":
+                status_text = " (Draft)";
+                break;
+            case "Scheduled":
+                status_text = " (Scheduled)";
+                break;
+            case "Arrival":
+                status_text = " (Arrival)";
+                break;
+            case "Started":
+                status_text = " (Started)";
+                break;
+            case "Approved":
+                status_text = " (Approved)";
+                break;
+            case "Finished":
+                status_text = " (Finished)";
+                break;
+            case "Cancelled":
+                status_text = " (Cancelled)";
+                break;
+            case "Invoiced":
+                status_text = " (Invoiced)";
+                break;
+            case "Completed":
+                status_text = " (Completed)";
+                break;
+            case "Acceptance Pending":
+                status_text = " (Acceptance Pending)";
+                break;
+            case "Active":
+                status_text = " (Active)";
+                break;
+            case "Active w/RAR":
+                status_text = " (Active w/RAR)";
+                break;
+            case "Active w/RMR":
+                status_text = " (Active w/RMR)";
+                break;
+            case "Active w/RQR":
+                status_text = " (Active w/RQR)";
+                break;
+            case "Active w/RYR":
+                status_text = " (Active w/RYR)";
+                break;
+            case "CAD/Permitting":
+                status_text = " (CAD/Permitting)";
+                break;
+            case "Cancel Pending":
+                status_text = " (Cancel Pending)";
+                break;
+            case "Charge Back":
+                status_text = " (Charge Back)";
+                break;
+            case "Collection":
+                status_text = " (Collection)";
+                break;
+            case "Competition Lost":
+                status_text = " (Competition Lost)";
+                break;
+            case "Contract Review":
+                status_text = " (Contract Review)";
+                break;
+            case "Design Team/Engineering Stamps":
+                status_text = " (Design Team/Engineering Stamps)";
+                break;
+            case "Funded":
+                status_text = " (Funded)";
+                break;
+            case "Inactive":
+                status_text = " (Inactive)";
+                break;
+            case "Inactive w/RMM":
+                status_text = " (Inactive w/RMM)";
+                break;
+            case "Inspection":
+                status_text = " (Inspection)";
+                break;
+            case "Installed":
+                status_text = " (Installed)";
+                break;
+            case "Interconnection":
+                status_text = " (Interconnection)";
+                break;
+            case "Lead":
+                status_text = " (Lead)";
+                break;
+            case "Loan Documents to be Executed":
+                status_text = " (Loan Documents to be Executed)";
+                break;
+            case "New":
+                status_text = " (New)";
+                break;
+            case "Proposal":
+                status_text = " (Proposal)";
+                break;
+            case "Site Survey":
+                status_text = " (Site Survey)";
+                break;
+            case "Service":
+                status_text = " (Service)";
+                break;
+            case "Job":
+                status_text = " (Job)";
+                break;
+            case "Event":
+                status_text = " (Event)";
+                break;
+            case "Estimate":
+                status_text = " (Estimate)";
+                break;
+            default:
+                status_text = "";
+        }
+
         // =========================
         theadColumnNames = $(`#<?php echo $tableID; ?> th`).map(function() { return $(this).text(); }).get();
         theadTotalColumn = $("#<?php echo $tableID; ?>").find('tr:first th').length;
@@ -122,6 +251,7 @@
             date_to: date_to,
             subscription_period: subscription_period,
             filter_by: filter_by,
+            status_filter: status_filter,
         };
         // =========================
         (enableDisableBusinessName) ? $("#businessName").text(businessName) : businessName = $("#businessName").html("&nbsp;").html() ;
@@ -154,7 +284,7 @@
                 theadColumnNames: theadColumnNames,
                 theadTotalColumn: theadTotalColumn,
                 businessName: businessName,
-                reportName: reportName + period, 
+                reportName: reportName + period + status_text, 
                 reportDate: reportDate, 
                 filename: filename, 
                 notes: notes, 
@@ -174,7 +304,7 @@
                         "lengthChange": false
                     });
                 }
-                $('#reportName').text(reportName + period);
+                $('#reportName').text(reportName + period + status_text);
             }
         });
         // =========================
@@ -198,6 +328,7 @@
                 report_date_to_text: date_to,
                 subscription_period: subscription_period,
                 filter_by: filter_by,
+                status_filter: status_filter,
             },
             success: function(data) {}   
         });

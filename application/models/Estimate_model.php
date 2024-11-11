@@ -404,10 +404,14 @@ class Estimate_model extends MY_Model
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'estimates.customer_id  = acs_profile.prof_id','left');
         $this->db->where('estimates.company_id', $company_id);
-        $this->db->where('estimates.status !=', 'Lost');
-        $this->db->where('estimates.status !=', 'Invoiced');
-        $this->db->where('estimates.status !=', 'Declined By Customer');
-        $this->db->where('estimates.view_flag', '0');
+        $this->db->where_in('estimates.status', [
+            'Draft',
+            'Pending',
+        ]);
+        // $this->db->where('estimates.status !=', 'Lost');
+        // $this->db->where('estimates.status !=', 'Invoiced');
+        // $this->db->where('estimates.status !=', 'Declined By Customer');
+        // $this->db->where('estimates.view_flag', '0');
         $this->db->order_by('estimates.id', 'DESC');
         $query = $this->db->get();
 
