@@ -106,6 +106,11 @@
 <div class="row mt-2">
     <div class="col-12">
         <div class="nsm-card primary">
+            <div class="nsm-card-header">
+                <div class="nsm-card-title">
+                    <span class="custom-ticket-header"><i class='bx bx-wrench'></i> Ticket Information</span>
+                </div>
+            </div>
             <div class="nsm-card-content">
                 <div class="row">
                     <div class="col-md-3">
@@ -294,7 +299,7 @@
                             <select id="bill_method" name="bill_method" class="form-select">
                                 <option value="CC">Credit Card</option>
                                 <option value="CHECK">Check</option>
-                                <option value="ACH">ACH</option>/option>
+                                <option value="ACH">ACH</option>
                             </select>
                         </div>
                     </div>
@@ -312,7 +317,7 @@
                                         <input type="text" class="form-control" name="customer_cc_num" id="customer_cc_num"/>
                                     </div>
                                 </div>
-                                <div class="col-md-2 form-group mt-2">
+                                <div class="col-md-3 form-group mt-2">
                                     <label for="customer_cc_expiry_date_month"><b>Expiry Date</b></label>
                                     <div class="input-group">
                                         <input type="text" class="form-control cc-expiry-month" style="width:60px !important;" maxlength="2" size="2" name="customer_cc_expiry_date_month" id="customer_cc_expiry_date_month" placeholder="MM"/>
@@ -394,12 +399,11 @@
                     </div>
                 </div>
                 <div class="nsm-card-content">
-                    <hr>
                     <div class="row">
                         <div class="col-md-6">
                                 <div class="row">
-                                    <div class="col-md-4 ">Contact Name 1</div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-5 ">Contact Name 1</div>
+                                    <div class="col-md-7">
                                         <div class="row">
                                             <div class="col-6" style="padding-right:2px !important;">
                                                 <input type="text" class="form-control" placeholder="First Name" name="contact_first_name1" id="contact_first_name1" value="" style="margin-bottom: 5px;"/>
@@ -513,7 +517,6 @@
                     </div>
                 </div>
                 <div class="nsm-card-content">
-                    <hr />
                     <div class="row" id="plansItemDiv" style="background-color:white;">
                         <div class="col-md-12 table-responsive">                        
                         <input type="hidden" name="count" value="0" id="service-ticket-item-count">
@@ -659,7 +662,7 @@
 </div>
 
 <!-- Modal -->
-<div class="modal fade" id="quick-add-service-ticket-item-list" tabindex="-1"  aria-labelledby="quickAddServiceTicketLabel" aria-hidden="true">
+<div class="modal fade" id="quick-add-service-ticket-item-list" tabindex="-1"  aria-labelledby="quick-add-service-ticket-item-listLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" style="margin-top:5%;">
         <div class="modal-content">
             <div class="modal-header">
@@ -805,6 +808,11 @@ $(document).ready(function(){
         templateSelection: formatRepoSelectionUser
     });
 
+    $('#esign-templates').select2({
+        dropdownParent: $("#modal-quick-add-service-ticket"),
+        placeholder: "Select Template"
+    });
+
     $('#sel-customer_t').select2({     
         dropdownParent: $("#modal-quick-add-service-ticket"),   
         minimumInputLength: 0        
@@ -833,12 +841,12 @@ $(document).ready(function(){
                     $("#ticket_customer_phone").val(response.phone_h);
                 }
 
-                var service_location = response.mail_add + ' ' + response.city + ', ' + response.state + ' ' + response.zip_code;
+                //var service_location = response.mail_add + ' ' + response.city + ', ' + response.state + ' ' + response.zip_code;
+                var service_location = response.mail_add;
                 $("#service_location").val(service_location);
                 $("#customer_city").val(response.city);
                 $("#customer_state").val(response.state);
-                $("#customer_zip").val(response.zip_code);                
-                $("#customer_zip").val(response.zip_code);
+                $("#customer_zip").val(response.zip_code);    
                 $("#business_name").val(response.business_name);
                 
                 $("#customer_cc_num").val(response.cc_num);
@@ -851,7 +859,7 @@ $(document).ready(function(){
                 $("#plan-value").val(mmr.toFixed(2));
                 $("#service-ticket-otp").val(otps.toFixed(2));
                 $('#span_mmr').html(mmr.toFixed(2));
-                $('#span_otp').html(otps.toFixed(2))
+                $('#span_otp').html(otps.toFixed(2));
 
                 $("#customer_monitoring_id").val(response.cs_account);
 
