@@ -788,70 +788,101 @@ function filterThumbnail(val, id, table,filter) {
             }
 
             break;
-        case 'week':
-            if(table == 'acs_billing'){
-                handleHideCurrentSub(false);
-            }
-            var today = new Date();
-            var from_date_temp = new Date(today.getFullYear(), today.getMonth(), today.getDate() -
-                6);
-            var to_date_temp = new Date();
+            case 'week':
+                if (table == 'acs_billing') {
+                    handleHideCurrentSub(false);
+                }
 
-            var from_month = ('0' + (from_date_temp.getMonth() + 1)).slice(-2);
-            var from_day = ('0' + from_date_temp.getDate()).slice(-2);
-            var from_year = from_date_temp.getFullYear();
-            var from_date = from_year + '-' + from_month + '-' + from_day;
+                var today = new Date();
+                var from_date_temp = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 6); // 7 days interval
 
-            var to_month = ('0' + (to_date_temp.getMonth() + 1)).slice(-2);
-            var to_day = ('0' + to_date_temp.getDate()).slice(-2);
-            var to_year = to_date_temp.getFullYear();
-            var to_date = to_year + '-' + to_month + '-' + to_day;
+                // Formatting from_date
+                var from_month = ('0' + (from_date_temp.getMonth() + 1)).slice(-2);
+                var from_day = ('0' + from_date_temp.getDate()).slice(-2);
+                var from_year = from_date_temp.getFullYear();
+                var from_date = from_year + '-' + from_month + '-' + from_day + ' 00:00:00'; // Start of 7-day interval
 
-            break;
+                // Formatting to_date
+                var to_month = ('0' + (today.getMonth() + 1)).slice(-2);
+                var to_day = ('0' + today.getDate()).slice(-2);
+                var to_year = today.getFullYear();
+                var to_date = to_year + '-' + to_month + '-' + to_day + ' 23:59:59'; // End of today
+
+                break;
+
 
 
         case 'two-week':
-            if(table == 'acs_billing'){
+            if (table == 'acs_billing') {
                 handleHideCurrentSub(false);
             }
+
             var endDate = new Date();
             var startDate = new Date(endDate);
-
             startDate.setDate(startDate.getDate() - 13);
 
-            var from_date = startDate.getFullYear() + '-' + String(startDate.getMonth() + 1).padStart(2, '0') + '-' +
-                String(startDate.getDate()).padStart(2, '0');
-            var to_date = endDate.getFullYear() + '-' + String(endDate.getMonth() + 1).padStart(2, '0') + '-' + String(
-                endDate.getDate()).padStart(2, '0');
+            // Formatting from_date with time starting at 00:00:00
+            var from_date = startDate.getFullYear() + '-' + 
+                            String(startDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                            String(startDate.getDate()).padStart(2, '0') + 
+                            ' 00:00:00';
+
+            // Formatting to_date with time ending at 23:59:59
+            var to_date = endDate.getFullYear() + '-' + 
+                        String(endDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                        String(endDate.getDate()).padStart(2, '0') + 
+                        ' 23:59:59';
+
             break;
+
         case 'month':
-            if(table == 'acs_billing'){
+            if (table == 'acs_billing') {
                 handleHideCurrentSub(false);
             }
+
             var endDate = new Date();
             var startDate = new Date(endDate);
 
+            // Set start date to 29 days before the end date
             startDate.setDate(startDate.getDate() - 29);
 
-            var from_date = startDate.getFullYear() + '-' + String(startDate.getMonth() + 1).padStart(2, '0') + '-' +
-                String(startDate.getDate()).padStart(2, '0');
-            var to_date = endDate.getFullYear() + '-' + String(endDate.getMonth() + 1).padStart(2, '0') + '-' + String(
-                endDate.getDate()).padStart(2, '0');
+            // Formatting from_date with time starting at 00:00:00
+            var from_date = startDate.getFullYear() + '-' + 
+                            String(startDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                            String(startDate.getDate()).padStart(2, '0') + 
+                            ' 00:00:00';
+
+            // Formatting to_date with time ending at 23:59:59
+            var to_date = endDate.getFullYear() + '-' + 
+                        String(endDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                        String(endDate.getDate()).padStart(2, '0') + 
+                        ' 23:59:59';
+
             break;
+
         case 'two-month':
-            if(table == 'acs_billing'){
+            if (table == 'acs_billing') {
                 handleHideCurrentSub(false);
             }
+
             var endDate = new Date();
             var startDate = new Date(endDate);
-
             startDate.setDate(startDate.getDate() - 59);
 
-            var from_date = startDate.getFullYear() + '-' + String(startDate.getMonth() + 1).padStart(2, '0') + '-' +
-                String(startDate.getDate()).padStart(2, '0');
-            var to_date = endDate.getFullYear() + '-' + String(endDate.getMonth() + 1).padStart(2, '0') + '-' + String(
-                endDate.getDate()).padStart(2, '0');
+            // Formatting from_date with time starting at 00:00:00
+            var from_date = startDate.getFullYear() + '-' + 
+                            String(startDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                            String(startDate.getDate()).padStart(2, '0') + 
+                            ' 00:00:00';
+
+            // Formatting to_date with time ending at 23:59:59
+            var to_date = endDate.getFullYear() + '-' + 
+                            String(endDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                            String(endDate.getDate()).padStart(2, '0') + 
+                            ' 23:59:59';
+
             break;
+
         default:
             var from_date = '';
             var to_date = '';

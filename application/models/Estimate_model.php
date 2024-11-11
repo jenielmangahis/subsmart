@@ -91,9 +91,9 @@ class Estimate_model extends MY_Model
 
     public function getAllByCompanyIdAndDateRange($cid, $date_range = [], $filter = [])
     {
-        $this->db->select('estimates.*, users.FName as user_firstname, users.LName as user_lastname');
+        $this->db->select('estimates.*');
         $this->db->from($this->table);
-        $this->db->join('users', 'estimates.user_id  = users.id');
+        $this->db->join('acs_profile', 'acs_profile.prof_id  = estimates.customer_id','left');
         $this->db->where('estimates.company_id', $cid);
 
         if ($date_range) {
@@ -400,7 +400,7 @@ class Estimate_model extends MY_Model
 
     public function getAllOpenEstimatesByCompanyId($company_id)
     {
-        $this->db->select('estimates.*, acs_profile.first_name, acs_profile.last_name');
+        $this->db->select('estimates.*, acs_profile.first_name, acs_profile.last_name,CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer');
         $this->db->from($this->table);
         $this->db->join('acs_profile', 'estimates.customer_id  = acs_profile.prof_id','left');
         $this->db->where('estimates.company_id', $company_id);

@@ -94,6 +94,20 @@ class Accounting_model extends MY_Model
             $this->db->where('invoices.status !=', "Draft");
             $this->db->where('invoices.status !=', "");
             $this->db->where('invoices.company_id', $companyID);
+            switch ($reportConfig['filter_by']) {
+                case 'current_month':
+                    $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    break;
+                case 'current_year':
+                    $this->db->where("YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+                case 'current_quarter':
+                    $this->db->where("QUARTER(invoices.date_created) = QUARTER(CURDATE()) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+                case 'current_week':
+                    $this->db->where("WEEK(invoices.date_created, 1) = WEEK(CURDATE(), 1) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+            }
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
@@ -145,7 +159,7 @@ class Accounting_model extends MY_Model
         if ($reportType == 'service_projective_income') {
             $this->db->select('jobs.id AS id,jobs.company_id AS company_id,jobs.job_number AS number,jobs.job_type AS type,jobs.job_description AS description,CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer,jobs.status AS status,jobs.date_issued AS date, jobs.date_created AS date_created, job_payments.amount AS total');
             $this->db->from('jobs');
-            $this->db->where('jobs.job_type', "Service");
+            // $this->db->where('jobs.job_type', "Service");
             $this->db->where_in('jobs.status', [
                 'Finished',
                 'Completed',
@@ -161,16 +175,18 @@ class Accounting_model extends MY_Model
 
         // Get Customer Groups data in Database
         if ($reportType == 'customer_groups') {
-            $this->db->select('customer_groups.id AS id, customer_groups.company_id AS company_id, customer_groups.title AS title_group, CONCAT(users.FName, " ", users.LName) AS added_by, customer_groups.date_added AS date ');
+            $this->db->select('customer_groups.id AS id, customer_groups.company_id AS company_id, customer_groups.title AS title_group, COUNT(acs_profile.customer_group_id) AS customer_count, CONCAT(users.FName, " ", users.LName) AS added_by, customer_groups.date_added AS date ');
             $this->db->from('customer_groups');
             $this->db->where('customer_groups.company_id', $companyID);
             $this->db->join('users', 'users.id = customer_groups.user_id', 'left');
+            $this->db->join('acs_profile', 'acs_profile.customer_group_id = customer_groups.id', 'left');
+            $this->db->group_by('customer_groups.id');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
         }
-
+    
         // Get Job Status data in Database
         if ($reportType == 'job_status') {
             $this->db->select('jobs.id AS id, jobs.company_id AS company_id, jobs.job_number AS number, jobs.job_description AS description, jobs.status AS status, jobs.date_created AS date');
@@ -199,6 +215,21 @@ class Accounting_model extends MY_Model
             $this->db->select('estimates.id AS id, estimates.company_id AS company_id, estimates.estimate_number AS number, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, estimates.job_name AS job, estimates.job_location AS location, estimates.status AS status, estimates.created_at AS date, estimates.grand_total AS total');
             $this->db->from('estimates');
             $this->db->where('estimates.company_id', $companyID);
+            switch ($reportConfig['filter_by']) {
+                case 'current_month':
+                    $this->db->where("DATE_FORMAT(estimates.created_at, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    break;
+                case 'current_year':
+                    $this->db->where("YEAR(estimates.created_at) = YEAR(CURDATE())");
+                    break;
+                case 'current_quarter':
+                    $this->db->where("QUARTER(estimates.created_at) = QUARTER(CURDATE()) AND YEAR(estimates.created_at) = YEAR(CURDATE())");
+                    break;
+            }
+
+            if (!empty($reportConfig['status_filter'])) {
+                $this->db->where('estimates.status', $reportConfig['status_filter']);
+            }
             $this->db->join('acs_profile', 'acs_profile.prof_id = estimates.customer_id', 'left');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
@@ -208,9 +239,11 @@ class Accounting_model extends MY_Model
 
         // Get Job Tags data in Database
         if ($reportType == 'job_tags') {
-            $this->db->select('job_tags.id AS id, job_tags.company_id AS company_id, job_tags.name AS tag, job_tags.created_at AS date');
+            $this->db->select('job_tags.id AS id, job_tags.company_id AS company_id, job_tags.name AS tag, COUNT(jobs.tags) AS job_count, job_tags.created_at AS date');
             $this->db->from('job_tags');
             $this->db->where('job_tags.company_id', $companyID);
+            $this->db->join('jobs', 'jobs.tags = job_tags.name', 'left');
+            $this->db->group_by('job_tags.id');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
@@ -234,6 +267,20 @@ class Accounting_model extends MY_Model
             $this->db->from('invoices');
             $this->db->where('invoices.status', "Paid");
             $this->db->where('invoices.company_id', $companyID);
+            switch ($reportConfig['filter_by']) {
+                case 'current_month':
+                    $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    break;
+                case 'current_year':
+                    $this->db->where("YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+                case 'current_quarter':
+                    $this->db->where("QUARTER(invoices.date_created) = QUARTER(CURDATE()) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+                case 'current_week':
+                    $this->db->where("WEEK(invoices.date_created, 1) = WEEK(CURDATE(), 1) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+            }
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
@@ -248,6 +295,20 @@ class Accounting_model extends MY_Model
             $this->db->where('invoices.status !=', "Paid");
             $this->db->where('invoices.status !=', "");
             $this->db->where('invoices.company_id', $companyID);
+            switch ($reportConfig['filter_by']) {
+                case 'current_month':
+                    $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    break;
+                case 'current_year':
+                    $this->db->where("YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+                case 'current_quarter':
+                    $this->db->where("QUARTER(invoices.date_created) = QUARTER(CURDATE()) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+                case 'current_week':
+                    $this->db->where("WEEK(invoices.date_created, 1) = WEEK(CURDATE(), 1) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+            }
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
@@ -263,6 +324,20 @@ class Accounting_model extends MY_Model
             $this->db->where('invoices.status !=', "");
             $this->db->where('invoices.due_date < CURDATE()');
             $this->db->where('invoices.company_id', $companyID);
+            switch ($reportConfig['subscription_period']) {
+                case 'last_7_days':
+                    $this->db->where('invoices.date_created >= CURDATE() - INTERVAL 7 DAY');
+                    break;
+                case 'last_14_days':
+                    $this->db->where('invoices.date_created >= CURDATE() - INTERVAL 14 DAY');
+                    break;
+                case 'last_30_days':
+                    $this->db->where('invoices.date_created >= CURDATE() - INTERVAL 30 DAY');
+                    break;
+                case 'last_60_days':
+                    $this->db->where('invoices.date_created >= CURDATE() - INTERVAL 60 DAY');
+                    break;
+            }
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
@@ -278,6 +353,20 @@ class Accounting_model extends MY_Model
             $this->db->where('invoices.status !=', "");
             $this->db->where('invoices.due_date < CURDATE() - INTERVAL 15 DAY');
             $this->db->where('invoices.company_id', $companyID);
+            switch ($reportConfig['filter_by']) {
+                case 'current_month':
+                    $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    break;
+                case 'current_year':
+                    $this->db->where("YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+                case 'current_quarter':
+                    $this->db->where("QUARTER(invoices.date_created) = QUARTER(CURDATE()) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+                case 'current_week':
+                    $this->db->where("WEEK(invoices.date_created, 1) = WEEK(CURDATE(), 1) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+            }
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
@@ -291,13 +380,26 @@ class Accounting_model extends MY_Model
             $this->db->from('invoices');
             $this->db->where('invoices.status', "Unpaid");
             $this->db->where('invoices.company_id', $companyID);
+            switch ($reportConfig['filter_by']) {
+                case 'current_month':
+                    $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    break;
+                case 'current_year':
+                    $this->db->where("YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+                case 'current_quarter':
+                    $this->db->where("QUARTER(invoices.date_created) = QUARTER(CURDATE()) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+                case 'current_week':
+                    $this->db->where("WEEK(invoices.date_created, 1) = WEEK(CURDATE(), 1) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+            }
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
         }
-
         
         // Get Taskhub data in Database
         if ($reportType == 'taskhub') {
@@ -355,6 +457,7 @@ class Accounting_model extends MY_Model
             $this->db->select('acs_profile.prof_id AS id, acs_profile.company_id AS company_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, acs_profile.customer_type AS customer_type, acs_profile.status AS status, acs_profile.updated_at AS updated_at');
             $this->db->from('acs_profile');
             $this->db->where('acs_profile.company_id', $companyID);
+            $this->db->where('acs_profile.status != ', "");
             if (!empty($reportConfig['status_filter'])) {
                 $this->db->where('acs_profile.status', $reportConfig['status_filter']);
             }

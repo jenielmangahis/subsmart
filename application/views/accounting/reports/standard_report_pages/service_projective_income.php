@@ -57,6 +57,7 @@
                                                 <th>DESCRIPTION</th>
                                                 <th>CUSTOMER</th>
                                                 <th>STATUS</th>
+                                                <th>DATE ISSUED</th>
                                                 <th>DATE CREATED</th>
                                                 <th style="text-align:right;">TOTAL</th>
                                             </tr>
@@ -236,8 +237,8 @@
                         <div class="form-group mb-2">
                             <label>Orientation</label>
                             <select id="pageOrientation" name="pageOrientation" class="form-select">
-                                <option value="P" selected>Portrait</option>
-                                <option value="L">Landscape</option>
+                                <option value="P">Portrait</option>
+                                <option value="L" selected>Landscape</option>
                             </select>
                         </div>
                         <!-- <div class="form-check">

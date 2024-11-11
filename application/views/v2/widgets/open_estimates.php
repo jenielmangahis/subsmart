@@ -164,14 +164,23 @@ function loadOpenEstimatesChart(){
                         '#4da6ff',
                         '#2eb82e',
                         '#70db70',
-                        '#cc66ff'                                
+                        '#cc66ff',
+                        '#FF6384',
+                        '#D7ECFB',
+                        '#FFF5DD',
+                        '#DBF2F2'
+
                     ],
                     borderColor: [
                         '#8c8c8c',
                         '#0073e6',
                         '#2eb82e',
                         '#29a329',
-                        '#8800cc'                                
+                        '#8800cc',
+                        '#FF6384',
+                        '#D7ECFB',
+                        '#FFF5DD',
+                        '#DBF2F2'                               
                     ],
                     data: data.chart_data,
                 },]

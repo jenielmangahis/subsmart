@@ -144,7 +144,7 @@ class Widgets extends MY_Controller
     {
         $this->load->model('widgets_model');
         $comp_id = getLoggedCompanyID();
-        $GET_TAGS_COUNT = $this->widgets_model->rawGetTagsWithCount($comp_id);
+        $GET_TAGS_COUNT = $this->widgets_model->getTagsWithCount($comp_id);
         $REMOVE_ZERO_TAGCOUNT = array();
         for ($i=0; $i < count($GET_TAGS_COUNT); $i++) {
             if ($GET_TAGS_COUNT[$i]->total_job_tags > 0) {
@@ -1038,10 +1038,13 @@ class Widgets extends MY_Controller
         $end_month    = explode("/", post('filter_date_to'));  
 
         $draft = 0;
+        $submitted = 0;
         $accepted = 0;
         $invoiced = 0;
-        $other = 0;
-        $sent  = 0;
+        $lost = 0;
+        $declined = 0;
+        $cancelled = 0;
+        $pending = 0;
         $total_estimates = 0;
 
         for( $start = $start_month[0]; $start <= $end_month[0]; $start++ ){
@@ -1049,17 +1052,35 @@ class Widgets extends MY_Controller
             $start_date = date("Y-m-d", strtotime($start_date));
             $end_date   = date("Y-m-t", strtotime($start_date));
             $date_range = ['from' => $start_date, 'to' => $end_date];
+
+        
+
             $estimates  = $this->Estimate_model->getAllByCompanyIdAndDateRange($cid, $date_range);
             foreach($estimates as $estimate){
                 switch ($estimate->status){
                     case 'Draft';
                         $draft++;
                         break;
+                    case 'Submitted';
+                        $submitted++;
+                        break;
                     case 'Accepted';
                         $accepted++;
                         break;
                     case 'Invoiced';
                         $invoiced++;
+                        break;
+                    case 'Lost';
+                        $lost++;
+                        break;
+                    case 'Declined By Customer';
+                        $declined++;
+                        break;
+                    case 'Cancelled';
+                        $cancelled++;
+                        break;
+                    case 'Pending';
+                        $pending++;
                         break;
                     default;
                         $other++;
@@ -1081,21 +1102,29 @@ class Widgets extends MY_Controller
         // $sent_percent = number_format((float)$sent/ (count($total_estimates) ?: 1) ,2,'.','') * 100;
         
         $draft_percent    = $draft;
+        $submitted_precent = $submitted;
         $accepted_percent = $accepted;
         $invoiced_percent = $invoiced;
-        $other_percent    = $other;
-        $sent_percent     = $sent;
+        $lost_precent = $lost;
+        $declined_percent = $declined;
+        $cancelled_percent = $cancelled;
+        $pending_percent = $pending;
+     
 
         $chart_labels = [
             'Draft',
+            'Submitted',
             'Accepted',
             'Invoiced',
-            'Sent',
-            'Others'
+            'Lost',
+            'Declined By Customer',
+            'Cancelled',
+            'Pending',
         ];
 
         $estimates_data = [
-            $draft_percent,$accepted_percent,$invoiced_percent,$sent_percent,$other_percent
+            $draft_percent,$submitted_precent,$accepted_percent,$invoiced_percent,$lost_precent,
+            $declined_percent,$cancelled_percent,$pending_percent
         ];
 
         $return = ['chart_labels' => $chart_labels, 'chart_data' => $estimates_data, 'total_estimates' => $total_estimates];

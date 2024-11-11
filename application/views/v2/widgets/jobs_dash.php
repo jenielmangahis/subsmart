@@ -205,16 +205,7 @@ endif;
                         <div id="YEAR_COUNT" class="mt-3"></div>
                       </div>
                     </div>
-                    <!-- <div class="col">
-                        <div class="row">
-                            <div class="col-9">
-                                <h6>Status</h6>
-                            </div>
-                            <div class="col-3" style="text-align: center;">
-                                <h6>Count</h6>
-                            </div>
-                        </div>
-                    </div> -->  
+                    
                 </div>
             </div>
         </div>
@@ -238,102 +229,14 @@ endif;
                     <div class="col">Arrival</div>
                     <div class="col">Start</div>
                     <div class="col">Approved</div>
-                    <div class="col">Finish</div>
+                    <div class="col">Finished</div>
                     <div class="col">Invoice</div>
                     <div class="col">Complete</div>
                 </div>
             </div>
             <div class="js-body">
 
-                <?php
-
-                if ($jobsStatus) {
-                    $limit = 4;
-                    $count = 0;
-
-                    foreach ($jobsStatus as $jobs) {
-                        if ($count < $limit) {
-                            $count++;
-                ?>
-                            <div class="row js-row">
-                                <div class="col-2"><?php echo $jobs->job_name ?></div>
-                                <div class="col">
-                                    <?php if ($jobs->draft != " ") {
-                                        if ($jobs->status == "draft") { ?> <?php $timestamp = strtotime($jobs->draft);
-                                                                            $day = date('D', $timestamp);
-                                                                            echo $day ?><br> <?php echo $jobs->draft;
-                                                                                            } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div><div>Complete</div> <?php 
-                                                                                                                                                                                                        }
-                                                                                                                                                                                                    } ?>
-                                </div>
-                                <div class="col">
-                                    <?php if ($jobs->schedule != "") {
-                                        if ($jobs->status == "schedule") { ?> <?php $timestamp = strtotime($jobs->schedule);
-                                                                                $day = date('D', $timestamp);
-                                                                                echo $day ?><br> <?php echo $jobs->schedule;
-                                                                                                } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->schedule;
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                        } ?>
-                                </div>
-                                <div class="col">
-                                    <?php if ($jobs->arrival != "") {
-                                        if ($jobs->status == "arrival") { ?> <?php $timestamp = strtotime($jobs->arrival);
-                                                                                $day = date('D', $timestamp);
-                                                                                echo $day ?><br> <?php echo $jobs->arrival;
-                                                                                                } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->arrival;
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                        } ?>
-                                </div>
-                                <div class="col"><?php if ($jobs->start != "") {
-                                                        if ($jobs->status == "start") { ?> <?php $timestamp = strtotime($jobs->start);
-                                                                                            $day = date('D', $timestamp);
-                                                                                            echo $day ?> <br> <?php echo $jobs->start;
-                                                                                                            } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->start;
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                    } ?></div>
-                                <div class="col">
-                                    <?php if ($jobs->approved != "") {
-                                        if ($jobs->status == "approved") { ?> <?php $timestamp = strtotime($jobs->approved);
-                                                                                $day = date('D', $timestamp);
-                                                                                echo $day ?><br> <?php echo $jobs->approved;
-                                                                                                } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->approved;
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                        } ?>
-                                </div>
-                                <div class="col">
-                                    <?php if ($jobs->finish != "") {
-                                        if ($jobs->status == "finish") { ?> <?php $timestamp = strtotime($jobs->finish);
-                                                                            $day = date('D', $timestamp);
-                                                                            echo $day ?><br> <?php echo $jobs->finish;
-                                                                                            } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->finish;
-                                                                                                                                                                                                        }
-                                                                                                                                                                                                    } ?>
-                                </div>
-                                <div class="col">
-                                    <?php if ($jobs->invoice != "") {
-                                        if ($jobs->status == "invoice") { ?> <?php $timestamp = strtotime($jobs->invoice);
-                                                                                $day = date('D', $timestamp);
-                                                                                echo $day ?><br> <?php echo $jobs->invoice;
-                                                                                                } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->invoice;
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                        } ?>
-                                </div>
-                                <div class="col">
-                                    <?php if ($jobs->complete != "") {
-                                        if ($jobs->status == "complete") { ?><?php $timestamp = strtotime($jobs->complete);
-                                                                                $day = date('D', $timestamp);
-                                                                                echo $day ?><br> <?php echo $jobs->complete;
-                                                                                                } else { ?> <div class="cent"><i class="bx bx-check-circle" style="color: #4f7514; font-size: 15px;"></i></div> <?php echo $jobs->complete;
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                        } ?>
-                                </div>
-                            </div>
-                <?php
-                        }
-                    }
-                }
-
-                ?>
+              
 
             </div>
         </div>

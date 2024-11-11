@@ -53,8 +53,8 @@
                                         <thead>
                                             <tr>
                                                 <th>TITLE</th>
+                                                <th>CUSTOMER COUNT</th>
                                                 <th>ADDED BY</th>
-                                                <th>DATE</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -178,13 +178,14 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                                <option value="customer_count" <?php echo ($reportSettings->sort_by == "customer_count") ? "selected" : "" ?>>Customer Count</option>
                                                 <option value="title_group" <?php echo ($reportSettings->sort_by == "title_group") ? "selected" : "" ?>>Title</option>
                                                 <option value="added_by" <?php echo ($reportSettings->sort_by == "added_by") ? "selected" : "" ?>>Added By</option>
                                                 <option value="date" <?php echo ($reportSettings->sort_by == "date") ? "selected" : "" ?>>Date</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
-                                                <option value="ASC" <?php echo ($reportSettings->sort_asc_desc== "ASC") ? "selected" : "" ?>>ASC</option>
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
+                                                <option value="ASC" <?php echo ($reportSettings->sort_asc_desc== "ASC") ? "selected" : "" ?>>ASC</option>
                                             </select>
                                         </div>
                                     </div>

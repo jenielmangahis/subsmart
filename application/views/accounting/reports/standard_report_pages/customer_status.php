@@ -203,6 +203,7 @@
                                         <option value="Active w/RQR">Active w/RQR</option>
                                         <option value="Active w/RYR">Active w/RYR</option>
                                         <option value="CAD/Permitting">CAD/Permitting</option>
+                                        <option value="Pending">Pending</option>
                                         <option value="Cancel Pending">Cancel Pending</option>
                                         <option value="Cancelled">Cancelled</option>
                                         <option value="Charge Back">Charge Back</option>

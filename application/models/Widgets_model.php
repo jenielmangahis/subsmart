@@ -89,14 +89,19 @@ class Widgets_model extends MY_Model
         return $this->db->get('job_tags')->result();
     }
 
-    public function rawGetTagsWithCount($company_id)
+    public function getTagsWithCount($company_id)
     {
-        $sql = 'SELECT job_tags.id, job_tags.name, job_tags.company_id, (SELECT COUNT(*) FROM jobs WHERE DATE_FORMAT(jobs.date_issued, "%Y") = DATE_FORMAT(CURDATE(), "%Y") AND jobs.tags = job_tags.name) AS total_job_tags FROM job_tags WHERE job_tags.company_id = '.$company_id.' ';
-        $query = $this->db->query($sql);
-
+        $this->db->select('job_tags.id, job_tags.name, job_tags.company_id');
+        $this->db->select('(SELECT COUNT(*) 
+                            FROM jobs 
+                            WHERE jobs.tags = job_tags.name) AS total_job_tags');
+        $this->db->from('job_tags');
+        $this->db->where('job_tags.company_id', $company_id);
+    
+        $query = $this->db->get();
         return $query->result();
     }
-
+    
     public function getLeadSource($comp_id)
     {
         $this->db->select('fk_lead_id, COUNT(fk_lead_id) as leadSource, lead_name');
