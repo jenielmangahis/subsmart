@@ -1756,6 +1756,7 @@ $route['ticket/_quick_add_service_ticket_form'] = 'Tickets/ajax_quick_add_servic
 $route['job/_create_service_ticket'] = 'Job/ajax_create_service_ticket';
 $route['ticket/_create_service_ticket'] = 'Tickets/ajax_create_service_ticket';
 $route['ticket/_get_customer_basic_information'] = 'Tickets/ajax_get_customer_basic_info';
+$route['job/_get_customer_information'] = 'Tickets/ajax_get_customer_basic_info';
 $route['calendar/_quick_add_appointment_form'] = 'Workcalender/ajax_quick_add_appointment_form';
 $route['calendar/_quick_add_tc_off_form'] = 'Workcalender/ajax_quick_add_tc_off_form';
 $route['calendar/_quick_edit_tc_off_form'] = 'Workcalender/ajax_quick_edit_tc_off_form';
@@ -1768,6 +1769,7 @@ $route['event/_quick_add_event_form'] = 'Events/ajax_quick_add_event_form';
 $route['event/_create_event'] = 'Events/ajax_create_event';
 $route['event/_quick_delete_event'] = 'Events/ajax_quick_delete_event';
 $route['docusign/debugGeneratePDF'] = 'DocuSign/debugGeneratePDF';
+
 
 // Affiliate
 $route['affiliate/_save_affiliate'] = 'Affiliate/ajax_save_affiliate';
