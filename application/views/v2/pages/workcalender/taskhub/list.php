@@ -265,7 +265,7 @@
                                             </div>
                                         </td>
                                         <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo url('taskhub/view/' . $row->task_id) ?>'">
-                                            <?php echo $row->subject; ?>
+                                            <?php echo $row->subject != '' ? $row->subject : $row->title; ?>
                                         </td>   
                                         <td>
                                             <div class="d-flex align-items-center">                
@@ -279,7 +279,9 @@
                                                                 $assignee = $this->users_model->getUser($user_id);
                                                                 if($assignee) {
                                                                     if($image == "") {
-                                                                        $user_initial = strtoupper(substr($assignee->FName, -1) . substr($assignee->LName, -1));
+                                                                        $firstName = $assignee->FName;
+                                                                        $lastName  = $assignee->LName;
+                                                                        $user_initial = strtoupper($firstName[0] . $lastName[0]);
                                                                         echo '<div class="nsm-profile" style="background-image: url('. $image . '); width: 40px; margin-right: -10px !important;"><span>' . $user_initial . '</span></div>';
                                                                     } else {
                                                                         echo '<div class="nsm-profile" style="background-image: url('. $image . '); width: 40px; margin-right: -10px !important;"></div>';
