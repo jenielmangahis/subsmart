@@ -88,15 +88,37 @@
         }
 
         switch (filter_by) {
+            case "current_week":
+                $("#filter_by_text").text("Filtered by Current Week (<?php echo date('Y'); ?>)");
+                break;
             case "current_month":
                 $("#filter_by_text").text("Filtered by Current Month (<?php echo date('M Y'); ?>)");
                 break;
             case "current_year":
                 $("#filter_by_text").text("Filtered by Current Year (<?php echo date('Y'); ?>)");
                 break;
+            case "current_quarter":
+                <?php
+                    $currentMonth = date('n');
+                    $currentQuarter = ceil($currentMonth / 3);
+
+                    $quarters = [
+                        1 => ['Jan', 'Mar'],
+                        2 => ['Apr', 'Jun'],
+                        3 => ['Jul', 'Sep'],
+                        4 => ['Oct', 'Dec']
+                    ];
+
+                    $quarterStart = $quarters[$currentQuarter][0];
+                    $quarterEnd = $quarters[$currentQuarter][1];
+                ?>
+                $("#filter_by_text").text("Filtered by This Quarter (<?php echo $quarterStart . '-' . $quarterEnd . ' ' . date('Y'); ?>)");
+                break;
             default:
                 $("#filter_by_text").text("As of <?php echo date('F d, Y'); ?>");
         }
+
+
 
         switch (status_filter) {
             case "Draft":
@@ -146,6 +168,9 @@
                 break;
             case "CAD/Permitting":
                 status_text = " (CAD/Permitting)";
+                break;
+            case "Pending":
+                status_text = " (Pending)";
                 break;
             case "Cancel Pending":
                 status_text = " (Cancel Pending)";

@@ -39,7 +39,7 @@
                                     <div class="reportTitleInfo">
                                         <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?></h3>
                                         <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
-                                        <h5><small id="reportDate">As of <?php echo date('F d, Y'); ?></small></h5>
+                                        <h5><small id="reportDate"><span id="filter_by_text"></span></small></h5>
                                     </div>
                                 </div>
                             </div>
@@ -196,10 +196,49 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-12"><hr class="mt-0"></div>
+                                <div class="col-md-4 mb-3">
+                                    <label class="mb-1 fw-xnormal">Filter By</label>
+                                    <?php
+                                        $currentMonth = date('n');
+                                        $currentQuarter = ceil($currentMonth / 3);
+
+                                        $quarters = [
+                                            1 => ['Jan', 'Mar'],
+                                            2 => ['Apr', 'Jun'],
+                                            3 => ['Jul', 'Sep'],
+                                            4 => ['Oct', 'Dec']
+                                        ];
+
+                                        $quarterStart = $quarters[$currentQuarter][0];
+                                        $quarterEnd = $quarters[$currentQuarter][1];
+                                    ?>
+                                    <select name="filter_by" id="filter-by" class="nsm-field form-select">
+                                        <option value="get_all" <?php echo ($reportSettings->filter_by == "get_all") ? "selected" : "" ?>>None</option>
+                                        <option value="current_month" <?php echo ($reportSettings->filter_by == "current_month") ? "selected" : "" ?>>This Month (<?php echo date('M'); ?>)</option>
+                                        <option value="current_quarter" <?php echo ($reportSettings->filter_by == "current_quarter") ? "selected" : "" ?>>This Quarter (<?php echo $quarterStart . '-' . $quarterEnd . ' ' . date('Y'); ?>)</option>
+                                        <option value="current_year" <?php echo ($reportSettings->filter_by == "current_year") ? "selected" : "" ?>>This Year (<?php echo date('Y'); ?>)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="mb-1 fw-xnormal">Status Filter</label>
+                                    <select name="status_filter" id="status-filter" class="nsm-field form-select">
+                                        <option value="" <?php echo ($reportSettings->status_filter == "") ? "selected" : "" ?>>None</option>
+                                        <option value="Draft" <?php echo ($reportSettings->status_filter == "Draft") ? "selected" : "" ?>>Draft</option>
+                                        <option value="Scheduled" <?php echo ($reportSettings->status_filter == "Scheduled") ? "selected" : "" ?>>Scheduled</option>
+                                        <option value="Arrival" <?php echo ($reportSettings->status_filter == "Arrival") ? "selected" : "" ?>>Arrival</option>
+                                        <option value="Started" <?php echo ($reportSettings->status_filter == "Started") ? "selected" : "" ?>>Started</option>
+                                        <option value="Approved" <?php echo ($reportSettings->status_filter == "Approved") ? "selected" : "" ?>>Approved</option>
+                                        <option value="Finished" <?php echo ($reportSettings->status_filter == "Finished") ? "selected" : "" ?>>Finished</option>
+                                        <option value="Cancelled" <?php echo ($reportSettings->status_filter == "Cancelled") ? "selected" : "" ?>>Cancelled</option>
+                                        <option value="Invoiced" <?php echo ($reportSettings->status_filter == "Invoiced") ? "selected" : "" ?>>Invoiced</option>
+                                        <option value="Completed" <?php echo ($reportSettings->status_filter == "Completed") ? "selected" : "" ?>>Completed</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-12"><hr class="mt-0"></div>
                             </div>
                         </div>
                     </div>
-                    <hr class="mt-0">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="float-start">

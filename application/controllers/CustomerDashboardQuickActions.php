@@ -551,4 +551,80 @@ class CustomerDashboardQuickActions extends MYF_Controller
 
         exit;
     }
+
+    public function downloadDocument($document_id)
+    {
+        $cid = logged('company_id');
+
+        $customerId = $this->input->get('customer_id', true);
+        $documentTypes = explode(',', $this->input->get('document_type', true));
+        $this->db->where('id', $document_id);
+        $this->db->where('file_name IS NOT NULL', null, false);
+        $this->db->where('file_name <>', "''", false);
+        $document = $this->db->get('acs_customer_documents')->row();
+
+        $filePath = $this->getCustomerDocumentPath($document->customer_id);
+
+        if( $document && file_exists($filePath . $document->file_name) ){
+            $this->db->select('prof_id, company_id');
+            $this->db->where('prof_id', $document->customer_id);
+            $customer = $this->db->get('acs_profile')->row();
+
+            if( $customer->company_id == $cid ){
+                $fileName = $document->file_name;
+                $file = $filePath . $fileName;
+                
+                header('Content-type: application/octet-stream');
+                header('Content-Type: ' . mime_content_type($file));
+
+                header('Content-Disposition: attachment; filename=' . $fileName);
+                while (ob_get_level()) {
+                    ob_end_clean();
+                }
+
+                readfile($file);
+            }else{
+                show_404();
+            }
+        }else{
+            show_404();
+        }
+    }
+
+    public function ajaxDeleteClientAgreement()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $cid = logged('company_id');
+        $post = $this->input->post();
+
+        $filePath = $this->getCustomerDocumentPath($customerId);
+
+        $this->db->where('id', $post['cdi']);
+        $document = $this->db->get('acs_customer_documents')->row();
+        
+        if( $document ){
+            $this->db->select('prof_id, company_id');
+            $this->db->where('prof_id', $document->customer_id);
+            $customer = $this->db->get('acs_profile')->row();
+
+            if( $customer->company_id == $cid ){
+                if ($document->file_name && file_exists($filePath . $document->file_name)) {
+                    unlink($filePath . $document->file_name);
+                }
+
+                $this->db->where('id', $post['cdi']);
+                $this->db->delete('acs_customer_documents');
+
+                $is_success = 1;
+                $msg = '';
+            } 
+        }
+
+        echo json_encode([
+            'is_success' => $is_success,
+            'msg' => $msg
+        ]);
+    }
 }

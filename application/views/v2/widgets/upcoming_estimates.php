@@ -106,7 +106,7 @@ function formatEstimateNumber($number) {
                             <tr>                    
                                 <td class="widget-tile-upcoming-estimate-row" data-id="<?= $estimate->id; ?>">
                                     <span class="content-title"><?= $estimate->estimate_number; ?></span>
-                                    <span class="content-subtitle d-block"><i class='bx bxs-user-circle' style="font-size: 14px;position: relative;top: 2px;"></i> <?= $estimate->first_name . ' ' . $estimate->last_name; ?></span>
+                                    <span class="content-subtitle d-block"><i class='bx bxs-user-circle' style="font-size: 14px;position: relative;top: 2px;"></i> <?php if ($estimate->customer !=='' &&  $estimate->customer !==null ){echo $estimate->customer;}else{ echo '—';}  ?></span>
                                     <?php if( $show_no_movement_notice == 1 ){  ?>
                                         <a style="text-decoration:none;" style="margin-top:7px;" href="<?= base_url('estimate/edit/'.$estimate->id) ?>"><span class="nsm-badge badge-error">Last update was <b><?= $difference->d . ' days ago' ?></b> - Needs update</span></a>
                                     <?php } ?>
