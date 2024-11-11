@@ -245,8 +245,9 @@ class Event_model extends MY_Model
         $this->db->join('accounting_receive_payment_invoices', 'accounting_receive_payment_invoices.invoice_id = invoices.id', 'left');
         $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
         $this->db->where('invoices.company_id', $company_id);
-        $this->db->where('invoices.grand_total >', 0);
-        $this->db->where_in('invoices.status', ['Submitted', 'Partially Paid', 'Due', 'Overdue', 'Approved', 'Schedule']);
+        //$this->db->where('invoices.grand_total >', 0);
+        //$this->db->where_in('invoices.status', ['Submitted', 'Partially Paid', 'Due', 'Overdue', 'Approved', 'Schedule']);
+        $this->db->where('invoices.status', 'Unpaid');
         $this->db->group_by('invoices.id');
         $this->db->order_by('balance', 'DESC');
         $this->db->limit($limit);
