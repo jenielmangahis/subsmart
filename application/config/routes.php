@@ -1279,6 +1279,8 @@ $route['job/update_job_type'] = 'Job/update_job_type';
 $route['job/_update_job_type'] = 'Job/ajax_update_job_type';
 $route['job/delete_job_type'] = 'Job/delete_job_type';
 $route['job/_delete_job_type'] = 'Job/ajax_delete_job_type';
+$route['job/_delete_job_tag'] = 'Job/ajax_delete_job_tag';
+
 
 // Event Tags
 $route['events/add_new_event_tag'] = 'Events/add_new_event_tag';
@@ -1298,9 +1300,8 @@ $route['job/save_job_tag'] = 'Job/create_new_job_tag';
 $route['job/edit_job_tag/(:any)'] = 'Job/edit_job_tag/$1';
 $route['job/update_job_tag'] = 'Job/update_job_tag';
 
-//$route['job/ajax_create_new_job_tag'] = 'Job/ajax_create_new_job_tag';
 $route['job/ajax_create_new_job_tag']['post'] = 'job/ajax_create_new_job_tag';
-$route['job/ajax_update_job_tag']['post'] = 'job/ajax_update_job_tag';
+$route['job/ajax_update_job_tag']['post']     = 'job/ajax_update_job_tag';
 
 // Forgot Password
 $route['login/_check_user_id_exists'] = 'Login/ajax_check_user_id_exists';
