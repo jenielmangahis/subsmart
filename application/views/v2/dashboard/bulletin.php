@@ -25,7 +25,7 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content">
-        <div class="nsm-widget-table" style="max-height:400px;overflow-y: auto;overflow-x: hidden;">
+        <div class="nsm-widget-table" style="max-height:auto;overflow-y: auto;overflow-x: hidden;">
             <!-- <div class="widget-header row">
                 <div class="col-12 col-md-5 d-flex">
                     <span class="content-subtitle d-block">Employee Name</span>
