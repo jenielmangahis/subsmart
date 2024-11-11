@@ -54,7 +54,6 @@
                                             <tr>
                                                 <th>NUMBER</th>
                                                 <th>PAYEE TYPE</th>
-                                                <th>DESCRIPTION</th>
                                                 <th>PAYMENT DATE</th>
                                                 <th>DATE CREATED</th>
                                                 <th style="text-align:right;">TOTAL</th>

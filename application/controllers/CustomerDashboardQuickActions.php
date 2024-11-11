@@ -275,7 +275,7 @@ class CustomerDashboardQuickActions extends MYF_Controller
         $currDocument = $this->db->get('acs_customer_documents')->row();
         $documentId = null;
 
-        if (!is_null($currDocument)) {
+        if (!is_null($currDocument) && $documentType != 'client_agreement' ) {
             if ($currDocument->file_name && file_exists($filePath . $currDocument->file_name)) {
                 unlink($filePath . $currDocument->file_name);
             }

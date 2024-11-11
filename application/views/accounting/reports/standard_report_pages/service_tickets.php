@@ -54,12 +54,11 @@
                                             <tr>
                                                 <th>NUMBER</th>
                                                 <th>TAG</th>
+                                                <th>TYPE</th>
                                                 <th>SERVICE TYPE</th>
-                                                <th>DESCRIPTION</th>
                                                 <th>STATUS</th>
                                                 <th>CUSTOMER</th>
                                                 <th>DATE CREATED</th>
-                                                <th>PAYMENT METHOD</th>
                                                 <th style="text-align:right;">TOTAL</th>
                                             </tr>
                                         </thead>
@@ -200,10 +199,21 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-12"><hr class="mt-0"></div>
+                                <div class="col-md-3 mb-3">
+                                    <label class="mb-1 fw-xnormal">Type Filter</label>
+                                    <select name="status_filter" id="status-filter" class="nsm-field form-select">
+                                        <option value="">None</option>
+                                        <option value="Service">Service</option>
+                                        <option value="Job">Job</option>
+                                        <option value="Event">Event</option>
+                                        <option value="Estimate">Estimate</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-12"><hr class="mt-0"></div>
                             </div>
                         </div>
                     </div>
-                    <hr class="mt-0">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="float-start">

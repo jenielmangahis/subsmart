@@ -12724,18 +12724,22 @@ class Workorder extends MY_Controller
             if ($job_settings) {
                 $prefix   = $job_settings->job_num_prefix;
                 $next_num = str_pad($job_settings->job_num_next, 5, '0', STR_PAD_LEFT);
+                $account_next_num = $job_settings->job_account_next_num;
             } else {
                 $prefix = 'JOB-';
                 $lastId = $this->Jobs_model->getlastInsert($cid);
                 if ($lastId) {
                     $next_num = $lastId->id + 1;
                     $next_num = str_pad($next_num, 5, '0', STR_PAD_LEFT);
+                    $account_next_num = $lastId->id + 1;
                 } else {
                     $next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+                    $account_next_num = 1;
                 }
             }
 
-            $job_number = $prefix . $next_num;                
+            $job_number = $prefix . $next_num;   
+            $job_account_number = $cid . '-' . $account_next_num;             
 
             $jobTag = $this->JobTags_model->getById($post['job_tag']);
             $job_location = $customer->mail_add;
@@ -12767,7 +12771,7 @@ class Workorder extends MY_Controller
                 'jobtypebase_amount' => 0,
                 'job_name' => $job_number . ' - ' . $post['job_type'],
                 'job_location' => $job_location,
-                'job_account_number' => $post['job_account_number'],
+                'job_account_number' => $job_account_number,
                 'job_description' => $post['job_description'],
                 'start_date' => date("Y-m-d",strtotime($post['start_date'])),
                 'start_time' => $post['start_time'],
@@ -12795,7 +12799,10 @@ class Workorder extends MY_Controller
                 'fix_cost' => 0,
                 'margin' => 0,
                 'amount_collected' => 0,
-                'gross_profit' => 0,             
+                'gross_profit' => 0,       
+                'program_setup' => $post['otps'],      
+                'monthly_monitoring' => $post['monthly_monitoring'],
+                'installation_cost' => $post['installation_cost'],
             );
 
             $job_id = $this->Jobs_model->createJob($jobs_data);
@@ -12806,7 +12813,8 @@ class Workorder extends MY_Controller
 
                 //Update job settings
                 $jobs_settings_data = array(
-                    'job_num_next' => $job_settings->job_num_next + 1
+                    'job_num_next' => $job_settings->job_num_next + 1,
+                    'job_account_next_num' => $account_next_num + 1
                 );
                 $this->general->update_with_key($jobs_settings_data, $job_settings->id, 'job_settings');
                 
@@ -12865,7 +12873,8 @@ class Workorder extends MY_Controller
             
                     $alarmInfoData = array(
                         'fk_prof_id'                => $post['customer_id'],
-                        'monitor_id'                => $post['JOB_ACCOUNT_NUMBER'],
+                        //'monitor_id'                => $post['JOB_ACCOUNT_NUMBER'],
+                        'monitor_id'                => $job_account_number
                     );
             
                     $alarmInfoDatas = $this->workorder_model->update_alarm_adi_job($alarmInfoData);
@@ -12894,6 +12903,15 @@ class Workorder extends MY_Controller
                 $customer_data['passcode'] = $workorder_data->password;
                 $customer_data['panel_type'] = $workorder_data->panel_type;
                 $customer_data['system_type'] = $workorder_data->plan_type;
+
+                if( $post['monthly_monitoring'] > 0 ){
+                    $customer_data['monthly_monitoring'] = $post['monthly_monitoring'];
+                }
+
+                if( $post['adjustment_otps'] ){
+                    $customer_data['otps'] = $post['adjustment_otps'];
+                } 
+
                 if (empty($is_exist)) {
                     $customer_data['fk_prof_id'] = $post['customer_id'];
                     $this->general->add_($customer_data, 'acs_alarm');

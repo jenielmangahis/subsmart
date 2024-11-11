@@ -101,13 +101,17 @@ $("#attachment-file").change(function() {
             $(".customer_message_input").val(window.CKEDITOR.instances.Message_Editor.getData());
             if($('#job_color_id').val() === ""){
                 error('Error','Event Color is required','error');
+            }else if( $('#job_type').val() === "" ){
+                error('Error','Job Type is required','error');
+            }else if( $('#job_tag').val() === "" ){ 
+                error('Error','Job Tag is required','error');
             }else if( $('#EMPLOYEE_SELECT_2').val() === "" ){
-                error('Error','Assigned To is required','error');
+                error('Error','Please select an employee to assign to this job.','error');
             }else{                
                 var formData = new FormData(this);                
                 $.ajax({
                     type: "POST",
-                    url: "<?= base_url() ?>workorder/convert_to_job",
+                    url: base_url + "workorder/convert_to_job",
                     data: formData, // serializes the form's elements.
                     dataType:'json',
                     cache: false,

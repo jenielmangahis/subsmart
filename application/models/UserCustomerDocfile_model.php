@@ -54,6 +54,31 @@ class UserCustomerDocfile_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllNotCompletedByCustomerId($customer_id, $search = '', $limit = 0)
+    {
+        $this->db->select('user_customer_docfile.*,user_docfile.name AS docfile_name,jobs.job_number');
+        $this->db->from($this->table);  
+        $this->db->join('user_docfile', 'user_customer_docfile.docfile_id = user_docfile.id', 'right');
+        $this->db->join('jobs', 'user_docfile.job_id = jobs.id', 'left');
+        $this->db->where('user_customer_docfile.customer_id', $customer_id);      
+        $this->db->where('user_docfile_generated_pdfs_id', 0);
+
+        if ( $search != '' ){
+            $this->db->group_start();
+            $this->db->or_like('docusign_envelope_id', $search);   
+            $this->db->group_end();
+        }
+
+        if( $limit > 0 ){
+            $this->db->limit($limit);
+        }
+
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getByUserDocfileGeneratedPdfId($pdf_id, $search = '')
     {        
         $this->db->select('user_customer_docfile.*,acs_profile.company_id,user_docfile_generated_pdfs.path');

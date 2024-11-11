@@ -184,9 +184,10 @@ class Accounting_model extends MY_Model
                 case 'current_year':
                     $this->db->where("YEAR(jobs.date_created) = YEAR(CURDATE())");
                     break;
-                case 'get_all':
-                    // Do nothing...
-                    break;
+            }
+
+            if (!empty($reportConfig['status_filter'])) {
+                $this->db->where('jobs.status', $reportConfig['status_filter']);
             }
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
@@ -354,6 +355,9 @@ class Accounting_model extends MY_Model
             $this->db->select('acs_profile.prof_id AS id, acs_profile.company_id AS company_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, acs_profile.customer_type AS customer_type, acs_profile.status AS status, acs_profile.updated_at AS updated_at');
             $this->db->from('acs_profile');
             $this->db->where('acs_profile.company_id', $companyID);
+            if (!empty($reportConfig['status_filter'])) {
+                $this->db->where('acs_profile.status', $reportConfig['status_filter']);
+            }
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
@@ -362,10 +366,12 @@ class Accounting_model extends MY_Model
 
         // Get Service Tickets data in Database
         if ($reportType == 'service_tickets') {
-            $this->db->select('tickets.id AS id, tickets.company_id AS company_id, tickets.ticket_no AS number, tickets.job_tag AS tag, tickets.service_type AS service_type, tickets.service_description AS description, tickets.ticket_status AS status, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, tickets.ticket_date AS date_created, tickets.payment_method AS payment_method, tickets.grandtotal AS total');
-            $this->db->from('tickets');
-            $this->db->where('tickets.company_id', $companyID);
-            $this->db->join('acs_profile', 'acs_profile.prof_id = tickets.customer_id', 'left');
+            $this->db->select('id, company_id, number, tag, type, service_type, status, customer, date_created, total');
+            $this->db->from('service_tickets_view');
+            $this->db->where('company_id', $companyID);
+            if (!empty($reportConfig['status_filter'])) {
+                $this->db->where('type', $reportConfig['status_filter']);
+            }
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
@@ -374,7 +380,7 @@ class Accounting_model extends MY_Model
 
         // Get Bank Accounts data in Database
         if ($reportType == 'bank_accounts') {
-            $this->db->select('accounting_check.id AS id, accounting_check.company_id AS company_id, accounting_check.check_no AS number, accounting_check.payee_type AS payee_type, accounting_check.memo AS description, accounting_check.payment_date AS payment_date, accounting_check.created_at AS date_created, accounting_check.total_amount AS total');
+            $this->db->select('accounting_check.id AS id, accounting_check.company_id AS company_id, accounting_check.check_no AS number, accounting_check.payee_type AS payee_type, accounting_check.payment_date AS payment_date, accounting_check.created_at AS date_created, accounting_check.total_amount AS total');
             $this->db->from('accounting_check');
             $this->db->where('accounting_check.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);

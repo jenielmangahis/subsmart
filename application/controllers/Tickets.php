@@ -2182,7 +2182,7 @@ class Tickets extends MY_Controller
         $company_id = logged('company_id');
 
         $customer = $this->AcsProfile_model->getCustomerBasicInfoByProfIdAndCompanyId($prof_id, $company_id);        
-        if( $customer ){            
+        if( $customer ){                   
             $cc_num  = '';
             $cc_exp = '';
             $cc_cvc  = '';
@@ -2289,6 +2289,10 @@ class Tickets extends MY_Controller
                 $bill_method = $billing->bill_method;
             }
             $json_data = [
+                'prof_id' => $customer->prof_id,
+                'first_name' => $customer->first_name,
+                'last_name' => $customer->last_name,
+                'email' => $customer->email,
                 'mail_add' => $customer->mail_add,
                 'city' => $customer->city,
                 'state' => $customer->state,
@@ -2328,6 +2332,10 @@ class Tickets extends MY_Controller
             ];  
         }else{
             $json_data = [
+                'prof_id' => $customer->prof_id,
+                'first_name' => $customer->first_name,
+                'last_name' => $customer->last_name,
+                'email' => $customer->email,
                 'mail_add' => '',
                 'city' => '',
                 'state' => '',

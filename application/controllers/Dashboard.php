@@ -348,6 +348,8 @@ class Dashboard extends Widgets
         }, ARRAY_FILTER_USE_BOTH);
 
         $this->page_data['open_invoices'] = $openInvoices;
+        $this->page_data['currentOverdueInvoices'] = $this->widgets_model->getCurrentCompanyOverdueInvoices();
+        
         // Plaid
         $this->load->model('PlaidAccount_model');
         $plaid_handler_open = 0;
@@ -708,16 +710,15 @@ class Dashboard extends Widgets
 
             case 'invoices':
                 $total_query = [
-                    'where' => ['invoices.company_id' => logged('company_id'), 'invoices.grand_total >' => 0, 'invoices.due_date !=' => null,
-                     'invoices.view_flag' => 0,
-                    'DATE(invoices.date_issued) >=' => date('Y-m-d', strtotime($date_from)), 'DATE(invoices.due_date) <' => date('Y-m-d', strtotime($date_to))],
+                    'where' => ['invoices.company_id' => logged('company_id'),
+                     'invoices.status !=' => 'Paid',
+                     'invoices.status !=' => "",
+                     'invoices.due_date <' =>  date('Y-m-d'),
+                    'DATE(invoices.date_issued) >=' => date('Y-m-d', strtotime($date_from)), 
+                    'DATE(invoices.due_date) <' => date('Y-m-d', strtotime($date_to))
+                    ],
                     'table' => 'invoices',
                     'join' => [
-                        [
-                            'table' => 'accounting_receive_payment_invoices',
-                            'statement' => 'accounting_receive_payment_invoices.invoice_id = invoices.id',
-                            'join_as' => 'left',
-                        ],
                         [
                             'table' => 'acs_profile',
                             'statement' => 'acs_profile.prof_id = invoices.customer_id',
@@ -734,7 +735,7 @@ class Dashboard extends Widgets
                     acs_profile.last_name,
                     acs_profile.fk_user_id as user_id,
                     invoices.grand_total,
-                    invoices.grand_total - COALESCE(SUM(accounting_receive_payment_invoices.payment_amount), 0) as balance',
+                    invoices.grand_total  as balance',
                 ];
                 $past_due = $this->general->get_data_with_param($total_query);
 

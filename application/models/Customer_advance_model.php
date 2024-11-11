@@ -1284,8 +1284,9 @@ class Customer_advance_model extends MY_Model
     {
         $this->db->select('*');
         $this->db->from('ac_leads');
-        $this->db->where('company_id', $company_id);
-        $this->db->order_by('leads_id', 'DESC');
+        $this->db->join('ac_leadtypes', 'ac_leadtypes.lead_id = ac_leads.fk_lead_type_id', 'left');
+        $this->db->where('ac_leads.company_id', $company_id);
+        $this->db->order_by('ac_leads.leads_id', 'DESC');
         $this->db->limit($limit);
 
         $query = $this->db->get();

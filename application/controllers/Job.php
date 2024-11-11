@@ -679,10 +679,22 @@ class Job extends MY_Controller
             $event_settings_data = array(
                 'job_num_prefix' => 'JOB',
                 'job_num_next' => 1,
+                'job_account_next_num' => 1,
                 'company_id' => $comp_id,
             );
             $this->general->add_($event_settings_data, 'job_settings');
+
+            $job_account_next_num = str_pad(1, 5, '0', STR_PAD_LEFT);
+            $lastId = $this->jobs_model->getlastInsert($comp_id);
+            if ($lastId) {
+                $job_account_next_num = str_pad($lastId->id, 5, '0', STR_PAD_LEFT);
+            }
+        }else{
+            $job_account_next_num = str_pad($event_settings->job_account_next_num, 5, '0', STR_PAD_LEFT);
         }
+
+        $default_job_account_number = $comp_id . '-' . $job_account_next_num;
+        $this->page_data['default_job_account_number'] = $default_job_account_number;
 
         $get_employee = array(
             'where' => array(
@@ -1765,7 +1777,7 @@ class Job extends MY_Controller
         exit;
     }
 
-    public function get_customer_selected()
+    public function get_customer_selected_old()
     {
         $this->load->model('Contacts_model');
         $this->load->model('Customer_advance_model');
@@ -3529,20 +3541,29 @@ class Job extends MY_Controller
     public function jobTagMoveUploadedFile()
     {
         if (isset($_FILES['image']) && $_FILES['image']['tmp_name'] != '') {
-            $company_id = logged('company_id');
-            $target_dir = "./uploads/job_tags/" . $company_id . "/";
-            if (!file_exists($target_dir)) {
-                mkdir($target_dir, 0777, true);
+            $tag_file         = $_FILES["image"]["name"];
+            $extension        = substr($tag_file,strlen($tag_file)-4,strlen($tag_file));
+            $valid_tag_extn   = array(".jpg","jpeg",".png",".gif");
+            
+            if(!in_array($extension,$valid_tag_extn)) {
+                return 'invalid_extension';
+                exit;
+            } else {
+                $company_id = logged('company_id');
+                $target_dir = "./uploads/job_tags/" . $company_id . "/";
+                if (!file_exists($target_dir)) {
+                    mkdir($target_dir, 0777, true);
+                }
+    
+                $tmp_name = $_FILES['image']['tmp_name'];
+                $extension = strtolower(end(explode('.', $_FILES['image']['name'])));
+                // basename() may prevent filesystem traversal attacks;
+                // further validation/sanitation of the filename may be appropriate
+                $name = basename($_FILES["image"]["name"]);
+                move_uploaded_file($tmp_name, $target_dir . $name);
+    
+                return $name;                
             }
-
-            $tmp_name = $_FILES['image']['tmp_name'];
-            $extension = strtolower(end(explode('.', $_FILES['image']['name'])));
-            // basename() may prevent filesystem traversal attacks;
-            // further validation/sanitation of the filename may be appropriate
-            $name = basename($_FILES["image"]["name"]);
-            move_uploaded_file($tmp_name, $target_dir . $name);
-
-            return $name;
         }
     }
 
@@ -3770,6 +3791,19 @@ class Job extends MY_Controller
         $post = $this->input->post();
         $company_id = logged('company_id');
 
+        if( $post['job_tag_name'] != ''){
+            $isJobTagExists = $this->JobTags_model->getByNameAndCompanyId($post['job_tag_name'], $company_id);
+            if( $isJobTagExists ){
+                $return = [
+                    'data' => null,
+                    'success' => false,
+                    'message' => 'Job tag already exist'
+                ]; 
+                echo json_encode($return);     
+                exit; 
+            }
+        }        
+
         if (isset($post['is_default_icon'])) {
             $icon = $this->Icons_model->getById($post['default_icon_id']);
             $marker_icon = $icon->image;
@@ -3789,19 +3823,28 @@ class Job extends MY_Controller
         } else {
             $marker_icon = $this->jobTagsMoveUploadedFile();
             if ($marker_icon != '') {
-                $data = [
-                    'name' => $post['job_tag_name'],
-                    'company_id' => $company_id,
-                    'marker_icon' => $marker_icon,
-                    'is_marker_icon_default_list' => 0
-                ];
-
-                $this->JobTags_model->create($data);
-
-                //Activity Logs
-                $activity_name = 'Created Job Tag '.$post['job_tag_name']; 
-                createActivityLog($activity_name);
-
+                if($marker_icon == 'invalid_extension') {
+                    $return = [
+                        'data' => null,
+                        'success' => false,
+                        'message' => 'Cannot update job tag, invalid file extension'
+                    ];                     
+                    echo json_encode($return);        
+                    exit;
+                } else {
+                    $data = [
+                        'name' => $post['job_tag_name'],
+                        'company_id' => $company_id,
+                        'marker_icon' => $marker_icon,
+                        'is_marker_icon_default_list' => 0
+                    ];
+    
+                    $this->JobTags_model->create($data);
+    
+                    //Activity Logs
+                    $activity_name = 'Created Job Tag '.$post['job_tag_name']; 
+                    createActivityLog($activity_name);
+                }
             } else {
                 $return = [
                     'data' => null,
@@ -3829,10 +3872,24 @@ class Job extends MY_Controller
         $this->load->model('Icons_model');
     
         $post = $this->input->post();
-        $company_id = logged('company_id');
+        $company_id = logged('company_id');         
     
         $jobTag = $this->JobTags_model->getById($post['jid']);
         if ($jobTag) {
+
+            if( $post['job_tag_name'] != '' && $jobTag->name != $post['job_tag_name']){
+                $isJobTagExists = $this->JobTags_model->getByNameAndCompanyId($post['job_tag_name'], $company_id);
+                if( $isJobTagExists ){
+                    $return = [
+                        'data' => null,
+                        'success' => false,
+                        'message' => 'Job tag already exist'
+                    ]; 
+                    echo json_encode($return);     
+                    exit; 
+                }
+            }
+
             $marker_icon = $jobTag->marker_icon;
             $is_marker_icon_default_list = $jobTag->is_marker_icon_default_list;
             if (isset($post['is_default_icon'])) {
@@ -3844,6 +3901,15 @@ class Job extends MY_Controller
             } else {
                 if ($_FILES['image']['size'] > 0) {
                     $marker_icon = $this->jobTagMoveUploadedFile();
+                    if($marker_icon == 'invalid_extension') {
+                        $return = [
+                            'data' => null,
+                            'success' => false,
+                            'message' => 'Cannot update job tag, invalid file extension'
+                        ];                     
+                        echo json_encode($return);        
+                        exit;
+                    }                    
                     $is_marker_icon_default_list = 0;
                 }
             }
@@ -3932,23 +3998,32 @@ class Job extends MY_Controller
     public function jobTagsMoveUploadedFile()
     {
         if (isset($_FILES['image']) && $_FILES['image']['tmp_name'] != '') {
-            $company_id = logged('company_id');
-            $target_dir = "./uploads/job_tags/" . $company_id . "/";
-            if (!file_exists($target_dir)) {
-                mkdir($target_dir, 0777, true);
+
+            $tag_file         = $_FILES["image"]["name"];
+            $extension        = substr($tag_file,strlen($tag_file)-4,strlen($tag_file));
+            $valid_tag_extn   = array(".jpg","jpeg",".png",".gif");
+
+            if(!in_array($extension,$valid_tag_extn)) {
+                return 'invalid_extension';
+                exit;
+            } else {
+                $company_id = logged('company_id');
+                $target_dir = "./uploads/job_tags/" . $company_id . "/";
+                if (!file_exists($target_dir)) {
+                    mkdir($target_dir, 0777, true);
+                }
+    
+                $tmp_name = $_FILES['image']['tmp_name'];
+                $extension = strtolower(end(explode('.', $_FILES['image']['name'])));
+                // basename() may prevent filesystem traversal attacks;
+                // further validation/sanitation of the filename may be appropriate
+                $name = basename($_FILES["image"]["name"]);
+                move_uploaded_file($tmp_name, $target_dir . $name);
+    
+                return $name;                
             }
-
-            $tmp_name = $_FILES['image']['tmp_name'];
-            $extension = strtolower(end(explode('.', $_FILES['image']['name'])));
-            // basename() may prevent filesystem traversal attacks;
-            // further validation/sanitation of the filename may be appropriate
-            $name = basename($_FILES["image"]["name"]);
-            move_uploaded_file($tmp_name, $target_dir . $name);
-
-            return $name;
         }
     }
-
 
     public function createOrUpdateSignature()
     {
@@ -4577,6 +4652,7 @@ class Job extends MY_Controller
     public function ajax_quick_add_job_form()
     {
         $this->load->model('CalendarSettings_model');
+        $this->load->model('User_docflies_model');
 
         $this->load->helper('functions');
         $comp_id = logged('company_id');
@@ -4716,6 +4792,16 @@ class Job extends MY_Controller
             $default_start_date = $this->input->get('date_selected');
         }
 
+        //esign templates
+        $esignTemplates  = $this->User_docflies_model->getAllDocfileTemplatesByCompanyId($comp_id);
+        $defaultTemplate = $this->User_docflies_model->getDefaultTemplateByCompanyId($comp_id);
+        if( $defaultTemplate ){
+            foreach($esignTemplates as $record){
+                $record->is_default = $defaultTemplate->template_id == $record->id ? 1 : 0;
+            }
+        }
+
+        $this->page_data['esignTemplates'] = $esignTemplates;
         $this->page_data['default_start_date'] = $default_start_date;
         $this->load->view('v2/pages/job/ajax_quick_add_job_form', $this->page_data);
     }
@@ -5800,6 +5886,43 @@ class Job extends MY_Controller
 
         echo json_encode($return);
     }
+
+    public function ajax_delete_job_tag()
+    {
+        $is_success = 0;
+        $msg        = 'Cannot find data';
+
+        $this->load->model('JobTags_model');
+        $company_id = logged('company_id');
+
+        $remove_tag = array(
+            'where' => array(
+                'id' => $_POST['tag_id']
+            ),
+            'table' => 'job_tags'
+        );
+
+        $jobTag = $this->JobTags_model->getByIdAndCompanyId($_POST['tag_id'], $company_id);
+
+        if( $jobTag && $jobTag->company_id == $company_id ) {
+    
+            if ($this->general->delete_($remove_tag)) {
+                //Activity Logs
+                $activity_name = 'Deleted Job Tag '.$jobTag->name; 
+                createActivityLog($activity_name);
+                $is_success = 1;
+                $msg = '';
+            }            
+
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);        
+    }    
 }
 
 /* End of file Job.php */

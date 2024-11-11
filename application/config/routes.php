@@ -1279,6 +1279,8 @@ $route['job/update_job_type'] = 'Job/update_job_type';
 $route['job/_update_job_type'] = 'Job/ajax_update_job_type';
 $route['job/delete_job_type'] = 'Job/delete_job_type';
 $route['job/_delete_job_type'] = 'Job/ajax_delete_job_type';
+$route['job/_delete_job_tag'] = 'Job/ajax_delete_job_tag';
+
 
 // Event Tags
 $route['events/add_new_event_tag'] = 'Events/add_new_event_tag';
@@ -1298,9 +1300,8 @@ $route['job/save_job_tag'] = 'Job/create_new_job_tag';
 $route['job/edit_job_tag/(:any)'] = 'Job/edit_job_tag/$1';
 $route['job/update_job_tag'] = 'Job/update_job_tag';
 
-//$route['job/ajax_create_new_job_tag'] = 'Job/ajax_create_new_job_tag';
 $route['job/ajax_create_new_job_tag']['post'] = 'job/ajax_create_new_job_tag';
-$route['job/ajax_update_job_tag']['post'] = 'job/ajax_update_job_tag';
+$route['job/ajax_update_job_tag']['post']     = 'job/ajax_update_job_tag';
 
 // Forgot Password
 $route['login/_check_user_id_exists'] = 'Login/ajax_check_user_id_exists';
@@ -1756,6 +1757,7 @@ $route['ticket/_quick_add_service_ticket_form'] = 'Tickets/ajax_quick_add_servic
 $route['job/_create_service_ticket'] = 'Job/ajax_create_service_ticket';
 $route['ticket/_create_service_ticket'] = 'Tickets/ajax_create_service_ticket';
 $route['ticket/_get_customer_basic_information'] = 'Tickets/ajax_get_customer_basic_info';
+$route['job/_get_customer_information'] = 'Tickets/ajax_get_customer_basic_info';
 $route['calendar/_quick_add_appointment_form'] = 'Workcalender/ajax_quick_add_appointment_form';
 $route['calendar/_quick_add_tc_off_form'] = 'Workcalender/ajax_quick_add_tc_off_form';
 $route['calendar/_quick_edit_tc_off_form'] = 'Workcalender/ajax_quick_edit_tc_off_form';
@@ -1768,6 +1770,7 @@ $route['event/_quick_add_event_form'] = 'Events/ajax_quick_add_event_form';
 $route['event/_create_event'] = 'Events/ajax_create_event';
 $route['event/_quick_delete_event'] = 'Events/ajax_quick_delete_event';
 $route['docusign/debugGeneratePDF'] = 'DocuSign/debugGeneratePDF';
+
 
 // Affiliate
 $route['affiliate/_save_affiliate'] = 'Affiliate/ajax_save_affiliate';
