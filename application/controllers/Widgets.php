@@ -673,7 +673,7 @@ class Widgets extends MY_Controller
         $in_count = 0;
         $company_id = 0;
         $counter = 0;
-        $user_limit = 7;
+        $user_limit = 20;
         foreach ($users as $cnt => $user) :
             $counter += 1;
             if ($user->status == 1) :
@@ -770,7 +770,7 @@ class Widgets extends MY_Controller
         <div class="content">
             <div class="details">
                 <span class="content-title"><?php echo $user->FName; ?> <?php echo $user->LName; ?></span>
-                <span class="content-subtitle d-block"><?php echo $u_role; ?></span>
+                <span class="content-subtitle d-block"><?php echo $u_role != '' ? $u_role : "---"; ?></span>
             </div>
             <div class="controls">
                 <div class="timesheet-group">
