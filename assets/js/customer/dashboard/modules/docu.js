@@ -80,13 +80,16 @@ $fileInput.addEventListener("change", async function () {
     const $chkBox    = document.getElementById(dataType);
     $chkBox.checked = true;
     const prevText = $uploadBtn.textContent;
-    $uploadBtn.textContent = "Uploading...";
-    $uploadBtn.setAttribute("disabled", true);
+    $uploadBtn.textContent = "Uploading...";    
+    if( dataType != 'client_agreement' ){
+      $uploadBtn.setAttribute("disabled", true);
+    }    
 
     try {
       await api.uploadCustomerDocument(payload);
       const $buttons = $wrapper.querySelector(".buttons");
       $buttons.classList.add("has-document");
+      location.reload();
     } catch (error) {
       $chkBox.checked = false;
       console.error(error);
