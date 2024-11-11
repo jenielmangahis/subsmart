@@ -25,7 +25,7 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content">
-        <div class="nsm-widget-table">
+        <div class="nsm-widget-table" style="max-height:400px;overflow-y: auto;overflow-x: hidden;">
             <!-- <div class="widget-header row">
                 <div class="col-12 col-md-5 d-flex">
                     <span class="content-subtitle d-block">Employee Name</span>
@@ -72,9 +72,7 @@ endif;
                     </div>
                 </div>
             </div>
-            <div class="row timesheet-container">
-
-            </div>
+            <div class="row timesheet-container"></div>
             <!-- <div class="nsm-loader">
             <i class='bx bx-loader-alt bx-spin'></i>
         </div> -->
@@ -90,12 +88,12 @@ endif;
     function loadTimesheet() {
         // console.log("called");
         $.ajax({
-            url: '<?php echo base_url(); ?>widgets/loadV2Timesheet',
+            url: base_url + 'widgets/loadV2Timesheet',
             method: 'get',
             data: {},
             success: function(response) {
                 $('.timesheet-container').html(response);
-                setTimeout(function() {loadTimesheet()}, 2000);
+                //setTimeout(function() {loadTimesheet()}, 2000);
             }
 
         });
