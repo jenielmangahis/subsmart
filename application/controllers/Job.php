@@ -1777,7 +1777,7 @@ class Job extends MY_Controller
         exit;
     }
 
-    public function get_customer_selected()
+    public function get_customer_selected_old()
     {
         $this->load->model('Contacts_model');
         $this->load->model('Customer_advance_model');
@@ -4729,7 +4729,16 @@ class Job extends MY_Controller
             $default_start_date = $this->input->get('date_selected');
         }
 
-        $esignTemplates  = $this->User_docflies_model->getAllDocfileTemplatesByCompanyId($company_id);
+        //esign templates
+        $esignTemplates  = $this->User_docflies_model->getAllDocfileTemplatesByCompanyId($comp_id);
+        $defaultTemplate = $this->User_docflies_model->getDefaultTemplateByCompanyId($comp_id);
+        if( $defaultTemplate ){
+            foreach($esignTemplates as $record){
+                $record->is_default = $defaultTemplate->template_id == $record->id ? 1 : 0;
+            }
+        }
+
+        $this->page_data['esignTemplates'] = $esignTemplates;
         $this->page_data['default_start_date'] = $default_start_date;
         $this->load->view('v2/pages/job/ajax_quick_add_job_form', $this->page_data);
     }
