@@ -497,8 +497,7 @@ $(function(){
     });
 
     $("#quick-add-service-ticket-form").submit(function(e) {
-        e.preventDefault();         
-        
+        e.preventDefault(); 
         var url  = base_url + 'ticket/_create_service_ticket';
         var form = $(this);
         $.ajax({
@@ -519,8 +518,8 @@ $(function(){
                         cancelButtonColor: '#d33',
                         confirmButtonText: 'Ok'
                     }).then((result) => {
-                        //reloadQuickAccessCalendarSchedule();
-                        location.href = base_url + 'job/new_job1/' + data.job_id
+                        reloadQuickAccessCalendarSchedule();
+                        //location.href = base_url + 'job/new_job1/' + data.job_id
                     });    
                 }else{
                     Swal.fire({
