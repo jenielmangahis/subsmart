@@ -1245,11 +1245,11 @@ class Widgets extends MY_Controller
         echo json_encode($return);
     }
 
-    public function ajax_load_taskhub_summary()
+    public function ajax_load_taskhub_summaryBackup()
     {
         $this->load->model('Taskhub_model');
 
-        $cid  = logged('company_id');
+        $cid     = logged('company_id');
         $user_id = logged('id');
 
         $date_range['from'] = date("Y-m-d");
@@ -1278,6 +1278,86 @@ class Widgets extends MY_Controller
             'completedTasks' => count($completedTasks),
             'totalAssignedTasks' => $totalAssignedTasks,
             'activitiesTasks' => count($activitiesTasks)
+        ];
+
+        echo json_encode($taskhubSummary);
+    }    
+
+    public function ajax_load_taskhub_summary()
+    {
+        $this->load->model('taskhub_model');
+        $this->load->model('taskhub_participants_model');
+        //$this->load->model('Taskhub_model');
+
+        /**
+         * Todo
+         * - total today - ok
+         * - total shared - ok
+         * - total activities
+         * - total flagged - ok
+         * - total done - ok
+         * - total my task - ok
+         */
+
+        $cid     = logged('company_id');
+        $user_id = logged('id');
+
+        $date_range['from'] = date("Y-m-d");
+        $date_range['to']   = date("Y-m-d");        
+
+		$total_backlog    = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Backlog');
+		$total_task_doing = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Doing');
+		$total_task_review_fail = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Review Fail');
+		$total_task_on_testing  = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'On Testing');
+		$total_task_review = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Review');
+		$total_task_done   = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Done');
+		$total_task_closed = $this->taskhub_model->getAllTasksByCompanyIdAndStatus($cid, 'Closed');
+        $total_today_task  = $this->taskhub_model->getAllTodayTasksByCompanyId($cid, $date_range);
+
+        $ongoingTasks      = $this->taskhub_model->getAllOngoingUsersTasksByCompanyId($cid);
+        $total_high_priority_task = $this->taskhub_model->getAllTasksByCompanyIdAndByPriority($cid, 'High');
+
+
+
+        $total_my_tasks = 0;
+        $total_shared_task = 0;
+        $task_ids = array();
+        if($ongoingTasks) {
+
+            foreach($ongoingTasks as $task){
+                $array_count    = 0;
+                $assigned_users = json_decode($task->assigned_employee_ids);
+                if($assigned_users && is_array($assigned_users)) {
+                    $array_count = count($assigned_users);
+                    foreach($assigned_users as $uid){
+                        if( $uid == $user_id ){
+                            if($array_count > 1) {
+                                $total_shared_task++;
+                            }
+                            $total_my_tasks++;
+                        }
+                    }
+                }
+
+                $task_ids[] = $task->task_id;
+            }
+        }
+
+        $task_activities = $this->taskhub_participants_model->getAllByTaskIds($task_ids);   
+
+        $taskhubSummary = [
+            'total_backlog' => count($total_backlog), 
+            'total_task_doing' => count($total_task_doing), 
+            'total_task_review_fail' => count($total_task_review_fail),
+            'total_task_on_testing' => count($total_task_on_testing),
+            'total_task_review' => count($total_task_review),
+            'total_task_done' => count($total_task_done),
+            'total_task_closed' => count($total_task_closed),
+            'total_today_task' => count($total_today_task),
+            'total_my_tasks' => $total_my_tasks,
+            'total_task_flagged' => count($total_high_priority_task),
+            'total_shared_task' => $total_shared_task,
+            'total_task_activities' => count($task_activities)
         ];
 
         echo json_encode($taskhubSummary);

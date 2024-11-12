@@ -34,6 +34,7 @@
     </div>
     <div class='nsm-card-footer widget-taskhub'>
         <div class="row h-100 g-2">
+
             <div class="col-12 col-md-6">
                 <div class="nsm-counter success h-100 mb-2">
                     <div class="row h-100">
@@ -41,7 +42,7 @@
                             <i class='bx bx-calendar' ></i>                            
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                            <h3 id="taskhub-today">0</h3>
+                            <h3 id="taskhub-todaytask">0</h3>
                             <span>Today</span>
                         </div>
                     </div>
@@ -54,7 +55,7 @@
                             <i class='bx bx-calendar-check' ></i>
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                            <h3 id="taskhub-shared-task">0</h3>
+                            <h3 id="taskhub-sharedtask">0</h3>
                             <span>Shared Task</span>
                         </div>
                     </div>
@@ -106,12 +107,106 @@
                             <i class='bx bx-list-ol' ></i>
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                            <h2 id="taskhub-my-tasks">0</h2>
+                            <h2 id="taskhub-mytasks">0</h2>
                             <span>My Tasks</span>
                         </div>
                     </div>
                 </div>
+            </div>       
+
+            <!-- 
+            <div class="col-12 col-md-6">
+                <div class="nsm-counter success h-100 mb-2">
+                    <div class="row h-100">
+                        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                            <i class='bx bx-receipt' ></i>                            
+                        </div>
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                            <h2 id="taskhub-backlog">0</h2>
+                            <span>BACKLOG</span>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <div class="col-12 col-md-6">
+                <div class="nsm-counter primary h-100 mb-2">
+                    <div class="row h-100">
+                        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                            <i class='bx bx-receipt' ></i>
+                        </div>
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                            <h2 id="taskhub-doing">0</h2>
+                            <span>DOING</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="nsm-counter success h-100 mb-2">
+                    <div class="row h-100">
+                        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                            <i class='bx bx-receipt'></i>
+                        </div>
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                            <h2 id="taskhub-reviewfail">0</h2>
+                            <span>REVIEW FAIL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="nsm-counter primary h-100 mb-2">
+                    <div class="row h-100">
+                        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                            <i class='bx bx-receipt'></i>
+                        </div>
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                            <h2 id="taskhub-ontesting">0</h2>
+                            <span>ON TESTING</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="nsm-counter success h-100 mb-2">
+                    <div class="row h-100">
+                        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                            <i class='bx bx-receipt'></i>
+                        </div>
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                            <h2 id="taskhub-review">0</h2>
+                            <span>REVIEW</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="nsm-counter primary h-100 mb-2">
+                    <div class="row h-100">
+                        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                            <i class='bx bx-receipt' ></i>
+                        </div>
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                            <h2 id="taskhub-done">0</h2>
+                            <span>DONE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="nsm-counter primary h-100 mb-2">
+                    <div class="row h-100">
+                        <div class="col-12 col-md-4 d-flex justify-content-center align-items-center">
+                            <i class='bx bx-receipt' ></i>
+                        </div>
+                        <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
+                            <h2 id="taskhub-closed">0</h2>
+                            <span>CLOSED</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            -->
         </div>
 
     </div>
@@ -256,20 +351,36 @@
             dataType: 'json',
             beforeSend: function() {
                 var loader = "<span class='bx bx-loader bx-spin'></span>";
-                $('#taskhub-today').html(loader);
-                $('#taskhub-activities').html(loader);
-                $('#taskhub-shared-task').html(loader);
-                $('#taskhub-flagged').html(loader);
+                $('#taskhub-backlog').html(loader);
+                $('#taskhub-doing').html(loader);
+                $('#taskhub-reviewfail').html(loader);
+                $('#taskhub-ontesting').html(loader);
+                $('#taskhub-review').html(loader);
                 $('#taskhub-done').html(loader);
-                $('#taskhub-my-tasks').html(loader);
+                $('#taskhub-closed').html(loader);
+                
+                $('#taskhub-todaytask').html(loader);
+                $('#taskhub-sharedtask').html(loader);
+                $('#taskhub-mytasks').html(loader);
+                $('#taskhub-flagged').html(loader);
+                $('#taskhub-activities').html(loader);
             },
             success: function (data) {
-                $('#taskhub-today').html(data.todaysTask);
-                $('#taskhub-shared-task').html(data.sharedTasks);
-                $('#taskhub-flagged').html(data.flaggedTasks);
-                $('#taskhub-activities').html(data.activitiesTasks);
-                $('#taskhub-done').html(data.completedTasks);
-                $('#taskhub-my-tasks').html(data.totalAssignedTasks);
+
+                $('#taskhub-backlog').html(data.total_backlog);
+                $('#taskhub-doing').html(data.total_task_doing);
+                $('#taskhub-reviewfail').html(data.total_task_review_fail);
+                $('#taskhub-ontesting').html(data.total_task_on_testing);
+                $('#taskhub-review').html(data.total_task_review);
+                $('#taskhub-closed').html(data.total_task_closed);
+
+                $('#taskhub-todaytask').html(data.total_today_task);
+                $('#taskhub-done').html(data.total_task_done);
+                $('#taskhub-sharedtask').html(data.total_shared_task);
+                $('#taskhub-mytasks').html(data.total_my_tasks);
+                $('#taskhub-flagged').html(data.total_task_flagged);
+                $('#taskhub-activities').html(data.total_task_activities);
+                
             },
         });
     }
