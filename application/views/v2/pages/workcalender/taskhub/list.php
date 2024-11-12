@@ -244,7 +244,7 @@
                                 <td data-name="Assigned" style="width:20%;">Assigned To</td>           
                                 <td data-name="Priority">Priority</td>
                                 <td data-name="Status">Status</td>
-                                <td data-name="Date Started">Date Started</td>
+                                <td data-name="Due Date">Due Date</td>
                                 <td data-name="Date Completion">Completion Date</td>
                                 <td data-name="Date Created">Date Created</td>
                                 <td data-name="Manage" style="width:2%;"></td>
@@ -265,7 +265,7 @@
                                             </div>
                                         </td>
                                         <td class="fw-bold nsm-text-primary nsm-link default" onclick="location.href='<?php echo url('taskhub/view/' . $row->task_id) ?>'">
-                                            <?php echo $row->subject; ?>
+                                            <?php echo $row->subject != '' ? $row->subject : $row->title; ?>
                                         </td>   
                                         <td>
                                             <div class="d-flex align-items-center">                
@@ -279,7 +279,9 @@
                                                                 $assignee = $this->users_model->getUser($user_id);
                                                                 if($assignee) {
                                                                     if($image == "") {
-                                                                        $user_initial = strtoupper(substr($assignee->FName, -1) . substr($assignee->LName, -1));
+                                                                        $firstName = $assignee->FName;
+                                                                        $lastName  = $assignee->LName;
+                                                                        $user_initial = strtoupper($firstName[0] . $lastName[0]);
                                                                         echo '<div class="nsm-profile" style="background-image: url('. $image . '); width: 40px; margin-right: -10px !important;"><span>' . $user_initial . '</span></div>';
                                                                     } else {
                                                                         echo '<div class="nsm-profile" style="background-image: url('. $image . '); width: 40px; margin-right: -10px !important;"></div>';
@@ -347,13 +349,13 @@
                                         <td>
                                             <?php //echo date("F d, Y", strtotime($row->date_started)); ?>
                                             <?php 
-                                                $date_started = "--";
-                                                if($row->date_started != null) {
-                                                    $date_started = date("F d, Y", strtotime($row->date_started));
+                                                $dude_date = "--";
+                                                if($row->date_due != NULL) {
+                                                    $dude_date = date("F d, Y", strtotime($row->date_due));
                                                 } else {
-                                                    $date_started = date("F d, Y", strtotime($row->date_created));
+                                                    //$dude_date = date("F d, Y", strtotime($row->date_due));
                                                 }
-                                                echo $date_started;
+                                                echo $dude_date;
                                             ?>
                                         </td>
                                         <td>

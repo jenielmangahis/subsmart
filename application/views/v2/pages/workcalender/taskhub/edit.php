@@ -173,7 +173,7 @@ if (isset($selected_participants)) {
                                             $date = date("m/d/Y",strtotime($taskHub->date_due));
                                         }
                                         ?>
-                                        <label class="content-subtitle fw-bold d-block mb-2">Due Date / Time</label>
+                                        <label class="content-subtitle fw-bold d-block mb-2">Due Date</label>
                                         <input type="text" name="date_due" class="nsm-field form-control due-date-datepicker" id="due-date-datepicker" value="<?= $date ?>" required>
                                     </div>
 
