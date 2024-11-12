@@ -77,7 +77,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <p class="top-spending">Your top spending categories:</p>
         </div>
         <h1 id='AccountingExpenseGraphLoader'> <span class="bx bx-loader bx-spin"></span></h1>
-        <canvas id="AccountingExpenseGraph" style="max-height:75%; margin-top: 10px; padding-bottom: 10px;" class="nsm-chart"
+        <canvas id="AccountingExpenseGraph" style="max-height:78%; margin-top: 10px; padding-bottom: 5px;" class="nsm-chart"
             data-chart-type="widgets/accounting_expense_counter" data-chart-id="<?php echo $id; ?>"></canvas>
     </div>
     <div class="nsm-card-content"
