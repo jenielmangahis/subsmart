@@ -19,7 +19,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                             <i class="bx bx-fw bx-notepad"></i>
                         </div>
                         <a role="button" class=" btn-sm m-0 me-2" href="accounting/expenses"
-                            style="color:#6ba77ced !important ">
+                            style="color:#6ba77ced !important; font-size: 17px !important;">
                             Accounting Expense
                         </a>
                     </div>
