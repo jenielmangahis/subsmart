@@ -276,54 +276,150 @@ function load_customer_data($id){
     var postData = new FormData();
     postData.append('id', $id);
 
-    fetch('<?= base_url('job/get_customer_selected') ?>', {
+    fetch(base_url + 'job/_get_customer_information', {
         method: 'POST',
-        body: postData
+        body: postData,        
     }).then(response => response.json()).then(response => {
-        var {success, data} = response;
+        var phone_h = '(xxx) xxx-xxxx';
+        var phone_m = '(xxx) xxx-xxxx';            
+        if( response.phone_m != '' ){
+            phone_m = formatNumber(response.phone_m);
+        }
 
-        if(success){
-            var phone_h = '(xxx) xxx-xxxx';
-            var phone_m = '(xxx) xxx-xxxx';
-            $('#cust_fullname').text(data.first_name + ' ' + data.last_name);
-            // if(data.mail_add !== null){
-            //     $('#cust_address').text(data.mail_add + ' ');
-            // }
-            if(data.cross_street != null){
-                $('#cust_address').text(data.cross_street + ' ');
-                ADDR_1 = data.cross_street;
-            } else {
-                $('#cust_address').text(data.mail_add + ' ');
-                ADDR_1 = data.mail_add;
-            }
-            /*if(data.phone_h){
-                if(data.phone_h.includes('Mobile:')){
-                    phone_h = ((data.phone_h).slice(0,13))
-                }else{
-                    phone_h = data.phone_h;
-                }
-            }*/
-            if( data.phone_m ){
-                phone_m = formatNumber(data.phone_m);
-            }
-            
-            if(data.city || data.state || data.zip_code){
-                $('#cust_address2').text(data.city + ' ' + ' ' + data.state + ', ' + data.zip_code);
-                ADDR_2 = data.city + ' ' + ' ' + data.state + ', ' + data.zip_code;
-            }else{
-                $('#cust_address2').text('-------------');
-            }
-            if(data.email){
-                $('#cust_email').text(data.email);
-            }else{
-                $('#cust_email').text('Email is not available.');
-            }
-            $("#customer_preview").attr("href", "/customer/preview/"+data.prof_id);
-            $('#cust_number').text(phone_m);
-            $('#mail_to').attr("href","mailto:"+data.email);
-            $("#TEMPORARY_MAP_VIEW").attr('src', 'http://maps.google.com/maps?q='+ADDR_1+' '+ADDR_2+'&output=embed');
-            $('.MAP_LOADER').fadeIn();
-            //$('#TEMPORARY_MAP_VIEW').hide();
+        var address1 = '';
+        if( response.mail_add != '' && response.mail_add != 'NA' ){
+            address1 = response.mail_add;
+        }
+        $('#cust_fullname').text(response.first_name + ' ' + response.last_name);
+        $('#cust_address').text(address1);
+        $('#cust_address2').text(response.city + ', ' + response.state + ' ' + response.zip_code);
+
+        ADDR_2 = response.city + ' ' + ' ' + response.state + ', ' + response.zip_code;
+        ADDR_1 = address1;
+        
+        if(response.email != ''){
+            $('#cust_email').text(response.email);
+        }else{
+            $('#cust_email').text('Email is not available.');
+        }
+
+        $("#customer_preview").attr("href", "/customer/preview/"+response.prof_id);
+        $('#cust_number').text(phone_m);
+        $('#mail_to').attr("href","mailto:"+response.email);
+        $("#TEMPORARY_MAP_VIEW").attr('src', 'http://maps.google.com/maps?q='+ADDR_1+' '+ADDR_2+'&output=embed');
+        $('.MAP_LOADER').fadeIn();
+
+        $("#customer_cc_num").val(response.cc_num);
+        $("#customer_cc_expiry_date_month").val(response.cc_exp_month);
+        $("#customer_cc_expiry_date_year").val(response.cc_exp_year);
+        $("#customer_cc_cvc").val(response.cc_cvc);
+
+        var mmr  = parseFloat(response.mmr);
+        var otps = parseFloat(response.otps);
+        $("#plan-value").val(mmr.toFixed(2));
+        $("#service-ticket-otp").val(otps.toFixed(2));
+        $('#span_mmr').html(mmr.toFixed(2));
+        $('#span_otp').html(otps.toFixed(2));
+
+        $("#customer_check_account_number").val(response.acct_num);
+        $("#customer_check_bank_name").val(response.bank_name);
+        $("#customer_check_routing_number").val(response.routing_num);
+        $("#customer_check_number").val(response.check_num);
+
+        $("#customer_ach_account_number").val(response.acct_num);
+        $("#customer_ach_routing_number").val(response.routing_num);
+
+        //Start Emergency Contacts
+        if( response.ec1_firstname != '' && response.ec1_firstname != null ){
+            $('#contact_first_name1').val(response.ec1_firstname);
+        }else{
+            $('#contact_first_name1').val('');
+        }
+
+        if( response.ec1_lastname != '' && response.ec1_lastname != null ){
+            $('#contact_last_name1').val(response.ec1_lastname);
+        }else{
+            $('#contact_last_name1').val('');
+        }
+
+        if( response.ec1_phone != '' && response.ec1_phone != null ){
+            $('#contact_phone1').val(response.ec1_phone);
+        }else{
+            $('#contact_phone1').val('');
+        }
+
+        if( response.ec1_relationship != '' && response.ec1_relationship != null ){
+            $('#contact_relationship1').val(response.ec1_relationship);
+        }else{
+            $('#contact_relationship1').val('');
+        }
+
+
+        if( response.ec2_firstname != '' && response.ec2_firstname != null ){
+            $('#contact_first_name2').val(response.ec2_firstname);
+        }else{
+            $('#contact_first_name2').val('');
+        }
+
+        if( response.ec2_lastname != '' && response.ec2_lastname != null ){
+            $('#contact_last_name2').val(response.ec2_lastname);
+        }else{
+            $('#contact_last_name2').val('');
+        }
+
+        if( response.ec2_phone != '' && response.ec2_phone != null ){
+            $('#contact_phone2').val(response.ec2_phone);
+        }else{
+            $('#contact_phone2').val('');
+        }
+
+        if( response.ec2_relationship != '' && response.ec2_relationship != null ){
+            $('#contact_relationship2').val(response.ec2_relationship);
+        }else{
+            $('#contact_relationship2').val('');
+        }
+
+
+        if( response.ec3_firstname != '' && response.ec3_firstname != null ){
+            $('#contact_first_name3').val(response.ec3_firstname);
+        }else{
+            $('#contact_first_name3').val('');
+        }
+
+        if( response.ec3_lastname != '' && response.ec3_lastname != null ){
+            $('#contact_last_name3').val(response.ec3_lastname);
+        }else{
+            $('#contact_last_name3').val('');
+        }
+
+        if( response.ec3_phone != '' && response.ec3_phone != null ){
+            $('#contact_phone3').val(response.ec3_phone);
+        }else{
+            $('#contact_phone3').val('');
+        }
+
+        if( response.ec3_relationship != '' && response.ec3_relationship != null ){
+            $('#contact_relationship3').val(response.ec3_relationship);
+        }else{
+            $('#contact_relationship3').val('');
+        }
+        //End Emergency contacts
+
+        if( response.bill_method == 'CC' ){
+            $('#bill_method').val('CC');
+            $('.grp-billing-cc').show();
+            $('.grp-billing-check').hide();
+            $('.grp-billing-ach').hide();
+        }else if( response.bill_method == 'ACH' ){
+            $('#bill_method').val('ACH');
+            $('.grp-billing-cc').hide();
+            $('.grp-billing-check').hide();
+            $('.grp-billing-ach').show();
+        }else{
+            $('#bill_method').val('CHECK');
+            $('.grp-billing-cc').hide();
+            $('.grp-billing-check').show();
+            $('.grp-billing-ach').hide();
         }
     })
 }
