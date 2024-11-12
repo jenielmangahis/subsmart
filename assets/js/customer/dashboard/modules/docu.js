@@ -86,10 +86,24 @@ $fileInput.addEventListener("change", async function () {
     }    
 
     try {
-      await api.uploadCustomerDocument(payload);
-      const $buttons = $wrapper.querySelector(".buttons");
-      $buttons.classList.add("has-document");
-      location.reload();
+      const maxClientAgreement = await api.fetchCustomerTotalClientAgreement(getCustomerId());
+      if( maxClientAgreement.total >= 3 ){
+        const result = await api.clientAgreementMaxUploadConfirmation();
+        if( result ){
+          payload.is_client_agreement_limit = 1;
+          await api.uploadCustomerDocument(payload);
+          const $buttons = $wrapper.querySelector(".buttons");
+          $buttons.classList.add("has-document");
+          location.reload();
+        }      
+      }else{
+        payload.is_client_agreement_limit = 0;
+        await api.uploadCustomerDocument(payload);
+        const $buttons = $wrapper.querySelector(".buttons");
+        $buttons.classList.add("has-document");
+        location.reload();
+      }
+      
     } catch (error) {
       $chkBox.checked = false;
       console.error(error);

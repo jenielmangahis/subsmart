@@ -253,7 +253,7 @@ class CustomerDashboardQuickActions extends MYF_Controller
         }
 
         $document = $_FILES['document'];
-        ['document_type' => $documentType, 'customer_id' => $customerId, 'document_label' => $documentLabel] = $this->input->post();
+        ['document_type' => $documentType, 'customer_id' => $customerId, 'document_label' => $documentLabel, 'is_client_agreement_limit' => $isMaxClientAgreement] = $this->input->post();
 
         $filePath = $this->getCustomerDocumentPath($customerId);
 
@@ -284,24 +284,40 @@ class CustomerDashboardQuickActions extends MYF_Controller
             $this->db->update('acs_customer_documents', ['file_name' => $fileName]);
             $documentId = $currDocument->id;
         } else {
-            $predefinedTypes = [
-                'client_agreement',
-                'photo_id_copy',
-                'proof_of_residency',
-                'personal_guarantee',
-            ];
 
-            $row = [
-                'file_name' => $fileName,
-                'customer_id' => $customerId,
-                'document_type' => $documentType,
-                'document_label' => $documentLabel,
-                'is_predefined' => in_array(strtolower($documentType), $predefinedTypes),
-                'date_created' => date("Y-m-d H:i:s")
-            ];
+            if( $isMaxClientAgreement == 1 ){
+                $this->db->where('customer_id', $customerId);
+                $this->db->where('document_type', $documentType);
+                $this->db->order_by('id', 'DESC');
+                $lastestDocument = $this->db->get('acs_customer_documents')->row();
+                if ($lastestDocument->file_name && file_exists($filePath . $lastestDocument->file_name)) {
+                    unlink($filePath . $lastestDocument->file_name);
+                }
 
-            $this->db->insert('acs_customer_documents', $row);
-            $documentId = $this->db->insert_id();
+                $this->db->where('id', $lastestDocument->id);
+                $this->db->update('acs_customer_documents', ['file_name' => $fileName]);
+                $documentId = $lastestDocument->id;
+
+            }else{
+                $predefinedTypes = [
+                    'client_agreement',
+                    'photo_id_copy',
+                    'proof_of_residency',
+                    'personal_guarantee',
+                ];
+    
+                $row = [
+                    'file_name' => $fileName,
+                    'customer_id' => $customerId,
+                    'document_type' => $documentType,
+                    'document_label' => $documentLabel,
+                    'is_predefined' => in_array(strtolower($documentType), $predefinedTypes),
+                    'date_created' => date("Y-m-d H:i:s")
+                ];
+    
+                $this->db->insert('acs_customer_documents', $row);
+                $documentId = $this->db->insert_id();
+            }
         }
 
         move_uploaded_file($tempName, $filePath . $fileName);
@@ -625,6 +641,22 @@ class CustomerDashboardQuickActions extends MYF_Controller
         echo json_encode([
             'is_success' => $is_success,
             'msg' => $msg
+        ]);
+    }
+
+    public function customerTotalClientAgreement()
+    {
+        $cid = logged('company_id');
+        $post = $this->input->post();
+
+        $this->db->where('customer_id', $post['cid']);
+        $this->db->where('document_type', 'client_agreement');
+        $clientAgreements = $this->db->get('acs_customer_documents')->result();
+        
+        $total = count($clientAgreements);
+        //$total = 3;
+        echo json_encode([
+            'total' => $total
         ]);
     }
 }

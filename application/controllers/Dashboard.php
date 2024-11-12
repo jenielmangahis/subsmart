@@ -591,8 +591,8 @@ class Dashboard extends Widgets
 
     public function loadFilterData()
     {
-        $date_from = post('from_date').' 00:00:00';
-        $date_to = post('to_date').' 23:59:59';
+        $date_from = post('from_date');
+        $date_to = post('to_date');
         $table = post('table');
         $id = post('id');
         $filter = post('filter');
@@ -709,24 +709,38 @@ class Dashboard extends Widgets
                 break;
 
             case 'invoices':
-                $total_query = [
-                    'where' => ['invoices.company_id' => logged('company_id'),
-                     'invoices.status !=' => 'Paid',
-                     'invoices.status !=' => "",
-                     'invoices.due_date <' =>  date('Y-m-d'),
-                    'DATE(invoices.date_issued) >=' => date('Y-m-d', strtotime($date_from)), 
-                    'DATE(invoices.due_date) <' => date('Y-m-d', strtotime($date_to))
-                    ],
-                    'table' => 'invoices',
-                    'join' => [
-                        [
-                            'table' => 'acs_profile',
-                            'statement' => 'acs_profile.prof_id = invoices.customer_id',
-                            'join_as' => 'left',
-                        ],
-                    ],
-                    'groupBy' => 'invoices.id',
-                    'select' => ' invoices.id,
+                // $total_query = [
+                //     'where' => ['invoices.company_id' => logged('company_id'),
+                //      'invoices.status !=' => 'Paid',
+                //      'invoices.status !=' => "",
+                //     'DATE(invoices.date_issued) >=' => date('Y-m-d', strtotime($date_from)), 
+                //     'invoices.due_date <' => date('Y-m-d', strtotime($date_to))
+                //     ],
+                //     'table' => 'invoices',
+                //     'join' => [
+                //         [
+                //             'table' => 'acs_profile',
+                //             'statement' => 'acs_profile.prof_id = invoices.customer_id',
+                //             'join_as' => 'left',
+                //         ],
+                //     ],
+                //     'select' => ' invoices.id,
+                //     invoices.invoice_number,
+                //     invoices.due_date,
+                //     invoices.status,
+                //     acs_profile.email AS customer_email,
+                //     acs_profile.first_name, 
+                //     acs_profile.last_name,
+                //     acs_profile.fk_user_id as user_id,
+                //     invoices.grand_total,
+                //     invoices.grand_total  as balance',
+                // ];
+                // $past_due = $this->general->get_data_with_param($total_query);
+
+                $company_id = logged('company_id');
+                $this->db->from('invoices');
+                $this->db->select('
+                    invoices.id,
                     invoices.invoice_number,
                     invoices.due_date,
                     invoices.status,
@@ -735,9 +749,19 @@ class Dashboard extends Widgets
                     acs_profile.last_name,
                     acs_profile.fk_user_id as user_id,
                     invoices.grand_total,
-                    invoices.grand_total  as balance',
-                ];
-                $past_due = $this->general->get_data_with_param($total_query);
+                    invoices.grand_total as balance
+                ');
+                $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+                $this->db->where('invoices.status !=', "Paid");
+                $this->db->where('invoices.status !=', "");
+                $this->db->where('invoices.due_date <',date('Y-m-d'));
+                $this->db->where('invoices.date_created >=',date('Y-m-d H:i:s', strtotime($date_from)));
+                $this->db->where('invoices.date_created <',date('Y-m-d H:i:s' , strtotime($date_to)));
+                $this->db->where('invoices.company_id', $company_id);
+                $this->db->order_by("invoices.invoice_number DESC");
+                $query = $this->db->get();
+                $past_due = $query->result();
+        
 
                 $invoices_total_due = 0;
                 foreach ($past_due as $total_due) {
@@ -747,7 +771,7 @@ class Dashboard extends Widgets
                 }
 
                 $mmr = $this->AcsProfile_model->getSubscriptionFilter(logged('company_id'), $date_from, $date_to);
-                $this->output->set_output(json_encode(['first' => count($past_due), 'second' => number_format($invoices_total_due),  'mmr' => $mmr, 'past_due' => $past_due]));
+                $this->output->set_output(json_encode(['first' => count($past_due), 'second' => number_format($invoices_total_due, 2, ".", ","),  'mmr' => $mmr, 'past_due' => $past_due]));
 
                 break;
             case 'open_invoices':
@@ -1448,13 +1472,14 @@ class Dashboard extends Widgets
     public function statusCount()
     {
         $DATE = $this->input->post('DATE');
-        $CURRENT_MONTH_COUNT = $this->event_model->getStatusCount('MONTH');
-        $CURRENT_YEAR_COUNT = $this->event_model->getStatusCount('YEAR');
+        $data = $this->event_model->getStatusCount();
+        
         if ($DATE == 'MONTH') {
-            echo json_encode($CURRENT_MONTH_COUNT);
-        }
-        if ($DATE == 'YEAR') {
-            echo json_encode($CURRENT_YEAR_COUNT);
+            echo json_encode($data['CURRENT_MONTH_COUNT']);
+        } elseif ($DATE == 'YEAR') {
+            echo json_encode($data['CURRENT_YEAR_COUNT']);
+        } else {
+            echo json_encode(['error' => 'Invalid date parameter']);
         }
     }
 

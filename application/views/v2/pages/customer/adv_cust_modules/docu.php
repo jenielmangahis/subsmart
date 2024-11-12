@@ -541,23 +541,33 @@ $(function(){
 
     $(document).on('click', '.delete-client-agreement', function(){
         var cdi = $(this).attr('data-id');
-
-        $.ajax({
-            type: 'POST',
-            url: base_url + "customer/_delete_client_agreement",
-            data: {cdi:cdi},
-            dataType: 'json',            
-            success: function(o) {
-                if( o.is_success == 1 ){   
-                    location.reload();
-                }else{
-                    Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    html: o.msg
-                    });
-                }
-            },
+        Swal.fire({
+            title: 'Delete Client Agreement',
+            html: "Are you sure you want to delete selected client agreement file?",
+            icon: 'question',
+            confirmButtonText: 'Proceed',
+            showCancelButton: true,
+            cancelButtonText: "Cancel"
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    type: 'POST',
+                    url: base_url + "customer/_delete_client_agreement",
+                    data: {cdi:cdi},
+                    dataType: 'json',            
+                    success: function(o) {
+                        if( o.is_success == 1 ){   
+                            location.reload();
+                        }else{
+                            Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            html: o.msg
+                            });
+                        }
+                    },
+                });
+            }
         });
     });
 

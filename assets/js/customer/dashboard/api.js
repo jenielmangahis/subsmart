@@ -48,6 +48,31 @@ export async function uploadCustomerDocument(payload) {
   return response.json();
 }
 
+export async function fetchCustomerTotalClientAgreement(cid){
+  const data = new FormData();
+  data.append("cid", cid);
+  const response = await fetch(`${prefixURL}/CustomerDashboardQuickActions/customerTotalClientAgreement`, {
+    method: "POST",
+    body: data,
+    headers: {
+      accepts: "application/json",
+    },
+  });
+  return response.json();
+}
+
+export async function clientAgreementMaxUploadConfirmation() {
+  const alert =  await Swal.fire({
+    title: 'Max Client Agreement',
+    text: `Continue uploading will overwrite recent saved data.`,
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Proceed',
+    cancelButtonText: 'Cancel'
+  });
+  return !!(alert.value && alert.value === true);
+}
+
 export function deleteCustomerDocument(payload, urlGetParams = null) {
   let endpoint = `${prefixURL}/CustomerDashboardQuickActions/deleteCustomerDocument`;
   if (urlGetParams !== null) {
