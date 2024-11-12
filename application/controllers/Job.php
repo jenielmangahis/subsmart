@@ -4653,6 +4653,7 @@ class Job extends MY_Controller
     {
         $this->load->model('CalendarSettings_model');
         $this->load->model('User_docflies_model');
+        $this->load->model('Contacts_model');
 
         $this->load->helper('functions');
         $comp_id = logged('company_id');
@@ -4801,6 +4802,9 @@ class Job extends MY_Controller
             }
         }
 
+        $contactRelationshipOptions = $this->Contacts_model->optionRelations();
+
+        $this->page_data['contactRelationshipOptions'] = $contactRelationshipOptions;      
         $this->page_data['esignTemplates'] = $esignTemplates;
         $this->page_data['default_start_date'] = $default_start_date;
         $this->load->view('v2/pages/job/ajax_quick_add_job_form', $this->page_data);
@@ -4812,6 +4816,8 @@ class Job extends MY_Controller
 
         $is_valid = 1;
         $msg = '';
+        $esign_id = 0; 
+        $card_type = '';   
 
         $comp_id = logged('company_id');
         $user_id = logged('id');
@@ -4825,6 +4831,28 @@ class Job extends MY_Controller
         if ($input['customer_id'] == 0 || $input['customer_id'] == '') {
             $msg = 'Please select customer';
             $is_valid = 0;
+        }
+
+        if( $this->input->post('is_with_esign') && $this->input->post('bill_method') == 'CC' ){
+            $card_details = [
+                'card_number' => $this->input->post('customer_cc_num'),
+                'card_month' => $this->input->post('customer_cc_expiry_date_month'),
+                'card_year' => $this->input->post('customer_cc_expiry_date_year'),
+                'card_cvc' => $this->input->post('customer_cc_cvc')
+            ];
+            $helper = new Stripe;
+            $result = $helper->validateCardDetails($card_details);
+            if( !$result['is_valid'] ){
+                $msg = $result['error_mesasge'];
+                $is_valid = 0;
+            }else{
+                $card_type = $result['card']['brand'];
+            }
+        }
+
+        $payment_method = '';
+        if( $this->input->post('is_with_esign') ){
+            $payment_method = $this->input->post('bill_method');
         }
 
         if ($is_valid != 0) {
@@ -4853,6 +4881,21 @@ class Job extends MY_Controller
 
             $job_number = $prefix . $next_num;
 
+            $monthly_monitoring_cost = 0;
+            $update_customer_mmr     = 0;
+            $update_customer_billing = 0;
+            $installation_cost = 0;
+            $otp_cost = 0;
+            $user_docfile_template_id = 0;
+            if( $this->input->post('is_with_esign') ){
+                $otp_cost = $this->input->post('otp');
+                $installation_cost = $this->input->post('installation_cost');
+                $monthly_monitoring_cost = $this->input->post('monthly_monitoring_rate_value');
+                $esign_id = $this->input->post('esign_template');
+                $update_customer_mmr = 1;
+                $update_customer_billing = 1;
+                $user_docfile_template_id = $this->input->post('esign_template');
+            }
 
             $jobs_data = array(
                 'job_number' => $job_number,
@@ -4882,6 +4925,10 @@ class Job extends MY_Controller
                 'tax_rate' => '0',
                 'job_type' => $input['job_type'],
                 'date_issued' => $input['start_date'],
+                'user_docfile_template_id' => $user_docfile_template_id,
+                'installation_cost' => $installation_cost,
+                'monthly_monitoring' => $monthly_monitoring_cost,
+                'program_setup' => $otp_cost
             );
 
             // INSERT DATA TO JOBS TABLE
@@ -4889,7 +4936,6 @@ class Job extends MY_Controller
             //Create hash_id
             $job_hash_id = hashids_encrypt($jobs_id, '', 15);
             $this->jobs_model->update($jobs_id, ['hash_id' => $job_hash_id]);
-
             customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #' . $job_number);
 
             //Google Calendar
@@ -4946,6 +4992,126 @@ class Job extends MY_Controller
             //Activity Logs
             $activity_name = 'Created Caledar Schedule ' . $job_number; 
             createActivityLog($activity_name);
+
+            if( $this->input->post('is_with_esign') ){
+                //Emergency Contacts
+                $payload    = [];
+                $postData   = $this->input->post();
+                $customerId = $this->input->post('customer_id');
+                $saveToPayload = function ($customerNumber) use (&$payload, $postData, $customerId) {
+                    if (empty(trim($postData['contact_first_name'.$customerNumber]))) {
+                        return; // ignore empty contact with empty name
+                    }
+        
+                    $name = trim($postData['contact_first_name'.$customerNumber]) . ' ' . trim($postData['contact_last_name'.$customerNumber]);
+                    array_push($payload, [
+                        'first_name' => trim($postData['contact_first_name'.$customerNumber]),
+                        'last_name' => trim($postData['contact_last_name'.$customerNumber]),
+                        'relation' => $postData['contact_relationship'.$customerNumber],
+                        'phone' => $postData['contact_phone'.$customerNumber],
+                        'customer_id' => $customerId,
+                        'phone_type' => 'mobile',
+                        'name' => $name
+                    ]);
+                };
+        
+                $saveToPayload(1);
+                $saveToPayload(2);
+                $saveToPayload(3);
+
+                if (!empty($payload)) {
+                    $this->db->where('customer_id', $customerId);
+                    $this->db->delete('contacts');
+
+                    $this->db->insert_batch('contacts', $payload);
+                }
+                //End Emergency Contacts
+            }
+
+            //Update customer mmr
+            if( $update_customer_mmr == 1 ){
+                $check = [
+                    'where' => [
+                        'fk_prof_id' => $this->input->post('customer_id'),
+                    ],
+                    'table' => 'acs_alarm',
+                ];
+                $exist = $this->general->get_data_with_param($check, false);
+                if ($exist) {
+                    $input_alarm['monthly_monitoring'] = $monthly_monitoring_cost;
+                    $input_alarm['otps'] = $otp_cost;   
+                    $input_alarm['monitor_id'] = $this->input->post('customer_monitoring_id');
+                    $input_alarm['alarm_cs_account'] = $this->input->post('customer_monitoring_id');
+                    $this->general->update_with_key_field($input_alarm, $this->input->post('customer_id'), 'acs_alarm', 'fk_prof_id');
+                }else{
+                    $input_alarm['fk_prof_id'] = $this->input->post('customer_id');
+                    $input_alarm['monitor_comp'] = '';                    
+                    $input_alarm['acct_type'] = '';
+                    $input_alarm['online'] = 'Yes';
+                    $input_alarm['in_service'] = 'Yes';
+                    $input_alarm['equipment'] = '';
+                    $input_alarm['collections'] = '';
+                    $input_alarm['credit_score_alarm'] = '';
+                    $input_alarm['passcode'] = '';
+                    $input_alarm['install_code'] = '';
+                    $input_alarm['mcn'] = 0;
+                    $input_alarm['scn'] = 0;
+                    $input_alarm['panel_type'] = '';
+                    $input_alarm['plan_type']  = '';
+                    $input_alarm['system_type'] = '';
+                    $input_alarm['warranty_type'] = '';
+                    $input_alarm['dealer'] = '';
+                    $input_alarm['alarm_login'] = '';
+                    $input_alarm['alarm_customer_id'] = '';                    
+                    $input_alarm['comm_type'] = '';
+                    $input_alarm['account_cost'] = 0;
+                    $input_alarm['pass_thru_cost'] = 0;
+                    $input_alarm['monthly_monitoring'] = $monthly_monitoring_cost;
+                    $input_alarm['otps'] = $otp_cost;   
+                    $input_alarm['monitor_id'] = $this->input->post('customer_monitoring_id');
+                    $input_alarm['alarm_cs_account'] = $this->input->post('customer_monitoring_id');
+                    $this->general->add_($input_alarm, 'acs_alarm');
+                }
+            }else{
+                $check = [
+                    'where' => [
+                        'fk_prof_id' => $this->input->post('customer_id'),
+                    ],
+                    'table' => 'acs_alarm',
+                ];
+                $exist = $this->general->get_data_with_param($check, false);
+                if ($exist) {
+                    $input_alarm['panel_type'] = $this->input->post('panel_type');
+                    $this->general->update_with_key_field($input_alarm, $this->input->post('customer_id'), 'acs_alarm', 'fk_prof_id');
+                }else{
+                    $input_alarm['fk_prof_id'] = $this->input->post('customer_id');
+                    $input_alarm['monitor_comp'] = '';                    
+                    $input_alarm['acct_type'] = '';
+                    $input_alarm['online'] = 'Yes';
+                    $input_alarm['in_service'] = 'Yes';
+                    $input_alarm['equipment'] = '';
+                    $input_alarm['collections'] = '';
+                    $input_alarm['credit_score_alarm'] = '';
+                    $input_alarm['passcode'] = '';
+                    $input_alarm['install_code'] = '';
+                    $input_alarm['mcn'] = 0;
+                    $input_alarm['scn'] = 0;
+                    $input_alarm['panel_type'] = $this->input->post('panel_type');
+                    $input_alarm['system_type'] = '';
+                    $input_alarm['warranty_type'] = $this->input->post('warranty_type');
+                    $input_alarm['dealer'] = '';
+                    $input_alarm['alarm_login'] = '';
+                    $input_alarm['alarm_customer_id'] = '';                    
+                    $input_alarm['comm_type'] = '';
+                    $input_alarm['account_cost'] = 0;
+                    $input_alarm['pass_thru_cost'] = 0;
+                    $input_alarm['monthly_monitoring'] = $monthly_monitoring_cost;
+                    $input_alarm['otps'] = $otp_cost;   
+                    $input_alarm['monitor_id'] = '';
+                    $input_alarm['alarm_cs_account'] = '';
+                    $this->general->add_($input_alarm, 'acs_alarm');
+                }
+            }
         }
 
         $json_data = ['is_success' => $is_valid, 'msg' => $msg];
