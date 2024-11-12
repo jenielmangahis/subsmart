@@ -1293,7 +1293,7 @@ class Widgets extends MY_Controller
          * Todo
          * - total today - ok
          * - total shared - ok
-         * - total activities
+         * - total activities - ok
          * - total flagged - ok
          * - total done - ok
          * - total my task - ok
