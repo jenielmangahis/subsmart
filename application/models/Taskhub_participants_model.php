@@ -38,6 +38,15 @@ class Taskhub_participants_model extends MY_Model {
         return $query;
     }
 
+    public function getAllByTaskIds($ids = array())
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where_in('task_id', $ids);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function deleteAllByTaskId($task_id){
 		$this->db->delete($this->table, array('task_id' => $task_id));
 	}

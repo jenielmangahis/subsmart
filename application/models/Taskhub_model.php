@@ -152,6 +152,48 @@ class Taskhub_model extends MY_Model {
         return $query->result();
     }
 
+    public function getAllTasksByCompanyIdAndByPriority($company_id, $priority = "")
+    {
+        $this->db->select('tasks.task_id');
+        $this->db->from($this->table);
+
+        $this->db->where('tasks.company_id', $company_id);
+        $this->db->where('tasks.priority', $priority);
+        $this->db->where('status !=', 'Done');
+        $this->db->where('status !=', 'Closed');        
+        $this->db->order_by('tasks.date_created','DESC');
+        $query = $this->db->get();
+        return $query->result();
+    }    
+
+    public function getAllOngoingUsersTasksByCompanyId($cid)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $cid);
+        $this->db->where('status !=', 'Done');
+        $this->db->where('status !=', 'Closed');
+
+        $query = $this->db->get();
+        return $query->result();
+    }      
+
+    public function getAllTodayTasksByCompanyId($cid, $date_range = [])
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $cid);
+        $this->db->where('status !=', 'Done');
+        $this->db->where('status !=', 'Closed');
+
+        if( !empty($date_range) ){
+            $this->db->where('date_due', $date_range['from']);
+        }
+
+        $query = $this->db->get();
+        return $query->result();
+    }    
+
     public function getAllByTaskIds($ids = array())
     {
         $this->db->select('*');
@@ -336,7 +378,7 @@ class Taskhub_model extends MY_Model {
 
         $query = $this->db->get();
         return $query->result();
-    }
+    }  
 
     public function getAllByCompanyIdAndStatus($cid, $status, $date_range = [])
     {

@@ -348,7 +348,7 @@ class Invoice_model extends MY_Model
             'Completed',
         ]);
         $this->db->where('jobs.company_id', $cid);
-        $this->db->where('DATE(jobs.date_created)', date('Y-m-d'));
+        $this->db->where('DATE(jobs.date_created) =  CURDATE()');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
         $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
 
