@@ -40,7 +40,11 @@ class Widgets extends MY_Controller
         $techs = $this->Users_model->getCompanyUsersByUserType($cid, $tech_field_user_type);
         
         //Service Tickets
-        $tickets = $this->Tickets_model->get_tickets_by_company_id($cid);
+        //$tickets = $this->Tickets_model->get_tickets_by_company_id($cid);
+        $techLeaderBoards = [];
+        $date_range       = ['from' => $date_from, 'to' => $date_to];
+
+        $tickets = $this->Tickets_model->getAllTicketsByCompanyIdAndDateRange($cid,$date_range);
         $user_tickets = [];
         foreach( $tickets as $t ){
             $ticketTechs = unserialize($t->technicians);
@@ -55,8 +59,6 @@ class Widgets extends MY_Controller
             }
         }
 
-        $techLeaderBoards = [];
-        $date_range       = ['from' => $date_from, 'to' => $date_to];
         foreach( $techs as $t ){
             $tech_name  = $t->FName . ' ' . $t->LName;
             $jobs = $this->Jobs_model->countAssignedJobsByUserId($t->id , $date_range);    
@@ -997,7 +999,7 @@ class Widgets extends MY_Controller
             $totalInvoices = $this->Invoice_model->getCompanyTotalAmountInvoices($cid, $date_range);
             $totalEstimate = $this->Estimate_model->getCompanyTotalAmountEstimates($cid, $date_range);
             $total_sales   = $totalInvoices->total_amount + $totalEstimate->total_amount;
-            $sales_data[]  = number_format($total_sales, 2, '.', '');
+            $sales_data[]  = $total_sales;
 
             //Jobs
             $jobs = $this->Jobs_model->getAllJobsByCompanyIdAndDateRange($cid, $date_range);
@@ -1234,7 +1236,7 @@ class Widgets extends MY_Controller
                 }
             }
 
-            $total_jobs_amount_data[] = number_format($total_jobs_amount,2, '.', '');
+            $total_jobs_amount_data[] = $total_jobs_amount;
             $total_jobs_number_data[] = $total_jobs;                        
             $chart_month    = date('F', strtotime($start_date));
             $chart_end_day  = date("t", strtotime($start_date));
