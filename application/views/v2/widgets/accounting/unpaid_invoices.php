@@ -86,8 +86,9 @@ endif;
                             <div class="widget-item widget-tile-unpaid-invoice-row" data-id="<?= $invoice->id; ?>">                                
                                 <div class="content">
                                     <div class="details" style="width:98% !important;">
+                                        <?php $customer_name = $invoice->first_name . ' ' . $invoice->last_name; ?>
                                         <span class="content-title"><?= $invoice->invoice_number ?></span>  
-                                        <span class="content-subtitle d-block" style="margin-top:7px;"><i class='bx bxs-user-circle' style="font-size: 14px;position: relative;top: 2px;"></i> <?= $invoice->first_name . ' ' . $invoice->last_name; ?></span> 
+                                        <span class="content-subtitle d-block" style="margin-top:7px;"><i class='bx bxs-user-circle' style="font-size: 14px;position: relative;top: 2px;"></i> <?= trim($customer_name) != '' ? $customer_name : '---'; ?></span> 
                                         <?php if( $show_no_movement_notice == 1 ){  ?>
                                             <a style="text-decoration:none;margin-top:5px;" href="<?= base_url('invoice/invoice_edit/'.$invoice->id) ?>"><span class="nsm-badge badge-error">Last update was <b><?= $difference->d . ' days ago' ?></b> - Needs update</span></a>
                                         <?php } ?>                                     

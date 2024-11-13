@@ -45,7 +45,7 @@
                     <input type="date" id="tech-leaderboard-filter-to" class="nsm-field form-control date" value="<?= date("Y-12-31"); ?>" required>
                 </div>
             </div>     
-            <div id="tech_leaderboard"></div>
+            <div id="user_tech_leaderboard"></div>
         </div>
     </div>
 </div>
@@ -134,7 +134,7 @@
             method: 'post',
             data: {tech_leaderboard_date_from:tech_leaderboard_date_from,tech_leaderboard_date_to:tech_leaderboard_date_to},
             success: function (response) {
-                $('#tech_leaderboard').html(response);
+                $('#user_tech_leaderboard').html(response);
             }
         });
     }
