@@ -11,7 +11,7 @@
     
     var setDataTable;
     var currentTable = '<?php echo $tableID; ?>';
-    var reportTables = ['vendorcontactlist_table', 'salesbycustomersummary_table',  'customerbalancesummary_table', 'customercontactlist_table', 'expensesbyvendorsummary_table', 'incomebycustomerysummary_table', 'invoicelistbydate_table', 'paymentmethodlist_table', 'physicalinventoryworksheet_table', 'productservicelist_table', 'salesbyproductservicesummary_table', 'taxablesalessummary_table', 'vendorbalancesummary_table', 'statementlist_table', 'employeedetails_table', 'accountsreceivableagingsummarylist_table', 'accountlist_table', 'incomebycustomerysummary_table', 'contractorbalancesummary_table', 'transactionlistwithsplits_table', 'transactionlistcustomer_table', 'employeedirectory_table', 'reconciliationreports_table', 'salesbyitems_table', 'accountreceivable_table', 'auditlogs_table', 'active_subscriptions_table', 'earned_table', 'invoiceamount_table', 'jobscompleted_table', 'newjobs_table', 'lostaccounts_table', 'serviceprojectiveincome_table', 'customergroups_table', 'jobstatus_table', 'estimates_table', 'jobtags_table', 'leadsource_table', 'paidinvoices_table', 'openinvoices_table', 'pastdueinvoices_table', 'overdueinvoices_table', 'unpaidinvoices_table', 'taskhub_table', 'openestimates_table', 'timesheet_table', 'recentleads_table', 'customerstatus_table', 'servicetickets_table', 'bankaccounts_table', ];
+    var reportTables = ['vendorcontactlist_table', 'salesbycustomersummary_table',  'customerbalancesummary_table', 'customercontactlist_table', 'expensesbyvendorsummary_table', 'incomebycustomerysummary_table', 'invoicelistbydate_table', 'paymentmethodlist_table', 'physicalinventoryworksheet_table', 'productservicelist_table', 'salesbyproductservicesummary_table', 'taxablesalessummary_table', 'vendorbalancesummary_table', 'statementlist_table', 'employeedetails_table', 'accountsreceivableagingsummarylist_table', 'accountlist_table', 'incomebycustomerysummary_table', 'contractorbalancesummary_table', 'transactionlistwithsplits_table', 'transactionlistcustomer_table', 'employeedirectory_table', 'reconciliationreports_table', 'salesbyitems_table', 'accountreceivable_table', 'auditlogs_table', 'active_subscriptions_table', 'earned_table', 'invoiceamount_table', 'jobscompleted_table', 'newjobs_table', 'lostaccounts_table', 'serviceprojectiveincome_table', 'customergroups_table', 'jobstatus_table', 'estimates_table', 'jobtags_table', 'leadsource_table', 'paidinvoices_table', 'openinvoices_table', 'pastdueinvoices_table', 'overdueinvoices_table', 'unpaidinvoices_table', 'taskhub_table', 'openestimates_table', 'timesheet_table', 'recentleads_table', 'customerstatus_table', 'servicetickets_table', 'bankaccounts_table', 'salesleaderboard_table', 'techleaderboard_table', 'recentcustomers_table', 'jobactivities_table', 'sales_table',];
     var base_url = window.location.origin;
     var REPORT_CATEGORY = "<?php echo $reportCategory; ?>";
     var REPORT_ID = "<?php echo $reportTypeId; ?>";
@@ -88,6 +88,9 @@
         }
 
         switch (filter_by) {
+            case "current_day":
+                $("#filter_by_text").text("Filtered by Current Day (<?php echo date('M d, Y'); ?>)");
+                break;
             case "current_week":
                 $("#filter_by_text").text("Filtered by Current Week (<?php echo date('Y'); ?>)");
                 break;
@@ -114,13 +117,62 @@
                 ?>
                 $("#filter_by_text").text("Filtered by This Quarter (<?php echo $quarterStart . '-' . $quarterEnd . ' ' . date('Y'); ?>)");
                 break;
+            case "jan":
+                $("#filter_by_text").text("Filtered by January (<?php echo date('Y'); ?>)");
+                break;
+            case "feb":
+                $("#filter_by_text").text("Filtered by February (<?php echo date('Y'); ?>)");
+                break;
+            case "mar":
+                $("#filter_by_text").text("Filtered by March (<?php echo date('Y'); ?>)");
+                break;
+            case "apr":
+                $("#filter_by_text").text("Filtered by April (<?php echo date('Y'); ?>)");
+                break;
+            case "may":
+                $("#filter_by_text").text("Filtered by May (<?php echo date('Y'); ?>)");
+                break;
+            case "jun":
+                $("#filter_by_text").text("Filtered by June (<?php echo date('Y'); ?>)");
+                break;
+            case "jul":
+                $("#filter_by_text").text("Filtered by July (<?php echo date('Y'); ?>)");
+                break;
+            case "aug":
+                $("#filter_by_text").text("Filtered by August (<?php echo date('Y'); ?>)");
+                break;
+            case "sep":
+                $("#filter_by_text").text("Filtered by September (<?php echo date('Y'); ?>)");
+                break;
+            case "oct":
+                $("#filter_by_text").text("Filtered by October (<?php echo date('Y'); ?>)");
+                break;
+            case "nov":
+                $("#filter_by_text").text("Filtered by November (<?php echo date('Y'); ?>)");
+                break;
+            case "dec":
+                $("#filter_by_text").text("Filtered by December (<?php echo date('Y'); ?>)");
+                break;
             default:
                 $("#filter_by_text").text("As of <?php echo date('F d, Y'); ?>");
         }
 
-
-
         switch (status_filter) {
+            case "Partially Paid":
+                status_text = " (Partially Paid)";
+                break;
+            case "Paid":
+                status_text = " (Paid)";
+                break;
+            case "Due":
+                status_text = " (Due)";
+                break;
+            case "Overdue":
+                status_text = " (Overdue)";
+                break;
+            case "Unpaid":
+                status_text = " (Unpaid)";
+                break;
             case "Draft":
                 status_text = " (Draft)";
                 break;
