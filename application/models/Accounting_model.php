@@ -178,6 +178,27 @@ class Accounting_model extends MY_Model
             $this->db->select('customer_groups.id AS id, customer_groups.company_id AS company_id, customer_groups.title AS title_group, COUNT(acs_profile.customer_group_id) AS customer_count, CONCAT(users.FName, " ", users.LName) AS added_by, customer_groups.date_added AS date ');
             $this->db->from('customer_groups');
             $this->db->where('customer_groups.company_id', $companyID);
+            $this->db->where_in('acs_profile.status', [
+                'Active w/RAR',
+                'Active w/RMR',
+                'Active w/RQR',
+                'Active w/RYR',
+                'Inactive w/RMM'
+            ]);
+            switch ($reportConfig['subscription_period']) {
+                case 'last_7_days':
+                    $this->db->where('acs_profile.updated_at >= CURDATE() - INTERVAL 7 DAY');
+                    break;
+                case 'last_14_days':
+                    $this->db->where('acs_profile.updated_at >= CURDATE() - INTERVAL 14 DAY');
+                    break;
+                case 'last_30_days':
+                    $this->db->where('acs_profile.updated_at >= CURDATE() - INTERVAL 30 DAY');
+                    break;
+                case 'last_60_days':
+                    $this->db->where('acs_profile.updated_at >= CURDATE() - INTERVAL 60 DAY');
+                    break;
+            }
             $this->db->join('users', 'users.id = customer_groups.user_id', 'left');
             $this->db->join('acs_profile', 'acs_profile.customer_group_id = customer_groups.id', 'left');
             $this->db->group_by('customer_groups.id');
@@ -491,6 +512,209 @@ class Accounting_model extends MY_Model
             $data = $this->db->get();
             return $data->result();
         }
+
+        // Get Sales Leaderboard data in Database
+        if ($reportType == 'sales_leaderboard') {
+            $this->db->select('users.id AS id, users.company_id AS company_id, CONCAT(users.FName, " ", users.LName) AS sales_rep, COALESCE(invoices.status, "") AS invoice_status, SUM(invoices.grand_total) AS total_sales, invoices.date_created AS date_created');
+            $this->db->from('users');
+            $this->db->where('users.company_id', $companyID);
+            $this->db->where('invoices.status !=', 'Draft');
+            $this->db->join('jobs', 'jobs.employee_id = users.id', 'left');
+            $this->db->join('invoices', 'invoices.job_id = jobs.id', 'left');
+            switch ($reportConfig['filter_by']) {
+                case 'current_month':
+                    $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    break;
+                case 'current_year':
+                    $this->db->where("YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+                case 'current_quarter':
+                    $this->db->where("QUARTER(invoices.date_created) = QUARTER(CURDATE()) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+                case 'current_week':
+                    $this->db->where("WEEK(invoices.date_created, 1) = WEEK(CURDATE(), 1) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+                case 'current_day':
+                    $this->db->where("DATE(invoices.date_created) = CURDATE()");
+                    break;
+            }
+            $this->db->group_by('users.id');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Tech Leaderboard data in Database
+        if ($reportType == 'tech_leaderboard') {
+            $this->db->select('users.id AS id, users.company_id AS company_id, CONCAT(users.FName, " ", users.LName) AS tech_rep, COUNT(DISTINCT COALESCE(jobs.id, tickets.ticket_no)) AS total_jobs, jobs.date_created AS job_date_created, tickets.created_at AS ticket_date_created');
+            $this->db->from('users');
+            $this->db->where('users.company_id', $companyID);
+            $this->db->join('jobs', 'jobs.employee_id = users.id', 'left');
+            $this->db->join('tickets', 'tickets.employee_id = users.id', 'left');
+
+            // Use REGEXP for job status and ticket status filtering
+            $this->db->where("(jobs.status REGEXP 'Finished|Completed' OR tickets.ticket_status REGEXP 'Finished|Completed')");
+
+            // Adjust date filtering for job or ticket date
+            switch ($reportConfig['filter_by']) {
+                case 'current_month':
+                    $this->db->where("DATE_FORMAT(jobs.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') OR DATE_FORMAT(tickets.created_at, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    break;
+                case 'current_year':
+                    $this->db->where("YEAR(jobs.date_created) = YEAR(CURDATE()) OR YEAR(tickets.created_at) = YEAR(CURDATE())");
+                    break;
+                case 'current_quarter':
+                    $this->db->where("QUARTER(jobs.date_created) = QUARTER(CURDATE()) AND YEAR(jobs.date_created) = YEAR(CURDATE()) OR QUARTER(tickets.created_at) = QUARTER(CURDATE()) AND YEAR(tickets.created_at) = YEAR(CURDATE())");
+                    break;
+                case 'current_week':
+                    $this->db->where("WEEK(jobs.date_created, 1) = WEEK(CURDATE(), 1) AND YEAR(jobs.date_created) = YEAR(CURDATE()) OR WEEK(tickets.created_at, 1) = WEEK(CURDATE(), 1) AND YEAR(tickets.created_at) = YEAR(CURDATE())");
+                    break;
+                case 'current_day':
+                    $this->db->where("DATE(jobs.date_created) = CURDATE() OR DATE(tickets.created_at) = CURDATE()");
+                    break;
+            }
+
+            // Group by users and apply other settings
+            $this->db->group_by('users.id');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Recent Customers data in Database
+        if ($reportType == 'recent_customers') {
+            $this->db->select('acs_profile.prof_id AS id, acs_profile.company_id AS company_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, acs_profile.customer_type AS customer_type, acs_profile.status AS status, acs_profile.email AS email, acs_profile.phone_h AS phone, acs_profile.phone_m AS mobile, acs_profile.created_at AS date_created');
+            $this->db->from('acs_profile');
+            $this->db->where('acs_profile.company_id', $companyID);
+            $this->db->order_by('acs_profile.created_at', 'DESC');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit(10);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Job Activies data in Database
+        if ($reportType == 'job_activities') {
+            $this->db->select('jobs.id AS id, jobs.company_id AS company_id, jobs.job_number AS number, jobs.job_type AS type, jobs.job_description AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, jobs.status AS status, jobs.date_created AS date_created, SUM(job_items.cost) AS job_amount');
+            $this->db->from('jobs');
+            $this->db->where('jobs.company_id', $companyID);
+            switch ($reportConfig['filter_by']) {
+                case 'current_month':
+                    $this->db->where("DATE_FORMAT(jobs.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    break;
+                case 'current_year':
+                    $this->db->where("YEAR(jobs.date_created) = YEAR(CURDATE())");
+                    break;
+            }
+
+            if (!empty($reportConfig['status_filter'])) {
+                $this->db->where('jobs.status', $reportConfig['status_filter']);
+            }
+            $this->db->join('job_items', 'job_items.job_id = jobs.id', 'left');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
+            $this->db->group_by('jobs.id');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+        // Get Sales data in Database
+        if ($reportType == 'sales') {
+            $this->db->select('invoices.id AS id, invoices.company_id AS company_id,invoices.invoice_number AS number, invoices.job_name AS description, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created,  invoices.grand_total AS total');
+            $this->db->from('invoices');
+            $this->db->where('invoices.company_id', $companyID);
+            $this->db->where('invoices.status != ', "Draft");
+            $this->db->where('invoices.status != ', "");
+            switch ($reportConfig['filter_by']) {
+                case 'current_month':
+                    $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    break;
+                case 'current_year':
+                    $this->db->where("YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+                case 'current_quarter':
+                    $this->db->where("QUARTER(invoices.date_created) = QUARTER(CURDATE()) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+                case 'current_week':
+                    $this->db->where("WEEK(invoices.date_created, 1) = WEEK(CURDATE(), 1) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    break;
+                case 'current_day':
+                    $this->db->where("DATE(invoices.date_created) = CURDATE()");
+                    break;
+                case 'jan':
+                    $this->db->where("MONTH(invoices.date_created)", 1);
+                    $this->db->where("YEAR(invoices.date_created)", 2024);
+                    break;
+                case 'feb':
+                    $this->db->where("MONTH(invoices.date_created)", 2);
+                    $this->db->where("YEAR(invoices.date_created)", 2024);
+                    break;
+                case 'mar':
+                    $this->db->where("MONTH(invoices.date_created)", 3);
+                    $this->db->where("YEAR(invoices.date_created)", 2024);
+                    break;
+                case 'apr':
+                    $this->db->where("MONTH(invoices.date_created)", 4);
+                    $this->db->where("YEAR(invoices.date_created)", 2024);
+                    break;
+                case 'may':
+                    $this->db->where("MONTH(invoices.date_created)", 5);
+                    $this->db->where("YEAR(invoices.date_created)", 2024);
+                    break;
+                case 'jun':
+                    $this->db->where("MONTH(invoices.date_created)", 6);
+                    $this->db->where("YEAR(invoices.date_created)", 2024);
+                    break;
+                case 'jul':
+                    $this->db->where("MONTH(invoices.date_created)", 7);
+                    $this->db->where("YEAR(invoices.date_created)", 2024);
+                    break;
+                case 'aug':
+                    $this->db->where("MONTH(invoices.date_created)", 8);
+                    $this->db->where("YEAR(invoices.date_created)", 2024);
+                    break;
+                case 'sep':
+                    $this->db->where("MONTH(invoices.date_created)", 9);
+                    $this->db->where("YEAR(invoices.date_created)", 2024);
+                    break;
+                case 'oct':
+                    $this->db->where("MONTH(invoices.date_created)", 10);
+                    $this->db->where("YEAR(invoices.date_created)", 2024);
+                    break;
+                case 'nov':
+                    $this->db->where("MONTH(invoices.date_created)", 11);
+                    $this->db->where("YEAR(invoices.date_created)", 2024);
+                    break;
+                case 'dec':
+                    $this->db->where("MONTH(invoices.date_created)", 12);
+                    $this->db->where("YEAR(invoices.date_created)", 2024);
+                    break;
+            }
+
+            if (!empty($reportConfig['status_filter'])) {
+                $this->db->where('invoices.status', $reportConfig['status_filter']);
+            }
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         // Get Sales Tax Liability Report data in Database
         if ($reportType == 'sales_tax_liability') {

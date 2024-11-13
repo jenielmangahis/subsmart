@@ -28,11 +28,11 @@ endif;
         </div>
     </div>
     <div class="nsm-card-content upcoming-calendar-container"  style="  height: calc(100% - 120px);"></div>
-    <div class='nsm-card-footer mt-3'>
+    <!-- <div class='nsm-card-footer mt-3'>
         <a role="button" class="nsm-button btn-sm m-0 me-2" href="workcalender">
             <i class='bx bx-right-arrow-alt'></i>
         </a>
-    </div>
+    </div> -->
 </div>
 
 <?php

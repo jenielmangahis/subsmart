@@ -282,7 +282,7 @@ class Debug extends MYF_Controller {
 
         $ringCentralAccount = $this->RingCentralAccounts_model->getByCompanyId($cid);
         //$ringcentral = smsRingCentral($ringCentralAccount, '+18509417380', 'test ringcentral');
-        $ringcentral = smsRingCentral($ringCentralAccount, '+18504780530', 'test ringcentral');
+        $ringcentral = smsRingCentral($ringCentralAccount, '+18509417380', 'test ringcentral');
 
         echo "<pre>";
         print_r($ringcentral);

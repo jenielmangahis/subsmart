@@ -135,8 +135,17 @@ function loadSalesChart(){
     var salesChart = new Chart(sales, {
         type: 'line',        
         options: {
+            //locale: 'en-US',
             responsive: true,
-            plugins: {
+            plugins: {                
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            const amount = tooltipItem.formattedValue;
+                            return '$' + amount.toLocaleString(undefined, {minimumFractionDigits: 2});
+                        }
+                    }
+                },
                 legend: {
                     position: 'bottom',                    
                 },
@@ -144,7 +153,12 @@ function loadSalesChart(){
             scales: {
                 y: {
                     beginAtZero: true,
-                    suggestedMax: 10
+                    suggestedMax: 10,
+                    ticks: {
+                        callback: function(value, index, values) {
+                            return '$' + value.toLocaleString(undefined, {minimumFractionDigits: 2});
+                        }
+                    }
                 },
             },
             aspectRatio: 1.5,

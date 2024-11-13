@@ -46,15 +46,19 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <?php 
-                                        $tableID = "customergroups_table"; 
-                                        $reportCategory = "customer_groups"; 
+                                        $tableID = "recentcustomers_table"; 
+                                        $reportCategory = "recent_customers"; 
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
-                                                <th>TITLE</th>
-                                                <th>CUSTOMER COUNT</th>
-                                                <th>ADDED BY</th>
+                                                <th>CUSTOMER</th>
+                                                <th>TYPE</th>
+                                                <th>STATUS</th>
+                                                <th>EMAIL</th>
+                                                <th>PHONE</th>
+                                                <th>MOBILE</th>
+                                                <th>DATE CREATED</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -162,7 +166,7 @@
                                         <option value="R" <?php echo ($reportSettings->footer_align == "R") ? "selected" : "" ?>>Right</option>
                                     </select>
                                 </div>
-                                <div class="col-md-2 mb-3">
+                                <!-- <div class="col-md-2 mb-3">
                                     <label class="mb-1 fw-xnormal">Row Size</label>
                                     <select name="page_size" id="page-size" class="nsm-field form-select">
                                         <option value="9999" <?php echo ($reportSettings->page_size == "9999") ? "selected" : "" ?>>All</option>
@@ -172,16 +176,16 @@
                                         <option value="100" <?php echo ($reportSettings->page_size == "100") ? "selected" : "" ?>>100</option>
                                         <option value="500" <?php echo ($reportSettings->page_size == "500") ? "selected" : "" ?>>500</option>
                                     </select>
-                                </div>
-                                <div class="col-md-4 mb-3">
+                                </div> -->
+                                <!-- <div class="col-md-4 mb-3">
                                     <div class="col-md-12">
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="customer_count" <?php echo ($reportSettings->sort_by == "customer_count") ? "selected" : "" ?>>Customer Count</option>
-                                                <option value="title_group" <?php echo ($reportSettings->sort_by == "title_group") ? "selected" : "" ?>>Title</option>
-                                                <option value="added_by" <?php echo ($reportSettings->sort_by == "added_by") ? "selected" : "" ?>>Added By</option>
-                                                <option value="date" <?php echo ($reportSettings->sort_by == "date") ? "selected" : "" ?>>Date</option>
+                                                <option value="updated_at" <?php echo ($reportSettings->sort_by == "updated_at") ? "selected" : "" ?>>Date Updated</option>
+                                                <option value="customer" <?php echo ($reportSettings->sort_by == "customer") ? "selected" : "" ?>>Customer</option>
+                                                <option value="customer_type" <?php echo ($reportSettings->sort_by == "customer_type") ? "selected" : "" ?>>Type</option>
+                                                <option value="status" <?php echo ($reportSettings->sort_by == "status") ? "selected" : "" ?>>Status</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
@@ -189,22 +193,7 @@
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="col-md-12"><hr class="mt-0"></div>
-                                <div class="col-lg-12">
-                                    <div class="row">
-                                        <div class="col-md-3 mb-3">
-                                            <label class="mb-1 fw-xnormal">Subscription Period</label>
-                                            <select name="subscription_period" id="subscription-period" class="nsm-field form-select">
-                                                <option value="all" <?php echo ($reportSettings->subscription_period == "all") ? "selected" : "" ?>>All</option>
-                                                <option value="last_7_days" <?php echo ($reportSettings->subscription_period == "last_7_days") ? "selected" : "" ?>>Last 7 Days</option>
-                                                <option value="last_14_days" <?php echo ($reportSettings->subscription_period == "last_14_days") ? "selected" : "" ?>>Last 14 Days</option>
-                                                <option value="last_30_days" <?php echo ($reportSettings->subscription_period == "last_30_days") ? "selected" : "" ?>>Last 30 Days</option>
-                                                <option value="last_60_days" <?php echo ($reportSettings->subscription_period == "last_60_days") ? "selected" : "" ?>>Last 60 Days</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
+                                </div> -->
                                 <div class="col-md-12"><hr class="mt-0"></div>
                             </div>
                         </div>
