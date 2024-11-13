@@ -54,7 +54,6 @@
                                             <tr>
                                                 <th>NUMBER</th>
                                                 <th>TAG</th>
-                                                <th>TYPE</th>
                                                 <th>SERVICE TYPE</th>
                                                 <th>STATUS</th>
                                                 <th>CUSTOMER</th>
@@ -201,16 +200,21 @@
                                 </div>
                                 <div class="col-md-12"><hr class="mt-0"></div>
                                 <div class="col-md-3 mb-3">
-                                    <label class="mb-1 fw-xnormal">Type Filter</label>
+                                    <label class="mb-1 fw-xnormal">Status Filter</label>
                                     <select name="status_filter" id="status-filter" class="nsm-field form-select">
-                                        <option value="">None</option>
-                                        <option value="Service">Service</option>
-                                        <option value="Job">Job</option>
-                                        <option value="Event">Event</option>
-                                        <option value="Estimate">Estimate</option>
+                                        <option value="" <?php echo ($reportSettings->status_filter == "") ? "selected" : "" ?>>None</option>
+                                        <option value="Draft" <?php echo ($reportSettings->status_filter == "Draft") ? "selected" : "" ?>>Draft</option>
+                                        <option value="Scheduled" <?php echo ($reportSettings->status_filter == "Scheduled") ? "selected" : "" ?>>Scheduled</option>
+                                        <option value="Arrival" <?php echo ($reportSettings->status_filter == "Arrival") ? "selected" : "" ?>>Arrival</option>
+                                        <option value="Started" <?php echo ($reportSettings->status_filter == "Started") ? "selected" : "" ?>>Started</option>
+                                        <option value="Approved" <?php echo ($reportSettings->status_filter == "Approved") ? "selected" : "" ?>>Approved</option>
+                                        <option value="Finished" <?php echo ($reportSettings->status_filter == "Finished") ? "selected" : "" ?>>Finished</option>
+                                        <option value="Cancelled" <?php echo ($reportSettings->status_filter == "Cancelled") ? "selected" : "" ?>>Cancelled</option>
+                                        <option value="Invoiced" <?php echo ($reportSettings->status_filter == "Invoiced") ? "selected" : "" ?>>Invoiced</option>
+                                        <option value="Completed" <?php echo ($reportSettings->status_filter == "Completed") ? "selected" : "" ?>>Completed</option>
                                     </select>
                                 </div>
-                                <div class="col-md-12"><hr class="mt-0"></div>
+                                <div class="col-md-12"><hr class="mt-0"></div>                                
                             </div>
                         </div>
                     </div>
