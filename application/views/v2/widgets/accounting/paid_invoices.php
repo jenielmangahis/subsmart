@@ -161,7 +161,8 @@ $(function(){
             data: {filter_date_from:filter_date_from,filter_date_to:filter_date_to},
             dataType:'json',
             success: function (response) {
-                $('#widget-paid-invoices-total-amount').text('$'+response.paid_invoices_total_amount);
+                var total_amount = parseFloat(response.paid_invoices_total_amount);
+                $('#widget-paid-invoices-total-amount').text('$'+total_amount.toLocaleString(undefined, {minimumFractionDigits: 2}));
                 $('#widget-paid-invoices-total-number').text(response.paid_invoices_total_number);
             }
         });
