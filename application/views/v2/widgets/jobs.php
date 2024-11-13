@@ -128,6 +128,19 @@ function loadJobChart(){
                 legend: {
                     position: 'bottom',
                 },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem, data) {
+                            //console.log(tooltipItem);
+                            if( tooltipItem.dataset.label == 'Job Value' ){
+                                const amount = tooltipItem.formattedValue;
+                                return '$' + amount.toLocaleString(undefined, {minimumFractionDigits: 2});
+                            }else{
+                                return tooltipItem.formattedValue;
+                            }
+                        }
+                    }
+                },
             },
             aspectRatio: 1,
             scales: {
@@ -149,12 +162,13 @@ function loadJobChart(){
                     ticks: {
                         beginAtZero: true,
                         callback: function(value, index, values) {
-                            if (parseInt(value) >= 1000) {
-                                return '$' + value.toString().replace(
-                                    /\B(?=(\d{3})+(?!\d))/g, ",");
-                            } else {
-                                return '$' + value;
-                            }
+                            return '$' + value.toLocaleString(undefined, {minimumFractionDigits: 2});
+                            // if (parseInt(value) >= 1000) {
+                            //     return '$' + value.toString().replace(
+                            //         /\B(?=(\d{3})+(?!\d))/g, ",");
+                            // } else {
+                            //     return '$' + value;
+                            // }
                         }
                     }
                 }
