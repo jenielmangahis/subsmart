@@ -19,7 +19,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                             <i class="bx bx-fw bx-notepad"></i>
                         </div>
                         <a role="button" class=" btn-sm m-0 me-2" href="accounting/expenses"
-                            style="color:#6ba77ced !important ">
+                            style="color:#6ba77ced !important; font-size: 17px !important;">
                             Accounting Expense
                         </a>
                     </div>
@@ -77,7 +77,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <p class="top-spending">Your top spending categories:</p>
         </div>
         <h1 id='AccountingExpenseGraphLoader'> <span class="bx bx-loader bx-spin"></span></h1>
-        <canvas id="AccountingExpenseGraph" style="max-height:80%;margin-top: 10px" class="nsm-chart"
+        <canvas id="AccountingExpenseGraph" style="max-height:78%; margin-top: 10px; padding-bottom: 5px;" class="nsm-chart"
             data-chart-type="widgets/accounting_expense_counter" data-chart-id="<?php echo $id; ?>"></canvas>
     </div>
     <div class="nsm-card-content"

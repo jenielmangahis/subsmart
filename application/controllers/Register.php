@@ -997,6 +997,16 @@ class Register extends MYF_Controller {
 
         $is_success = true;
         $is_valid   = false;
+        
+        $json_data = ['is_success' => false];
+
+        echo json_encode($json_data);        
+        exit;
+
+        $json_data = ['is_success' => $is_success];
+
+        echo json_encode($json_data);        
+        exit;
 
         $post = $this->input->post(); 
         if( $post['subscription_type'] != 'trial' ){

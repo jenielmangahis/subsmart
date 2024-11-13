@@ -161,7 +161,7 @@ class Dashboard extends Widgets
 
         add_footer_js([
             'https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js',
-            // 'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
+            //'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
             'assets/js/v2/bootstrap-datetimepicker.v2.min.js',
             'assets/plugins/timeline_calendar/main.js',
             'assets/frontend/js/workcalender/workcalender.js',
@@ -709,33 +709,36 @@ class Dashboard extends Widgets
                 break;
 
             case 'invoices':
-                // $total_query = [
-                //     'where' => ['invoices.company_id' => logged('company_id'),
-                //      'invoices.status !=' => 'Paid',
-                //      'invoices.status !=' => "",
-                //     'DATE(invoices.date_issued) >=' => date('Y-m-d', strtotime($date_from)), 
-                //     'invoices.due_date <' => date('Y-m-d', strtotime($date_to))
-                //     ],
-                //     'table' => 'invoices',
-                //     'join' => [
-                //         [
-                //             'table' => 'acs_profile',
-                //             'statement' => 'acs_profile.prof_id = invoices.customer_id',
-                //             'join_as' => 'left',
-                //         ],
-                //     ],
-                //     'select' => ' invoices.id,
-                //     invoices.invoice_number,
-                //     invoices.due_date,
-                //     invoices.status,
-                //     acs_profile.email AS customer_email,
-                //     acs_profile.first_name, 
-                //     acs_profile.last_name,
-                //     acs_profile.fk_user_id as user_id,
-                //     invoices.grand_total,
-                //     invoices.grand_total  as balance',
-                // ];
-                // $past_due = $this->general->get_data_with_param($total_query);
+                
+                /*
+                    // $total_query = [
+                    //     'where' => ['invoices.company_id' => logged('company_id'),
+                    //      'invoices.status !=' => 'Paid',
+                    //      'invoices.status !=' => "",
+                    //     'DATE(invoices.date_issued) >=' => date('Y-m-d', strtotime($date_from)), 
+                    //     'invoices.due_date <' => date('Y-m-d', strtotime($date_to))
+                    //     ],
+                    //     'table' => 'invoices',
+                    //     'join' => [
+                    //         [
+                    //             'table' => 'acs_profile',
+                    //             'statement' => 'acs_profile.prof_id = invoices.customer_id',
+                    //             'join_as' => 'left',
+                    //         ],
+                    //     ],
+                    //     'select' => ' invoices.id,
+                    //     invoices.invoice_number,
+                    //     invoices.due_date,
+                    //     invoices.status,
+                    //     acs_profile.email AS customer_email,
+                    //     acs_profile.first_name, 
+                    //     acs_profile.last_name,
+                    //     acs_profile.fk_user_id as user_id,
+                    //     invoices.grand_total,
+                    //     invoices.grand_total  as balance',
+                    // ];
+                    // $past_due = $this->general->get_data_with_param($total_query);
+                */
 
                 $company_id = logged('company_id');
                 $this->db->from('invoices');

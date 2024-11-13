@@ -469,11 +469,11 @@ class Accounting_model extends MY_Model
 
         // Get Service Tickets data in Database
         if ($reportType == 'service_tickets') {
-            $this->db->select('id, company_id, number, tag, type, service_type, status, customer, date_created, total');
+            $this->db->select('id, company_id, number, tag, service_type, status, customer, date_created, total');
             $this->db->from('service_tickets_view');
             $this->db->where('company_id', $companyID);
             if (!empty($reportConfig['status_filter'])) {
-                $this->db->where('type', $reportConfig['status_filter']);
+                $this->db->where('status', $reportConfig['status_filter']);
             }
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);

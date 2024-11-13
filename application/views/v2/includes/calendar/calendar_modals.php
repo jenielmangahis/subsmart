@@ -528,7 +528,7 @@
 </div>
 
 <div class="modal fade nsm-modal fade" id="modal-quick-add-job" aria-labelledby="modal-quick-add-job-label" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <form method="post" id="quick-add-job-form">   
             <div class="modal-content">
                 <div class="modal-header">

@@ -370,6 +370,17 @@
         padding: 6px;
         font-size: 16px;
     }
+    .block-label{
+        display:block;
+        height:30px;
+    }
+    .block-label a{
+        float:right;
+    }
+    .block-label b{
+        position:relative;
+        top:10px;
+    }
 </style>
 <div class="row page-content g-0">    
     <div class="col-12">
@@ -483,11 +494,11 @@
                                 </div>
                                 <div class="mb-3">
                                     <div class="d-flex justify-content-between">
-                                        <h6>Select Job Type</h6>
-                                        <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_types'); ?>">
-                                            <span class="bx bx-plus"></span>Manage Job Types
+                                        <h6 style="line-height:22px;">Job Type</h6>
+                                        <a class="btn-small nsm-button nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_types'); ?>">
+                                            Add New
                                         </a>
-                                    </div>
+                                    </div> 
                                     <select id="job_type_option" name="job_type" class="form-control " required>
                                         <option value="">Select Type</option>
                                         <?php if(!empty($job_types)): ?>
@@ -499,9 +510,9 @@
                                 </div>
                                 <div class="mb-3">
                                     <div class="d-flex justify-content-between">
-                                        <h6>Select Job Tag</h6>
-                                        <a class="nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_tags'); ?>">
-                                            <span class="bx bx-plus"></span>Manage Job Tags
+                                        <h6 style="line-height:22px;">Job Tag</h6>
+                                        <a class="btn-small nsm-button nsm-link d-flex align-items-center" target="_blank" href="<?= base_url('job/job_tags'); ?>">
+                                            Add New
                                         </a>
                                     </div>
                                     <select id="job_tags" name="tags" class="form-control " required>
@@ -635,8 +646,8 @@
                                         <p>Job Description</p>
                                         <textarea name="job_description" class="form-control" required=""></textarea>
                                         <div class="form-check mt-2">
-                                            <input class="form-check-input" type="checkbox" name="is_with_esign" id="is-with-esign" value="1">
-                                            <label class="form-check-label" for="is-with-esign">eSign Required</label>
+                                            <input class="form-check-input" type="checkbox" name="is_with_esign" id="is-with-esign-job" value="1">
+                                            <label class="form-check-label" for="is-with-esign-job">eSign Required</label>
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -660,9 +671,9 @@
                                         </div>
                                     </div>
                                     <div class="row mt-4" style="background-color:white;">
-                                        <div class="col-md-12 form-group mt-2" id="service-ticket-esign-template">                            
+                                        <div class="col-md-6 form-group mt-2" id="job-esign-template">                            
                                             <label for="esign-template-list"><b>eSign Templates</b></label>
-                                            <select class="form-control nsm-field form-select" name="esign_template" id="esign-templates" style="width:344px;">
+                                            <select class="form-control nsm-field form-select" name="esign_template" id="esign-templates">
                                                 <?php foreach($esignTemplates as $e){ ?>
                                                     <?php 
                                                         $template_name = $e->name;
@@ -1003,7 +1014,7 @@
                                     <?php //if ($item_qty[0]->total_qty > 0) { ?>
                                         <tr id="<?php echo "ITEMLIST_PRODUCT_$item->id"; ?>">
                                             <td class="nsm-text-primary">
-                                                <button type="button" data-bs-dismiss="modal" class="nsm nsm-button default select_item" id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="<?= $item->units; ?>" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
+                                                <button type="button" data-bs-dismiss="modal" class="nsm nsm-button default select_item" id="<?= $item->id; ?>" data-item_type="<?= ucfirst($item->type); ?>" data-quantity="1" data-itemname="<?= $item->title; ?>" data-price="<?= $item->price; ?>"><i class='bx bx-plus-medical'></i></button>
                                             </td>
                                             <td class="nsm-text-primary"><?php echo $item->title; ?></td>
                                             <td class="nsm-text-primary"><?php echo $item->type; ?></td>
@@ -1151,7 +1162,7 @@ $(function() {
         //     "ordering": false,
         // });
 
-        $('#is-with-esign').on('change', function(){
+        $('#is-with-esign-job').on('change', function(){
             if( $(this).is(':checked') ){
                 is_with_esign = 1;
                 $('#with-esign-inputs-container').fadeIn();
@@ -1169,6 +1180,11 @@ $(function() {
         $("#search_field").on("input", debounce(function() {
             tableSearch($(this));        
         }, 1000));
+
+        $('#esign-templates').select2({
+            dropdownParent: $("#modal-quick-add-job #job-esign-template"),
+            placeholder: "Select Template"
+        });
 
         $('#customer_id').select2({
             dropdownParent: $("#modal-quick-add-job"),
