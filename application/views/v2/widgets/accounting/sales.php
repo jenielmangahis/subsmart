@@ -142,7 +142,7 @@ function loadSalesChart(){
                     callbacks: {
                         label: function(tooltipItem, data) {
                             const amount = tooltipItem.formattedValue;
-                            return '$' + amount.toLocaleString();
+                            return '$' + amount.toLocaleString(undefined, {minimumFractionDigits: 2});
                         }
                     }
                 },
@@ -156,7 +156,7 @@ function loadSalesChart(){
                     suggestedMax: 10,
                     ticks: {
                         callback: function(value, index, values) {
-                            return '$' + value.toLocaleString();
+                            return '$' + value.toLocaleString(undefined, {minimumFractionDigits: 2});
                         }
                     }
                 },
