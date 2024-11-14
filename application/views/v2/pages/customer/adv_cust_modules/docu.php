@@ -216,6 +216,11 @@
                                 <i class='bx bx-fw bx-list-minus'></i> Customize List
                             </button>                            
                         </div>
+                        <div class="col-6 col-md-6 mb-2">
+                            <button type="button" class="nsm-button primary w-100 ms-0" id="manageArchivedDocuments" data-id="<?= $cus_id; ?>">
+                                <i class='bx bx-fw bx-trash'></i> Archived List
+                            </button>                            
+                        </div>
 
                         <!-- <div class="col-6 col-md-6 mb-2">
                             <button type="submit" class="nsm-button w-100 ms-0 amt-3" id="managecustomerdocumentsbtn--download">
@@ -229,7 +234,7 @@
                             </button>
                         </div> -->
                         <div class="col-6 col-6 col-md-6">
-                            <button type="button" class="nsm-button w-100 ms-0" data-action="import_esign" data-bs-toggle="modal" data-bs-target="#searchesignmodal">
+                            <button type="button" class="nsm-button primary w-100 ms-0" data-action="import_esign" data-bs-toggle="modal" data-bs-target="#searchesignmodal">
                                 <i class='bx bx-fw bx-import'></i>
                                 <span class="text">Import eSign</span>
                             </button>
@@ -238,6 +243,20 @@
                 </form>                
             </div>
         </div>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-document-archived" tabindex="-1" aria-labelledby="modal-quick-add-job-tag-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form id="quick-add-job-tag-form" method="POST">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Document Archived</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="document-archived-container"></div>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -530,6 +549,20 @@ $(function(){
             },
         });
     }
+
+    $(document).on('click', '#manageArchivedDocuments', function(){
+        var cid = $(this).attr('data-id');
+
+        $('#modal-document-archived').modal('show');
+        $.ajax({
+            type: 'POST',
+            url: base_url + "customer/_get_document_archives",
+            data: {cid:cid},           
+            success: function(o) {
+                $('#document-archived-container').html(o);
+            },
+        });
+    });
 
     $(document).on('click', '.download-client-agreement', function(){
         var cdi = $(this).attr('data-id');
