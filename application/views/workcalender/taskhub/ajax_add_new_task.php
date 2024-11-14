@@ -1,95 +1,110 @@
-<style>
-.select2-container--open {
-    z-index: 9999999
-}
-.select2-container{
-    width: 100% !important; 
-}
-.badge{
-    display: block;
-    width: 100%;
-    padding: 5px;
-}
+<style> 
+    .select2-container--open {
+        z-index: 9999999
+    }
+    .select2-container{
+        width: 100% !important; 
+    }
+    .badge{
+        display: block;
+        width: 100%;
+        padding: 5px;
+    }    
 </style>
-<div class="row">
-    <div class="col-6 mt-3 company-select">
-        <label for="">Customer <small>(optional)</small></label>
-        <select name="customer_id" id="taskhub-customer-id" class="nsm-field mb-2 form-control"></select>
-    </div>
-    <div class="col-6 mt-3 company-select">
-        <label for="">Assigned to</label>
-        <select name="user_id" id="taskhub-user-id" class="nsm-field mb-2 form-control" required=""></select>
-    </div>
-</div>
-<div class="row">    
-    <div class="col-6 mt-3">
-        <label for="">Status</label>
-        <select class="form-control" name="status" id="status">
-            <?php foreach($taskStatus as $ts){ ?>
-                <option value="<?= $ts->status_id; ?>"><?= $ts->status_text; ?></option>
-            <?php } ?>
-        </select>
-    </div>
-    <div class="col-6 mt-3">
-        <label for="">Priority</label>
-        <select class="form-control" name="priority" id="priority">
-            <?php foreach($optionPriority as $key => $value){ ?>
-                <option value="<?= $key; ?>"><?= $value; ?></option>
-            <?php } ?>
-        </select>
-    </div>
 
-</div>
 <div class="row">
-    <div class="col-md-6 mt-3">
-        <label for="">Subject</label>
-        <input type="text" name="subject" id="event-name" class="form-control" required="">
-    </div>
     <div class="col-6 mt-3">
-        <label for="">Estimated Date of Completion</label>
-        <div class="input-group date" data-provide="datepicker">
-            <input type="text" class="form-control dt-default" name="estimated_date_complete">
-            <div class="input-group-addon">
-                <span class="glyphicon glyphicon-th"></span>
-            </div>
-        </div>
+        <label class="content-subtitle fw-bold d-block mb-2">Title</label>
+        <input type="text" name="title" class="nsm-field form-control" value="" required>        
+    </div>
+    <div class="col-6 mt-3 company-select">
+        <?php if (isset($status_selection)) { ?>
+            <label class="content-subtitle fw-bold d-block mb-2">Status</label>
+            <select name="status" id="status-select" class="nsm-field form-select status-select">
+                <?php foreach($status_selection as $status) { ?>
+                <option value="<?php echo $status; ?>"><?php echo $status; ?></option>
+                <?php } ?>
+            </select>
+        <?php } ?>
     </div>
 </div>
-<div class="col-md-12 mt-3">
-    <label for="">Description</label>
-    <textarea class="form-control" name="description" id="task-editor" style="height:100px;"></textarea>
-</div>   
+
+<div class="row">
+    <div class="col-6 mt-3 company-select">
+        <label class="content-subtitle fw-bold d-block mb-2">Assign To</label>
+        <select name="assigned_to" id="taskhub-user-id" class="nsm-field mb-2 form-control" required=""></select>
+    </div>
+    <div class="col-6 mt-3 company-select">
+        <label class="content-subtitle fw-bold d-block mb-2">Priority</label>
+        <select name="priority" id="priority-select" class="nsm-field form-select priority-select">
+            <?php foreach ($optionPriority as $key => $value) { ?>
+                <?php if ($task) { ?>
+                    <option <?= $taskHub->priority == $key ? 'selected="selected"' : ''; ?> value="<?= $key; ?>"><?= $value; ?></option>
+                <?php } else { ?>
+                    <option value="<?= $key; ?>"><?= $value; ?></option>
+                <?php } ?>
+
+            <?php } ?>
+        </select>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6 mt-3 company-select">
+        <label class="content-subtitle fw-bold d-block mb-2">Due Date</label>
+        <input type="text" name="date_due" class="nsm-field form-control datepicker" value="" required>
+    </div>
+    <div class="col-6 mt-3 company-select">
+        <label class="content-subtitle fw-bold d-block mb-2">Select a group for this task</label>
+        <select name="group" id="group-select" class="nsm-field form-select group-select" required>
+            <option value="0">Select a Group</option>
+            <?php foreach($taskslists as $row) { ?>
+                <option value="<?php echo $row->id; ?>"><?php echo $row->name; ?></option>
+            <?php } ?>
+        </select>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <label class="content-subtitle fw-bold d-block mb-2">Notes</label>
+        <textarea name="notes" class="nsm-field form-control ckeditortaskhub" id="ckeditortaskhub" placeholder="Enter Notes" required></textarea>
+    </div>    
+</div>
+
 <script>
+
 $(function(){
-    CKEDITOR.replace('task-editor',{
+
+    $('.datepicker').datepicker({
+        format: 'mm/dd/yyyy',
+        autoclose: true,
+    });
+
+    CKEDITOR.replace('ckeditortaskhub',{
         height: '200px',
     });
 
-    $('#taskhub-customer-id').select2({
-        ajax: {
-            url: base_url + 'autocomplete/_company_customer',
-            dataType: 'json',
-            delay: 250,
-            data: function(params) {
-                return {
-                    q: params.term, // search term
-                    page: params.page
-                };
-            },
-            processResults: function(data, params) {
-                params.page = params.page || 1;
-                return {
-                    results: data,
-                };
-            },
-            cache: true
-        },
-        placeholder: 'Select Customer',        
-        minimumInputLength: 0,
-        templateResult: formatRepoCustomer,
-        templateSelection: formatRepoCustomerSelection
-    });
+    CKEDITOR.config.toolbarGroups = [
+        //{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+        //{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+        //{ name: 'links' },
+        { name: 'insert' },
+        //{ name: 'forms' },
+        //{ name: 'tools' },
+        //{ name: 'document',       groups: [ 'mode', 'document', 'doctools' ] },
+        //{ name: 'others' },
+        //'/',
+        //{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+        { name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+        { name: 'styles' },
+        { name: 'colors' },
+        //{ name: 'about' }
+    ];
 
+    $('#status-select').select2();
+    $('#priority-select').select2();
+    
     $('#taskhub-user-id').select2({
         ajax: {
             url: base_url + 'autocomplete/_company_users',
@@ -152,6 +167,8 @@ $(function(){
 
     function formatRepoSelectionUser(repo) {
         return (repo.FName) ? repo.FName + ' ' + repo.LName : repo.text;
-    }
+    }  
+
 });
+
 </script>

@@ -39,22 +39,25 @@
                                     <div class="reportTitleInfo">
                                         <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?></h3>
                                         <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
-                                        <h5><small id="reportDate">As of <?php echo date('F d, Y'); ?></small></h5>
+                                        <h5><small id="reportDate"><span id="filter_by_text"></span></small></h5>
                                     </div>
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <?php 
-                                        $tableID = "customergroups_table"; 
-                                        $reportCategory = "customer_groups"; 
+                                        $tableID = "sales_table"; 
+                                        $reportCategory = "sales"; 
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
-                                                <th>TITLE</th>
-                                                <th>CUSTOMER COUNT</th>
-                                                <th>ADDED BY</th>
+                                                <th>NUMBER</th>
+                                                <th>DESCRIPTION</th>
+                                                <th>STATUS</th>
+                                                <th>DUE DATE</th>
+                                                <th>DATE CREATED</th>
+                                                <th style="text-align:right;">TOTAL</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -178,10 +181,11 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="customer_count" <?php echo ($reportSettings->sort_by == "customer_count") ? "selected" : "" ?>>Customer Count</option>
-                                                <option value="title_group" <?php echo ($reportSettings->sort_by == "title_group") ? "selected" : "" ?>>Title</option>
-                                                <option value="added_by" <?php echo ($reportSettings->sort_by == "added_by") ? "selected" : "" ?>>Added By</option>
-                                                <option value="date" <?php echo ($reportSettings->sort_by == "date") ? "selected" : "" ?>>Date</option>
+                                                <option value="date_created" <?php echo ($reportSettings->sort_by == "date_created") ? "selected" : "" ?>>Date Created</option>
+                                                <option value="number" <?php echo ($reportSettings->sort_by == "number") ? "selected" : "" ?>>Number</option>
+                                                <option value="status" <?php echo ($reportSettings->sort_by == "status") ? "selected" : "" ?>>Status</option>
+                                                <option value="due_date" <?php echo ($reportSettings->sort_by == "due_date") ? "selected" : "" ?>>Due Date</option>
+                                                <option value="total" <?php echo ($reportSettings->sort_by == "total") ? "selected" : "" ?>>Total</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
@@ -193,14 +197,52 @@
                                 <div class="col-md-12"><hr class="mt-0"></div>
                                 <div class="col-lg-12">
                                     <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label class="mb-1 fw-xnormal">Filter by</label>
+                                            <select name="filter_by" id="filter-by" class="nsm-field form-select">
+                                                <?php
+                                                    $currentMonth = date('n');
+                                                    $currentQuarter = ceil($currentMonth / 3);
+
+                                                    $quarters = [
+                                                        1 => ['Jan', 'Mar'],
+                                                        2 => ['Apr', 'Jun'],
+                                                        3 => ['Jul', 'Sep'],
+                                                        4 => ['Oct', 'Dec']
+                                                    ];
+
+                                                    $quarterStart = $quarters[$currentQuarter][0];
+                                                    $quarterEnd = $quarters[$currentQuarter][1];
+                                                ?>
+                                                <option value="get_all" <?php echo ($reportSettings->filter_by == "get_all") ? "selected" : "" ?>>None</option>
+                                                <option value="current_day" <?php echo ($reportSettings->filter_by == "current_day") ? "selected" : "" ?>>Today</option>
+                                                <option value="current_week" <?php echo ($reportSettings->filter_by == "current_week") ? "selected" : "" ?>>This Week</option>
+                                                <option value="current_month" <?php echo ($reportSettings->filter_by == "current_month") ? "selected" : "" ?>>This Month (<?php echo date('M'); ?>)</option>
+                                                <option value="current_quarter" <?php echo ($reportSettings->filter_by == "current_quarter") ? "selected" : "" ?>>This Quarter (<?php echo $quarterStart . '-' . $quarterEnd . ' ' . date('Y'); ?>)</option>
+                                                <option value="current_year" <?php echo ($reportSettings->filter_by == "current_year") ? "selected" : "" ?>>This Year (<?php echo date('Y'); ?>)</option>
+                                                <option value="jan" <?php echo ($reportSettings->filter_by == "jan") ? "selected" : ""; ?>>January</option>
+                                                <option value="feb" <?php echo ($reportSettings->filter_by == "feb") ? "selected" : ""; ?>>February</option>
+                                                <option value="mar" <?php echo ($reportSettings->filter_by == "mar") ? "selected" : ""; ?>>March</option>
+                                                <option value="apr" <?php echo ($reportSettings->filter_by == "apr") ? "selected" : ""; ?>>April</option>
+                                                <option value="may" <?php echo ($reportSettings->filter_by == "may") ? "selected" : ""; ?>>May</option>
+                                                <option value="jun" <?php echo ($reportSettings->filter_by == "jun") ? "selected" : ""; ?>>June</option>
+                                                <option value="jul" <?php echo ($reportSettings->filter_by == "jul") ? "selected" : ""; ?>>July</option>
+                                                <option value="aug" <?php echo ($reportSettings->filter_by == "aug") ? "selected" : ""; ?>>August</option>
+                                                <option value="sep" <?php echo ($reportSettings->filter_by == "sep") ? "selected" : ""; ?>>September</option>
+                                                <option value="oct" <?php echo ($reportSettings->filter_by == "oct") ? "selected" : ""; ?>>October</option>
+                                                <option value="nov" <?php echo ($reportSettings->filter_by == "nov") ? "selected" : ""; ?>>November</option>
+                                                <option value="dec" <?php echo ($reportSettings->filter_by == "dec") ? "selected" : ""; ?>>December</option>
+                                            </select>
+                                        </div>
                                         <div class="col-md-3 mb-3">
-                                            <label class="mb-1 fw-xnormal">Subscription Period</label>
-                                            <select name="subscription_period" id="subscription-period" class="nsm-field form-select">
-                                                <option value="all" <?php echo ($reportSettings->subscription_period == "all") ? "selected" : "" ?>>All</option>
-                                                <option value="last_7_days" <?php echo ($reportSettings->subscription_period == "last_7_days") ? "selected" : "" ?>>Last 7 Days</option>
-                                                <option value="last_14_days" <?php echo ($reportSettings->subscription_period == "last_14_days") ? "selected" : "" ?>>Last 14 Days</option>
-                                                <option value="last_30_days" <?php echo ($reportSettings->subscription_period == "last_30_days") ? "selected" : "" ?>>Last 30 Days</option>
-                                                <option value="last_60_days" <?php echo ($reportSettings->subscription_period == "last_60_days") ? "selected" : "" ?>>Last 60 Days</option>
+                                            <label class="mb-1 fw-xnormal">Status Filter</label>
+                                            <select name="status_filter" id="status-filter" class="nsm-field form-select">
+                                                <option value="" <?php echo ($reportSettings->status_filter == "") ? "selected" : "" ?>>None</option>
+                                                <option value="Partially Paid" <?php echo ($reportSettings->status_filter == "Partially Paid") ? "selected" : "" ?>>Partially Paid</option>
+                                                <option value="Paid" <?php echo ($reportSettings->status_filter == "Paid") ? "selected" : "" ?>>Paid</option>
+                                                <option value="Due" <?php echo ($reportSettings->status_filter == "Due") ? "selected" : "" ?>>Due</option>
+                                                <option value="Overdue" <?php echo ($reportSettings->status_filter == "Overdue") ? "selected" : "" ?>>Overdue</option>
+                                                <option value="Unpaid" <?php echo ($reportSettings->status_filter == "Unpaid") ? "selected" : "" ?>>Unpaid</option>
                                             </select>
                                         </div>
                                     </div>

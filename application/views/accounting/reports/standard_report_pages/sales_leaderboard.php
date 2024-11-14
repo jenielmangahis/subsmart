@@ -39,7 +39,7 @@
                                     <div class="reportTitleInfo">
                                         <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?></h3>
                                         <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
-                                        <h5><small id="reportDate"><span id="date_from_text"></span> &mdash; <span id="date_to_text"></span></small></h5>
+                                        <h5><small id="reportDate"><span id="filter_by_text"></span></small></h5>
                                     </div>
                                 </div>
                             </div>
@@ -47,13 +47,13 @@
                                 <div class="col-lg-12">
                                     <?php 
                                         $tableID = "salesleaderboard_table"; 
-                                        $reportCategory = "sales_leader_board"; 
+                                        $reportCategory = "sales_leaderboard"; 
                                     ?>
-                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0 accordion">
+                                    <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
                                             <tr>
-                                                <th class="PLACE_LEFT">NAME</th>
-                                                <th class="PLACE_RIGHT">AMOUNT</th>
+                                                <th>SALES REPRESENTATIVE</th>
+                                                <th style="text-align:right;">TOTAL SALES</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -177,8 +177,8 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
-                                                <option value="employee" <?php echo ($reportSettings->sort_by == "employee") ? "selected" : "" ?>>Name</option>
-                                                <option value="amount" <?php echo ($reportSettings->sort_by == "amount") ? "selected" : "" ?>>Amount</option>
+                                                <option value="total_sales" <?php echo ($reportSettings->sort_by == "total_sales") ? "selected" : "" ?>>Total Sales</option>
+                                                <option value="sales_rep" <?php echo ($reportSettings->sort_by == "sales_rep") ? "selected" : "" ?>>Sales Rep</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>
@@ -188,17 +188,39 @@
                                     </div>
                                 </div>
                                 <div class="col-md-12"><hr class="mt-0"></div>
-                                <div class="col-md-5 mb-3">
-                                    <label class="mb-1 fw-xnormal">Date Range <small class="text-muted">(From &mdash; To)</small></label>
-                                    <div class="input-group">
-                                        <input name="date_from" class="form-control mt-0" type="date" value="<?php echo (isset($reportSettings->report_date_from_text)) ? $reportSettings->report_date_from_text : date('Y').'-01-01'; ?>">
-                                        <input name="date_to" class="form-control mt-0" type="date" value="<?php echo (isset($reportSettings->report_date_to_text)) ? $reportSettings->report_date_to_text : date('Y-m-d'); ?>">
-                                    </div>   
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label class="mb-1 fw-xnormal">Filter Date by</label>
+                                            <?php
+                                                $currentMonth = date('n');
+                                                $currentQuarter = ceil($currentMonth / 3);
+
+                                                $quarters = [
+                                                    1 => ['Jan', 'Mar'],
+                                                    2 => ['Apr', 'Jun'],
+                                                    3 => ['Jul', 'Sep'],
+                                                    4 => ['Oct', 'Dec']
+                                                ];
+
+                                                $quarterStart = $quarters[$currentQuarter][0];
+                                                $quarterEnd = $quarters[$currentQuarter][1];
+                                            ?>
+                                            <select name="filter_by" id="filter-by" class="nsm-field form-select">
+                                                <option value="get_all" <?php echo ($reportSettings->filter_by == "get_all") ? "selected" : "" ?>>None</option>
+                                                <option value="current_day" <?php echo ($reportSettings->filter_by == "current_day") ? "selected" : "" ?>>Today</option>
+                                                <option value="current_week" <?php echo ($reportSettings->filter_by == "current_week") ? "selected" : "" ?>>This Week</option>
+                                                <option value="current_month" <?php echo ($reportSettings->filter_by == "current_month") ? "selected" : "" ?>>This Month (<?php echo date('M'); ?>)</option>
+                                                <option value="current_quarter" <?php echo ($reportSettings->filter_by == "current_quarter") ? "selected" : "" ?>>This Quarter (<?php echo $quarterStart . '-' . $quarterEnd . ' ' . date('Y'); ?>)</option>
+                                                <option value="current_year" <?php echo ($reportSettings->filter_by == "current_year") ? "selected" : "" ?>>This Year (<?php echo date('Y'); ?>)</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="col-md-12"><hr class="mt-0"></div>
                             </div>
                         </div>
                     </div>
-                    <hr class="mt-0">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="float-start">

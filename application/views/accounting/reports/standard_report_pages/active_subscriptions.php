@@ -194,25 +194,25 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-12"><hr class="mt-0"></div>
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-md-3 mb-3">
+                                            <label class="mb-1 fw-xnormal">Subscription Period</label>
+                                            <select name="subscription_period" id="subscription-period" class="nsm-field form-select">
+                                                <option value="all" <?php echo ($reportSettings->subscription_period == "all") ? "selected" : "" ?>>All</option>
+                                                <option value="last_7_days" <?php echo ($reportSettings->subscription_period == "last_7_days") ? "selected" : "" ?>>Last 7 Days</option>
+                                                <option value="last_14_days" <?php echo ($reportSettings->subscription_period == "last_14_days") ? "selected" : "" ?>>Last 14 Days</option>
+                                                <option value="last_30_days" <?php echo ($reportSettings->subscription_period == "last_30_days") ? "selected" : "" ?>>Last 30 Days</option>
+                                                <option value="last_60_days" <?php echo ($reportSettings->subscription_period == "last_60_days") ? "selected" : "" ?>>Last 60 Days</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12"><hr class="mt-0"></div>
                             </div>
                         </div>
                     </div>
-                    <hr class="mt-0">
-                    <div class="col-lg-12">
-                            <div class="row">
-                                <div class="col-md-3 mb-3">
-                                    <label class="mb-1 fw-xnormal">Subscription Period</label>
-                                    <select name="subscription_period" id="subscription-period" class="nsm-field form-select">
-                                        <option value="all" <?php echo ($reportSettings->subscription_period == "all") ? "selected" : "" ?>>All</option>
-                                        <option value="last_7_days" <?php echo ($reportSettings->subscription_period == "last_7_days") ? "selected" : "" ?>>Last 7 Days</option>
-                                        <option value="last_14_days" <?php echo ($reportSettings->subscription_period == "last_14_days") ? "selected" : "" ?>>Last 14 Days</option>
-                                        <option value="last_30_days" <?php echo ($reportSettings->subscription_period == "last_30_days") ? "selected" : "" ?>>Last 30 Days</option>
-                                        <option value="last_60_days" <?php echo ($reportSettings->subscription_period == "last_60_days") ? "selected" : "" ?>>Last 60 Days</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    <hr class="mt-0">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="float-start">

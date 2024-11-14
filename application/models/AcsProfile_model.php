@@ -683,14 +683,16 @@ class AcsProfile_model extends MY_Model
 
     public function getCompanyTotalSubscriptions($cid, $date_range = [])
     {
-        $this->db->select('acs_billing.bill_id, COALESCE(SUM(acs_billing.mmr),0) AS total_subscription');
+       
+        $this->db->select('acs_billing.bill_id, SUM(COALESCE(acs_billing.mmr, 0)) AS total_subscription');
         $this->db->from($this->table2);
         $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $cid);
 
         if (!empty($date_range)) {
-            $this->db->where('acs_billing.bill_end_date >=', $date_range['from']);
-            $this->db->where('acs_billing.bill_end_date <=', $date_range['to']);
+            $date_from = $date_range['from'] . ' 00:00:00';
+            $this->db->where('acs_billing.bill_start_date >=', date('Y-m-d H:i:s', strtotime($date_from)));
+            // $this->db->where('DATE(acs_billing.bill_end_date) >=', date('Y-m-d H:i:s', strtotime($date_range['from'])));
         }
 
         $query = $this->db->get()->row();

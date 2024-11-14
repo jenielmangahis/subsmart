@@ -1352,7 +1352,7 @@ class Taskhub extends MY_Controller {
         $this->load->view('workcalender/taskhub/ajax_load_company_list', $this->page_data);
 	}
 
-	public function ajax_add_new_task()
+	public function ajax_add_new_task_backup()
 	{
 		$this->load->model('Taskhub_status_model');
 
@@ -1361,11 +1361,31 @@ class Taskhub extends MY_Controller {
         $this->load->view('workcalender/taskhub/ajax_add_new_task', $this->page_data);
 	}
 
+	public function ajax_add_new_task()
+	{
+		$this->load->model('Taskhub_status_model');
+
+		$task_status_data[] = 'Backlog';
+		$task_status_data[] = 'Doing';
+		$task_status_data[] = 'Review Fail';
+		$task_status_data[] = 'On Testing';
+		$task_status_data[] = 'Review';
+		$task_status_data[] = 'Done';
+		$task_status_data[] = 'Closed';
+
+		$taskslists = $this->taskslists_model->getAll();
+
+		$this->page_data['taskslists']       = $taskslists;
+		$this->page_data['status_selection'] = $task_status_data;	
+		$this->page_data['optionPriority']   = $this->taskhub_model->optionPriority();	
+        $this->load->view('workcalender/taskhub/ajax_add_new_task', $this->page_data);
+	}	
+
 	public function ajax_save_task()
 	{
 		$this->load->model('Taskhub_model');
         $this->load->model('Taskhub_participants_model');
-        $this->load->model('Taskhub_status_model');   
+        $this->load->model('Taskhub_status_model'); 
 
         $cid = logged('company_id');
         $uid = logged('id');
@@ -1375,15 +1395,25 @@ class Taskhub extends MY_Controller {
 
         $post = $this->input->post();  
 
-        if( $post['subject'] != '' ){
+		$assigned_to_arr = explode(",", $post['assigned_to']);
+		$post_encode_assigned_to = json_encode($assigned_to_arr, JSON_NUMERIC_CHECK);
+
+        if( $post['title'] != '' ){
             $taskStatus = $this->Taskhub_status_model->getById($post['status']);
 
             $prof_id = 0;
             if( $post['customer_id'] > 0 ){
             	$prof_id = $post['customer_id'];
             }
+
+			$list_id = $this->input->post('group');
+			if($assigned_to == ''){
+				$list_id = 0;
+			}	
+			
+			$title = isset($post['title']) ? $post['title'] : $post['subject'];
             
-            $task_data = [
+            /*$task_data = [
                 'prof_id' => $prof_id,
                 'subject' => $post['subject'],
                 'description' => $post['description'],
@@ -1396,17 +1426,49 @@ class Taskhub extends MY_Controller {
                 'priority' => $post['priority'],
                 'company_id' => $cid,
                 'view_count' => 0
-            ];
+            ];*/
+
+            $task_data = [
+				'title'   => $title,
+				'notes' => $post['notes'], 
+                'created_by' => $uid,
+                'date_created' => date('Y-m-d h:i:s'),
+				'date_started' => null,
+				'date_due'     => isset($post['date_due']) ? date("Y-m-d",strtotime($post['date_due'])) : null,
+				'date_completed' => isset($post['date_completed']) ? $post['date_completed'] : null,
+				'color' => 'NA', 
+                'priority' => $post['priority'],
+                'company_id' => $cid,
+                'view_count' => 0,
+				'assigned_employee_ids' => !empty($post_encode_assigned_to) ? $post_encode_assigned_to : json_encode($assigned_to, JSON_NUMERIC_CHECK),
+				'list_id' => $list_id,
+				'status' => $post['status'],
+				'subject' => $title,
+				'description' => $post['notes'],
+				'estimated_date_complete' => !empty($post['estimated_date_complete']) ? date('Y-m-d', strtotime($post['estimated_date_complete'])) : null,
+				'actual_date_complete' => null,
+				'task_color' => null,
+				'status_id' => null, 
+				'prof_id' => $prof_id,
+            ];			
 
             $taskId = $this->Taskhub_model->create($task_data);
 
             $data_participant = [
                 'task_id' => $taskId,
-                'user_id' => $post['user_id'],
+                'user_id' => $post['assigned_to'],
                 'is_assigned' => 1
             ];
 
             $this->Taskhub_participants_model->create($data_participant);
+
+			$activity_text = ' created the task.';
+			$activity_data = array(
+				'task_id'      => trim($taskId),
+				'notes'        => $activity_text,
+				'date_updated' => date('Y-m-d h:i:s'),
+				'performed_by' => $uid
+			);			
 
             $is_success = 1;
             $msg = '';

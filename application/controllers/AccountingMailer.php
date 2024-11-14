@@ -204,6 +204,11 @@ class AccountingMailer extends MY_Controller
             "customer_status",
             "service_tickets",
             "bank_accounts",
+            "sales_leaderboard",
+            "tech_leaderboard",
+            "recent_customers",
+            "job_activities",
+            "sales",
         );
 
         // Conditional Statements on the array

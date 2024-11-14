@@ -66,6 +66,14 @@ class General_model extends MY_Model {
                 
             }
         }
+
+        if (array_key_exists("where_in", $params)) {
+            foreach ($params['where_in'] as $column => $values) {
+                $this->db->where_in($column, $values);
+            }
+        }
+
+        
         if (array_key_exists("join", $params)) {
             if (is_array($params['join'][0])) {
                 foreach ($params['join'] as $join) {

@@ -122,12 +122,20 @@ class Customer_advance_model extends MY_Model
     public function getCustomerGroupByCompanyId($company_id)
     {
         $this->db->select('customer_groups.title, COUNT(acs_profile.prof_id) AS total_customer');
+        $this->db->from('customer_groups');
+        $this->db->join('users', 'users.id = customer_groups.user_id', 'left');
         $this->db->join('acs_profile', 'acs_profile.customer_group_id = customer_groups.id');
         $this->db->where('customer_groups.company_id', $company_id);
-        $this->db->or_where('customer_groups.company_id', 0);
-        $this->db->group_by('customer_groups.title');
+        $this->db->where_in('acs_profile.status', [
+            'Active w/RAR',
+            'Active w/RMR',
+            'Active w/RQR',
+            'Active w/RYR',
+            'Inactive w/RMM'
+        ]);
+        $this->db->group_by('customer_groups.id');
 
-        $query = $this->db->get('customer_groups');
+        $query = $this->db->get();
 
         return $query->result();
     }
@@ -795,24 +803,27 @@ class Customer_advance_model extends MY_Model
 
     public function countTotalSubscriptionsByCompanyId($company_id = 0)
     {
+        $today = date('Y-m-d');
+    
         $this->db->select("
-            SUM(CASE WHEN DATE(acs_billing.bill_start_date) < CURDATE() THEN COALESCE(acs_billing.mmr, 0) ELSE 0 END) AS total_amount_subscriptions,
-            COUNT(CASE WHEN DATE(acs_billing.bill_start_date) < CURDATE() THEN acs_billing.bill_id END) AS total_subscriptions,
-            COUNT(CASE WHEN DATE(acs_billing.bill_start_date) < CURDATE() THEN acs_profile.prof_id END) AS total_active_subscription,
+            SUM(COALESCE(acs_billing.mmr, 0)) AS total_amount_subscriptions,
+            COUNT(acs_billing.bill_id) AS total_subscriptions,
+            COUNT(acs_profile.prof_id) AS total_active_subscription,
             
-            SUM(CASE WHEN DATE(acs_billing.bill_start_date) = CURDATE() THEN COALESCE(acs_billing.mmr, 0) ELSE 0 END) AS total_current_amount_subscriptions,
-            COUNT(CASE WHEN DATE(acs_billing.bill_start_date) = CURDATE() THEN acs_profile.prof_id END) AS total_current_active_subscription
+            SUM(CASE WHEN acs_billing.bill_start_date = '$today' THEN COALESCE(acs_billing.mmr, 0) ELSE 0 END) AS total_current_amount_subscriptions,
+            COUNT(CASE WHEN acs_billing.bill_start_date = '$today' THEN acs_profile.prof_id END) AS total_current_active_subscription
         ");
         
         $this->db->from('acs_profile');
         $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $company_id);
-        $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR','Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
+        $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RQR', 'Active w/RMR', 'Active w/RYR', 'Inactive w/RMM']);
         
         $query = $this->db->get();
     
         return $query->row();
     }
+    
 
     public function countCurrentTotalSubscriptionsByCompanyId($company_id = 0)
     {

@@ -440,6 +440,27 @@ class Invoice_model extends MY_Model
         return $query;
     }
 
+    public function getCompanyTotalAmountInvoicesSales($cid, $date_range = array())
+    {
+        $this->db->select('id, COALESCE(SUM(invoices.grand_total),0) AS total_amount');    
+        $this->db->from($this->table);   
+        $this->db->where('invoices.company_id', $cid);
+        $this->db->where('invoices.status != ', "Draft");
+        $this->db->where('invoices.status != ', "");
+
+        if( !empty($date_range) ){
+            $date_from = $date_range['from'] . ' 00:00:00';
+            $date_to   = $date_range['to'] . ' 23:59:59';
+
+            $this->db->where('DATE(date_created) >=', date('Y-m-d H:i:s', strtotime($date_from)));
+            $this->db->where('DATE(date_created) <=',date('Y-m-d H:i:s', strtotime($date_to)));
+        }
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+
     public function getCompanyOverDueInvoices($cid, $date_range = array())
     {
         $current_date = date("Y-m-d");
