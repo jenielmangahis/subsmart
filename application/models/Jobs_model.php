@@ -181,6 +181,23 @@ class Jobs_model extends MY_Model
         return $query->row();
     }
 
+    public function getTotalSalesBySalesRepresentativeV2($companyID, $date_range = []){        
+        $this->db->select('users.id AS uid,users.email AS email, users.company_id AS company_id, CONCAT(users.FName, " ", users.LName) AS name, COALESCE(invoices.status, "") AS invoice_status, SUM(invoices.grand_total) AS total_sales, invoices.date_created AS date_created');
+        $this->db->from('users');
+        $this->db->where('users.company_id', $companyID);
+        $this->db->where('invoices.status !=', 'Draft');
+        $this->db->join('jobs', 'jobs.employee_id = users.id', 'left');
+        $this->db->join('invoices', 'invoices.job_id = jobs.id', 'left');
+     
+        if( !empty($date_range) ){
+            $this->db->where("invoices.date_created >= ", $date_range['from']);
+            $this->db->where("invoices.date_created <= ", $date_range['to']);
+        }
+        $this->db->group_by('users.id');
+        $data = $this->db->get();
+        return $data->result();
+    }
+
     /**
      * @return mixed
      */

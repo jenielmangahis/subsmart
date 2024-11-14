@@ -769,9 +769,9 @@ function filterThumbnail(val, id, table,filter) {
     handleHideCurrentSub(true);
     switch (val) {
         case 'all':
-            var from_date = '0000-00-00';
+            var from_date = '0000-00-00  00:00:00';
             if(table == 'acs_billing'){
-                var to_date = '0000-00-00';
+                var to_date = '0000-00-00 23:59:59';
             }else{
                 var to_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date
                 .getDate()).slice(-2);

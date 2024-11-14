@@ -1,21 +1,17 @@
-<?php
-if (count($salesLeaderBoards) > 0) :
+<?php if (count($salesLeaderBoards) > 0) : ?>
+
+    <?php
     $count = 0;
     foreach ($salesLeaderBoards as $sales) :
-?>
-        <?php 
-            if( $count > 10 ){
-                break;
-            }   
-        
-        ?>
+        if ($count >= 10) break;
+    ?>
         <div class="widget-item">
             <?php
-            $image = userProfilePicture($sales['uid']);
+            $image = userProfilePicture($sales->uid);
             if (is_null($image)) :
             ?>
                 <div class="nsm-profile">
-                    <span><?php echo getLoggedNameInitials($sales['uid']); ?></span>
+                    <span><?php echo getLoggedNameInitials($sales->uid); ?></span>
                 </div>
             <?php
             else :
@@ -26,11 +22,11 @@ if (count($salesLeaderBoards) > 0) :
             ?>
             <div class="content">
                 <div class="details">
-                    <span class="content-title"><?= $sales['name']; ?></span>
-                    <span class="content-subtitle d-block"><?= $sales['email'] ?></span>
+                    <span class="content-title"><?= $sales->name; ?></span>
+                    <span class="content-subtitle d-block"><?= $sales->email ?></span>
                 </div>
                 <div class="controls">
-                    <span class="content-subtitle d-block nsm-text-success fw-bold">$<?= number_format($sales['total_sales'],2); ?></span>
+                    <span class="content-subtitle d-block nsm-text-success fw-bold">$<?= number_format($sales->total_sales, 2); ?></span>
                 </div>
             </div>
         </div>
@@ -43,6 +39,4 @@ else :
         <i class='bx bx-meh-blank'></i>
         <span>Sales Leaderboard is empty.</span>
     </div>
-<?php
-endif;
-?>
+<?php endif; ?>
