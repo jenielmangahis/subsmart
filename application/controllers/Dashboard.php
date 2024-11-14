@@ -239,7 +239,7 @@ class Dashboard extends Widgets
             return $job->id;
         }, $latestJobs);
 
-        if (!empty($jobIds)) {
+        /*if (!empty($jobIds)) {
             // Calculate job amount based on saved job's items.
 
             $this->db->select('job_items.job_id,items.id,items.title,items.price,job_items.total,job_items.cost,job_items.qty,job_items.tax');
@@ -268,9 +268,9 @@ class Dashboard extends Widgets
                 $job->amount = $jobAmounts[$job->id];
                 return $job;
             }, $latestJobs);
-        }
+        }*/
 
-        $latestJobs = array_map(function ($job) {
+        /*$latestJobs = array_map(function ($job) {
             if (!$job->work_order_id) {
                 return $job;
             }
@@ -296,8 +296,7 @@ class Dashboard extends Widgets
             }
 
             return $job;
-        }, $latestJobs);        
-
+        }, $latestJobs);*/        
 
         /*foreach ($latestJobs as $job) {
             $jobPayment = $this->jobs_model->getJobPaymentByJobId($job->id);

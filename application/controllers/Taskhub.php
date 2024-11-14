@@ -1014,6 +1014,7 @@ class Taskhub extends MY_Controller {
 					'estimated_date_complete' => date('Y-m-d', strtotime($post['estimated_date_complete'])),
 					'date_completed' => isset($post['date_completed']) ? $post['date_completed'] : $actual_date_complete,
 					'actual_date_complete' => $actual_date_complete,
+					'date_due' => isset($post['date_due']) ? date("Y-m-d",strtotime($post['date_due'])) : date("Y-m-d"),
 					'color' => 'NA', 
 					'task_color' => null, 
 					'priority' => $post['priority'],
