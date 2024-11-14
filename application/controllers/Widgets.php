@@ -84,29 +84,17 @@ class Widgets extends MY_Controller
         $this->load->model('Users_model');
         $this->load->model('Jobs_model');
 
-        $cid       = getLoggedCompanyID();
+        $cid       = logged('company_id');
         $date_from = post('sales_leaderboard_date_from') . ' 00:00:00';
         $date_to   = post('sales_leaderboard_date_to') . ' 23:59:59';
 
         // $sales_field_user_type = 5;
         // $sales     = $this->Users_model->getCompanyUsersByUserType($cid, $sales_field_user_type);
-        $users = $this->Users_model->getCompanyUsers($cid);
-
-        $salesLeaderBoards = [];
         $date_range        = ['from' => $date_from, 'to' => $date_to];
-        foreach( $users as $u ){
-            $sales = $this->Jobs_model->getTotalSalesBySalesRepresentative($u->id, $date_range);
-            if( $sales->total_sales > 0 ){
-                $sales_name = $u->FName . ' ' . $u->LName;                
-                $salesLeaderBoards[] = ['uid' => $u->id, 'name' => $sales_name, 'email' => $u->email, 'total_sales' => $sales->total_sales];
-            }            
-        }
-
-        usort($salesLeaderBoards, function($a, $b) {
-            return $b["total_sales"] - $a["total_sales"];
-        });
+        $salesLeaderBoards = $this->Jobs_model->getTotalSalesBySalesRepresentativeV2($cid,$date_range);
 
         $data['salesLeaderBoards'] = $salesLeaderBoards;
+   
         $this->load->view('v2/widgets/sales_leaderboard_details', $data);
     }
 
@@ -964,8 +952,8 @@ class Widgets extends MY_Controller
         $return = [
             'total_unpaid_invoices' => $totalUnpaidInvoices,
             'total_overdue_invoices' => $totalOverdueInvoices,
-            'total_amount_paid_invoices' => number_format($totalPaidInvoices->total_paid,2,'.',''),
-            'total_amount_subscriptions' => number_format($subscriptions->total_subscription,2,'.','')
+            'total_amount_paid_invoices' => number_format($totalPaidInvoices->total_paid, 2, ".", ",") ,
+            'total_amount_subscriptions' => number_format($subscriptions->total_subscription, 2, ".", ",")
         ];
 
         echo json_encode($return);
@@ -996,10 +984,10 @@ class Widgets extends MY_Controller
             //$sales_data[]  = number_format($totalPaidInvoices->total_paid, 2, '.', '');
 
             $date_range    = ['from' => $start_date, 'to' => $end_date];
-            $totalInvoices = $this->Invoice_model->getCompanyTotalAmountInvoices($cid, $date_range);
+            $totalInvoices = $this->Invoice_model->getCompanyTotalAmountInvoicesSales($cid, $date_range);
             $totalEstimate = $this->Estimate_model->getCompanyTotalAmountEstimates($cid, $date_range);
             $total_sales   = $totalInvoices->total_amount + $totalEstimate->total_amount;
-            $sales_data[]  = $total_sales;
+            $sales_data[]  = $totalInvoices->total_amount;
 
             //Jobs
             $jobs = $this->Jobs_model->getAllJobsByCompanyIdAndDateRange($cid, $date_range);
