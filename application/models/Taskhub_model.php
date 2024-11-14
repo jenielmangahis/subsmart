@@ -2,6 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 class Taskhub_model extends MY_Model {
 	public $table = 'tasks';
+    public $table_task_list = 'tasks_lists';
 	public function __construct(){
 		parent::__construct();
 
@@ -250,6 +251,14 @@ class Taskhub_model extends MY_Model {
         return  $insert_id;
     }
 
+    public function saveTaskList($post_data)
+    {
+        $this->db->insert($this->table_task_list, $post_data);
+        $insert_id = $this->db->insert_id();
+
+        return  $insert_id;
+    }
+
     public function getAll($filters=array())
     {
         $id = $user_id;
@@ -397,5 +406,15 @@ class Taskhub_model extends MY_Model {
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function getAllTaskListByCompanyId($cid)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table_task_list);
+        $this->db->where('company_id', $cid);
+
+        $query = $this->db->get();
+        return $query->result();
+    }  
         
 }
