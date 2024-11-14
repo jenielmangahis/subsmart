@@ -33,26 +33,30 @@ async function onClickDelete() {
   const $deleteBtn = $wrapper.querySelector("[data-action=delete]");
   const dataType   = $deleteBtn.getAttribute('data-type');
   const prevText = $deleteBtn.textContent;
-  $deleteBtn.textContent = "Deleting...";
-  $deleteBtn.setAttribute("disabled", true);
+  const result = await api.deleteConfirmation();
+  if( result ){
+    $deleteBtn.textContent = "Deleting...";
+    $deleteBtn.setAttribute("disabled", true);
 
-  const $chkBox    = document.getElementById(dataType);
-  $chkBox.checked = false;
-
-  try {
-    const payload = {
-      document_type: documentType,
-      customer_id: getCustomerId(),
-    };
-
-    await api.deleteCustomerDocument(payload);
-    const $buttons = $wrapper.querySelector(".buttons");
-    $buttons.classList.remove("has-document");
-  } catch (error) {
-  } finally {
-    $deleteBtn.textContent = prevText;
-    $deleteBtn.removeAttribute("disabled");
-  }
+    const $chkBox    = document.getElementById(dataType);
+    $chkBox.checked = false;
+    
+    try {
+      const payload = {
+        document_type: documentType,
+        customer_id: getCustomerId(),
+      };
+  
+      await api.deleteCustomerDocument(payload);
+      const $buttons = $wrapper.querySelector(".buttons");
+      $buttons.classList.remove("has-document");
+      
+    } catch (error) {
+    } finally {
+      $deleteBtn.textContent = prevText;
+      $deleteBtn.removeAttribute("disabled");
+    }
+  }  
 }
 
 $fileInput.addEventListener("change", async function () {
