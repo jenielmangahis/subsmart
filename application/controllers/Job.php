@@ -6089,6 +6089,114 @@ class Job extends MY_Controller
 
         echo json_encode($return);        
     }    
+
+    public function ajax_quick_create_job_type()
+    {
+        $this->load->model('Icons_model');
+
+        $is_success = 1;
+        $msg        = '';
+        $job_type_name = '';
+
+        $cid = logged('company_id');
+        $uid = logged('id');
+        $post = $this->input->post();
+        
+        if ($post['job_type_name'] == '') {
+            $is_success = 0;
+            $msg = 'Please enter job type name';
+        }
+
+        if( $post['job_type_name'] != '' ){
+            $isJobTypeExists = $this->JobType_model->getByTitleAndCompanyId($post['job_type_name'], $cid);
+            if( $isJobTypeExists ){
+                $is_success = 0;
+                $msg = 'Job type already exists';
+            }
+        }
+
+        if( $is_success == 1 ){
+            $data_job_type = [
+                'user_id' => $uid,
+                'company_id' => $cid,
+                'title' => $post['job_type_name'],
+                'icon_marker' => 'settings_48px.png',
+                'is_marker_icon_default_list' => 1,
+                'status' => 1,
+                'created_at' => date("Y-m-d H:i:s")
+            ];
+
+            $job_type_id = $this->JobType_model->create($data_job_type);
+            if ($job_type_id > 0) {
+                //Activity Logs
+                $activity_name = 'Job Type : Created Job Type '. $post['job_type_name']; 
+                createActivityLog($activity_name);
+
+                $job_type_name = $post['job_type_name'];
+            }
+
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+            'job_type_name' => $job_type_name
+        ];
+
+        echo json_encode($return);        
+    }
+
+    public function ajax_quick_create_job_tag()
+    {
+        $this->load->model('JobTags_model');
+
+        $is_success = 1;
+        $msg        = '';
+        $job_tag_name = '';
+
+        $cid = logged('company_id');
+        $uid = logged('id');
+        $post = $this->input->post();
+        
+        if ($post['job_tag_name'] == '') {
+            $is_success = 0;
+            $msg = 'Please enter job tag name';
+        }
+
+        if( $post['job_tag_name'] != '' ){
+            $isJobTagExists = $this->JobTags_model->getByNameAndCompanyId($post['job_tag_name'], $cid);
+            if( $isJobTagExists ){
+                $is_success = 0;
+                $msg = 'Job tag already exists';
+            }
+        }
+
+        if( $is_success == 1 ){
+            $data = [
+                'name' => $post['job_tag_name'],
+                'company_id' => $cid,
+                'marker_icon' => 'settings_48px.png',
+                'is_marker_icon_default_list' => 1
+            ];
+
+            $this->JobTags_model->create($data);
+
+            //Activity Logs
+            $activity_name = 'Created Job Tag '.$post['job_tag_name']; 
+            createActivityLog($activity_name);
+
+            $job_tag_name = $post['job_tag_name'];
+
+        }
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+            'job_tag_name' => $job_tag_name
+        ];
+
+        echo json_encode($return);        
+    }
 }
 
 /* End of file Job.php */

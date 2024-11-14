@@ -2417,6 +2417,7 @@ class Customer extends MY_Controller
             
             $this->page_data['customer_id'] = $id;
 
+            $this->db->where('is_active', 1);
             $this->db->where('customer_id', $id);
             $customerDocuments = $this->db->get('acs_customer_documents')->result_array();
             

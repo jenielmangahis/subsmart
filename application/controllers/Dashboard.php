@@ -234,14 +234,80 @@ class Dashboard extends Widgets
         // $this->page_data['leadSources']=$this->event_model->getLeadSourceWithCount(); // fetch Lead Sources
 
         $latestJobs = $this->event_model->getLatestJobs();
-        foreach ($latestJobs as $job) {
+
+        $jobIds = array_map(function ($job) {
+            return $job->id;
+        }, $latestJobs);
+
+        if (!empty($jobIds)) {
+            // Calculate job amount based on saved job's items.
+
+            $this->db->select('job_items.job_id,items.id,items.title,items.price,job_items.total,job_items.cost,job_items.qty,job_items.tax');
+            $this->db->from('job_items');
+            $this->db->join('items', 'items.id = job_items.items_id', 'left');
+            $this->db->where_in('job_items.job_id', $jobIds);
+            $itemsQuery = $this->db->get();
+            $items = $itemsQuery->result();
+
+            $jobAmounts = [];
+            foreach ($items as $item) {
+                if (!array_key_exists($item->job_id, $jobAmounts)) {
+                    $jobAmounts[$item->job_id] = 0;
+                }
+
+                $total = (float) $item->total; // include tax? (float) $item->tax
+                $jobAmounts[$item->job_id] = $jobAmounts[$item->job_id] + $total;
+            }
+
+            $latestJobs = array_map(function ($job) use ($jobAmounts) {
+                if (!array_key_exists($job->id, $jobAmounts)) {
+                    return $job;
+                }
+
+                // make sure to calculate amount from items
+                $job->amount = $jobAmounts[$job->id];
+                return $job;
+            }, $latestJobs);
+        }
+
+        $latestJobs = array_map(function ($job) {
+            if (!$job->work_order_id) {
+                return $job;
+            }
+
+            $this->db->select('installation_cost,otp_setup,monthly_monitoring');
+            $this->db->where('id', $job->work_order_id);
+            $workorderQuery = $this->db->get('work_orders');
+            $workorder = $workorderQuery->row();
+
+            if (!$workorder) {
+                return $job;
+            }
+
+            // make sure to include adjustment to total
+            if ($workorder->installation_cost) {
+                $job->amount = (float) $job->amount + (float) $workorder->installation_cost;
+            }
+            if ($workorder->otp_setup) {
+                $job->amount = (float) $job->amount + (float) $workorder->otp_setup;
+            }
+            if ($workorder->monthly_monitoring) {
+                $job->amount = (float) $job->amount + (float) $workorder->monthly_monitoring;
+            }
+
+            return $job;
+        }, $latestJobs);        
+
+
+        /*foreach ($latestJobs as $job) {
             $jobPayment = $this->jobs_model->getJobPaymentByJobId($job->id);
             if ($jobPayment) {
                 $job->amount = $jobPayment->amount;
             } else {
                 $job->payment = 0;
             }
-        }
+        }*/
+
         $this->page_data['latestJobs'] = $latestJobs; // fetch Sales Rep and customer they are assigned to
         $this->page_data['company_id'] = $companyId; // Company ID of the logged in USER
 
@@ -608,8 +674,8 @@ class Dashboard extends Widgets
                 $total_query = [
                     'where' => ['estimates.company_id' => logged('company_id'), 'estimates.status !=' => 'Lost',
                 'estimates.status !=' => 'Invoiced', 'estimates.view_flag' => '0', 'estimates.status !=' => 'Declined By Customer',
-                'DATE(estimates.created_at)  >=' => date('Y-m-d H:i:s', strtotime($date_from)),
-                 'DATE(estimates.created_at)  <=' => date('Y-m-d H:i:s', strtotime($date_to))],
+                'DATE(estimates.created_at)  >=' => date('Y-m-d', strtotime($date_from)),
+                 'DATE(estimates.created_at)  <=' => date('Y-m-d', strtotime($date_to))],
                     'table' => 'estimates',
                     'join' => [
                        [
@@ -667,20 +733,18 @@ class Dashboard extends Widgets
                 if(  $date_to == '0000-00-00 23:59:59'){
                     $total_query = [
                         'filter'=>$filter,
-                        'where' => [
-                            'acs_profile.company_id' => logged('company_id'),
-                            ],
-                        'select'=>' SUM( COALESCE(acs_billing.mmr, 0)) AS total_amount_subscriptions,
-                                    COUNT(acs_billing.bill_id) AS total_subscriptions,
-                                    COUNT(acs_profile.prof_id) AS total_active_subscription,
+                        'select'=>' SUM(CASE WHEN DATE(acs_billing.bill_start_date) < CURDATE() THEN COALESCE(acs_billing.mmr, 0) ELSE 0 END) AS total_amount_subscriptions,
+                                    COUNT(CASE WHEN DATE(acs_billing.bill_start_date) < CURDATE() THEN acs_billing.bill_id END) AS total_subscriptions,
+                                    COUNT(CASE WHEN DATE(acs_billing.bill_start_date) < CURDATE() THEN acs_profile.prof_id END) AS total_active_subscription,
                                     
-                                    SUM(CASE WHEN acs_billing.bill_start_date = CURDATE() THEN COALESCE(acs_billing.mmr, 0) ELSE 0 END) AS total_current_amount_subscriptions,
-                                    COUNT(CASE WHEN acs_billing.bill_start_date = CURDATE() THEN acs_profile.prof_id END) AS total_current_active_subscription'
+                                    SUM(CASE WHEN DATE(acs_billing.bill_start_date) = CURDATE() THEN COALESCE(acs_billing.mmr, 0) ELSE 0 END) AS total_current_amount_subscriptions,
+                                    COUNT(CASE WHEN DATE(acs_billing.bill_start_date) = CURDATE() THEN acs_profile.prof_id END) AS total_current_active_subscription'
                         ];
                 }else{
                     $total_query = [
                         'where' => [
-                        'acs_billing.bill_start_date >=' => date('Y-m-d H:i:s', strtotime($date_from)), 
+                        'DATE(acs_billing.bill_start_date) >=' => date('Y-m-d', strtotime($date_from)), 
+                        'DATE(acs_billing.bill_end_date) >=' => date('Y-m-d', strtotime($date_to)),
                         'acs_profile.company_id' => logged('company_id'),
                         ],
                         'filter'=>$filter,
@@ -694,8 +758,8 @@ class Dashboard extends Widgets
 
                 $mmr_query = [
                     'where' => [
-                        'acs_billing.bill_start_date>=' => date('Y-m-d H:i:s', strtotime($date_from)), 
-                        'acs_billing.bill_start_date >=' => date('Y-m-d H:i:s', strtotime($date_to)),
+                        'DATE(acs_billing.bill_start_date) >=' => date('Y-m-d', strtotime($date_from)), 
+                        'DATE(acs_billing.bill_end_date) >=' => date('Y-m-d', strtotime($date_to)),
                         'acs_profile.company_id' => logged('company_id'),
                         ],
                     'select' => 'acs_billing.*',
@@ -868,7 +932,6 @@ class Dashboard extends Widgets
                         ],
                     ],
                     'select' => 'customer_groups.title, COUNT(acs_profile.prof_id) AS total_customer',
-                    'where_in'=>"'acs_profile.status', ['Active w/RAR','Active w/RMR','Active w/RQR','Active w/RYR','Inactive w/RMM']"
                 ];
                 $customer = $this->general->get_data_with_param($acs_profile_query);
                 $this->output->set_output(json_encode(['first' => null, 'second' => null, 'customer' => $customer]));
