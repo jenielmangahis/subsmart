@@ -681,11 +681,18 @@ class Tickets_model extends MY_Model
         return $query->result();
     }
 
-    public function getAllTicketsByCompanyIdAndDateRange($cid, $date_range = array())
+    public function getAllTicketsByCompanyIdAndDateRange($cid, $date_range = array(), $status = [])
     {
         $this->db->select('*');        
         $this->db->from($this->table);   
         $this->db->where('company_id', $cid);
+        if( $status ){
+            $this->db->group_start();            
+            foreach( $status as $value ){
+                $this->db->or_where('ticket_status', $value);
+            }
+            $this->db->group_end();
+        }
 
         if( $date_range ){
             $this->db->where('ticket_date >=', $date_range['from']);
