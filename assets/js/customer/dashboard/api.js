@@ -73,6 +73,18 @@ export async function clientAgreementMaxUploadConfirmation() {
   return !!(alert.value && alert.value === true);
 }
 
+export async function deleteConfirmation() {
+  const alert =  await Swal.fire({
+    title: 'Delete Document',
+    text: `Continue deleting selected document?`,
+    icon: 'question',
+    showCancelButton: true,
+    confirmButtonText: 'Proceed',
+    cancelButtonText: 'Cancel'
+  });
+  return !!(alert.value && alert.value === true);
+}
+
 export function deleteCustomerDocument(payload, urlGetParams = null) {
   let endpoint = `${prefixURL}/CustomerDashboardQuickActions/deleteCustomerDocument`;
   if (urlGetParams !== null) {
