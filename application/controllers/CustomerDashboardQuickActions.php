@@ -326,7 +326,7 @@ class CustomerDashboardQuickActions extends MYF_Controller
         $this->respond(['data' => $this->db->get('acs_customer_documents')->row()]);
     }
 
-    public function deleteCustomerDocument()
+    public function deleteCustomerDocumentV1()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             $this->respond(['success' => false]);
@@ -356,6 +356,29 @@ class CustomerDashboardQuickActions extends MYF_Controller
         } else {
             $this->db->where('id', $currDocument->id);
             $this->db->update('acs_customer_documents', ['file_name' => null]);
+        }
+
+        $this->respond(['data' => null, 'deleted' => $payload]);
+    }
+
+    public function deleteCustomerDocument()
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->respond(['success' => false]);
+        }
+
+        $payload = json_decode(file_get_contents('php://input'), true);
+        ['document_type' => $documentType, 'customer_id' => $customerId] = $payload;
+
+        $filePath = $this->getCustomerDocumentPath($customerId);
+
+        $this->db->where('customer_id', $customerId);
+        $this->db->where('document_type', $documentType);
+        $currDocument = $this->db->get('acs_customer_documents')->row();
+
+        if( $currDocument ){
+            $this->db->where('id', $currDocument->id);
+            $this->db->update('acs_customer_documents', ['is_active' => 0]);
         }
 
         $this->respond(['data' => null, 'deleted' => $payload]);
@@ -621,17 +644,21 @@ class CustomerDashboardQuickActions extends MYF_Controller
         $document = $this->db->get('acs_customer_documents')->row();
         
         if( $document ){
+
             $this->db->select('prof_id, company_id');
             $this->db->where('prof_id', $document->customer_id);
             $customer = $this->db->get('acs_profile')->row();
 
             if( $customer->company_id == $cid ){
-                if ($document->file_name && file_exists($filePath . $document->file_name)) {
-                    unlink($filePath . $document->file_name);
-                }
+                $this->db->where('id', $document->id);
+                $this->db->update('acs_customer_documents', ['is_active' => 0]);
+            
+                // if ($document->file_name && file_exists($filePath . $document->file_name)) {
+                //     unlink($filePath . $document->file_name);
+                // }
 
-                $this->db->where('id', $post['cdi']);
-                $this->db->delete('acs_customer_documents');
+                // $this->db->where('id', $post['cdi']);
+                // $this->db->delete('acs_customer_documents');
 
                 $is_success = 1;
                 $msg = '';
@@ -657,6 +684,49 @@ class CustomerDashboardQuickActions extends MYF_Controller
         //$total = 3;
         echo json_encode([
             'total' => $total
+        ]);
+    }
+
+    public function ajaxGetDocumentArchives()
+    {
+        $post = $this->input->post();
+
+        $this->db->where('customer_id', $post['cid']);
+        $this->db->where('is_active', 0);
+        $archivedDocuments = $this->db->get('acs_customer_documents')->result();
+
+        $this->page_data['archivedDocuments'] = $archivedDocuments;
+        $this->load->view('v2/pages/customer/ajax_customer_document_archive_list', $this->page_data);
+    }
+
+    public function ajaxRestoreArchivedDocument()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $cid = logged('company_id');
+        $post = $this->input->post();
+
+        $this->db->where('id', $post['cdi']);
+        $document = $this->db->get('acs_customer_documents')->row();
+        if( $document ){
+            $this->db->select('prof_id, company_id');
+            $this->db->where('prof_id', $document->customer_id);
+            $customer = $this->db->get('acs_profile')->row();
+
+            if( $customer->company_id == $cid ){
+                $this->db->where('id', $document->id);
+                $this->db->update('acs_customer_documents', ['is_active' => 1]);
+
+                $is_success = 1;
+                $msg = '';
+            } 
+        }
+
+
+        echo json_encode([
+            'is_success' => $is_success,
+            'msg' => $msg
         ]);
     }
 }
