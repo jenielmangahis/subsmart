@@ -27,7 +27,7 @@ class Taskhub extends MY_Controller {
                     
         }
 
-	public function index(){
+	public function index(){		
         $this->page_data['page']->title  = 'Task Hub';
         $this->page_data['page']->parent = 'Calendar';
 
@@ -1733,6 +1733,44 @@ class Taskhub extends MY_Controller {
 			$json_data = ['is_success' => 0, 'msg' => 'No selected task comment.'];
 			echo json_encode($json_data);  	
 		}
+	}
+
+	public function tasks_list()
+	{
+		$cid = logged('company_id');
+
+		$tasksList = $this->taskhub_model->getAllTaskListByCompanyId($cid);
+
+		$this->page_data['page']->title  = 'Task List';
+        $this->page_data['page']->parent = 'Calendar';
+		$this->page_data['tasksList'] = $tasksList;
+		$this->load->view('v2/pages/workcalender/taskhub/task_list/list', $this->page_data);
+	}
+
+	public function ajax_create_task_list()
+	{
+		$is_success = 1;
+        $msg = '';
+
+        $cid  = logged('company_id');
+		$uid  = logged('id');
+        $post = $this->input->post();
+
+		$data = [
+			'name' => $post['task_list_name'],
+			'color' => $post['color_code'],
+			'company_id' => $cid,
+			'created_by' => $uid
+		];
+		
+		$this->taskhub_model->saveTaskList($data);
+
+		$return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
 	}
 }
 ?>
