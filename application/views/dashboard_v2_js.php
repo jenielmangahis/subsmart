@@ -300,11 +300,12 @@ $(document).ready(function() {
         if (success) {
             for (var x = 0; x < status.length; x++) {
                 if(status[x].status != ''){
+                        var total_count = parseFloat(status[x].statusCount);                        
                         $('#customer_status').append(
                         '<div class="row js-row-dash"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">' +
                         status[x].status +
                         '</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">' +
-                        status[x].statusCount + '</span></div></div></div></div></div></div>'
+                        total_count.toLocaleString(undefined, {minimumFractionDigits: 0}) + '</span></div></div></div></div></div></div>'
                     )
                 }
               
