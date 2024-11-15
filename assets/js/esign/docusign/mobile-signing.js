@@ -39,6 +39,16 @@ function Signing(hash) {
     data = await response.json();
     window.__esigndata = data;
 
+    if (data.generated_pdf) {
+      let downloadEsignQueryString = new URLSearchParams({
+        document_type: "esign",
+        generated_esign_id: data.generated_pdf.docfile_id,
+        //generated_esign_id: 1643, //For debugging
+      }).toString();
+  
+      generateFileVault(downloadEsignQueryString);   
+    }
+
     if( window.__esigndata.is_finished == 1 ){
       $('.btn-finish-text').text('Finish');
     }
@@ -2050,12 +2060,12 @@ function Signing(hash) {
   async function generateFileVault(downloadEsignQueryString) {
     const endpointDownloadEsign = `${prefixURL}/CustomerDashboardQuickActions/mobileDownloadCustomerDocument?${downloadEsignQueryString}`;
     const response = await fetch(endpointDownloadEsign);
-    data = await response.json();
+    fileData = await response.json();
 
-    if( data.is_success == 1 ){
+    if( fileData.is_success == 1 ){
       alert('File is downloaded into file vault.');
     }else{
-      alert(data.msg);
+      alert(fileData.msg);
     }
   }
 
