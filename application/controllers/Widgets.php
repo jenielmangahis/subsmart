@@ -946,6 +946,9 @@ class Widgets extends MY_Controller
         $unpaidInvoices    = $this->Invoice_model->getCompanyUnpaidInvoices($cid, $date_range);
         $overDueInvoices   = $this->Invoice_model->getCompanyOverDueInvoices($cid, $date_range);
         $totalPaidInvoices = $this->Invoice_model->getCompanyTotalAmountPaidInvoices($cid, $date_range);
+
+       
+        
         $subscriptions     = $this->AcsProfile_model->getCompanyTotalSubscriptions($cid, $date_range);
 
         $totalUnpaidInvoices  = count($unpaidInvoices);

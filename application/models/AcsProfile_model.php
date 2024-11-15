@@ -684,14 +684,15 @@ class AcsProfile_model extends MY_Model
     public function getCompanyTotalSubscriptions($cid, $date_range = [])
     {
        
-        $this->db->select('acs_billing.bill_id, SUM(COALESCE(acs_billing.mmr, 0)) AS total_subscription');
-        $this->db->from($this->table2);
-        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->select('acs_billing.bill_id,SUM(COALESCE(acs_billing.mmr, 0))  AS total_subscription');
+        $this->db->from($this->table);
+        $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $cid);
+        $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RQR', 'Active w/RMR', 'Active w/RYR', 'Inactive w/RMM']);
 
-        if (!empty($date_range)) {
-            $date_from = $date_range['from'] . ' 00:00:00';
-            $this->db->where('acs_billing.bill_start_date >=', date('Y-m-d H:i:s', strtotime($date_from)));
+        if (!empty($date_range['from'])) {
+            $date_from = $date_range['from'];
+            $this->db->where('acs_billing.bill_start_date >=', date('Y-m-d', strtotime($date_from)));
             // $this->db->where('DATE(acs_billing.bill_end_date) >=', date('Y-m-d H:i:s', strtotime($date_range['from'])));
         }
 
@@ -720,6 +721,18 @@ class AcsProfile_model extends MY_Model
         return $query;
     }
 
+    public function getTotalActiveServicePlans($cid)
+    {
+        $this->db->select('COUNT(*) AS total_active_subscriptions');
+        $this->db->where('company_id', $cid);
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get('ac_rateplan');
+
+        return $query->row();
+
+    }
+
+
     public function getCompanyTotalAmountActiveRecurringPayment($cid, $date_range = [])
     {
         $this->db->select('COALESCE(SUM(acs_billing.mmr),0)AS total_amount');
@@ -739,6 +752,22 @@ class AcsProfile_model extends MY_Model
 
         return $query;
     }
+
+    public function getTotalRecurringPayment($cid)
+    {
+        $this->db->select('acs_billing.bill_id,SUM(COALESCE(acs_billing.mmr, 0))  AS total_amount');
+        $this->db->from($this->table);
+        $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_profile.company_id', $cid);
+        $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RQR', 'Active w/RMR', 'Active w/RYR', 'Inactive w/RMM']);
+        $query = $this->db->get()->row();
+
+        return $query;
+
+        return $query;
+    }
+
+
 
     public function getCompanyActiveSubscriptionWillExpireIn30Days($cid)
     {

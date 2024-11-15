@@ -189,11 +189,10 @@ $(function(){
             dataType: 'json',
             success: function (data) {
                 var total_amount_paid = parseFloat(data.total_amount_paid_invoices);
-                var total_amount_subscriptions = parseFloat(data.total_amount_subscriptions);
                 $('#income-widget-open-invoices').text(data.total_unpaid_invoices);
                 $('#income-widget-overdue').text(data.total_overdue_invoices);
                 $('#income-widget-paid-invoices').text('$' + total_amount_paid.toLocaleString(undefined, {minimumFractionDigits: 2}));
-                $('#income-widget-subscriptions').text('$' + total_amount_subscriptions.toLocaleString(undefined, {minimumFractionDigits: 2}));
+                $('#income-widget-subscriptions').text('$' + data.total_amount_subscriptions);
             }
         });
     }
