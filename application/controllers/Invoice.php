@@ -965,8 +965,7 @@ class Invoice extends MY_Controller
     }
 
     public function invoice_edit($id)
-    {
-        
+    {   
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
@@ -984,11 +983,11 @@ class Invoice extends MY_Controller
         // $this->page_data['items'] = $this->items_model->getItemlist();
         $this->page_data['itemsDetails'] = $this->invoice_model->getInvoiceItems($id);
         $this->page_data['terms'] =  $terms;
-        // print_r($this->page_data['invoice']);
-        
         $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
         $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
-
+        $this->page_data['page_title'] = "Invoices & Payments";
+        $this->page_data['page']->title = 'Invoices & Payments';
+        $this->page_data['page']->parent = 'Sales';
         $this->load->view('invoice/invoice_edit', $this->page_data);
     }
 
