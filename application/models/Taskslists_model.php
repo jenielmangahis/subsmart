@@ -23,6 +23,27 @@ class Taskslists_model extends MY_Model {
         return $query->result();
     }
 
+    public function getAllByCompanyId($company_id,$filters=[])
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+
+        if ( !empty($filters) ) {
+            if ( !empty($filters['search']) ) {
+                $this->db->like('name', $filters['search'], 'both');
+            }
+        }
+
+        if(!empty($company_id)) {
+            $this->db->where('company_id', $company_id);
+        }
+
+        $this->db->order_by('id', 'DESC');
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
 	public function getById($id)
     {
         $this->db->select('*');

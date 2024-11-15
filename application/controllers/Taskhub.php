@@ -144,11 +144,12 @@ class Taskhub extends MY_Controller {
         $this->page_data['page']->parent = 'Calendar';
 		$this->page_data['taskhub_tab_subtitle'] = 'Create New Task';
 
-		$taskslists = $this->taskslists_model->getAll();
-
+		
 		$this->hasAccessModule(6);
 		$uid = logged('id');
 		$company_id = logged('company_id');
+
+		$taskslists = $this->taskslists_model->getAllByCompanyId($company_id);
 
 		$users_selection = $this->db->query(
 			'select '.'a.id, '.'concat(a.FName, " ", a.LName) as `name` '.'from users a '
@@ -396,7 +397,8 @@ class Taskhub extends MY_Controller {
 			$this->page_data['users_selection'] = $users_selection->result();
 		}
 
-		$taskslists = $this->taskslists_model->getAll();
+		//$taskslists = $this->taskslists_model->getAll();
+		$taskslists = $this->taskslists_model->getAllByCompanyId($company_id);
 
 		$taskid = trim($this->input->post('taskid'));
 
@@ -1667,6 +1669,35 @@ class Taskhub extends MY_Controller {
         echo json_encode($json_data);  
 	}
 
+	public function ajax_delete_task_list()
+	{
+		$this->load->model('Taskhub_model');
+
+        $cid = logged('company_id');
+
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $post = $this->input->post();  
+        $taskHubList = $this->Taskhub_model->getTaskListById($post['tsid']);
+
+        if( $taskHubList && $taskHubList->company_id == $cid ){
+
+			$this->Taskhub_model->deleteByTaskListId($taskHubList->id);
+
+			//Activity Logs
+			$activity_name = 'Taskhub List : Deleted Task List ' . $taskHubList->name; 
+			createActivityLog($activity_name);
+
+        	$msg ='';
+	        $is_success = 1;   	
+        }
+ 
+		$json_data = ['is_success' => $is_success, 'msg' => $msg];
+
+        echo json_encode($json_data);  
+	}
+
 	public function ajax_delete_selected_tasks()
 	{
 		$this->load->model('Taskhub_model'); 
@@ -1771,6 +1802,40 @@ class Taskhub extends MY_Controller {
         ];
 
         echo json_encode($return);
+	}
+
+	public function ajax_update_task_list()
+	{
+		$is_success = 1;
+        $msg = '';
+
+        $cid  = logged('company_id');
+		$uid  = logged('id');
+        $post = $this->input->post();
+
+		$task_list_id = $post['task_list_id'];
+		if(($task_list_id > 0)){
+			$task_list = $this->taskslists_model->getById($task_list_id);
+			if($task_list) {
+				$data = [
+					'name' => $post['task_list_name'],
+					'color' => $post['color_code'],
+				];				
+
+				$update_successful = $this->taskslists_model->trans_update($data, array('id' => trim($task_list_id)));
+				if($update_successful) {
+					$is_success = 1;
+					$msg = 'Task list is saved successfully.';	
+				}
+			}
+		}
+
+		$return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+		echo json_encode($return);
 	}
 }
 ?>
