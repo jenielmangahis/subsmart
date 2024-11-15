@@ -1,350 +1,40 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 ?>
-
 <!-- Script for autosaving form -->
-<script src="<?=base_url("assets/js/invoice/autosave-update.js")?>"></script>
-
+<!-- <script src="<?=base_url("assets/js/invoice/autosave-update.js")?>"></script> -->
 <?php include viewPath('v2/includes/header'); ?>
-<div class="wrapper" role="wrapper">
-<?php //include viewPath('includes/sidebars/invoice'); ?>
-    <link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
+<link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
     
-    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
-    <style>
-  .custom-signaturepad {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  .custom-signaturepad .sigWrapper canvas {
-      width: 100%;
-  }
-  .custom-signaturepad .sigPad  {
-    width: 100% !important;
-  }
-  #group_area{
-    background-color:#F9F9F9;
-  }
-  #group_area:hover{
-    background-color:#EBFFE2;
-  }
-  .pointer {cursor: pointer;}
-/* 
-  #company_representative_approval_signature1a{
-  border: solid 1px blue;  
-  width: 100%;
-} */
-
-#signature-pad {min-height:200px;}
-#signature-pad canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-#signature-pad2 {min-height:200px;}
-#signature-pad2 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-#signature-pad3 {min-height:200px;}
-#signature-pad3 canvas {background-color:white;left: 0;top: 0;width: 100%;min-height:250px;height: 100%}
-
-.switch {
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
-}
-
-.switch input { 
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-.slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-}
-
-input:checked + .slider {
-  background-color: #10ab06;
-}
-
-input:focus + .slider {
-  box-shadow: 0 0 1px #10ab06;
-}
-
-input:checked + .slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
-}
-
-/* Rounded sliders */
-.slider.round {
-  border-radius: 34px;
-}
-
-.slider.round:before {
-  border-radius: 50%;
-}
-
-
-.signature_mobile
-{
-    display: none;
-}
-
-.show_mobile_view
-{
-    display: none;
-}
-
-@media only screen and (max-device-width: 600px) {
-    .label-element{
-        position:absolute;
-        top:-8px;
-        left:25px;
-        font-size:12px;
-        color:#666;
-        }
-    .input-element{
-        padding:30px 5px 10px 8px;
-        width:100%;
-        height:55px;
-        /* border:1px solid #CCC; */
-        font-weight: bold;
-        margin-top: -15px;
-    }
-
-        .mobile_qty
-    {
-        background: transparent !important;
-        border: none !important;
-        outline: none !important;
-        padding: 0px 0px 0px 0px !important;
-        text-align: center;
-    }
-
-    .select-wrap 
-    {
-    border: 2px solid #e0e0e0;
-    /* border-radius: 4px; */
-    margin-top: -10px;
-    /* margin-bottom: 10px; */
-    padding: 0 5px 5px;
-    width:100%;
-    /* background-color:#ebebeb; */
-    }
-
-    .select-wrap label
-    {
-    font-size:10px;
-    text-transform: uppercase;
-    color: #777;
-    padding: 2px 8px 0;
-    }
-
-    .m_select
-    {
-    /* background-color: #ebebeb;
-    border:0px; */
-    border-color: white !important;
-    border:0px !important;
-    outline:0px !important;
-    }
-    .select2 .select2-container .select2-container--default{
-        /* background-color: #ebebeb;
-    border:0px; */
-    border-color: white !important;
-    border:0px !important;
-    outline:0px !important;
-    }
-
-    .select2-container--default .select2-selection--single {
-    background-color: #fff;
-    border: 1px solid #fff !important;
-    border-radius: 4px;
-    }
-
-    .sub_label{
-        font-size:12px !important;
-    }
-
-    .signature_web
-    {
-        display: none;
-    }
-
-    .signature_mobile
-    {
-        display: block;
-    }
-
-    .hidden_mobile_view{
-        display: none;
-    }
-
-    .show_mobile_view
-    {
-        display: block;
-    }
-
-    .table_mobile
-    {
-        font-size:14px;
-    }
-
-    div.dropdown-wrapper select { 
-    width:115% /* This hides the arrow icon */; 
-    background-color:transparent /* This hides the background */; 
-    background-image:none; 
-    -webkit-appearance: none /* Webkit Fix */; 
-    border:none; 
-    box-shadow:none; 
-    padding:0.3em 0.5em; 
-    font-size:13px;
-    }
-    .signature-pad-canvas-wrapper {
-    margin: 15px 0 0;
-    border: 1px solid #cbcbcb;
-    border-radius: 3px;
-    overflow: hidden;
-    position: relative;
-}
-
-    .signature-pad-canvas-wrapper::after {
-        content: 'Name';
-        border-top: 1px solid #cbcbcb;
-        color: #cbcbcb;
-        width: 100%;
-        margin: 0 15px;
-        display: inline-flex;
-        position: absolute;
-        bottom: 10px;
-        font-size: 13px;
-        z-index: -1;
-    }
-
-    .tabs { list-style: none; }
-.tabs li { display: inline; }
-.tabs li a 
-{ 
-    color: black; 
-    float: left; 
-    display: block; 
-    /* padding: 4px 10px;  */
-    /* margin-left: -1px;  */
-    position: relative; 
-    /* left: 1px;  */
-    background: #a2a5a3; 
-    text-decoration: none; 
-}
-.tabs li a:hover 
-{ 
-    background: #ccc; 
-}
-.group:after 
-{ 
-    visibility: hidden; 
-    display: block; 
-    font-size: 0; 
-    content: " "; 
-    clear: both; 
-    height: 0; 
-}
-
-.box-wrap 
-{ 
-    position: relative; 
-    min-height: 250px; 
-}
-.tabbed-area div div 
-{ 
-    background: white; 
-    padding: 20px; 
-    min-height: 250px; 
-    position: absolute; 
-    top: -1px; 
-    left: 0; 
-    width: 100%; 
-}
-
-.tabbed-area div div, .tabs li a 
-{ 
-    border: 1px solid #ccc; 
-}
-
-#box-one:target, #box-two:target, #box-three:target {
-  z-index: 1;
-}
-
-.group li.active a,
-.group li a:hover,
-.group li.active a:focus,
-.group li.active a:hover{
-  background-color: #52cc6e;
-  color: black; 
-}
-}
-</style>
-<div class="row">
+<div class="row page-content g-0">
     <div class="col-12 mb-3">
-        <?php include viewPath('v2/includes/page_navigations/sales_tabs'); ?>
+        <?php include viewPath('v2/includes/page_navigations/invoce_tabs_v2'); ?>
     </div>
     <div class="col-12 mb-3">
         <?php include viewPath('v2/includes/page_navigations/invoice_subtabs'); ?>
     </div>
-</div>
+
     <!-- page wrapper start -->
-    <div wrapper__section>
-        <div class="container-fluid" style="background-color:white;">
-            <div class="page-title-box" style="padding:0 0 0 2%;">
-                <div class="row align-items-center">
-                  <div class="col-sm-6">
-                      <h3 class="page-title mt-0" style="font-size: 1.75rem; font-weight: 600;">Update Invoice</h3>
-                  </div>
-                  <div class="col-sm-6">
-                      <div class="float-right d-none d-md-block" style="float:right;">
-                          <div class="dropdown">
-                                  <a href="<?php echo base_url('invoice') ?>" class="btn btn-primary"
-                                     aria-expanded="false">
-                                      <i class="mdi mdi-settings mr-2"></i> Go Back to Invoices List
-                                  </a>
-                          </div>
-                      </div>
-                  </div>
-                </div>
-                <div class="pl-3 pr-3 mt-2 row">
-                  <div class="col mb-4 left alert alert-warning mt-0 mb-0">
-                      <span style="color:black;font-family: 'Open Sans',sans-serif !important;font-weight:300 !important;font-size: 14px;">Complete the fields below to create a new invoice.</span>
-                  </div>
+    <div class="col-12">
+        <div class="nsm-page">
+            <div class="nsm-page-content">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="nsm-callout primary">
+                            <button><i class='bx bx-x'></i></button>
+                            Edit Invoice.
+                        </div>
+                    </div>
                 </div>
             </div>
             <!-- end row -->
             <?php echo form_open_multipart('invoice/updateInvoice', ['class' => 'form-validate require-validation', 'id' => 'invoice_form', 'autocomplete' => 'off']); ?>
 
-            <div class="row custom__border" style="padding:2%;">
-                <div class="col-xl-12">
-                    <div class="card">
-                        <div class="card-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="nsm-card primary">
+                        <div class="">
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-5 form-group">
                                 <input type="hidden" value="<?php echo $invoice->id; ?>" name="invoiceDataID">
@@ -637,7 +327,12 @@ input:checked + .slider:before {
                                                 </tr>
                                                 <tr>
                                                     <td>Taxes</td>
-                                                    <td colspan="2" align="right">$ <span id="total_tax_"><?php echo number_format(intval($invoice->taxes), 2); ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $invoice->taxes; ?>"></td>
+                                                    <td colspan="2" align="right">
+                                                        <div style="display:none;">
+                                                        $ <span id="total_tax_"><?php echo number_format(intval($invoice->taxes), 2); ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $invoice->taxes; ?>">
+                                                        </div>
+                                                        <input type="number" step="any" min="0" class="form-control" id="taxes" name="taxes" value="<?= $invoice->taxes > 0 ? number_format($invoice->taxes, 2, ".","") : '0.00'; ?>" required="" style="width:50%;text-align:right;" />
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Installation Cost</td>                                                    
@@ -658,7 +353,7 @@ input:checked + .slider:before {
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td style="width:;"><input type="text" name="adjustment_name" id="adjustment_name" value="<?php echo $invoice->adjustment_name; ?>" placeholder="Adjustment Name" class="form-control" style="width:; display:inline; border: 1px dashed #d1d1d1"><span class="fa fa-question-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span></td>
+                                                    <td><input type="text" name="adjustment_name" id="adjustment_name" value="<?php echo $invoice->adjustment_name; ?>" placeholder="Adjustment Name" class="form-control" style="width:80%;margin-right:4px; display:inline;"><span class="bx bx-fw bx-help-circle" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional it allows you to adjust the total amount Eg. +10 or -10." data-original-title="" title=""></span></td>
                                                     <td colspan="2" align="right">
                                                     <input type="number" name="adjustment_value" id="adjustment_input" value="<?php if(empty($invoice->adjustment_value)){ echo "0"; }else{echo $invoice->adjustment_value; } ?>" class="form-control adjustment_input" style="width:50%;text-align:right;">                                                        
                                                         <span id="adjustmentText" style="display:none;"><?php echo $invoice->adjustment_value; ?></span>
@@ -818,9 +513,8 @@ input:checked + .slider:before {
                             <br>
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12 form-group">
-                                    <button class="btn btn-light but" style="border-radius: 0 !important;border:solid gray 1px;" data-action="update">Update</button>
-                                    <button class="btn btn-success but" style="border-radius: 0 !important;" data-action="send">Preview</button>
-                                    <a href="<?php echo url('invoice') ?>" class="btn but-red">cancel this</a>
+                                    <button class="nsm-button primary but" data-action="update">Update</button>                                    
+                                    <a href="<?php echo url('invoice') ?>" class="btn">Cancel</a>
                                 </div>
                             </div>
 
