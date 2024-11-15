@@ -211,7 +211,9 @@ class Users_model extends MY_Model
         $this->db->select('*');
         $this->db->from($this->table);
         $this->db->where('company_id', $company_id);
-        $this->db->where('user_type', $user_type);
+        if( $user_type != '' ){
+            $this->db->where('user_type', $user_type);
+        }         
 
         $query = $this->db->get();
         return $query->result();

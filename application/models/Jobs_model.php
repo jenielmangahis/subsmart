@@ -941,7 +941,7 @@ class Jobs_model extends MY_Model
         return $query->row();
     }
 
-    public function countAssignedJobsByUserId($user_id, $date_range = [])
+    public function countAssignedJobsByUserId($user_id, $date_range = [], $status = [])
     {
         $this->db->select('COUNT(id)AS total_jobs_assigned');
         $this->db->from($this->table);
@@ -953,6 +953,14 @@ class Jobs_model extends MY_Model
             $this->db->or_where('employee5_id', $user_id);
             $this->db->or_where('employee6_id', $user_id);
         $this->db->group_end();
+
+        if( $status ){
+            $this->db->group_start();
+            foreach($status as $value){                
+                $this->db->or_where('status', $value);                
+            }
+            $this->db->group_end();
+        }
 
         if( !empty($date_range) ){
             $this->db->where("start_date >= ", $date_range['from']);

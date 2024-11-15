@@ -239,7 +239,7 @@ class Dashboard extends Widgets
             return $job->id;
         }, $latestJobs);
 
-        if (!empty($jobIds)) {
+        /*if (!empty($jobIds)) {
             // Calculate job amount based on saved job's items.
 
             $this->db->select('job_items.job_id,items.id,items.title,items.price,job_items.total,job_items.cost,job_items.qty,job_items.tax');
@@ -268,9 +268,9 @@ class Dashboard extends Widgets
                 $job->amount = $jobAmounts[$job->id];
                 return $job;
             }, $latestJobs);
-        }
+        }*/
 
-        $latestJobs = array_map(function ($job) {
+        /*$latestJobs = array_map(function ($job) {
             if (!$job->work_order_id) {
                 return $job;
             }
@@ -296,8 +296,7 @@ class Dashboard extends Widgets
             }
 
             return $job;
-        }, $latestJobs);        
-
+        }, $latestJobs);*/        
 
         /*foreach ($latestJobs as $job) {
             $jobPayment = $this->jobs_model->getJobPaymentByJobId($job->id);
@@ -384,8 +383,8 @@ class Dashboard extends Widgets
         ];
         $this->page_data['total_invoice_paid'] = $this->general->get_data_with_param($total_invoice_paid, false);
 
-        $this->page_data['activeSubscriptions'] = $this->AcsProfile_model->getCompanyTotalActiveSubscriptions(logged('company_id'));
-        $this->page_data['totalAmountActiveSubscriptions'] = $this->AcsProfile_model->getCompanyTotalAmountActiveRecurringPayment(logged('company_id'));
+        $this->page_data['activeSubscriptions'] = $this->AcsProfile_model->getTotalActiveServicePlans(logged('company_id'));
+        $this->page_data['totalAmountActiveSubscriptions'] = $this->AcsProfile_model->getTotalRecurringPayment(logged('company_id'));
         $this->page_data['activeSubscriptionsWillExpireIn30d'] = $this->AcsProfile_model->getCompanyActiveSubscriptionWillExpireIn30Days(logged('company_id'));
 
         // get customer subscription history

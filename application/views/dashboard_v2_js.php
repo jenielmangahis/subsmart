@@ -195,13 +195,12 @@ $(document).ready(function() {
                     '<div class="widget-item cursor-pointer" onclick="location.href=`/customer/module/' +
                     recentCustomers[j].prof_id + '`"><div class="nsm-profile"><span>' + nn +
                     '</span></div><div class="content ms-2"><div class="details"><span class="content-title">' +
-                    recentCustomers[j].last_name + ' ' + recentCustomers[j].first_name +
+                    recentCustomers[j].first_name + ' ' + recentCustomers[j].last_name +
                     '</span><span class="content-subtitle d-block">' + recentCustomers[j].city +
                     ', ' + recentCustomers[j].state + ' ' + recentCustomers[j].zip_code +
                     '</span></div><div class="controls"><span class="nsm-badge primary">' +
                     recentCustomers[j].customer_type +
-                    '</span><span class="content-subtitle d-block mt-1">' + recentCustomers[j]
-                    .email + '</span></div></div></div>'
+                    '</span><span class="content-subtitle d-block mt-1"></span></div></div></div>'
                 )
             }
         }
@@ -300,11 +299,12 @@ $(document).ready(function() {
         if (success) {
             for (var x = 0; x < status.length; x++) {
                 if(status[x].status != ''){
+                        var total_count = parseFloat(status[x].statusCount);                        
                         $('#customer_status').append(
                         '<div class="row js-row-dash"><div class="col"><div class="row"><div class="col-9 marg-top"><div class="jname">' +
                         status[x].status +
                         '</div></div><div class="col-3 col-center"><div class="row"><div class="col col-align"><span class="nsm-badge success" style="font-size:12px;">' +
-                        status[x].statusCount + '</span></div></div></div></div></div></div>'
+                        total_count.toLocaleString(undefined, {minimumFractionDigits: 0}) + '</span></div></div></div></div></div></div>'
                     )
                 }
               

@@ -488,10 +488,63 @@ class Event_model extends MY_Model
     public function getLatestJobs()
     {
         $cid = logged('company_id');
-        $this->db->select('acs_profile.first_name , acs_profile.last_name, acs_profile.city, acs_profile.state, acs_profile.zip_code, jobs.id, jobs.status, jobs.job_number, jobs.job_type, jobs.date_updated, jobs.start_date, job_payments.amount, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee_id) AS TECH_1, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee2_id) AS TECH_2, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee3_id) AS TECH_3, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee4_id) AS TECH_4, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee5_id) AS TECH_5, (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee6_id) AS TECH_6');
+
+        //Old Query - Nov 14, 2024
+        /*
+            $this->db->select(
+                    'acs_profile.first_name, 
+                    acs_profile.last_name, 
+                    acs_profile.city, 
+                    acs_profile.state, 
+                    acs_profile.zip_code, 
+                    jobs.id, jobs.status, 
+                    jobs.job_number, jobs.job_type, 
+                    jobs.date_updated, jobs.start_date, 
+                    job_payments.amount, 
+                    (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee_id) AS TECH_1, 
+                    (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee2_id) AS TECH_2, 
+                    (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee3_id) AS TECH_3, 
+                    (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee4_id) AS TECH_4, 
+                    (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee5_id) AS TECH_5, 
+                    (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee6_id) AS TECH_6'
+                );
+
+            $this->db->from('jobs');
+            $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
+            $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
+            $this->db->order_by('jobs.id', 'desc');
+            $this->db->where('jobs.company_id', $cid);
+            if ($cid == 58) {
+                $this->db->limit(25); // for SOLAR COMPANY it needs to be 25
+            } else {
+                $this->db->limit(10);
+            }
+
+            $query = $this->db->get();
+        */
+
+        $this->db->select(
+                'acs_profile.first_name, 
+                acs_profile.last_name, 
+                acs_profile.city, 
+                acs_profile.state, 
+                acs_profile.zip_code, 
+                jobs.id, jobs.status, 
+                jobs.job_number, jobs.job_type, 
+                jobs.date_updated, jobs.start_date, 
+                SUM(job_items.cost) AS amount,
+                (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee_id) AS TECH_1, 
+                (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee2_id) AS TECH_2, 
+                (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee3_id) AS TECH_3, 
+                (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee4_id) AS TECH_4, 
+                (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee5_id) AS TECH_5, 
+                (SELECT CONCAT(users.FName, " ", users.LName) FROM users WHERE users.id = jobs.employee6_id) AS TECH_6'
+            );
+
         $this->db->from('jobs');
-        $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
+        $this->db->join('job_items', 'job_items.job_id = jobs.id', 'left');
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
+        $this->db->group_by('jobs.id');
         $this->db->order_by('jobs.id', 'desc');
         $this->db->where('jobs.company_id', $cid);
         if ($cid == 58) {
@@ -500,7 +553,7 @@ class Event_model extends MY_Model
             $this->db->limit(10);
         }
 
-        $query = $this->db->get();
+        $query = $this->db->get();        
 
         return $query->result();
     }

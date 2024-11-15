@@ -1208,6 +1208,8 @@ $route['job/_update_job_status'] = 'Job/ajax_update_job_status';
 $route['job/_send_esign_form'] = 'Job/ajax_send_esign_form';
 $route['job/create_invoice/(:num)'] = 'Job/createInvoice/$1';
 $route['job/_update_job'] = 'Job/ajax_update_job';
+$route['job/_quick_create_job_type'] = 'Job/ajax_quick_create_job_type';
+$route['job/_quick_create_job_tag'] = 'Job/ajax_quick_create_job_tag';
 
 // Trac360
 $route['job/bird_eye_view'] = 'JobMap/index';
@@ -1663,6 +1665,7 @@ $route['taskhub/_delete_selected_tasks'] = 'Taskhub/ajax_delete_selected_tasks';
 $route['taskhub/_delete_selected_task_comment'] = 'Taskhub/ajax_delete_selected_task_comment';
 $route['taskhub/create'] = 'Taskhub/create';
 $route['taskhub/edit/(:num)'] = 'Taskhub/edit/$1';
+$route['taskhub/_create_task_list'] = 'Taskhub/ajax_create_task_list';
 
 // SMS
 $route['messages'] = 'Sms/index';
@@ -1921,3 +1924,5 @@ $route['tickets/_delete_plan_type'] = 'Tickets/ajax_delete_plan_type';
 //Customer Dashboard
 $route['customer/download_document/(:any)?'] = 'CustomerDashboardQuickActions/downloadDocument/$1';
 $route['customer/_delete_client_agreement']  = 'CustomerDashboardQuickActions/ajaxDeleteClientAgreement';
+$route['customer/_get_document_archives']  = 'CustomerDashboardQuickActions/ajaxGetDocumentArchives';
+$route['customer/_restore_archived_document']  = 'CustomerDashboardQuickActions/ajaxRestoreArchivedDocument';

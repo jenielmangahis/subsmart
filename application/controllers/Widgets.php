@@ -37,14 +37,15 @@ class Widgets extends MY_Controller
         $date_to   = post('tech_leaderboard_date_to');
 
         $tech_field_user_type = 6;
-        $techs = $this->Users_model->getCompanyUsersByUserType($cid, $tech_field_user_type);
+        $techs = $this->Users_model->getCompanyUsersByUserType($cid, '');
         
         //Service Tickets
         //$tickets = $this->Tickets_model->get_tickets_by_company_id($cid);
         $techLeaderBoards = [];
         $date_range       = ['from' => $date_from, 'to' => $date_to];
+        $status  = ['Finished', 'Completed'];
 
-        $tickets = $this->Tickets_model->getAllTicketsByCompanyIdAndDateRange($cid,$date_range);
+        $tickets = $this->Tickets_model->getAllTicketsByCompanyIdAndDateRange($cid,$date_range,$status);
         $user_tickets = [];
         foreach( $tickets as $t ){
             $ticketTechs = unserialize($t->technicians);
@@ -61,7 +62,8 @@ class Widgets extends MY_Controller
 
         foreach( $techs as $t ){
             $tech_name  = $t->FName . ' ' . $t->LName;
-            $jobs = $this->Jobs_model->countAssignedJobsByUserId($t->id , $date_range);    
+
+            $jobs = $this->Jobs_model->countAssignedJobsByUserId($t->id , $date_range, $status);    
             if( $user_tickets[$t->id] ){
                 $total_jobs_assigned = $jobs->total_jobs_assigned + $user_tickets[$t->id];
             }else{
@@ -944,6 +946,9 @@ class Widgets extends MY_Controller
         $unpaidInvoices    = $this->Invoice_model->getCompanyUnpaidInvoices($cid, $date_range);
         $overDueInvoices   = $this->Invoice_model->getCompanyOverDueInvoices($cid, $date_range);
         $totalPaidInvoices = $this->Invoice_model->getCompanyTotalAmountPaidInvoices($cid, $date_range);
+
+       
+        
         $subscriptions     = $this->AcsProfile_model->getCompanyTotalSubscriptions($cid, $date_range);
 
         $totalUnpaidInvoices  = count($unpaidInvoices);
@@ -998,7 +1003,7 @@ class Widgets extends MY_Controller
             $jobs_data[] = $total_amount_jobs;
 
             //Service Tickets
-            $serviceTickets = $this->Tickets_model->getAllTicketsByCompanyIdAndDateRange($cid, $date_range);
+            $serviceTickets = $this->Tickets_model->getAllTicketsByCompanyIdAndDateRange($cid, $date_range, []);
             $total_amount_services = 0;
             foreach($serviceTickets as $st){
                 $total_amount_services += (float) $st->grandtotal;
@@ -1365,9 +1370,9 @@ class Widgets extends MY_Controller
 
         foreach($customerGroups as $group){
             $customers = $this->Customer_advance_model->getAllCustomerByCustomerGroupIdAndCompanyId($group->id, $cid);
-
-            $chart_labels[] = $group->title . ' ('. count($customers) .')';
-            $chart_data[]   = count($customers); 
+            $total     = count($customers);
+            $chart_labels[] = $group->title . ' ('. number_format($total) .')';
+            $chart_data[]   = $total;
             $chart_colors[] = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
         }
 
