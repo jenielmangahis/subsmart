@@ -374,9 +374,11 @@
                                                     <div class="col-12 col-md-6">
                                                         <label class="content-title">Taxes</label>
                                                     </div>
-                                                    <div class="col-12 col-md-6 text-end">
+                                                    <div class="col-12 col-md-3 offset-md-3 text-end">
+                                                        <div style="display:none;">
                                                         $ <span id="total_tax_"><?= number_format($workorder->taxes,2,'.',''); ?></span>
-                                                        <input type="hidden" name="taxes" id="total_tax_input" value="<?= $workorder->taxes; ?>" />
+                                                        </div>
+                                                        <input type="number" step="any" name="taxes" class="nsm-field form-control text-end" id="total_tax_input" value="<?= $workorder->taxes; ?>" />
                                                     </div>
                                                     <div class="col-12 col-md-6 d-flex align-items-center">
                                                         <input type="text" class="nsm-field form-control" placeholder="Adjustment Name" name="adjustment_name" id="adjustment_name" style="border: 1px dashed #d1d1d1;" value="<?= $workorder->adjustment_name; ?>">                                                        
