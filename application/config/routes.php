@@ -1666,6 +1666,8 @@ $route['taskhub/_delete_selected_task_comment'] = 'Taskhub/ajax_delete_selected_
 $route['taskhub/create'] = 'Taskhub/create';
 $route['taskhub/edit/(:num)'] = 'Taskhub/edit/$1';
 $route['taskhub/_create_task_list'] = 'Taskhub/ajax_create_task_list';
+$route['taskhub/_update_task_list'] = 'Taskhub/ajax_update_task_list';
+$route['taskhub/_delete_task_list'] = 'Taskhub/ajax_delete_task_list';
 
 // SMS
 $route['messages'] = 'Sms/index';
