@@ -140,25 +140,25 @@
                                         <div class="col-12 grid-mb">
                                             <h4>Outstanding Transactions</h4>
                                         </div>
-                                        <div class="col-12 col-md-6 grid-mb">
+                                        <div class="col-12 col-md-4 grid-mb">
                                             <div class="nsm-field-group search">
                                                 <input type="text" class="nsm-field nsm-search form-control mb-2" id="search-invoice-no" name="search" placeholder="Find Invoice No.">
                                             </div>
                                             <button type="button" class="nsm-button" data-bs-toggle="dropdown">
-                                                Filter <i class="bx bx-fw bx-chevron-right"></i>
+                                                Filter <i class="bx bx-fw bx-chevron-down"></i>
                                             </button>
-                                            <ul class="dropdown-menu p-3">
+                                            <ul class="dropdown-menu p-3" style="width:25% !important;">
                                                 <div class="row">
                                                     <div class="col-12 col-md-6">
                                                         <label for="invoices-from">Invoices from</label>
                                                         <div class="nsm-field-group calendar">
-                                                            <input type="text" class="form-control nsm-field mb-2 date" id="invoices-from">
+                                                            <input type="date" value="<?= date("Y-m-d"); ?>" class="form-control nsm-field mb-2" id="invoices-from">
                                                         </div>
                                                     </div>
                                                     <div class="col-12 col-md-6">
                                                         <label for="invoices-to">To</label>
                                                         <div class="nsm-field-group calendar">
-                                                            <input type="text" class="form-control nsm-field mb-2 date" id="invoices-to">
+                                                            <input type="date" value="<?= date("Y-m-d"); ?>" class="form-control nsm-field mb-2" id="invoices-to">
                                                         </div>
                                                     </div>
                                                     <div class="col-12">
@@ -198,7 +198,7 @@
                                                 </ul>
                                             </div>
                                         </div> -->
-                                        <div class="col-12 col-md-6 grid-mb text-end">
+                                        <div class="col-12 col-md-12 grid-mb text-end">
                                             <div class="nsm-page-buttons page-button-container">
                                                 <button type="button" class="nsm-button primary" data-bs-toggle="dropdown">
                                                     <i class="bx bx-fw bx-cog"></i>
