@@ -8914,8 +8914,8 @@ $(function () {
         var id = $(this).val();
 
         $('#receivePaymentModal #search-invoice-no').val('');
-        $('#receivePaymentModal #invoices-from').val('').attr('data-applied', '');
-        $('#receivePaymentModal #invoices-to').val('').attr('data-applied', '');
+        //$('#receivePaymentModal #invoices-from').val('').attr('data-applied', '');
+        //$('#receivePaymentModal #invoices-to').val('').attr('data-applied', '');
         $('#receivePaymentModal #overdue-invoices-only').prop('checked', false).attr('data-applied', '');
 
         $('#receivePaymentModal #search-credit-memo-no').val('');
@@ -11854,7 +11854,7 @@ const makeRecurring = (modalName) => {
             $(intervalFields).insertAfter($(`#${modalId} div.modal-body div.row.customer-details`));
             $(`#${modalId} div.modal-body div.row.customer-details`).children('div:last-child()').remove();
             $(`#${modalId} div.modal-body div.row.date-row`).remove();
-            $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Invoice');
+            $(`#${modalId} div.modal-body div.recurring-details h3`).html('Recurring Invoice <a style="font-size: 12px !important;" href="javascript:void(0)" onclick="cancelRecurring('+ '`' + modalName + '`' +')">Cancel Recurring</a>');
             $(`#${modalId} div.modal-body #shipping-date`).parent().parent().html('');
             $(`#${modalId} div.modal-body #invoice-no`).parent().remove();
             break;
@@ -11917,6 +11917,32 @@ const makeRecurring = (modalName) => {
             });
         }
     });
+}
+
+const cancelRecurring = (modalName) => {
+
+    var templateShippingDateFields = `<div class="col-12 col-md-2">
+        <label for="shipping-date">Shipping date</label>
+        <div class="nsm-field-group calendar">
+            <input type="text" class="form-control nsm-field mb-2 date" id="shipping-date" name="shipping_date" value="">
+        </div>    
+    </div>`;    
+
+    var templateInvoiceNoFields = `<div class="col-12 col-md-2">
+        <label for="invoice-no">Invoice # </label>
+        <input type="text" class="form-control nsm-field mb-2" id="invoice-no" name="invoice_no" value="">
+    </div>`;  
+
+    switch (modalName) {
+        case 'invoice':
+            modalId = 'invoiceModal';
+            $(`#${modalId} div.modal-body .recurring-details`).remove();
+            $(`#${modalId} div.modal-body .recurring-interval-container`).remove();     
+            
+            $(templateShippingDateFields).insertAfter($(`#${modalId} div.modal-body div.col-12.col-md-2.ship-via-container`));
+            $(templateInvoiceNoFields).insertBefore($(`#${modalId} div.modal-body div.col-12.col-md-2.purchase-order`));            
+            break;
+    }    
 }
 
 const viewPrint = (id, title = "") => {
