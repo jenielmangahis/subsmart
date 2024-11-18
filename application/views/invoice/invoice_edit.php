@@ -5,7 +5,44 @@ defined('BASEPATH') or exit('No direct script access allowed');
 <!-- <script src="<?=base_url("assets/js/invoice/autosave-update.js")?>"></script> -->
 <?php include viewPath('v2/includes/header'); ?>
 <link href="<?php echo $url->assets ?>css/jquery.signaturepad.css" rel="stylesheet">
-    
+<style>
+.show_mobile_view{
+    display:none;
+}
+.span-input{
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    text-align:right;
+}
+#jobs_items_table_body .nsm-button {
+    margin: 0 auto;
+    display: block;
+}
+#jobs_items_table_body .nsm-button i{
+    position: relative;
+    left: 2px;
+}
+.custom-ticket-header {
+    background-color: #6a4a86;
+    color: #ffffff;
+    font-size: 15px;
+    padding: 10px;
+}
+.bold{
+    font-weight:bold;
+}
+</style>
 
 <div class="row page-content g-0">
     <div class="col-12 mb-3">
@@ -31,50 +68,79 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <!-- end row -->
             <?php echo form_open_multipart('invoice/updateInvoice', ['class' => 'form-validate require-validation', 'id' => 'invoice_form', 'autocomplete' => 'off']); ?>
 
+
             <div class="row">
+                <div class="col-md-4">
+                    <div class="nsm-card primary">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="hidden" value="<?php echo $invoice->id; ?>" name="invoiceDataID">
+                                <label for="invoice_customer" class="bold">Customer</label>
+                                <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" data-toggle="modal" data-target="#modalNewCustomer" style="float:right;">Add New</a>
+                                <select name="customer_id" id="customer_id" class="form-control" required>
+                                <?php foreach ($customers as $customer):?>
+                                <option <?php if(isset($customers)){ if($customer->prof_id == $invoice->customer_id){echo "selected";} } ?>  value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
+                                <?php endforeach; ?>
+                            </select>
+                            </div>
+                            <div class="col-md-12 mt-4">
+                                <label class="bold">Customer email</label><br />
+                                <input type="email" class="form-control" name="customer_email" id="customer_email" value="<?php echo $invoice->customer_email; ?>" />
+                            </div>  
+                            <div class="col-md-12 mt-4">
+                                <label class="bold" for="status">Status</label><br/>
+                                <select name="status" class="form-control">
+                                    <option <?php if(isset($invoice)){ if($invoice->status == "Draft"){echo "selected";} } ?>  value="Draft">Draft</option>
+                                    <option <?php if(isset($invoice)){ if($invoice->status == "Partially Paid"){echo "selected";} } ?> value="Partially Paid">Partially Paid</option>
+                                    <option <?php if(isset($invoice)){ if($invoice->status == "Paid"){echo "selected";} } ?> value="Paid">Paid</option>
+                                    <option <?php if(isset($invoice)){ if($invoice->status == "Due"){echo "selected";} } ?> value="Due">Due</option>
+                                    <option <?php if(isset($invoice)){ if($invoice->status == "Overdue"){echo "selected";} } ?> value="Overdue">Overdue</option>
+                                </select>
+                            </div>   
+                            <?php if( $job_number != '' ){ ?>
+                            <div class="col-md-12 mt-4">
+                                <label class="bold" for="work_order">Job Number</label>                                    
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="job_number" name="job_number" value="<?= $job_number; ?>" readonly="" disabled="">
+                                </div>
+                            </div>                      
+                            <?php } ?>
+                            <?php if( $ticket_number != '' ){ ?>
+                            <div class="col-md-12 mt-4">
+                                <label class="bold" for="work_order">Service Ticket Number</label>                                    
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="ticket_number" name="ticket_number" value="<?= $ticket_number; ?>" readonly="" disabled="">
+                                </div>
+                            </div>                      
+                            <?php } ?>
+                            <div class="col-md-12 mt-4">                            
+                                <label class="bold" for="job_name">Job Name <small class="help help-sm">(optional)</small></label>
+                                <input type="text" class="form-control" name="job_name" id="job_name"  value="<?php echo $invoice->job_name; ?>"/>
+                            </div>
+                            <div class="col-md-12 mt-4">
+                                <label class="bold" for="job_location">Job Location <small class="help help-sm">(optional)</small></label>
+                                <textarea class="form-control" name="jobs_location" id="invoice_jobs_location" style="height:100px;"><?php echo $invoice->job_location; ?></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="nsm-card primary">
+                        <div class="MAP_LOADER_CONTAINER">
+                            <div class="text-center MAP_LOADER">
+                                <iframe id="TEMPORARY_MAP_VIEW"                                
+                                    <?php $location = $customer->mail_add . ' ' . $customer->city . ', ' . $customer->state . ' ' . $customer->zip_code; ?>
+                                    src="http://maps.google.com/maps?q=<?= $location; ?>&output=embed" height="470" width="100%"
+                                    style=""></iframe>
+                            </div>
+                        </div>
+                </div>                                
+            </div>
+
+            <div class="row mt-4">
                 <div class="col-12">
                     <div class="nsm-card primary">
                         <div class="">
-                            <div class="row" style="background-color:white;">
-                                <div class="col-md-5 form-group">
-                                <input type="hidden" value="<?php echo $invoice->id; ?>" name="invoiceDataID">
-                                    <label for="invoice_customer">Customer</label>
-                                    <!-- <select id="invoice_customer" name="customer_id"
-                                            data-inquiry-source="dropdown" class="form-control searchable-dropdown"
-                                            placeholder="Select customer">
-                                    </select> -->
-                                    <select name="customer_id" id="customer_id" data-customer-source="dropdown" class="form-control searchable-dropdown" required>
-                                    <option>Select a customer</option>
-                                    <?php foreach ($customers as $customer):?>
-                                    <option <?php if(isset($customers)){ if($customer->prof_id == $invoice->customer_id){echo "selected";} } ?>  value="<?php echo $customer->prof_id?>"><?php echo $customer->first_name."&nbsp;".$customer->last_name;?> </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                </div>
-                                <div class="col-md-5 form-group">
-                                    <p>&nbsp;</p>
-                                    <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
-                                       data-target="#modalNewCustomer" style="color:#02A32C;"><span
-                                                class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Customer</a>
-                                </div>
-                                <div class="col-md-5 form-group">
-                                <br>
-                                    <label for="job_location">Job Location <small class="help help-sm">(optional)</small></label>
-                                    
-                                    <input type="text" class="form-control" name="jobs_location" id="invoice_jobs_location" value="<?php echo $invoice->job_location; ?>"/>
-                                </div>
-                                <div class="col-md-5 form-group">
-                                    <!-- <p>&nbsp;</p>
-                                    <a class="link-modal-open" href="javascript:void(0)" data-toggle="modal"
-                                       data-target="#modalNewLocationAddress" style="color:#02A32C;"><span
-                                                class="fa fa-plus fa-margin-right" style="color:#02A32C;"></span>New Location Address</a> -->
-                                </div>
-                                <div class="col-md-5 form-group">
-                                <br>
-                                    <label for="job_name">Job Name <small class="help help-sm">(optional)</small></label>
-                                    <input type="text" class="form-control" name="job_name" id="job_name"  value="<?php echo $invoice->job_name; ?>"/>
-                                </div>
-                            </div>
-
                             <br>
                             <div class="row" style="background-color:white;">
                                 <div class="col-md-12">
@@ -88,11 +154,6 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                 <option <?php if(isset($terms)){ if($term->id == $invoice->terms){echo "selected";} } ?> value="<?php echo $term->id; ?>"><?php echo $term->name . ' ' . $term->net_due_days; ?></option>
                                                 <?php endforeach; ?>
                                             </select>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label>Customer email</label>
-                                            <input type="email" class="form-control" name="customer_email" id="customer_email" value="<?php echo $invoice->customer_email; ?>">
-                                            <p><input type="checkbox"> Send later </p>
                                         </div>
                                         <div class="col-md-3">
                                             <label>Location of sale</label>
@@ -138,13 +199,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                 </div>
 
 
-                                <div class="col-md-3 form-group">
-                                    <label for="work_order">Job# <small class="help help-sm">(optional)</small></label>
-                                    <span class="fa fa-question-circle text-ter" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Field is auto-populated on create Invoice from a Work Order." data-original-title="" title=""></span>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="job_number" name="job_number">
-                                    </div>
-                                </div>
+                                
                                 <div class="col-md-3 form-group">
                                     <label for="purchase_order">Purchase Order# <small class="help help-sm">(optional)</small></label>
                                     <span class="fa fa-question-circle text-ter" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional if you want to display the purchase order number on invoice." data-original-title="" title=""></span>
@@ -181,24 +236,12 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     <input type="date" class="form-control" id="" name="due_date" value="<?php echo $invoice->due_date; ?>"/>
                                 </div>
 
-                                <div class="col-md-3 form-group">
-                                    <label for="status">Status</label><br/>
-                                    <!-- <input type="text" name="status" class="form-control"> -->
-                                                <select name="status" class="form-control">
-                                                    <option <?php if(isset($invoice)){ if($invoice->status == "Draft"){echo "selected";} } ?>  value="Draft">Draft</option>
-                                                    <option <?php if(isset($invoice)){ if($invoice->status == "Partially Paid"){echo "selected";} } ?> value="Partially Paid">Partially Paid</option>
-                                                    <option <?php if(isset($invoice)){ if($invoice->status == "Paid"){echo "selected";} } ?> value="Paid">Paid</option>
-                                                    <option <?php if(isset($invoice)){ if($invoice->status == "Due"){echo "selected";} } ?> value="Due">Due</option>
-                                                    <option <?php if(isset($invoice)){ if($invoice->status == "Overdue"){echo "selected";} } ?> value="Overdue">Overdue</option>
-                                                </select>
-                                </div>
+                                
                             </div>
 
-                            <div class="row" id="plansItemDiv" style="background-color:white;">
-                                <div class="col-md-10 pt-2">
-                                    <label for="">Manage invoice items</label>
-                                </div>
-                                <div class="col-md-2 row pr-0">
+                            <div class="row mt-4">
+                                <h6 class="card_header custom-ticket-header">Invoice Items</h6>
+                                <div class="col-md-2 row pr-0" style="display:none;">
                                     <label for="" class="pt-2">Show qty as: </label>
                                     <select name="qty_type[]" id="show_qty_type" class="form-control mb-2" style="display:inline-block; width: 135px;">
                                         <option value="Quantity">Quantity</option>
@@ -218,6 +261,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                             <th width="100px"><b>Discount</b></th>
                                             <th><b>Tax(%)</b></th>
                                             <th><b>Total</b></th>
+                                            <th></th>
                                         </tr>
                                         </thead>
                                         <tbody id="jobs_items_table_body">
@@ -226,7 +270,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         foreach($itemsDetails as $data){ ?>
 
                                                         <tr id="ss">
-                                                            <td width="35%">
+                                                            <td width="40%">
                                                                 <div class="hidden_mobile_view">
                                                                     <input type="text" class="form-control getItems"
                                                                         onKeyup="getItems(this)" name="items[]" value="<?php echo $data->title; ?>">
@@ -237,7 +281,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                 <?php echo $data->item; ?>
                                                                 </div>
                                                             </td>
-                                                            <td width="20%">
+                                                            <td width="15%">
                                                                 <div class="hidden_mobile_view">
                                                                     <select name="item_type[]" class="form-control">
                                                                         <option value="product">Product</option>
@@ -250,15 +294,25 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                                 <?php echo $data->item_type; ?>
                                                                 </div>
                                                             </td>
-                                                            <td width="10%"><input data-itemid="<?php echo $i; ?>" id="quantity_<?php echo $i; ?>" value="<?php echo $data->qty; ?>" type="number" name="quantity[]" data-counter="<?php echo $i; ?>" min="0" class="form-control quantity mobile_qty valid" aria-invalid="false"></td>
-                                                            <td width="10%"><input data-itemid="<?php echo $i; ?>" id="price_<?php echo $i; ?>" value="<?php echo $data->iCost; ?>" type="number" name="price[]" data-counter="<?php echo $i; ?>" class="form-control price hidden_mobile_view" placeholder="Unit Price"><input type="hidden" class="priceqty" id="priceqty_<?php echo $i; ?>" value="<?php echo $aaa = $data->iCost * $data->qty; ?>"><div class="show_mobile_view"><span class="price"><?php echo $data->iCost; ?></span></div></td>
-                                                            <td width="10%" class="hidden_mobile_view"><input type="number" name="discount[]" value="<?php echo $data->discount; ?>" class="form-control discount" data-counter="<?php echo $i; ?>" id="discount_<?php echo $i; ?>"></td>
-                                                            <td width="20%" class="hidden_mobile_view"><input type="text" data-itemid="<?php echo $i; ?>" class="form-control tax_change valid" name="tax[]" data-counter="<?php echo $i; ?>" id="tax1_<?php echo $i; ?>" min="0" value="<?php echo $data->tax; ?>" aria-invalid="false"></td>
-                                                            <td style="text-align: center" class="hidden_mobile_view" width="15%"><input type="hidden" class="form-control " name="total[]"
+                                                            <td width="8%">
+                                                                <input data-itemid="<?php echo $i; ?>" id="quantity_<?php echo $i; ?>" value="<?php echo $data->qty; ?>" type="number" name="quantity[]" data-counter="<?php echo $i; ?>" min="0" class="form-control quantity mobile_qty valid" aria-invalid="false">
+                                                            </td>
+                                                            <td width="10%">
+                                                                <input data-itemid="<?php echo $i; ?>" id="price_<?php echo $i; ?>" value="<?php echo $data->iCost; ?>" type="number" name="price[]" data-counter="<?php echo $i; ?>" class="form-control price text-end hidden_mobile_view" placeholder="Unit Price"><input type="hidden" class="priceqty" id="priceqty_<?php echo $i; ?>" value="<?php echo $aaa = $data->iCost * $data->qty; ?>"><div class="show_mobile_view"><span class="price"><?php echo $data->iCost; ?></span></div>
+                                                            </td>
+                                                            <td width="10%" class="hidden_mobile_view">
+                                                                <input type="number" name="discount[]" value="<?php echo $data->discount; ?>" class="form-control text-end discount" data-counter="<?php echo $i; ?>" id="discount_<?php echo $i; ?>">
+                                                            </td>
+                                                            <td width="8%" class="hidden_mobile_view">
+                                                                <input type="text" data-itemid="<?php echo $i; ?>" class="form-control text-end tax_change valid" name="tax[]" data-counter="<?php echo $i; ?>" id="tax1_<?php echo $i; ?>" min="0" value="<?php echo $data->tax; ?>" aria-invalid="false">
+                                                            </td>
+                                                            <td style="width:10%;text-align: center" class="hidden_mobile_view">
+                                                                <input type="hidden" class="form-control " name="total[]"
                                                                     data-counter="0" id="sub_total_text<?php echo $i; ?>" min="0" value="<?php echo $data->total; ?>">
-                                                                    $<span id="span_total_<?php echo $i; ?>"><?php echo $data->total; ?></span></td>
+                                                                    <span id="span_total_<?php echo $i; ?>" class="span-input"><?php echo $data->total; ?></span>
+                                                            </td>
                                                             <td>
-                                                            <a href="#" class="remove nsm-button danger" id="<?php echo $i; ?>"><i class="bx bx-fw bx-trash"></i></a>
+                                                                <a href="#" class="remove nsm-button danger" id="<?php echo $i; ?>"><i class="bx bx-fw bx-trash"></i></a>
                                                             </td>
                                                         </tr>
                                                     <?php $i++; } ?>
@@ -266,12 +320,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                     </table>
                                     
                                     <input type="hidden" name="count" value="<?php echo $i; ?>" id="count">
-                                    <div class="row">
-                                        <!-- <a class="link-modal-open pt-1 pl-2" href="#" id="add_another_new_invoice" style="color:#02A32C;"><span
-                                                    class="fa fa-plus-square fa-margin-right" style="color:#02A32C;"></span>Add Items</a> -->
-                                        <a href="#" id="add_another_new_invoice2" style="color:#02A32C;" data-toggle="modal" data-target="#item_list"><i class="fa fa-plus-square" aria-hidden="true"></i> Add another line </a>
-                                        <hr style="display:inline-block; width:91%">
-                                    </div>
+                                        <a href="#" id="add_another_new_invoice2" data-toggle="modal" data-target="#item_list" class="nsm-button primary small"> <i class='bx bx-plus'></i>Add Item</a>
                                     <!-- <div class="row">
                                         <div class="col-md-7">
                                         &nbsp;
@@ -911,45 +960,41 @@ var options = {
 
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAlMWhWMHlxQzuolWb2RrfUeb0JyhhPO9c&libraries=places"></script>
 <script>
-function initialize() {
-          var input = document.getElementById('invoice_jobs_location');
-          var autocomplete = new google.maps.places.Autocomplete(input);
-            google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                var place = autocomplete.getPlace();
-                document.getElementById('city2').value = place.name;
-                document.getElementById('cityLat').value = place.geometry.location.lat();
-                document.getElementById('cityLng').value = place.geometry.location.lng();
-            });
-        }
-        google.maps.event.addDomListener(window, 'load', initialize);
-</script>
-
-<script>
 
 $(document).ready(function(){
- 
-    $('#customer_id').change(function(){
-    var id  = $(this).val();
-    // alert(id);
+    $('#customer_id').select2({     
+        minimumInputLength: 0        
+    });
 
+    $('#customer_id').change(function(){
+        var id  = $(this).val();    
         $.ajax({
             type: 'POST',
             url:"<?php echo base_url(); ?>accounting/addLocationajax",
             data: {id : id },
             dataType: 'json',
-            success: function(response){
-                // alert('success');
-                console.log(response['customer']);
-            $("#invoice_jobs_location").val(response['customer'].mail_add + ' ' + response['customer'].city + ' ' + response['customer'].state + ' ' + response['customer'].country);
-            $("#customer_email").val(response['customer'].email);
-            $("#shipping_address").val(response['customer'].mail_add);
-            $("#billing_address").val(response['customer'].mail_add);
-        
+            success: function(response){            
+                var phone = response['customer'].phone_h;
+                var mobile = response['customer'].phone_m;
+                var test_p = phone.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+                var test_m = mobile.replace(/(\d{3})(\d{3})(\d{3})/, "$1-$2-$3")
+            
+                var service_location = response['customer'].mail_add + ' ' + response['customer'].city + ', ' + response['customer'].state + ' ' + response['customer'].zip_code;
+
+                $("#invoice_jobs_location").val(response['customer'].mail_add);
+                $("#customer_email").val(response['customer'].email);
+                $("#shipping_address").val(response['customer'].mail_add);
+                $("#billing_address").val(response['customer'].mail_add);
+
+                var map_source = 'http://maps.google.com/maps?q=' + service_location +
+                        '&output=embed';
+                var map_iframe = '<iframe id="TEMPORARY_MAP_VIEW" src="' + map_source +
+                '" height="370" width="100%" style=""></iframe>';
+                $('.MAP_LOADER').hide().html(map_iframe).fadeIn('slow');
             },
-                error: function(response){
-                alert('Error'+response);
-       
-                }
+            error: function(response){            
+        
+            }
         });
     });
 });
