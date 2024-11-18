@@ -966,6 +966,10 @@ class Invoice extends MY_Controller
 
     public function invoice_edit($id)
     {   
+        $this->load->model('Jobs_model');
+        $this->load->model('Tickets_model');
+        $this->load->model('AcsProfile_model');
+
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
@@ -979,16 +983,38 @@ class Invoice extends MY_Controller
         $this->page_data['customers'] = $this->accounting_invoices_model->getCustomers();
         $terms = $this->accounting_terms_model->getCompanyTerms_a($comp_id);
 
-        $this->page_data['invoice'] = $this->invoice_model->getinvoice($id);
-        // $this->page_data['items'] = $this->items_model->getItemlist();
-        $this->page_data['itemsDetails'] = $this->invoice_model->getInvoiceItems($id);
-        $this->page_data['terms'] =  $terms;
-        $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
-        $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
-        $this->page_data['page_title'] = "Invoices & Payments";
-        $this->page_data['page']->title = 'Invoices & Payments';
-        $this->page_data['page']->parent = 'Sales';
-        $this->load->view('invoice/invoice_edit', $this->page_data);
+        $invoice  = $this->invoice_model->getinvoice($id);
+        if( $invoice->company_id == $comp_id ){
+            $customer = $this->AcsProfile_model->getByProfId($invoice->customer_id); 
+
+            $job_number = '';
+            if( $invoice->job_id > 0 ){
+                $job = $this->Jobs_model->get_specific_job($invoice->job_id);
+                $job_number = $job ? $job->job_number : '';
+            }
+
+            $ticket_number = '';
+            if( $invoice->ticket_id > 0 ){
+                $ticket = $this->Tickets_model->getTicketInfo($invoice->ticket_id);
+                $ticket_number = $ticket ? $ticket->ticket_no : '';
+            }
+
+            $this->page_data['invoice'] = $invoice;
+            $this->page_data['job_number'] = $job_number;
+            $this->page_date['ticket_number'] = $ticket_number;
+            $this->page_data['customer'] = $customer;
+            // $this->page_data['items'] = $this->items_model->getItemlist();
+            $this->page_data['itemsDetails'] = $this->invoice_model->getInvoiceItems($id);
+            $this->page_data['terms'] =  $terms;
+            $this->page_data['items'] = $this->items_model->getAllItemWithLocation();
+            $this->page_data['itemsLocation'] = $this->items_model->getLocationStorage();
+            $this->page_data['page_title'] = "Invoices & Payments";
+            $this->page_data['page']->title = 'Invoices & Payments';
+            $this->page_data['page']->parent = 'Sales';
+            $this->load->view('invoice/invoice_edit', $this->page_data);
+        }else{
+            redirect('invoice');
+        } 
     }
 
     public function getPackageById()
