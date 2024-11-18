@@ -25,7 +25,7 @@ class Widgets extends MY_Controller
         $this->load->view('widgets/tech_leaderboard_details', $data);
     }
 
-    public function loadV2TechLeaderboardOld()
+    public function loadV2TechLeaderboard()
     {        
         $this->load->model('widgets_model');
         $this->load->model('Users_model');
@@ -80,7 +80,7 @@ class Widgets extends MY_Controller
         $this->load->view('v2/widgets/tech_leaderboard_details', $data);
     }
 
-    public function loadV2TechLeaderboard()
+    public function loadV3TechLeaderboard()
     {        
         $this->load->model('widgets_model');
         $this->load->model('Users_model');
@@ -1330,22 +1330,27 @@ class Widgets extends MY_Controller
         $chart_labels = [];
 
         $start_month  = explode("/", post('filter_date_from'));
-        $end_month    = explode("/", post('filter_date_to'));  
+        $end_month    = explode("/", post('filter_date_to'));
         for( $start = $start_month[0]; $start <= $end_month[0]; $start++ ){
             $start_date = $year . '-' . $start . '-' . 1;
-            $start_date = date("Y-m-d", strtotime($start_date));
-            $end_date   = date("Y-m-t", strtotime($start_date));
-
+            
             //$date_range    = ['from' => $start_date, 'to' => $end_date];
             //$totalPaidInvoices = $this->Invoice_model->getCompanyTotalAmountPaidInvoices($cid, $date_range);            
             //$sales_data[]  = number_format($totalPaidInvoices->total_paid, 2, '.', '');
+
             $total_jobs = 0;
             $total_jobs_amount = 0;
-            $date_range    = ['from' => $start_date, 'to' => $end_date];
-            $jobs = $this->Jobs_model->getAllJobsByCompanyIdAndDateRange($cid, $date_range);
+
+            $start_date = date($start_month[1] . "-m-d", strtotime($start_date));
+            $end_date   = date($end_month[1] . "-m-t", strtotime($start_date));
+            $date_range = ['from' => $start_date, 'to' => $end_date];
+
+            //$jobs = $this->Jobs_model->getAllJobsByCompanyIdAndDateRange($cid, $date_range);
+            $jobs = $this->Jobs_model->getAllJobsByCompanyIdAndDateRangeV2($cid, $date_range);
+
             if( $jobs ){
                 foreach($jobs as $j){
-                    $total_jobs_amount += (float) $j->amount;
+                    $total_jobs_amount += (float) $j->job_amount;
                     $total_jobs++;
                 }
             }
