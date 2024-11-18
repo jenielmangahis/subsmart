@@ -53,7 +53,8 @@
                                         <thead>
                                             <tr>
                                                 <th>TECHNICIAN</th>
-                                                <th>JOB COUNT</th>
+                                                <th>JOBS COUNT</th>
+                                                <th style="text-align:right;">TOTAL AMOUNT</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -179,6 +180,7 @@
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
                                                 <option value="total_jobs" <?php echo ($reportSettings->sort_by == "total_jobs") ? "selected" : "" ?>>Job Count</option>
                                                 <option value="tech_rep" <?php echo ($reportSettings->sort_by == "tech_rep") ? "selected" : "" ?>>Technician</option>
+                                                <option value="total_amount" <?php echo ($reportSettings->sort_by == "total_amount") ? "selected" : "" ?>>Total Amount</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="DESC" <?php echo ($reportSettings->sort_asc_desc == "DESC") ? "selected" : "" ?>>DESC</option>

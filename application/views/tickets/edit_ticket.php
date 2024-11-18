@@ -521,7 +521,7 @@ a.btn-primary.btn-md {
                                                         <input id="priceM_qty<?php echo $i; ?>" value="0"  type="hidden" name="price_qty[]" class="form-control hidden_mobile_view price_qty">
                                                     </td>
                                                     <td class="hidden_mobile_view"><input type="number" step="any" class="form-control discount" name="discount[]" data-counter="<?php echo $i; ?>" id="discount_<?php echo $i; ?>" min="0"  value="<?php echo $itemL->discount; ?>"></td>
-                                                    <td class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]" data-counter="<?php echo $i; ?>" id="tax1_<?php echo $i; ?>" min="0"  value="<?php echo number_format($itemL->tax,2, '.', ','); ?>" readonly=""></td>
+                                                    <td class="hidden_mobile_view"><input type="text" class="form-control tax_change" name="tax[]" data-counter="<?php echo $i; ?>" id="tax1_<?php echo $i; ?>" step="any" value="<?php echo number_format($itemL->tax,2, '.', ','); ?>" readonly=""></td>
                                                     <td class="hidden_mobile_view"><input type="hidden" class="form-control " name="total[]" data-counter="<?php echo $i; ?>" id="item_total_<?php echo $i; ?>" min="0"  value="<?php echo $itemL->total; ?>"><span class="span-input" id="span_total_<?php echo $i; ?>"><?php echo number_format($itemL->total,2, '.', ','); ?></span></td>
                                                     <td><a href="#" class="remove nsm-button" id="<?php echo $i; ?>"><i class="bx bx-fw bx-trash"></i></a></td>
                                                 </tr>
@@ -625,7 +625,11 @@ a.btn-primary.btn-md {
                                             <tr>
                                                 <td>Taxes</td>
                                                 <!-- <td></td> -->
-                                                <td colspan="2" align="right"><span id="total_tax_"><?php echo $tickets->taxes > 0 ? number_format($tickets->taxes,2,".","") : '0.00'; ?></span><input type="hidden" name="taxes" id="total_tax_input"></td>
+                                                <td colspan="2" align="right">
+                                                    <div style="display:none;">
+                                                        <span id="total_tax_"><?php echo $tickets->taxes > 0 ? number_format($tickets->taxes,2,".","") : '0.00'; ?></span>
+                                                    </div>
+                                                    <input type="number" step="any" name="taxes" id="total_tax_input" class="form-control"  style="width:50%;float:right;text-align:right;" value="<?php echo $tickets->taxes > 0 ? number_format($tickets->taxes,2,".","") : '0.00'; ?>"></td>
                                             </tr>
                                             <tr>
                                                 <td>

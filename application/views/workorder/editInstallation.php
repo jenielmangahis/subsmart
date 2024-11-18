@@ -1013,8 +1013,13 @@ tr {
                                                 <label class="content-title fw-normal">Sales Tax</label>
                                             </div>
                                             <div class="col-12 col-md-3 text-end">
-                                                <label class="content-title">$ <span class="sales_tax_total"><?php echo number_format((float)$workorder->taxes,2); ?></span></label>
-                                                <input type="hidden" name="salesTax" id="salesTax" value="<?php echo number_format((float)$workorder->taxes,2); ?>">
+                                                <div style="display:none;">
+                                                    <label class="content-title">$ <span class="sales_tax_total"><?php echo number_format((float)$workorder->taxes,2); ?></span></label>
+                                                </div>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">$</span>
+                                                    <input type="number" name="salesTax" step="any" id="salesTax" class="nsm-field form-control text-end" value="<?php echo number_format((float)$workorder->taxes,2); ?>">
+                                                </div>
                                             </div>
                                             <div class="col-12 col-md-9">
                                                 <label class="content-title fw-normal">Installation Cost</label>
@@ -1022,7 +1027,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="text" name="installationCost" id="installationCost" class="nsm-field form-control text-end total-price total-price-click" oninput="this.value = !!(+this.value) && Math.abs(+this.value)>= 0 ? Math.abs(+this.value) : null;" value="<?php echo number_format((float)$workorder->installation_cost,2); ?>">
+                                                    <input type="number" step="any" name="installationCost" id="installationCost" class="nsm-field form-control text-end total-price total-price-click" value="<?php echo number_format((float)$workorder->installation_cost,2); ?>">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -1031,7 +1036,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="text" name="otps" id="otps" class="nsm-field form-control text-end total-price total-price-click" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" value="<?php echo number_format((float)$workorder->otp_setup,2); ?>">
+                                                    <input type="number" step="any" name="otps" id="otps" class="nsm-field form-control text-end total-price total-price-click" value="<?php echo number_format((float)$workorder->otp_setup,2); ?>">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -1040,7 +1045,7 @@ tr {
                                             <div class="col-12 col-md-3 text-end">
                                                 <div class="input-group">
                                                     <span class="input-group-text">$</span>
-                                                    <input type="text" name="monthlyMonitoring" id="monthlyMonitoring" class="nsm-field form-control text-end total-price total-price-click" oninput="this.value = !!this.value && Math.abs(this.value) >= 0 ? Math.abs(this.value) : null" value="<?php echo number_format((float)$workorder->monthly_monitoring,2); ?>">
+                                                    <input type="number" step="any" name="monthlyMonitoring" id="monthlyMonitoring" class="nsm-field form-control text-end total-price total-price-click" value="<?php echo number_format((float)$workorder->monthly_monitoring,2); ?>">
                                                 </div>
                                             </div>
                                             <div class="col-12 col-md-9">
@@ -1711,6 +1716,10 @@ $(".nsm-subtitle").html(function() {
             getTotalPrice();
         });
 
+        $("#salesTax").on("blur", function() {
+            getTotalPrice();
+        });
+
         $(document).on('keyup', '.number', function() {
         var a = $(this).val();
         $(this).val(numeral(a).format('0,0[.]00'));
@@ -2080,19 +2089,18 @@ $(".nsm-subtitle").html(function() {
         $('#equipmentCost').val(eq.toFixed(2));
         $('.equipment_cost').html(eq.toFixed(2));
 
+        //let ec = $('#equipmentCost').val();
+        // let grandtaxes = (parseFloat(ec) * (7.5 / 100));
+        // $('#salesTax').val(grandtaxes)
+        // let salesTax = $('#salesTax').val();
+        // $('.sales_tax_total').html(grandtaxes.toFixed(2));
         let ec = $('#equipmentCost').val();
-
-        let grandtaxes = (parseFloat(ec) * (7.5 / 100));
-        $('#salesTax').val(grandtaxes)
-        let salesTax = $('#salesTax').val();
-        $('.sales_tax_total').html(grandtaxes.toFixed(2));
+        let salesTax   = parseFloat($('#salesTax').val());
+        $('.sales_tax_total').html(salesTax.toFixed(2));
 
         let overAllTotal = parseFloat(val2) + parseFloat(salesTax) + parseFloat(installationCost) + parseFloat(otps) + parseFloat(monthlyMonitoring);
-
         let val3 = overAllTotal;
-
         let val4 = $('#totalDue').html(val3.toFixed(2));
-        console.log(val3);
         $('.totalDue').val(val3.toFixed(2));
         $('#payment_amount_grand').val(val3.toFixed(2));
         $('#payment_amount').val(val3.toFixed(2));

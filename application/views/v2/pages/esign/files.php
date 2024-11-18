@@ -522,7 +522,8 @@ echo put_header_assets();
                                                             <ul class="menu_list">
                                                                 <li class="menu_listItem">
                                                                     <div class="fields menu_item" data-type="default-widget" data-key="Signature">
-                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-sign"></i></span>
+                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0">
+                                                                        <i class="icon icon-color-tagger icon-palette-field-sign esign-fa fas fa-pen-nib"></i></span>
                                                                         <span class="u-ellipsis ng-binding">Signature</span>
                                                                     </div>
                                                                 </li>
@@ -683,9 +684,25 @@ echo put_header_assets();
                                                                 </li>
 
                                                                 <li class="menu_listItem">
+                                                                    <div class="fields menu_item" data-type="default-widget" data-key="Customer Mobile Number">
+                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-address"></i></span>
+                                                                        <i class="esign-fa fas fa-mobile-alt"></i>
+                                                                        <span class="u-ellipsis ng-binding">Customer Mobile</span>
+                                                                    </div>
+                                                                </li>
+
+                                                                <li class="menu_listItem">
+                                                                    <div class="fields menu_item" data-type="default-widget" data-key="Customer Mobile Number">
+                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-address"></i></span>
+                                                                        <i class="esign-fa fas fa-phone"></i>
+                                                                        <span class="u-ellipsis ng-binding">Customer Phone</span>
+                                                                    </div>
+                                                                </li>
+
+                                                                <li class="menu_listItem">
                                                                     <div class="fields menu_item" data-type="default-widget" data-key="Customer Date of Birth">
                                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-secondary_contact"></i></span>
-                                                                        <i class="esign-fa fas fa-mobile-alt"></i>
+                                                                        <i class="esign-fa fas fa-calendar"></i>
                                                                         <span class="u-ellipsis ng-binding">Date of Birth</span>
                                                                     </div>
                                                                 </li>
@@ -693,7 +710,7 @@ echo put_header_assets();
                                                                 <li class="menu_listItem">
                                                                     <div class="fields menu_item" data-type="default-widget" data-key="Customer Social Security Number">
                                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-secondary_contact"></i></span>
-                                                                        <i class="esign-fa fas fa-mobile-alt"></i>
+                                                                        <i class="esign-fa fas fa-id-card"></i>
                                                                         <span class="u-ellipsis ng-binding">Social Security Number</span>
                                                                     </div>
                                                                 </li>                                                                                      
@@ -870,6 +887,14 @@ echo put_header_assets();
                                                                         <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-acct_num"></i></span>
                                                                         <i class="esign-fa fas fa-money-check"></i>
                                                                         <span class="u-ellipsis ng-binding">Account Number</span>
+                                                                    </div>
+                                                                </li>
+
+                                                                <li class="menu_listItem">
+                                                                    <div class="fields menu_item" data-type="default-widget" data-key="Bank Name">
+                                                                        <span class="swatch swatch-recipient swatch-lg swatch-ext-0"><i class="icon icon-color-tagger icon-palette-field-check_num"></i></span>
+                                                                        <i class="esign-fa fas fa-building-columns"></i>
+                                                                        <span class="u-ellipsis ng-binding">Bank Name</span>
                                                                     </div>
                                                                 </li>
 

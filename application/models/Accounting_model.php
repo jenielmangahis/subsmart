@@ -48,6 +48,7 @@ class Accounting_model extends MY_Model
             $this->db->from('acs_profile');
             $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
             $this->db->where('acs_profile.company_id', $companyID);
+            $this->db->where('acs_billing.bill_start_date <= ', $companyID);
             $this->db->where_in('acs_profile.status', [
                 'Active w/RAR',
                 'Active w/RMR',
@@ -515,7 +516,7 @@ class Accounting_model extends MY_Model
 
         // Get Sales Leaderboard data in Database
         if ($reportType == 'sales_leaderboard') {
-            $this->db->select('users.id AS id, users.company_id AS company_id, CONCAT(users.FName, " ", users.LName) AS sales_rep, COALESCE(invoices.status, "") AS invoice_status, SUM(invoices.grand_total) AS total_sales, invoices.date_created AS date_created');
+            $this->db->select('users.id AS id, users.company_id AS company_id, CONCAT(users.FName, " ", users.LName) AS sales_rep, COALESCE(invoices.status, "") AS invoice_status, COUNT(jobs.id) AS total_jobs, SUM(invoices.grand_total) AS total_sales, invoices.date_created AS date_created');
             $this->db->from('users');
             $this->db->where('users.company_id', $companyID);
             $this->db->where('invoices.status !=', 'Draft');
@@ -547,42 +548,119 @@ class Accounting_model extends MY_Model
 
         // Get Tech Leaderboard data in Database
         if ($reportType == 'tech_leaderboard') {
-            $this->db->select('users.id AS id, users.company_id AS company_id, CONCAT(users.FName, " ", users.LName) AS tech_rep, COUNT(DISTINCT COALESCE(jobs.id, tickets.ticket_no)) AS total_jobs, jobs.date_created AS job_date_created, tickets.created_at AS ticket_date_created');
-            $this->db->from('users');
-            $this->db->where('users.company_id', $companyID);
-            $this->db->join('jobs', 'jobs.employee_id = users.id', 'left');
-            $this->db->join('tickets', 'tickets.employee_id = users.id', 'left');
 
-            // Use REGEXP for job status and ticket status filtering
-            $this->db->where("(jobs.status REGEXP 'Finished|Completed' OR tickets.ticket_status REGEXP 'Finished|Completed')");
-
-            // Adjust date filtering for job or ticket date
             switch ($reportConfig['filter_by']) {
-                case 'current_month':
-                    $this->db->where("DATE_FORMAT(jobs.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m') OR DATE_FORMAT(tickets.created_at, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
-                    break;
-                case 'current_year':
-                    $this->db->where("YEAR(jobs.date_created) = YEAR(CURDATE()) OR YEAR(tickets.created_at) = YEAR(CURDATE())");
-                    break;
-                case 'current_quarter':
-                    $this->db->where("QUARTER(jobs.date_created) = QUARTER(CURDATE()) AND YEAR(jobs.date_created) = YEAR(CURDATE()) OR QUARTER(tickets.created_at) = QUARTER(CURDATE()) AND YEAR(tickets.created_at) = YEAR(CURDATE())");
-                    break;
-                case 'current_week':
-                    $this->db->where("WEEK(jobs.date_created, 1) = WEEK(CURDATE(), 1) AND YEAR(jobs.date_created) = YEAR(CURDATE()) OR WEEK(tickets.created_at, 1) = WEEK(CURDATE(), 1) AND YEAR(tickets.created_at) = YEAR(CURDATE())");
-                    break;
                 case 'current_day':
-                    $this->db->where("DATE(jobs.date_created) = CURDATE() OR DATE(tickets.created_at) = CURDATE()");
+                    $filter_by1 = "AND ((DATE(jobs2.date_updated) = CURDATE()) 
+                                    OR (DATE(jobs3.date_updated) = CURDATE()) 
+                                    OR (DATE(jobs4.date_updated) = CURDATE()) 
+                                    OR (DATE(jobs5.date_updated) = CURDATE()) 
+                                    OR (DATE(jobs6.date_updated) = CURDATE()))";
+                    $filter_by2 = "AND DATE(tickets.updated_at) = CURDATE()";
+                    break;
+
+                case 'current_week':
+                    $filter_by1 = "AND ((YEARWEEK(jobs2.date_updated, 1) = YEARWEEK(CURDATE(), 1)) 
+                                    OR (YEARWEEK(jobs3.date_updated, 1) = YEARWEEK(CURDATE(), 1)) 
+                                    OR (YEARWEEK(jobs4.date_updated, 1) = YEARWEEK(CURDATE(), 1)) 
+                                    OR (YEARWEEK(jobs5.date_updated, 1) = YEARWEEK(CURDATE(), 1)) 
+                                    OR (YEARWEEK(jobs6.date_updated, 1) = YEARWEEK(CURDATE(), 1)))";
+                    $filter_by2 = "AND YEARWEEK(tickets.updated_at, 1) = YEARWEEK(CURDATE(), 1)";
+                    break;
+
+                case 'current_month':
+                    $filter_by1 = "AND ((YEAR(jobs2.date_updated) = YEAR(CURDATE()) AND MONTH(jobs2.date_updated) = MONTH(CURDATE())) 
+                                    OR (YEAR(jobs3.date_updated) = YEAR(CURDATE()) AND MONTH(jobs3.date_updated) = MONTH(CURDATE())) 
+                                    OR (YEAR(jobs4.date_updated) = YEAR(CURDATE()) AND MONTH(jobs4.date_updated) = MONTH(CURDATE())) 
+                                    OR (YEAR(jobs5.date_updated) = YEAR(CURDATE()) AND MONTH(jobs5.date_updated) = MONTH(CURDATE())) 
+                                    OR (YEAR(jobs6.date_updated) = YEAR(CURDATE()) AND MONTH(jobs6.date_updated) = MONTH(CURDATE())))";
+                    $filter_by2 = "AND YEAR(tickets.updated_at) = YEAR(CURDATE()) AND MONTH(tickets.updated_at) = MONTH(CURDATE())";
+                    break;
+
+                case 'current_quarter':
+                    $filter_by1 = "AND ((YEAR(jobs2.date_updated) = YEAR(CURDATE()) AND QUARTER(jobs2.date_updated) = QUARTER(CURDATE())) 
+                                    OR (YEAR(jobs3.date_updated) = YEAR(CURDATE()) AND QUARTER(jobs3.date_updated) = QUARTER(CURDATE())) 
+                                    OR (YEAR(jobs4.date_updated) = YEAR(CURDATE()) AND QUARTER(jobs4.date_updated) = QUARTER(CURDATE())) 
+                                    OR (YEAR(jobs5.date_updated) = YEAR(CURDATE()) AND QUARTER(jobs5.date_updated) = QUARTER(CURDATE())) 
+                                    OR (YEAR(jobs6.date_updated) = YEAR(CURDATE()) AND QUARTER(jobs6.date_updated) = QUARTER(CURDATE())))";
+                    $filter_by2 = "AND YEAR(tickets.updated_at) = YEAR(CURDATE()) AND QUARTER(tickets.updated_at) = QUARTER(CURDATE())";
+                    break;
+
+                case 'current_year':
+                    $filter_by1 = "AND ((YEAR(jobs2.date_updated) = YEAR(CURDATE())) 
+                                    OR (YEAR(jobs3.date_updated) = YEAR(CURDATE())) 
+                                    OR (YEAR(jobs4.date_updated) = YEAR(CURDATE())) 
+                                    OR (YEAR(jobs5.date_updated) = YEAR(CURDATE())) 
+                                    OR (YEAR(jobs6.date_updated) = YEAR(CURDATE())))";
+                    $filter_by2 = "AND YEAR(tickets.updated_at) = YEAR(CURDATE())";
                     break;
             }
 
-            // Group by users and apply other settings
-            $this->db->group_by('users.id');
-            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
-            $this->db->limit($reportConfig['page_size']);
-            $data = $this->db->get();
-            return $data->result();
+            $orderBy = "ORDER BY $reportConfig[sort_by] $reportConfig[sort_order]";
+            $limit = "LIMIT $reportConfig[page_size]";
+
+            $query = $this->db->query("
+                SELECT 
+                    combined.id AS id,
+                    combined.company_id AS company_id,
+                    combined.tech_rep AS tech_rep,
+                    SUM(combined.jobs) AS total_jobs,
+                    SUM(combined.total) AS total_amount
+                FROM (
+                    SELECT 
+                        users.id AS id,
+                        users.company_id AS company_id,
+                        CONCAT(users.FName, ' ', users.LName) AS tech_rep,
+                        COUNT(DISTINCT COALESCE(jobs2.id, jobs3.id, jobs4.id, jobs5.id, jobs6.id)) AS jobs,
+                        SUM(COALESCE(job_payments.amount, 0)) AS total
+                    FROM 
+                        users
+                        LEFT JOIN jobs jobs2 ON jobs2.employee2_id = users.id 
+                        LEFT JOIN jobs jobs3 ON jobs3.employee3_id = users.id
+                        LEFT JOIN jobs jobs4 ON jobs4.employee4_id = users.id
+                        LEFT JOIN jobs jobs5 ON jobs5.employee5_id = users.id
+                        LEFT JOIN jobs jobs6 ON jobs6.employee6_id = users.id
+                        LEFT JOIN job_payments ON job_payments.job_id = COALESCE(jobs2.id, jobs3.id, jobs4.id, jobs5.id, jobs6.id)
+                    WHERE 
+                        users.company_id = $companyID AND (
+                            (jobs2.status = 'Finished' OR jobs2.status = 'Completed')
+                            OR (jobs3.status = 'Finished' OR jobs3.status = 'Completed')
+                            OR (jobs4.status = 'Finished' OR jobs4.status = 'Completed')
+                            OR (jobs5.status = 'Finished' OR jobs5.status = 'Completed')
+                            OR (jobs6.status = 'Finished' OR jobs6.status = 'Completed')
+                        ) $filter_by1
+                    GROUP BY users.id
+
+                    UNION ALL
+
+                    SELECT 
+                        users.id AS id,
+                        users.company_id AS company_id,
+                        CONCAT(users.FName, ' ', users.LName) AS tech_rep,
+                        COUNT(DISTINCT tickets.ticket_no) AS jobs,
+                        SUM(COALESCE(tickets.grandtotal, 0)) AS total
+                    FROM 
+                        users
+                            LEFT JOIN tickets ON (
+                        users.id = SUBSTRING_INDEX(SUBSTRING_INDEX(tickets.technicians, ':\"', -5), '\"', 1) OR
+                        users.id = SUBSTRING_INDEX(SUBSTRING_INDEX(tickets.technicians, ':\"', -4), '\"', 1) OR
+                        users.id = SUBSTRING_INDEX(SUBSTRING_INDEX(tickets.technicians, ':\"', -3), '\"', 1) OR
+                        users.id = SUBSTRING_INDEX(SUBSTRING_INDEX(tickets.technicians, ':\"', -2), '\"', 1) OR
+                        users.id = SUBSTRING_INDEX(SUBSTRING_INDEX(tickets.technicians, ':\"', -1), '\"', 1)
+                    )
+                    WHERE 
+                        users.company_id = $companyID AND (tickets.ticket_status = 'Finished' OR tickets.ticket_status = 'Completed') $filter_by2
+                    GROUP BY users.id
+                ) AS combined
+                GROUP BY combined.id
+                $orderBy
+                $limit
+            ");
+
+            return $query->result();
         }
 
+        
         // Get Recent Customers data in Database
         if ($reportType == 'recent_customers') {
             $this->db->select('acs_profile.prof_id AS id, acs_profile.company_id AS company_id, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, acs_profile.customer_type AS customer_type, acs_profile.status AS status, acs_profile.email AS email, acs_profile.phone_h AS phone, acs_profile.phone_m AS mobile, acs_profile.created_at AS date_created');
