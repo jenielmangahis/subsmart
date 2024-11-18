@@ -187,7 +187,7 @@ class Cron_Payment extends MY_Controller {
                 'attachment' => ''
             ];
 
-            $isSent = sendEmail($data);
+            //$isSent = sendEmail($data);
         }
         
         exit;
