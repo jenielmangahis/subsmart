@@ -25,7 +25,7 @@ class Widgets extends MY_Controller
         $this->load->view('widgets/tech_leaderboard_details', $data);
     }
 
-    public function loadV2TechLeaderboard()
+    public function loadV2TechLeaderboardOld()
     {        
         $this->load->model('widgets_model');
         $this->load->model('Users_model');
@@ -76,6 +76,127 @@ class Widgets extends MY_Controller
             return $b["total_jobs"] - $a["total_jobs"];
         });
 
+        $data['techLeaderBoards'] = $techLeaderBoards;
+        $this->load->view('v2/widgets/tech_leaderboard_details', $data);
+    }
+
+    public function loadV2TechLeaderboard()
+    {        
+        $this->load->model('widgets_model');
+        $this->load->model('Users_model');
+        $this->load->model('Jobs_model');
+        $this->load->model('Tickets_model');
+
+        $companyID = logged('company_id');
+        $date_from = post('tech_leaderboard_date_from');
+        $date_to   = post('tech_leaderboard_date_to');
+        $filter_by = post('filter_by');
+
+        $filter_by1 = "";
+        $filter_by2 = "";
+        
+        if($filter_by == 'today') {
+            $filter_by1 = "AND ((DATE(jobs2.date_updated) = CURDATE()) 
+                            OR (DATE(jobs3.date_updated) = CURDATE()) 
+                            OR (DATE(jobs4.date_updated) = CURDATE()) 
+                            OR (DATE(jobs5.date_updated) = CURDATE()) 
+                            OR (DATE(jobs6.date_updated) = CURDATE()))";
+            $filter_by2 = "AND DATE(tickets.updated_at) = CURDATE()";
+        }elseif($filter_by == 'this-week') {
+            $filter_by1 = "AND ((YEARWEEK(jobs2.date_updated, 1) = YEARWEEK(CURDATE(), 1)) 
+                            OR (YEARWEEK(jobs3.date_updated, 1) = YEARWEEK(CURDATE(), 1)) 
+                            OR (YEARWEEK(jobs4.date_updated, 1) = YEARWEEK(CURDATE(), 1)) 
+                            OR (YEARWEEK(jobs5.date_updated, 1) = YEARWEEK(CURDATE(), 1)) 
+                            OR (YEARWEEK(jobs6.date_updated, 1) = YEARWEEK(CURDATE(), 1)))";
+            $filter_by2 = "AND YEARWEEK(tickets.updated_at, 1) = YEARWEEK(CURDATE(), 1)";
+        }elseif($filter_by == 'this-month') {
+            $filter_by1 = "AND ((YEAR(jobs2.date_updated) = YEAR(CURDATE()) AND MONTH(jobs2.date_updated) = MONTH(CURDATE())) 
+                            OR (YEAR(jobs3.date_updated) = YEAR(CURDATE()) AND MONTH(jobs3.date_updated) = MONTH(CURDATE())) 
+                            OR (YEAR(jobs4.date_updated) = YEAR(CURDATE()) AND MONTH(jobs4.date_updated) = MONTH(CURDATE())) 
+                            OR (YEAR(jobs5.date_updated) = YEAR(CURDATE()) AND MONTH(jobs5.date_updated) = MONTH(CURDATE())) 
+                            OR (YEAR(jobs6.date_updated) = YEAR(CURDATE()) AND MONTH(jobs6.date_updated) = MONTH(CURDATE())))";
+            $filter_by2 = "AND YEAR(tickets.updated_at) = YEAR(CURDATE()) AND MONTH(tickets.updated_at) = MONTH(CURDATE())";
+        }elseif($filter_by == 'this-quarter') {
+            $filter_by1 = "AND ((YEAR(jobs2.date_updated) = YEAR(CURDATE()) AND QUARTER(jobs2.date_updated) = QUARTER(CURDATE())) 
+                            OR (YEAR(jobs3.date_updated) = YEAR(CURDATE()) AND QUARTER(jobs3.date_updated) = QUARTER(CURDATE())) 
+                            OR (YEAR(jobs4.date_updated) = YEAR(CURDATE()) AND QUARTER(jobs4.date_updated) = QUARTER(CURDATE())) 
+                            OR (YEAR(jobs5.date_updated) = YEAR(CURDATE()) AND QUARTER(jobs5.date_updated) = QUARTER(CURDATE())) 
+                            OR (YEAR(jobs6.date_updated) = YEAR(CURDATE()) AND QUARTER(jobs6.date_updated) = QUARTER(CURDATE())))";
+            $filter_by2 = "AND YEAR(tickets.updated_at) = YEAR(CURDATE()) AND QUARTER(tickets.updated_at) = QUARTER(CURDATE())";
+        }elseif($filter_by == 'this-year') {
+            $filter_by1 = "AND ((YEAR(jobs2.date_updated) = YEAR(CURDATE())) 
+                            OR (YEAR(jobs3.date_updated) = YEAR(CURDATE())) 
+                            OR (YEAR(jobs4.date_updated) = YEAR(CURDATE())) 
+                            OR (YEAR(jobs5.date_updated) = YEAR(CURDATE())) 
+                            OR (YEAR(jobs6.date_updated) = YEAR(CURDATE())))";
+            $filter_by2 = "AND YEAR(tickets.updated_at) = YEAR(CURDATE())";
+        }
+
+        $orderBy = "ORDER BY total_jobs DESC";
+        $limit = "LIMIT 9999";
+
+        $query = $this->db->query("
+            SELECT 
+                combined.id AS id,
+                combined.company_id AS company_id,
+                combined.tech_rep AS tech_rep,
+                combined.email AS email,
+                SUM(combined.jobs) AS total_jobs,
+                SUM(combined.total) AS total_amount
+            FROM (
+                SELECT 
+                    users.id AS id,
+                    users.company_id AS company_id,
+                    CONCAT(users.FName, ' ', users.LName) AS tech_rep,
+                    users.email as email,
+                    COUNT(DISTINCT COALESCE(jobs2.id, jobs3.id, jobs4.id, jobs5.id, jobs6.id)) AS jobs,
+                    SUM(COALESCE(job_payments.amount, 0)) AS total
+                FROM 
+                    users
+                    LEFT JOIN jobs jobs2 ON jobs2.employee2_id = users.id 
+                    LEFT JOIN jobs jobs3 ON jobs3.employee3_id = users.id
+                    LEFT JOIN jobs jobs4 ON jobs4.employee4_id = users.id
+                    LEFT JOIN jobs jobs5 ON jobs5.employee5_id = users.id
+                    LEFT JOIN jobs jobs6 ON jobs6.employee6_id = users.id
+                    LEFT JOIN job_payments ON job_payments.job_id = COALESCE(jobs2.id, jobs3.id, jobs4.id, jobs5.id, jobs6.id)
+                WHERE 
+                    users.company_id = $companyID AND (
+                        (jobs2.status = 'Finished' OR jobs2.status = 'Completed')
+                        OR (jobs3.status = 'Finished' OR jobs3.status = 'Completed')
+                        OR (jobs4.status = 'Finished' OR jobs4.status = 'Completed')
+                        OR (jobs5.status = 'Finished' OR jobs5.status = 'Completed')
+                        OR (jobs6.status = 'Finished' OR jobs6.status = 'Completed')
+                    ) $filter_by1
+                GROUP BY users.id
+
+                UNION ALL
+
+                SELECT 
+                    users.id AS id,
+                    users.company_id AS company_id,
+                    CONCAT(users.FName, ' ', users.LName) AS tech_rep,
+                    users.email as email,
+                    COUNT(DISTINCT tickets.ticket_no) AS jobs,
+                    SUM(COALESCE(tickets.grandtotal, 0)) AS total
+                FROM 
+                    users
+                        LEFT JOIN tickets ON (
+                    users.id = SUBSTRING_INDEX(SUBSTRING_INDEX(tickets.technicians, ':\"', -5), '\"', 1) OR
+                    users.id = SUBSTRING_INDEX(SUBSTRING_INDEX(tickets.technicians, ':\"', -4), '\"', 1) OR
+                    users.id = SUBSTRING_INDEX(SUBSTRING_INDEX(tickets.technicians, ':\"', -3), '\"', 1) OR
+                    users.id = SUBSTRING_INDEX(SUBSTRING_INDEX(tickets.technicians, ':\"', -2), '\"', 1) OR
+                    users.id = SUBSTRING_INDEX(SUBSTRING_INDEX(tickets.technicians, ':\"', -1), '\"', 1)
+                )
+                WHERE 
+                    users.company_id = $companyID AND (tickets.ticket_status = 'Finished' OR tickets.ticket_status = 'Completed') $filter_by2
+                GROUP BY users.id
+            ) AS combined
+            GROUP BY combined.id
+            $orderBy
+            $limit
+        ");
+
+        $techLeaderBoards = $query->result();      
         $data['techLeaderBoards'] = $techLeaderBoards;
         $this->load->view('v2/widgets/tech_leaderboard_details', $data);
     }

@@ -11,11 +11,11 @@ if (count($techLeaderBoards) > 0) :
         ?>
         <div class="widget-item">
             <?php
-            $image = userProfilePicture($tech['uid']);
+            $image = userProfilePicture($tech->id);
             if (is_null($image)) :
             ?>
                 <div class="nsm-profile">
-                    <span><?php echo getLoggedNameInitials($tech['uid']); ?></span>
+                    <span><?php echo getLoggedNameInitials($tech->id); ?></span>
                 </div>
             <?php
             else :
@@ -26,11 +26,11 @@ if (count($techLeaderBoards) > 0) :
             ?>
             <div class="content">
                 <div class="details">
-                    <span class="content-title"><?= $tech['name']; ?></span>
-                    <span class="content-subtitle d-block"><?= $tech['email'] ?></span>
+                    <span class="content-title"><?= $tech->tech_rep; ?></span>
+                    <span class="content-subtitle d-block"><?php echo $tech->email; ?></span>
                 </div>
                 <div class="controls">
-                    <span class="content-subtitle d-block nsm-text-success fw-bold"><?= $tech['total_jobs']; ?> <?= $tech['total_jobs'] > 1 ? ' Jobs' : ' Job'; ?></span>
+                    <span class="content-subtitle d-block nsm-text-success fw-bold"><?= $tech->total_jobs; ?> <?= $tech->total_jobs > 1 ? ' Jobs' : ' Job'; ?></span>
                 </div>
             </div>
         </div>

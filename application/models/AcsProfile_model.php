@@ -762,7 +762,6 @@ class AcsProfile_model extends MY_Model
         $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RQR', 'Active w/RMR', 'Active w/RYR', 'Inactive w/RMM']);
         $query = $this->db->get()->row();
 
-        return $query;
 
         return $query;
     }
@@ -771,19 +770,17 @@ class AcsProfile_model extends MY_Model
 
     public function getCompanyActiveSubscriptionWillExpireIn30Days($cid)
     {
-        $today = date('m/d/Y');
-        $_30_days = date('m/d/Y', strtotime('+30 days'));
-
         $this->db->select('*');
-        $this->db->from($this->table2);
-        $this->db->join('acs_profile', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->from($this->table);
+        $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $cid);
-        $this->db->where('acs_billing.bill_end_date >=', $today);
-        $this->db->where('acs_billing.bill_end_date <=', $_30_days);
-
+        $this->db->where('acs_billing.bill_end_date >= CURDATE()', null, false); 
+        $this->db->where('acs_billing.bill_end_date <= DATE_ADD(CURDATE(), INTERVAL 30 DAY)', null, false);
+        $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RQR', 'Active w/RMR', 'Active w/RYR', 'Inactive w/RMM']);
         $query = $this->db->get();
-
+        
         return $query->result();
+        
     }
 }
 

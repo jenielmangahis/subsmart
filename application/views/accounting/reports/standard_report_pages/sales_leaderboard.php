@@ -53,6 +53,7 @@
                                         <thead>
                                             <tr>
                                                 <th>SALES REPRESENTATIVE</th>
+                                                <th>JOBS COUNT</th>
                                                 <th style="text-align:right;">TOTAL SALES</th>
                                             </tr>
                                         </thead>
@@ -178,6 +179,7 @@
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
                                                 <option value="total_sales" <?php echo ($reportSettings->sort_by == "total_sales") ? "selected" : "" ?>>Total Sales</option>
+                                                <option value="total_jobs" <?php echo ($reportSettings->sort_by == "total_jobs") ? "selected" : "" ?>>Jobs Count</option>
                                                 <option value="sales_rep" <?php echo ($reportSettings->sort_by == "sales_rep") ? "selected" : "" ?>>Sales Rep</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
