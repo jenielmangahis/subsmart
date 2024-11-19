@@ -1166,6 +1166,23 @@ class Jobs_model extends MY_Model
         $query = $this->db->get();
         return $query->result();
     }
+
+    public function widgetCountJobs($cid, $date_range = [])
+    {
+        $this->db->select('jobs.id AS id, jobs.company_id AS company_id, jobs.job_number AS number, jobs.job_type AS type, jobs.job_description AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, jobs.status AS status, jobs.date_created AS date_created, SUM(job_items.cost) AS job_amount');
+        $this->db->from($this->table);
+        $this->db->where('jobs.company_id', $cid);
+        if( $date_range ){
+            $this->db->where('jobs.start_date >=', $date_range['from']);
+            $this->db->where('jobs.start_date <=', $date_range['to']);
+        }
+
+        $this->db->join('job_items', 'job_items.job_id = jobs.id', 'left');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
+        $this->db->group_by('jobs.id');
+        $data = $this->db->get();
+        return $data->result();
+    }
 }
 /* End of file Jobs_model.php */
 /* Location: ./application/models/Jobs_model.php */
