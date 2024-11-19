@@ -937,22 +937,37 @@ class Dashboard extends Widgets
 
                 break;
             case 'jobs':
-                $jobs_query = [
-                    'where' => ['jobs.company_id' => logged('company_id'),
-                    'DATE(jobs.date_created)  >=' => date('Y-m-d', strtotime($date_from)),
-                    'DATE(jobs.date_created)  <=' => date('Y-m-d', strtotime($date_to)),
-                     ],
-                    'table' => 'jobs',
-                    'join' => [
-                        [
-                            'table' => 'job_payments',
-                            'statement' => 'jobs.id = job_payments.job_id',
-                        ],
-                    ],
-                    'select' => 'jobs.*, job_payments.amount',
-                ];
-                $total_jobs = $this->general->get_data_with_param($jobs_query);
-                $this->output->set_output(json_encode(['first' => count($total_jobs), 'second' => null, 'jobs' => $total_jobs]));
+                $this->load->model('Jobs_model');
+                $cid = logged('company_id');
+                $date_range['from'] = $date_from;
+                $date_range['to']   = $date_to;
+                $data = $this->Jobs_model->widgetCountJobs($cid,$date_range);
+                // $jobs_query = [
+                //     'where' => ['jobs.company_id' => logged('company_id'),
+                //     'DATE(jobs.date_created)  >=' => date('Y-m-d', strtotime($date_from)),
+                //     'DATE(jobs.date_created)  <=' => date('Y-m-d', strtotime($date_to)),
+                //      ],
+                //     'table' => 'jobs',
+                //     'join' => [
+                //         [
+                //             'table' => 'acs_profile',
+                //             'statement' => 'acs_profile.prof_id = jobs.customer_id',
+                //         ],
+                //         [
+                //             'table' => 'job_items',
+                //             'statement' => 'job_items.job_id = jobs.id',
+                //         ],
+                //     ],
+                //     'select' => 'jobs.id AS id, jobs.company_id AS company_id, jobs.job_number AS number, jobs.job_type AS type, jobs.job_description AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, jobs.status AS status, jobs.date_created AS date_created, SUM(job_items.cost) AS job_amount',
+                // ];
+
+                // echo "<pre>";
+                // print_r($jobs_query);
+                // $total_jobs = $this->general->get_data_with_param($jobs_query);
+                // $this->output->set_output(json_encode(['first' => count($total_jobs), 'second' => null, 'jobs' => $total_jobs]));
+
+                // break;
+                $this->output->set_output(json_encode(['first' => count($data), 'second' => null, 'jobs' => $data]));
 
                 break;
             case 'unpaid_invoices':
@@ -1602,7 +1617,10 @@ class Dashboard extends Widgets
 
     public function jobs_thumbnail_graph()
     {
-        $jobs = $this->event_model->getAllJobs();
+        $this->load->model('Jobs_model');
+
+        $cid = logged('company_id');
+        $jobs = $this->Jobs_model->widgetCountJobs($cid, []);
         $data_arr = ['Success' => true, 'jobs' => $jobs, 'total_jobs' => count($jobs)];
         exit(json_encode($data_arr));
     }

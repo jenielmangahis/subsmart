@@ -1124,6 +1124,30 @@ class Jobs_model extends MY_Model
         return $query->result();
     }
 
+    public function getAllJobsByCompanyIdAndDateRangeV2($cid, $date_range = array())
+    {
+        $this->db->select('jobs.id AS id, jobs.company_id AS company_id, jobs.job_number AS number, jobs.job_type AS type, jobs.job_description AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, jobs.status AS status, jobs.date_created AS date_created, SUM(job_items.cost) AS job_amount');
+        $this->db->from('jobs');   
+        $this->db->where('jobs.company_id', $cid);
+
+        if( $date_range ){
+            $date_start = $date_range['from'];
+            $date_end   = $date_range['to'];
+            $this->db->where("DATE_FORMAT(jobs.date_created,'%Y-%m-%d') >= '$date_start'");
+            $this->db->where("DATE_FORMAT(jobs.date_created,'%Y-%m-%d') <= '$date_end'");
+        }        
+
+        $this->db->join('job_items', 'job_items.job_id = jobs.id', 'left');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
+        $this->db->group_by('jobs.id');
+        
+        $this->db->order_by('date_created', 'DESC');
+        $this->db->limit(99999);
+
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getAllJobsByCompanyIdAndStartDate($cid, $date_range = array())
     {
         $this->db->select('jobs.*, COALESCE(invoices.grand_total,0) AS amount,acs_profile.first_name,acs_profile.last_name,acs_profile.mail_add,acs_profile.city as cust_city,acs_profile.state as cust_state, acs_profile.zip_code as cust_zipcode');
@@ -1141,6 +1165,23 @@ class Jobs_model extends MY_Model
 
         $query = $this->db->get();
         return $query->result();
+    }
+
+    public function widgetCountJobs($cid, $date_range = [])
+    {
+        $this->db->select('jobs.id AS id, jobs.company_id AS company_id, jobs.job_number AS number, jobs.job_type AS type, jobs.job_description AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, jobs.status AS status, jobs.date_created AS date_created, SUM(job_items.cost) AS job_amount');
+        $this->db->from($this->table);
+        $this->db->where('jobs.company_id', $cid);
+        if( $date_range ){
+            $this->db->where('jobs.start_date >=', $date_range['from']);
+            $this->db->where('jobs.start_date <=', $date_range['to']);
+        }
+
+        $this->db->join('job_items', 'job_items.job_id = jobs.id', 'left');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
+        $this->db->group_by('jobs.id');
+        $data = $this->db->get();
+        return $data->result();
     }
 }
 /* End of file Jobs_model.php */

@@ -29,20 +29,21 @@
         <div class="nsm-widget-table">
             <div class="row mb-4 mt-2">
                 <div class="col-4">
-                    <select class="nsm-field form-select" name="filter_date" id="tech-leader-board-filter-date">                                                
+                    <select class="nsm-field form-select" name="filter_date" id="tech-leader-board-filter-date">  
+                        <option value="all" selected="">All</option>                                              
                         <option value="today">Today</option>                        
-                        <option value="custom">Custom</option>
+                        <!-- <option value="custom">Custom</option> -->
                         <option value="this-week" <?=$date === 'this-week' ? 'selected' : ''?>>This week</option>
                         <option value="this-month">This month</option>
                         <option value="this-quarter">This quarter</option>
-                        <option value="this-year" selected="">This year</option>
+                        <option value="this-year">This year</option>
                     </select>
                 </div>
                 <div class="col-4">
-                    <input type="date" id="tech-leaderboard-filter-from" class="nsm-field form-control date" value="<?= date("Y-01-01"); ?>" />
+                    <input type="date" id="tech-leaderboard-filter-from" class="nsm-field form-control date" disable value="<?= date("Y-01-01"); ?>" />
                 </div>
                 <div class="col-4">
-                    <input type="date" id="tech-leaderboard-filter-to" class="nsm-field form-control date" value="<?= date("Y-12-31"); ?>" required>
+                    <input type="date" id="tech-leaderboard-filter-to" class="nsm-field form-control date" disable value="<?= date("Y-12-31"); ?>" required>
                 </div>
             </div>     
             <div id="user_tech_leaderboard"></div>
@@ -128,11 +129,12 @@
     function loadTechLeaderboards(){
         var tech_leaderboard_date_from = $('#tech-leaderboard-filter-from').val();
         var tech_leaderboard_date_to   = $('#tech-leaderboard-filter-to').val();
+        var filter_by                  = $('#tech-leader-board-filter-date').val();
 
         $.ajax({
-            url: base_url + 'widgets/loadV2TechLeaderBoard',
+            url: base_url + 'widgets/loadV3TechLeaderBoard',
             method: 'post',
-            data: {tech_leaderboard_date_from:tech_leaderboard_date_from,tech_leaderboard_date_to:tech_leaderboard_date_to},
+            data: {tech_leaderboard_date_from:tech_leaderboard_date_from,tech_leaderboard_date_to:tech_leaderboard_date_to,filter_by:filter_by},
             success: function (response) {
                 $('#user_tech_leaderboard').html(response);
             }

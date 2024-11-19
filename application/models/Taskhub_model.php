@@ -416,5 +416,18 @@ class Taskhub_model extends MY_Model {
         $query = $this->db->get();
         return $query->result();
     }  
+
+    public function getTaskListById($id)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table_task_list);
+        $this->db->where('tasks_lists.id', $id);
+        $query = $this->db->get();
+        return $query->row();
+    }    
+
+    public function deleteByTaskListId($task_id){
+        $this->db->delete($this->table_task_list, array('tasks_lists.id' => $task_id));
+    }
         
 }

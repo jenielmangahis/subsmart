@@ -356,7 +356,7 @@
 <div class="nsm-card primary">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span><i class="bx bx-fw bx-credit-card"></i>Subscription Pay Plan</span>
+            <span><i class="bx bx-fw bx-credit-card"></i>Financing Payment Schedule</span>
         </div>
     </div>
     <div class="nsm-card-content">
