@@ -48,7 +48,6 @@ class Accounting_model extends MY_Model
             $this->db->from('acs_profile');
             $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
             $this->db->where('acs_profile.company_id', $companyID);
-            $this->db->where('acs_billing.bill_start_date <= ', $companyID);
             $this->db->where_in('acs_profile.status', [
                 'Active w/RAR',
                 'Active w/RMR',
