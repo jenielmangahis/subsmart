@@ -1139,8 +1139,8 @@ function accountingExpenseGraphThumbnail() {
                 },
             });
 
-            $(".total_expense_graph_total").html('$ ' + total_expense);
-            $("#total_expense_graph").html('$' + total_expense);
+            $(".total_expense_graph_total").html('$ ' + total_expense.toLocaleString(undefined, {minimumFractionDigits: 2}));
+            $("#total_expense_graph").html('$' + total_expense.toLocaleString(undefined, {minimumFractionDigits: 2}));
 
 
             window.AccountingExpenseGraph = AccountingExpenseGraph;
