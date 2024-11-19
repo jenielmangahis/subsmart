@@ -650,8 +650,8 @@ function filterAccountingExpenseCategory(selectedCategory) {
             // Update the chart with filtered data
             renderAccountingExpenseGraph(filteredCategories, filteredData);
 
-            $(".total_expense_graph_total").html('$ ' + filteredTotal);
-            $("#total_expense_graph").html('$' + filteredTotal);
+            $(".total_expense_graph_total").html('$ ' + filteredTotal.toLocaleString(undefined, {minimumFractionDigits: 2}));
+            $("#total_expense_graph").html('$' + filteredTotal.toLocaleString(undefined, {minimumFractionDigits: 2}));
         }
     ).catch((error) => {
         console.log(error);
@@ -1137,8 +1137,8 @@ function filterAccountingExpenseThumbnailGraph(accounting_expense) {
         }
     }
 
-    $(".total_expense_graph_total").html('$ ' + total_expense);
-    $("#total_expense_graph").html('$' + total_expense);
+    $(".total_expense_graph_total").html('$ ' + total_expense.toLocaleString(undefined, {minimumFractionDigits: 2}));
+    $("#total_expense_graph").html('$' + total_expense.toLocaleString(undefined, {minimumFractionDigits: 2}));
     $('#AccountingExpenseGraphLoader').hide();
     AccountingExpenseGraph.data.labels = expenseCategory;
     AccountingExpenseGraph.data.datasets[0].data = dataTemp;
