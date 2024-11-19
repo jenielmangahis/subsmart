@@ -12342,21 +12342,27 @@ class Accounting_modals extends MY_Controller
                 'text' => 'All'
             ];
         }
+
         foreach ($paymentMethods as $paymentMethod) {
             if ($search !== null && $search !== '') {
-                $stripos = stripos($paymentMethod['name'], $search);
-                if ($stripos !== false) {
-                    $searched = substr($paymentMethod['name'], $stripos, strlen($search));
-                    $choices['results'][] = [
-                        'id' => $paymentMethod['id'],
-                        'text' => str_replace($searched, "<strong>$searched</strong>", $paymentMethod['name'])
-                    ];
+                if($paymentMethod['name'] !== null && $paymentMethod['name'] !== '') {
+                    $stripos = stripos($paymentMethod['name'], $search);
+                    if ($stripos !== false) {
+                        $searched = substr($paymentMethod['name'], $stripos, strlen($search));
+                        $choices['results'][] = [
+                            'id' => $paymentMethod['id'],
+                            'text' => str_replace($searched, "<strong>$searched</strong>", $paymentMethod['name'])
+                        ];
+                    }
                 }
             } else {
-                $choices['results'][] = [
-                    'id' => $paymentMethod['id'],
-                    'text' => $paymentMethod['name']
-                ];
+                if($paymentMethod['name'] !== null && $paymentMethod['name'] !== '') {
+                    $choices['results'][] = [
+                        'id' => $paymentMethod['id'],
+                        'text' => $paymentMethod['name']
+                    ];
+                }
+
             }
         }
 

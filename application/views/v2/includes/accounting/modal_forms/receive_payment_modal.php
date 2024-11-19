@@ -49,7 +49,7 @@
                                                         <?php endif; ?>
                                                     </select>
                                                 </div>
-                                                <div class="col-12 col-md-2 d-flex align-items-end">
+                                                <div class="col-12 col-md-3 d-flex align-items-end" style="margin-top: 19px;">
                                                     <div class="dropdown">
                                                         <button class="nsm-button" type="button" id="findByInvoice" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Find by invoice no.</button>
                                                         <div class="dropdown-menu p-3" style="width: 150%" aria-labelledby="findByInvoice">
