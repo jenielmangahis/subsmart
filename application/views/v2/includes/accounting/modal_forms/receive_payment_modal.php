@@ -373,19 +373,17 @@
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-12 col-md-6">
+                                        <div class="col-12 col-md-9">
                                             <div class="row">
                                                 <div class="col-12 col-md-4">
                                                     <label for="memo">Memo</label>
-                                                    <textarea name="memo" id="memo" class="nsm-field form-control mb-2"><?= isset($payment) ? str_replace("<br />", "", $payment->memo) : "" ?></textarea>
+                                                    <textarea name="memo" id="memo" rows="6" class="nsm-field form-control mb-2"><?= isset($payment) ? str_replace("<br />", "", $payment->memo) : "" ?></textarea>
                                                 </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-12 col-md-6">
+                                                <div class="col-12 col-md-8">
                                                     <div class="attachments">
                                                         <label for="attachment" style="margin-right: 15px"><i class="bx bx-fw bx-paperclip"></i>&nbsp;Attachment</label>
                                                         <span>Maximum size: 20MB</span>
-                                                        <div id="receive-payment-attachments" class="dropzone d-flex justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
+                                                        <div id="receive-payment-attachments" class="dropzone justify-content-center align-items-center" style="border: 1px solid #e1e2e3;background: #ffffff;width: 100%;">
                                                             <div class="dz-message" style="margin: 20px;border">
                                                                 <span style="font-size: 16px;color: rgb(180,132,132);font-style: italic;">Drag and drop files here or</span>
                                                                 <a href="#" style="font-size: 16px;color: #0b97c4">browse to upload</a>
