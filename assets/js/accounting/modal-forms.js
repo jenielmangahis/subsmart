@@ -14024,10 +14024,16 @@ const applyInvoicesFilter = (e) => {
 const resetInvoicesFilter = (e) => {
     e.preventDefault();
 
+    let today = new Date();
+    let dd   = today.getDate();
+    let mm   = today.getMonth() + 1;
+    let yyyy = today.getFullYear();
+    let current_date = yyyy + '-' + mm + '-' + dd;
+
     var href = $('#modal-container form').attr('data-href');
     if (href === false || typeof href === 'undefined') {
-        $('#receivePaymentModal #invoices-from').val('');
-        $('#receivePaymentModal #invoices-to').val('');
+        $('#receivePaymentModal #invoices-from').val(current_date);
+        $('#receivePaymentModal #invoices-to').val(current_date);
         $('#receivePaymentModal #overdue-invoices-only').prop('checked', false);
         $('#receivePaymentModal #invoices-from').attr('data-applied', '');
         $('#receivePaymentModal #invoices-to').attr('data-applied', '');
