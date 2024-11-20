@@ -967,6 +967,7 @@ class Invoice extends MY_Controller
     public function invoice_edit($id)
     {   
         $this->load->model('Jobs_model');
+        $this->load->model('Job_tags_model');
         $this->load->model('Tickets_model');
         $this->load->model('AcsProfile_model');
 
@@ -1003,6 +1004,7 @@ class Invoice extends MY_Controller
             $this->page_data['job_number'] = $job_number;
             $this->page_date['ticket_number'] = $ticket_number;
             $this->page_data['customer'] = $customer;
+            $this->page_data['tags'] = $this->Job_tags_model->getJobTagsByCompany($comp_id);
             // $this->page_data['items'] = $this->items_model->getItemlist();
             $this->page_data['itemsDetails'] = $this->invoice_model->getInvoiceItems($id);
             $this->page_data['terms'] =  $terms;

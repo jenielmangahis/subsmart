@@ -42,6 +42,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
 .bold{
     font-weight:bold;
 }
+.block-label {
+    display: block;
+    height: 30px;
+}
 </style>
 
 <div class="row page-content g-0">
@@ -141,104 +145,92 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 <div class="col-12">
                     <div class="nsm-card primary">
                         <div class="">
-                            <br>
-                            <div class="row" style="background-color:white;">
+                            <div class="row">
                                 <div class="col-md-12">
                                     <div class="row form-group">
+                                        <div class="col-md-3 form-group">
+                                            <label for="invoice_number" class="bold block-label">Invoice Number</label>                                    
+                                            <input type="text" class="form-control" name="invoice_number" id="invoice_number" value="<?php echo $invoice->invoice_number; ?>" readonly/>
+                                        </div>                                
+                                        <div class="col-md-3 form-group">
+                                            <label for="date_issued" class="bold block-label">Date Issued <span style="color:red;">*</span></label>
+                                            <input type="date" class="form-control" id="" name="date_issued"  value="<?php echo $invoice->date_issued; ?>"/>
+                                        </div>
+
+                                        <div class="col-md-3 form-group">
+                                            <label for="due_date" class="bold block-label">Due Date <span style="color:red;">*</span></label>
+                                            <input type="date" class="form-control" id="" name="due_date" value="<?php echo $invoice->due_date; ?>"/>
+                                        </div>         
                                         <div class="col-md-3">
-                                        <label>Terms</label>
-                                            <select class="form-control" name="terms" id="addNewTermsInvoice">
-                                                <option></option>
-                                                <option value="0">Add New</option>
+                                            <label class="bold block-label">
+                                                Terms
+                                                <a class="link-modal-open nsm-button btn-small" id="btn-quick-add-payment-terms" href="javascript:void(0);" style="float:right;">Add New</a>
+                                            </label>                                            
+                                            <select class="form-control" name="terms" id="payment-terms">                                                                                                
                                                 <?php foreach($terms as $term) : ?>
-                                                <option <?php if(isset($terms)){ if($term->id == $invoice->terms){echo "selected";} } ?> value="<?php echo $term->id; ?>"><?php echo $term->name . ' ' . $term->net_due_days; ?></option>
+                                                <option <?php if(isset($terms)){ if($term->id == $invoice->terms){echo "selected";} } ?> value="<?php echo $term->id; ?>"><?php echo $term->name; ?></option>
                                                 <?php endforeach; ?>
                                             </select>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label>Location of sale</label>
-                                            <input type="text" class="form-control" name="location_scale" value="<?php echo $invoice->location_scale; ?>">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label>Tracking no.</label>
-                                            <input type="text" class="form-control" name="tracking_number" value="<?php echo $invoice->tracking_number; ?>">
-                                        </div>
+                                        </div>                                        
                                     </div>
-                                    <div class="row form-group">
+                                    <div class="row form-group mt-4">
                                         <div class="col-md-3">
-                                            <label>Ship via</label>
-                                            <input type="text" class="form-control" name="ship_via" value="<?php echo $invoice->ship_via; ?>">
+                                            <label class="bold block-label">Location of sale</label>
+                                            <input type="text" class="form-control" name="location_scale" value="<?php echo $invoice->location_scale; ?>">
+                                        </div>                                        
+                                        <div class="col-md-3">
+                                            <label class="bold block-label">
+                                                Tags
+                                                <a class="link-modal-open nsm-button btn-small" href="javascript:void(0);" id="btn-quick-add-job-tags" style="float:right;">Add New</a>
+                                            </label>     
+                                            <select class="form-control" name="tags" id="tags">
+                                                <?php foreach($tags as $t){ ?>
+                                                    <option value="<?= $t->name; ?>" <?php if($t->name == $invoice->tags){ echo 'selected'; } ?>><?= $t->name; ?></option>
+                                                <?php } ?>
+                                            </select>    
                                         </div>
                                         <div class="col-md-3">
-                                            <label>Shipping date</label>
+                                            <label for="estimate_date" class="bold block-label">Invoice Type <span style="color:red;">*</span></label>
+                                            <select name="invoice_type" class="form-control">
+                                                <option value="Deposit">Deposit</option>
+                                                <option value="Partial Payment">Partial Payment</option>
+                                                <option value="Final Payment">Final Payment</option>
+                                                <option value="Total Due" selected="selected">Total Due</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-3 form-group">
+                                            <label for="purchase_order" class="bold block-label">Purchase Order Number <span class="fa fa-question-circle text-ter" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional if you want to display the purchase order number on invoice." data-original-title="" title=""></span></label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" name="purchase_order" id="purchase_order" value="<?php echo $invoice->purchase_order; ?>">
+                                            </div>
+                                        </div>                                        
+                                    </div>
+                                    <div class="row mt-4">                                
+                                        <div class="col-md-3">
+                                            <label class="bold">Shipping date</label>
                                             <input type="date" class="form-control" name="shipping_date" value="<?php echo $invoice->shipping_date; ?>">
                                         </div>
                                         <div class="col-md-3">
-                                        <label>Tags</label> <span class="float-right"><a href="#" class="text-info" data-toggle="modal" data-target="#tags-modal" id="open-tags-modal">Manage tags</a></span>
-                                            <input type="text" class="form-control" name="tags" value="<?php echo $invoice->tags; ?>">
+                                            <label class="bold">Tracking no.</label>
+                                            <input type="text" class="form-control" name="tracking_number" value="<?php echo $invoice->tracking_number; ?>">
                                         </div>
-                                    <!-- </div>
-                                    <div class="row form-group"> -->
                                         <div class="col-md-3">
-                                            <label>Billing address</label>
+                                            <label class="bold">Ship via</label>
+                                            <input type="text" class="form-control" name="ship_via" value="<?php echo $invoice->ship_via; ?>">
+                                        </div>                 
+                                    </div>
+                                    <div class="row mt-4">
+                                        <div class="col-md-3">
+                                            <label class="bold">Shipping to</label>
+                                            <textarea class="form-control" style="width:100%;" name="shipping_to_address" id="shipping_address"><?php echo $invoice->shipping_to_address; ?></textarea>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label class="bold">Billing address</label>
                                             <textarea class="form-control" style="width:100%;" name="billing_address" id="billing_address"><?php echo $invoice->billing_address; ?></textarea>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
-                            <div class="row" style="background-color:white;">
-                                <div class="col-md-3 form-group">
-                                    <label for="estimate_date">Invoice Type <span style="color:red;">*</span></label>
-                                    <select name="invoice_type" class="form-control">
-                                        <option value="Deposit">Deposit</option>
-                                        <option value="Partial Payment">Partial Payment</option>
-                                        <option value="Final Payment">Final Payment</option>
-                                        <option value="Total Due" selected="selected">Total Due</option>
-                                    </select>
-                                </div>
-
-
-                                
-                                <div class="col-md-3 form-group">
-                                    <label for="purchase_order">Purchase Order# <small class="help help-sm">(optional)</small></label>
-                                    <span class="fa fa-question-circle text-ter" data-toggle="popover" data-placement="top" data-trigger="hover" data-content="Optional if you want to display the purchase order number on invoice." data-original-title="" title=""></span>
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" name="purchase_order" id="purchase_order" value="<?php echo $invoice->purchase_order; ?>">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                            <label>Shipping to</label>
-                                            <textarea class="form-control" style="width:100%;" name="shipping_to_address" id="shipping_address"><?php echo $invoice->shipping_to_address; ?></textarea>
-                                        </div>
-
-                                <!-- <div class="col-md-3 form-group">
-                                </div> -->
-
-                                <div class="col-md-3 form-group">
-                                    <label for="invoice_number">Invoice#</label>
-                                    <!-- <input type="text" class="form-control" name="invoice_number"
-                                           id="invoice_number" value="<?php echo "INV-".date("YmdHis"); ?>" required placeholder="Enter Invoice#"
-                                           autofocus onChange="jQuery('#customer_name').text(jQuery(this).val());"/> -->
-                                    <!-- <input type="text" class="form-control" name="invoice_number"
-                                           id="invoice_number" value="<?php echo "INV-".date("YmdHis"); ?>" required placeholder="Enter Invoice#"
-                                           onChange="jQuery('#customer_id').text(jQuery(this).val());"/> -->
-                                    <input type="text" class="form-control" name="invoice_number" id="invoice_number" value="<?php echo $invoice->invoice_number; ?>" readonly/>
-                                </div>
-
-                                <div class="col-md-3 form-group">
-                                    <label for="date_issued">Date Issued <span style="color:red;">*</span></label>
-                                    <input type="date" class="form-control" id="" name="date_issued"  value="<?php echo $invoice->date_issued; ?>"/>
-                                </div>
-
-                                <div class="col-md-3 form-group">
-                                    <label for="due_date">Due Date <span style="color:red;">*</span></label>
-                                    <input type="date" class="form-control" id="" name="due_date" value="<?php echo $invoice->due_date; ?>"/>
-                                </div>
-
-                                
-                            </div>
-
                             <div class="row mt-4">
                                 <h6 class="card_header custom-ticket-header">Invoice Items</h6>
                                 <div class="col-md-2 row pr-0" style="display:none;">
@@ -574,6 +566,107 @@ defined('BASEPATH') or exit('No direct script access allowed');
             </div>
 
             <?php echo form_close(); ?>
+
+            <!-- Modal Quick Add Job Tags -->
+            <div class="modal fade nsm-modal fade" id="modal-quick-add-job-tag" tabindex="-1" aria-labelledby="modal-quick-add-job-tag-label" aria-hidden="true">
+                <div class="modal-dialog modal-md" style="margin-top:13%;">
+                    <form id="quick-add-job-tag-form" method="POST">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <span class="modal-title content-title">Quick Add : Job Tag</span>
+                                <button type="button" data-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <label for="job-tag-name" class="content-subtitle fw-bold d-block mb-2">Name </label>
+                                        <input type="text" name="job_tag_name" id="job-tag-name" class="nsm-field form-control" placeholder="" required>
+                                    </div>
+                                </div> 
+                            </div>
+                            <div class="modal-footer">                    
+                                <button type="button" class="nsm-button primary" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="nsm-button primary" id="btn-quick-add-job-tag-submit">Save</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modal Quick Add Payment Terms -->
+            <div class="modal fade nsm-modal fade" id="modalAddTerms" tabindex="-1" aria-labelledby="modalAddTerms-label" aria-hidden="true">
+                <div class="modal-dialog modal-md">        
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title">Quick Add : Payment Term</span>
+                            <button type="button" data-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                        </div>
+                        <form id="frm-quick-add-payment-term" action="" method="post">
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12 mb-4">
+                                    <label for="name">Name</label>
+                                    <input type="text" name="name" id="name" class="form-control nsm-field mb-2" value="" required="">                                    
+                                </div>
+                                <div class="col-md-12 mb-2">
+                                    <div class="form-check mb-2 mt-2">
+                                        <input class="form-check-input" type="radio" name="payment_term_type" id="payment-term-type-1" value="1">
+                                        <label class="form-check-label" for="payment-term-type-1">
+                                            Due in fixed number of days
+                                        </label>
+                                    </div>
+                                    <div class="row px-4 mb-2">
+                                        <div class="col-auto">                                            
+                                            <div class="input-group">                                                
+                                                <input type="number" style="width:90px;" class="form-control nsm-field" id="net-due-days" name="net_due_days" value="">
+                                                <div class="input-group-text">days</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb-2">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" type="radio" name="payment_term_type" id="payment-term-type-2" value="2" >
+                                        <label class="form-check-label" for="payment-term-type-2">
+                                            Due by certain day of the month
+                                        </label>
+                                    </div>
+                                    <div class="row px-4 mb-2">
+                                        <div class="col-auto">                                            
+                                            <div class="input-group">                                                
+                                                <input type="number" style="width:90px;" class="form-control nsm-field" id="day-of-month-due" name="day_of_month_due" value="">
+                                                <div class="input-group-text">day of month</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb-2">
+                                    <div class="row px-4 mb-2">
+                                        <div class="col-12">
+                                            <p>Due the next month if issued within</p>
+                                        </div>
+                                        <div class="row mb-2">
+                                            <div class="col-auto">                                            
+                                                <div class="input-group">                                                
+                                                    <input type="number" style="width:90px;" class="form-control nsm-field" id="minimum-days-to-pay" name="minimum_days_to_pay" value="" required="">
+                                                    <div class="input-group-text">days of due date</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer" style="display:block;">                    
+                            <div style="float:right;">
+                                <button type="button" class="nsm-button primary" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="nsm-button primary" id="btn-quick-add-payment-terms">Save</button>
+                            </div>
+                        </div>
+                        </form>   
+                    </div>        
+                </div>
+            </div>
 
             <!-- Modal Service Address -->
             <div class="modal fade" id="modalServiceAddress" tabindex="-1" role="dialog"
@@ -964,6 +1057,94 @@ var options = {
 $(document).ready(function(){
     $('#customer_id').select2({     
         minimumInputLength: 0        
+    });
+
+    $('#tags').select2({     
+        minimumInputLength: 0        
+    });
+
+    $('#btn-quick-add-job-tags').on('click', function(){
+        $('#quick-add-job-tag-form').trigger("reset");
+        $('#modal-quick-add-job-tag').modal('show');
+    });
+
+    $('#quick-add-job-tag-form').on('submit', function(e){
+        e.preventDefault();
+        var url = base_url + 'job/_quick_create_job_tag';
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: $('#quick-add-job-tag-form').serialize(),
+            success: function(data) {    
+                $('#btn-quick-add-job-tag-submit').html('Save');                   
+                if (data.is_success) {
+                    $('#modal-quick-add-job-tag').modal('hide');
+                    $('#tags').append($('<option>', {
+                        value: data.job_tag_name,
+                        text: data.job_tag_name
+                    }));
+                    $('#tags').val(data.job_tag_name);
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-quick-add-job-tag-submit').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $('#btn-quick-add-payment-terms').on('click', function(){
+        $('#frm-quick-add-payment-term').trigger("reset");
+        $('#modalAddTerms').modal('show');
+    });
+
+    $('#frm-quick-add-payment-term').on('submit', function(e){
+        e.preventDefault();
+        var url = base_url + 'accounting/payment_terms/_save_payment_terms';
+
+        $.ajax({
+            type: "POST",
+            url: url,
+            dataType: 'json',
+            data: $('#frm-quick-add-payment-term').serialize(),
+            success: function(data) {    
+                $('#btn-quick-add-payment-terms').html('Save');                   
+                if (data.is_success) {
+                    $('#modalAddTerms').modal('hide');
+                    var payment_term_name = data.payment_term_name;
+                    var payment_term_id   = data.payment_term_id
+                    $('#payment-terms').append($('<option>', {
+                        value: payment_term_id,
+                        text: payment_term_name
+                    }));
+                    $('#payment-terms').val(payment_term_id);
+                }else{
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.msg,
+                        icon: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Okay'
+                    }).then((result) => {
+                        
+                    });
+                }
+            },
+            beforeSend: function() {
+                $('#btn-quick-add-payment-terms').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
     });
 
     $('#customer_id').change(function(){
