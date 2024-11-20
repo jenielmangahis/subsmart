@@ -108,6 +108,7 @@ $route['customer/save_person_profile'] = 'Customer/save_person_profile';
 $route['customer/delete/(:num)'] = 'customer/delete_company_or_person/$1';
 $route['customer/export_residential_list'] = 'Customer/export_residential_list';
 $route['customer/export_commercial_list'] = 'Customer/export_commercial_list';
+$route['customer/_archived_list'] = 'Customer/ajax_archived_list';
 
 // Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -1929,3 +1930,10 @@ $route['customer/download_document/(:any)?'] = 'CustomerDashboardQuickActions/do
 $route['customer/_delete_client_agreement']  = 'CustomerDashboardQuickActions/ajaxDeleteClientAgreement';
 $route['customer/_get_document_archives']  = 'CustomerDashboardQuickActions/ajaxGetDocumentArchives';
 $route['customer/_restore_archived_document']  = 'CustomerDashboardQuickActions/ajaxRestoreArchivedDocument';
+
+//Customer
+$route['customer/_restore_archived']  = 'Customer/ajax_restore_archived';
+
+
+//Events
+$route['events/_view_event']  = 'Events/ajax_view_event';
