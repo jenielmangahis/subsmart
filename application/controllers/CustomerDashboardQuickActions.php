@@ -542,6 +542,9 @@ class CustomerDashboardQuickActions extends MYF_Controller
             $this->db->where('id', $generatedPDF->docfile_id);
             $userDocfile = $this->db->get('user_docfile')->row();
             if( $userDocfile ){
+                $this->db->where('prof_id', $userDocfile->customer_id);
+                $customer = $this->db->get('acs_profile')->row();
+                $customer_name  = $customer->first_name . ' ' . $customer->last_name;
                 $esign_filename = explode('/', $generatedPDF->path);
                 $esign_filename = end(array_values($esign_filename));
                 $vault_location = FCPATH . 'uploads/filevault_v2/'.$userDocfile->company_id.'/'.$esign_filename;
@@ -551,10 +554,12 @@ class CustomerDashboardQuickActions extends MYF_Controller
                 //if (!file_exists($vault_location)) {          
                 if( !$isFileExists ){
                     $file_size = filesize($generatedPDFPath);          
-                    copy($generatedPDFPath, $vault_location);
+                    copy($generatedPDFPath, $vault_location);                    
 
                     $this->db->insert('filevault_v2', [
                         'name' => $esign_filename,
+                        'template_name' => $userDocfile->name,
+                        'customer_name' => $customer_name,
                         'file_path' => $vault_location_db,
                         'file_size' => $file_size,
                         'file_type' => 'pdf',

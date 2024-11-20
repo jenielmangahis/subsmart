@@ -1777,7 +1777,7 @@ class Job extends MY_Controller
         exit;
     }
 
-    public function get_customer_selected_old()
+    public function get_customer_selected()
     {
         $this->load->model('Contacts_model');
         $this->load->model('Customer_advance_model');
