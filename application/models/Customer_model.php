@@ -91,7 +91,8 @@ class Customer_model extends MY_Model
         $this->db->from($this->table);
         $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('company_id', $company_id);
-        $this->db->where('customer_type', $customer_type);        
+        $this->db->where('customer_type', $customer_type);  
+        $this->db->where('acs_profile.is_archived', 0);      
             
         if (!empty($filter_status)) {
             if($filter_status =="Active Subscription"){
@@ -635,7 +636,9 @@ class Customer_model extends MY_Model
 
     public function deleteCustomer($id)
     {
-        $this->db->delete($this->table, array("prof_id" => $id));        
+        //$this->db->delete($this->table, array("prof_id" => $id));  
+        $this->db->where('prof_id', $id);      
+        $this->db->update($this->table, array("is_archived" => 1, 'deleted_at' => date("Y-m-d H:i:s")));        
     }
 
     public function updateCustomerSpecificData($primaryKey, $id, $table, $data, $updateType) 
