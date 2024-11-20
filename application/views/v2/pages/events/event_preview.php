@@ -365,6 +365,7 @@ add_footer_js(array(
             var default_lat    = '39.7837304';
             var default_lon    = '-100.445882';   
             var map_zoom_level = '5';    
+            var address_line2  = 'P Lane, Oberlin, KS 67749 Center Kansas United States';
     <?php } ?>
 
     var map_style = 'osm-bright';
