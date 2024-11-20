@@ -308,7 +308,7 @@
                     </div>
                 <?php else : ?>
                     <div class="cont">
-                        <table id="person-list" style="width:100%">
+                        <table id="company-list" style="width:100%">
                             <thead>
                                 <tr>
                                     <th class="table-icon"></th>
