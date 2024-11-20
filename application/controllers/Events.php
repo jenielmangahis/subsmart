@@ -579,9 +579,11 @@ class Events extends MY_Controller
             if( $data && isset($data->results[0] )){ 
                 $default_lat = $data->results[0]->lat;   
                 $default_lon = $data->results[0]->lon;
-                
-                $this->page_data['default_lat'] = $default_lat;
-                $this->page_data['default_lon'] = $default_lon;
+                $address_line2 = $data->results[0]->address_line2;
+               
+                $this->page_data['default_lat']   = $default_lat;
+                $this->page_data['default_lon']   = $default_lon;
+                $this->page_data['address_line2'] = $address_line2;
             }                 
         }
         
