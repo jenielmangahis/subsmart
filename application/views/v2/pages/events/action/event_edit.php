@@ -408,7 +408,7 @@ $('.geoapify-autocomplete-input').val('<?= $jobs_data->event_address; ?>');
 <?php } ?>
 
 var markerIcon = L.icon({
-    iconUrl: `https://api.geoapify.com/v1/icon?size=xx-large&type=material&color=rgb(106,74,134)&icon=my_location&apiKey=${myAPIKey}`,
+    iconUrl: `https://api.geoapify.com/v1/icon?size=xx-large&type=material&color=rgb(106,74,134)&icon=my_location&apiKey=${myAPIKey}`, 
     iconSize: [38, 56], // size of the icon
     iconAnchor: [19, 51], // point of the icon which will correspond to marker's location
     popupAnchor: [0, -60] // point from which the popup should open relative to the iconAnchor
