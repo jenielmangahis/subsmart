@@ -1406,6 +1406,7 @@ class Widgets extends MY_Controller
     {
         $this->load->model('taskhub_model');
         $this->load->model('taskhub_participants_model');
+        $this->load->model('taskhub_updates_model');
         //$this->load->model('Taskhub_model');
 
         /**
@@ -1481,8 +1482,8 @@ class Widgets extends MY_Controller
             }
         }
 
-        $task_activities = $this->taskhub_participants_model->getAllByTaskIds($task_ids);  
-
+        //$task_activities = $this->taskhub_participants_model->getAllByTaskIds($task_ids);  
+        $task_activities = $this->taskhub_updates_model->getAllActivityByCompanyId($cid);
         $taskhubSummary = [
             'total_backlog' => count($total_backlog), 
             'total_task_doing' => count($total_task_doing), 
