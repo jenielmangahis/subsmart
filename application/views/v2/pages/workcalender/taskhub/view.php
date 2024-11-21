@@ -158,6 +158,10 @@
                                                                 $priority_text = $taskHub->priority;
                                                                 $class_priority = "";
                                                                 break;
+                                                            case 'Urgent':
+                                                                $priority_text = $taskHub->priority;
+                                                                $class_priority = "error";
+                                                                break;
                                                             default:
                                                                 $priority_text = 'Not Specified';
                                                                 break;

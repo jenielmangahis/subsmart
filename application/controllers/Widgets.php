@@ -1434,15 +1434,15 @@ class Widgets extends MY_Controller
         $total_today_task  = $this->taskhub_model->getAllTodayTasksByCompanyId($cid, $date_range);
 
         $ongoingTasks      = $this->taskhub_model->getAllOngoingUsersTasksByCompanyId($cid);
-        $total_high_priority_task = $this->taskhub_model->getAllTasksByCompanyIdAndByPriority($cid, 'High');
-
-
+        $allTasksByCompId  = $this->taskhub_model->getAllTasksByCompanyId($cid);
+        $total_urgent_priority_task = $this->taskhub_model->getAllTasksByCompanyIdAndByPriority($cid, 'Urgent');
 
         $total_my_tasks = 0;
         $total_shared_task = 0;
         $task_ids = array();
-        if($ongoingTasks) {
 
+        /*$assigned_users = null;
+        if($ongoingTasks) {
             foreach($ongoingTasks as $task){
                 $array_count    = 0;
                 $assigned_users = json_decode($task->assigned_employee_ids);
@@ -1452,13 +1452,32 @@ class Widgets extends MY_Controller
                         if( $uid == $user_id ){
                             if($array_count > 1) {
                                 $total_shared_task++;
+                            }                            
+                            $total_my_tasks++;
+                        }
+                    }
+                }
+                $task_ids[] = $all_task->task_id;
+            }
+        }*/
+        
+        $assigned_users = null;
+        if($allTasksByCompId) {
+            foreach($allTasksByCompId as $all_task){
+                $array_count    = 0;
+                $assigned_users = json_decode($all_task->assigned_employee_ids);
+                if($assigned_users && is_array($assigned_users)) {
+                    $array_count = count($assigned_users);
+                    foreach($assigned_users as $uid){
+                        if( $uid == $user_id ){
+                            if($array_count > 0) {
+                                $total_shared_task++;
                             }
                             $total_my_tasks++;
                         }
                     }
                 }
-
-                $task_ids[] = $task->task_id;
+                $task_ids[] = $all_task->task_id;
             }
         }
 
@@ -1474,7 +1493,7 @@ class Widgets extends MY_Controller
             'total_task_closed' => count($total_task_closed),
             'total_today_task' => count($total_today_task),
             'total_my_tasks' => $total_my_tasks,
-            'total_task_flagged' => count($total_high_priority_task),
+            'total_task_flagged' => count($total_urgent_priority_task),
             'total_shared_task' => $total_shared_task,
             'total_task_activities' => count($task_activities)
         ];
