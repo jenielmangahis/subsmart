@@ -160,8 +160,8 @@ class Taskhub_model extends MY_Model {
 
         $this->db->where('tasks.company_id', $company_id);
         $this->db->where('tasks.priority', $priority);
-        $this->db->where('status !=', 'Done');
-        $this->db->where('status !=', 'Closed');        
+        //$this->db->where('status !=', 'Done');
+        //$this->db->where('status !=', 'Closed');        
         $this->db->order_by('tasks.date_created','DESC');
         $query = $this->db->get();
         return $query->result();
@@ -178,6 +178,16 @@ class Taskhub_model extends MY_Model {
         $query = $this->db->get();
         return $query->result();
     }      
+
+    public function getAllTasksByCompanyId($cid)
+    {
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $cid);
+
+        $query = $this->db->get();
+        return $query->result();
+    } 
 
     public function getAllTodayTasksByCompanyId($cid, $date_range = [])
     {
@@ -331,7 +341,8 @@ class Taskhub_model extends MY_Model {
         $options = [
             'Low' => 'Low',
             'Medium' => 'Medium',
-            'High' => 'High'
+            'High' => 'High',
+            'Urgent' => 'Urgent'
         ];
 
         return $options;

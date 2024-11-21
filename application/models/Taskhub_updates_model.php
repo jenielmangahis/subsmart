@@ -20,4 +20,16 @@ class Taskhub_updates_model extends MY_Model {
 
         return $query->result();
     }	
+
+    public function getAllActivityByCompanyId($company_id)
+    {
+		$this->db->select('tasks_updates.*');
+        $this->db->join('users', 'tasks_updates.performed_by = users.id','left');
+        $this->db->from($this->table);
+        $this->db->where('users.company_id', $company_id);
+        $this->db->order_by('tasks_updates.id', 'DESC');
+        $query = $this->db->get();
+
+        return $query->result();
+    }	
 }
