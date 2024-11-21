@@ -1468,11 +1468,11 @@ class Widgets extends MY_Controller
                 $assigned_users = json_decode($all_task->assigned_employee_ids);
                 if($assigned_users && is_array($assigned_users)) {
                     $array_count = count($assigned_users);
+                    if($array_count > 0) {
+                        $total_shared_task++;
+                    }                     
                     foreach($assigned_users as $uid){
                         if( $uid == $user_id ){
-                            if($array_count > 0) {
-                                $total_shared_task++;
-                            }
                             $total_my_tasks++;
                         }
                     }
@@ -1481,7 +1481,7 @@ class Widgets extends MY_Controller
             }
         }
 
-        $task_activities = $this->taskhub_participants_model->getAllByTaskIds($task_ids);   
+        $task_activities = $this->taskhub_participants_model->getAllByTaskIds($task_ids);  
 
         $taskhubSummary = [
             'total_backlog' => count($total_backlog), 
