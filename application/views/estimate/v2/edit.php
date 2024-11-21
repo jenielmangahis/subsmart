@@ -1255,8 +1255,8 @@ echo put_header_assets();
             });
         });
 
-        $(".select_item2a").click(function () {
-        // taxRate();
+        $(document).on('click', '.select_item2a', function(){
+            // taxRate();
             var idd = this.id;
             var title = $(this).data('itemname');
             var price = parseInt($(this).attr('data-price'));
