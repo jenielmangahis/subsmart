@@ -2287,7 +2287,8 @@ class Invoice extends MY_Controller
 
                 //Update invoice status
                 if( $new_balance <= $invoice->grand_total ){                    
-                    $status = 'Partially Paid';
+                    //$status = 'Partially Paid';
+                    $status = 'Paid';
                     customerAuditLog($uid, $invoice->customer_id, $invoice->id, 'Invoice', 'Fully paid invoice number '.$invoice->invoice_number);
                 }elseif( $new_balance == 0 ){
                     $status = 'Paid';
