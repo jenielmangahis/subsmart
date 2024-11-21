@@ -993,6 +993,108 @@ function collectionGraphThumbnail() {
         })
 }
 
+subscriptionThumbnail();
+function subscriptionThumbnail(){
+    fetch('<?php echo base_url('Dashboard/income_subscription'); ?>', {}).then(response => response.json()).then(
+    response => {
+        var monthlyAmounts = new Array(12).fill(0);
+
+        var {
+            success,
+            mmr
+        } = response;
+        console.log('mmr',mmr)
+
+        let status = [];
+
+
+        if (mmr) {
+            for (var x = 0; x < mmr.length; x++) {
+                if( mmr[x].bill_end_date == '0000-00-00' || mmr[x].bill_end_date == '1970-01-01' ){
+                    var installDate = '2024-01-01';
+                }else{
+                    var installDate = mmr[x].bill_end_date;
+                }
+                
+                if (installDate) {
+                    var ins = new Date(installDate);
+                    var month = ins.getMonth();
+                    if (!status.includes(mmr[x].status)) {
+                        status.push(mmr[x].status);
+                    }
+                    monthlyAmounts[month] += parseFloat(mmr[x].mmr);
+                }
+            }
+        }
+
+        let output = '';
+            if (status.length > 0) {
+                output = '<select class="nsm-field form-select filterSubscriptionStatus" style="width: 90%;border: none;" onChange="filterSubscription()">';
+                output += `<option value="">All Status</option>`;
+                for (var i = 0; i < status.length; i++) {
+                    output += `<option value="${status[i]}">${status[i]}</option>`;
+                }
+                output += '</select>';
+            }
+
+        // $('#filter-subscription-status').html(output);
+        
+
+        var sales_data = {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+                label: 'Subscription',
+                backgroundColor: 'rgb(220, 53, 69 ,0.79)',
+                borderColor: 'rgb(220, 53, 69 ,0.79)',
+                data: monthlyAmounts.map(amount => parseFloat(amount.toFixed(2)))
+            }]
+        };
+
+        
+        $('#IncomeSubscriptioneGraphLoader').hide()
+
+    
+        const subscriptionChart = new Chart($('#income_subscription'), {
+            type: 'line',
+            data: sales_data,
+            options: {
+                responsive: true,
+                plugins: {                
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                const amount = tooltipItem.raw; 
+                                return `$ ${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                            }
+                        }
+                    },
+                    legend: {
+                        position: 'bottom',                    
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        suggestedMax: 10,
+                        ticks: {
+                            callback: function(value) {
+                                return `$ ${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                            }
+                        }
+                    },
+                },
+                aspectRatio: 1.5,
+            }
+        });
+
+
+        window.subscriptionChart = subscriptionChart;
+    }).catch((error) => {
+    console.log(error);
+})
+}
+
+
 openInvoicesGraphThumbnail();
 
 function openInvoicesGraphThumbnail() {
@@ -1057,6 +1159,14 @@ function openInvoicesGraphThumbnail() {
 }
 
 accountingExpenseGraphThumbnail();
+
+function number_format(number, decimals, dec_point, thousands_sep) {
+    number = parseFloat(number).toFixed(decimals);
+    const parts = number.split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousands_sep);
+    console.log('parts.join(dec_point)',parts.join(dec_point))
+    return parts.join(dec_point);
+}
 
 function accountingExpenseGraphThumbnail() {
     fetch('<?php echo base_url('Dashboard/accounting_expense'); ?>', {}).then(response => response.json()).then(
@@ -1478,11 +1588,11 @@ function incomeGraphThumbnail() {
 
             if (income) {
                 for (var x = 0; x < income.length; x++) {
-                    var payment_date = income[x].payment_date;
+                    var payment_date = income[x].date_created;
                     if (payment_date) {
                         var due = new Date(payment_date);
                         var month = due.getMonth();
-                        monthlyAmounts[month] += parseFloat(income[x].invoice_amount);
+                        monthlyAmounts[month] += parseFloat(income[x].total);
                     }
                 }
             }
@@ -1502,19 +1612,33 @@ function incomeGraphThumbnail() {
                 type: 'bar',
                 data: jobs_data,
                 options: {
-                    plugins: {
+                    responsive: true,
+                    plugins: {                
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    const amount = tooltipItem.raw; 
+                                    return `$ ${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                                }
+                            }
+                        },
                         legend: {
-                            position: 'bottom',
+                            position: 'bottom',                    
                         },
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            suggestedMax: 10
+                            suggestedMax: 10,
+                            ticks: {
+                                callback: function(value) {
+                                    return `$ ${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                                }
+                            }
                         },
                     },
-                    aspectRatio: 1.2,
-                },
+                    aspectRatio: 1.5,
+                }
             });
 
             window.IncomeThumbnailGraph = IncomeThumbnailGraph;
