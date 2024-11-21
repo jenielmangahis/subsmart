@@ -1066,11 +1066,9 @@ class Widgets extends MY_Controller
         $date_range = ['from' => post('filter_date_from'), 'to' => post('filter_date_to')];
         $unpaidInvoices    = $this->Invoice_model->getCompanyUnpaidInvoices($cid, $date_range);
         $overDueInvoices   = $this->Invoice_model->getCompanyOverDueInvoices($cid, $date_range);
-        $totalPaidInvoices = $this->Invoice_model->getCompanyTotalAmountPaidInvoices($cid, $date_range);
-
-       
+        $totalPaidInvoices = $this->Invoice_model->widgetCompanyTotalAmountPaidInvoices($cid, $date_range);
         
-        $subscriptions     = $this->AcsProfile_model->getCompanyTotalSubscriptions($cid, $date_range);
+        $subscriptions     = $this->AcsProfile_model->widgetCompanyTotalSubscriptions($cid, $date_range);
 
         $totalUnpaidInvoices  = count($unpaidInvoices);
         $totalOverdueInvoices = count($overDueInvoices);
@@ -1489,15 +1487,30 @@ class Widgets extends MY_Controller
         $this->load->model('Customer_advance_model');
 
         $cid  = logged('company_id');
-        $customerGroups = $this->Customer_advance_model->getAllSettingsCustomerGroupByCompanyId($cid);
+        $this->db->select('customer_groups.id AS id, customer_groups.company_id AS company_id, customer_groups.title AS title_group, COUNT(acs_profile.customer_group_id) AS customer_count, CONCAT(users.FName, " ", users.LName) AS added_by, customer_groups.date_added AS date ');
+        $this->db->from('customer_groups');
+        $this->db->where('customer_groups.company_id', $cid);
+        $this->db->where_in('acs_profile.status', [
+            'Active w/RAR',
+            'Active w/RMR',
+            'Active w/RQR',
+            'Active w/RYR',
+            'Inactive w/RMM'
+        ]);
+        $this->db->join('users', 'users.id = customer_groups.user_id', 'left');
+        $this->db->join('acs_profile', 'acs_profile.customer_group_id = customer_groups.id', 'left');
+        $this->db->group_by('customer_groups.id');
+        $data = $this->db->get();
+        $customerGroups = $data->result();
+        //$customerGroups = $this->Customer_advance_model->widgetCustomerGroupByCompanyId($cid);
 
         $chart_data   = [];
         $chart_labels = [];
 
         foreach($customerGroups as $group){
-            $customers = $this->Customer_advance_model->getAllCustomerByCustomerGroupIdAndCompanyId($group->id, $cid);
-            $total     = count($customers);
-            $chart_labels[] = $group->title . ' ('. number_format($total) .')';
+            ///$customers = $this->Customer_advance_model->getAllCustomerByCustomerGroupIdAndCompanyId($group->id, $cid);
+            $total     = $group->customer_count;
+            $chart_labels[] = $group->title_group . ' ('. number_format($total) .')';
             $chart_data[]   = $total;
             $chart_colors[] = '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
         }
