@@ -521,14 +521,7 @@ echo put_header_assets();
                                     <a href="#" style="color:#02A32C;"><b>Items list</b></a> | <b>Items Summary</b>
                                     <b>Items Summary</b>
                                 </div>
-                                <div class="col-md-6">
-                                </div>
-                                <div class="col-md-3" align="right">
-                                    <b>Show qty as: </b>
-                                    <select class="dropdown">
-                                        <option>Quantity</option>
-                                    </select>
-                                </div>
+                                <div class="col-md-6"></div>
                             </div>
 
                             <div class="row mb-3" style="background-color:white;">
@@ -1255,8 +1248,8 @@ echo put_header_assets();
             });
         });
 
-        $(".select_item2a").click(function () {
-        // taxRate();
+        $(document).on('click', '.select_item2a', function(){
+            // taxRate();
             var idd = this.id;
             var title = $(this).data('itemname');
             var price = parseInt($(this).attr('data-price'));

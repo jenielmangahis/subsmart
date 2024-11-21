@@ -338,6 +338,23 @@ class Invoice_model extends MY_Model
         return $query;
     }
 
+    public function widgetCompanyTotalAmountPaidInvoices($cid, $date_range = array())
+    {
+        $this->db->select('id, COALESCE(SUM(grand_total),0) AS total_paid');    
+        $this->db->from($this->table);   
+        $this->db->where('company_id', $cid);
+        //$this->db->where('view_flag', 0);
+        $this->db->where('status', 'Paid');
+
+        if( !empty($date_range) ){
+            $this->db->where('date_created >=', $date_range['from']);
+            $this->db->where('date_created <=', $date_range['to']);
+        }
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
     public function gerServiceProjectvieIncome($cid)
     {
         $this->db->select('jobs.id AS id,jobs.company_id AS company_id,jobs.job_number AS number,jobs.job_type AS type,jobs.job_description AS description,CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer,jobs.status AS status,jobs.date_issued AS date, job_payments.amount AS total');
@@ -598,6 +615,17 @@ class Invoice_model extends MY_Model
         // $this->db->group_by('payment_date');
         $this->db->order_by('payment_date', 'desc');
         $query = $this->db->get('payment_records');
+        return $query->result();
+    }
+
+    public function get_income_thumbnail($companyID)
+    {
+        $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, invoices.job_name AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
+        $this->db->from('invoices');
+        $this->db->where('invoices.status', "Paid");
+        $this->db->where('invoices.company_id', $companyID);
+        $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        $query = $this->db->get();
         return $query->result();
     }
 

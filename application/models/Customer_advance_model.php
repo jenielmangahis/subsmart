@@ -458,7 +458,7 @@ class Customer_advance_model extends MY_Model
                 $this->db->limit($length, $start);
             }
      
-            $this->db->where('acs_profile.company_id', $cid);
+            //$this->db->where('acs_profile.company_id', $cid);            
           
             if ($param['search'] != '') {
                 $this->db->group_start();
@@ -497,11 +497,7 @@ class Customer_advance_model extends MY_Model
         $this->db->join('acs_billing as acs_b', 'acs_b.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->join('acs_alarm', 'acs_alarm.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
-        $this->db->join('industry_type', 'acs_profile.industry_type_id = industry_type.id', 'left');
-       
-      
-
-      
+        $this->db->join('industry_type', 'acs_profile.industry_type_id = industry_type.id', 'left');      
 
         if (!empty($filter_status)) {
             if($filter_status =="Active Subscription"){
@@ -515,6 +511,7 @@ class Customer_advance_model extends MY_Model
             $this->db->limit($length, $start);
         }
         $this->db->where('acs_profile.company_id', $cid);
+        $this->db->where('acs_profile.is_archived', 0);
 
         // $search = isset($param['search']) ? $param['search'] : '';
         // if (!empty($search)) {

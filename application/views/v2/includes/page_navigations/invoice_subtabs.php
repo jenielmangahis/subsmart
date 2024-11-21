@@ -15,6 +15,11 @@
                 <span>Tax Rates</span>
             </a>
         </li>
+        <li class="<?php if($page->title == 'Payment Terms'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('accounting/terms') ?>'">
+            <a class="nsm-page-link" href="javascript:void(0);">
+                <span>Payment Terms</span>
+            </a>
+        </li>
         <li class="<?php if($page->title == 'Invoice Settings'): echo 'active'; endif; ?>" onclick="location.href='<?= base_url('invoice/settings') ?>'">
             <a class="nsm-page-link" href="javascript:void(0);">
                 <span>Settings</span>

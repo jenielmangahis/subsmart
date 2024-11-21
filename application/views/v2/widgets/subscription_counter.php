@@ -103,11 +103,10 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                         <h1 id="first_content_<?php echo $id; ?>" >$
                             <?php echo number_format($subs->total_amount_subscriptions, 2); ?> 
                         </h1>
-                        <?php if($subs->total_current_amount_subscriptions > 0){  ?>
                             <span class="plus_text plus_text_content" data-bs-toggle="popover" data-bs-html="true" title="Details" data-item="<?php echo $subsContent; ?>">
                                 <?php     
                                     echo '+ $'.number_format($subs->total_current_amount_subscriptions, 2);
-                                    }
+                                
                                 ?>
                             </span>
                     </div>
@@ -118,13 +117,8 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                         <h1 id="second_content_<?php echo $id; ?>" >
                             <?php echo number_format($subs->total_active_subscription, 0); ?>
                         </h1>
-
-                        <?php if($subs->total_current_active_subscription > 0){  ?>
-                            <span class="plus_text"> + <?= number_format($subs->total_current_active_subscription, 0); ?>
-                            </span>
-                            <?php     
-                                }
-                            ?>
+                        <span class="plus_text"> + <?= number_format($subs->total_current_active_subscription, 0); ?>
+                        </span>
                     </div>
                    
                 </div>

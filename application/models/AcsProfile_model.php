@@ -323,7 +323,8 @@ class AcsProfile_model extends MY_Model
         $this->db->from('acs_profile');
         $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $id);
-        $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RQR','Active w/RMR', 'Active w/RYR', 'Inactive w/RMM']);
+        $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR','Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
+        $this->db->order_by("acs_billing.bill_start_date ASC");
         $query = $this->db->get();
 
         return $query->result();
@@ -689,6 +690,26 @@ class AcsProfile_model extends MY_Model
         $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
         $this->db->where('acs_profile.company_id', $cid);
         $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RQR', 'Active w/RMR', 'Active w/RYR', 'Inactive w/RMM']);
+
+        if (!empty($date_range['from'])) {
+            $date_from = $date_range['from'];
+            $this->db->where('acs_billing.bill_start_date >=', date('Y-m-d', strtotime($date_from)));
+            // $this->db->where('DATE(acs_billing.bill_end_date) >=', date('Y-m-d H:i:s', strtotime($date_range['from'])));
+        }
+
+        $query = $this->db->get()->row();
+
+        return $query;
+    }
+
+    public function widgetCompanyTotalSubscriptions($cid, $date_range = [])
+    {
+       
+        $this->db->select('acs_billing.bill_id,SUM(COALESCE(acs_billing.mmr, 0))  AS total_subscription');
+        $this->db->from($this->table);
+        $this->db->join('acs_billing', 'acs_billing.fk_prof_id = acs_profile.prof_id', 'left');
+        $this->db->where('acs_profile.company_id', $cid);
+        $this->db->where_in('acs_profile.status', ['Active w/RAR', 'Active w/RMR', 'Active w/RQR', 'Active w/RYR', 'Inactive w/RMM']);
 
         if (!empty($date_range['from'])) {
             $date_from = $date_range['from'];

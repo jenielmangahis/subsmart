@@ -977,10 +977,10 @@ function loadDataFilter(from_date, to_date, table, id,filter) {
                 var income = data['income'];
                 var totalIncome = 0;
                 for (var x = 0; x < income.length; x++) {
-                    totalIncome += parseFloat(income[x].invoice_amount);
+                    totalIncome += parseFloat(income[x].total);
                 }
 
-                $(`#first_content_${id}`).html('$ ' + totalIncome.toFixed(2));
+                $(`#first_content_${id}`).html('$ ' + totalIncome.toLocaleString(undefined, {minimumFractionDigits: 2}));
 
                 filterIncomeThumbnailGraph(data['income'])
             }
@@ -1026,11 +1026,11 @@ function filterIncomeThumbnailGraph(income) {
     var monthlyAmounts = new Array(12).fill(0);
 
     for (var x = 0; x < income.length; x++) {
-        var payment_date = income[x].payment_date;
+        var payment_date = income[x].date_created;
         if (payment_date) {
             var due = new Date(payment_date);
             var month = due.getMonth();
-            monthlyAmounts[month] += parseFloat(income[x].invoice_amount);
+            monthlyAmounts[month] += parseFloat(income[x].total);
         }
     }
 
@@ -1231,14 +1231,19 @@ function filterSubsciptionThumbnailGraph(mmr) {
     var amountsByMonth = new Array(12).fill(0);
 
     for (var x = 0; x < mmr.length; x++) {
-        var installDate = new Date(mmr[x].bill_end_date);
-        var month = installDate.getMonth();
+        if( mmr[x].bill_end_date == '0000-00-00' || mmr[x].bill_end_date == '1970-01-01' ){
+            var installDate = '2024-01-01';
+        }else{
+            var installDate = mmr[x].bill_end_date;
+        }
+        var insDate = new Date(installDate);
+        var month = insDate.getMonth();
         var amount = parseFloat(mmr[x].mmr);
         amountsByMonth[month] += amount;
 
     }
 
-    subscriptionChart.data.datasets[0].data = amountsByMonth;
+    subscriptionChart.data.datasets[0].data = amountsByMonth.map(amount => parseFloat(amount.toFixed(2)));
     subscriptionChart.update();
 
 }

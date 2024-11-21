@@ -253,7 +253,7 @@ class Events extends MY_Controller
 
                 $this->page_data['default_lon'] = $default_lon;
                 $this->page_data['default_lat'] = $default_lat;
-                $this->page_data['jobs_data'] = $event;
+                $this->page_data['jobs_data']   = $event;
                 $this->page_data['event_items'] = $this->event_model->get_specific_event_items($id);
                 //print_r($this->page_data['jobs_data_items'] );
             }else{
@@ -297,7 +297,301 @@ class Events extends MY_Controller
         $this->load->view('v2/pages/events/action/event_add', $this->page_data);
     }
 
+    public function event_edit($id=null) {
+        $this->load->model('Users_model');
+
+		$this->page_data['page']->title = 'Event Scheduler Tool';
+        $this->page_data['page']->parent = 'Sales';
+        $this->page_data['page']->tab = 'Events';
+        
+        $this->load->helper('functions');
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+
+        // get all job tags
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+
+
+        $get_employee = array(
+            'where' => array(
+                'company_id' => $comp_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
+
+        // get all job tags
+        $get_job_tags = array(
+            'where' => array(
+                'company_id' => $comp_id
+            ),
+            // 'or_where' => array(
+            //     'is_marker_icon_default_list' => 1
+            // ),
+            'table' => 'event_tags',
+            'select' => 'id,name,marker_icon',
+        );
+        $this->page_data['job_tags'] = $this->general->get_data_with_param($get_job_tags);
+        //echo logged('company_id');
+
+        // get color settings
+        $get_color_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'color_settings',
+            'select' => '*',
+        );
+        $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
+
+        $get_job_types = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'event_types',
+            'select' => 'id,title,icon_marker',
+            'order' => array(
+                'order_by' => 'id',
+                'ordering' => 'DESC',
+            ),
+        );
+        $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
+
+        $get_company_info = array(
+            'where' => array(
+                'id' => logged('company_id'),
+            ),
+            'table' => 'business_profile',
+            'select' => 'business_phone,business_name',
+        );
+        $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
+
+        // get items
+        $get_items = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+                'is_active' => 1,
+            ),
+            'table' => 'items',
+            'select' => 'id,title,price',
+        );
+        $this->page_data['items'] = $this->general->get_data_with_param($get_items);
+
+        $settings = $this->settings_model->getValueByKey(DB_SETTINGS_TABLE_KEY_SCHEDULE);
+        $this->page_data['settings'] = unserialize($settings);
+
+        $attendees   = array();
+        $page_action = 'add';
+        if(!$id==NULL){
+            $page_action = 'edit';
+            $event = $this->event_model->get_specific_event($id);
+            if( $event->company_id == $comp_id ){
+                $a_attendees = json_decode($event->employee_id);
+                foreach($a_attendees as $uid){
+                    $user = $this->Users_model->getUserByID($uid);
+                    if( $user ){
+                        $attendees[$user->id] = $user->FName . ' ' . $user->LName;
+                    }
+                }  
+
+                $param    = [
+                    'text' => $event->event_address,
+                    'format' => 'json',
+                    'apiKey' => GEOAPIKEY
+                ];            
+                $url = 'https://api.geoapify.com/v1/geocode/search?'.http_build_query($param);
+                $data = file_get_contents($url);            
+                $data = json_decode($data);
+                if( $data && isset($data->results[0] )){ 
+                    $default_lon = $data->results[0]->lon;
+                    $default_lat = $data->results[0]->lat;                    
+                }               
+
+                $this->page_data['default_lon'] = $default_lon;
+                $this->page_data['default_lat'] = $default_lat;
+                $this->page_data['jobs_data']   = $event;
+                $this->page_data['event_items'] = $this->event_model->get_specific_event_items($id);
+                //print_r($this->page_data['jobs_data_items'] );
+            }else{
+                return redirect('events');
+            }
+        }
+
+        $default_start_date = date("Y-m-d");
+        $default_start_time = '';
+        $default_user = 0;
+        $redirect_calendar = 0;
+
+        if( $this->input->get('start_date') ){
+            $redirect_calendar = 1;
+            $default_start_date = $this->input->get('start_date');
+        }
+
+        if( $this->input->get('start_time') ){
+            $redirect_calendar = 1;
+            $default_start_time = $this->input->get('start_time');
+        }
+
+        if( $this->input->get('user') ){
+            $redirect_calendar = 1;
+            $user = $this->Users_model->getUserByID($this->input->get('user'));
+            if( $user ){
+                $attendees[$user->id] = $user->FName . ' ' . $user->LName;
+            }
+        }
+
+        $eventSettings = $this->EventSettings_model->getByCompanyId($comp_id);
+
+        $this->page_data['optionsCustomerNotifications'] = $this->EventSettings_model->optionsCustomerNotifications();
+        $this->page_data['attendees'] = $attendees;
+        $this->page_data['redirect_calendar']  = $redirect_calendar;
+        $this->page_data['default_start_date'] = $default_start_date;
+        $this->page_data['default_start_time'] = $default_start_time;
+        $this->page_data['eventSettings'] = $eventSettings;
+        $this->page_data['page_action'] = $page_action;
+        $this->load->view('v2/pages/events/action/event_edit', $this->page_data);
+    }     
+    
     public function event_preview($id=null) {
+        $this->load->helper('functions');
+        $comp_id = logged('company_id');
+        $user_id = logged('id');
+        // get all employees
+        // get all job tags
+        $get_login_user = array(
+            'where' => array(
+                'id' => $user_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['logged_in_user'] = $this->general->get_data_with_param($get_login_user,FALSE);
+
+        $get_employee = array(
+            'where' => array(
+                'company_id' => $comp_id
+            ),
+            'table' => 'users',
+            'select' => 'id,FName,LName',
+        );
+        $this->page_data['employees'] = $this->general->get_data_with_param($get_employee);
+
+        // get all job tags
+        $get_job_tags = array(
+            'table' => 'job_tags',
+            'select' => 'id,name',
+        );
+        $this->page_data['tags'] = $this->general->get_data_with_param($get_job_tags);
+        //echo logged('company_id');
+
+        // get color settings
+        $get_color_settings = array(
+            'where' => array(
+                'company_id' => logged('company_id')
+            ),
+            'table' => 'color_settings',
+            'select' => '*',
+        );
+        $this->page_data['color_settings'] = $this->general->get_data_with_param($get_color_settings);
+
+        $get_job_types = array(
+            'table' => 'job_types',
+            'select' => 'id,title',
+            'order' => array(
+                'order_by' => 'id',
+                'ordering' => 'DESC',
+            ),
+        );
+        $this->page_data['job_types'] = $this->general->get_data_with_param($get_job_types);
+
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'business_profile',
+            'select' => 'id,business_phone,business_name,business_email,street,city,postal_code,state,business_image',
+        );
+        $this->page_data['company_info'] = $this->general->get_data_with_param($get_company_info,FALSE);
+
+        //echo logged('company_id');
+
+        // get items
+        $get_items = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+                'is_active' => 1,
+            ),
+            'table' => 'items',
+            'select' => 'id,title,price',
+        );
+        $this->page_data['items'] = $this->general->get_data_with_param($get_items);
+
+        // get estimates
+        $get_estimates = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'estimates',
+            'select' => 'id,estimate_number,estimate_date,job_name,customer_id',
+        );
+        $this->page_data['estimates'] = $this->general->get_data_with_param($get_estimates);
+
+        // get workorder
+        $get_workorder = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'work_orders',
+            'select' => 'id,work_order_number,start_date,job_name,customer_id',
+        );
+        $this->page_data['workorders'] = $this->general->get_data_with_param($get_workorder);
+
+        // get invoices
+        $get_invoices = array(
+            'where' => array(
+                'company_id' => logged('company_id'),
+            ),
+            'table' => 'invoices',
+            'select' => 'id,invoice_number,date_issued,job_name,customer_id',
+        );
+        $this->page_data['invoices'] = $this->general->get_data_with_param($get_invoices);
+        if($id!=NULL){
+            $this->page_data['jobs_data']   = $jobs_d = $this->event_model->get_specific_event($id);
+            $this->page_data['event_items'] = $this->event_model->get_specific_event_items($id);
+
+            $param    = [
+                'text' => $jobs_d->event_address,
+                'format' => 'json',
+                'apiKey' => GEOAPIKEY
+            ];            
+
+            $url = 'https://api.geoapify.com/v1/geocode/search?'.http_build_query($param);
+            $data = file_get_contents($url);            
+            $data = json_decode($data);
+            if( $data && isset($data->results[0] )){ 
+                $default_lat = $data->results[0]->lat;   
+                $default_lon = $data->results[0]->lon;
+                $address_line2 = $data->results[0]->address_line2;
+               
+                $this->page_data['default_lat']   = $default_lat;
+                $this->page_data['default_lon']   = $default_lon;
+                $this->page_data['address_line2'] = $address_line2;
+            }                 
+        }
+        
+
+        $this->load->view('v2/pages/events/event_preview', $this->page_data);
+    }    
+
+    public function event_previewOld($id=null) {
         $this->load->helper('functions');
         $comp_id = logged('company_id');
         $user_id = logged('id');
