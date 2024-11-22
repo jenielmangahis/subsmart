@@ -818,7 +818,7 @@ $(".select_item").click(function () {
     qty +
     '\' type="number" name="quantity[]" data-counter=\'' +
     count +
-    '\'  min="0" class="form-control quantity mobile_qty "></td>\n' +
+    '\'  min="0" class="form-control quantity mobile_qty"></td>\n' +
     // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
     '<td><input data-itemid=\'' +
     idd +
@@ -828,14 +828,14 @@ $(".select_item").click(function () {
     price +
     '\'  type="number" step="any" name="price[]" data-counter=\'' +
     count +
-    '\' class="form-control price hidden_mobile_view" placeholder="Unit Price"><input type="hidden" class="priceqty" id=\'priceqty_' +
+    '\' class="form-control price hidden_mobile_view text-end" placeholder="Unit Price"><input type="hidden" class="priceqty" id=\'priceqty_' +
     idd +
     '\'><div class="show_mobile_view"><span class="price">' +
     price +
     "</span></div></td>\n" +
     // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
     // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-    '<td class="hidden_mobile_view"><input type="number" step="any" min=0 name="discount[]" value="0" class="form-control discount" data-counter=\'' +
+    '<td class="hidden_mobile_view"><input type="number" step="any" min=0 name="discount[]" value="0" class="form-control discount text-end" data-counter=\'' +
     count +
     "' id='discount_" +
     count +
@@ -843,7 +843,7 @@ $(".select_item").click(function () {
     // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
     '<td class="hidden_mobile_view"><input type="text" data-itemid=\'' +
     idd +
-    '\' class="form-control tax_change" name="tax[]" readonly data-counter=\'' +
+    '\' class="form-control tax_change text-end" name="tax[]" readonly data-counter=\'' +
     count +
     "' id='tax1_" +
     count +
@@ -2668,6 +2668,7 @@ function calculation(counter) {
       stotal_cost += parseFloat(prc) * parseFloat(quantity);
     }
   }
+
   //   var subtotal = 0;
   // $( total ).each( function(){
   //   subtotal += parseFloat( $( this ).val() ) || 0;
