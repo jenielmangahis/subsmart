@@ -1,4 +1,4 @@
-<table class="nsm-table" id="customer-search-result">
+<table class="nsm-table" id="archived-customers">
     <thead>
         <tr>
             <td class="table-icon"></td>
@@ -23,7 +23,7 @@
                         <div class="dropdown table-management">
                             <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                             <ul class="dropdown-menu dropdown-menu-end">
-                                <li><a class="dropdown-item btn-restore-customer" data-id="<?= $customer->prof_id; ?>" data-name="<?= $customer->first_name . ' ' . $customer->last_name; ?>" href="javascript:void(0);">Restore</a></li>   
+                                <li><a class="dropdown-item btn-restore-customer" data-id="<?= $customer->prof_id; ?>" data-name="<?= $customer->first_name . ' ' . $customer->last_name; ?>" href="javascript:void(0);"><i class='bx bx-recycle'></i> Restore</a></li>   
                             </ul>
                         </div>
                     </td>
@@ -42,6 +42,6 @@
 </table>
 <script>
 $(function(){
-    $("#customer-search-result").nsmPagination();
+    $("#archived-customers").nsmPagination();
 });
 </script>
