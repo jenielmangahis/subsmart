@@ -1475,6 +1475,15 @@ class Invoice_model extends MY_Model
         return $query->result();
     }
 
+    public function get_company_archived_invoices($cid)
+    {
+        $this->db->where('company_id', $cid);
+        $this->db->where('view_flag', 0);
+        $this->db->order_by('date_updated', 'DESC');
+        $query = $this->db->get('invoices');
+        return $query->result();
+    }
+
     public function get_all_company_invoice($companyId)
     {
         $this->db->where('company_id', $companyId);
@@ -1603,6 +1612,12 @@ class Invoice_model extends MY_Model
         $this->db->where('invoice_id', $invoice_id);
         $this->db->update($this->table_invoice_payment, $data);
         return true;
+    }
+
+    public function restoreInvoice($id)
+    {
+        $this->db->where('id', $id);      
+        $this->db->update($this->table, array("view_flag" => 1, 'date_updated' => date("Y-m-d H:i:s")));        
     }
 }
 
