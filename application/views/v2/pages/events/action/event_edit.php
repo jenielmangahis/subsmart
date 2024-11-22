@@ -259,11 +259,11 @@
                                         <?php foreach (config_item('calendar_timezone') as $key => $zone) { ?>
                                             <?php if( $jobs_data ){ ?>
                                                 <option value="<?php echo $key ?>" <?php echo ($jobs_data->timezone === $key) ? "selected" : "" ?>>
-                                                    <?php echo $zone ?>
+                                                    <?php echo $key ?>
                                                 </option>
                                             <?php }else{ ?>
                                                 <option value="<?php echo $key ?>" <?= $eventSettings && $eventSettings->timezone == $key ? 'selected="selected"' : ''; ?>>
-                                                    <?php echo $zone ?>
+                                                    <?php echo $key ?>
                                                 </option>
                                             <?php } ?>
                                         <?php } ?>
