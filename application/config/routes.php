@@ -307,6 +307,7 @@ $route['invoice/customer_view/(:any)'] = 'Pages/front_customer_invoice_pay_now/$
 $route['invoice/_create_invoice'] = 'Invoice/ajax_create_invoice';
 $route['invoice/standard_invoice'] = 'Invoice/standard_invoice_template';
 $route['invoice/_send_invoice_email_with_late_fee'] = 'Invoice/ajax_send_invoice_email_with_late_fee';
+$route['invoice/_update_invoice'] = 'Invoice/ajax_update_invoice';
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
 
@@ -1933,6 +1934,7 @@ $route['customer/_restore_archived_document']  = 'CustomerDashboardQuickActions/
 
 //Customer
 $route['customer/_restore_archived']  = 'Customer/ajax_restore_archived';
+$route['customer/_quick_save_customer']  = 'Customer/ajax_quick_save_customer';
 
 
 //Events
