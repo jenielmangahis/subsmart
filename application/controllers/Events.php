@@ -1863,9 +1863,7 @@ class Events extends MY_Controller
         }
 
         $json_data = ['is_success' => $is_valid, 'msg' => $msg];
-        echo json_encode($json_data);       
-
-        exit;
+        echo json_encode($json_data);   
     }
 
     public function ajax_update_settings()
