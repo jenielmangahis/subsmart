@@ -732,9 +732,9 @@ class Dashboard extends Widgets
                 if(  $date_to == '0000-00-00 23:59:59'){
                     $total_query = [
                         'filter'=>$filter,
-                        'select'=>' SUM(CASE WHEN DATE(acs_billing.bill_start_date) < CURDATE() THEN COALESCE(acs_billing.mmr, 0) ELSE 0 END) AS total_amount_subscriptions,
-                                    COUNT(CASE WHEN DATE(acs_billing.bill_start_date) < CURDATE() THEN acs_billing.bill_id END) AS total_subscriptions,
-                                    COUNT(CASE WHEN DATE(acs_billing.bill_start_date) < CURDATE() THEN acs_profile.prof_id END) AS total_active_subscription,
+                        'select'=>' SUM(COALESCE(acs_billing.mmr, 0)) AS total_amount_subscriptions,
+                                    COUNT(acs_billing.bill_id) AS total_subscriptions,
+                                    COUNT(acs_profile.prof_id) AS total_active_subscription,
                                     
                                     SUM(CASE WHEN DATE(acs_billing.bill_start_date) = CURDATE() THEN COALESCE(acs_billing.mmr, 0) ELSE 0 END) AS total_current_amount_subscriptions,
                                     COUNT(CASE WHEN DATE(acs_billing.bill_start_date) = CURDATE() THEN acs_profile.prof_id END) AS total_current_active_subscription'

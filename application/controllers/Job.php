@@ -4938,6 +4938,9 @@ class Job extends MY_Controller
             $this->jobs_model->update($jobs_id, ['hash_id' => $job_hash_id]);
             customerAuditLog(logged('id'), $input['customer_id'], $jobs_id, 'Jobs', 'Added New Job #' . $job_number);
 
+            //Create invoice
+            $this->createInitialInvoice($jobs_id);
+
             //Google Calendar
             createSyncToCalendar($jobs_id, 'job', $comp_id);
 
@@ -5479,7 +5482,7 @@ class Job extends MY_Controller
             'message_to_customer'       => '',
             'terms_and_conditions'      => !empty($workorder) ? $workorder->terms_and_conditions : '',            
             'attachments'               => $job->attachment,
-            'status'                    => 'Draft',
+            'status'                    => 'Unpaid',
             'company_id'                => $company_id,
             'deposit_request_type'      => '$',
             'deposit_request'           => '0',

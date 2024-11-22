@@ -73,6 +73,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <option value="two-week">last 14 days</option>
             <option value="month">last 30 days </option>
             <option value="two-month">last 60 days </option>
+            <option value="this-year">This Year  </option>
         </select>
     </div>
     <div  id="filter-subscription-status">
