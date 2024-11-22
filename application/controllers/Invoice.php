@@ -1156,6 +1156,90 @@ class Invoice extends MY_Controller
         }
     }
 
+    public function ajax_update_invoice()
+    {
+        $id = $this->input->post('invoiceDataID');
+
+        $update_data = array(
+            'id'                        => $this->input->post('invoiceDataID'),//
+            'customer_id'               => $this->input->post('customer_id'),//
+            'job_location'              => $this->input->post('jobs_location'), //
+            'job_name'                  => $this->input->post('job_name'),//
+            'invoice_type'              => $this->input->post('invoice_type'),//
+            'purchase_order'            => $this->input->post('purchase_order'),//
+            'date_issued'               => $this->input->post('date_issued'),//
+            'due_date'                  => $this->input->post('due_date'),//
+            'status'                    => $this->input->post('status'),//
+            'customer_email'            => $this->input->post('customer_email'),//
+            'online_payments'           => $this->input->post('online_payments'),
+            'billing_address'           => $this->input->post('billing_address'),//
+            'shipping_to_address'       => $this->input->post('shipping_to_address'),
+            'ship_via'                  => $this->input->post('ship_via'),//
+            'shipping_date'             => $this->input->post('shipping_date'),
+            'tracking_number'           => $this->input->post('tracking_number'),//
+            'terms'                     => $this->input->post('terms'),//
+            'location_scale'            => $this->input->post('location_scale'),//
+            'message_on_invoice'        => $this->input->post('message_on_invoice'),
+            'message_on_statement'      => $this->input->post('message_on_statement'),
+            'job_number'                => $this->input->post('job_number'), //to add on database
+            // 'attachments'            => $this->input->post('attachments'),
+            'tags'                      => $this->input->post('tags'),//
+            // 'total_due'              => $this->input->post('total_due'),
+            // 'balance'                => $this->input->post('balance'),
+            'deposit_request_type'      => $this->input->post('deposit_request_type'),
+            'deposit_request'           => $this->input->post('deposit_amount'),
+            'message_to_customer'       => $this->input->post('message_to_customer'),
+            'terms_and_conditions'      => $this->input->post('terms_and_conditions'),
+            // 'signature'              => $this->input->post('signature'),
+            // 'sign_date'              => $this->input->post('sign_date'),
+            // 'is_recurring'           => $this->input->post('is_recurring'),
+            // 'invoice_totals'         => $this->input->post('invoice_totals'),
+            'phone'                     => $this->input->post('phone'),
+            'payment_schedule'          => $this->input->post('payment_schedule'),
+            'subtotal'                  => $this->input->post('subtotal'),
+            'taxes'                     => $this->input->post('taxes'),
+            'adjustment_name'           => $this->input->post('adjustment_name'),
+            'adjustment_value'          => $this->input->post('adjustment_value'),
+            'monthly_monitoring'        => $this->input->post('monthly_monitoring'),
+            'installation_cost'         => $this->input->post('installation_cost'),
+            'program_setup'             => $this->input->post('program_setup'),
+            'grand_total'               => $this->input->post('grand_total'),
+            'date_updated'              => date("Y-m-d H:i:s"),
+        );
+        $addQuery = $this->invoice_model->update_invoice_data($update_data);
+        $objInvoice = $this->invoice_model->getinvoice($this->input->post('invoiceDataID'));
+
+        customerAuditLog(logged('id'), $this->input->post('customer_id'), $this->input->post('invoiceDataID'), 'Invoice', 'Updated invoice #'.$objInvoice->invoice_number);
+
+        $delete2 = $this->invoice_model->delete_items($id);
+        $a          = $this->input->post('itemid');
+        $quantity   = $this->input->post('quantity');
+        $price      = $this->input->post('price');
+        $h          = $this->input->post('tax');
+        $total      = $this->input->post('total');
+    
+        $i = 0;
+        $a = is_array($a) ? $a : [];
+        foreach ($a as $row) {
+            $data['items_id'] = $a[$i];
+            $data['qty'] = $quantity[$i];
+            $data['cost'] = $price[$i];
+            $data['tax'] = $h[$i];
+            $data['total'] = $total[$i];
+            $data['invoice_id '] = $id;
+            $addQuery2 = $this->invoice_model->add_invoice_items($data);
+            $i++;
+        }
+
+        if (!is_null($this->input->get('json', TRUE))) {
+            header('content-type: application/json');
+            exit(json_encode(['id' => $addQuery]));
+        } else {
+            // redirect('accounting/invoices');
+            redirect('invoice');
+        }
+    }
+
     public function edit($id)
     {
         $comp_id = logged('company_id');
