@@ -7802,7 +7802,7 @@ $(function () {
 
         var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
-        $.get('/accounting/print-payment-modal/' + split[1], function (result) {
+        $.get(base_url + '/accounting/print-payment-modal/' + split[1], function (result) {
             $('div#modal-container').append(result);
 
             $('#viewPrintPaymentModal').modal('show');
