@@ -414,6 +414,9 @@
                             <button type="button" class="nsm-button primary" id="print-customer-list" data-bs-toggle="modal" data-bs-target="#print_customer_list_modal">
                                 <i class='bx bx-fw bx-printer'></i>
                             </button>
+                            <button type="button" class="nsm-button primary" id="archived-customer-list">
+                                <i class='bx bx-fw bx-trash'></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -625,6 +628,20 @@
         </div>
     </div>
 </div>
+<div class="modal fade nsm-modal fade" id="modal-archived-customers" aria-labelledby="modal-archived-customers-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form method="post" id="quick-add-event-form">   
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Archived Customers</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="customer-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="modal duplicateRemoverModal" data-bs-backdrop="static" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-fullscreen modal-dialog-centered">
         <div class="modal-content">
@@ -757,6 +774,47 @@
                     }
                 });
             }, 800);
+        });
+
+        $(document).on('click', '.btn-restore-customer', function(){
+            var cid = $(this).attr('data-id');
+            var name = $(this).attr('data-name');
+
+            Swal.fire({
+                title: 'Restore Customer Data',
+                html: `Proceed with restoring customer data <b>${name}</b>?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.isConfirmed) {                    
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "customer/_restore_archived",
+                        data: {cid:cid},
+                        dataType:'json',
+                        success: function(result) {                            
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-customers').modal('hide');
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Customer data was successfully restored.',
+                                }).then((result) => {
+                                    CUSTOMER_LIST_TABLE.ajax.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        }
+                    });
+                }
+            });
         });
 
         $(document).on('click', '.delete-customer', function() {
@@ -962,6 +1020,20 @@
                     },
                 });
             }
+        });
+
+        $('#archived-customer-list').on('click', function(){
+            $('#modal-archived-customers').modal('show');
+            $.ajax({
+                type: "POST",
+                url: base_url + "customer/_archived_list",  
+                success: function(html) {    
+                    $('#customer-archived-list-container').html(html);                          
+                },
+                beforeSend: function() {
+                    $('#customer-archived-list-container').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
         });
     });
 

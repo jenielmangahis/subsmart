@@ -641,6 +641,12 @@ class Customer_model extends MY_Model
         $this->db->update($this->table, array("is_archived" => 1, 'deleted_at' => date("Y-m-d H:i:s")));        
     }
 
+    public function restoreCustomer($id)
+    {
+        $this->db->where('prof_id', $id);      
+        $this->db->update($this->table, array("is_archived" => 0, 'deleted_at' => NULL));        
+    }
+
     public function updateCustomerSpecificData($primaryKey, $id, $table, $data, $updateType) 
     {
         $company_id = logged('company_id');
@@ -677,6 +683,28 @@ class Customer_model extends MY_Model
                 return true;
             }
         }
+    }
+
+    public function getAllArchivedByCompany($company_id, $filter = array())
+    {
+
+        $this->db->select('*');
+        $this->db->from($this->table);
+        $this->db->where('company_id', $company_id);
+        $this->db->where('is_archived', 1);
+
+        if (!empty($filter)) {
+            if (isset($filter['q'])) {
+                $this->db->group_start();
+                    $this->db->or_like('first_name', $filter['q'], 'both');
+                    $this->db->or_like('last_name', $filter['q'], 'both');
+                    //$this->db->like('email', $filter['q'], 'both');
+                $this->db->group_end();
+            }
+        }
+
+        $query = $this->db->get();
+        return $query->result();
     }
 }
 

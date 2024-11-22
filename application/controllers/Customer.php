@@ -1727,15 +1727,22 @@ class Customer extends MY_Controller
             echo $this->load->view('no_access_module', $this->page_data, true);
             exit;
         }
-        $userid = $id;
-        $user_id = logged('id');
+        $userid   = $id;
+        $user_id  = logged('id');
+        $cid      = logged('company_id');
+        $customer = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
+
+        if( $customer->is_archived == 1 || $customer->company_id != $cid){
+            redirect('customer');
+        }
+
         if (isset($userid) || !empty($userid)) {
-            $this->page_data['commission'] = $this->customer_ad_model->getTotalCommission($userid);
-            $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
-            $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_access');
-            $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_office');
+            $this->page_data['commission']   = $this->customer_ad_model->getTotalCommission($userid);
+            $this->page_data['profile_info'] = $customer;
+            $this->page_data['access_info']  = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_access');
+            $this->page_data['office_info']  = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_office');
             $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
-            $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_alarm');
+            $this->page_data['alarm_info']   = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_alarm');
             $get_customer_notes = [
                 'where' => [
                     'fk_prof_id' => $userid,
@@ -9567,6 +9574,45 @@ class Customer extends MY_Controller
         $this->page_data['customers'] = $customers;
         $this->load->view("v2/pages/customer/ajax_quick_search_result", $this->page_data);
 
+    }
+
+    public function ajax_archived_list()
+    {
+        $this->load->model('Customer_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $customers = $this->Customer_model->getAllArchivedByCompany($cid,[]);
+
+        $this->page_data['customers'] = $customers;
+        $this->load->view("v2/pages/customer/ajax_archived_list", $this->page_data);
+    }
+
+    public function ajax_restore_archived()
+    {
+        $this->load->model('Customer_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find customer data';
+
+        $company_id = logged('company_id');
+        $post = $this->input->post();
+        $customer = $this->Customer_model->getCustomer($post['cid']);
+        if ($customer && $customer->company_id == $company_id) {                        
+            $this->Customer_model->restoreCustomer($post['cid']);
+
+            //Activity Logs
+            $customer_name = $customer->first_name . ' ' . $customer->last_name;
+            $activity_name = 'Archived : Restore customer data  ' . $customer_name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
     }
 
 }

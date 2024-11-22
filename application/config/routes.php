@@ -554,6 +554,7 @@ $route['accounting/terms/activate/(:any)'] = 'accounting_controllers/payment_ter
 $route['accounting/terms/update/(:any)']['post'] = 'accounting_controllers/payment_terms/update/$1';
 $route['accounting/terms/ajax-add-term']['post'] = 'accounting_controllers/payment_terms/ajax_add_term';
 $route['accounting/terms/print']['post'] = 'accounting_controllers/payment_terms/print';
+$route['accounting/payment_terms/_save_payment_terms'] = 'accounting_controllers/payment_terms/ajax_save_payment_terms';
 
 $route['accounting/customers'] = 'accounting_controllers/customers/index';
 $route['accounting/customers/batch-select-customer-type']['post'] = 'accounting_controllers/customers/batch_select_customer_type';

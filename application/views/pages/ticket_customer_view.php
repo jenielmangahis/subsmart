@@ -170,7 +170,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <tr>
                                             <!-- <td><?php //echo $i; ?></td> -->
                                             <td><?php echo $item->title; ?></td>
-                                            <td><?php echo $item->item_type; ?></td>
+                                            <td><?php echo ucwords($item->item_type); ?></td>
                                             <td style="text-align:center;">$<?php echo number_format($item->costing,2); ?></td>
                                             <td style="text-align:center;"><?php echo $item->qty; ?></td>
                                             <td style="text-align:center;">$<?php echo '0'.number_format($item->discount,2); ?></td>
