@@ -308,6 +308,8 @@ $route['invoice/_create_invoice'] = 'Invoice/ajax_create_invoice';
 $route['invoice/standard_invoice'] = 'Invoice/standard_invoice_template';
 $route['invoice/_send_invoice_email_with_late_fee'] = 'Invoice/ajax_send_invoice_email_with_late_fee';
 $route['invoice/_update_invoice'] = 'Invoice/ajax_update_invoice';
+$route['invoice/_archived_list'] = 'Invoice/ajax_archived_list';
+$route['invoice/_restore_archived'] = 'Invoice/ajax_restore_archived';
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
 
