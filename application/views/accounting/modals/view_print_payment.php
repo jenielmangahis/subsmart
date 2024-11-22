@@ -6,7 +6,9 @@
             <div class="modal-content" style="height: 100%;">
                 <div class="modal-header" style="background: #f4f5f8;border-bottom: 0">
                     <h4 class="modal-title">Print Preview</h4>
-                    <button type="button" class="close" data-dismiss="modal"><i class="fa fa-times fa-lg"></i></button>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>                    
                 </div>
                 <div class="modal-body">
                     <div class="row" style="min-height: 100%">
@@ -30,7 +32,7 @@
                 <div class="modal-footer">
                     <div class="row w-100">
                         <div class="col-md-4">
-                            <button type="button" class="btn btn-secondary btn-rounded border" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary btn-rounded border" data-bs-dismiss="modal">Close</button>
                         </div>
                         <div class="col-md-4 d-flex"></div>
                         <div class="col-md-4">
