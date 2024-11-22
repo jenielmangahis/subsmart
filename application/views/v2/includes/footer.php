@@ -882,6 +882,30 @@ function filterThumbnail(val, id, table,filter) {
                             ' 23:59:59';
 
             break;
+        case 'this-year':
+            if (table == 'acs_billing') {
+                handleHideCurrentSub(false);
+            }
+
+            // Set startDate to January 1st of the current year
+            var startDate = new Date(new Date().getFullYear(), 0, 1);
+
+            // Set endDate to December 31st of the current year
+            var endDate = new Date(new Date().getFullYear(), 11, 31); 
+
+            var from_date = startDate.getFullYear() + '-' + 
+                            String(startDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                            String(startDate.getDate()).padStart(2, '0') + 
+                            ' 00:00:00';
+
+            var to_date = endDate.getFullYear() + '-' + 
+                        String(endDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                        String(endDate.getDate()).padStart(2, '0') + 
+                        ' 23:59:59';
+
+            break;
+
+
 
         default:
             var from_date = '';

@@ -173,7 +173,7 @@ class Events extends MY_Controller
             //     'is_marker_icon_default_list' => 1
             // ),
             'table' => 'event_tags',
-            'select' => 'id,name,marker_icon',
+            'select' => 'id,name,marker_icon,is_marker_icon_default_list',
         );
         $this->page_data['job_tags'] = $this->general->get_data_with_param($get_job_tags);
         //echo logged('company_id');
@@ -193,7 +193,7 @@ class Events extends MY_Controller
                 'company_id' => logged('company_id')
             ),
             'table' => 'event_types',
-            'select' => 'id,title,icon_marker',
+            'select' => 'id,title,icon_marker,is_marker_icon_default_list',
             'order' => array(
                 'order_by' => 'id',
                 'ordering' => 'DESC',
@@ -1916,6 +1916,50 @@ class Events extends MY_Controller
         ];
 
         echo json_encode($return);
+    }
+
+    public function ajax_view_event()
+    {        
+        $this->load->helper('functions');
+        
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+        
+        $event = $this->event_model->get_specific_event($post['event_id']);
+        $default_lat = '';
+        $default_lon = '';
+        $address_line2 = '';
+        
+        $get_company_info = array(
+            'where' => array(
+                'company_id' => $cid,
+            ),
+            'table' => 'business_profile',
+            'select' => 'id,business_phone,business_name,business_email,street,city,postal_code,state,business_image',
+        );
+        $company_info = $this->general->get_data_with_param($get_company_info,FALSE);
+
+        $param    = [
+            'text' => $event->event_address,
+            'format' => 'json',
+            'apiKey' => GEOAPIKEY
+        ];            
+
+        $url = 'https://api.geoapify.com/v1/geocode/search?'.http_build_query($param);
+        $data = file_get_contents($url);            
+        $data = json_decode($data);
+        if( $data && isset($data->results[0] )){ 
+            $default_lat = $data->results[0]->lat;   
+            $default_lon = $data->results[0]->lon;            
+            $address_line2 = $data->results[0]->address_line2;            
+        }                 
+        
+        $this->page_data['default_lat']   = $default_lat;
+        $this->page_data['default_lon']   = $default_lon;
+        $this->page_data['address_line2'] = $address_line2;
+        $this->page_data['event']         = $event;
+        $this->page_data['company_info']  = $company_info;
+        $this->load->view('v2/pages/events/ajax_view_event', $this->page_data);
     }
 }
 

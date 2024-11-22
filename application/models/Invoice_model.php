@@ -340,15 +340,18 @@ class Invoice_model extends MY_Model
 
     public function widgetCompanyTotalAmountPaidInvoices($cid, $date_range = array())
     {
-        $this->db->select('id, COALESCE(SUM(grand_total),0) AS total_paid');    
+        $this->db->select('invoices.id, COALESCE(SUM(invoices.grand_total),0) AS total_paid');    
         $this->db->from($this->table);   
-        $this->db->where('company_id', $cid);
-        //$this->db->where('view_flag', 0);
-        $this->db->where('status', 'Paid');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        $this->db->where('invoices.status', 'Paid');
+        $this->db->where('invoices.company_id', $cid);
 
-        if( !empty($date_range) ){
-            $this->db->where('date_created >=', $date_range['from']);
-            $this->db->where('date_created <=', $date_range['to']);
+        if( !empty($date_range['from']) ){
+            $date_from = $date_range['from'];
+            $date_to= $date_range['to'];
+
+            $this->db->where('invoices.date_created >=',date('Y-m-d H:i:s', strtotime($date_from)));
+            $this->db->where('invoices.date_created <=', date('Y-m-d H:i:s' , strtotime($date_to)));
         }
 
         $query = $this->db->get()->row();
