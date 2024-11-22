@@ -124,7 +124,7 @@ table.dataTable.no-footer {
                                 <div class="dropdown table-management">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="<?php echo base_url('events/event_preview/') . $event->id; ?>">Preview</a></li>
+                                        <li><a class="dropdown-item btn-view-event" href="javascript:void(0);" data-id="<?= $event->id; ?>" data-event-number="<?= $event->event_number; ?>">Preview</a></li>
                                         <li><a class="dropdown-item" href="<?php echo base_url('events/event_edit/') . $event->id; ?>">Edit</a></li>
                                         <li><a class="dropdown-item delete-item" href="javascript:void(0);" data-id="<?php echo $event->id; ?>">Delete</a></li>
                                     </ul>
@@ -135,11 +135,37 @@ table.dataTable.no-footer {
                     </tbody>
                 </table>
             </div>
+            
+            <div class="modal fade nsm-modal fade" id="modal-view-event" tabindex="-1" aria-labelledby="modal-view-event-label" aria-hidden="true">
+                <div class="modal-dialog modal-lg">        
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title">View Event</span>
+                            <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                        </div>
+                        <div class="modal-body" id="view-event-container"></div>
+                    </div>        
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 
+<!-- Map files -->
+<script src='https://unpkg.com/popper.js/dist/umd/popper.min.js'></script>
+<script type="text/javascript" src="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.js"></script>
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/maplibre-gl@1.15.2/dist/maplibre-gl.css" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.umd.js"></script>
+<link href="https://cdn.maptiler.com/maptiler-sdk-js/v2.0.3/maptiler-sdk.css" rel="stylesheet" />
+<script src="https://cdn.maptiler.com/leaflet-maptilersdk/v2.0.0/leaflet-maptilersdk.js"></script>
 
+<link rel="stylesheet" type="text/css" href="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/styles/minimal.css" />
+<script src="https://unpkg.com/@geoapify/geocoder-autocomplete@1.4.0/dist/index.min.js"></script>
+<!-- End Map files -->
+ 
 <script type="text/javascript">
 var EVENT_TABLE = $("#EVENT_TABLE").DataTable({
     "ordering": false,
@@ -160,6 +186,24 @@ $('#CUSTOM_FILTER_DROPDOWN').change(function (event) {
 
 $(document).ready(function () {
     // $(".nsm-table").nsmPagination();
+
+    $('.btn-view-event').on('click', function(){
+        var event_id = $(this).attr('data-id');
+        var event_number = $(this).attr('data-event-number');
+        $('#modal-view-event').modal('show');
+
+        $.ajax({
+            type: "POST",
+            url: base_url + 'events/_view_event',
+            data: {event_id:event_id},
+            success: function(html) {    
+               $('#view-event-container').html(html);               
+            },
+            beforeSend: function() {
+                $('#view-event-container').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
 
     $(document).on("click", ".delete-item", function (event) {
         var ID = $(this).data("id");
