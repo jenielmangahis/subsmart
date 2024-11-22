@@ -408,7 +408,24 @@
                                 </div>
                                 <div class="col-md-4 <?= !isset($payment) ? 'd-flex' : '' ?>">
                                     <?php if (!isset($payment)) : ?>
-                                        <a href="#" class="text-dark text-decoration-none m-auto" id="save-and-print">Print</a>
+                                        <!-- <a href="#" class="text-dark text-decoration-none m-auto receive-payment-modal-print-link" id="save-and-print">Print</a> -->
+                                        <div class="col-md-12 d-flex align-items-center justify-content-center">
+                                            <span>
+                                                <a href="#" class="text-dark text-decoration-none" id="save-and-print">Print</a>
+                                            </span>
+                                            <span style="display:none;" id="receive-payment-modal-print-link-divider" class="mx-3 divider"></span>
+                                            <span style="display:none;" id="receive-payment-modal-print-link-more">
+                                                <a href="#" class="text-dark text-decoration-none" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">More</a>
+                                                <div class="dropdown-menu">
+                                                    <?php if ($payment->status !== "4") : ?>
+                                                        <a class="dropdown-item" href="#" id="void-payment">Void</a>
+                                                    <?php endif; ?>
+                                                    <a class="dropdown-item" href="#" id="delete-payment">Delete</a>
+                                                    <a class="dropdown-item" href="#">Transaction journal</a>
+                                                    <a class="dropdown-item" href="#">Audit history</a>
+                                                </div>
+                                            </span>
+                                        </div>                                        
                                     <?php else : ?>
                                         <div class="row h-100">
                                             <div class="col-md-12 d-flex align-items-center justify-content-center">
