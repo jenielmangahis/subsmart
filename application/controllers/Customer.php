@@ -4597,6 +4597,33 @@ class Customer extends MY_Controller
         }
     }
 
+    public function ajax_quick_save_customer()
+    {
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $input = $this->input->post();
+        $input['company_id'] = logged('company_id');
+        $input['status']     = 'New';
+
+        $customer_id   = $this->customer_ad_model->add($input, 'acs_profile');
+        $customer_name = $input['first_name'] . ' ' . $input['last_name'];
+        $activity_name = 'Customer : Created customer ' . $customer_name; 
+        createActivityLog($activity_name);
+
+        $is_success = 1;
+        $msg = '';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg,
+            'customer_id' => $customer_id,
+            'customer_name' => $customer_name
+        ];
+
+        echo json_encode($return);
+    }
+
     public function add_furnisher_ajax()
     {
         $input = $this->input->post();

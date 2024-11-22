@@ -546,7 +546,7 @@ $('#ADD_EVENT_FORM').submit(function (event) {
             showCancelButton: false,
             confirmButtonText: 'Okay'
         }).then((result) => {
-            window.location.href = base_url + "/events";
+            window.location.href = base_url + "events";
         });
     });
 });
