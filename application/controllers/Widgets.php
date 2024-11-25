@@ -225,7 +225,7 @@ class Widgets extends MY_Controller
                 $value->total_tickets = 0;
             }
         }
-        
+
         $data['techLeaderBoards'] = $techLeaderBoards;
         $this->load->view('v2/widgets/tech_leaderboard_details', $data);
     }
@@ -1126,6 +1126,8 @@ class Widgets extends MY_Controller
         $chart_labels  = [];
         $start_month   = explode("/", post('filter_date_from'));
         $end_month     = explode("/", post('filter_date_to'));  
+        $start = 0;
+        $prev_amount = 0;
         for( $start = $start_month[0]; $start <= $end_month[0]; $start++ ){
             $start_date = $year . '-' . $start . '-' . 1;
             $start_date = date("Y-m-d", strtotime($start_date));
@@ -1138,8 +1140,16 @@ class Widgets extends MY_Controller
             $date_range    = ['from' => $start_date, 'to' => $end_date];
             $totalInvoices = $this->Invoice_model->getCompanyTotalAmountInvoicesSales($cid, $date_range);
             $totalEstimate = $this->Estimate_model->getCompanyTotalAmountEstimates($cid, $date_range);
-            $total_sales   = $totalInvoices->total_amount + $totalEstimate->total_amount;
-            $sales_data[]  = $totalInvoices->total_amount;
+            
+
+            if( $start > 0 ){
+                $total_sales   = $totalInvoices->total_amount + $totalEstimate->total_amount + $prev_amount;
+            }else{
+                $total_sales   = $totalInvoices->total_amount + $totalEstimate->total_amount;
+            }
+
+            $sales_data[]  = $total_sales;
+            $prev_amount   = $total_sales;
 
             //Jobs
             $jobs = $this->Jobs_model->getAllJobsByCompanyIdAndDateRange($cid, $date_range);
@@ -1162,6 +1172,8 @@ class Widgets extends MY_Controller
             $chart_end_day  = date("t", strtotime($start_date));
             //$chart_labels[] = $chart_month . ' 01-'.$chart_end_day;
             $chart_labels[] = $chart_month;
+
+            $start++;
         } 
 
         $return = ['chart_labels' => $chart_labels, 'chart_data_sales' => $sales_data, 'chart_data_jobs' => $jobs_data, 'chart_data_services' => $services_data];
