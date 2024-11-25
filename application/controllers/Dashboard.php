@@ -211,17 +211,16 @@ class Dashboard extends Widgets
 
         $output = 'Recent Subscription Update <br>';
 
-       if(count($subsContent) > 0 ){
-        foreach ($subsContent as $item) {
-            $output .= "<br> subscriber : <b>".$item->first_name." ".$item->last_name."</b> <br> amount <b>$".$item->mmr."</b>,";
+        if(count($subsContent) > 0 ){
+            foreach ($subsContent as $item) {
+                $output .= "<br> subscriber : <b>".$item->first_name." ".$item->last_name."</b> <br> amount <b>$".$item->mmr."</b>,";
+            }
         }
-       }
 
-       $this->page_data['subsContent'] = $output;
+        $this->page_data['subsContent'] = $output;
 
-        
-        
         $past_due = $this->widgets_model->getCurrentCompanyOverdueInvoices2();
+
         $invoices_total_due = 0;
         foreach ($past_due as $total_due) {
             if ($total_due->status != 'paid') {
@@ -1620,9 +1619,12 @@ class Dashboard extends Widgets
 
     public function past_due_invoices()
     {
-        $past_due = $this->AcsProfile_model->getCurrentCompanyOverdue(logged('company_id'));
+        $this->load->model('widgets_model');
+        $past_due = $this->widgets_model->getCurrentCompanyOverdueInvoices2();
 
-        // $past_due = $this->AcsProfile_model->getSubscription(logged('company_id'));
+        //$past_due = $this->AcsProfile_model->getCurrentCompanyOverdue(logged('company_id'));
+        //$past_due = $this->AcsProfile_model->getSubscription(logged('company_id'));
+        
         $data_arr = ['Success' => true, 'past_due' => $past_due];
         exit(json_encode($data_arr));
     }
