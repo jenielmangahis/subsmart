@@ -1258,21 +1258,49 @@ function filterSubsciptionThumbnailGraph(mmr) {
         if( mmr[x].bill_end_date == '0000-00-00' || mmr[x].bill_end_date == '1970-01-01' ){
             var installDate = '2024-01-01';
         }else{
-            var installDate = mmr[x].bill_end_date;
+            var currentYear  = new Date().getFullYear();
+            var insA     = new Date(mmr[x].bill_end_date);
+            var insAYear = insA.getFullYear();
+            if( insAYear < currentYear ){                        
+                var installDate = '2024-01-01';
+            }else if( insAYear > currentYear ){
+                var today = new Date();                                     
+                var installDate = moment(today).format('YYYY-MM-DD');
+            }else{
+                var installDate = mmr[x].bill_end_date;
+            }
         }
         var insDate = new Date(installDate);
-        var month = insDate.getMonth();
-        var amount = parseFloat(mmr[x].mmr);
-        amountsByMonth[month] += amount;
+        var month   = insDate.getMonth();
+        var amount  = parseFloat(mmr[x].mmr);
 
+        if( !isNaN(parseFloat(amount)) ){
+            amountsByMonth[month] += amount;
+        }
     }
+
+    console.log('prev amountsByMonth', amountsByMonth);
+
+    var start = 0;
+    var prev_amount = 0;
+    for (i = 0; i < amountsByMonth.length; ++i) {
+        if( start == 0 ){
+            var amount = amountsByMonth[i];
+        }else{
+            var amount = amountsByMonth[i] + prev_amount;
+        }
+
+        prev_amount = amount;
+        amountsByMonth[i] = amount;                
+        start++;
+    }
+
+    console.log('amountsByMonth', amountsByMonth);
 
     subscriptionChart.data.datasets[0].data = amountsByMonth.map(amount => parseFloat(amount.toFixed(2)));
     subscriptionChart.update();
 
 }
-
-
 
 function filterEstimateThumbnailGraph(first, second) {
     estimateChart.data.datasets[0].data = [first, second];

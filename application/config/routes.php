@@ -108,6 +108,7 @@ $route['customer/save_person_profile'] = 'Customer/save_person_profile';
 $route['customer/delete/(:num)'] = 'customer/delete_company_or_person/$1';
 $route['customer/export_residential_list'] = 'Customer/export_residential_list';
 $route['customer/export_commercial_list'] = 'Customer/export_commercial_list';
+$route['customer/_archived_list'] = 'Customer/ajax_archived_list';
 
 // Credit Bureau
 $route['credit_bureau/list'] = 'Credit_Bureau/index';
@@ -306,6 +307,9 @@ $route['invoice/customer_view/(:any)'] = 'Pages/front_customer_invoice_pay_now/$
 $route['invoice/_create_invoice'] = 'Invoice/ajax_create_invoice';
 $route['invoice/standard_invoice'] = 'Invoice/standard_invoice_template';
 $route['invoice/_send_invoice_email_with_late_fee'] = 'Invoice/ajax_send_invoice_email_with_late_fee';
+$route['invoice/_update_invoice'] = 'Invoice/ajax_update_invoice';
+$route['invoice/_archived_list'] = 'Invoice/ajax_archived_list';
+$route['invoice/_restore_archived'] = 'Invoice/ajax_restore_archived';
 
 $route['reports/main/report/(:any)'] = 'reports/report/$1';
 
@@ -1929,3 +1933,11 @@ $route['customer/download_document/(:any)?'] = 'CustomerDashboardQuickActions/do
 $route['customer/_delete_client_agreement']  = 'CustomerDashboardQuickActions/ajaxDeleteClientAgreement';
 $route['customer/_get_document_archives']  = 'CustomerDashboardQuickActions/ajaxGetDocumentArchives';
 $route['customer/_restore_archived_document']  = 'CustomerDashboardQuickActions/ajaxRestoreArchivedDocument';
+
+//Customer
+$route['customer/_restore_archived']  = 'Customer/ajax_restore_archived';
+$route['customer/_quick_save_customer']  = 'Customer/ajax_quick_save_customer';
+
+
+//Events
+$route['events/_view_event']  = 'Events/ajax_view_event';

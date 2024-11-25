@@ -9,7 +9,7 @@
     .nsm-badge.primary-enhanced {
         background-color: #6a4a86;
     }
-        table {
+    table {
         width: 100% !important;
     }
     .dataTables_filter, .dataTables_length{
@@ -129,50 +129,57 @@ table.dataTable.no-footer {
 
 
 <script type="text/javascript">
-var EVENT_TAG_TABLE = $("#EVENT_TAG_TABLE").DataTable({
-    "ordering": false,
-    language: {
-        processing: '<span>Fetching data...</span>'
-    },
-    "columns": [
-        { "width": "5%"},
-        null,
-        { "width": "5%"},
-    ]
-});
-
-$("#CUSTOM_TAG_SEARCHBAR").keyup(function() {
-    EVENT_TAG_TABLE.search($(this).val()).draw()
-});
-EVENT_TAG_TABLE_SETTINGS = EVENT_TAG_TABLE.settings();
-
-
+//EVENT_TAG_TABLE_SETTINGS = EVENT_TAG_TABLE.settings();
     $(document).ready(function() {
-        // $(".nsm-table").nsmPagination();
+        var EVENT_TAG_TABLE = $("#EVENT_TAG_TABLE").DataTable({
+            "ordering": false,
+            language: {
+                processing: '<span>Fetching data...</span>'
+            },
+            "columns": [
+                { "width": "5%"},
+                null,
+                { "width": "5%"},
+            ]
+        });
+
+        $("#CUSTOM_TAG_SEARCHBAR").keyup(function() {
+            EVENT_TAG_TABLE.search($(this).val()).draw()
+        });
         
         $(document).on( "click", ".delete-item", function( event ) {
-            var ID = $(this).data("id");
+            var tag_id = $(this).data("id");
             Swal.fire({
-                title: 'Warning',
+                title: 'Delete',
                 text: "Do you want to delete selected event tag?",
-                icon: 'warning',
+                icon: 'question',
                 showCancelButton: true,
                 confirmButtonText: 'Yes',
                 cancelButtonText: 'No',
             }).then((result) => {
                 if (result.isConfirmed) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Event Tag was deleted successfully!',
-                }).then((result) => {
-                    window.location.href = base_url + "/events/event_tags";
-                });
                     $.ajax({
                         type: "POST",
-                        url: base_url + "/events/delete_tag",
-                        data: {tag_id : ID}, // serializes the form's elements.
-                        success: function(data) {}
+                        url: base_url + "events/_delete_event_tag",
+                        data: {tag_id:tag_id},
+                        dataType:'json',
+                        success: function(result) {
+                            if( result.is_success == 1 ) {
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Event tags was successfully deleted',
+                                }).then((result) => {
+                                    window.location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        }
                     });
                 }
             });

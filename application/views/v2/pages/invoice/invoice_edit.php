@@ -74,11 +74,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
                 </div>
             </div>
             <!-- end row -->
-            <?php echo form_open_multipart('invoice/updateInvoice', ['class' => 'form-validate require-validation', 'id' => 'invoice_form', 'autocomplete' => 'off']); ?>
+            <?php echo form_open_multipart(null, ['class' => 'form-validate require-validation', 'id' => 'invoice_form', 'autocomplete' => 'off']); ?>
             <div class="row">
                 <div class="col-md-4">
                     <div class="nsm-card primary">
-                        <div class="row">
+                        <div class="nsm-card-header d-block">
+                            <div class="nsm-card-title"><span><i class='bx bx-user-circle'></i>&nbsp;Customer Details</span></div>
+                        </div>
+                        <div class="nsm-card-content row">
                             <div class="col-md-12">
                                 <input type="hidden" value="<?php echo $invoice->id; ?>" name="invoiceDataID">
                                 <label for="invoice_customer" class="bold">Customer</label>
@@ -146,7 +149,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
             <div class="row mt-4">
                 <div class="col-12">
                     <div class="nsm-card primary">
-                        <div class="">
+                        <div class="nsm-card-header d-block">
+                            <div class="nsm-card-title"><span><i class='bx bx-list-plus'></i>&nbsp;Invoice Details</span></div>
+                        </div>
+                        <div class="nsm-card-content">
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="row form-group">
@@ -194,10 +200,10 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                         <div class="col-md-3">
                                             <label for="estimate_date" class="bold block-label">Invoice Type <span style="color:red;">*</span></label>
                                             <select name="invoice_type" class="form-control">
-                                                <option value="Deposit">Deposit</option>
-                                                <option value="Partial Payment">Partial Payment</option>
-                                                <option value="Final Payment">Final Payment</option>
-                                                <option value="Total Due" selected="selected">Total Due</option>
+                                                <option value="Deposit" <?= $invoice->invoice_type == 'Deposit' ? 'selected="selected"' : ''; ?>>Deposit</option>
+                                                <option value="Partial Payment" <?= $invoice->invoice_type == 'Partial Payment' ? 'selected="selected"' : ''; ?>>Partial Payment</option> 
+                                                <option value="Final Payment" <?= $invoice->invoice_type == 'Final Payment' ? 'selected="selected"' : ''; ?>>Final Payment</option>
+                                                <option value="Total Due" <?= $invoice->invoice_type == 'Total Due' ? 'selected="selected"' : ''; ?>>Total Due</option>
                                             </select>
                                         </div>
                                         <div class="col-md-3 form-group">
@@ -345,9 +351,9 @@ defined('BASEPATH') or exit('No direct script access allowed');
                                                     <td class="bold">Taxes</td>
                                                     <td colspan="2" align="right">
                                                         <div style="display:none;">
-                                                        $ <span id="total_tax_"><?php echo number_format(intval($invoice->taxes), 2); ?></span><input type="hidden" name="taxes" id="total_tax_input" value="<?php echo $invoice->taxes; ?>">
+                                                        $ <span id="total_tax_"><?php echo number_format(intval($invoice->taxes), 2); ?></span>
                                                         </div>
-                                                        <input type="number" step="any" min="0" class="form-control" id="taxes" name="taxes" value="<?= $invoice->taxes > 0 ? number_format($invoice->taxes, 2, ".","") : '0.00'; ?>" required="" style="width:50%;text-align:right;" />
+                                                        <input type="number" step="any" min="0" class="form-control" id="total_tax_input" name="taxes" value="<?= $invoice->taxes > 0 ? number_format($invoice->taxes, 2, ".","") : '0.00'; ?>" required="" style="width:50%;text-align:right;" />
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -698,11 +704,17 @@ $(document).ready(function(){
         e.preventDefault();
         var url = base_url + 'invoice/_update_invoice';
 
+        for ( instance in CKEDITOR.instances ){
+            CKEDITOR.instances[instance].updateElement();
+        }        
+
         $.ajax({
             type: "POST",
             url: url,
             dataType: 'json',
-            data: $('#invoice_form').serialize(),
+            data:new FormData(this),
+            processData:false,
+            contentType:false,
             success: function(data) {    
                 $('#btn-update-invoice').html('Save');                   
                 if (data.is_success) {

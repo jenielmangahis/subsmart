@@ -310,7 +310,7 @@
                                             <option selected hidden disabled value>- Select Event Type -</option>
                                             <?php if(!empty($job_types)): ?>
                                             <?php foreach ($job_types as $type): ?>
-                                            <option <?php if(isset($jobs_data) && $jobs_data->event_type == $type->title) {echo 'selected'; } ?> value="<?php echo $type->title; ?>" data-image="<?php echo $type->icon_marker ?>"><?php echo $type->title; ?></option>
+                                            <option <?php if(isset($jobs_data) && $jobs_data->event_type == $type->title) {echo 'selected'; } ?> value="<?php echo $type->title; ?>" data-default="<?= $type->is_marker_icon_default_list; ?>" data-image="<?php echo $type->icon_marker ?>"><?php echo $type->title; ?></option>
                                             <?php endforeach; ?>
                                             <?php endif; ?>
                                         </select>
@@ -320,9 +320,9 @@
                                         <select required id="event_tags_option" name="tags" class="form-control">
                                             <option selected hidden disabled value>- Select Event Tag -</option>
                                             <?php if(!empty($job_tags)): ?>
-                                            <?php foreach ($job_tags as $tag): ?>
-                                            <option <?php if(isset($jobs_data) && $jobs_data->event_tag == $tag->name) {echo 'selected'; } ?> value="<?php echo $tag->name; ?>" data-image="<?php echo $tag->marker_icon ?>"><?php echo $tag->name; ?></option>
-                                            <?php endforeach; ?>
+                                                <?php foreach ($job_tags as $tag): ?>
+                                                <option <?php if(isset($jobs_data) && $jobs_data->event_tag == $tag->name) {echo 'selected'; } ?> value="<?php echo $tag->name; ?>" data-default="<?=$tag->is_marker_icon_default_list; ?>" data-image="<?php echo $tag->marker_icon ?>"><?php echo $tag->name; ?></option>
+                                                <?php endforeach; ?>
                                             <?php endif; ?>
                                         </select>
                                     </div>
@@ -546,7 +546,7 @@ $('#ADD_EVENT_FORM').submit(function (event) {
             showCancelButton: false,
             confirmButtonText: 'Okay'
         }).then((result) => {
-            window.location.href = base_url + "/events";
+            window.location.href = base_url + "events";
         });
     });
 });
@@ -555,7 +555,6 @@ $('#ADD_EVENT_FORM').submit(function (event) {
 $("#start_date").change(function (event) {
     $("#end_date").val($("#start_date").val());
 });
-
 
 $(function () {
     $("#start_time, #end_time, #customer_reminder, #inputState").select2();
@@ -612,13 +611,21 @@ function formatState (opt) {
     if (!opt.id) {
         return opt.text;
     } 
-    var optimage = $(opt.element).attr('data-image'); 
+    var optimage  = $(opt.element).attr('data-image'); 
+    var isDefault = $(opt.element).attr('data-default');
     if(!optimage){
        return opt.text;
-    } else {                    
-        var $opt = $(
+    } else {     
+        if( isDefault == 0 ){
+            var $opt = $(
+            '<span><img src="<?php echo base_url('uploads/event_tags/'.logged('company_id').'/'); ?>' + optimage + '" style="width: 20px; margin-top: -4px;" /> ' + opt.text + '</span>'
+            );
+        }else{
+            var $opt = $(
            '<span><img src="<?php echo base_url('uploads/icons/'); ?>' + optimage + '" style="width: 20px; margin-top: -4px;" /> ' + opt.text + '</span>'
-        );
+            );
+        }               
+        
         return $opt;
     }
 };

@@ -800,7 +800,7 @@ $(".select_item").click(function () {
   // alert(total);
   markup =
     '<tr id="ss">' +
-    '<td width="35%"><input value=\'' +
+    '<td><input value=\'' +
     title +
     '\' type="text" name="items[]" class="form-control getItems" ><input type="hidden" value=\'' +
     idd +
@@ -809,8 +809,8 @@ $(".select_item").click(function () {
     '</span></div><input type="hidden" name="itemid[]" id="itemid" class="itemid" value=\'' +
     idd +
     '\'><input type="hidden" name="packageID[]" value="0"></td>\n' +
-    '<td width="20%"><div class="dropdown-wrapper"><select name="item_type[]" class="form-control"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option><option value="fee">Fee</option></select></div></td>\n' +
-    '<td width="10%"><input data-itemid=\'' +
+    '<td><div class="dropdown-wrapper"><select name="item_type[]" class="form-control"><option value="product">Product</option><option value="material">Material</option><option value="service">Service</option><option value="fee">Fee</option></select></div></td>\n' +
+    '<td><input data-itemid=\'' +
     idd +
     "' id='quantity_" +
     count +
@@ -818,39 +818,39 @@ $(".select_item").click(function () {
     qty +
     '\' type="number" name="quantity[]" data-counter=\'' +
     count +
-    '\'  min="0" class="form-control quantity mobile_qty "></td>\n' +
+    '\'  min="0" class="form-control quantity mobile_qty"></td>\n' +
     // "<td>\n" + '<input type="number" class="form-control qtyest" name="quantity[]" data-counter="' + count + '" id="quantity_' + count + '" min="1" value="1">\n' + "</td>\n" +
-    '<td width="10%"><input data-itemid=\'' +
+    '<td><input data-itemid=\'' +
     idd +
     "' id='price_" +
     count +
     "' value='" +
     price +
-    '\'  type="number" name="price[]" data-counter=\'' +
+    '\'  type="number" step="any" name="price[]" data-counter=\'' +
     count +
-    '\' class="form-control price hidden_mobile_view" placeholder="Unit Price"><input type="hidden" class="priceqty" id=\'priceqty_' +
+    '\' class="form-control price hidden_mobile_view text-end" placeholder="Unit Price"><input type="hidden" class="priceqty" id=\'priceqty_' +
     idd +
     '\'><div class="show_mobile_view"><span class="price">' +
     price +
     "</span></div></td>\n" +
     // "<td width=\"10%\"><input type=\"number\" class=\"form-control discount\" name=\"discount[]\" data-counter="0" id=\"discount_0\" min="0" value="0" ></td>\n" +
     // "<td width=\"10%\"><small>Unit Cost</small><input type=\"text\" name=\"item_cost[]\" class=\"form-control\"></td>\n" +
-    '<td width="10%" class="hidden_mobile_view"><input type="number" min=0 name="discount[]" value="0" class="form-control discount" data-counter=\'' +
+    '<td class="hidden_mobile_view"><input type="number" step="any" min=0 name="discount[]" value="0" class="form-control discount text-end" data-counter=\'' +
     count +
     "' id='discount_" +
     count +
     "'></td>\n" +
     // "<td width=\"25%\"><small>Inventory Location</small><input type=\"text\" name=\"item_loc[]\" class=\"form-control\"></td>\n" +
-    '<td width="20%" class="hidden_mobile_view"><input type="text" data-itemid=\'' +
+    '<td class="hidden_mobile_view"><input type="text" data-itemid=\'' +
     idd +
-    '\' class="form-control tax_change" name="tax[]" data-counter=\'' +
+    '\' class="form-control tax_change text-end" name="tax[]" readonly data-counter=\'' +
     count +
     "' id='tax1_" +
     count +
     "'  min=\"0\" value='" +
     taxes_t +
     "'></td>\n" +
-    '<td style="text-align: center" class="hidden_mobile_view" width="15%"><span data-subtotal=\'' +
+    '<td style="text-align: center" class="hidden_mobile_view"><span class="span-input" data-subtotal=\'' +
     total_ +
     "' id='span_total_" +
     count +
@@ -2668,6 +2668,7 @@ function calculation(counter) {
       stotal_cost += parseFloat(prc) * parseFloat(quantity);
     }
   }
+
   //   var subtotal = 0;
   // $( total ).each( function(){
   //   subtotal += parseFloat( $( this ).val() ) || 0;

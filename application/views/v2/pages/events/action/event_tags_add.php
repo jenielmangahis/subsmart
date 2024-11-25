@@ -42,7 +42,7 @@
                 <form id="EVENT_TAG_ADD_FORM" method="POST" accept="multipart">
                     <input type="hidden" name="default_icon_id" id="default-icon-id" value="">
                     <div class="row">
-                        <div class="col-12">
+                        <div class="col-5">
                             <div class="nsm-card primary">
                                 <div class="nsm-card-header">
                                     <div class="nsm-card-title">
@@ -71,7 +71,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 mt-3 text-end">
+                    </div>
+                    <div class="row">
+                        <div class="col-5 mt-3 text-end">
                             <button type="button" name="btn_back" class="nsm-button" onclick="location.href='<?php echo url('events/event_tags') ?>'">Go Back to Event Tags List</button>
                             <button type="submit" name="btn_save" class="nsm-button primary">Save</button>
                         </div>
@@ -115,28 +117,29 @@ $("#EVENT_TAG_ADD_FORM").submit(function (event) {
         Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Please specify job type icon/marker image!',
+            text: 'Please specify event tag icon/marker image!',
         });
-    } else {
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            text: 'Event tag was added successfully!',
-        }).then((result) => {
-            // if (result.isConfirmed) {
-            window.location.href = base_url + "/events/event_tags";
-            // }
-        });
+    } else {        
         $.ajax({
-            url: base_url + '/events/save_event_tag',
+            url: base_url + 'events/_save_event_tag',
             type: "post",
             data: new FormData(this),
+            dataType:'json',
             processData: false,
             contentType: false,
             cache: false,
             async: false,
-            //   success: function(data){
-            // }
+            success: function(data){
+                Swal.fire({
+                    icon: 'success',
+                    //title: 'Success',
+                    text: 'Event Tag was created successfully!',
+                }).then((result) => {
+                    // if (result.isConfirmed) {
+                    location.href = base_url + "events/event_tags";                    
+                    // }
+                });
+            }
         });
     }
 });

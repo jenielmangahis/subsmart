@@ -7802,7 +7802,7 @@ $(function () {
 
         var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
-        $.get('/accounting/print-payment-modal/' + split[1], function (result) {
+        $.get(base_url + '/accounting/print-payment-modal/' + split[1], function (result) {
             $('div#modal-container').append(result);
 
             $('#viewPrintPaymentModal').modal('show');
@@ -11193,7 +11193,10 @@ const submitModalForm = (event, el) => {
                         case 'receivePaymentModal':
                             var type = 'receive-payment';
 
-                            $('#receivePaymentModal .modal-footer div.row.w-100 div:nth-child(2)').removeClass('d-flex');
+                            $('#receivePaymentModal .modal-footer div.row.w-100 #receive-payment-modal-print-link-divider').show();
+                            $('#receivePaymentModal .modal-footer div.row.w-100 #receive-payment-modal-print-link-more').show();
+                            
+                            /*$('#receivePaymentModal .modal-footer div.row.w-100 div:nth-child(2)').removeClass('d-flex');
                             $('#receivePaymentModal .modal-footer div.row.w-100 div:nth-child(2)').html(`
                             <div class="row h-100">
                                 <div class="col-md-12 d-flex align-items-center justify-content-center">
@@ -11211,7 +11214,7 @@ const submitModalForm = (event, el) => {
                                         </div>
                                     </span>
                                 </div>
-                            </div>`);
+                            </div>`);*/
                             break;
                         case 'invoiceModal':
                             var type = 'invoice';

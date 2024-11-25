@@ -740,30 +740,50 @@ class Dashboard extends Widgets
                                     COUNT(CASE WHEN DATE(acs_billing.bill_start_date) = CURDATE() THEN acs_profile.prof_id END) AS total_current_active_subscription'
                         ];
                 }else{
+                    // $total_query = [
+                    //     'where' => [
+                    //     'DATE(acs_billing.bill_start_date) >=' => date('Y-m-d', strtotime($date_from)), 
+                    //     'DATE(acs_billing.bill_end_date) >=' => date('Y-m-d', strtotime($date_to)),
+                    //     'acs_profile.company_id' => logged('company_id'),
+                    //     ],
+                    //     'filter'=>$filter,
+                    //     'select'=>' SUM(COALESCE(acs_billing.mmr, 0)) AS total_amount_subscriptions, 
+                    //                 COALESCE(COUNT(acs_billing.bill_id), 0) AS total_subscriptions, 
+                    //                 COUNT(acs_billing.bill_id) AS total_active_subscription, '
+                    // ];
+
                     $total_query = [
                         'where' => [
-                        'DATE(acs_billing.bill_start_date) >=' => date('Y-m-d', strtotime($date_from)), 
-                        'DATE(acs_billing.bill_end_date) >=' => date('Y-m-d', strtotime($date_to)),
+                        'DATE(acs_billing.bill_start_date) >=' => date('Y-m-d', strtotime($date_from)),                         
                         'acs_profile.company_id' => logged('company_id'),
                         ],
                         'filter'=>$filter,
                         'select'=>' SUM(COALESCE(acs_billing.mmr, 0)) AS total_amount_subscriptions, 
                                     COALESCE(COUNT(acs_billing.bill_id), 0) AS total_subscriptions, 
                                     COUNT(acs_billing.bill_id) AS total_active_subscription, '
-                        ];
+                    ];
                 }
               
                 $total = $this->customer_ad_model->getTotalSubscriptionsFilterDate($total_query);
 
                 $mmr_query = [
                     'where' => [
-                        'DATE(acs_billing.bill_start_date) >=' => date('Y-m-d', strtotime($date_from)), 
-                        'DATE(acs_billing.bill_end_date) >=' => date('Y-m-d', strtotime($date_to)),
+                        'DATE(acs_billing.bill_start_date) >=' => date('Y-m-d', strtotime($date_from)),                         
                         'acs_profile.company_id' => logged('company_id'),
                         ],
                     'select' => 'acs_billing.*',
                     'filter'=>$filter,
                 ];
+
+                // $mmr_query = [
+                //     'where' => [
+                //         'DATE(acs_billing.bill_start_date) >=' => date('Y-m-d', strtotime($date_from)), 
+                //         'DATE(acs_billing.bill_end_date) >=' => date('Y-m-d', strtotime($date_to)),
+                //         'acs_profile.company_id' => logged('company_id'),
+                //         ],
+                //     'select' => 'acs_billing.*',
+                //     'filter'=>$filter,
+                // ];
                 $mmr = $this->customer_ad_model->getTotalSubscriptionsFilterDate($mmr_query);
 
      

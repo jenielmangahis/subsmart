@@ -863,7 +863,7 @@ class Customer_advance_model extends MY_Model
             }
         }
 
-        
+        $this->db->order_by('acs_billing.bill_end_date DESC');
         $query = $this->db->get();
         return $query->result();
     }
