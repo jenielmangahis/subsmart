@@ -1013,17 +1013,56 @@ function subscriptionThumbnail(){
                 if( mmr[x].bill_end_date == '0000-00-00' || mmr[x].bill_end_date == '1970-01-01' ){
                     var installDate = '2024-01-01';
                 }else{
-                    var installDate = mmr[x].bill_end_date;
+                    //var installDate = mmr[x].bill_end_date;
+                    var currentYear  = new Date().getFullYear();
+                    var insA     = new Date(mmr[x].bill_end_date);
+                    var insAYear = insA.getFullYear();
+
+                    if( insAYear < currentYear ){                        
+                        var installDate = '2024-01-01';
+                    }else if( insAYear > currentYear ){
+                        var today = new Date();                                     
+                        var installDate = moment(today).format('YYYY-MM-DD');
+                    }else{
+                        var installDate = mmr[x].bill_end_date;
+                    }
                 }
                 
                 if (installDate) {
                     var ins = new Date(installDate);
-                    var month = ins.getMonth();
+                    var month = ins.getMonth();                    
                     if (!status.includes(mmr[x].status)) {
                         status.push(mmr[x].status);
                     }
-                    monthlyAmounts[month] += parseFloat(mmr[x].mmr);
+                    if( isNaN(parseFloat(mmr[x].mmr)) ){
+                        monthlyAmounts[month] += 0;
+                    }else{
+                        monthlyAmounts[month] += parseFloat(mmr[x].mmr);
+                    }
+
+                    // if( month == 11 ){
+                    //     console.log('install date ' + installDate);
+                    //     console.log('installDate', installDate);
+                    //     console.log('month', month);
+                    //     console.log('mmr', mmr[x].mmr);
+                    // }   
                 }
+            }
+            
+            //console.log('monthlyAmounts', monthlyAmounts);
+
+            var start = 0;
+            var prev_amount = 0;
+            for (i = 0; i < monthlyAmounts.length; ++i) {
+                if( start == 0 ){
+                    var amount = monthlyAmounts[i];
+                }else{
+                    var amount = monthlyAmounts[i] + prev_amount;
+                }
+
+                prev_amount = amount;
+                monthlyAmounts[i] = amount;                
+                start++;
             }
         }
 
