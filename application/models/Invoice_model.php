@@ -1203,9 +1203,10 @@ class Invoice_model extends MY_Model
 
     public function filterBy($filters = array(), $company_id = 0, $type)
     {
-        $this->db->select('*, jobs.job_number AS jobnumber');
+        $this->db->select('invoices.*, jobs.id AS jobid, jobs.job_number AS jobnumber');
         $this->db->from($this->table);
         $this->db->join('jobs', 'invoices.job_id = jobs.id', 'LEFT');      
+        $this->db->where('invoices.view_flag', 0);
         $this->db->where('invoices.is_recurring', $type);
 
         if (!empty($filters)) {
