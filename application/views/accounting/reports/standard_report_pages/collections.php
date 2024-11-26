@@ -46,8 +46,8 @@
                             <div class="row mb-3">
                                 <div class="col-lg-12">
                                     <?php 
-                                        $tableID = "pastdueinvoices_table"; 
-                                        $reportCategory = "past_due_invoices"; 
+                                        $tableID = "collections_table"; 
+                                        $reportCategory = "collections"; 
                                     ?>
                                     <table id="<?php echo $tableID; ?>" class="nsm-table w-100 border-0">
                                         <thead>
@@ -201,12 +201,26 @@
                                     <div class="row">
                                         <div class="col-md-4 mb-3">
                                             <label class="mb-1 fw-xnormal">Invoice Period</label>
-                                            <select name="subscription_period" id="subscription-period" class="nsm-field form-select">
-                                                <option value="all" <?php echo ($reportSettings->subscription_period == "all") ? "selected" : "" ?>>All</option>
-                                                <option value="last_7_days" <?php echo ($reportSettings->subscription_period == "last_7_days") ? "selected" : "" ?>>Last 7 Days</option>
-                                                <option value="last_14_days" <?php echo ($reportSettings->subscription_period == "last_14_days") ? "selected" : "" ?>>Last 14 Days</option>
-                                                <option value="last_30_days" <?php echo ($reportSettings->subscription_period == "last_30_days") ? "selected" : "" ?>>Last 30 Days</option>
-                                                <option value="last_60_days" <?php echo ($reportSettings->subscription_period == "last_60_days") ? "selected" : "" ?>>Last 60 Days</option>
+                                            <?php
+                                                $currentMonth = date('n');
+                                                $currentQuarter = ceil($currentMonth / 3);
+
+                                                $quarters = [
+                                                    1 => ['Jan', 'Mar'],
+                                                    2 => ['Apr', 'Jun'],
+                                                    3 => ['Jul', 'Sep'],
+                                                    4 => ['Oct', 'Dec']
+                                                ];
+
+                                                $quarterStart = $quarters[$currentQuarter][0];
+                                                $quarterEnd = $quarters[$currentQuarter][1];
+                                            ?>
+                                            <select name="filter_by" id="filter-by" class="nsm-field form-select">
+                                                <option value="get_all" <?php echo ($reportSettings->filter_by == "get_all") ? "selected" : "" ?>>None</option>
+                                                <option value="current_week" <?php echo ($reportSettings->filter_by == "current_week") ? "selected" : "" ?>>This Week</option>
+                                                <option value="current_month" <?php echo ($reportSettings->filter_by == "current_month") ? "selected" : "" ?>>This Month (<?php echo date('M'); ?>)</option>
+                                                <option value="current_quarter" <?php echo ($reportSettings->filter_by == "current_quarter") ? "selected" : "" ?>>This Quarter (<?php echo $quarterStart . '-' . $quarterEnd . ' ' . date('Y'); ?>)</option>
+                                                <option value="current_year" <?php echo ($reportSettings->filter_by == "current_year") ? "selected" : "" ?>>This Year (<?php echo date('Y'); ?>)</option>
                                             </select>
                                         </div>
                                     </div>

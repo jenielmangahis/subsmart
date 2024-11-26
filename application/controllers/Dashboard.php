@@ -211,17 +211,16 @@ class Dashboard extends Widgets
 
         $output = 'Recent Subscription Update <br>';
 
-       if(count($subsContent) > 0 ){
-        foreach ($subsContent as $item) {
-            $output .= "<br> subscriber : <b>".$item->first_name." ".$item->last_name."</b> <br> amount <b>$".$item->mmr."</b>,";
+        if(count($subsContent) > 0 ){
+            foreach ($subsContent as $item) {
+                $output .= "<br> subscriber : <b>".$item->first_name." ".$item->last_name."</b> <br> amount <b>$".$item->mmr."</b>,";
+            }
         }
-       }
 
-       $this->page_data['subsContent'] = $output;
+        $this->page_data['subsContent'] = $output;
 
-        
-        
         $past_due = $this->widgets_model->getCurrentCompanyOverdueInvoices2();
+
         $invoices_total_due = 0;
         foreach ($past_due as $total_due) {
             if ($total_due->status != 'paid') {
@@ -414,7 +413,7 @@ class Dashboard extends Widgets
 
         $this->page_data['open_invoices'] = $openInvoices;
         $this->page_data['currentOverdueInvoices'] = $this->widgets_model->getCurrentCompanyOverdueInvoices();
-        
+        $company_id = logged('company_id');
         // Plaid
         $this->load->model('PlaidAccount_model');
         $plaid_handler_open = 0;
@@ -456,12 +455,7 @@ class Dashboard extends Widgets
         $this->page_data['estimates'] = $this->estimate_model->getAllOpenEstimatesByCompanyId($companyId);
         $this->page_data['expired_estimates'] = $this->estimate_model->getExpiredEstimatesByCompanyId($companyId);
         $this->page_data['leads'] = count($this->customer_ad_model->get_leads_data());
-        $collection_query = [
-            'where' => ['company_id' => logged('company_id'), 'status =' => 'Collections'],
-            'table' => 'acs_profile',
-            'select' => 'COUNT(*) as total',
-        ];
-        $this->page_data['collection'] = $this->general->get_data_with_param($collection_query);
+        $this->page_data['collection'] = $this->invoice_model->getCollection($company_id);
 
         $esign_query = [
             'where' => ['user_docfile.company_id' => logged('company_id'), 'user_docfile.status !=' => 'Deleted',
@@ -481,11 +475,11 @@ class Dashboard extends Widgets
         $this->page_data['esign'] = $this->general->get_data_with_param($esign_query);
 
         $payments = $this->invoice_model->get_company_payments(logged('company_id'));
-        $deposits = 0;
-        foreach ($payments as $payment) {
-            $deposits += floatval($payment->invoice_amount);
-        }
-        $this->page_data['deposits'] = $deposits;
+        // $deposits = 0;
+        // foreach ($payments as $payment) {
+        //     $deposits += floatval($payment->invoice_amount);
+        // }
+        $this->page_data['deposits'] = $payments;
 
         // $this->load->view('dashboard', $this->page_data);
         $this->load->view('dashboard_v2', $this->page_data);
@@ -1010,24 +1004,59 @@ class Dashboard extends Widgets
 
                 break;
             case 'income':
-                $income_query = [
-                    'where' => ['company_id' => logged('company_id'),  'DATE(payment_date)  >=' => date('Y-m-d', strtotime($date_from)),
-                    'DATE(payment_date) <=' => date('Y-m-d', strtotime($date_to))],
-                    'table' => 'payment_records',
-                    'select' => '*',
-                ];
-                $income = $this->general->get_data_with_param($income_query);
+                // $income_query = [
+                //     'where' => ['company_id' => logged('company_id'),
+                //     'company_id' => logged('company_id'),
+                //     'DATE(payment_date)  >=' => date('Y-m-d', strtotime($date_from)),
+                //     'DATE(payment_date) <=' => date('Y-m-d', strtotime($date_to))],
+                //     'table' => 'payment_records',
+                //     'select' => '*',
+                // ];
+                // $income = $this->general->get_data_with_param($income_query);
+
+                $company_id = logged('company_id');
+                $this->db->from('invoices');
+                $this->db->select('*');
+                $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+                $this->db->where('invoices.status', "Paid");
+                $this->db->where('invoices.date_created >=',date('Y-m-d', strtotime($date_from)));
+                $this->db->where('invoices.date_created <',date('Y-m-d' , strtotime($date_to)));
+                $this->db->where('invoices.company_id', $company_id);
+                $this->db->order_by("invoices.invoice_number DESC");
+                $query = $this->db->get();
+                $income = $query->result();
+
+
 
                 $this->output->set_output(json_encode(['first' => null, 'second' => null, 'income' => $income]));
 
                 break;
             case 'collection':
-                $collection_query = [
-                    'where' => ['status =' => 'Collections',  'DATE(created_at)  >=' => date('Y-m-d', strtotime($date_from)),  'DATE(created_at)   <=' => date('Y-m-d', strtotime($date_to))],
-                    'table' => 'acs_profile',
-                    'select' => '*',
-                ];
-                $collection = $this->general->get_data_with_param($collection_query);
+                $company_id = logged('company_id');
+                if(  $date_to == '0000-00-00 23:59:59'){
+                    $this->db->select('*');
+                    $this->db->from('invoices');
+                    $this->db->where('invoices.status', "Unpaid");
+                    $this->db->where('invoices.company_id', $company_id);
+                    $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-90 days')));
+                    $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+                    $data = $this->db->get();
+                    $collection = $data->result();
+                }else{
+                    $this->db->from('invoices');
+                    $this->db->select('*');
+                    $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+                    $this->db->where('invoices.status', "Unpaid");
+                    $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-90 days')));
+                    $this->db->where('invoices.date_created >=',date('Y-m-d H:i:s', strtotime($date_from)));
+                    $this->db->where('invoices.date_created <',date('Y-m-d H:i:s' , strtotime($date_to)));
+                    $this->db->where('invoices.company_id', $company_id);
+                    $query = $this->db->get();
+                    $collection = $query->result();
+
+                }
+
+          
 
                 $this->output->set_output(json_encode(['first' => null, 'second' => null, 'collection' => $collection]));
 
@@ -1332,8 +1361,8 @@ class Dashboard extends Widgets
         $lostAccounts = $this->event_model->getAccountSituation('Cancelled'); // lost account count, if Cancel Date Office Info is set
         $onlineBookingCount = $this->event_model->getLeadSource('Online Booking');
         $data_arr = ['success' => true, 'data' => $payment, 'paymentInvoice' => $paymentInvoices, 'onlineBooking' => $onlineBookingCount, 'jobsCompleted' => $total_jobs_done, 'lostAccount' => $lostAccounts, 'collectedAccounts' => $collectedAccounts, 'invoice_amount_due' => $total_amount_due, 
-        'collected_amount' => $total_amount_paid , 'service_project_income'=>$service_project_income, 'invoice_amount'=>$invoice_amount, 'jobs_completed'=>$jobs_completed,
-        'new_jobs'=> $new_jobs, 'earned'=>$earned,'lost_accounts'=>$lost_accounts];
+        'collected_amount' => $total_amount_paid , 'service_project_income'=>$service_project_income, 'invoice_amount'=>number_format($invoice_amount->total, 2, ".", ","), 'jobs_completed'=>number_format($jobs_completed->total, 0, ".", ","),
+        'new_jobs'=> number_format($new_jobs->total, 0, ".", ","), 'earned'=>number_format($earned->total, 2, ".", ",") ,'lost_accounts'=>number_format($lost_accounts->total, 0, ".", ",") ];
         exit(json_encode($data_arr));
     }
 
@@ -1620,9 +1649,12 @@ class Dashboard extends Widgets
 
     public function past_due_invoices()
     {
-        $past_due = $this->AcsProfile_model->getCurrentCompanyOverdue(logged('company_id'));
+        $this->load->model('widgets_model');
+        $past_due = $this->widgets_model->getCurrentCompanyOverdueInvoices2();
 
-        // $past_due = $this->AcsProfile_model->getSubscription(logged('company_id'));
+        //$past_due = $this->AcsProfile_model->getCurrentCompanyOverdue(logged('company_id'));
+        //$past_due = $this->AcsProfile_model->getSubscription(logged('company_id'));
+        
         $data_arr = ['Success' => true, 'past_due' => $past_due];
         exit(json_encode($data_arr));
     }
@@ -1654,7 +1686,7 @@ class Dashboard extends Widgets
 
     public function income_thumbnail_graph()
     {
-        $income = $this->invoice_model->get_company_payments(logged('company_id'));
+        $income = $this->invoice_model->get_company_payments_graph(logged('company_id'));
         $data_arr = ['Success' => true, 'income' => $income];
         exit(json_encode($data_arr));
     }
@@ -1693,15 +1725,18 @@ class Dashboard extends Widgets
         $CI = &get_instance();
         $CI->load->model('Invoice_model', 'invoice_model');
         $CI->load->model('Payment_records_model');
-        $company_id = logged('company_id');
-        // $unpaid = $CI->Payment_records_model->getTotalInvoiceAmountByCompanyId($company_id);
 
-        $collection_query = [
-            'where' => ['status =' => 'Collections'],
-            'table' => 'acs_profile',
-            'select' => '*',
-        ];
-        $collection = $this->general->get_data_with_param($collection_query);
+        $company_id = logged('company_id');
+        
+        $this->db->select('*');
+        $this->db->from('invoices');
+        $this->db->where('invoices.status', "Unpaid");
+        $this->db->where('invoices.company_id', $company_id);
+        $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-90 days')));
+        $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        $data = $this->db->get();
+        $collection = $data->result();
+
 
         $data_arr = ['Success' => true, 'collection' => $collection];
         exit(json_encode($data_arr));

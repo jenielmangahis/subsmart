@@ -237,10 +237,11 @@
                         </tr>
                     </thead>
                     <tbody>
+                        <?php $count = 1?>
                         <?php foreach ($items as $item ) { ?>
                         <tr class="table-items__tr">
                             <td style="width:30px; text-align:center;" valign="top">
-                                <?php echo intval($key) + 1 ?>
+                                <?php echo $count; ?>
                             </td>
                             <td valign="top">
                                 <?php echo $item->title; ?>
@@ -265,7 +266,7 @@
                             <td></td>
                             <td colspan="6"></td>
                         </tr>
-                        <?php } ?>
+                        <?php $count++;} ?>
                     </tbody>
                     <tfoot>
                         <tr>

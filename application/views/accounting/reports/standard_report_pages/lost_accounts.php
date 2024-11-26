@@ -184,6 +184,7 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                                <option value="updated_at" <?php echo ($reportSettings->sort_by == "updated_at") ? "selected" : "" ?>>Updated At</option>
                                                 <option value="customer" <?php echo ($reportSettings->sort_by == "customer") ? "selected" : "" ?>>Customer</option>
                                                 <option value="customer_type" <?php echo ($reportSettings->sort_by == "customer_type") ? "selected" : "" ?>>Type</option>
                                                 <option value="status" <?php echo ($reportSettings->sort_by == "status") ? "selected" : "" ?>>Status</option>
@@ -191,7 +192,6 @@
                                                 <option value="phone" <?php echo ($reportSettings->sort_by == "phone") ? "selected" : "" ?>>Phone</option>
                                                 <option value="mobile" <?php echo ($reportSettings->sort_by == "mobile") ? "selected" : "" ?>>Mobile</option>
                                                 <option value="cancel_date" <?php echo ($reportSettings->sort_by == "cancel_date") ? "selected" : "" ?>>Cancel Date</option>
-                                                <option value="updated_at" <?php echo ($reportSettings->sort_by == "updated_at") ? "selected" : "" ?>>Updated At</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">
                                                 <option value="ASC" <?php echo ($reportSettings->sort_asc_desc== "ASC") ? "selected" : "" ?>>ASC</option>

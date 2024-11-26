@@ -56,20 +56,26 @@ class Accounting_model extends MY_Model
                 'Inactive w/RMM'
             ]);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+
             switch ($reportConfig['subscription_period']) {
                 case 'last_7_days':
-                    $this->db->where('acs_billing.bill_start_date >= CURDATE() - INTERVAL 7 DAY');
+                    $startDate = (new DateTime())->modify('-7 days')->format('Y-m-d');
+                    $this->db->where('acs_billing.bill_start_date >=', $startDate);
                     break;
                 case 'last_14_days':
-                    $this->db->where('acs_billing.bill_start_date >= CURDATE() - INTERVAL 14 DAY');
+                    $startDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
+                    $this->db->where('acs_billing.bill_start_date >=', $startDate);
                     break;
                 case 'last_30_days':
-                    $this->db->where('acs_billing.bill_start_date >= CURDATE() - INTERVAL 30 DAY');
+                    $startDate = (new DateTime())->modify('-30 days')->format('Y-m-d');
+                    $this->db->where('acs_billing.bill_start_date >=', $startDate);
                     break;
                 case 'last_60_days':
-                    $this->db->where('acs_billing.bill_start_date >= CURDATE() - INTERVAL 60 DAY');
+                    $startDate = (new DateTime())->modify('-60 days')->format('Y-m-d');
+                    $this->db->where('acs_billing.bill_start_date >=', $startDate);
                     break;
             }
+            
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
@@ -80,6 +86,41 @@ class Accounting_model extends MY_Model
             $this->db->select('invoices.id AS id, invoices.company_id AS company_id,invoices.invoice_number AS number, invoices.job_name AS description, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
             $this->db->from('invoices');
             $this->db->where('invoices.status', "Paid");
+            
+            $today = new DateTime();
+            switch ($reportConfig['filter_by']) {
+                case 'current_month':
+                    $startDate = $today->format('Y-m-01');
+                    $endDate = $today->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
+                    break;
+
+                case 'current_year':
+                    $startDate = $today->format('Y-01-01');
+                    $endDate = $today->format('Y-12-31');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
+                    break;
+
+                case 'current_quarter':
+                    $month = (int)$today->format('m');
+                    $year = $today->format('Y');
+                    $quarterStartMonth = floor(($month - 1) / 3) * 3 + 1;
+                    $startDate = (new DateTime("$year-$quarterStartMonth-01"))->format('Y-m-d');
+                    $endDate = (new DateTime("$year-$quarterStartMonth-01"))->modify('+2 months')->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
+                    break;
+
+                case 'current_week':
+                    $startDate = (new DateTime())->modify('monday this week')->format('Y-m-d');
+                    $endDate = (new DateTime())->modify('sunday this week')->format('Y-m-d');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
+                    break;
+            }
+
             $this->db->where('invoices.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
@@ -94,20 +135,41 @@ class Accounting_model extends MY_Model
             $this->db->where('invoices.status !=', "Draft");
             $this->db->where('invoices.status !=', "");
             $this->db->where('invoices.company_id', $companyID);
+            
+            $today = new DateTime();
             switch ($reportConfig['filter_by']) {
                 case 'current_month':
-                    $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    $startDate = $today->format('Y-m-01');
+                    $endDate = $today->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_year':
-                    $this->db->where("YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $startDate = $today->format('Y-01-01');
+                    $endDate = $today->format('Y-12-31');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_quarter':
-                    $this->db->where("QUARTER(invoices.date_created) = QUARTER(CURDATE()) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $month = (int)$today->format('m');
+                    $year = $today->format('Y');
+                    $quarterStartMonth = floor(($month - 1) / 3) * 3 + 1;
+                    $startDate = (new DateTime("$year-$quarterStartMonth-01"))->format('Y-m-d');
+                    $endDate = (new DateTime("$year-$quarterStartMonth-01"))->modify('+2 months')->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_week':
-                    $this->db->where("WEEK(invoices.date_created, 1) = WEEK(CURDATE(), 1) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $startDate = (new DateTime())->modify('monday this week')->format('Y-m-d');
+                    $endDate = (new DateTime())->modify('sunday this week')->format('Y-m-d');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
             }
+
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
@@ -157,16 +219,48 @@ class Accounting_model extends MY_Model
 
         // Get Service Projective Income data for Today's Widget Report in Database
         if ($reportType == 'service_projective_income') {
-            $this->db->select('jobs.id AS id,jobs.company_id AS company_id,jobs.job_number AS number,jobs.job_type AS type,jobs.job_description AS description,CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer,jobs.status AS status,jobs.date_issued AS date, jobs.date_created AS date_created, job_payments.amount AS total');
-            $this->db->from('jobs');
-            // $this->db->where('jobs.job_type', "Service");
-            $this->db->where_in('jobs.status', [
-                'Finished',
-                'Completed',
-            ]);
-            $this->db->where('jobs.company_id', $companyID);
-            $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
-            $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
+            $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, invoices.job_name AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
+            $this->db->from('invoices');
+            $this->db->where('invoices.status !=', "Paid");
+            $this->db->where('invoices.status !=', "Draft");
+            $this->db->where('invoices.status !=', "");
+            $this->db->where('invoices.company_id', $companyID);
+            
+            $today = new DateTime();
+            switch ($reportConfig['filter_by']) {
+                case 'current_month':
+                    $startDate = $today->format('Y-m-01');
+                    $endDate = $today->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
+                    break;
+
+                case 'current_year':
+                    $startDate = $today->format('Y-01-01');
+                    $endDate = $today->format('Y-12-31');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
+                    break;
+
+                case 'current_quarter':
+                    $month = (int)$today->format('m');
+                    $year = $today->format('Y');
+                    $quarterStartMonth = floor(($month - 1) / 3) * 3 + 1;
+                    $startDate = (new DateTime("$year-$quarterStartMonth-01"))->format('Y-m-d');
+                    $endDate = (new DateTime("$year-$quarterStartMonth-01"))->modify('+2 months')->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
+                    break;
+
+                case 'current_week':
+                    $startDate = (new DateTime())->modify('monday this week')->format('Y-m-d');
+                    $endDate = (new DateTime())->modify('sunday this week')->format('Y-m-d');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
+                    break;
+            }
+            
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
@@ -185,20 +279,26 @@ class Accounting_model extends MY_Model
                 'Active w/RYR',
                 'Inactive w/RMM'
             ]);
+          
             switch ($reportConfig['subscription_period']) {
                 case 'last_7_days':
-                    $this->db->where('acs_profile.updated_at >= CURDATE() - INTERVAL 7 DAY');
+                    $startDate = (new DateTime())->modify('-7 days')->format('Y-m-d');
+                    $this->db->where('acs_profile.updated_at >=', $startDate);
                     break;
                 case 'last_14_days':
-                    $this->db->where('acs_profile.updated_at >= CURDATE() - INTERVAL 14 DAY');
+                    $startDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
+                    $this->db->where('acs_profile.updated_at >=', $startDate);
                     break;
                 case 'last_30_days':
-                    $this->db->where('acs_profile.updated_at >= CURDATE() - INTERVAL 30 DAY');
+                    $startDate = (new DateTime())->modify('-30 days')->format('Y-m-d');
+                    $this->db->where('acs_profile.updated_at >=', $startDate);
                     break;
                 case 'last_60_days':
-                    $this->db->where('acs_profile.updated_at >= CURDATE() - INTERVAL 60 DAY');
+                    $startDate = (new DateTime())->modify('-60 days')->format('Y-m-d');
+                    $this->db->where('acs_profile.updated_at >=', $startDate);
                     break;
             }
+
             $this->db->join('users', 'users.id = customer_groups.user_id', 'left');
             $this->db->join('acs_profile', 'acs_profile.customer_group_id = customer_groups.id', 'left');
             $this->db->group_by('customer_groups.id');
@@ -214,12 +314,38 @@ class Accounting_model extends MY_Model
             $this->db->from('jobs');
             $this->db->where('jobs.company_id', $companyID);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+
+            $today = new DateTime();
             switch ($reportConfig['filter_by']) {
                 case 'current_month':
-                    $this->db->where("DATE_FORMAT(jobs.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    $startDate = $today->format('Y-m-01');
+                    $endDate = $today->format('Y-m-t');
+                    $this->db->where('jobs.date_created >=', $startDate);
+                    $this->db->where('jobs.date_created <=', $endDate);
                     break;
+
                 case 'current_year':
-                    $this->db->where("YEAR(jobs.date_created) = YEAR(CURDATE())");
+                    $startDate = $today->format('Y-01-01');
+                    $endDate = $today->format('Y-12-31');
+                    $this->db->where('jobs.date_created >=', $startDate);
+                    $this->db->where('jobs.date_created <=', $endDate);
+                    break;
+
+                case 'current_quarter':
+                    $month = (int)$today->format('m');
+                    $year = $today->format('Y');
+                    $quarterStartMonth = floor(($month - 1) / 3) * 3 + 1;
+                    $startDate = (new DateTime("$year-$quarterStartMonth-01"))->format('Y-m-d');
+                    $endDate = (new DateTime("$year-$quarterStartMonth-01"))->modify('+2 months')->format('Y-m-t');
+                    $this->db->where('jobs.date_created >=', $startDate);
+                    $this->db->where('jobs.date_created <=', $endDate);
+                    break;
+
+                case 'current_week':
+                    $startDate = (new DateTime())->modify('monday this week')->format('Y-m-d');
+                    $endDate = (new DateTime())->modify('sunday this week')->format('Y-m-d');
+                    $this->db->where('jobs.date_created >=', $startDate);
+                    $this->db->where('jobs.date_created <=', $endDate);
                     break;
             }
 
@@ -236,15 +362,38 @@ class Accounting_model extends MY_Model
             $this->db->select('estimates.id AS id, estimates.company_id AS company_id, estimates.estimate_number AS number, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, estimates.job_name AS job, estimates.job_location AS location, estimates.status AS status, estimates.created_at AS date, estimates.grand_total AS total');
             $this->db->from('estimates');
             $this->db->where('estimates.company_id', $companyID);
+            
+            $today = new DateTime();
             switch ($reportConfig['filter_by']) {
                 case 'current_month':
-                    $this->db->where("DATE_FORMAT(estimates.created_at, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    $startDate = $today->format('Y-m-01');
+                    $endDate = $today->format('Y-m-t');
+                    $this->db->where('estimates.created_at >=', $startDate);
+                    $this->db->where('estimates.created_at <=', $endDate);
                     break;
+
                 case 'current_year':
-                    $this->db->where("YEAR(estimates.created_at) = YEAR(CURDATE())");
+                    $startDate = $today->format('Y-01-01');
+                    $endDate = $today->format('Y-12-31');
+                    $this->db->where('estimates.created_at >=', $startDate);
+                    $this->db->where('estimates.created_at <=', $endDate);
                     break;
+
                 case 'current_quarter':
-                    $this->db->where("QUARTER(estimates.created_at) = QUARTER(CURDATE()) AND YEAR(estimates.created_at) = YEAR(CURDATE())");
+                    $month = (int)$today->format('m');
+                    $year = $today->format('Y');
+                    $quarterStartMonth = floor(($month - 1) / 3) * 3 + 1;
+                    $startDate = (new DateTime("$year-$quarterStartMonth-01"))->format('Y-m-d');
+                    $endDate = (new DateTime("$year-$quarterStartMonth-01"))->modify('+2 months')->format('Y-m-t');
+                    $this->db->where('estimates.created_at >=', $startDate);
+                    $this->db->where('estimates.created_at <=', $endDate);
+                    break;
+
+                case 'current_week':
+                    $startDate = (new DateTime())->modify('monday this week')->format('Y-m-d');
+                    $endDate = (new DateTime())->modify('sunday this week')->format('Y-m-d');
+                    $this->db->where('estimates.created_at >=', $startDate);
+                    $this->db->where('estimates.created_at <=', $endDate);
                     break;
             }
 
@@ -288,20 +437,41 @@ class Accounting_model extends MY_Model
             $this->db->from('invoices');
             $this->db->where('invoices.status', "Paid");
             $this->db->where('invoices.company_id', $companyID);
+
+            $today = new DateTime();
             switch ($reportConfig['filter_by']) {
                 case 'current_month':
-                    $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    $startDate = $today->format('Y-m-01');
+                    $endDate = $today->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_year':
-                    $this->db->where("YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $startDate = $today->format('Y-01-01');
+                    $endDate = $today->format('Y-12-31');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_quarter':
-                    $this->db->where("QUARTER(invoices.date_created) = QUARTER(CURDATE()) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $month = (int)$today->format('m');
+                    $year = $today->format('Y');
+                    $quarterStartMonth = floor(($month - 1) / 3) * 3 + 1;
+                    $startDate = (new DateTime("$year-$quarterStartMonth-01"))->format('Y-m-d');
+                    $endDate = (new DateTime("$year-$quarterStartMonth-01"))->modify('+2 months')->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_week':
-                    $this->db->where("WEEK(invoices.date_created, 1) = WEEK(CURDATE(), 1) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $startDate = (new DateTime())->modify('monday this week')->format('Y-m-d');
+                    $endDate = (new DateTime())->modify('sunday this week')->format('Y-m-d');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
             }
+
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
@@ -314,22 +484,44 @@ class Accounting_model extends MY_Model
             $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, invoices.job_name AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
             $this->db->from('invoices');
             $this->db->where('invoices.status !=', "Paid");
+            $this->db->where('invoices.status !=', "Draft");
             $this->db->where('invoices.status !=', "");
             $this->db->where('invoices.company_id', $companyID);
+
+            $today = new DateTime();
             switch ($reportConfig['filter_by']) {
                 case 'current_month':
-                    $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    $startDate = $today->format('Y-m-01');
+                    $endDate = $today->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_year':
-                    $this->db->where("YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $startDate = $today->format('Y-01-01');
+                    $endDate = $today->format('Y-12-31');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_quarter':
-                    $this->db->where("QUARTER(invoices.date_created) = QUARTER(CURDATE()) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $month = (int)$today->format('m');
+                    $year = $today->format('Y');
+                    $quarterStartMonth = floor(($month - 1) / 3) * 3 + 1;
+                    $startDate = (new DateTime("$year-$quarterStartMonth-01"))->format('Y-m-d');
+                    $endDate = (new DateTime("$year-$quarterStartMonth-01"))->modify('+2 months')->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_week':
-                    $this->db->where("WEEK(invoices.date_created, 1) = WEEK(CURDATE(), 1) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $startDate = (new DateTime())->modify('monday this week')->format('Y-m-d');
+                    $endDate = (new DateTime())->modify('sunday this week')->format('Y-m-d');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
             }
+
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
@@ -342,23 +534,30 @@ class Accounting_model extends MY_Model
             $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, invoices.job_name AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
             $this->db->from('invoices');
             $this->db->where('invoices.status !=', "Paid");
+            $this->db->where('invoices.status !=', "Draft");
             $this->db->where('invoices.status !=', "");
             $this->db->where('invoices.due_date < CURDATE()');
             $this->db->where('invoices.company_id', $companyID);
+            
             switch ($reportConfig['subscription_period']) {
                 case 'last_7_days':
-                    $this->db->where('invoices.date_created >= CURDATE() - INTERVAL 7 DAY');
+                    $startDate = (new DateTime())->modify('-7 days')->format('Y-m-d');
+                    $this->db->where('invoices.date_created >=', $startDate);
                     break;
                 case 'last_14_days':
-                    $this->db->where('invoices.date_created >= CURDATE() - INTERVAL 14 DAY');
+                    $startDate = (new DateTime())->modify('-14 days')->format('Y-m-d');
+                    $this->db->where('invoices.date_created >=', $startDate);
                     break;
                 case 'last_30_days':
-                    $this->db->where('invoices.date_created >= CURDATE() - INTERVAL 30 DAY');
+                    $startDate = (new DateTime())->modify('-30 days')->format('Y-m-d');
+                    $this->db->where('invoices.date_created >=', $startDate);
                     break;
                 case 'last_60_days':
-                    $this->db->where('invoices.date_created >= CURDATE() - INTERVAL 60 DAY');
+                    $startDate = (new DateTime())->modify('-60 days')->format('Y-m-d');
+                    $this->db->where('invoices.date_created >=', $startDate);
                     break;
             }
+
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
@@ -371,23 +570,45 @@ class Accounting_model extends MY_Model
             $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, invoices.job_name AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
             $this->db->from('invoices');
             $this->db->where('invoices.status !=', "Paid");
+            $this->db->where('invoices.status !=', "Draft");
             $this->db->where('invoices.status !=', "");
-            $this->db->where('invoices.due_date < CURDATE() - INTERVAL 15 DAY');
+            $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-15 days')));
             $this->db->where('invoices.company_id', $companyID);
+            
+            $today = new DateTime();
             switch ($reportConfig['filter_by']) {
                 case 'current_month':
-                    $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    $startDate = $today->format('Y-m-01');
+                    $endDate = $today->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_year':
-                    $this->db->where("YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $startDate = $today->format('Y-01-01');
+                    $endDate = $today->format('Y-12-31');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_quarter':
-                    $this->db->where("QUARTER(invoices.date_created) = QUARTER(CURDATE()) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $month = (int)$today->format('m');
+                    $year = $today->format('Y');
+                    $quarterStartMonth = floor(($month - 1) / 3) * 3 + 1;
+                    $startDate = (new DateTime("$year-$quarterStartMonth-01"))->format('Y-m-d');
+                    $endDate = (new DateTime("$year-$quarterStartMonth-01"))->modify('+2 months')->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_week':
-                    $this->db->where("WEEK(invoices.date_created, 1) = WEEK(CURDATE(), 1) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $startDate = (new DateTime())->modify('monday this week')->format('Y-m-d');
+                    $endDate = (new DateTime())->modify('sunday this week')->format('Y-m-d');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
             }
+
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
@@ -399,29 +620,103 @@ class Accounting_model extends MY_Model
         if ($reportType == 'unpaid_invoices') {
             $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, invoices.job_name AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
             $this->db->from('invoices');
-            $this->db->where('invoices.status', "Unpaid");
+            $this->db->where('invoices.status !=', "Paid");
+            $this->db->where('invoices.status !=', "Draft");
+            $this->db->where('invoices.status !=', "");
+            $this->db->where('invoices.due_date >=', date('Y-m-d', strtotime('-90 days')));
+            $this->db->where('invoices.due_date <=', date('Y-m-d'));            
             $this->db->where('invoices.company_id', $companyID);
+            
+            $today = new DateTime();
             switch ($reportConfig['filter_by']) {
                 case 'current_month':
-                    $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    $startDate = $today->format('Y-m-01');
+                    $endDate = $today->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_year':
-                    $this->db->where("YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $startDate = $today->format('Y-01-01');
+                    $endDate = $today->format('Y-12-31');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_quarter':
-                    $this->db->where("QUARTER(invoices.date_created) = QUARTER(CURDATE()) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $month = (int)$today->format('m');
+                    $year = $today->format('Y');
+                    $quarterStartMonth = floor(($month - 1) / 3) * 3 + 1;
+                    $startDate = (new DateTime("$year-$quarterStartMonth-01"))->format('Y-m-d');
+                    $endDate = (new DateTime("$year-$quarterStartMonth-01"))->modify('+2 months')->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_week':
-                    $this->db->where("WEEK(invoices.date_created, 1) = WEEK(CURDATE(), 1) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $startDate = (new DateTime())->modify('monday this week')->format('Y-m-d');
+                    $endDate = (new DateTime())->modify('sunday this week')->format('Y-m-d');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
             }
+
             $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
         }
-        
+  
+        // Get Collections data in Database
+        if ($reportType == 'collections') {
+            $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, invoices.job_name AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
+            $this->db->from('invoices');
+            $this->db->where('invoices.status', "Unpaid");
+            $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-90 days')));
+            $this->db->where('invoices.company_id', $companyID);
+            
+            $today = new DateTime();
+            switch ($reportConfig['filter_by']) {
+                case 'current_month':
+                    $startDate = $today->format('Y-m-01');
+                    $endDate = $today->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
+                    break;
+
+                case 'current_year':
+                    $startDate = $today->format('Y-01-01');
+                    $endDate = $today->format('Y-12-31');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
+                    break;
+
+                case 'current_quarter':
+                    $month = (int)$today->format('m');
+                    $year = $today->format('Y');
+                    $quarterStartMonth = floor(($month - 1) / 3) * 3 + 1;
+                    $startDate = (new DateTime("$year-$quarterStartMonth-01"))->format('Y-m-d');
+                    $endDate = (new DateTime("$year-$quarterStartMonth-01"))->modify('+2 months')->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
+                    break;
+
+                case 'current_week':
+                    $startDate = (new DateTime())->modify('monday this week')->format('Y-m-d');
+                    $endDate = (new DateTime())->modify('sunday this week')->format('Y-m-d');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
+                    break;
+            }
+
+            $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+            $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
+            $this->db->limit($reportConfig['page_size']);
+            $data = $this->db->get();
+            return $data->result();
+        }
+
         // Get Taskhub data in Database
         if ($reportType == 'taskhub') {
             $this->db->select('tasks.task_id AS id, tasks.company_id AS company_id, tasks.title AS task, tasks.status AS status, tasks.priority AS priority, tasks.date_due AS date_due, tasks.date_created AS date_created');
@@ -521,23 +816,41 @@ class Accounting_model extends MY_Model
             $this->db->where('invoices.status !=', 'Draft');
             $this->db->join('jobs', 'jobs.employee_id = users.id', 'left');
             $this->db->join('invoices', 'invoices.job_id = jobs.id', 'left');
+
+            $today = new DateTime();
             switch ($reportConfig['filter_by']) {
                 case 'current_month':
-                    $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    $startDate = $today->format('Y-m-01');
+                    $endDate = $today->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_year':
-                    $this->db->where("YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $startDate = $today->format('Y-01-01');
+                    $endDate = $today->format('Y-12-31');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_quarter':
-                    $this->db->where("QUARTER(invoices.date_created) = QUARTER(CURDATE()) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $month = (int)$today->format('m');
+                    $year = $today->format('Y');
+                    $quarterStartMonth = floor(($month - 1) / 3) * 3 + 1;
+                    $startDate = (new DateTime("$year-$quarterStartMonth-01"))->format('Y-m-d');
+                    $endDate = (new DateTime("$year-$quarterStartMonth-01"))->modify('+2 months')->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_week':
-                    $this->db->where("WEEK(invoices.date_created, 1) = WEEK(CURDATE(), 1) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
-                    break;
-                case 'current_day':
-                    $this->db->where("DATE(invoices.date_created) = CURDATE()");
+                    $startDate = (new DateTime())->modify('monday this week')->format('Y-m-d');
+                    $endDate = (new DateTime())->modify('sunday this week')->format('Y-m-d');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
             }
+
             $this->db->group_by('users.id');
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
@@ -550,50 +863,63 @@ class Accounting_model extends MY_Model
 
             switch ($reportConfig['filter_by']) {
                 case 'current_day':
-                    $filter_by1 = "AND ((DATE(jobs2.date_updated) = CURDATE()) 
-                                    OR (DATE(jobs3.date_updated) = CURDATE()) 
-                                    OR (DATE(jobs4.date_updated) = CURDATE()) 
-                                    OR (DATE(jobs5.date_updated) = CURDATE()) 
-                                    OR (DATE(jobs6.date_updated) = CURDATE()))";
-                    $filter_by2 = "AND DATE(tickets.updated_at) = CURDATE()";
+                    $currentDay = date('Y-m-d');
+                    $filter_by1 = "AND ((jobs2.date_updated >= '$currentDay 00:00:00' AND jobs2.date_updated <= '$currentDay 23:59:59') 
+                                    OR (jobs3.date_updated >= '$currentDay 00:00:00' AND jobs3.date_updated <= '$currentDay 23:59:59') 
+                                    OR (jobs4.date_updated >= '$currentDay 00:00:00' AND jobs4.date_updated <= '$currentDay 23:59:59') 
+                                    OR (jobs5.date_updated >= '$currentDay 00:00:00' AND jobs5.date_updated <= '$currentDay 23:59:59') 
+                                    OR (jobs6.date_updated >= '$currentDay 00:00:00' AND jobs6.date_updated <= '$currentDay 23:59:59'))";
+                    $filter_by2 = "AND tickets.updated_at >= '$currentDay 00:00:00' AND tickets.updated_at <= '$currentDay 23:59:59'";
                     break;
-
+            
                 case 'current_week':
-                    $filter_by1 = "AND ((YEARWEEK(jobs2.date_updated, 1) = YEARWEEK(CURDATE(), 1)) 
-                                    OR (YEARWEEK(jobs3.date_updated, 1) = YEARWEEK(CURDATE(), 1)) 
-                                    OR (YEARWEEK(jobs4.date_updated, 1) = YEARWEEK(CURDATE(), 1)) 
-                                    OR (YEARWEEK(jobs5.date_updated, 1) = YEARWEEK(CURDATE(), 1)) 
-                                    OR (YEARWEEK(jobs6.date_updated, 1) = YEARWEEK(CURDATE(), 1)))";
-                    $filter_by2 = "AND YEARWEEK(tickets.updated_at, 1) = YEARWEEK(CURDATE(), 1)";
+                    $startOfWeek = date('Y-m-d', strtotime('monday this week'));
+                    $endOfWeek = date('Y-m-d', strtotime('sunday this week'));
+                    $filter_by1 = "AND ((jobs2.date_updated >= '$startOfWeek 00:00:00' AND jobs2.date_updated <= '$endOfWeek 23:59:59') 
+                                    OR (jobs3.date_updated >= '$startOfWeek 00:00:00' AND jobs3.date_updated <= '$endOfWeek 23:59:59') 
+                                    OR (jobs4.date_updated >= '$startOfWeek 00:00:00' AND jobs4.date_updated <= '$endOfWeek 23:59:59') 
+                                    OR (jobs5.date_updated >= '$startOfWeek 00:00:00' AND jobs5.date_updated <= '$endOfWeek 23:59:59') 
+                                    OR (jobs6.date_updated >= '$startOfWeek 00:00:00' AND jobs6.date_updated <= '$endOfWeek 23:59:59'))";
+                    $filter_by2 = "AND tickets.updated_at >= '$startOfWeek 00:00:00' AND tickets.updated_at <= '$endOfWeek 23:59:59'";
                     break;
-
+            
                 case 'current_month':
-                    $filter_by1 = "AND ((YEAR(jobs2.date_updated) = YEAR(CURDATE()) AND MONTH(jobs2.date_updated) = MONTH(CURDATE())) 
-                                    OR (YEAR(jobs3.date_updated) = YEAR(CURDATE()) AND MONTH(jobs3.date_updated) = MONTH(CURDATE())) 
-                                    OR (YEAR(jobs4.date_updated) = YEAR(CURDATE()) AND MONTH(jobs4.date_updated) = MONTH(CURDATE())) 
-                                    OR (YEAR(jobs5.date_updated) = YEAR(CURDATE()) AND MONTH(jobs5.date_updated) = MONTH(CURDATE())) 
-                                    OR (YEAR(jobs6.date_updated) = YEAR(CURDATE()) AND MONTH(jobs6.date_updated) = MONTH(CURDATE())))";
-                    $filter_by2 = "AND YEAR(tickets.updated_at) = YEAR(CURDATE()) AND MONTH(tickets.updated_at) = MONTH(CURDATE())";
+                    $startOfMonth = date('Y-m-01');
+                    $endOfMonth = date('Y-m-t');
+                    $filter_by1 = "AND ((jobs2.date_updated >= '$startOfMonth 00:00:00' AND jobs2.date_updated <= '$endOfMonth 23:59:59') 
+                                    OR (jobs3.date_updated >= '$startOfMonth 00:00:00' AND jobs3.date_updated <= '$endOfMonth 23:59:59') 
+                                    OR (jobs4.date_updated >= '$startOfMonth 00:00:00' AND jobs4.date_updated <= '$endOfMonth 23:59:59') 
+                                    OR (jobs5.date_updated >= '$startOfMonth 00:00:00' AND jobs5.date_updated <= '$endOfMonth 23:59:59') 
+                                    OR (jobs6.date_updated >= '$startOfMonth 00:00:00' AND jobs6.date_updated <= '$endOfMonth 23:59:59'))";
+                    $filter_by2 = "AND tickets.updated_at >= '$startOfMonth 00:00:00' AND tickets.updated_at <= '$endOfMonth 23:59:59'";
                     break;
-
+            
                 case 'current_quarter':
-                    $filter_by1 = "AND ((YEAR(jobs2.date_updated) = YEAR(CURDATE()) AND QUARTER(jobs2.date_updated) = QUARTER(CURDATE())) 
-                                    OR (YEAR(jobs3.date_updated) = YEAR(CURDATE()) AND QUARTER(jobs3.date_updated) = QUARTER(CURDATE())) 
-                                    OR (YEAR(jobs4.date_updated) = YEAR(CURDATE()) AND QUARTER(jobs4.date_updated) = QUARTER(CURDATE())) 
-                                    OR (YEAR(jobs5.date_updated) = YEAR(CURDATE()) AND QUARTER(jobs5.date_updated) = QUARTER(CURDATE())) 
-                                    OR (YEAR(jobs6.date_updated) = YEAR(CURDATE()) AND QUARTER(jobs6.date_updated) = QUARTER(CURDATE())))";
-                    $filter_by2 = "AND YEAR(tickets.updated_at) = YEAR(CURDATE()) AND QUARTER(tickets.updated_at) = QUARTER(CURDATE())";
+                    $currentMonth = (int)date('n');
+                    $currentYear = (int)date('Y');
+                    $quarterStartMonth = floor(($currentMonth - 1) / 3) * 3 + 1;
+                    $quarterStart = date('Y-m-d', strtotime("$currentYear-$quarterStartMonth-01"));
+                    $quarterEnd = date('Y-m-t', strtotime("$currentYear-" . ($quarterStartMonth + 2) . "-01"));
+                    $filter_by1 = "AND ((jobs2.date_updated >= '$quarterStart 00:00:00' AND jobs2.date_updated <= '$quarterEnd 23:59:59') 
+                                    OR (jobs3.date_updated >= '$quarterStart 00:00:00' AND jobs3.date_updated <= '$quarterEnd 23:59:59') 
+                                    OR (jobs4.date_updated >= '$quarterStart 00:00:00' AND jobs4.date_updated <= '$quarterEnd 23:59:59') 
+                                    OR (jobs5.date_updated >= '$quarterStart 00:00:00' AND jobs5.date_updated <= '$quarterEnd 23:59:59') 
+                                    OR (jobs6.date_updated >= '$quarterStart 00:00:00' AND jobs6.date_updated <= '$quarterEnd 23:59:59'))";
+                    $filter_by2 = "AND tickets.updated_at >= '$quarterStart 00:00:00' AND tickets.updated_at <= '$quarterEnd 23:59:59'";
                     break;
-
+            
                 case 'current_year':
-                    $filter_by1 = "AND ((YEAR(jobs2.date_updated) = YEAR(CURDATE())) 
-                                    OR (YEAR(jobs3.date_updated) = YEAR(CURDATE())) 
-                                    OR (YEAR(jobs4.date_updated) = YEAR(CURDATE())) 
-                                    OR (YEAR(jobs5.date_updated) = YEAR(CURDATE())) 
-                                    OR (YEAR(jobs6.date_updated) = YEAR(CURDATE())))";
-                    $filter_by2 = "AND YEAR(tickets.updated_at) = YEAR(CURDATE())";
+                    $currentYear = date('Y');
+                    $yearStart = "$currentYear-01-01";
+                    $yearEnd = "$currentYear-12-31";
+                    $filter_by1 = "AND ((jobs2.date_updated >= '$yearStart 00:00:00' AND jobs2.date_updated <= '$yearEnd 23:59:59') 
+                                    OR (jobs3.date_updated >= '$yearStart 00:00:00' AND jobs3.date_updated <= '$yearEnd 23:59:59') 
+                                    OR (jobs4.date_updated >= '$yearStart 00:00:00' AND jobs4.date_updated <= '$yearEnd 23:59:59') 
+                                    OR (jobs5.date_updated >= '$yearStart 00:00:00' AND jobs5.date_updated <= '$yearEnd 23:59:59') 
+                                    OR (jobs6.date_updated >= '$yearStart 00:00:00' AND jobs6.date_updated <= '$yearEnd 23:59:59'))";
+                    $filter_by2 = "AND tickets.updated_at >= '$yearStart 00:00:00' AND tickets.updated_at <= '$yearEnd 23:59:59'";
                     break;
-            }
+            }            
 
             $orderBy = "ORDER BY $reportConfig[sort_by] $reportConfig[sort_order]";
             $limit = "LIMIT $reportConfig[page_size]";
@@ -658,7 +984,6 @@ class Accounting_model extends MY_Model
 
             return $query->result();
         }
-
         
         // Get Recent Customers data in Database
         if ($reportType == 'recent_customers') {
@@ -677,12 +1002,38 @@ class Accounting_model extends MY_Model
             $this->db->select('jobs.id AS id, jobs.company_id AS company_id, jobs.job_number AS number, jobs.job_type AS type, jobs.job_description AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, jobs.status AS status, jobs.date_created AS date_created, SUM(job_items.cost) AS job_amount');
             $this->db->from('jobs');
             $this->db->where('jobs.company_id', $companyID);
+           
+            $today = new DateTime();
             switch ($reportConfig['filter_by']) {
                 case 'current_month':
-                    $this->db->where("DATE_FORMAT(jobs.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    $startDate = $today->format('Y-m-01');
+                    $endDate = $today->format('Y-m-t');
+                    $this->db->where('jobs.date_created >=', $startDate);
+                    $this->db->where('jobs.date_created <=', $endDate);
                     break;
+
                 case 'current_year':
-                    $this->db->where("YEAR(jobs.date_created) = YEAR(CURDATE())");
+                    $startDate = $today->format('Y-01-01');
+                    $endDate = $today->format('Y-12-31');
+                    $this->db->where('jobs.date_created >=', $startDate);
+                    $this->db->where('jobs.date_created <=', $endDate);
+                    break;
+
+                case 'current_quarter':
+                    $month = (int)$today->format('m');
+                    $year = $today->format('Y');
+                    $quarterStartMonth = floor(($month - 1) / 3) * 3 + 1;
+                    $startDate = (new DateTime("$year-$quarterStartMonth-01"))->format('Y-m-d');
+                    $endDate = (new DateTime("$year-$quarterStartMonth-01"))->modify('+2 months')->format('Y-m-t');
+                    $this->db->where('jobs.date_created >=', $startDate);
+                    $this->db->where('jobs.date_created <=', $endDate);
+                    break;
+
+                case 'current_week':
+                    $startDate = (new DateTime())->modify('monday this week')->format('Y-m-d');
+                    $endDate = (new DateTime())->modify('sunday this week')->format('Y-m-d');
+                    $this->db->where('jobs.date_created >=', $startDate);
+                    $this->db->where('jobs.date_created <=', $endDate);
                     break;
             }
 
@@ -705,90 +1056,74 @@ class Accounting_model extends MY_Model
             $this->db->where('invoices.company_id', $companyID);
             $this->db->where('invoices.status != ', "Draft");
             $this->db->where('invoices.status != ', "");
+            
+            $today = new DateTime();
             switch ($reportConfig['filter_by']) {
                 case 'current_month':
-                    $this->db->where("DATE_FORMAT(invoices.date_created, '%Y-%m') = DATE_FORMAT(CURDATE(), '%Y-%m')");
+                    $startDate = $today->format('Y-m-01');
+                    $endDate = $today->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_year':
-                    $this->db->where("YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $startDate = $today->format('Y-01-01');
+                    $endDate = $today->format('Y-12-31');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_quarter':
-                    $this->db->where("QUARTER(invoices.date_created) = QUARTER(CURDATE()) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $month = (int)$today->format('m');
+                    $year = $today->format('Y');
+                    $quarterStartMonth = floor(($month - 1) / 3) * 3 + 1;
+                    $startDate = (new DateTime("$year-$quarterStartMonth-01"))->format('Y-m-d');
+                    $endDate = (new DateTime("$year-$quarterStartMonth-01"))->modify('+2 months')->format('Y-m-t');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_week':
-                    $this->db->where("WEEK(invoices.date_created, 1) = WEEK(CURDATE(), 1) AND YEAR(invoices.date_created) = YEAR(CURDATE())");
+                    $startDate = (new DateTime())->modify('monday this week')->format('Y-m-d');
+                    $endDate = (new DateTime())->modify('sunday this week')->format('Y-m-d');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <=', $endDate);
                     break;
+
                 case 'current_day':
-                    $this->db->where("DATE(invoices.date_created) = CURDATE()");
+                    $startDate = $today->format('Y-m-d');
+                    $this->db->where('invoices.date_created >=', $startDate);
+                    $this->db->where('invoices.date_created <', $today->modify('+1 day')->format('Y-m-d'));
                     break;
-                case 'jan':
-                    $this->db->where("MONTH(invoices.date_created)", 1);
-                    $this->db->where("YEAR(invoices.date_created)", 2024);
-                    break;
-                case 'feb':
-                    $this->db->where("MONTH(invoices.date_created)", 2);
-                    $this->db->where("YEAR(invoices.date_created)", 2024);
-                    break;
-                case 'mar':
-                    $this->db->where("MONTH(invoices.date_created)", 3);
-                    $this->db->where("YEAR(invoices.date_created)", 2024);
-                    break;
-                case 'apr':
-                    $this->db->where("MONTH(invoices.date_created)", 4);
-                    $this->db->where("YEAR(invoices.date_created)", 2024);
-                    break;
-                case 'may':
-                    $this->db->where("MONTH(invoices.date_created)", 5);
-                    $this->db->where("YEAR(invoices.date_created)", 2024);
-                    break;
-                case 'jun':
-                    $this->db->where("MONTH(invoices.date_created)", 6);
-                    $this->db->where("YEAR(invoices.date_created)", 2024);
-                    break;
-                case 'jul':
-                    $this->db->where("MONTH(invoices.date_created)", 7);
-                    $this->db->where("YEAR(invoices.date_created)", 2024);
-                    break;
-                case 'aug':
-                    $this->db->where("MONTH(invoices.date_created)", 8);
-                    $this->db->where("YEAR(invoices.date_created)", 2024);
-                    break;
-                case 'sep':
-                    $this->db->where("MONTH(invoices.date_created)", 9);
-                    $this->db->where("YEAR(invoices.date_created)", 2024);
-                    break;
-                case 'oct':
-                    $this->db->where("MONTH(invoices.date_created)", 10);
-                    $this->db->where("YEAR(invoices.date_created)", 2024);
-                    break;
-                case 'nov':
-                    $this->db->where("MONTH(invoices.date_created)", 11);
-                    $this->db->where("YEAR(invoices.date_created)", 2024);
-                    break;
-                case 'dec':
-                    $this->db->where("MONTH(invoices.date_created)", 12);
-                    $this->db->where("YEAR(invoices.date_created)", 2024);
+
+                default:
+                    $monthMapping = [
+                        'jan' => 1, 'feb' => 2, 'mar' => 3, 'apr' => 4,
+                        'may' => 5, 'jun' => 6, 'jul' => 7, 'aug' => 8,
+                        'sep' => 9, 'oct' => 10, 'nov' => 11, 'dec' => 12,
+                    ];
+
+                    if (isset($monthMapping[$reportConfig['filter_by']])) {
+                        $month = $monthMapping[$reportConfig['filter_by']];
+                        $year = $today->format('Y');
+                        $startDate = (new DateTime("$year-$month-01"))->format('Y-m-d');
+                        $endDate = (new DateTime("$year-$month-01"))->format('Y-m-t');
+                        $this->db->where('invoices.date_created >=', $startDate);
+                        $this->db->where('invoices.date_created <=', $endDate);
+                    }
                     break;
             }
+
 
             if (!empty($reportConfig['status_filter'])) {
                 $this->db->where('invoices.status', $reportConfig['status_filter']);
             }
+
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
             $this->db->limit($reportConfig['page_size']);
             $data = $this->db->get();
             return $data->result();
         }
-
-
-
-
-
-
-
-
-
-
 
 
 

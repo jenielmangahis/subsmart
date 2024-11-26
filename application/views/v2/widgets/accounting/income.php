@@ -188,7 +188,7 @@ $(function(){
             data: {filter_date_from:filter_date_from,filter_date_to:filter_date_to},
             dataType: 'json',
             success: function (data) {
-                $('#income-widget-open-invoices').text(data.total_unpaid_invoices);
+                $('#income-widget-open-invoices').text(data.total_open_invoices);
                 $('#income-widget-overdue').text(data.total_overdue_invoices);
                 $('#income-widget-paid-invoices').text('$' + data.total_amount_paid_invoices);
                 $('#income-widget-subscriptions').text('$' + data.total_amount_subscriptions);

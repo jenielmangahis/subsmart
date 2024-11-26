@@ -104,7 +104,9 @@ table.dataTable.no-footer {
                                     <i class='bx bx-calendar-event'></i>
                                 </div>
                             </td>
-                            <td class="fw-bold nsm-text-primary"><?php echo $event->event_number; ?></td>
+                            <td class="fw-bold nsm-text-primary">
+                                <a class="btn-view-event" href="javascript:void(0);" data-id="<?= $event->id; ?>" data-event-number="<?= $event->event_number; ?>"><?php echo $event->event_number; ?></a>
+                            </td>
                             <td><?= date("m/d/Y", strtotime($event->start_date)); ?> - <?= date("m/d/Y", strtotime($event->end_date)); ?></td>
                             <td>
                                 <div class="nsm-profile me-3" style="background-color:<?= $event->event_color; ?>; width: 40px;"></div>

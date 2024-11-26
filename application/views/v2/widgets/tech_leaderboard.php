@@ -30,20 +30,20 @@
             <div class="row mb-4 mt-2">
                 <div class="col-4">
                     <select class="nsm-field form-select" name="filter_date" id="tech-leader-board-filter-date">  
-                        <option value="all" selected="">All</option>                                              
+                        <option value="all">All</option>                                              
                         <option value="today">Today</option>                        
                         <!-- <option value="custom">Custom</option> -->
                         <option value="this-week" <?=$date === 'this-week' ? 'selected' : ''?>>This week</option>
                         <option value="this-month">This month</option>
                         <option value="this-quarter">This quarter</option>
-                        <option value="this-year">This year</option>
+                        <option value="this-year" selected="">This year</option>
                     </select>
                 </div>
                 <div class="col-4">
                     <input type="date" id="tech-leaderboard-filter-from" class="nsm-field form-control date" disable value="<?= date("Y-01-01"); ?>" />
                 </div>
                 <div class="col-4">
-                    <input type="date" id="tech-leaderboard-filter-to" class="nsm-field form-control date" disable value="<?= date("Y-12-31"); ?>" required>
+                    <input type="date" id="tech-leaderboard-filter-to" class="nsm-field form-control date" disable value="<?= date("Y-m-d"); ?>" required>
                 </div>
             </div>     
             <div id="user_tech_leaderboard"></div>
@@ -107,7 +107,7 @@
                     var date = new Date();
 
                     var from_date = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-                    var to_date = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
+                    var to_date   = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();                    
                 break;
                 default :
                     var from_date = '';

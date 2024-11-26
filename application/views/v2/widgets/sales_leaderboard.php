@@ -46,7 +46,7 @@ endif;
                     <input type="date" id="sales-leaderboard-filter-from" class="nsm-field form-control date" value="<?= date("Y-01-01"); ?>" />
                 </div>
                 <div class="col-4">
-                    <input type="date" id="sales-leaderboard-filter-to" class="nsm-field form-control date" value="<?= date("Y-12-31"); ?>" required>
+                    <input type="date" id="sales-leaderboard-filter-to" class="nsm-field form-control date" value="<?= date("Y-m-d"); ?>" required>
                 </div>
             </div>            
             <div id="sales_leaderboard_v2"></div>
@@ -88,7 +88,7 @@ endif;
                     var to_date = new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
                     from_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-                    to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
+                    to_date   = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
                 break;
                 case 'this-quarter' :
                     var date = new Date();
@@ -117,7 +117,7 @@ endif;
                     var date = new Date();
 
                     var from_date = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-                    var to_date = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
+                    var to_date   = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
                 break;
                 default :
                     var from_date = '';
