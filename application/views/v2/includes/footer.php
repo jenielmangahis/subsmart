@@ -1296,8 +1296,7 @@ function filterOpenInvoicesThumbnailGraph(open_invoices) {
     OpenInvoicesGraph.update();
 }
 
-
-function filterPastDueThumbnailGraph(past_due) {
+function filterPastDueThumbnailGraphBackup(past_due) {
     var amountsByMonth = new Array(12).fill(0);
 
     for (var x = 0; x < past_due.length; x++) {
@@ -1311,6 +1310,49 @@ function filterPastDueThumbnailGraph(past_due) {
     }
 
     pastDueGraph.data.datasets[0].data = amountsByMonth;
+    pastDueGraph.update();
+}
+
+function filterPastDueThumbnailGraph(past_due) {
+    var currentDate    = new Date();
+    var month_index    = currentDate.getMonth() + 1;
+    var monthlyAmounts = new Array(month_index).fill(0);    
+    
+    for (var x = 0; x < past_due.length; x++) {
+
+        var dueDate = past_due[x].due_date;
+
+        var insA = new Date(past_due[x].due_date);
+        if( insA.getFullYear() < currentDate.getFullYear() ){    
+            var installDate = '2024-01-01';
+        }else if( insA > currentDate ){        
+            var installDate = moment(currentDate).format('YYYY-MM-DD');
+        }else{
+            var installDate = past_due[x].due_date;
+        }                    
+
+        if (dueDate) {
+            var due = new Date(dueDate);
+            var month = due.getMonth();
+            monthlyAmounts[month] += parseFloat(past_due[x].balance);
+        }
+    }    
+
+    var start = 0;
+    var prev_amount = 0;
+    for (i = 0; i < monthlyAmounts.length; ++i) {
+        if( start == 0 ){
+            var amount = monthlyAmounts[i];
+        }else{
+            var amount = monthlyAmounts[i] + prev_amount;
+        }
+
+        prev_amount = amount;
+        monthlyAmounts[i] = amount;                
+        start++;
+    }    
+
+    pastDueGraph.data.datasets[0].data = monthlyAmounts;
     pastDueGraph.update();
 }
 
