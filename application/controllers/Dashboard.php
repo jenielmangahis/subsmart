@@ -985,7 +985,8 @@ class Dashboard extends Widgets
 
                 break;
             case 'unpaid_invoices':
-                $unpaid_query = [
+                
+                /*$unpaid_query = [
                     'where' => ['invoices.company_id' => logged('company_id'),  'DATE(invoices.date_created) >=' => date('Y-m-d', strtotime($date_from)),
                     'DATE(invoices.date_created) <=' => date('Y-m-d', strtotime($date_to)), 'invoices.status =' => 'Unpaid'],
                     'table' => 'invoices',
@@ -998,7 +999,29 @@ class Dashboard extends Widgets
                     ],
                     'select' => 'invoices.*', 'payment_records.invoice_amount AS total_amount_paid',
                 ];
-                $resultInvoice = $this->general->get_data_with_param($unpaid_query);
+                $resultInvoice = $this->general->get_data_with_param($unpaid_query);*/
+
+                $company_id = logged('company_id');
+
+                $this->db->from('invoices');
+                $this->db->join('payment_records', 'payment_records.invoice_id = invoices.id', 'left');
+                $this->db->select('invoices.*', 'payment_records.invoice_amount AS total_amount_paid');
+                $this->db->where('invoices.company_id', $company_id);
+
+                if($date_from != '0000-00-00  00:00:00' && $date_to != "") {
+                    $this->db->where('invoices.date_created >=', $date_from);
+                    $this->db->where('invoices.date_created <=', $date_to);
+                }
+
+                $this->db->where('invoices.due_date >=',date('Y-m-d', strtotime('-90 days')));
+                $this->db->where('invoices.due_date <',date('Y-m-d'));
+
+                $this->db->where('invoices.status !=', "Paid");
+                $this->db->where('invoices.status !=', "Draft");
+                $this->db->where('invoices.status !=', "");
+                
+                $query = $this->db->get();
+                $resultInvoice = $query->result();                
 
                 $this->output->set_output(json_encode(['first' => null, 'second' => null, 'unpaid' => $resultInvoice]));
 
@@ -1715,7 +1738,9 @@ class Dashboard extends Widgets
         $company_id = logged('company_id');
         // $unpaid = $CI->Payment_records_model->getTotalInvoiceAmountByCompanyId($company_id);
 
-        $unpaid = $CI->invoice_model->getUnpaidInvoicesByCompanyId($company_id);
+        //$unpaid = $CI->invoice_model->getUnpaidInvoicesByCompanyId($company_id);
+        $unpaid = $CI->invoice_model->getUnpaidInvoicesByCompanyIdV2($company_id);
+        
         $data_arr = ['Success' => true, 'unpaid_invoices' => $unpaid];
         exit(json_encode($data_arr));
     }

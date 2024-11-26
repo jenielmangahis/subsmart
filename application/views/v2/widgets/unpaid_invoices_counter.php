@@ -3,8 +3,6 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
 }
 ?>
 
-
-
 <div class="<?php echo $class; ?>" data-id="<?php echo $id; ?>" id="thumbnail_<?php echo $id; ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
@@ -31,11 +29,8 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                     <i class='bx bx-fw bx-dots-vertical-rounded'></i>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#" onclick="removeThumbnail('<?php echo $id; ?>');">Remove
-                            Thumbnail</a></li>
-
+                    <li><a class="dropdown-item" href="#" onclick="removeThumbnail('<?php echo $id; ?>');">Remove Thumbnail</a></li>
                     <li>
-
                         <div class="form-check form-switch"
                             style="display: flex; align-items: center;gap: 5px;padding-left: 10px;">
                             <input class="form-check-input ms-0" type="checkbox"
@@ -43,7 +38,6 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                                 <?php echo $isListView ? 'checked' : ''; ?> data-addon-delete-modal="open" data-id="WiZ"
                                 data-name="WiZ" style="margin: 0" />
                             <span class="content-title d-block mb-1">Show Graph </span>
-
                         </div>
                     </li>
                 </ul>
@@ -75,7 +69,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                 <div class="text-start summary-report-body">
                     <label for="">Total Unpaid</label>
                     <h1 id="first_content_<?php echo $id; ?>">
-                        $<?php echo get_invoice_amount('balance'); ?></h1>
+                        $<?php echo get_invoice_amount('unpaid_thumb_widget'); ?></h1>
                 </div>
             </div>
         </div>

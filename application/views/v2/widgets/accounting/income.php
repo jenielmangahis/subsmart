@@ -39,7 +39,7 @@ endif;
                     <option value="this-week" <?=$date === 'this-week' ? 'selected' : ''?>>This week</option>
                     <option value="this-month">This month</option>
                     <option value="this-quarter">This quarter</option>
-                    <option value="this-year" selected="">This year</option>
+                    <option value="this-year" selected="">All time</option>
                 </select>
             </div>
             <div class="col-4">
