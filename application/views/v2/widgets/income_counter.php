@@ -69,8 +69,8 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
         <div class="row ">
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
-                    <label for="">Total Deposits</label>
-                    <h1 id="first_content_<?php echo $id; ?>">$ <?php echo number_format($deposits, 2); ?></h1>
+                    <label for="">Total Income</label>
+                    <h1 id="first_content_<?php echo $id; ?>">$ <?php echo number_format($deposits->total, 2); ?></h1>
 
                 </div>
             </div>

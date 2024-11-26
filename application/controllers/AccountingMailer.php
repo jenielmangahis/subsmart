@@ -197,6 +197,7 @@ class AccountingMailer extends MY_Controller
             "past_due_invoices",
             "overdue_invoices",
             "unpaid_invoices",
+            "collections",
             "taskhub",
             "open_estimates",
             "timesheet",

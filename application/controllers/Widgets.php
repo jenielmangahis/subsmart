@@ -1092,18 +1092,16 @@ class Widgets extends MY_Controller
         $date_to   = date("Y-m-d", strtotime(post('sales_leaderboard_date_to')));
 
         $date_range = ['from' => post('filter_date_from'), 'to' => post('filter_date_to')];
-        $unpaidInvoices    = $this->Invoice_model->getCompanyUnpaidInvoices($cid, $date_range);
+        $openInvoices    = $this->Invoice_model->getCompanyOpenInvoices($cid, $date_range);
         $overDueInvoices   = $this->Invoice_model->getCompanyOverDueInvoices($cid, $date_range);
         $totalPaidInvoices = $this->Invoice_model->widgetCompanyTotalAmountPaidInvoices($cid, $date_range);
         
         $subscriptions     = $this->AcsProfile_model->widgetCompanyTotalSubscriptions($cid, $date_range);
 
-        $totalUnpaidInvoices  = count($unpaidInvoices);
-        $totalOverdueInvoices = count($overDueInvoices);
 
         $return = [
-            'total_unpaid_invoices' => $totalUnpaidInvoices,
-            'total_overdue_invoices' => $totalOverdueInvoices,
+            'total_open_invoices' =>  number_format($openInvoices->total, 0, ".", ","),
+            'total_overdue_invoices' => number_format($overDueInvoices->total, 0, ".", ","),
             'total_amount_paid_invoices' => number_format($totalPaidInvoices->total_paid, 2, ".", ",") ,
             'total_amount_subscriptions' => number_format($subscriptions->total_subscription, 2, ".", ",")
         ];

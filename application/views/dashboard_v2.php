@@ -932,7 +932,10 @@ function collectionGraphThumbnail() {
     fetch('<?php echo base_url('Dashboard/collections_graph'); ?>', {}).then(response => response.json())
         .then(
             response => {
-                var monthlyAmounts = new Array(12).fill(0);
+                var currentDate    = new Date();
+                var month_index    = currentDate.getMonth() + 1;
+                var monthlyAmounts = new Array(month_index).fill(0);
+
 
                 var {
                     success,
@@ -942,15 +945,40 @@ function collectionGraphThumbnail() {
 
                 if (collection) {
                     for (var x = 0; x < collection.length; x++) {
-                        var dueDate = collection[x].created_at;
-                        var total_amount_paid = collection[x].total_amount_paid ? collection[x]
-                            .total_amount_paid : 0
-                        if (dueDate) {
-                            var due = new Date(dueDate);
-                            var month = due.getMonth();
-                            totalCollection += 1;
-                            monthlyAmounts[month] += 1;
+
+                        var insA          = new Date(collection[x].date_created);
+                        if( insA.getFullYear() < currentDate.getFullYear() ){    
+                            var installDate = '2024-01-01';
+                        }else if( insA > currentDate ){        
+                            var installDate = moment(currentDate).format('YYYY-MM-DD');
+                        }else{
+                            var installDate = collection[x].date_created;
                         }
+
+                        if (installDate) {
+                            var ins = new Date(installDate);
+                            var month = ins.getMonth();             
+                        
+                            if( isNaN(parseFloat(collection[x].grand_total)) ){
+                                monthlyAmounts[month] += 0;
+                            }else{
+                                monthlyAmounts[month] += parseFloat(collection[x].grand_total);
+                            }
+                        }
+                    }
+
+                    var start = 0;
+                    var prev_amount = 0;
+                    for (i = 0; i < monthlyAmounts.length; ++i) {
+                        if( start == 0 ){
+                            var amount = monthlyAmounts[i];
+                        }else{
+                            var amount = monthlyAmounts[i] + prev_amount;
+                        }
+
+                        prev_amount = amount;
+                        monthlyAmounts[i] = amount;                
+                        start++;
                     }
                 }
 
@@ -997,8 +1025,9 @@ subscriptionThumbnail();
 function subscriptionThumbnail(){
     fetch('<?php echo base_url('Dashboard/income_subscription'); ?>', {}).then(response => response.json()).then(
     response => {
-        var monthlyAmounts = new Array(12).fill(0);
-
+        var currentDate    = new Date();
+        var month_index    = currentDate.getMonth() + 1;
+        var monthlyAmounts = new Array(month_index).fill(0);
         var {
             success,
             mmr
@@ -1014,23 +1043,34 @@ function subscriptionThumbnail(){
                     var installDate = '2024-01-01';
                 }else{
                     //var installDate = mmr[x].bill_end_date;
-                    var currentYear  = new Date().getFullYear();
-                    var insA     = new Date(mmr[x].bill_end_date);
-                    var insAYear = insA.getFullYear();
 
-                    if( insAYear < currentYear ){                        
+                    var insA          = new Date(mmr[x].bill_end_date);
+            
+                    if( insA.getFullYear() < currentDate.getFullYear() ){    
                         var installDate = '2024-01-01';
-                    }else if( insAYear > currentYear ){
-                        var today = new Date();                                     
-                        var installDate = moment(today).format('YYYY-MM-DD');
+                    }else if( insA > currentDate ){        
+                        var installDate = moment(currentDate).format('YYYY-MM-DD');
                     }else{
                         var installDate = mmr[x].bill_end_date;
                     }
+
+                    // var currentYear  = new Date().getFullYear();
+                    // var insA     = new Date(mmr[x].bill_end_date);
+                    // var insAYear = insA.getFullYear();
+
+                    // if( insAYear < currentYear ){                        
+                    //     var installDate = '2024-01-01';
+                    // }else if( insAYear > currentYear ){
+                    //     var today = new Date();                                     
+                    //     var installDate = moment(today).format('YYYY-MM-DD');
+                    // }else{
+                    //     var installDate = mmr[x].bill_end_date;
+                    // }
                 }
                 
                 if (installDate) {
                     var ins = new Date(installDate);
-                    var month = ins.getMonth();                    
+                    var month = ins.getMonth();             
                     if (!status.includes(mmr[x].status)) {
                         status.push(mmr[x].status);
                     }
@@ -1039,17 +1079,8 @@ function subscriptionThumbnail(){
                     }else{
                         monthlyAmounts[month] += parseFloat(mmr[x].mmr);
                     }
-
-                    // if( month == 11 ){
-                    //     console.log('install date ' + installDate);
-                    //     console.log('installDate', installDate);
-                    //     console.log('month', month);
-                    //     console.log('mmr', mmr[x].mmr);
-                    // }   
                 }
             }
-            
-            //console.log('monthlyAmounts', monthlyAmounts);
 
             var start = 0;
             var prev_amount = 0;
@@ -1617,7 +1648,9 @@ incomeGraphThumbnail()
 function incomeGraphThumbnail() {
     fetch('<?php echo base_url('Dashboard/income_thumbnail_graph'); ?>', {}).then(response => response.json()).then(
         response => {
-            var monthlyAmounts = new Array(12).fill(0);
+            var currentDate    = new Date();
+            var month_index    = currentDate.getMonth() + 1;
+            var monthlyAmounts = new Array(month_index).fill(0);
 
             var {
                 success,
@@ -1627,12 +1660,39 @@ function incomeGraphThumbnail() {
 
             if (income) {
                 for (var x = 0; x < income.length; x++) {
-                    var payment_date = income[x].date_created;
-                    if (payment_date) {
-                        var due = new Date(payment_date);
-                        var month = due.getMonth();
-                        monthlyAmounts[month] += parseFloat(income[x].total);
+                    var insA          = new Date(income[x].date_created);
+                    if( insA.getFullYear() < currentDate.getFullYear() ){    
+                        var installDate = '2024-01-01';
+                    }else if( insA > currentDate ){        
+                        var installDate = moment(currentDate).format('YYYY-MM-DD');
+                    }else{
+                        var installDate = income[x].date_created;
                     }
+
+                    if (installDate) {
+                        var ins = new Date(installDate);
+                        var month = ins.getMonth();             
+                    
+                        if( isNaN(parseFloat(income[x].grand_total)) ){
+                            monthlyAmounts[month] += 0;
+                        }else{
+                            monthlyAmounts[month] += parseFloat(income[x].grand_total);
+                        }
+                    }
+                }
+
+                var start = 0;
+                var prev_amount = 0;
+                for (i = 0; i < monthlyAmounts.length; ++i) {
+                    if( start == 0 ){
+                        var amount = monthlyAmounts[i];
+                    }else{
+                        var amount = monthlyAmounts[i] + prev_amount;
+                    }
+
+                    prev_amount = amount;
+                    monthlyAmounts[i] = amount;                
+                    start++;
                 }
             }
 

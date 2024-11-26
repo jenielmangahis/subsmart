@@ -48,7 +48,7 @@ endif;
                             <i class='bx bx-box'></i>
                         </div>
                         <div class="col-12 col-md-8 text-center text-md-start d-flex flex-column justify-content-center">
-                            <h3 id="invoice_amount"></h3>
+                            <h3 id="invoice_amount_stats"></h3>
                             <span>Invoice Amount</span>
                         </div>
                     </div>

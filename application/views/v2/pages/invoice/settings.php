@@ -108,7 +108,7 @@
                                                 <div class="input-group mb-3">
                                                 <select class="nsm-field form-select" name="invoice_template">
                                                     <option value="1" <?php echo $setting->invoice_template == 1 ? 'selected' : ''; ?>>Standard</option>
-                                                    <option value="2" <?php echo $setting->invoice_template == 2 ? 'selected' : ''; ?>>Mailing</option>
+                                                    <!-- <option value="2" <?php echo $setting->invoice_template == 2 ? 'selected' : ''; ?>>Mailing</option> -->
                                                     <option value="3" <?php echo $setting->invoice_template == 3 ? 'selected' : ''; ?>>Mobile</option>
                                                 </select>
                                                 </div>

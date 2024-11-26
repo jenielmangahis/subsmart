@@ -15,7 +15,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
                         </div>
                         <a role="button" class=" btn-sm m-0 me-2" href="customer/group"
                             style="color:#6ba77ced !important ">
-                            Customer Groups
+                            Active Customer Groups
                         </a>
                     </div>
                 </div>
