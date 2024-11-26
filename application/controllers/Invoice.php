@@ -347,8 +347,8 @@ class Invoice extends MY_Controller
     }
 
     public function standard_invoice_template(){
-    $this->load->view('v2/pages/invoice/standard_invoice_template');
-   }
+        $this->load->view('v2/pages/invoice/standard_invoice_template');
+    }
     public function estimateConversion($id)
     {
         
@@ -1013,7 +1013,7 @@ class Invoice extends MY_Controller
             $this->page_data['page_title'] = "Invoices & Payments";
             $this->page_data['page']->title = 'Invoices & Payments';
             $this->page_data['page']->parent = 'Sales';
-            $this->load->view('invoice/invoice_edit', $this->page_data);
+            $this->load->view('v2/pages/invoice/invoice_edit', $this->page_data);
         }else{
             redirect('invoice');
         } 
@@ -1158,7 +1158,26 @@ class Invoice extends MY_Controller
 
     public function ajax_update_invoice()
     {
-        $id = $this->input->post('invoiceDataID');
+        $is_success = 0;
+        $msg = 'Cannot find data';
+
+        $id   = $this->input->post('invoiceDataID');
+        $cid  = logged('company_id');
+        $post = $this->input->post();
+        $objInvoice = $this->invoice_model->getinvoice($this->input->post('invoiceDataID'));
+
+        $upload_path = "./uploads/invoice/attachments/".$cid."/";        
+        if (!file_exists($upload_path)) {
+            mkdir($upload_path, 0777, true);
+        }
+
+        if( $_FILES['attachment-file'] && $_FILES['attachment-file']['tmp_name'] != '' ){
+            $tmp_name   = $_FILES['attachment-file']['tmp_name'];
+            $extension  = strtolower(end(explode('.',$_FILES['attachment-file']['name'])));
+            $attachment = "attachment_" . basename($_FILES["attachment-file"]["name"]);
+            $file = $upload_path . $attachment;
+            move_uploaded_file($tmp_name, $file);
+        }
 
         $update_data = array(
             'id'                        => $this->input->post('invoiceDataID'),//
@@ -1171,7 +1190,7 @@ class Invoice extends MY_Controller
             'due_date'                  => $this->input->post('due_date'),//
             'status'                    => $this->input->post('status'),//
             'customer_email'            => $this->input->post('customer_email'),//
-            'online_payments'           => $this->input->post('online_payments'),
+            //'online_payments'           => $this->input->post('online_payments'),
             'billing_address'           => $this->input->post('billing_address'),//
             'shipping_to_address'       => $this->input->post('shipping_to_address'),
             'ship_via'                  => $this->input->post('ship_via'),//
@@ -1179,9 +1198,9 @@ class Invoice extends MY_Controller
             'tracking_number'           => $this->input->post('tracking_number'),//
             'terms'                     => $this->input->post('terms'),//
             'location_scale'            => $this->input->post('location_scale'),//
-            'message_on_invoice'        => $this->input->post('message_on_invoice'),
-            'message_on_statement'      => $this->input->post('message_on_statement'),
-            'job_number'                => $this->input->post('job_number'), //to add on database
+            //'message_on_invoice'        => $this->input->post('message_on_invoice'),
+            //'message_on_statement'      => $this->input->post('message_on_statement'),
+            //'job_number'                => $this->input->post('job_number'), //to add on database
             // 'attachments'            => $this->input->post('attachments'),
             'tags'                      => $this->input->post('tags'),//
             // 'total_due'              => $this->input->post('total_due'),
@@ -1195,7 +1214,7 @@ class Invoice extends MY_Controller
             // 'is_recurring'           => $this->input->post('is_recurring'),
             // 'invoice_totals'         => $this->input->post('invoice_totals'),
             'phone'                     => $this->input->post('phone'),
-            'payment_schedule'          => $this->input->post('payment_schedule'),
+            //'payment_schedule'          => $this->input->post('payment_schedule'),
             'subtotal'                  => $this->input->post('subtotal'),
             'taxes'                     => $this->input->post('taxes'),
             'adjustment_name'           => $this->input->post('adjustment_name'),
@@ -1206,9 +1225,8 @@ class Invoice extends MY_Controller
             'grand_total'               => $this->input->post('grand_total'),
             'date_updated'              => date("Y-m-d H:i:s"),
         );
-        $addQuery = $this->invoice_model->update_invoice_data($update_data);
-        $objInvoice = $this->invoice_model->getinvoice($this->input->post('invoiceDataID'));
 
+        $addQuery   = $this->invoice_model->update_invoice_data($update_data);
         customerAuditLog(logged('id'), $this->input->post('customer_id'), $this->input->post('invoiceDataID'), 'Invoice', 'Updated invoice #'.$objInvoice->invoice_number);
 
         $delete2 = $this->invoice_model->delete_items($id);
@@ -1231,13 +1249,15 @@ class Invoice extends MY_Controller
             $i++;
         }
 
-        if (!is_null($this->input->get('json', TRUE))) {
-            header('content-type: application/json');
-            exit(json_encode(['id' => $addQuery]));
-        } else {
-            // redirect('accounting/invoices');
-            redirect('invoice');
-        }
+        $is_success = 1;
+        $msg = '';
+
+        $return = [
+            'is_success' => $is_success,
+            'msg' => $msg
+        ];
+
+        echo json_encode($return);
     }
 
     public function edit($id)
@@ -2704,6 +2724,7 @@ class Invoice extends MY_Controller
                 mkdir($attachmentFolderPath, 0777, true);
             }
 
+            $attachment_file = '';
             if(isset($_FILES['attachment_file']) && $_FILES['attachment_file']['tmp_name'] != '') {
                 $tmp_name  = $_FILES['attachment_file']['tmp_name'];
                 $extension = strtolower(end(explode('.',$_FILES['attachment_file']['name'])));
@@ -2727,21 +2748,21 @@ class Invoice extends MY_Controller
                 'due_date'                  => date("Y-m-d",strtotime($post['due_date'])),
                 'customer_email'            => $customer->email,
                 'online_payments'           => '',
-                'billing_address'           => $customer->mail_add,
-                'shipping_to_address'       => $customer->mail_add,
-                'ship_via'                  => '',
-                'shipping_date'             => '',
+                'billing_address'           => $post['billing_address'],
+                'shipping_to_address'       => $post['shipping_to_address'],
+                'ship_via'                  => $post['ship_via'],
+                'shipping_date'             => $post['shipping_date'],
                 'tracking_number'           => '',
                 'terms'                     => 0,     
                 'tip'                       => 0,     
-                'location_scale'            => '',
-                'message_to_customer'       => '',
+                'location_scale'            => $post['location_scale'],
+                'message_to_customer'       => $post['message_to_customer'],
                 'terms_and_conditions'      => $post['terms_and_conditions'],            
                 'attachments'               => $attachment_file,
                 'status'                    => $post['status'],
                 'company_id'                => $cid,
-                'deposit_request_type'      => '',
-                'deposit_request'           => '',
+                'deposit_request_type'      => $post['deposit_request_type'],
+                'deposit_request'           => $post['deposit_amount'],
                 'monthly_monitoring'        => $post['adjustment_otps'],
                 'program_setup'             => $post['monthly_monitoring'],
                 'installation_cost'         => $post['adjustment_ic'],
@@ -2772,9 +2793,11 @@ class Invoice extends MY_Controller
                     'invoice_tip' => 0,
                     'balance' => $balance,
                     'payment_date' => date('Y-m-d', strtotime($post['payment_date'])),
-                    'payment_method' => $post['payment_method'],
+                    //'payment_method' => $post['payment_method'],
+                    'payment_method' => '',
                     'invoice_number' => $invoiceNumber,
-                    'reference_number' => $post['reference_number'],
+                    //'reference_number' => $post['reference_number'],
+                    'reference_number' => '',
                     'notes' => ''
                 ]);
 
@@ -2818,7 +2841,11 @@ class Invoice extends MY_Controller
                     'logo' => '',
                     'payment_fee_percent' => '',
                     'payment_fee_amount' => '',
-                    'recurring' => ''
+                    'recurring' => '',
+                    'invoice_template' => 1,
+                    'residential_message' => 'Thank you for your business.',
+                    'residential_terms_and_conditions' => 'Thank you for your business.'
+
                 ];
 
                 $this->Invoice_settings_model->create($invoice_settings_data);
@@ -2882,6 +2909,10 @@ class Invoice extends MY_Controller
                 }
             }
 
+            //Activity Logs
+            $activity_name = 'Invoice : Created Invoice Number : ' . $invoiceNumber; 
+            createActivityLog($activity_name);
+
             $this->activity_model->add('Created Invoice ID ' . $invoice_id . ' Created by User:' . logged('name'), $uid);
 
             $is_success = 1;
@@ -2890,6 +2921,44 @@ class Invoice extends MY_Controller
 
         $data = ['msg' => $msg, 'is_success' => $is_success];
 		echo json_encode($data);
+    }
+
+    public function ajax_archived_list()
+    {
+        $this->load->model('Customer_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $invoices = $this->invoice_model->get_company_archived_invoices($cid);
+
+        $this->page_data['invoices'] = $invoices;
+        $this->load->view("v2/pages/invoice/ajax_archived_list", $this->page_data);
+    }
+
+    public function ajax_restore_archived()
+    {
+
+        $is_success = 0;
+        $msg = 'Cannot find invoice data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $invoice = $this->invoice_model->getById($post['invoice_id']);
+        if ($invoice && $invoice->company_id == $company_id) {                        
+            $this->invoice_model->restoreInvoice($invoice->id);
+
+            //Activity Logs
+            $activity_name = 'Archived : Restore invoice data  ' . $invoice->invoice_number; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
     }
 
 }

@@ -1864,6 +1864,15 @@ class Tickets extends MY_Controller
             $tDate  = date("Y-m-d",strtotime($this->input->post('ticket_date')));
             $status = $this->input->post('ticket_status');
 
+            $no_tax = 0;
+            $grand_total = $this->input->post('grandtotal');
+            $taxes  = $this->input->post('taxes');
+            if( $this->input->post('no_tax') ){
+                $no_tax = 1;
+                $taxes  = 0;
+                $grand_total = $this->input->post('grandtotal') - $this->input->post('taxes');
+            }
+
             $new_data = array(
                 'customer_id'               => $this->input->post('customer_id'),
                 'business_name'             => $this->input->post('business_name'),
@@ -1885,11 +1894,11 @@ class Tickets extends MY_Controller
                 'warranty_type'             => $this->input->post('warranty_type'),
                 'technicians'               => $techni,
                 'subtotal'                  => $this->input->post('subtotal'),
-                'taxes'                     => $this->input->post('taxes'),
+                'taxes'                     => $taxes,
                 'adjustment'                => $this->input->post('adjustment_name'),
                 'adjustment_value'          => $this->input->post('adjustment_amount'),
                 'markup'                    => '',
-                'grandtotal'                => $this->input->post('grandtotal'),
+                'grandtotal'                => $grand_total,
                 'payment_method'            => $payment_method,
                 'payment_amount'            => 0,
                 'billing_date'              => '',
@@ -1909,6 +1918,7 @@ class Tickets extends MY_Controller
                 'installation_cost'         => $installation_cost,
                 'user_docfile_template_id'  => $user_docfile_template_id,
                 'company_id'                => $company_id,
+                'no_tax'                    => $no_tax,
                 'created_at'                => date("Y-m-d H:i:s"),
                 'updated_at'                => date("Y-m-d H:i:s")
             );
