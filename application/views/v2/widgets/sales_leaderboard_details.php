@@ -11,7 +11,7 @@
 }
 </style>
 <?php if (count($salesLeaderBoards) > 0) : ?>
-    <table class="nsm-table table table table-borderless" id="widget-sales-leaderboard">
+    <table class="table table table-borderless" id="widget-sales-leaderboard">
         <thead>
         <tr>
             <td>Employee</td>            
