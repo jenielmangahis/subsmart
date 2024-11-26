@@ -34,7 +34,7 @@
                         <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
                     <?php } ?>
                     <div class="content">
-                        <div class="details">
+                        <div class="details" style="width:159px;overflow:hidden;display:inline-block;">
                             <span class="content-title"><?= $sales->name; ?></span>
                             <span class="content-subtitle d-block"><?= $sales->email ?></span>
                         </div>
