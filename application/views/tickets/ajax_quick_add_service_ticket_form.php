@@ -1191,6 +1191,10 @@ $(document).ready(function(){
       computeGrandTotal();
     }
 
+    $('#chk-no-tax').on('change', function(){
+        computeGrandTotal();
+    });
+
     function calculateTaxes() {
       let retval = 0;
       const $rows = document.querySelectorAll("#service-ticket-items tr");
@@ -1200,7 +1204,17 @@ $(document).ready(function(){
         retval = retval + Number($tax.value);
       });
 
-      return retval.toFixed(2);
+      if( $('#chk-no-tax').is(':checked') ){
+        $("#total_tax_").text('0.00');
+        $("#total_tax_input").val(0);
+
+        return 0;
+      }else{    
+        $("#total_tax_").text(retval.toFixed(2));
+        $("#total_tax_input").val(retval.toFixed(2));
+        
+        return retval.toFixed(2);
+      }
     }
 
     function calculateSubtotal() {
