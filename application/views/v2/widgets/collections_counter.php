@@ -72,7 +72,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
                     <label for="">Total Collections</label>
-                    <h1 id='collections-thumbnail'><?php echo count($collection)  > 0 ? $collection[0]->total: '0'; ?></h1>
+                    <h1 id="first_content_<?php echo $id; ?>"><?php echo $collection->total  > 0 ?  '$ '.number_format($collection->total, 2, ".", ",")  : '$0'; ?></h1>
 
                 </div>
             </div>

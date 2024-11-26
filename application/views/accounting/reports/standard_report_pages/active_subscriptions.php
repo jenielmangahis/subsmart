@@ -180,11 +180,11 @@
                                         <label class="mb-1 fw-xnormal">Sort By</label>
                                         <div class="input-group">
                                             <select name="sort_by" id="sort-by" class="nsm-field form-select">
+                                                <option value="bill_end_date" <?php echo ($reportSettings->sort_by == "bill_end_date") ? "selected" : "" ?>>Bill. End Date</option>
                                                 <option value="customer" <?php echo ($reportSettings->sort_by == "customer") ? "selected" : "" ?>>Customer</option>
                                                 <option value="customer_id" <?php echo ($reportSettings->sort_by == "customer_id") ? "selected" : "" ?>>Customer ID</option>
                                                 <option value="status" <?php echo ($reportSettings->sort_by == "status") ? "selected" : "" ?>>Status</option>
                                                 <option value="bill_start_date" <?php echo ($reportSettings->sort_by == "bill_start_date") ? "selected" : "" ?>>Bill. Start Date</option>
-                                                <option value="bill_end_date" <?php echo ($reportSettings->sort_by == "bill_end_date") ? "selected" : "" ?>>Bill. End Date</option>
                                                 <option value="mmr" <?php echo ($reportSettings->sort_by == "mmr") ? "selected" : "" ?>>MMR</option>
                                             </select>
                                             <select name="sort_order" id="sort-order" class="nsm-field form-select">

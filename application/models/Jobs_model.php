@@ -182,7 +182,15 @@ class Jobs_model extends MY_Model
     }
 
     public function getTotalSalesBySalesRepresentativeV2($companyID, $date_range = []){        
-        $this->db->select('users.id AS uid,users.email AS email, users.company_id AS company_id, CONCAT(users.FName, " ", users.LName) AS name, COALESCE(invoices.status, "") AS invoice_status, SUM(invoices.grand_total) AS total_sales, invoices.date_created AS date_created');
+        
+        $jobs_date_start = $date_range['from'] . ' 00:00:00';
+        $jobs_date_end   = $date_range['to'] . ' 23:59:59';
+
+        $this->db->select('users.id AS uid,users.email AS email, users.company_id AS company_id, CONCAT(users.FName, " ", users.LName) AS name, COALESCE(invoices.status, "") AS invoice_status, SUM(invoices.grand_total) AS total_sales, invoices.date_created AS date_created, COALESCE((
+            SELECT COUNT(id) FROM jobs            
+            WHERE employee_id = users.id
+            AND jobs.date_created >="'.$jobs_date_start.'" AND jobs.date_created <="' .$jobs_date_end.'"
+        ),0)AS total_jobs');
         $this->db->from('users');
         $this->db->where('users.company_id', $companyID);
         $this->db->where('invoices.status !=', 'Draft');
@@ -193,6 +201,8 @@ class Jobs_model extends MY_Model
             $this->db->where("invoices.date_created >= ", $date_range['from']);
             $this->db->where("invoices.date_created <= ", $date_range['to']);
         }
+
+        $this->db->order_by('total_sales', 'DESC');
         $this->db->group_by('users.id');
         $data = $this->db->get();
         return $data->result();

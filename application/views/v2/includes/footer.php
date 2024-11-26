@@ -770,7 +770,7 @@ function filterThumbnail(val, id, table,filter) {
     switch (val) {
         case 'all':
             var from_date = '0000-00-00  00:00:00';
-            if(table == 'acs_billing'){
+            if(table == 'acs_billing' || table == 'collection'){
                 var to_date = '0000-00-00 23:59:59';
             }else{
                 var to_date = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2) + '-' + ('0' + date
@@ -972,6 +972,14 @@ function loadDataFilter(from_date, to_date, table, id,filter) {
             }
 
             if (table == 'collection') {
+                var income = data['collection'];
+                var totalIncome = 0;
+                for (var x = 0; x < income.length; x++) {
+                    totalIncome += parseFloat(income[x].grand_total);
+                }
+
+                $(`#first_content_${id}`).html('$ ' + totalIncome.toLocaleString(undefined, {minimumFractionDigits: 2}));
+
                 filterCollectionThumbnailGraph(data['collection'])
             }
 
@@ -1001,7 +1009,7 @@ function loadDataFilter(from_date, to_date, table, id,filter) {
                 var income = data['income'];
                 var totalIncome = 0;
                 for (var x = 0; x < income.length; x++) {
-                    totalIncome += parseFloat(income[x].total);
+                    totalIncome += parseFloat(income[x].grand_total);
                 }
 
                 $(`#first_content_${id}`).html('$ ' + totalIncome.toLocaleString(undefined, {minimumFractionDigits: 2}));
@@ -1047,15 +1055,45 @@ function htmlspecialchars(str) {
 }
 
 function filterIncomeThumbnailGraph(income) {
-    var monthlyAmounts = new Array(12).fill(0);
+    var currentDate    = new Date();
+    var month_index    = currentDate.getMonth() + 1;
+    var monthlyAmounts = new Array(month_index).fill(0);
 
     for (var x = 0; x < income.length; x++) {
-        var payment_date = income[x].date_created;
-        if (payment_date) {
-            var due = new Date(payment_date);
-            var month = due.getMonth();
-            monthlyAmounts[month] += parseFloat(income[x].total);
+        var insA = new Date(income[x].date_created);
+
+        if( insA.getFullYear() < currentDate.getFullYear() ){    
+            var installDate = '2024-01-01';
+        }else if( insA > currentDate ){        
+            var installDate = moment(currentDate).format('YYYY-MM-DD');
+        }else{
+            var installDate = income[x].date_created;
         }
+
+        if (installDate) {
+        var ins = new Date(installDate);
+        var month = ins.getMonth();             
+    
+        if( isNaN(parseFloat(income[x].grand_total)) ){
+            monthlyAmounts[month] += 0;
+        }else{
+            monthlyAmounts[month] += parseFloat(income[x].grand_total);
+        }
+        }
+  
+    }
+    var start = 0;
+    var prev_amount = 0;
+    for (i = 0; i < monthlyAmounts.length; ++i) {
+        if( start == 0 ){
+            var amount = monthlyAmounts[i];
+        }else{
+            var amount = monthlyAmounts[i] + prev_amount;
+        }
+
+        prev_amount = amount;
+        monthlyAmounts[i] = amount;                
+        start++;
     }
 
     IncomeThumbnailGraph.data.datasets[0].data = monthlyAmounts;
@@ -1099,21 +1137,48 @@ function filterJobsThumbnailGraph(jobs) {
 }
 
 function filterCollectionThumbnailGraph(collection) {
-    var amountsByMonth = new Array(12).fill(0);
-    var totalCollection = 0;
+    var currentDate    = new Date();
+    var month_index    = currentDate.getMonth() + 1;
+    var monthlyAmounts = new Array(month_index).fill(0);
+
     for (var x = 0; x < collection.length; x++) {
-        var dueDate = collection[x].created_at;
-        if (dueDate) {
-            var due = new Date(dueDate);
-            var month = due.getMonth();
-            totalCollection += 1;
-            amountsByMonth[month] += 1;
+        var insA          = new Date(collection[x].date_created);
+        if( insA.getFullYear() < currentDate.getFullYear() ){    
+            var installDate = '2024-01-01';
+        }else if( insA > currentDate ){        
+            var installDate = moment(currentDate).format('YYYY-MM-DD');
+        }else{
+            var installDate = collection[x].date_created;
+        }
+
+        if (installDate) {
+            var ins = new Date(installDate);
+            var month = ins.getMonth();             
+
+            if( isNaN(parseFloat(collection[x].grand_total)) ){
+                monthlyAmounts[month] += 0;
+            }else{
+                monthlyAmounts[month] += parseFloat(collection[x].grand_total);
+            }
         }
     }
 
-    $('#collections-thumbnail').html(totalCollection)
+    var start = 0;
+    var prev_amount = 0;
+    for (i = 0; i < monthlyAmounts.length; ++i) {
+        if( start == 0 ){
+            var amount = monthlyAmounts[i];
+        }else{
+            var amount = monthlyAmounts[i] + prev_amount;
+        }
 
-    collectionGraph.data.datasets[0].data = amountsByMonth;
+        prev_amount = amount;
+        monthlyAmounts[i] = amount;                
+        start++;
+    }
+
+
+    collectionGraph.data.datasets[0].data = monthlyAmounts;
     collectionGraph.update();
 }
 
@@ -1251,35 +1316,45 @@ function filterPastDueThumbnailGraph(past_due) {
 
 
 function filterSubsciptionThumbnailGraph(mmr) {
-    console.log('mmr', mmr)
-    var amountsByMonth = new Array(12).fill(0);
+    var currentDate    = new Date();
+    var month_index    = currentDate.getMonth() + 1;
+    var amountsByMonth = new Array(month_index).fill(0);
 
     for (var x = 0; x < mmr.length; x++) {
         if( mmr[x].bill_end_date == '0000-00-00' || mmr[x].bill_end_date == '1970-01-01' ){
             var installDate = '2024-01-01';
         }else{
-            var currentYear  = new Date().getFullYear();
-            var insA     = new Date(mmr[x].bill_end_date);
-            var insAYear = insA.getFullYear();
-            if( insAYear < currentYear ){                        
+            var insA = new Date(mmr[x].bill_end_date);
+            
+            if( insA.getFullYear() < currentDate.getFullYear() ){    
                 var installDate = '2024-01-01';
-            }else if( insAYear > currentYear ){
-                var today = new Date();                                     
-                var installDate = moment(today).format('YYYY-MM-DD');
+            }else if( insA > currentDate ){        
+                var installDate = moment(currentDate).format('YYYY-MM-DD');
             }else{
                 var installDate = mmr[x].bill_end_date;
             }
-        }
-        var insDate = new Date(installDate);
-        var month   = insDate.getMonth();
-        var amount  = parseFloat(mmr[x].mmr);
 
-        if( !isNaN(parseFloat(amount)) ){
-            amountsByMonth[month] += amount;
+            // var insAYear = insA.getFullYear();
+            // if( insAYear < currentYear ){                        
+            //     var installDate = '2024-01-01';
+            // }else if( insAYear > currentYear ){
+            //     var today = new Date();                                     
+            //     var installDate = moment(today).format('YYYY-MM-DD');
+            // }else{
+            //     var installDate = mmr[x].bill_end_date;
+            // }
+        }
+
+        if (installDate) {
+            var ins = new Date(installDate);
+            var month = ins.getMonth();                         
+            if( isNaN(parseFloat(mmr[x].mmr)) ){
+                amountsByMonth[month] += 0;
+            }else{
+                amountsByMonth[month] += parseFloat(mmr[x].mmr);
+            }
         }
     }
-
-    console.log('prev amountsByMonth', amountsByMonth);
 
     var start = 0;
     var prev_amount = 0;
@@ -1294,8 +1369,6 @@ function filterSubsciptionThumbnailGraph(mmr) {
         amountsByMonth[i] = amount;                
         start++;
     }
-
-    console.log('amountsByMonth', amountsByMonth);
 
     subscriptionChart.data.datasets[0].data = amountsByMonth.map(amount => parseFloat(amount.toFixed(2)));
     subscriptionChart.update();

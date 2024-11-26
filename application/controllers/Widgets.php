@@ -196,7 +196,36 @@ class Widgets extends MY_Controller
             $limit
         ");
 
-        $techLeaderBoards = $query->result();      
+        $techLeaderBoards = $query->result();    
+
+        $date_range = ['from' => $date_from, 'to' => $date_to];
+        $status     = ['Finished', 'Completed'];
+        $cid        = logged('company_id');
+        $user_tickets = [];
+        $tickets = $this->Tickets_model->getAllTicketsByCompanyIdAndDateRange($cid,$date_range,[]);
+        foreach( $tickets as $t ){
+            $ticketTechs = unserialize($t->technicians);
+            if( !empty($ticketTechs) ){
+                foreach($ticketTechs as $uid){
+                    if( $user_tickets[$uid] ){
+                        $user_tickets[$uid]['total_tickets'] = $user_tickets[$uid]['total_tickets'] + 1;
+                        $user_tickets[$uid]['total_tickets_sales'] = $user_tickets[$uid]['total_tickets_sales'] + $t->grandtotal;
+                    }else{
+                        $user_tickets[$uid] = ['total_tickets' => 1, 'total_tickets_sales' => $t->grandtotal];
+                    }
+                }
+            }
+        }
+
+        foreach( $techLeaderBoards as $value ){
+            if( isset($user_tickets[$value->id]) ){
+                $value->total_tickets = $user_tickets[$value->id]['total_tickets'];
+                $value->total_amount  = $user_tickets[$value->id]['total_tickets_sales'];
+            }else{
+                $value->total_tickets = 0;
+            }
+        }
+
         $data['techLeaderBoards'] = $techLeaderBoards;
         $this->load->view('v2/widgets/tech_leaderboard_details', $data);
     }
@@ -216,8 +245,7 @@ class Widgets extends MY_Controller
         $date_range        = ['from' => $date_from, 'to' => $date_to];
         $salesLeaderBoards = $this->Jobs_model->getTotalSalesBySalesRepresentativeV2($cid,$date_range);
 
-        $data['salesLeaderBoards'] = $salesLeaderBoards;
-   
+        $data['salesLeaderBoards'] = $salesLeaderBoards;   
         $this->load->view('v2/widgets/sales_leaderboard_details', $data);
     }
 
@@ -1064,18 +1092,16 @@ class Widgets extends MY_Controller
         $date_to   = date("Y-m-d", strtotime(post('sales_leaderboard_date_to')));
 
         $date_range = ['from' => post('filter_date_from'), 'to' => post('filter_date_to')];
-        $unpaidInvoices    = $this->Invoice_model->getCompanyUnpaidInvoices($cid, $date_range);
+        $openInvoices    = $this->Invoice_model->getCompanyOpenInvoices($cid, $date_range);
         $overDueInvoices   = $this->Invoice_model->getCompanyOverDueInvoices($cid, $date_range);
         $totalPaidInvoices = $this->Invoice_model->widgetCompanyTotalAmountPaidInvoices($cid, $date_range);
         
         $subscriptions     = $this->AcsProfile_model->widgetCompanyTotalSubscriptions($cid, $date_range);
 
-        $totalUnpaidInvoices  = count($unpaidInvoices);
-        $totalOverdueInvoices = count($overDueInvoices);
 
         $return = [
-            'total_unpaid_invoices' => $totalUnpaidInvoices,
-            'total_overdue_invoices' => $totalOverdueInvoices,
+            'total_open_invoices' =>  number_format($openInvoices->total, 0, ".", ","),
+            'total_overdue_invoices' => number_format($overDueInvoices->total, 0, ".", ","),
             'total_amount_paid_invoices' => number_format($totalPaidInvoices->total_paid, 2, ".", ",") ,
             'total_amount_subscriptions' => number_format($subscriptions->total_subscription, 2, ".", ",")
         ];
@@ -1098,6 +1124,8 @@ class Widgets extends MY_Controller
         $chart_labels  = [];
         $start_month   = explode("/", post('filter_date_from'));
         $end_month     = explode("/", post('filter_date_to'));  
+        $start = 0;
+        $prev_amount = 0;
         for( $start = $start_month[0]; $start <= $end_month[0]; $start++ ){
             $start_date = $year . '-' . $start . '-' . 1;
             $start_date = date("Y-m-d", strtotime($start_date));
@@ -1110,8 +1138,16 @@ class Widgets extends MY_Controller
             $date_range    = ['from' => $start_date, 'to' => $end_date];
             $totalInvoices = $this->Invoice_model->getCompanyTotalAmountInvoicesSales($cid, $date_range);
             $totalEstimate = $this->Estimate_model->getCompanyTotalAmountEstimates($cid, $date_range);
-            $total_sales   = $totalInvoices->total_amount + $totalEstimate->total_amount;
-            $sales_data[]  = $totalInvoices->total_amount;
+            
+
+            if( $start > 0 ){
+                $total_sales   = $totalInvoices->total_amount + $totalEstimate->total_amount + $prev_amount;
+            }else{
+                $total_sales   = $totalInvoices->total_amount + $totalEstimate->total_amount;
+            }
+
+            $sales_data[]  = $total_sales;
+            $prev_amount   = $total_sales;
 
             //Jobs
             $jobs = $this->Jobs_model->getAllJobsByCompanyIdAndDateRange($cid, $date_range);
@@ -1134,6 +1170,8 @@ class Widgets extends MY_Controller
             $chart_end_day  = date("t", strtotime($start_date));
             //$chart_labels[] = $chart_month . ' 01-'.$chart_end_day;
             $chart_labels[] = $chart_month;
+
+            $start++;
         } 
 
         $return = ['chart_labels' => $chart_labels, 'chart_data_sales' => $sales_data, 'chart_data_jobs' => $jobs_data, 'chart_data_services' => $services_data];

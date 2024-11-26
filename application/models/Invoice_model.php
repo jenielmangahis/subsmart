@@ -285,6 +285,28 @@ class Invoice_model extends MY_Model
         return $query->result();
     }
 
+    public function getCompanyOpenInvoices($cid, $date_range = [])
+    {
+        $this->db->select('COUNT(*) AS total');        
+        $this->db->from('invoices');   
+        $this->db->where('invoices.status !=', "Paid");
+        $this->db->where('invoices.status !=', "Draft");
+        $this->db->where('invoices.status !=', "");
+        $this->db->where('invoices.company_id', $cid);
+        if (!empty($date_range['from'])) {
+            $date_from = $date_range['from'];
+            $date_to= $date_range['to'];
+            $this->db->where('DATE(invoices.date_issued) >=', date('Y-m-d', strtotime($date_from)));
+            $this->db->where('DATE(invoices.date_issued) <=', date('Y-m-d', strtotime($date_to)));
+        }
+
+        $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+
+        $query = $this->db->get();
+        return $query->row();
+    }
+
+
     public function getCompanyPaidInvoices($cid, $date_range = array())
     {
         $this->db->select('invoices.*');        
@@ -380,10 +402,12 @@ class Invoice_model extends MY_Model
     {
         $this->db->select('SUM(invoices.grand_total) AS total');
         $this->db->from('invoices');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        $this->db->where('invoices.status !=', "Paid");
         $this->db->where('invoices.status !=', "Draft");
         $this->db->where('invoices.status !=', "");
         $this->db->where('invoices.company_id', $cid);
-        $this->db->where('DATE(invoices.date_created)', date('Y-m-d'));
+        // $this->db->where('DATE(invoices.date_created)', date('Y-m-d'));
 
         $query = $this->db->get()->row();
         return $query;
@@ -397,7 +421,7 @@ class Invoice_model extends MY_Model
             'Finished',
             'Completed',
         ]);
-        $this->db->where('DATE(date)', date('Y-m-d'));
+        // $this->db->where('DATE(date)', date('Y-m-d'));
         $this->db->where('company_id', $cid);
 
         $query = $this->db->get()->row();
@@ -410,7 +434,7 @@ class Invoice_model extends MY_Model
         $this->db->from('jobs');
         $this->db->where('jobs.status', "Scheduled");
         $this->db->where('jobs.company_id', $cid);
-        $this->db->where('DATE(jobs.date_created)', date('Y-m-d'));
+        // $this->db->where('DATE(jobs.date_created)', date('Y-m-d'));
         $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
 
         $query = $this->db->get()->row();
@@ -423,11 +447,21 @@ class Invoice_model extends MY_Model
         $this->db->from('invoices');
         $this->db->where('invoices.status', "Paid");
         $this->db->where('invoices.company_id', $cid);
-        $this->db->where('DATE(invoices.date_created)', date('Y-m-d'));
-    
+        $this->db->where('YEAR(invoices.date_created)', date('Y'));
 
         $query = $this->db->get()->row();
         return $query;
+    }
+
+    public function getCollection($cid){
+        $this->db->select(' SUM(invoices.grand_total) AS total');
+        $this->db->from('invoices');
+        $this->db->where('invoices.status', "Unpaid");
+        $this->db->where('invoices.company_id', $cid);
+        $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-90 days')));
+        $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        $data = $this->db->get();
+        return $data->row();
     }
 
     public function getLostAccounts($cid)
@@ -436,8 +470,7 @@ class Invoice_model extends MY_Model
         $this->db->from('acs_profile');
         $this->db->where('acs_profile.status', "Cancelled");
         $this->db->where('acs_profile.company_id', $cid);
-        $this->db->where('DATE(acs_profile.updated_at)', date('Y-m-d'));
-
+        // $this->db->where('DATE(acs_profile.updated_at)', date('Y-m-d'));
         $this->db->join('acs_office', 'acs_office.fk_prof_id = acs_profile.prof_id', 'left');
  
         $query = $this->db->get()->row();
@@ -483,24 +516,25 @@ class Invoice_model extends MY_Model
 
     public function getCompanyOverDueInvoices($cid, $date_range = array())
     {
-        $current_date = date("Y-m-d");
 
-        $this->db->select('*');        
-        $this->db->from($this->table);   
-        $this->db->where('company_id', $cid);
-        $this->db->where('view_flag', 0);
-
-        if( !empty($date_range) ){
-            $this->db->where('due_date >=', $date_range['from']);
-            $this->db->where('due_date <=', $date_range['to']);
-        }else{
-            $this->db->where('due_date <=', $current_date);
+        $this->db->select('COUNT(*) AS total');        
+        $this->db->from('invoices');   
+        $this->db->where('invoices.status !=', "Paid");
+        $this->db->where('invoices.status !=', "Draft");
+        $this->db->where('invoices.status !=', "");
+        $this->db->where('invoices.company_id', $cid);
+        $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-15 days')));
+        if (!empty($date_range['from'])) {
+            $date_from = $date_range['from'];
+            $date_to= $date_range['to'];
+            $this->db->where('invoices.date_issued>=', date('Y-m-d', strtotime($date_from)));
+            $this->db->where('invoices.date_issued <=', date('Y-m-d', strtotime($date_to)));
         }
-        
-        $this->db->order_by('invoices.id', 'DESC');
+
+        $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
 
         $query = $this->db->get();
-        return $query->result();
+        return $query->row();
     }
 
     public function getItems($id)
@@ -614,10 +648,23 @@ class Invoice_model extends MY_Model
 
     public function get_company_payments($company_id)
     {
-        $this->db->where('company_id', $company_id);
-        // $this->db->group_by('payment_date');
-        $this->db->order_by('payment_date', 'desc');
-        $query = $this->db->get('payment_records');
+        $this->db->select('SUM(invoices.grand_total) AS total');
+        $this->db->from('invoices');
+        $this->db->where('invoices.status', "Paid");
+        $this->db->where('invoices.company_id', $company_id);
+        $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        $query = $this->db->get('');
+        return $query->row();
+    }
+
+    public function get_company_payments_graph($company_id)
+    {
+        $this->db->select('*');
+        $this->db->from('invoices');
+        $this->db->where('invoices.status', "Paid");
+        $this->db->where('invoices.company_id', $company_id);
+        $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        $query = $this->db->get('');
         return $query->result();
     }
 

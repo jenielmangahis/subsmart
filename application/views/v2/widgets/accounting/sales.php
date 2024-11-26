@@ -40,7 +40,7 @@ endif;
                 <input type="text" id="widget-sales-filter-from" class="nsm-field form-control widget-sales-datepicker" value="<?= date("01/Y"); ?>" />
             </div>
             <div class="col-4">
-                <input type="text" id="widget-sales-filter-to" class="nsm-field form-control widget-sales-datepicker" value="<?= date("12/Y"); ?>" required>
+                <input type="text" id="widget-sales-filter-to" class="nsm-field form-control widget-sales-datepicker" value="<?= date("m/Y"); ?>" required>
             </div>
         </div>  
 
@@ -101,7 +101,8 @@ function initializeSalesChart(){
                 var date = new Date();
 
                 var from_date = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-                var to_date = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
+                var to_date   = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(date.getDate()).padStart(2, '0') + '/' + date.getFullYear();
+                //var to_date = String(12).padStart(2, '0') + '/' + String(31).padStart(2, '0') + '/' + date.getFullYear();
             break;
             default :
                 var date = new Date();
