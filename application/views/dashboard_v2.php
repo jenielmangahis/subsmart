@@ -1016,7 +1016,12 @@ function collectionGraphThumbnail() {
                         scales: {
                             y: {
                                 beginAtZero: true,
-                                suggestedMax: 10
+                                suggestedMax: 10,
+                                ticks: {
+                                    callback: function(value, index, values) {
+                                        return '$' + value.toLocaleString(undefined, {minimumFractionDigits: 2});
+                                    }
+                                }
                             },
                         },
                         aspectRatio: 1.2,
@@ -1568,7 +1573,12 @@ function pastDueGraphThumbnail() {
                     scales: {
                         y: {
                             beginAtZero: true,
-                            suggestedMax: 10
+                            suggestedMax: 10,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return '$' + value.toLocaleString(undefined, {minimumFractionDigits: 2});
+                                }
+                            }
                         },
                     },
                     aspectRatio: 1.2,
@@ -1870,7 +1880,9 @@ unpaidInvoicesGraphThumbnail();
 function unpaidInvoicesGraphThumbnail() {
     fetch('<?php echo base_url('Dashboard/unpaid_invoices_graph'); ?>', {}).then(response => response.json()).then(
         response => {
-            var monthlyAmounts = new Array(12).fill(0);
+            var currentDate    = new Date();
+            var month_index    = currentDate.getMonth() + 1;
+            var monthlyAmounts = new Array(month_index).fill(0);
 
             var {
                 success,
@@ -1879,6 +1891,15 @@ function unpaidInvoicesGraphThumbnail() {
 
             if (unpaid_invoices) {
                 for (var x = 0; x < unpaid_invoices.length; x++) {
+                    var dateCreated = new Date(unpaid_invoices[x].date_created);
+                    if( dateCreated.getFullYear() < currentDate.getFullYear() ){    
+                        var dueDate = '2024-01-01';
+                    }else if( dateCreated > currentDate ){        
+                        var dueDate = moment(currentDate).format('YYYY-MM-DD');
+                    }else{
+                        var dueDate = unpaid_invoices[x].date_created;
+                    }
+
                     var dueDate = unpaid_invoices[x].date_created;
                     var total_amount_paid = unpaid_invoices[x].total_amount_paid ? unpaid_invoices[x]
                         .total_amount_paid : 0
@@ -1886,6 +1907,20 @@ function unpaidInvoicesGraphThumbnail() {
                         var due = new Date(dueDate);
                         var month = due.getMonth();
                         monthlyAmounts[month] += parseFloat(unpaid_invoices[x].grand_total - total_amount_paid);
+                    }
+
+                    var start = 0;
+                    var prev_amount = 0;
+                    for (i = 0; i < monthlyAmounts.length; ++i) {
+                        if( start == 0 ){
+                            var amount = monthlyAmounts[i];
+                        }else{
+                            var amount = monthlyAmounts[i] + prev_amount;
+                        }
+
+                        prev_amount = amount;
+                        monthlyAmounts[i] = amount;                
+                        start++;
                     }
                 }
             }
@@ -1913,7 +1948,12 @@ function unpaidInvoicesGraphThumbnail() {
                     scales: {
                         y: {
                             beginAtZero: true,
-                            suggestedMax: 10
+                            suggestedMax: 10,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return '$' + value.toLocaleString(undefined, {minimumFractionDigits: 2});
+                                }
+                            }
                         },
                     },
                     aspectRatio: 1.2,
