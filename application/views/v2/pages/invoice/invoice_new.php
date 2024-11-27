@@ -141,7 +141,7 @@
                                 <i class='bx bx-fw bx-receipt'></i> Add New Invoice
                             </button>
                             <button type="button" class="nsm-button primary" id="archived-invoice-list">
-                                <i class='bx bx-fw bx-trash'></i>
+                                <i class='bx bx-fw bx-trash'></i> Manage Archived
                             </button>
                         </div>
                     </div>
