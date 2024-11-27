@@ -2127,7 +2127,15 @@ function loadCustomerGroupChart() {
             var centerTextPlugin = {
                 id: 'centerTextPlugin',
                 afterDatasetDraw(chart) {
-                    const { width, height, ctx } = chart;
+                    const {ctx , 
+                        chartArea: {
+                            top,
+                            bottom,
+                            left,
+                            right,
+                            width,
+                            height
+                        }, } = chart;
                     ctx.save();
                     ctx.font = 'bold 16px Arial';
                     ctx.textAlign = 'center';
@@ -2139,7 +2147,7 @@ function loadCustomerGroupChart() {
 
                     // Draw "total" on the first line
                     const text1 = 'Total';
-                    ctx.fillText(text1, width / 2, height / 2-50); // Adjust Y for the first line
+                    ctx.fillText(text1, width / 2, height / 2); // Adjust Y for the first line
 
                     // Draw the total value on the second line
                     const text2 = total;
@@ -2156,16 +2164,16 @@ function loadCustomerGroupChart() {
                 type: 'doughnut',
                 data: chart_data,
                 options: {
-                    responsive: true,
+                    responsive: false,
                     plugins: {
                         legend: {
-                            position: 'bottom',
+                            position: 'right',
                         },
                         tooltip: {
                             enabled: true,
                         },
                     },
-                    aspectRatio: 1.5,
+                    aspectRatio: 1,
                 },
                 plugins: [centerTextPlugin], // Use the correct plugin
             });
