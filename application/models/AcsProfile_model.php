@@ -714,8 +714,8 @@ class AcsProfile_model extends MY_Model
         if (!empty($date_range['from'])) {
             $date_from = $date_range['from'];
             $date_to= $date_range['to'];
-            $this->db->where('DATE(acs_billing.bill_start_date) >=', date('Y-m-d', strtotime($date_from)));
-            $this->db->where('DATE(acs_billing.bill_end_date) >=', date('Y-m-d', strtotime($date_to)));
+            $this->db->where('acs_billing.bill_start_date >=', date('Y-m-d', strtotime($date_from)));
+            // $this->db->where('acs_billing.bill_end_date >=', date('Y-m-d', strtotime($date_to)));
             // $this->db->where('DATE(acs_billing.bill_end_date) >=', date('Y-m-d H:i:s', strtotime($date_range['from'])));
         }
 

@@ -459,13 +459,19 @@ class Invoice_model extends MY_Model
 
     public function getJobsCompleted($cid)
     {
+        $today = new DateTime();
+        $startDate = $today->format('Y-01-01');
+        $endDate = $today->format('Y-12-31');
+
         $this->db->select('count(*) AS total');
         $this->db->from('jobs_completed_view');
         $this->db->where_in('status', [
             'Finished',
             'Completed',
         ]);
-        // $this->db->where('DATE(date)', date('Y-m-d'));
+        $this->db->where('date >=', $startDate);
+        $this->db->where('date <=', $endDate);
+        // $this->db->where('DATE(date)', date('Y'));
         $this->db->where('company_id', $cid);
 
         $query = $this->db->get()->row();

@@ -69,7 +69,7 @@
 
         switch (subscription_period) {
             case "all":
-                period = " (All)";
+                period = " (All Time)";
                 break;
             case "last_7_days":
                 period = " (Last 7 Days)";
@@ -152,6 +152,12 @@
                 break;
             case "dec":
                 $("#filter_by_text").text("Filtered by December (<?php echo date('Y'); ?>)");
+                break;
+            case "active_customer_group":
+                $("#filter_by_text").text("Filtered by Active Customer Group");
+                break;
+            case "all_customer_group":
+                $("#filter_by_text").text("Filtered by All Customer Group");
                 break;
             default:
                 $("#filter_by_text").text("As of <?php echo date('F d, Y'); ?>");

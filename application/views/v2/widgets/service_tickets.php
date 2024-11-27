@@ -55,15 +55,7 @@ function initializeServiceTicketChart(){
     });
 
     $('#widget-service-ticket-filter-date').on('change', function(){
-        switch($(this).val()) {            
-            case 'last-7d':
-                var date    = new Date();
-                var to_date = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-                to_date.setDate(date.getDate() - 7);
-
-                from_date = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-                to_date = String(to_date.getMonth() + 1).padStart(2, '0') + '/' + String(to_date.getDate()).padStart(2, '0') + '/' + to_date.getFullYear();
-            break;
+        switch($(this).val()) {  
             case 'this-month' :
                 var date = new Date();
                 var to_date = new Date(date.getFullYear(), date.getMonth() + 1, 0);
@@ -98,7 +90,7 @@ function initializeServiceTicketChart(){
                 var date = new Date();
 
                 var from_date = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-                var to_date   = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+                var to_date   = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();                
             break;
             default :
                 var date = new Date();

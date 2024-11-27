@@ -1548,13 +1548,13 @@ class Widgets extends MY_Controller
         $this->db->select('customer_groups.id AS id, customer_groups.company_id AS company_id, customer_groups.title AS title_group, COUNT(acs_profile.customer_group_id) AS customer_count, CONCAT(users.FName, " ", users.LName) AS added_by, customer_groups.date_added AS date ');
         $this->db->from('customer_groups');
         $this->db->where('customer_groups.company_id', $cid);
-        $this->db->where_in('acs_profile.status', [
-            'Active w/RAR',
-            'Active w/RMR',
-            'Active w/RQR',
-            'Active w/RYR',
-            'Inactive w/RMM'
-        ]);
+        // $this->db->where_in('acs_profile.status', [
+        //     'Active w/RAR',
+        //     'Active w/RMR',
+        //     'Active w/RQR',
+        //     'Active w/RYR',
+        //     'Inactive w/RMM'
+        // ]);
         $this->db->join('users', 'users.id = customer_groups.user_id', 'left');
         $this->db->join('acs_profile', 'acs_profile.customer_group_id = customer_groups.id', 'left');
         $this->db->group_by('customer_groups.id');

@@ -57,6 +57,40 @@ class Accounting_model extends MY_Model
             ]);
             $this->db->order_by($reportConfig['sort_by'], $reportConfig['sort_order']);
 
+            $today = new DateTime();
+            switch ($reportConfig['filter_by']) {
+                case 'current_month':
+                    $startDate = $today->format('Y-m-01');
+                    $endDate = $today->format('Y-m-t');
+                    $this->db->where('acs_billing.bill_start_date >=', $startDate);
+                    $this->db->where('acs_billing.bill_start_date <=', $endDate);
+                    break;
+
+                case 'current_year':
+                    $startDate = $today->format('Y-01-01');
+                    $endDate = $today->format('Y-12-31');
+                    $this->db->where('acs_billing.bill_start_date >=', $startDate);
+                    $this->db->where('acs_billing.bill_start_date <=', $endDate);
+                    break;
+
+                case 'current_quarter':
+                    $month = (int)$today->format('m');
+                    $year = $today->format('Y');
+                    $quarterStartMonth = floor(($month - 1) / 3) * 3 + 1;
+                    $startDate = (new DateTime("$year-$quarterStartMonth-01"))->format('Y-m-d');
+                    $endDate = (new DateTime("$year-$quarterStartMonth-01"))->modify('+2 months')->format('Y-m-t');
+                    $this->db->where('acs_billing.bill_start_date >=', $startDate);
+                    $this->db->where('acs_billing.bill_start_date <=', $endDate);
+                    break;
+
+                case 'current_week':
+                    $startDate = (new DateTime())->modify('monday this week')->format('Y-m-d');
+                    $endDate = (new DateTime())->modify('sunday this week')->format('Y-m-d');
+                    $this->db->where('acs_billing.bill_start_date >=', $startDate);
+                    $this->db->where('acs_billing.bill_start_date <=', $endDate);
+                    break;
+            }
+
             switch ($reportConfig['subscription_period']) {
                 case 'last_7_days':
                     $startDate = (new DateTime())->modify('-7 days')->format('Y-m-d');
@@ -272,14 +306,22 @@ class Accounting_model extends MY_Model
             $this->db->select('customer_groups.id AS id, customer_groups.company_id AS company_id, customer_groups.title AS title_group, COUNT(acs_profile.customer_group_id) AS customer_count, CONCAT(users.FName, " ", users.LName) AS added_by, customer_groups.date_added AS date ');
             $this->db->from('customer_groups');
             $this->db->where('customer_groups.company_id', $companyID);
-            $this->db->where_in('acs_profile.status', [
-                'Active w/RAR',
-                'Active w/RMR',
-                'Active w/RQR',
-                'Active w/RYR',
-                'Inactive w/RMM'
-            ]);
-          
+
+            switch ($reportConfig['filter_by']) {
+                case 'active_customer_group':
+                    $this->db->where_in('acs_profile.status', [
+                        'Active w/RAR',
+                        'Active w/RMR',
+                        'Active w/RQR',
+                        'Active w/RYR',
+                        'Inactive w/RMM'
+                    ]);
+                    break;
+                case 'all_customer_group':
+                    // Do nothing...
+                    break;
+            }
+
             switch ($reportConfig['subscription_period']) {
                 case 'last_7_days':
                     $startDate = (new DateTime())->modify('-7 days')->format('Y-m-d');

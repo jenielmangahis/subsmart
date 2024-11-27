@@ -1001,6 +1001,14 @@ function collectionGraphThumbnail() {
                     data: collection_data,
                     options: {
                         plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem, data) {
+                                        const amount = tooltipItem.formattedValue;
+                                        return '$' + amount.toLocaleString(undefined, {minimumFractionDigits: 2});
+                                    }
+                                }
+                            },
                             legend: {
                                 position: 'bottom',
                             },
@@ -1545,6 +1553,14 @@ function pastDueGraphThumbnail() {
                 data: pastdue_data,
                 options: {
                     plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem, data) {
+                                    const amount = tooltipItem.formattedValue;
+                                    return '$' + amount.toLocaleString(undefined, {minimumFractionDigits: 2});
+                                }
+                            }
+                        },
                         legend: {
                             position: 'bottom',
                         },
@@ -2008,6 +2024,82 @@ function load_plaid_accounts() {
         }
     });
 }
+
+loadCustomerGroupChart();
+
+function loadCustomerGroupChart() {
+    fetch('<?php echo base_url('widgets/_load_customer_group_chart'); ?>', {})
+        .then(response => response.json())
+        .then(data => {
+            const chart_labels = data.chart_labels;
+            const chart_data = {
+                labels: chart_labels,
+                datasets: [{
+                    data: data.chart_data,
+                    backgroundColor: data.chart_colors,
+                    borderColor: data.chart_colors,
+                    borderWidth: 0.5,
+                }],
+            };
+
+            // Define the center text plugin
+            var centerTextPlugin = {
+                id: 'centerTextPlugin',
+                afterDatasetDraw(chart) {
+                    const { width, height, ctx } = chart;
+                    ctx.save();
+                    ctx.font = 'bold 16px Arial';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'top';
+                    ctx.fillStyle = '#333';
+
+                    // Calculate total
+                    const total = chart.data.datasets[0].data.reduce((a, b) => Number(a) + Number(b), 0) || 0;
+
+                    // Draw "total" on the first line
+                    const text1 = 'Total';
+                    ctx.fillText(text1, width / 2, height / 2-50); // Adjust Y for the first line
+
+                    // Draw the total value on the second line
+                    const text2 = total;
+                    ctx.font = '25px sans-serif'
+                    ctx.fillText(text2, width / 2, height / 2 - 30); // Adjust Y for the second line
+
+                    ctx.restore();
+                },
+            };
+
+            // Render the chart
+            var customerGroup = $('#customer_groups_chart');
+            var customerGroupChart = new Chart(customerGroup, {
+                type: 'doughnut',
+                data: chart_data,
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            enabled: true,
+                        },
+                    },
+                    aspectRatio: 1.5,
+                },
+                plugins: [centerTextPlugin], // Use the correct plugin
+            });
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+}
+
+
+
+
+
+
+
 </script>
 
 <?php include viewPath('v2/includes/footer'); ?>

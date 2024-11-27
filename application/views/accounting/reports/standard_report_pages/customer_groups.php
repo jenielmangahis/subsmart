@@ -39,7 +39,7 @@
                                     <div class="reportTitleInfo">
                                         <h3 id="businessName"><?php echo ($reportSettings->company_name) ? $reportSettings->company_name : strtoupper($companyInfo->business_name)?></h3>
                                         <h5><strong id="reportName"><?php echo $reportSettings->title ?></strong></h5>
-                                        <h5><small id="reportDate">As of <?php echo date('F d, Y'); ?></small></h5>
+                                        <h5><small id="reportDate"><span id="filter_by_text"></span></small></h5>
                                     </div>
                                 </div>
                             </div>
@@ -201,6 +201,13 @@
                                                 <option value="last_14_days" <?php echo ($reportSettings->subscription_period == "last_14_days") ? "selected" : "" ?>>Last 14 Days</option>
                                                 <option value="last_30_days" <?php echo ($reportSettings->subscription_period == "last_30_days") ? "selected" : "" ?>>Last 30 Days</option>
                                                 <option value="last_60_days" <?php echo ($reportSettings->subscription_period == "last_60_days") ? "selected" : "" ?>>Last 60 Days</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label class="mb-1 fw-xnormal">Filter By</label>
+                                            <select name="filter_by" id="filter-by" class="nsm-field form-select">
+                                                <option value="active_customer_group" <?php echo ($reportSettings->filter_by == "active_customer_group") ? "selected" : "" ?>>Active Customer Groups</option>
+                                                <option value="all_customer_group" <?php echo ($reportSettings->filter_by == "all_customer_group") ? "selected" : "" ?>>All Customer Groups</option>
                                             </select>
                                         </div>
                                     </div>
