@@ -44,10 +44,12 @@ class Widgets_model extends MY_Model
         ');
         $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
         $this->db->where('invoices.status !=', "Paid");
+        $this->db->where('invoices.status !=', "Draft");
+        $this->db->where('invoices.view_flag', 0);
         $this->db->where('invoices.status !=', "");
-        $this->db->where('invoices.due_date < CURDATE() - INTERVAL 15 DAY');
+        $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-14 days')));
         $this->db->where('invoices.company_id', $company_id);
-        $this->db->order_by("invoice_number DESC");
+        $this->db->order_by("invoices.invoice_number DESC");
         $query = $this->db->get();
         return $results = $query->result();
 
@@ -74,8 +76,8 @@ class Widgets_model extends MY_Model
         $this->db->where('invoices.status !=', "Paid");
         $this->db->where('invoices.status !=', "Draft");
         $this->db->where('invoices.status !=', "");
-        $this->db->where('invoices.view_flag =', 0);
-        $this->db->where('invoices.due_date < CURDATE()');
+        $this->db->where('invoices.view_flag', 0);
+        $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-14 days')));
         $this->db->where('invoices.company_id', $company_id);
         $this->db->order_by("invoices.invoice_number DESC");
         $query = $this->db->get();
