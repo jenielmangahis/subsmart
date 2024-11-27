@@ -1101,15 +1101,40 @@ function filterIncomeThumbnailGraph(income) {
 }
 
 function filterUnpaidInvoicesThumbnailGraph(sales) {
-    var amountsByMonth = new Array(12).fill(0);
+    var currentDate    = new Date();
+    var month_index    = currentDate.getMonth() + 1;
+    var amountsByMonth = new Array(month_index).fill(0);
 
     for (var x = 0; x < sales.length; x++) {
-        var dueDate = sales[x].due_date;
+        var dateCreated = new Date(sales[x].date_created);
+        if( dateCreated.getFullYear() < currentDate.getFullYear() ){    
+            var dueDate = '2024-01-01';
+        }else if( dateCreated > currentDate ){        
+            var dueDate = moment(currentDate).format('YYYY-MM-DD');
+        }else{
+            var dueDate = sales[x].date_created;
+        }
+        
+        //var dueDate = sales[x].due_date;
         if (dueDate) {
             var due = new Date(dueDate);
             var month = due.getMonth();
 
             amountsByMonth[month] += parseFloat(sales[x].grand_total);
+        }
+
+        var start = 0;
+        var prev_amount = 0;
+        for (i = 0; i < amountsByMonth.length; ++i) {
+            if( start == 0 ){
+                var amount = amountsByMonth[i];
+            }else{
+                var amount = amountsByMonth[i] + prev_amount;
+            }
+
+            prev_amount = amount;
+            amountsByMonth[i] = amount;                
+            start++;
         }
     }
 
