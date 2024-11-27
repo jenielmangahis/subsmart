@@ -26,7 +26,7 @@ endif;
             </div>
         </div>
     </div>
-    <div class="nsm-card-content d-flex justify-content-center flex-column align-items-center">
+    <div class="nsm-card-content d-flex flex-column align-items-center">
         <div class="row mb-4 mt-2">
             <div class="col-4">
                 <select class="nsm-field form-select" name="filter_date" id="widget-sales-filter-date">   

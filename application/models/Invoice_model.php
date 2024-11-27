@@ -292,6 +292,7 @@ class Invoice_model extends MY_Model
         $this->db->where('invoices.status !=', "Paid");
         $this->db->where('invoices.status !=', "Draft");
         $this->db->where('invoices.status !=', "");
+        $this->db->where('invoices.view_flag', 0);
         $this->db->where('invoices.company_id', $cid);
         if (!empty($date_range['from'])) {
             $date_from = $date_range['from'];
@@ -313,6 +314,7 @@ class Invoice_model extends MY_Model
         $this->db->from($this->table);   
         $this->db->where('invoices.company_id', $cid);
         $this->db->where('invoices.status', "Paid");
+        $this->db->where('invoices.view_flag', 0);
         $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
 
         if( !empty($date_range) ){
@@ -410,14 +412,15 @@ class Invoice_model extends MY_Model
         $this->db->from($this->table);   
         $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
         $this->db->where('invoices.status', 'Paid');
+        $this->db->where('invoices.view_flag', 0);
         $this->db->where('invoices.company_id', $cid);
 
         if( !empty($date_range['from']) ){
             $date_from = $date_range['from'];
             $date_to= $date_range['to'];
 
-            $this->db->where('invoices.date_created >=',date('Y-m-d H:i:s', strtotime($date_from)));
-            $this->db->where('invoices.date_created <=', date('Y-m-d H:i:s' , strtotime($date_to)));
+            $this->db->where('invoices.date_created >=',date('Y-m-d', strtotime($date_from)));
+            $this->db->where('invoices.date_created <=', date('Y-m-d' , strtotime($date_to)));
         }
 
         $query = $this->db->get()->row();
@@ -449,6 +452,7 @@ class Invoice_model extends MY_Model
         $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
         $this->db->where('invoices.status !=', "Paid");
         $this->db->where('invoices.status !=', "Draft");
+        $this->db->where('invoices.view_flag', 0);
         $this->db->where('invoices.status !=', "");
         $this->db->where('invoices.company_id', $cid);
         // $this->db->where('DATE(invoices.date_created)', date('Y-m-d'));
@@ -496,6 +500,7 @@ class Invoice_model extends MY_Model
         $this->db->select('SUM(invoices.grand_total) AS total');
         $this->db->from('invoices');
         $this->db->where('invoices.status', "Paid");
+        $this->db->where('invoices.view_flag', 0);
         $this->db->where('invoices.company_id', $cid);
         $this->db->where('YEAR(invoices.date_created)', date('Y'));
 
@@ -506,7 +511,9 @@ class Invoice_model extends MY_Model
     public function getCollection($cid){
         $this->db->select(' SUM(invoices.grand_total) AS total');
         $this->db->from('invoices');
-        $this->db->where('invoices.status', "Unpaid");
+        $this->db->where('invoices.status !=', "Paid");
+        $this->db->where('invoices.status !=', "Draft");
+        $this->db->where('invoices.status !=', "");
         $this->db->where('invoices.company_id', $cid);
         $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-90 days')));
         $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
@@ -550,6 +557,7 @@ class Invoice_model extends MY_Model
         $this->db->where('invoices.company_id', $cid);
         $this->db->where('invoices.status != ', "Draft");
         $this->db->where('invoices.status != ', "");
+        $this->db->where('invoices.view_flag', 0);
 
         if( !empty($date_range) ){
             $date_from = $date_range['from'] . ' 00:00:00';
@@ -1593,6 +1601,22 @@ class Invoice_model extends MY_Model
         $query = $this->db->get('invoices');
         return $query->result();
     }
+
+    
+    public function getOpenInvoices($companyId)
+    {
+        $this->db->select('*');
+        $this->db->from('invoices');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        $this->db->where('invoices.status !=', "Paid");
+        $this->db->where('invoices.status !=', "Draft");
+        $this->db->where('invoices.status !=', "");
+        $this->db->where('invoices.view_flag', 0);
+        $this->db->where('invoices.company_id', $companyId);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
 
     public function get_invoice_items($invoiceId)
     {
