@@ -352,13 +352,15 @@ class AcsProfile_model extends MY_Model
 
     
     public function getCurrentCompanyOpenInvoices($id){
-        $this->db->where('company_id', $id);
-        $this->db->where('is_recurring', 0);
-        $this->db->where('view_flag', 0);
-        $this->db->where('status !=', 'Draft');
-        $this->db->where('status !=', 'Paid');
-        $this->db->where('status !=', '');
-        $query = $this->db->get('invoices');
+        $this->db->select('*');
+        $this->db->from('invoices');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        $this->db->where('invoices.status !=', "Paid");
+        $this->db->where('invoices.status !=', "Draft");
+        $this->db->where('invoices.status !=', "");
+        $this->db->where('invoices.view_flag', 0);
+        $this->db->where('invoices.company_id', $id);
+        $query = $this->db->get();
         return $query->result();
     }
 

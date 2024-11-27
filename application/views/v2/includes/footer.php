@@ -1305,19 +1305,44 @@ function filterSalesThumbnailGraph(sales) {
 }
 
 function filterOpenInvoicesThumbnailGraph(open_invoices) {
-    var amountsByMonth = new Array(12).fill(0);
+    var currentDate    = new Date();
+    var month_index    = currentDate.getMonth() + 1;
+    var monthlyAmounts = new Array(month_index).fill(0);
 
-    for (var x = 0; x < open_invoices.length; x++) {
-        var dueDate = open_invoices[x].due_date;
-        if (dueDate) {
-            var due = new Date(dueDate);
-            var month = due.getMonth();
+    if (open_invoices) {
+        for (var x = 0; x < open_invoices.length; x++) {
+            var insA          = new Date(open_invoices[x].date_created);
+            if( insA.getFullYear() < currentDate.getFullYear() ){    
+                var installDate = '2024-01-01';
+            }else if( insA > currentDate ){        
+                var installDate = moment(currentDate).format('YYYY-MM-DD');
+            }else{
+                var installDate = open_invoices[x].date_created;
+            }
 
-            amountsByMonth[month] += 1;
+            if (installDate) {
+                var ins = new Date(installDate);
+                var month = ins.getMonth();             
+                monthlyAmounts[month] += 1;
+            }
+        }
+
+        var start = 0;
+        var prev_amount = 0;
+        for (i = 0; i < monthlyAmounts.length; ++i) {
+        if( start == 0 ){
+            var amount = monthlyAmounts[i];
+        }else{
+            var amount = monthlyAmounts[i] + prev_amount;
+        }
+
+        prev_amount = amount;
+        monthlyAmounts[i] = amount;                
+        start++;
         }
     }
 
-    OpenInvoicesGraph.data.datasets[0].data = amountsByMonth;
+    OpenInvoicesGraph.data.datasets[0].data = monthlyAmounts;
     OpenInvoicesGraph.update();
 }
 

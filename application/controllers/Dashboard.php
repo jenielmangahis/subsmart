@@ -406,13 +406,13 @@ class Dashboard extends Widgets
         $this->page_data['total_recurring_payment'] = $this->getTotalRecurringPayment();
         $this->page_data['total_agreements_to_expire_in_30_days'] = $this->getAgreementsToExpireIn30Days();
 
-        $invoices = $this->invoice_model->get_all_company_invoice(logged('company_id'));
+        $invoices = $this->invoice_model->getOpenInvoices(logged('company_id'));
         $openInvoices = array_filter($invoices, function ($v, $k) {
             return !in_array($v->status, ['Draft', 'Declined', 'Paid']);
         }, ARRAY_FILTER_USE_BOTH);
 
         $this->page_data['open_invoices'] = $openInvoices;
-        $this->page_data['currentOverdueInvoices'] = $this->widgets_model->getCurrentCompanyOverdueInvoices();
+        $this->page_data['currentOverdueInvoices'] = $this->widgets_model->getCurrentCompanyOverdueInvoices2();
         $company_id = logged('company_id');
         // Plaid
         $this->load->model('PlaidAccount_model');
@@ -858,19 +858,19 @@ class Dashboard extends Widgets
 
                 break;
             case 'open_invoices':
-                $total_query = [
-                    'where' => ['company_id' => logged('company_id'),
-                    'is_recurring =' => 0, 'view_flag =' => 0,
-                    'status !=' => 'Draft', 'status !=' => 'Declined', 'status !=' => 'Paid', 'status !=' => '',
-                    'date_issued >=' => date('Y-m-d', strtotime($date_from)),
-                     'due_date <' => date('Y-m-d', strtotime($date_to))],
-                    'table' => 'invoices',
-                    'select' => '*',
-                ];
-                $invoices = $this->general->get_data_with_param($total_query);
-                $openInvoices = array_filter($invoices, function ($v, $k) {
-                    return !in_array($v->status, ['Draft', 'Declined', 'Paid']);
-                }, ARRAY_FILTER_USE_BOTH);
+                $company_id = logged('company_id');
+                $this->db->select('*');
+                $this->db->from('invoices');
+                $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+                $this->db->where('invoices.status !=', "Paid");
+                $this->db->where('invoices.status !=', "Draft");
+                $this->db->where('invoices.status !=', "");
+                $this->db->where('invoices.view_flag', 0);
+                $this->db->where('invoices.date_created >=',date('Y-m-d', strtotime($date_from)));
+                $this->db->where('invoices.date_created <',date('Y-m-d' , strtotime($date_to)));
+                $this->db->where('invoices.company_id', $company_id);
+                $query = $this->db->get();
+                $openInvoices = $query->result();
 
                 $this->output->set_output(json_encode(['first' => count($openInvoices), 'second' => null, 'open_invoices' => array_values($openInvoices)]));
 
@@ -1060,7 +1060,9 @@ class Dashboard extends Widgets
                 if(  $date_to == '0000-00-00 23:59:59'){
                     $this->db->select('*');
                     $this->db->from('invoices');
-                    $this->db->where('invoices.status', "Unpaid");
+                    $this->db->where('invoices.status !=', "Paid");
+                    $this->db->where('invoices.status !=', "Draft");
+                    $this->db->where('invoices.status !=', "");
                     $this->db->where('invoices.company_id', $company_id);
                     $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-90 days')));
                     $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
@@ -1070,7 +1072,9 @@ class Dashboard extends Widgets
                     $this->db->from('invoices');
                     $this->db->select('*');
                     $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
-                    $this->db->where('invoices.status', "Unpaid");
+                    $this->db->where('invoices.status !=', "Paid");
+                    $this->db->where('invoices.status !=', "Draft");
+                    $this->db->where('invoices.status !=', "");
                     $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-90 days')));
                     $this->db->where('invoices.date_created >=',date('Y-m-d H:i:s', strtotime($date_from)));
                     $this->db->where('invoices.date_created <',date('Y-m-d H:i:s' , strtotime($date_to)));

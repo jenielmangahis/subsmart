@@ -192,10 +192,11 @@ class Jobs_model extends MY_Model
             AND jobs.date_created >="'.$jobs_date_start.'" AND jobs.date_created <="' .$jobs_date_end.'"
         ),0)AS total_jobs');
         $this->db->from('users');
+        $this->db->join('jobs', 'jobs.employee_id = users.id', 'left');
+        $this->db->join('invoices', 'invoices.job_id = jobs.id', 'left');        
         $this->db->where('users.company_id', $companyID);
         $this->db->where('invoices.status !=', 'Draft');
-        $this->db->join('jobs', 'jobs.employee_id = users.id', 'left');
-        $this->db->join('invoices', 'invoices.job_id = jobs.id', 'left');
+        $this->db->where("invoices.view_flag", 0);
      
         if( !empty($date_range) ){
             $this->db->where("invoices.date_created >= ", $date_range['from']);
