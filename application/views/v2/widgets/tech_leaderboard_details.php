@@ -11,13 +11,13 @@
 }
 </style>
 <?php if (count($techLeaderBoards) > 0) : ?>
-    <table class="nsm-table table table-borderless" id="widget-tech-leaderboard">
+    <table class="table table-borderless" id="widget-tech-leaderboard">
         <thead>
         <tr>
-            <td>Employee</td>            
-            <td>Job</td>
-            <td>Ticket</td>
-            <td style="text-align:right;">Sales</td>
+            <td data-name="Employee">Employee</td>            
+            <td data-name="Job">Job</td>
+            <td data-name="Ticket">Ticket</td>
+            <td data-name="Action" style="text-align:right;">Sales</td>
         </tr>
         </thead>
         <tbody>
@@ -26,18 +26,20 @@
             <?php  if ($count >= 10) break; ?>
             <tr>
                 <td>
-                    <?php $image = userProfilePicture($tech->id); ?>
-                    <?php if (is_null($image)){ ?>
-                        <div class="nsm-profile">
-                            <span><?php echo getLoggedNameInitials($tech->id); ?></span>
-                        </div>
-                    <?php }else{ ?>
-                        <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
-                    <?php } ?>
-                    <div class="content">
-                        <div class="details">
-                            <span class="content-title"><?= $tech->tech_rep; ?></span>
-                            <span class="content-subtitle d-block"><?= $tech->email ?></span>
+                    <div class="widget-item">
+                        <?php $image = userProfilePicture($tech->id); ?>
+                        <?php if (is_null($image)){ ?>
+                            <div class="nsm-profile">
+                                <span><?php echo getLoggedNameInitials($tech->id); ?></span>
+                            </div>
+                        <?php }else{ ?>
+                            <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
+                        <?php } ?>
+                        <div class="content">
+                            <div class="details">
+                                <span class="content-title"><?= $tech->tech_rep; ?></span>
+                                <span class="content-subtitle d-block"><?= $tech->email ?></span>
+                            </div>
                         </div>
                     </div>
                 </td>

@@ -211,17 +211,16 @@ class Dashboard extends Widgets
 
         $output = 'Recent Subscription Update <br>';
 
-       if(count($subsContent) > 0 ){
-        foreach ($subsContent as $item) {
-            $output .= "<br> subscriber : <b>".$item->first_name." ".$item->last_name."</b> <br> amount <b>$".$item->mmr."</b>,";
+        if(count($subsContent) > 0 ){
+            foreach ($subsContent as $item) {
+                $output .= "<br> subscriber : <b>".$item->first_name." ".$item->last_name."</b> <br> amount <b>$".$item->mmr."</b>,";
+            }
         }
-       }
 
-       $this->page_data['subsContent'] = $output;
+        $this->page_data['subsContent'] = $output;
 
-        
-        
         $past_due = $this->widgets_model->getCurrentCompanyOverdueInvoices2();
+
         $invoices_total_due = 0;
         foreach ($past_due as $total_due) {
             if ($total_due->status != 'paid') {
@@ -836,6 +835,7 @@ class Dashboard extends Widgets
                 ');
                 $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
                 $this->db->where('invoices.status !=', "Paid");
+                $this->db->where('invoices.status !=', "Draft");
                 $this->db->where('invoices.status !=', "");
                 $this->db->where('invoices.due_date <',date('Y-m-d'));
                 $this->db->where('invoices.date_created >=',date('Y-m-d H:i:s', strtotime($date_from)));
@@ -986,7 +986,8 @@ class Dashboard extends Widgets
 
                 break;
             case 'unpaid_invoices':
-                $unpaid_query = [
+                
+                /*$unpaid_query = [
                     'where' => ['invoices.company_id' => logged('company_id'),  'DATE(invoices.date_created) >=' => date('Y-m-d', strtotime($date_from)),
                     'DATE(invoices.date_created) <=' => date('Y-m-d', strtotime($date_to)), 'invoices.status =' => 'Unpaid'],
                     'table' => 'invoices',
@@ -999,7 +1000,29 @@ class Dashboard extends Widgets
                     ],
                     'select' => 'invoices.*', 'payment_records.invoice_amount AS total_amount_paid',
                 ];
-                $resultInvoice = $this->general->get_data_with_param($unpaid_query);
+                $resultInvoice = $this->general->get_data_with_param($unpaid_query);*/
+
+                $company_id = logged('company_id');
+
+                $this->db->from('invoices');
+                $this->db->join('payment_records', 'payment_records.invoice_id = invoices.id', 'left');
+                $this->db->select('invoices.*', 'payment_records.invoice_amount AS total_amount_paid');
+                $this->db->where('invoices.company_id', $company_id);
+
+                if($date_from != '0000-00-00  00:00:00' && $date_to != "") {
+                    $this->db->where('invoices.date_created >=', $date_from);
+                    $this->db->where('invoices.date_created <=', $date_to);
+                }
+
+                $this->db->where('invoices.due_date >=',date('Y-m-d', strtotime('-90 days')));
+                $this->db->where('invoices.due_date <',date('Y-m-d'));
+
+                $this->db->where('invoices.status !=', "Paid");
+                $this->db->where('invoices.status !=', "Draft");
+                $this->db->where('invoices.status !=', "");
+                
+                $query = $this->db->get();
+                $resultInvoice = $query->result();                
 
                 $this->output->set_output(json_encode(['first' => null, 'second' => null, 'unpaid' => $resultInvoice]));
 
@@ -1650,9 +1673,12 @@ class Dashboard extends Widgets
 
     public function past_due_invoices()
     {
-        $past_due = $this->AcsProfile_model->getCurrentCompanyOverdue(logged('company_id'));
+        $this->load->model('widgets_model');
+        $past_due = $this->widgets_model->getCurrentCompanyOverdueInvoices2();
 
-        // $past_due = $this->AcsProfile_model->getSubscription(logged('company_id'));
+        //$past_due = $this->AcsProfile_model->getCurrentCompanyOverdue(logged('company_id'));
+        //$past_due = $this->AcsProfile_model->getSubscription(logged('company_id'));
+        
         $data_arr = ['Success' => true, 'past_due' => $past_due];
         exit(json_encode($data_arr));
     }
@@ -1713,7 +1739,9 @@ class Dashboard extends Widgets
         $company_id = logged('company_id');
         // $unpaid = $CI->Payment_records_model->getTotalInvoiceAmountByCompanyId($company_id);
 
-        $unpaid = $CI->invoice_model->getUnpaidInvoicesByCompanyId($company_id);
+        //$unpaid = $CI->invoice_model->getUnpaidInvoicesByCompanyId($company_id);
+        $unpaid = $CI->invoice_model->getUnpaidInvoicesByCompanyIdV2($company_id);
+        
         $data_arr = ['Success' => true, 'unpaid_invoices' => $unpaid];
         exit(json_encode($data_arr));
     }

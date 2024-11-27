@@ -25,14 +25,14 @@
         <div class="row mb-4 mt-2">
             <div class="col-4">
                 <select class="nsm-field form-select" name="filter_date" id="widget-job-filter-date">   
-                    <option value="custom">Custom</option>
-                    <option value="this-month" selected="">This month</option>
+                    <!-- <option value="custom">Custom</option> -->
+                    <option value="this-month">This month</option>
                     <option value="this-quarter">This quarter</option>
-                    <option value="this-year">This year</option>
+                    <option value="this-year" selected="">All Time</option>
                 </select>
             </div>
             <div class="col-4">
-                <input type="text" id="widget-job-filter-from" class="nsm-field form-control widget-job-datepicker" value="<?= date("m/Y"); ?>" />
+                <input type="text" id="widget-job-filter-from" class="nsm-field form-control widget-job-datepicker" value="<?= date("01/Y"); ?>" />
             </div>
             <div class="col-4">
                 <input type="text" id="widget-job-filter-to" class="nsm-field form-control widget-job-datepicker" value="<?= date("m/Y"); ?>" required>

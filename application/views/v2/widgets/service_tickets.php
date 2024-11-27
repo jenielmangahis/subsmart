@@ -25,14 +25,15 @@
         <div class="row mb-4 mt-2">
             <div class="col-4">
                 <select class="nsm-field form-select" name="filter_date" id="widget-service-ticket-filter-date">   
-                    <option value="custom">Custom</option>
-                    <option value="this-month" selected="">This month</option>
+                    <!-- <option value="custom">Custom</option> -->
+                    <option value="this-month">This month</option>
                     <option value="this-quarter">This quarter</option>
-                    <option value="this-year">This year</option>
+                    <option value="this-year" selected="">All Time</option>
+                    
                 </select>
             </div>
             <div class="col-4">
-                <input type="text" id="widget-service-ticket-filter-from" class="nsm-field form-control widget-service-ticket-datepicker" value="<?= date("m/Y"); ?>" />
+                <input type="text" id="widget-service-ticket-filter-from" class="nsm-field form-control widget-service-ticket-datepicker" value="<?= date("01/Y"); ?>" />
             </div>
             <div class="col-4">
                 <input type="text" id="widget-service-ticket-filter-to" class="nsm-field form-control widget-service-ticket-datepicker" value="<?= date("m/Y"); ?>" required>
@@ -54,7 +55,7 @@ function initializeServiceTicketChart(){
     });
 
     $('#widget-service-ticket-filter-date').on('change', function(){
-        switch($(this).val()) {            
+        switch($(this).val()) {  
             case 'this-month' :
                 var date = new Date();
                 var to_date = new Date(date.getFullYear(), date.getMonth() + 1, 0);
@@ -89,7 +90,7 @@ function initializeServiceTicketChart(){
                 var date = new Date();
 
                 var from_date = String(1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
-                var to_date   = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();
+                var to_date   = String(date.getMonth() + 1).padStart(2, '0') + '/' + String(1).padStart(2, '0') + '/' + date.getFullYear();                
             break;
             default :
                 var date = new Date();

@@ -45,7 +45,7 @@
                 <input type="text" id="widget-open-estimates-filter-from" class="nsm-field form-control widget-open-estimates-datepicker" value="<?= date("01/Y"); ?>" />
             </div>
             <div class="col-4">
-                <input type="text" id="widget-open-estimates-filter-to" class="nsm-field form-control widget-open-estimates-datepicker" value="<?= date("12/Y"); ?>" required>
+                <input type="text" id="widget-open-estimates-filter-to" class="nsm-field form-control widget-open-estimates-datepicker" value="<?= date("m/Y"); ?>" required>
             </div>
         </div>  
         <h4 class="widget-legend-header">Total Estimates : <span id="estimate-chart-total-estimates">0</span></h4>

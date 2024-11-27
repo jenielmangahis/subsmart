@@ -623,7 +623,14 @@ a.btn-primary.btn-md {
                                                 <td colspan="2" align="right"><span id="span_sub_total_invoice"> <?php echo $tickets->subtotal > 0 ? number_format($tickets->subtotal,2,".","") : '0.00'; ?> </span> <input type="hidden" name="subtotal" id="item_total"></td>
                                             </tr>
                                             <tr>
-                                                <td>Taxes</td>
+                                                <td>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" name="no_tax" <?= $tickets->no_tax == 1 ? 'checked="checked"' : ""; ?> type="checkbox" value="1" id="chk-no-tax">
+                                                        <label class="form-check-label" for="chk-no-tax">
+                                                            Tax (Check if no tax)
+                                                        </label>
+                                                    </div>
+                                                </td>
                                                 <!-- <td></td> -->
                                                 <td colspan="2" align="right">
                                                     <div style="display:none;">

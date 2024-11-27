@@ -541,32 +541,39 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-8">
-                            <div class="row mt-5">
+                        <div class="col-md-7">
+                            <!-- <div class="row mt-5">
                                 <div class="col-md-6 form-group">
                                     <label for="ticket-appointment-user"><b>Adjustment Name</b></label>
-                                    <input type="text" id="adjustment-name" name="adjustment_name" value="" class="form-control" />
+                                    <input type="text" id="adjustment-name" name="adjustment_name" value="" placeholder="Adjustment Name" class="form-control" />
                                     
                                 </div>
                                 <div class="col-md-4 form-group">
                                     <label for="adjustment-amount"><b>Adjustment Amount</b></label>                        
                                     <input type="number" step="any" id="adjustment-amount" name="adjustment_amount" value="0.00" class="form-control" />
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
-                        <div class="col-md-4">
-                            <table class="table" style="text-align:left;">
+                        <div class="col-md-5">
+                            <table class="table table-borderless" style="text-align:left;">
                                 <tr>
                                     <td>Subtotal</td>
                                     <td colspan="2" align="right">$ <span id="span_sub_total_invoice">0.00</span> <input type="hidden" name="subtotal" id="item_total"></td>
                                 </tr>
                                 <tr>
-                                    <td>Taxes</td>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" name="no_tax" type="checkbox" value="1" id="chk-no-tax">
+                                            <label class="form-check-label" for="chk-no-tax">
+                                                Tax (Check if no tax)
+                                            </label>
+                                        </div>
+                                    </td>
                                     <td colspan="2" align="right">$ <span id="total_tax_">0.00</span><input type="hidden" name="taxes" id="total_tax_input"></td>
                                 </tr>
                                 <tr>
-                                    <td>Adjustment</td>
-                                    <td colspan="2" align="right">$ <span id="adjustment_amount">0.00</span></td>
+                                    <td><input type="text" id="adjustment-name" name="adjustment_name" placeholder="Adjustment Name" value="" class="form-control" /></td>
+                                    <td colspan="2" align="right"><input type="number" style="width:60%;" step="any" id="adjustment-amount" name="adjustment_amount" value="0.00" class="form-control text-end" /></td>
                                 </tr>
                                 <tr style="display:none;">
                                     <td>Monthly Monitoring Rate</td>
@@ -1184,6 +1191,10 @@ $(document).ready(function(){
       computeGrandTotal();
     }
 
+    $('#chk-no-tax').on('change', function(){
+        computeGrandTotal();
+    });
+
     function calculateTaxes() {
       let retval = 0;
       const $rows = document.querySelectorAll("#service-ticket-items tr");
@@ -1193,7 +1204,17 @@ $(document).ready(function(){
         retval = retval + Number($tax.value);
       });
 
-      return retval.toFixed(2);
+      if( $('#chk-no-tax').is(':checked') ){
+        $("#total_tax_").text('0.00');
+        $("#total_tax_input").val(0);
+
+        return 0;
+      }else{    
+        $("#total_tax_").text(retval.toFixed(2));
+        $("#total_tax_input").val(retval.toFixed(2));
+        
+        return retval.toFixed(2);
+      }
     }
 
     function calculateSubtotal() {

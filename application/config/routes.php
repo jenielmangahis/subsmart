@@ -1814,6 +1814,8 @@ $route['widgets/_load_taskhub_summary'] = 'Widgets/ajax_load_taskhub_summary';
 $route['widgets/_load_customer_group_chart'] = 'Widgets/ajax_load_customer_group_chart';
 $route['widgets/_update_sort'] = 'Widgets/ajax_update_sort';
 
+$route['Dashboard/past_due_invoices'] = 'Dashboard/past_due_invoices';
+
 // Esign
 $route['esign_v2/_tags_sections'] = 'Esign_v2/ajax_company_tags_sections';
 $route['esign_v2/_create_tags'] = 'Esign_v2/ajax_create_tags';

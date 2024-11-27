@@ -46,7 +46,7 @@ endif;
                 <input type="date" id="widget-income-filter-from" class="nsm-field form-control date" value="<?= date("Y-01-01"); ?>" />
             </div>
             <div class="col-4">
-                <input type="date" id="widget-income-filter-to" class="nsm-field form-control date" value="<?= date("Y-12-31"); ?>" required>
+                <input type="date" id="widget-income-filter-to" class="nsm-field form-control date" value="<?= date("Y-m-t"); ?>" required>
             </div>
         </div>     
         <div class="row">

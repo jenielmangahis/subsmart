@@ -343,6 +343,50 @@ class Invoice_model extends MY_Model
         return $query;
     }
 
+    public function getCompanyTotalAmountUnPaidInvoicesV2($cid, $date_range = array())
+    {
+        $this->db->select('id, COALESCE(SUM(grand_total),0) AS total_amount');       
+        $this->db->from($this->table);   
+        $this->db->where('company_id', $cid);
+        $this->db->where('invoices.status !=', "Paid");
+        $this->db->where('invoices.status !=', "Draft");
+        $this->db->where('invoices.status !=', "");
+
+        $this->db->where('invoices.due_date >=', date('Y-m-d', strtotime('-90 days')));
+        $this->db->where('invoices.due_date <=', date('Y-m-d'));      
+  
+        if( !empty($date_range) ){
+            //$this->db->where('date_issued >=', $date_range['from']);
+            //$this->db->where('date_issued <=', $date_range['to']);
+            $this->db->where('invoices.date_created >=', $date_range['from']);
+            $this->db->where('invoices.date_created <=', $date_range['to']);
+        }
+
+        $query = $this->db->get()->row();
+        return $query;
+    }
+
+    public function getUnpaidInvoicesByCompanyIdV2($company_id)
+    {
+        $this->db->select('invoices.*','payment_records.invoice_amount AS total_amount_paid');
+        //$this->db->select('invoices.*','COALESCE(SUM(grand_total),0) AS total_amount_paid');
+        $this->db->from($this->table);
+        $this->db->join('payment_records', 'payment_records.invoice_id = invoices.id','left');
+        $this->db->where('invoices.company_id', $company_id);
+
+        $this->db->where('invoices.due_date >=', date('Y-m-d', strtotime('-90 days')));
+        $this->db->where('invoices.due_date <=', date('Y-m-d'));   
+
+        $this->db->where('invoices.status !=', "Paid");
+        $this->db->where('invoices.status !=', "Draft");
+        $this->db->where('invoices.status !=', "");
+
+        //$this->db->where('invoices.view_flag', 0);
+        
+        $query = $this->db->get();
+        return $query->result();
+    }
+
     public function getCompanyTotalAmountPaidInvoices($cid, $date_range = array())
     {
         $this->db->select('id, COALESCE(SUM(total_due),0) AS total_paid');    
@@ -415,13 +459,19 @@ class Invoice_model extends MY_Model
 
     public function getJobsCompleted($cid)
     {
+        $today = new DateTime();
+        $startDate = $today->format('Y-01-01');
+        $endDate = $today->format('Y-12-31');
+
         $this->db->select('count(*) AS total');
         $this->db->from('jobs_completed_view');
         $this->db->where_in('status', [
             'Finished',
             'Completed',
         ]);
-        // $this->db->where('DATE(date)', date('Y-m-d'));
+        $this->db->where('date >=', $startDate);
+        $this->db->where('date <=', $endDate);
+        // $this->db->where('DATE(date)', date('Y'));
         $this->db->where('company_id', $cid);
 
         $query = $this->db->get()->row();
@@ -1203,9 +1253,10 @@ class Invoice_model extends MY_Model
 
     public function filterBy($filters = array(), $company_id = 0, $type)
     {
-        $this->db->select('*, jobs.job_number AS jobnumber');
+        $this->db->select('invoices.*, jobs.id AS jobid, jobs.job_number AS jobnumber');
         $this->db->from($this->table);
         $this->db->join('jobs', 'invoices.job_id = jobs.id', 'LEFT');      
+        $this->db->where('invoices.view_flag', 0);
         $this->db->where('invoices.is_recurring', $type);
 
         if (!empty($filters)) {
