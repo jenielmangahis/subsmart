@@ -837,6 +837,7 @@ class Dashboard extends Widgets
                 $this->db->where('invoices.status !=', "Paid");
                 $this->db->where('invoices.status !=', "Draft");
                 $this->db->where('invoices.status !=', "");
+                $this->db->where('invoices.view_flag =', 0);
                 $this->db->where('invoices.due_date <',date('Y-m-d'));
                 $this->db->where('invoices.date_created >=',date('Y-m-d H:i:s', strtotime($date_from)));
                 $this->db->where('invoices.date_created <',date('Y-m-d H:i:s' , strtotime($date_to)));
@@ -1020,6 +1021,7 @@ class Dashboard extends Widgets
                 $this->db->where('invoices.status !=', "Paid");
                 $this->db->where('invoices.status !=', "Draft");
                 $this->db->where('invoices.status !=', "");
+                $this->db->where('invoices.view_flag =', 0);
                 
                 $query = $this->db->get();
                 $resultInvoice = $query->result();                

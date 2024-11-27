@@ -351,6 +351,7 @@ class Invoice_model extends MY_Model
         $this->db->where('invoices.status !=', "Paid");
         $this->db->where('invoices.status !=', "Draft");
         $this->db->where('invoices.status !=', "");
+        $this->db->where('invoices.view_flag =', 0);
 
         $this->db->where('invoices.due_date >=', date('Y-m-d', strtotime('-90 days')));
         $this->db->where('invoices.due_date <=', date('Y-m-d'));      
@@ -380,8 +381,7 @@ class Invoice_model extends MY_Model
         $this->db->where('invoices.status !=', "Paid");
         $this->db->where('invoices.status !=', "Draft");
         $this->db->where('invoices.status !=', "");
-
-        //$this->db->where('invoices.view_flag', 0);
+        $this->db->where('invoices.view_flag =', 0);
         
         $query = $this->db->get();
         return $query->result();
