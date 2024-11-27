@@ -140,6 +140,9 @@
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo base_url('invoice/add') ?>'">
                                 <i class='bx bx-fw bx-receipt'></i> Add New Invoice
                             </button>
+                            <button type="button" class="nsm-button primary" id="archived-invoice-list">
+                                <i class='bx bx-fw bx-trash'></i> Manage Archived
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -330,6 +333,20 @@
                             <div class="view-schedule-container row"></div>
                         </div>                                    
                     </div>        
+                </div>
+            </div>
+
+            <div class="modal fade nsm-modal fade" id="modal-archived-invoices" aria-labelledby="modal-archived-invoices-label" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <form method="post" id="quick-add-event-form">   
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <span class="modal-title content-title">Archived Invoices</span>
+                                <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                            </div>
+                            <div class="modal-body" id="invoices-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -578,6 +595,61 @@
                     $("#btn-record-payment").html('Save');
                 }, beforeSend: function() {
                     $("#btn-record-payment").html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $('#archived-invoice-list').on('click', function(){
+            $('#modal-archived-invoices').modal('show');
+            $.ajax({
+                type: "POST",
+                url: base_url + "invoice/_archived_list",  
+                success: function(html) {    
+                    $('#invoices-archived-list-container').html(html);                          
+                },
+                beforeSend: function() {
+                    $('#invoices-archived-list-container').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $(document).on('click', '.btn-restore-invoice', function(){
+            var invoice_id = $(this).attr('data-id');
+            var invoice_number = $(this).attr('data-invoicenumber');
+
+            Swal.fire({
+                title: 'Restore Invoice Data',
+                html: `Proceed with restoring invoice data <b>${invoice_number}</b>?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.isConfirmed) {                    
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "invoice/_restore_archived",
+                        data: {invoice_id:invoice_id},
+                        dataType:'json',
+                        success: function(result) {                            
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-invoices').modal('hide');
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Invoice data was successfully restored.',
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        }
+                    });
                 }
             });
         });

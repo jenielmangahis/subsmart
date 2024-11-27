@@ -120,6 +120,7 @@ class Accounting_model extends MY_Model
             $this->db->select('invoices.id AS id, invoices.company_id AS company_id,invoices.invoice_number AS number, invoices.job_name AS description, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
             $this->db->from('invoices');
             $this->db->where('invoices.status', "Paid");
+            $this->db->where('invoices.view_flag', 0);
             
             $today = new DateTime();
             switch ($reportConfig['filter_by']) {
@@ -168,6 +169,7 @@ class Accounting_model extends MY_Model
             $this->db->from('invoices');
             $this->db->where('invoices.status !=', "Draft");
             $this->db->where('invoices.status !=', "");
+            $this->db->where('invoices.view_flag', 0);
             $this->db->where('invoices.company_id', $companyID);
             
             $today = new DateTime();
@@ -258,6 +260,7 @@ class Accounting_model extends MY_Model
             $this->db->where('invoices.status !=', "Paid");
             $this->db->where('invoices.status !=', "Draft");
             $this->db->where('invoices.status !=', "");
+            $this->db->where('invoices.view_flag', 0);
             $this->db->where('invoices.company_id', $companyID);
             
             $today = new DateTime();
@@ -478,6 +481,7 @@ class Accounting_model extends MY_Model
             $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, invoices.job_name AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
             $this->db->from('invoices');
             $this->db->where('invoices.status', "Paid");
+            $this->db->where('invoices.view_flag', 0);
             $this->db->where('invoices.company_id', $companyID);
 
             $today = new DateTime();
@@ -528,6 +532,7 @@ class Accounting_model extends MY_Model
             $this->db->where('invoices.status !=', "Paid");
             $this->db->where('invoices.status !=', "Draft");
             $this->db->where('invoices.status !=', "");
+            $this->db->where('invoices.view_flag', 0);
             $this->db->where('invoices.company_id', $companyID);
 
             $today = new DateTime();
@@ -579,6 +584,7 @@ class Accounting_model extends MY_Model
             $this->db->where('invoices.status !=', "Draft");
             $this->db->where('invoices.status !=', "");
             $this->db->where('invoices.due_date < CURDATE()');
+            $this->db->where('invoices.view_flag', 0);
             $this->db->where('invoices.company_id', $companyID);
             
             switch ($reportConfig['subscription_period']) {
@@ -614,7 +620,8 @@ class Accounting_model extends MY_Model
             $this->db->where('invoices.status !=', "Paid");
             $this->db->where('invoices.status !=', "Draft");
             $this->db->where('invoices.status !=', "");
-            $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-15 days')));
+            $this->db->where('invoices.view_flag', 0);
+            $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-14 days')));
             $this->db->where('invoices.company_id', $companyID);
             
             $today = new DateTime();
@@ -665,6 +672,7 @@ class Accounting_model extends MY_Model
             $this->db->where('invoices.status !=', "Paid");
             $this->db->where('invoices.status !=', "Draft");
             $this->db->where('invoices.status !=', "");
+            $this->db->where('invoices.view_flag', 0);
             $this->db->where('invoices.due_date >=', date('Y-m-d', strtotime('-90 days')));
             $this->db->where('invoices.due_date <=', date('Y-m-d'));            
             $this->db->where('invoices.company_id', $companyID);
@@ -714,7 +722,10 @@ class Accounting_model extends MY_Model
         if ($reportType == 'collections') {
             $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, invoices.job_name AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
             $this->db->from('invoices');
-            $this->db->where('invoices.status', "Unpaid");
+            $this->db->where('invoices.status !=', "Paid");
+            $this->db->where('invoices.status !=', "Draft");
+            $this->db->where('invoices.status !=', "");
+            $this->db->where('invoices.view_flag', 0);
             $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-90 days')));
             $this->db->where('invoices.company_id', $companyID);
             
@@ -856,6 +867,7 @@ class Accounting_model extends MY_Model
             $this->db->from('users');
             $this->db->where('users.company_id', $companyID);
             $this->db->where('invoices.status !=', 'Draft');
+            $this->db->where('invoices.view_flag', 0);
             $this->db->join('jobs', 'jobs.employee_id = users.id', 'left');
             $this->db->join('invoices', 'invoices.job_id = jobs.id', 'left');
 
@@ -1098,6 +1110,7 @@ class Accounting_model extends MY_Model
             $this->db->where('invoices.company_id', $companyID);
             $this->db->where('invoices.status != ', "Draft");
             $this->db->where('invoices.status != ', "");
+            $this->db->where('invoices.view_flag', 0);
             
             $today = new DateTime();
             switch ($reportConfig['filter_by']) {
