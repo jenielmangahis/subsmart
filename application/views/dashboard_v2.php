@@ -1427,9 +1427,6 @@ function salesGraphThumbnail() {
                 open_invoices
             } = response;
 
-
-
-
             if (open_invoices) {
                 for (var x = 0; x < open_invoices.length; x++) {
                     var dueDate = open_invoices[x].due_date;
@@ -1458,6 +1455,14 @@ function salesGraphThumbnail() {
                 data: sales_graph_data,
                 options: {
                     plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem, data) {
+                                    const amount = tooltipItem.formattedValue;
+                                    return '$' + amount.toLocaleString(undefined, {minimumFractionDigits: 2});
+                                }
+                            }
+                        },                        
                         legend: {
                             position: 'bottom',
                         },
@@ -1465,8 +1470,13 @@ function salesGraphThumbnail() {
                     scales: {
                         y: {
                             beginAtZero: true,
-                            suggestedMax: 10
-                        },
+                            suggestedMax: 10,
+                            ticks: {
+                                callback: function(value, index, values) {
+                                    return '$' + value.toLocaleString(undefined, {minimumFractionDigits: 2});
+                                }
+                            }
+                        },                        
                     },
                     aspectRatio: 1.2,
                 },
@@ -1941,6 +1951,14 @@ function unpaidInvoicesGraphThumbnail() {
                 data: unpaid_graph_data,
                 options: {
                     plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem, data) {
+                                    const amount = tooltipItem.formattedValue;
+                                    return '$' + amount.toLocaleString(undefined, {minimumFractionDigits: 2});
+                                }
+                            }
+                        },                        
                         legend: {
                             position: 'bottom',
                         },

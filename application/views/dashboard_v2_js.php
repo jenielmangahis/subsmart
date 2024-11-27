@@ -163,15 +163,23 @@ $(document).ready(function() {
                 if (recentCustomers[j].last_name[0]) {
                     nn = recentCustomers[j].last_name[0] + '' + recentCustomers[j].first_name[0];
                 }
+
+                if(recentCustomers[j].city == null && recentCustomers[j].state == null && recentCustomers[j].zip_code == null) {
+                    var cust_address = '---';
+                } else {
+                    var cust_address = recentCustomers[j].city + ', ' + recentCustomers[j].state + ' ' + recentCustomers[j].zip_code;
+                }
+                
+                var cust_type = recentCustomers[j].customer_type !== null ? recentCustomers[j].customer_type : '---';
+
                 $("#recent-customer-container").append(
                     '<div class="widget-item cursor-pointer" onclick="location.href=`/customer/module/' +
                     recentCustomers[j].prof_id + '`"><div class="nsm-profile"><span>' + nn +
                     '</span></div><div class="content ms-2"><div class="details"><span class="content-title">' +
                     recentCustomers[j].first_name + ' ' + recentCustomers[j].last_name +
-                    '</span><span class="content-subtitle d-block">' + recentCustomers[j].city +
-                    ', ' + recentCustomers[j].state + ' ' + recentCustomers[j].zip_code +
+                    '</span><span class="content-subtitle d-block">' + cust_address +
                     '</span></div><div class="controls"><span class="nsm-badge primary">' +
-                    recentCustomers[j].customer_type +
+                    cust_type +
                     '</span><span class="content-subtitle d-block mt-1"></span></div></div></div>'
                 )
             }
