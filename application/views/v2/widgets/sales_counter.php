@@ -77,8 +77,7 @@ if (!is_null($dynamic_load) && $dynamic_load == true) {
             <div class="col-12 col-lg-12 leads-container">
                 <div class="text-start summary-report-body">
                     <label for="">Total Sales</label>
-                    <h1 id="first_content_<?php echo $id; ?>">
-                        <?php echo get_invoice_amount('total'); ?></h1>
+                    <h1 id="first_content_<?php echo $id; ?>">$<?php echo get_invoice_amount('total'); ?></h1>
                 </div>
             </div>
         </div>

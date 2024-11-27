@@ -353,6 +353,7 @@ class Invoice_model extends MY_Model
         $this->db->where('invoices.status !=', "Paid");
         $this->db->where('invoices.status !=', "Draft");
         $this->db->where('invoices.status !=', "");
+        $this->db->where('invoices.view_flag =', 0);
 
         $this->db->where('invoices.due_date >=', date('Y-m-d', strtotime('-90 days')));
         $this->db->where('invoices.due_date <=', date('Y-m-d'));      
@@ -382,8 +383,7 @@ class Invoice_model extends MY_Model
         $this->db->where('invoices.status !=', "Paid");
         $this->db->where('invoices.status !=', "Draft");
         $this->db->where('invoices.status !=', "");
-
-        //$this->db->where('invoices.view_flag', 0);
+        $this->db->where('invoices.view_flag =', 0);
         
         $query = $this->db->get();
         return $query->result();
@@ -580,8 +580,10 @@ class Invoice_model extends MY_Model
         $this->db->where('invoices.status !=', "Paid");
         $this->db->where('invoices.status !=', "Draft");
         $this->db->where('invoices.status !=', "");
+        $this->db->where('invoices.view_flag', 0);
         $this->db->where('invoices.company_id', $cid);
-        $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-15 days')));
+        $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-14 days')));
+
         if (!empty($date_range['from'])) {
             $date_from = $date_range['from'];
             $date_to= $date_range['to'];

@@ -957,6 +957,7 @@ function loadDataFilter(from_date, to_date, table, id,filter) {
             }
 
             if (table == 'sales') {
+                $(`#first_content_${id}`).html('$ ' + data['first']);
                 filterSalesThumbnailGraph(data['sales'])
             }
 
@@ -1001,7 +1002,8 @@ function loadDataFilter(from_date, to_date, table, id,filter) {
                         total_amount_paid);
                 }
 
-                $(`#first_content_${id}`).html(totalUnpaid.toFixed(2));
+                //$(`#first_content_${id}`).html(totalUnpaid.toFixed(2));
+                $(`#first_content_${id}`).html("$ " + totalUnpaid.toFixed(2));
 
                 filterUnpaidInvoicesThumbnailGraph(data['unpaid'])
             }

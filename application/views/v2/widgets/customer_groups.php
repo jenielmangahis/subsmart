@@ -32,7 +32,7 @@
         </div>
     </div>
     <div class="nsm-card-content">        
-        <canvas id="customer_groups_chart" class="nsm-chart" data-chart-type="customer-groups"></canvas>
+        <canvas id="customer_groups_chart" class="nsm-chart" data-chart-type="customer-groups" style="width:100% !important"></canvas>
     </div>
 </div>
 
