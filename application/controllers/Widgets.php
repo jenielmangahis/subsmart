@@ -303,6 +303,19 @@ class Widgets extends MY_Controller
         $comp_id = logged('company_id');
 
         $leadSource =$this->Event_model->getCompanyLeadSourceWithCount($comp_id);
+        $total_door_knocking = 0;
+        foreach( $leadSource as $key => $l ){
+            if( $l->lead_source == 'Door Knocking' ){
+                $total_door_knocking += $l->leadSourceCount;
+                unset($leadSource[$key]);
+            }
+        }
+
+        foreach( $leadSource as $key => $l ){
+            if( $l->lead_source == 'Door' ){
+                $l->leadSourceCount = $l->leadSourceCount + $total_door_knocking;
+            }
+        }   
 
         foreach ($leadSource as $ld) :
             $leadNames[] = $ld->lead_name;
