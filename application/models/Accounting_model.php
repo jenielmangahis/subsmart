@@ -727,6 +727,7 @@ class Accounting_model extends MY_Model
             $this->db->where('invoices.status !=', "");
             $this->db->where('invoices.view_flag', 0);
             $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-90 days')));
+            $this->db->where('invoices.due_date >=', date('Y-m-d', strtotime('-5 years')));
             $this->db->where('invoices.company_id', $companyID);
             
             $today = new DateTime();
