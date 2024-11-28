@@ -164,6 +164,12 @@ $(document).ready(function() {
                     nn = recentCustomers[j].last_name[0] + '' + recentCustomers[j].first_name[0];
                 }
 
+                if( recentCustomers[j].is_favorite == 1 ){
+                    var cust_name =  '<i class="bx bxs-heart customer-favorite"></i> ' + recentCustomers[j].first_name + ' ' + recentCustomers[j].last_name;                        
+                }else{
+                    var cust_name =  recentCustomers[j].first_name + ' ' + recentCustomers[j].last_name;
+                }
+
                 if(recentCustomers[j].city == null && recentCustomers[j].state == null && recentCustomers[j].zip_code == null) {
                     var cust_address = '---';
                 } else {
@@ -175,8 +181,7 @@ $(document).ready(function() {
                 $("#recent-customer-container").append(
                     '<div class="widget-item cursor-pointer" onclick="location.href=`/customer/module/' +
                     recentCustomers[j].prof_id + '`"><div class="nsm-profile"><span>' + nn +
-                    '</span></div><div class="content ms-2"><div class="details"><span class="content-title">' +
-                    recentCustomers[j].first_name + ' ' + recentCustomers[j].last_name +
+                    '</span></div><div class="content ms-2"><div class="details"><span class="content-title">' + cust_name +
                     '</span><span class="content-subtitle d-block">' + cust_address +
                     '</span></div><div class="controls"><span class="nsm-badge primary">' +
                     cust_type +

@@ -1067,6 +1067,7 @@ class Dashboard extends Widgets
                     $this->db->where('invoices.status !=', "");
                     $this->db->where('invoices.company_id', $company_id);
                     $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-90 days')));
+                    $this->db->where('invoices.due_date >=', date('Y-m-d', strtotime('-5 years')));
                     $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
                     $data = $this->db->get();
                     $collection = $data->result();
@@ -1078,6 +1079,7 @@ class Dashboard extends Widgets
                     $this->db->where('invoices.status !=', "Draft");
                     $this->db->where('invoices.status !=', "");
                     $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-90 days')));
+                    $this->db->where('invoices.due_date >=', date('Y-m-d', strtotime('-5 years')));
                     $this->db->where('invoices.date_created >=',date('Y-m-d H:i:s', strtotime($date_from)));
                     $this->db->where('invoices.date_created <',date('Y-m-d H:i:s' , strtotime($date_to)));
                     $this->db->where('invoices.company_id', $company_id);
@@ -1762,9 +1764,14 @@ class Dashboard extends Widgets
         
         $this->db->select('*');
         $this->db->from('invoices');
-        $this->db->where('invoices.status', "Unpaid");
-        $this->db->where('invoices.company_id', $company_id);
+        $this->db->where('invoices.status !=', "Paid");
+        $this->db->where('invoices.status !=', "Draft");
+        $this->db->where('invoices.status !=', "");
+        $this->db->where('invoices.view_flag', 0);
         $this->db->where('invoices.due_date <', date('Y-m-d', strtotime('-90 days')));
+        $this->db->where('invoices.due_date >=', date('Y-m-d', strtotime('-5 years')));
+        $this->db->where('invoices.company_id', $company_id);
+
         $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
         $data = $this->db->get();
         $collection = $data->result();

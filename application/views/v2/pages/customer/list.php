@@ -398,24 +398,31 @@
                         </div>
                     <button type="button" class="nsm-button batchUpdaterButton"><i class='bx bxs-edit'></i> Customer Management</button>
                     <button type="button" class="nsm-button dupEntryButton"><i class='bx bxs-duplicate'></i> Duplicate Entries <small class="text-muted dupEntryCount"></small></button>
-                        <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?= url('customer/import_customer') ?>'">
-                                <i class='bx bx-fw bx-chart'></i> Import
-                            </button>
-                            <button type="button" class="nsm-button primary" onclick="location.href='<?= url('customer/customer_export') ?>'">
-                                <i class='bx bx-fw bx-file'></i> Export
-                            </button>
-                            <!-- <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
-                                <i class='bx bx-fw bx-chart'></i> Add Lead
-                            </button> -->
+                        <div class="nsm-page-buttons primary page-button-container">
+                            <div class="dropdown d-inline-block">
+                                <button type="button" class="dropdown-toggle nsm-button primary" data-bs-toggle="dropdown" style="width:122px;">
+                                    <span>More Action <i class='bx bx-fw bx-chevron-down'></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li>
+                                        <a class="dropdown-item" href="<?= url('customer/import_customer') ?>'"><i class='bx bx-fw bx-chart'></i> Import</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="<?= url('customer/import_customer') ?>"><i class='bx bx-fw bx-file'></i> Export</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" id="print-customer-list" href="javascript:void(0)"><i class='bx bx-fw bx-printer'></i> Print</a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" id="favorite-customer-list" href="javascript:void(0)"><i class='bx bx-fw bxs-heart'></i> Favorite Customers</a>
+                                    </li>
+                                </ul>     
+                            </div>
                             <button type="button" class="nsm-button primary" onclick="location.href='<?php echo url('customer/add_advance') ?>'">
                                 <i class='bx bx-fw bx-chart'></i> New Customer
                             </button>
-                            <button type="button" class="nsm-button primary" id="print-customer-list" data-bs-toggle="modal" data-bs-target="#print_customer_list_modal">
-                                <i class='bx bx-fw bx-printer'></i>
-                            </button>
                             <button type="button" class="nsm-button primary" id="archived-customer-list">
-                                <i class='bx bx-fw bx-trash'></i>
+                                <i class='bx bx-fw bx-trash'></i> Manage Archived
                             </button>
                         </div>
                     </div>
@@ -633,10 +640,24 @@
         <form method="post" id="quick-add-event-form">   
             <div class="modal-content">
                 <div class="modal-header">
-                    <span class="modal-title content-title">Archived Customers</span>
+                    <span class="modal-title content-title">Manage Archived Customers</span>
                     <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
                 </div>
                 <div class="modal-body" id="customer-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade nsm-modal fade" id="modal-favorite-customers" aria-labelledby="modal-favorite-customers-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form method="post" id="quick-add-event-form">   
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="modal-title content-title">Manage Favorite Customers</span>
+                    <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                </div>
+                <div class="modal-body" id="customer-favorite-list-container" style="max-height: 800px; overflow: auto;"></div>
             </div>
         </form>
     </div>
@@ -815,6 +836,68 @@
                     });
                 }
             });
+        });
+
+        $(document).on('click', '.favorite-customer', function(){
+            var cid = $(this).attr('data-id');
+            var cname = $(this).attr('data-name');
+            var is_favorite = $(this).attr('data-favorite');
+
+            if( is_favorite == 1 ){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    html: 'Customer is already in favorite list.'
+                });
+            }else{
+                Swal.fire({
+                    title: "Favorite Customer",
+                    html: `Do you want to add to <b>${cname}</b> to the list?`,
+                    icon: 'question',
+                    confirmButtonText: 'Proceed',
+                    showCancelButton: true,
+                    cancelButtonText: "Cancel"
+                }).then((result) => {
+                    if (result.value) {
+                        var url = base_url + "customer/_add_to_favorites";
+                        $.ajax({
+                            type: 'POST',
+                            url: url,
+                            data: {
+                                cid: cid
+                            },
+                            dataType: 'json',
+                            beforeSend: function(result) {
+
+                            },
+                            success: function(result) {
+                                if (result.is_success == 1) {
+                                    Swal.fire({
+                                        html: 'Customer record was updated successfully',
+                                        icon: 'success',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'Okay'
+                                    }).then((result) => {
+                                        CUSTOMER_LIST_TABLE.ajax.reload();
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error!',
+                                        html: result.msg
+                                    });
+                                }
+                            },
+                            complete: function() {
+
+                            },
+                            error: function(e) {
+                                console.log(e);
+                            }
+                        });
+                    }
+                });
+            }            
         });
 
         $(document).on('click', '.delete-customer', function() {
@@ -1032,6 +1115,62 @@
                 },
                 beforeSend: function() {
                     $('#customer-archived-list-container').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $('#favorite-customer-list').on('click', function(){
+            $('#modal-favorite-customers').modal('show');
+            $.ajax({
+                type: "POST",
+                url: base_url + "customer/_favorite_list",  
+                success: function(html) {    
+                    $('#customer-favorite-list-container').html(html);                          
+                },
+                beforeSend: function() {
+                    $('#customer-favorite-list-container').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
+
+        $(document).on('click', '.btn-remove-favorite-customer', function(){
+        var cid = $(this).attr('data-id');
+        var name = $(this).attr('data-name');
+
+        Swal.fire({
+                title: 'Remove from Favorites',
+                html: `Do you wish to remove from favorites customer <b>${name}</b>?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.isConfirmed) {                    
+                    $.ajax({
+                        type: "POST",
+                        url: base_url + "customer/_remove_favorite",
+                        data: {cid:cid},
+                        dataType:'json',
+                        success: function(result) {     
+                            $('#modal-favorite-customers').modal('hide');                       
+                            if( result.is_success == 1 ) {
+                                $('#modal-archived-customers').modal('hide');
+                                Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: 'Customer data was successfully updated.',
+                                }).then((result) => {
+                                    CUSTOMER_LIST_TABLE.ajax.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: result.msg,
+                                });
+                            }
+                        }
+                    });
                 }
             });
         });

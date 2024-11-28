@@ -1937,8 +1937,11 @@ $route['customer/_get_document_archives']  = 'CustomerDashboardQuickActions/ajax
 $route['customer/_restore_archived_document']  = 'CustomerDashboardQuickActions/ajaxRestoreArchivedDocument';
 
 //Customer
-$route['customer/_restore_archived']  = 'Customer/ajax_restore_archived';
-$route['customer/_quick_save_customer']  = 'Customer/ajax_quick_save_customer';
+$route['customer/_restore_archived']    = 'Customer/ajax_restore_archived';
+$route['customer/_quick_save_customer'] = 'Customer/ajax_quick_save_customer';
+$route['customer/_add_to_favorites']    = 'Customer/ajax_add_to_favorites';
+$route['customer/_favorite_list']       = 'Customer/ajax_favorite_list';
+$route['customer/_remove_favorite']       = 'Customer/ajax_remove_favorite';
 
 
 //Events
