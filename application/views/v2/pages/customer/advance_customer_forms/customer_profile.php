@@ -2,6 +2,12 @@
     <div class="nsm-card-header">
         <div class="nsm-card-title">
             <span><i class="bx bx-fw bx-user"></i>Customer Profile</span>
+            <div class="form-check" style="float:right;">
+                <input class="form-check-input" type="checkbox" value="1" <?= $profile_info->is_favorite == 1 ? 'checked="checked"' : ''; ?> name="is_favorite" id="chk-favorite">
+                <label class="form-check-label" for="chk-favorite">
+                    Favorite
+                </label>
+            </div>
         </div>
     </div>
     <div class="nsm-card-content">
