@@ -2162,6 +2162,10 @@ span.select2-selection {
 }
 
 /*Custom*/
+.customer-favorite{
+  color:#db3a18 !important;
+  font-size:15px !important;
+}
 .pull-right {
   float: right;
 }
