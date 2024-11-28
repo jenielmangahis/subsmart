@@ -12937,6 +12937,10 @@ class Workorder extends MY_Controller
                     createCronAutoSmsNotification($cid, $job_id, 'job', 'Scheduled', 0, $post['emp6_id'], 0);
                 }
 
+                //Update workorder status to Converted
+                $data_workorder = ['status' => 'Converted'];
+                $this->workorder_model->update($job_workorder_id, $data_workorder);
+
                 // Record Job save and Update to Customer Activities Module in Customer Dashboard
                 $action = "$user_logged_name scheduled a job with you. <a href='#' onclick='window.open(`".base_url('job/new_job1/').$job_id."`, `_blank`, `location=yes,height=1080,width=1500,scrollbars=yes,status=yes`);'>$job_number</a>";
 
