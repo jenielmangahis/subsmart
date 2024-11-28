@@ -853,7 +853,12 @@ class Customer extends MY_Controller
             $companyId = logged('company_id');
             $salesRep = get_sales_rep_name($customer->fk_sales_rep_office);
             //$labelName = $customer->customer_type === 'Business' ? $customer->business_name : $customer->first_name.' '.$customer->last_name;
-            $labelName   = $customer->first_name.' '.$customer->last_name;
+            if( $customer->is_favorite == 1 ){
+                $labelName   = "<i class='bx bxs-heart customer-favorite'></i> " . $customer->first_name.' '.$customer->last_name;
+            }else{
+                $labelName   = $customer->first_name.' '.$customer->last_name;
+            }
+            
             $data_arr = [];
             if (!empty($enabled_table_headers)) {
                 if (in_array('name', $enabled_table_headers)) {
@@ -1074,6 +1079,9 @@ class Customer extends MY_Controller
                         </li>
                         <li>
                             <a class='dropdown-item sms-messages' data-id='".$customer->prof_id."' href='javascript:void(0);'>Message</a>
+                        </li>
+                        <li>
+                            <a class='dropdown-item favorite-customer' data-favorite='".$customer->is_favorite."' data-name='".$customer->first_name.' '.$customer->last_name."' data-id='".$customer->prof_id."' href='javascript:void(0);'>Add to Favorites</a>
                         </li>
                         <li>
                             <a class='dropdown-item delete-customer' data-id='".$customer->prof_id."' href='javascript:void(0);'>Delete</a>
@@ -3304,6 +3312,11 @@ class Customer extends MY_Controller
             $check_customer = [];
         }
 
+        $is_favorite = 0;
+        if( isset($input['is_favorite']) ){
+            $is_favorite = 1;
+        }
+
         $custom_fields_array = [];
         if (array_key_exists('custom_name', $input) && array_key_exists('custom_value', $input)) {
             foreach ($input['custom_name'] as $key => $name) {
@@ -3347,6 +3360,7 @@ class Customer extends MY_Controller
             $input_profile['phone_m'] = $input['phone_m'];
             $input_profile['notes'] = trim($input['notes']);
             $input_profile['custom_fields'] = json_encode($custom_fields_array);
+            $input_profile['is_favorite'] = $is_favorite;
             $input_profile['is_sync'] = 0;
             if ($input['bill_method'] == 'CC') {
                 // Check cc if valid using converge
@@ -8776,7 +8790,7 @@ class Customer extends MY_Controller
             $this->Customer_model->deleteCustomer($post['cid']);
 
             //Activity Logs
-            $activity_name = 'Deleted Customer  ' . $customer_name; 
+            $activity_name = 'Customer : Deleted customer  ' . $customer_name; 
             createActivityLog($activity_name);
 
             $is_success = 1;
@@ -9631,7 +9645,72 @@ class Customer extends MY_Controller
 
             //Activity Logs
             $customer_name = $customer->first_name . ' ' . $customer->last_name;
-            $activity_name = 'Archived : Restore customer data  ' . $customer_name; 
+            $activity_name = 'Customer : Restore customer data  ' . $customer_name; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_add_to_favorites()
+    {
+        $this->load->model('Customer_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find customer data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+        $customer = $this->Customer_model->getCustomer($post['cid']);
+        if ($customer && $customer->company_id == $company_id) {                        
+            $this->Customer_model->addToFavorite($post['cid']);
+
+            //Activity Logs
+            $customer_name = $customer->first_name . ' ' . $customer->last_name;
+            $activity_name = 'Customer : Added customer ' . $customer_name . ' to favorite list'; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_favorite_list()
+    {
+        $this->load->model('Customer_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $customers = $this->Customer_model->getAllFavoritesByCompanyId($cid,[]);
+
+        $this->page_data['customers'] = $customers;
+        $this->load->view("v2/pages/customer/ajax_favorite_list", $this->page_data);
+    }
+
+    public function ajax_remove_favorite()
+    {
+        $this->load->model('Customer_model');
+
+        $is_success = 0;
+        $msg = 'Cannot find customer data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+        $customer = $this->Customer_model->getCustomer($post['cid']);
+        if ($customer && $customer->company_id == $company_id) {                        
+            $this->Customer_model->removeToFavorite($post['cid']);
+
+            //Activity Logs
+            $customer_name = $customer->first_name . ' ' . $customer->last_name;
+            $activity_name = 'Customer : Removed customer ' . $customer_name . ' from favorite list'; 
             createActivityLog($activity_name);
 
             $is_success = 1;
