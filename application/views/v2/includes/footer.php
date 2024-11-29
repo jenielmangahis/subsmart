@@ -1290,10 +1290,20 @@ function filterLeadsThumbnailGraph(leads) {
 }
 
 function filterSalesThumbnailGraph(sales) {
-    var amountsByMonth = new Array(12).fill(0);
+    var currentDate    = new Date();
+    var month_index    = currentDate.getMonth() + 1;
+    var amountsByMonth = new Array(month_index).fill(0);
 
     for (var x = 0; x < sales.length; x++) {
-        var dueDate = sales[x].due_date;
+        var dateA = new Date(sales[x].due_date);
+        if( dateA.getFullYear() < currentDate.getFullYear() ){    
+            var dueDate = '2024-01-01';
+        }else if( dateA > currentDate ){        
+            var dueDate = moment(currentDate).format('YYYY-MM-DD');
+        }else{
+            var dueDate = sales[x].due_date;
+        }
+        
         if (dueDate) {
             var due = new Date(dueDate);
             var month = due.getMonth();

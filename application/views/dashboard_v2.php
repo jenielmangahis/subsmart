@@ -1443,7 +1443,9 @@ salesGraphThumbnail();
 function salesGraphThumbnail() {
     fetch('<?php echo base_url('Dashboard/sales_graph'); ?>', {}).then(response => response.json()).then(
         response => {
-            var monthlyAmounts = new Array(12).fill(0);
+            var currentDate    = new Date();
+            var month_index    = currentDate.getMonth() + 1;
+            var monthlyAmounts = new Array(month_index).fill(0);
 
             var {
                 success,
@@ -1452,7 +1454,16 @@ function salesGraphThumbnail() {
 
             if (open_invoices) {
                 for (var x = 0; x < open_invoices.length; x++) {
-                    var dueDate = open_invoices[x].due_date;
+                    var dateA = new Date(open_invoices[x].due_date);
+                    if( dateA.getFullYear() < currentDate.getFullYear() ){    
+                        var dueDate = '2024-01-01';
+                    }else if( dateA > currentDate ){        
+                        var dueDate = moment(currentDate).format('YYYY-MM-DD');
+                    }else{
+                        var dueDate = open_invoices[x].due_date;
+                    }
+
+                    
                     if (dueDate) {
                         var due = new Date(dueDate);
                         var month = due.getMonth();

@@ -39,7 +39,7 @@
                     </div>
                 </td>
                 <td>
-                    <span class="content-subtitle d-block" style="font-size:11px;"><i class='bx bx-calendar' style="position:relative;top:3px;color:#000000;font-size:17px;"></i> <?= date('F d, Y g:i A', strtotime($logs->created_at)) ?></span>
+                    <span class="content-subtitle d-block" style="font-size:10px;"><i class='bx bx-calendar' style="position:relative;top:3px;color:#000000;font-size:17px;"></i> <?= date('F d, Y g:i A', strtotime($logs->created_at)) ?></span>
                 </td>
             </tr>
             <?php endforeach; ?>

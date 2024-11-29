@@ -127,7 +127,7 @@ $(document).ready(function() {
             $("#jobs_completed").text(jobs_completed); // total jobs completed
             $("#jobs_added").text(new_jobs); // total jobs added
             $("#lost_accounts").text(lost_accounts); // total lost account
-            $("#service_project_income").text('$' + invoice_amount); 
+            $("#service_project_income").text('$' + service_project_income); 
             $("#invoice_amount_stats").text('$' + invoice_amount); // total earned
         }
     }).catch((error) => {
@@ -209,15 +209,26 @@ $(document).ready(function() {
                     if (recentLeads[j].lastname[0]) {
                         nn = recentLeads[j].lastname[0] + '' + recentLeads[j].firstname[0];
                     }
+
+                    var recent_lead_mail = "---";
+                    if(recentLeads[j].email_add != null) {
+                        var recent_lead_mail = recentLeads[j].email_add;
+                    }
+
+                    if(recentLeads[j].city == null && recentLeads[j].state == null && recentLeads[j].zip) {
+                        var recent_lead_address = "---";
+                    } else {
+                        var recent_lead_address = recentLeads[j].city + ', ' + recentLeads[j].state + ' ' + recentLeads[j].zip;
+                    }
+
                     $("#recent-leads-container").append(
                         '<div class="widget-item cursor-pointer" onclick="location.href=`/customer/add_lead/' +
                         recentLeads[j].leads_id + '`"><div class="nsm-profile"><span>' + nn +
                         '</span></div><div class="content ms-2"><div class="details"><span class="content-title">' +
                         recentLeads[j].lastname + ' ' + recentLeads[j].firstname +
-                        '</span><span class="content-subtitle d-block">' + recentLeads[j].city + ', ' +
-                        recentLeads[j].state + ' ' + recentLeads[j].zip +
+                        '</span><span class="content-subtitle d-block">' + recent_lead_address +
                         '</span></div><div class="controls"><span class="content-subtitle d-block mt-1">' +
-                        recentLeads[j].email_add + '</span></div></div></div>'
+                        recent_lead_mail + '</span></div></div></div>'
                     )
                 }
             }else{
