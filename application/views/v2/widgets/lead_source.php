@@ -51,8 +51,15 @@ function initializeLeadSourceChart(){
         var LEAD_SOURCE = "["; var LEAD_SOURCE_COUNT = "[";
         for (var i = 0; i < response.length; i++) {
             if( response[i].lead_source != 'Door Knocking' ){
-                LEAD_SOURCE += "'"+response[i].lead_source+" ("+response[i].leadSourceCount+")',";
-                LEAD_SOURCE_COUNT += ""+response[i].leadSourceCount+",";
+                //LEAD_SOURCE += "'"+response[i].lead_source+" ("+response[i].leadSourceCount+")',";
+                //LEAD_SOURCE_COUNT += ""+response[i].leadSourceCount+",";
+                if(response[i].lead_source == 'Door') {
+                    LEAD_SOURCE += "'"+'Self Generated'+" ("+response[i].leadSourceCount+")',";
+                    LEAD_SOURCE_COUNT += ""+response[i].leadSourceCount+",";  
+                } else {
+                    LEAD_SOURCE += "'"+response[i].lead_source+" ("+response[i].leadSourceCount+")',";
+                    LEAD_SOURCE_COUNT += ""+response[i].leadSourceCount+",";                    
+                }
             }
         }
         LEAD_SOURCE += "]"; LEAD_SOURCE_COUNT += "]";
