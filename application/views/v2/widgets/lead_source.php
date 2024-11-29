@@ -51,6 +51,10 @@ function initializeLeadSourceChart(){
         var LEAD_SOURCE = "["; var LEAD_SOURCE_COUNT = "[";
         for (var i = 0; i < response.length; i++) {
             if( response[i].lead_source != 'Door Knocking' ){
+                if( response[i].lead_source == 'Door' ){
+                    response[i].lead_source = 'Self Generated';
+                }
+                
                 LEAD_SOURCE += "'"+response[i].lead_source+" ("+response[i].leadSourceCount+")',";
                 LEAD_SOURCE_COUNT += ""+response[i].leadSourceCount+",";
             }
