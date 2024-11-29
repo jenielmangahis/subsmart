@@ -257,10 +257,10 @@ class Accounting_model extends MY_Model
         if ($reportType == 'service_projective_income') {
             $this->db->select('invoices.id AS id, invoices.company_id AS company_id, invoices.invoice_number AS number, invoices.job_name AS description, CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer, invoices.status AS status, invoices.due_date AS due_date, invoices.date_created AS date_created, invoices.grand_total AS total');
             $this->db->from('invoices');
-            $this->db->where('invoices.status !=', "Paid");
             $this->db->where('invoices.status !=', "Draft");
             $this->db->where('invoices.status !=', "");
             $this->db->where('invoices.view_flag', 0);
+            $this->db->where('invoices.date_created >=', date('Y-m-d'));
             $this->db->where('invoices.company_id', $companyID);
             
             $today = new DateTime();

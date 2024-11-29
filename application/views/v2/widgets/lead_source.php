@@ -50,8 +50,10 @@ function initializeLeadSourceChart(){
         var response = jQuery.parseJSON(data); 
         var LEAD_SOURCE = "["; var LEAD_SOURCE_COUNT = "[";
         for (var i = 0; i < response.length; i++) {
-            LEAD_SOURCE += "'"+response[i].lead_source+" ("+response[i].leadSourceCount+")',";
-            LEAD_SOURCE_COUNT += ""+response[i].leadSourceCount+",";
+            if( response[i].lead_source != 'Door Knocking' ){
+                LEAD_SOURCE += "'"+response[i].lead_source+" ("+response[i].leadSourceCount+")',";
+                LEAD_SOURCE_COUNT += ""+response[i].leadSourceCount+",";
+            }
         }
         LEAD_SOURCE += "]"; LEAD_SOURCE_COUNT += "]";
         var ctx = document.getElementById("lead-source");

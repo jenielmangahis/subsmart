@@ -1393,7 +1393,7 @@ class Dashboard extends Widgets
         $lostAccounts = $this->event_model->getAccountSituation('Cancelled'); // lost account count, if Cancel Date Office Info is set
         $onlineBookingCount = $this->event_model->getLeadSource('Online Booking');
         $data_arr = ['success' => true, 'data' => $payment, 'paymentInvoice' => $paymentInvoices, 'onlineBooking' => $onlineBookingCount, 'jobsCompleted' => $total_jobs_done, 'lostAccount' => $lostAccounts, 'collectedAccounts' => $collectedAccounts, 'invoice_amount_due' => $total_amount_due, 
-        'collected_amount' => $total_amount_paid , 'service_project_income'=>$service_project_income, 'invoice_amount'=>number_format($invoice_amount->total, 2, ".", ","), 'jobs_completed'=>number_format($jobs_completed->total, 0, ".", ","),
+        'collected_amount' => $total_amount_paid , 'service_project_income'=>number_format($service_project_income->total, 2, ".", ","), 'invoice_amount'=>number_format($invoice_amount->total, 2, ".", ","), 'jobs_completed'=>number_format($jobs_completed->total, 0, ".", ","),
         'new_jobs'=> number_format($new_jobs->total, 0, ".", ","), 'earned'=>number_format($earned->total, 2, ".", ",") ,'lost_accounts'=>number_format($lost_accounts->total, 0, ".", ",") ];
         exit(json_encode($data_arr));
     }

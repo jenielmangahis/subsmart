@@ -127,7 +127,7 @@ $(document).ready(function() {
             $("#jobs_completed").text(jobs_completed); // total jobs completed
             $("#jobs_added").text(new_jobs); // total jobs added
             $("#lost_accounts").text(lost_accounts); // total lost account
-            $("#service_project_income").text('$' + invoice_amount); 
+            $("#service_project_income").text('$' + service_project_income); 
             $("#invoice_amount_stats").text('$' + invoice_amount); // total earned
         }
     }).catch((error) => {

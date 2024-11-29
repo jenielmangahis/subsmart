@@ -429,17 +429,14 @@ class Invoice_model extends MY_Model
 
     public function gerServiceProjectvieIncome($cid)
     {
-        $this->db->select('jobs.id AS id,jobs.company_id AS company_id,jobs.job_number AS number,jobs.job_type AS type,jobs.job_description AS description,CONCAT(acs_profile.first_name, " ", acs_profile.last_name) AS customer,jobs.status AS status,jobs.date_issued AS date, job_payments.amount AS total');
-        $this->db->from('jobs');
-        $this->db->where('jobs.job_type', "Service");
-        $this->db->where_in('jobs.status', [
-            'Finished',
-            'Completed',
-        ]);
-        $this->db->where('jobs.company_id', $cid);
-        $this->db->where('DATE(jobs.date_created) =  CURDATE()');
-        $this->db->join('acs_profile', 'acs_profile.prof_id = jobs.customer_id', 'left');
-        $this->db->join('job_payments', 'job_payments.job_id = jobs.id', 'left');
+        $this->db->select('SUM(invoices.grand_total) AS total');
+        $this->db->from('invoices');
+        $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
+        $this->db->where('invoices.date_created >=', date('Y-m-d'));
+        $this->db->where('invoices.status !=', "Draft");
+        $this->db->where('invoices.view_flag', 0);
+        $this->db->where('invoices.status !=', "");
+        $this->db->where('invoices.company_id', $cid);
 
         $query = $this->db->get()->row();
         return $query;
@@ -450,7 +447,6 @@ class Invoice_model extends MY_Model
         $this->db->select('SUM(invoices.grand_total) AS total');
         $this->db->from('invoices');
         $this->db->join('acs_profile', 'acs_profile.prof_id = invoices.customer_id', 'left');
-        $this->db->where('invoices.status !=', "Paid");
         $this->db->where('invoices.status !=', "Draft");
         $this->db->where('invoices.view_flag', 0);
         $this->db->where('invoices.status !=', "");
