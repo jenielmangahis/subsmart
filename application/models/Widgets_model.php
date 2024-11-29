@@ -236,14 +236,23 @@ class Widgets_model extends MY_Model
 
     public function getWidgetsList()
     {
-        //        $query = "Select * FROM widgets WHERE NOT EXISTS(SELECT * FROM widgets_users WHERE widgets.w_id = widgets_users.wu_widget_id AND wu_user_id = $user_id)";
-        //        return $this->db->query($query)->result();
-        //   return $this->db->get('widgets')->result();
-
         $this->db->where('w_main =', 0);
+        $this->db->order_by('w_name', 'ASC');
         $query = $this->db->get('widgets');
-
-        return $query->result();
+    
+        $widgets = $query->result();
+    
+        usort($widgets, function ($a, $b) {
+            if ($a->w_sort == 1 && $b->w_sort != 1) {
+                return -1;
+            }
+            if ($a->w_sort != 1 && $b->w_sort == 1) {
+                return 1;
+            }
+            return strcmp($a->w_name, $b->w_name);
+        });
+    
+        return $widgets;
     }
 
     public function getThumbnailsList()
