@@ -1943,6 +1943,5 @@ $route['customer/_add_to_favorites']    = 'Customer/ajax_add_to_favorites';
 $route['customer/_favorite_list']       = 'Customer/ajax_favorite_list';
 $route['customer/_remove_favorite']       = 'Customer/ajax_remove_favorite';
 
-
 //Events
 $route['events/_view_event']  = 'Events/ajax_view_event';
