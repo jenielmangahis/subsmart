@@ -12,7 +12,7 @@ endif;
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="thumbnail_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">
         <div class="nsm-card-title">
-            <span>Year To Date</span>
+            <span>YTD Stats</span>
         </div>
         <div class="nsm-card-controls">
             <div class="dropdown">
