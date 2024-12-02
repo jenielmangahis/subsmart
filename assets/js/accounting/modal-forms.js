@@ -11233,6 +11233,7 @@ const submitModalForm = (event, el) => {
                                     </div>
                                 </div>
                             </span>`);
+                            
                             break;
                         case 'weeklyTimesheetModal':
                             var type = 'weekly-timesheet';
@@ -14508,7 +14509,7 @@ const loadPaymentCredits = (paymentdata) => {
 // }
 
 const printPreviewInvoice = () => {
-    var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
+    var split = $('#modal-container form').attr('data-href').replace(base_url + '/accounting/update-transaction/', '').split('/');
 
     $.get(base_url + 'accounting/print-invoice-modal/' + split[1], function (result) {
         $('div#modal-container').append(result);
@@ -14540,7 +14541,7 @@ const printPreviewSalesReceipt = () => {
 const printPreviewRefundReceipt = () => {
     var split = $('#modal-container form').attr('data-href').replace('/accounting/update-transaction/', '').split('/');
 
-    $.get('/accounting/print-refund-receipt-modal/' + split[1], function (result) {
+    $.get(base_url + '/accounting/print-refund-receipt-modal/' + split[1], function (result) {
         $('div#modal-container').append(result);
 
         $('#viewPrintRefundReceiptModal').modal('show');

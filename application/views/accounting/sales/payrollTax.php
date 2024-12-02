@@ -126,14 +126,11 @@
                     <template id="taxRowTemplate">
                         <tr class="payrollTax__row">
                             <td class="nsm-text-primary">
-                                <div class="payrollTax__taxType">                                    
+                                <div class="payrollTax__taxType">                         
                                     <div data-type="type.title" class="payrollTax__text700"></div>
                                     <div data-type="type.date_range" class="payrollTax__taxTypeDateRange"></div>
                                 </div>
                             </td>
-                            <!-- <td class="nsm-text-primary">
-                                <div data-type="status" class="payrollTax__paymentStatus"></div>
-                            </td> -->
                             <td class="nsm-text-primary">
                                 <div class="payrollTax__text700">
                                     $<span data-type="amount"></span>
@@ -142,12 +139,6 @@
                             <td class="nsm-text-primary">
                                 <div data-type="due_date" class="payrollTax__text700"></div>
                             </td>
-                            <!-- <td class="nsm-text-primary">
-                                <div class="payrollTax__paymentMethod">
-                                    <div data-type="payment_method.primary_text" class="payrollTax__text700"></div>
-                                    <div data-type="payment_method.secondary_text" class="payrollTax__paymentMethodDate"></div>
-                                </div>
-                            </td> -->
                             <td class="nsm-text-primary">
                                 <div class="dropdown table-management payrollTax__actions">
                                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"><i class='bx bx-fw bx-dots-vertical-rounded'></i></a>
@@ -158,27 +149,13 @@
                                 </div>
                             </td>
                         </tr>
-                        <!-- <tr class="payrollTax__secondaryRow">
-                            <td colspan="2">
-                                <div class="payrollTax__taxType">
-                                    <div data-type="secondary_data.type.title"></div>
-                                </div>
-                            </td>
-                            <td colspan="4">
-                                <div class="payrollTax__text400">
-                                    $<span data-type="secondary_data.amount"></span>
-                                </div>
-                            </td>
-                        </tr> -->
                     </template>
 
                     <thead>
                         <tr>
                             <td data-name="TaxType">Tax type</td>
-                            <!-- <td data-name="PaymentStatus">Payment status</td> -->
                             <td data-name="Balance">Balance</td>
                             <td scope="DueDate">Due date</td>
-                            <!-- <td scope="PaymentMethod">Payment method</td> -->
                             <td scope="Manamge" style="width:5%;"></td>
                         </tr>
                     </thead>
@@ -188,54 +165,6 @@
                         </tr>
                     </tbody>
                 </table>    
-                
-                <!-- 
-                <div class="payrollTax__resources">
-                    <div class="payrollTax__title payrollTax__resourcesTitle">Payment resources</div>
-
-                    <div class="payrollTax__spacer"></div>
-
-                    <div class="payrollTax__resourcesItem">
-                        <div><a class="payrollTax__resourcesLink" href="#">Tax payment history</a></div>
-                        <div class="payrollTax__resourcesBody">Run reports to view your tax payments history.</div>
-                    </div>
-
-                    <div class="payrollTax__spacer"></div>
-
-                    <div class="payrollTax__resourcesItem">
-                        <div><a class="payrollTax__resourcesLink" href="#">Tax setup</a></div>
-                        <div class="payrollTax__resourcesBody">Edit your federal and state tax info in Payroll Settings.</div>
-                    </div>
-
-                    <div class="payrollTax__spacer"></div>
-
-                    <div class="payrollTax__resourcesItem">
-                        <div><a class="payrollTax__resourcesLink" href="#">Tax liability report</a></div>
-                        <div class="payrollTax__resourcesBody">Run reports to view your tax liabilities.</div>
-                    </div>
-
-                    <div class="payrollTax__spacer"></div>
-
-                    <div class="payrollTax__resourcesItem">
-                        <div><a class="payrollTax__resourcesLink" href="#">Prior tax history</a></div>
-                        <div class="payrollTax__resourcesBody">Add payments to your prior tax history.</div>
-                    </div>
-
-                    <div class="payrollTax__spacer"></div>
-
-                    <div class="payrollTax__resourcesItem">
-                        <div><a class="payrollTax__resourcesLink" href="#">Compliance resources</a></div>
-                        <div class="payrollTax__resourcesBody">Year-end info and resources to help stay in compliance.</div>
-                    </div>
-
-                    <div class="payrollTax__spacer"></div>
-
-                    <div class="payrollTax__resourcesItem">
-                        <div><a class="payrollTax__resourcesLink" href="#">COBRA premium assistance <div class="payrollTax__resourcesNew">NEW</div></a></div>
-                        <div class="payrollTax__resourcesBody">Claim a tax credit as part of the American Rescue Plan Act of 2021 (eligibility applies).</div>
-                    </div>
-                </div>   
-                -->             
 
             </div>
         </div>
@@ -244,6 +173,50 @@
 <script>
 $(function(){
     $("#payroll-tax-list").nsmPagination({itemsPerPage:10});
+
+    function performSearch() {
+        var searchValue = $('#search_field').val().toLowerCase();
+        var hasResults = false;
+
+        $('#taxRowContainer .payrollTax__row').each(function() {
+            var title = $(this).find('[data-type="type.title"]').text().toLowerCase();
+            var typeDateRange = $(this).find('[data-type="type.date_range"]').text().toLowerCase();
+            var amount = $(this).find('[data-type="amount"]').text().toLowerCase();
+            var dueDate = $(this).find('[data-type="due_date"]').text().toLowerCase();
+
+            if (title.indexOf(searchValue) === -1 &&
+                title.indexOf(searchValue) === -1 &&
+                typeDateRange.indexOf(searchValue) === -1 &&
+                amount.indexOf(searchValue) === -1 &&
+                dueDate.indexOf(searchValue) === -1) {
+                $(this).hide();
+            } else {
+                $(this).show();
+                hasResults = true;
+            }
+        });
+
+        $('.no-results').remove();
+
+        if (!hasResults) {
+            var noResultsRow = '<tr class="no-results">' +
+                '<td colspan="4">' +
+                '<div class="nsm-empty">' +
+                '<span>No results found.</span>' +
+                '</div>' +
+                '</td>' +
+                '</tr>';
+            $('#taxRowContainer').append(noResultsRow);
+        }
+    }
+
+    $('#search_field').on('keyup', function() {
+        performSearch();
+    });
+
+    $('.nsm-field-group.search').on('click', function() {
+        performSearch();
+    });    
 });
 </script>
 <?php include viewPath('v2/includes/footer'); ?>
