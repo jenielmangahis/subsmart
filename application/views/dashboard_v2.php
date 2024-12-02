@@ -173,11 +173,11 @@
 }
 
 .main-widget-container {
-    width: 280px;
+    width: 380px;
     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .14), 0 2px 1px -1px rgba(0, 0, 0, .12), 0 1px 3px 0 rgba(0, 0, 0, .2);
     border-radius: .75rem;
-    height: 340px;
-    max-height: 340px;
+    height: 390px;
+    max-height: 390px;
 }
 
 .top-spending {
@@ -1027,10 +1027,8 @@ function subscriptionThumbnail(){
             success,
             mmr
         } = response;
-        console.log('mmr',mmr)
 
         let status = [];
-
 
         if (mmr) {
             for (var x = 0; x < mmr.length; x++) {
@@ -1159,7 +1157,6 @@ function subscriptionThumbnail(){
 })
 }
 
-
 openInvoicesGraphThumbnail();
 
 function openInvoicesGraphThumbnail() {
@@ -1252,7 +1249,7 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     number = parseFloat(number).toFixed(decimals);
     const parts = number.split(".");
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousands_sep);
-    console.log('parts.join(dec_point)',parts.join(dec_point))
+    //console.log('parts.join(dec_point)',parts.join(dec_point))
     return parts.join(dec_point);
 }
 
@@ -2093,8 +2090,8 @@ function load_plaid_accounts() {
             $('#plaid-accounts-thumbnail').html(o);
             $('#plaid_label').hide();
             load_plaid_gauge_chart();
-
-            console.log(initialChartData);
+            //console.log(initialChartData);
+            
         }
     });
 }

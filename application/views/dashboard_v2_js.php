@@ -492,8 +492,8 @@ $(document).ready(function() {
     $.post("<?php echo base_url('Dashboard/statusCount'); ?>", {
     DATE: MONTH_DATE,
     }).done(function(data) {
-        console.log('jobs tatus data =========')
-        console.log(data)
+        //console.log('jobs tatus data =========')
+        //console.log(data)
         var MONTH_DATA = JSON.parse(data);
         var content = '';
 
@@ -615,7 +615,7 @@ $(document).ready(function() {
                 }
 
             }
-            console.log(previousMonthNow);
+            //console.log(previousMonthNow);
 
         }
         var jobs = $("#jobs_chart");
