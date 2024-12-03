@@ -229,8 +229,9 @@
                     <option <?= isset($billing_info) && $billing_info->bill_method == 'HOF' ?  'selected' : '';?> value="HOF">Home Owner Financing</option>
                     <option <?= isset($billing_info) && $billing_info->bill_method == 'eT' ?  'selected' : '';?> value="eT">e-Transfer</option>
                     <option <?= isset($billing_info) && $billing_info->bill_method == 'Invoicing' ?  'selected' : '';?> value="Invoicing">Invoicing</option>
+                    <option <?= isset($billing_info) && $billing_info->bill_method == 'APPLE PAY' ?  'selected' : '';?> value="APPLE PAY">Apple Pay</option>
                     <option <?= isset($billing_info) && $billing_info->bill_method == 'OCCP' ?  'selected' : '';?> value="OCCP">Other Credit Card Processor</option>
-                    <option <?= isset($billing_info) && $billing_info->bill_method == 'OPT' ?  'selected' : '';?> value="OPT">Other Payment Type</option>
+                    <option <?= isset($billing_info) && $billing_info->bill_method == 'OPT' ?  'selected' : '';?> value="OPT">Other Payment Type</option>                    
                 </select>
             </div>
         </div>
@@ -432,6 +433,7 @@
                     <option <?= isset($billing_info) && $billing_info->transaction_category == 'D' ?  'selected' : '';?> value="D">Deposit</option>
                     <option <?= isset($billing_info) && $billing_info->transaction_category == 'O' ?  'selected' : '';?> value="O">Other</option>
                 </select>
+                <a href="javascript:void(0);" class="nsm-button btn-small" id="btn-quick-add-financing-category"><span class="fa fa-plus"></span> Add Category</a>
             </div>
         </div>
         <div class="row form_line">
@@ -449,9 +451,9 @@
                     <option <?php if(isset($billing_info)){ if($billing_info->frequency == "12"){echo "selected";} } ?> value="12">Every 1 Year</option>
                 </select>
             </div>
-        </div>
-        <hr>
+        </div>        
         <?php if(isset($billing_info)): ?>
+            <hr>
             <a href="<?= base_url('customer/subscription_new/'.$this->uri->segment(3)) ?>">
                 <button type="button" class="nsm-button primary"><span class="fa fa-plus"></span> Add Subscription</button>
             </a>

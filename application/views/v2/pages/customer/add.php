@@ -20,6 +20,13 @@
         margin-top:10px;
         margin-bottom:10px;
     }
+    #customer-add-advance .nsm-card{
+        margin-top:10px;
+    }
+    #customer-add-advance .btn-small{
+        display:inline-block;
+        margin:5px 0px;
+    }
 </style>
 <div class="nsm-fab-container">
     <div class="nsm-fab nsm-fab-icon nsm-bxshadow" onclick="location.href='<?php echo url('customer/add_lead') ?>'">
@@ -52,21 +59,32 @@
                     </div>
                 </div>
                 <form id="customer_form">
-                    <div class="row g-3 align-items-start">
-                        <div class="col-12 col-md-12">
-                            <div class="row">
-                                <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_papers'); ?>
+                    <div class="row g-3 align-items-start" id="customer-add-advance">
+                        <?php if( in_array(logged('company_id'), adi_company_ids()) ){ ?>
+                            <div class="col-12 col-md-12">
+                                <div class="row">
+                                    <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_papers'); ?>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-4">
-                            <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_profile'); ?>
-                        </div>
-                        <div class="col-md-4">
-                            <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_office_info'); ?>
-                        </div>
-                        <div class="col-md-4">
-                            <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_alarm_info'); ?>
-                        </div>
+                            <div class="col-md-4">
+                                <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_profile'); ?>
+                            </div>
+                            <div class="col-md-4">
+                                <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_office_info'); ?>
+                            </div>
+                            <div class="col-md-4">
+                                <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_alarm_info'); ?>
+                            </div>
+                        <?php }else{ ?>                            
+                            <div class="col-md-6">
+                                <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_profile_non_adi'); ?>
+                                <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_office_info_no_funding'); ?>
+                            </div>
+                            <div class="col-md-6">
+                                <?php include viewPath('v2/pages/customer/advance_customer_forms/customer_billing_info'); ?>
+                            </div>
+                        <?php } ?>
+                        
                         <div class="col-md-12">
                             <input type="hidden" value="<?php if(isset($profile_info)){ echo $profile_info->prof_id; } ?>" class="form-control" name="prof_id" id="prof_id" />
                             <input type="hidden" value="<?php if(isset($billing_info)){ echo $billing_info->bill_method; } ?>" class="form-control" name="default_bill_method" id="default_bill_method" />
@@ -76,6 +94,7 @@
             </div>
         </div>
     </div>
+    <?php include viewPath('v2/pages/customer/advance_customer_forms/quick_add_modal_forms'); ?>
 </div>
 
 <!-- <div class="modal duplicateWarningModal" data-bs-backdrop="static" aria-modal="true" role="dialog">

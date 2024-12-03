@@ -205,9 +205,10 @@ add_css(array(
                                                                 <option  value="Due On Receipt">Due On Receipt</option>
                                                                 <option  value="Net 5">Net 5</option>
                                                                 <option  value="Net 10">Net 10</option>
+                                                                <option  value="Net 14">Net 14</option>
                                                                 <option  value="Net 15">Net 15</option>
+                                                                <option  value="Net 21">Net 21</option>
                                                                 <option  value="Net 30">Net 30</option>
-                                                                <option  value="Net 60">Net 60</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -216,7 +217,7 @@ add_css(array(
                                                             Invoice Date
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="number" class="form-control" name="invoice_date" id="invoice_date" />
+                                                            <input type="date" class="form-control" name="invoice_date" value="<?= date("Y-m-d"); ?>" id="invoice_date" />
                                                         </div>
                                                     </div>
                                                     <div class="row form_line invoicing_field">
@@ -400,21 +401,15 @@ add_css(array(
                                                         <textarea type="text" style="background-color: #fdeac3;width: 100%;" class="form-controls" rows="3" cols="50" name="notes" id="notes" ></textarea>
                                                     </div>
                                                 </div>
-                                                <div>
-                                                    <div style="position: absolute; margin: 0;left: 40px;display: block;">
-                                                        <a href="<?= base_url('customer/subscription_new/'.$this->uri->segment(3)) ?>">
-                                                            <button  type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Add New Subcription Plan</button>
-                                                        </a>
+                                                <div class="text-end mt-2">
+                                                    <button type="button" class="nsm-button primary" id="btn-add-subscription-plan"><span class="fa fa-plus"></span> Add New Subcription Plan</button>                                                    
+                                                    <div id="payment-button" style="display:inline-block;">
+                                                        <button type="submit" class="nsm-button primary" id="btn-pre-auth"><span class="fa fa-money"></span> Pre Auth Now</button>
+                                                        <button type="submit" class="nsm-button primary" id="btn-capture-now"><span class="fa fa-money"></span> Capture Now</button>
                                                     </div>
-                                                    <div style="position: absolute; margin: 0;right: 40px;display: block;" >
-                                                        <div id="payment-button">
-                                                            <button type="submit" class="btn btn-primary"><span class="fa fa-money"></span> Pre Auth Now</button>&nbsp;&nbsp;
-                                                            <button type="submit" class="btn btn-primary"><span class="fa fa-money"></span> Capture Now</button>
-                                                        </div>
-                                                        <div id="paypal-button-container" style="display: none;"></div>
-                                                        <input type="hidden" name="customer_id" id="customer_id" value="<?= $this->uri->segment(3); ?>"/>
-                                                        <input type="hidden" name="method" id="method" value="CC"/>
-                                                    </div>
+                                                    <div id="paypal-button-container" style="display: none;"></div>
+                                                    <input type="hidden" name="customer_id" id="customer_id" value="<?= $this->uri->segment(3); ?>"/>
+                                                    <input type="hidden" name="method" id="method" value="CC"/>
                                                 </div>
                                             </form>
                                         </div>
