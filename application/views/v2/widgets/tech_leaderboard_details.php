@@ -5,14 +5,16 @@
     margin-top: -4px;
     margin-right: 2px;
 }
-#widget-tech-leaderboard .content{
-    display: inline-block;
+#widget-tech-leaderboard .details{
+    display: block;
+    width:100%;
     vertical-align:top;
+    margin-left:5px;
 }
 </style>
 <?php if (count($techLeaderBoards) > 0) : ?>
     <div style="overflow-x:auto;">
-        <table class="table table-borderless" id="widget-tech-leaderboard">
+        <table class="w-100" id="widget-tech-leaderboard">
             <thead>
             <tr>
                 <td data-name="Employee">Employee</td>            
@@ -36,11 +38,9 @@
                             <?php }else{ ?>
                                 <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
                             <?php } ?>
-                            <div class="content">
-                                <div class="details">
-                                    <span class="content-title"><?= $tech->tech_rep; ?></span>
-                                    <span class="content-subtitle d-block"><?= $tech->email ?></span>
-                                </div>
+                            <div class="details">
+                                <span class="content-title"><?= $tech->tech_rep; ?></span>
+                                <span class="content-subtitle d-block"><?= $tech->email ?></span>
                             </div>
                         </div>
                     </td>
@@ -59,3 +59,13 @@
         <span>Tech Leaderboard is empty.</span>
     </div>
 <?php endif; ?>
+<script>
+$(function(){
+    var dt_tech_leaderboard = $("#widget-tech-leaderboard").DataTable({
+        "searching": false,
+        "paging": false, 
+        "info": false,
+        "ordering": true
+    });
+});
+</script>
