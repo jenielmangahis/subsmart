@@ -38,6 +38,7 @@ class Jobs_model extends MY_Model
         $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
         $this->db->join('job_payments', 'jobs.id = job_payments.job_id', 'left');
         $this->db->where("jobs.company_id", $cid);
+        $this->db->where('jobs.is_archived', 0);
 
         if (in_array($leaderBoardType, ['sales', 'tech'])) {
             if (is_numeric($userId)) {
@@ -74,6 +75,7 @@ class Jobs_model extends MY_Model
         $this->db->join('job_tags', 'job_tags.id = jobs.tags', 'left');
         $this->db->join('job_payments', 'jobs.id = job_payments.job_id', 'left');
         $this->db->where("jobs.company_id", $cid);
+        $this->db->where('jobs.is_archived', 0);
 
         if (in_array($leaderBoardType, ['sales', 'tech'])) {
             if (is_numeric($userId)) {
@@ -1072,6 +1074,7 @@ class Jobs_model extends MY_Model
         $this->db->from($this->table);   
         $this->db->where('company_id', $cid);
         $this->db->where('status', $status);
+        $this->db->where('is_archived', 0);
         $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
@@ -1085,6 +1088,7 @@ class Jobs_model extends MY_Model
         $this->db->where('company_id', $cid);
         $this->db->where('status !=', 'Completed');
         $this->db->where('status !=', 'Cancelled');
+        $this->db->where('is_archived', 0);
         $this->db->order_by('id', 'DESC');
 
         $query = $this->db->get();
@@ -1193,6 +1197,21 @@ class Jobs_model extends MY_Model
         $this->db->group_by('jobs.id');
         $data = $this->db->get();
         return $data->result();
+    }
+
+    public function getAllIsArchiveByCompanyId($cid)
+    {
+        $this->db->where('company_id', $cid);
+        $this->db->where('is_archived', 1);
+        $this->db->order_by('archived_date', 'DESC');
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
+
+    public function restoreJob($id)
+    {
+        $this->db->where('id', $id);      
+        $this->db->update($this->table, array("is_archived" => 0, 'archived_date' => null));        
     }
 }
 /* End of file Jobs_model.php */

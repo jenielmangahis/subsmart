@@ -738,7 +738,7 @@ class Estimate extends MY_Controller
         $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogPayload);
 
         //Activity Logs
-        $activity_name = 'Deleted Estimate Number : ' . $estimateInfo->estimate_number; 
+        $activity_name = 'Estimate : Deleted Estimate Number : ' . $estimateInfo->estimate_number; 
         createActivityLog($activity_name);
 
         $delete = $this->estimate_model->deleteEstimate($data);
@@ -3140,6 +3140,44 @@ class Estimate extends MY_Controller
             'msg' => $msg
         ];
 
+        echo json_encode($return);
+    }
+
+    public function ajax_archived_list()
+    {
+        $this->load->model('estimate_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $estimates = $this->estimate_model->get_company_archived_estimates($cid);
+
+        $this->page_data['estimates'] = $estimates;
+        $this->load->view("v2/pages/estimate/ajax_archived_list", $this->page_data);
+    }
+
+    public function ajax_restore_archived()
+    {
+
+        $is_success = 0;
+        $msg = 'Cannot find estimate data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $estimate = $this->estimate_model->getDataByESTID($post['estimate_id']);
+        if ($estimate && $estimate->company_id == $company_id) {                        
+            $this->estimate_model->restoreEstimate($estimate->id);
+
+            //Activity Logs
+            $activity_name = 'Estimates : Restore Estimate Number  ' . $estimate->estimate_number; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
         echo json_encode($return);
     }
 }

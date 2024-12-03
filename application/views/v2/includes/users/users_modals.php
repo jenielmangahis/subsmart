@@ -27,11 +27,13 @@
                     <div class="row gy-3 mb-4">
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Mobile Number</label>
-                            <input type="text" name="mobile" class="nsm-field form-control" value="" />
+                            <!-- <input type="text" name="mobile" class="nsm-field form-control" value="" /> -->
+                            <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="mobile" id="mobile" value="" />
                         </div>
                         <div class="col-12 col-md-6">
                             <label class="content-subtitle fw-bold d-block mb-2">Phone Number</label>
-                            <input type="text" name="phone" class="nsm-field form-control" value="" />
+                            <!-- <input type="text" name="phone" class="nsm-field form-control" value="" /> -->
+                            <input type="text" class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone" id="phone" value="" />
                         </div>
                     </div>
                     <div class="row gy-3 mb-4">
@@ -582,5 +584,23 @@
         });
         //compensationHideShow();
         //setDefaultEmpCommissionValue();
+    });
+
+    $(function () {
+
+        $('.phone_number').keydown(function (e) {
+            var key = e.charCode || e.keyCode || 0;
+            $text = $(this);
+            if (key !== 8 && key !== 9) {
+                if ($text.val().length === 3) {
+                    $text.val($text.val() + '-');
+                }
+                if ($text.val().length === 7) {
+                    $text.val($text.val() + '-');
+                }
+            }
+            return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+        });
+
     });
 </script>

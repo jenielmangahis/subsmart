@@ -1398,6 +1398,33 @@ class Dashboard extends Widgets
         exit(json_encode($data_arr));
     }
 
+    public function today()
+    {
+        $this->load->model('Jobs_model');
+        $this->load->model('Tickets_model');
+        $this->load->model('Invoice_model');
+
+        $cid = logged('company_id');
+        // $date_from = date('Y-m-d', strtotime('last monday'));
+        $date_from = '2023-11-10';
+        $date_to = date('Y-m-d', strtotime('sunday this week'));
+
+        $sales = $this->event_model->getTodayStatsSales($cid);
+        $jobsCreated = $this->event_model->getTodayStatsJobsCreated($cid);
+        $jobsDone = $this->event_model->getTodayJobsDone($cid);
+        $collected = $this->event_model->getTodayCollected($cid);
+        $jobsCanceled = $this->event_model->getTodayStatsJobsCanceled($cid);
+        $serviceSceduled = $this->event_model->getTotalServiceScheduled($cid);
+    
+
+        
+        $data_arr = ['success' => true, 'data' => $payment,
+        'sales' =>number_format( $sales->total, 2, ".", ","), 'jobsCreated' => $jobsCreated->total, 'jobsDone' => $jobsDone->total,
+        'collected' =>number_format( $collected, 2, ".", ",") , 'jobsCanceled'=>$jobsCanceled->total,'serviceSceduled'=>$serviceSceduled->total];
+        exit(json_encode($data_arr));
+    }
+
+
     public function upcoming_jobs()
     {
         $companyId = logged('company_id');

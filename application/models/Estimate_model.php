@@ -1042,6 +1042,21 @@ class Estimate_model extends MY_Model
 
         return $query->result();
     }
+
+    public function get_company_archived_estimates($cid)
+    {
+        $this->db->where('company_id', $cid);
+        $this->db->where('view_flag', 1);
+        $this->db->order_by('id', 'DESC');
+        $query = $this->db->get($this->table);
+        return $query->result();
+    }
+
+    public function restoreEstimate($id)
+    {
+        $this->db->where('id', $id);      
+        $this->db->update($this->table, array("view_flag" => 0, 'archived_date' => null));        
+    }
 }
 
 /* End of file Estimate_model.php */

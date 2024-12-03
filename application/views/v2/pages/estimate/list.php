@@ -188,9 +188,12 @@
                             </ul>
                         </div>
                         <div class="nsm-page-buttons page-button-container">
-                            <button type="button" class="nsm-button" data-bs-toggle="modal"
+                            <button type="button" class="nsm-button primary" data-bs-toggle="modal"
                                 data-bs-target="#new_estimate_modal">
                                 <i class='bx bx-fw bx-chart'></i> New Estimate
+                            </button>
+                            <button type="button" class="nsm-button primary" id="archived-estimate-list">
+                                <i class='bx bx-fw bx-trash'></i> Manage Archived
                             </button>
                             <?php if (isset($estimates) && count($estimates) > 0) { ?>
                             <button type="button" class="nsm-button primary"
@@ -400,6 +403,21 @@
                 </table>
             </div>
         </div>
+
+        <div class="modal fade nsm-modal fade" id="modal-archived-estimates" aria-labelledby="modal-archived-estimates-label" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <form method="post" id="quick-add-event-form">   
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span class="modal-title content-title">Archived Estimates</span>
+                            <button type="button" data-bs-dismiss="modal" aria-label="Close"><i class='bx bx-fw bx-x m-0'></i></button>
+                        </div>
+                        <div class="modal-body" id="estimates-archived-list-container" style="max-height: 800px; overflow: auto;"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
     </div>
 </div>
 
@@ -418,6 +436,61 @@ $(document).ready(function() {
 
         _form.submit();
     }, 1500));
+
+    $(document).on('click', '#archived-estimate-list', function(){
+        $('#modal-archived-estimates').modal('show');
+        $.ajax({
+            type: "POST",
+            url: base_url + "estimates/_archived_list",  
+            success: function(html) {    
+                $('#estimates-archived-list-container').html(html);                          
+            },
+            beforeSend: function() {
+                $('#invoestimatesices-archived-list-container').html('<span class="bx bx-loader bx-spin"></span>');
+            }
+        });
+    });
+
+    $(document).on('click', '.btn-restore-estimate', function(){
+        var estimate_id = $(this).attr('data-id');
+        var estimate_number = $(this).attr('data-estimatenumber');
+
+        Swal.fire({
+            title: 'Restore Estimate Data',
+            html: `Proceed with restoring estimate data <b>${estimate_number}</b>?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.isConfirmed) {                    
+                $.ajax({
+                    type: "POST",
+                    url: base_url + "estimates/_restore_archived",
+                    data: {estimate_id:estimate_id},
+                    dataType:'json',
+                    success: function(result) {                            
+                        if( result.is_success == 1 ) {
+                            $('#modal-archived-estimates').modal('hide');
+                            Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Estimate data was successfully restored.',
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: result.msg,
+                            });
+                        }
+                    }
+                });
+            }
+        });
+    });
 
     $(document).on("click", ".clone-item", function() {
         let num = $(this).attr("data-wo_num");

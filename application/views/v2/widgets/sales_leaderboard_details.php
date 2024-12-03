@@ -5,13 +5,15 @@
     margin-top: -4px;
     margin-right: 2px;
 }
-#widget-sales-leaderboard .content{
-    display: inline-block;
+#widget-sales-leaderboard .details{
+    display: block;
+    width:100%;
     vertical-align:top;
+    margin-left:5px;
 }
 </style>
 <?php if (count($salesLeaderBoards) > 0) : ?>
-    <table class="table table table-borderless" id="widget-sales-leaderboard">
+    <table class="w-100" id="widget-sales-leaderboard">
         <thead>
         <tr>
             <td>Employee</td>            
@@ -33,11 +35,9 @@
                     <?php }else{ ?>
                         <div class="nsm-profile" style="background-image: url('<?php echo $image; ?>');"></div>
                     <?php } ?>
-                    <div class="content">
-                        <div class="details" style="width:159px;overflow:hidden;display:inline-block;">
-                            <span class="content-title"><?= $sales->name; ?></span>
-                            <span class="content-subtitle d-block"><?= $sales->email ?></span>
-                        </div>
+                    <div class="details" style="width:159px;overflow:hidden;display:inline-block;">
+                        <span class="content-title"><?= $sales->name; ?></span>
+                        <span class="content-subtitle d-block"><?= $sales->email ?></span>
                     </div>
                 </td>                
                 <td style="vertical-align:top;font-weight:bold;"><?= $sales->total_jobs; ?></td>
@@ -52,3 +52,13 @@
         <span>Sales Leaderboard is empty.</span>
     </div>
 <?php endif; ?>
+<script>
+$(function(){
+    var dt_sales_leaderboard = $("#widget-sales-leaderboard").DataTable({
+        "searching": false,
+        "paging": false, 
+        "info": false,
+        "ordering": true
+    });
+});
+</script>

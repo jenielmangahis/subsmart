@@ -55,7 +55,7 @@
                                         </div>
                                         <div class="col-lg-2 mb-2">
                                             <strong>Cost Per</strong>
-                                            <select class="form-control" name="cost_per" id="cost_per" required>
+                                            <select class="form-select" name="cost_per" id="cost_per" required>
                                                 <option <?php echo (stripos("$item->cost_per", "Each") !== false) ? "selected": ""; ?> value="Each">Each</option>
                                                 <option <?php echo (stripos("$item->cost_per", "Weight") !== false) ? "selected": ""; ?> value="Weight">Weight</option>
                                                 <option <?php echo (stripos("$item->cost_per", "Length") !== false) ? "selected": ""; ?> value="Length">Length</option>
@@ -70,7 +70,7 @@
                                         </div>
                                         <div class="col-lg-3 mb-2">
                                             <strong>Vendor</strong>
-                                            <select class="form-control" name="vendor_id" id="vendor_id" required>
+                                            <select class="form-select" name="vendor_id" id="vendor_id" required>
                                                 <option value="">Select</option>
                                                 <?php 
                                                     foreach ($vendors as $vendor) { 
@@ -85,7 +85,7 @@
                                         </div>
                                         <div class="col-lg-2 mb-2">
                                             <strong>Item Type</strong>
-                                            <select class="form-control" name="type" id="type" required>
+                                            <select class="form-select" name="type" id="type" required>
                                                 <option <?php echo (stripos("$item->type", "Product") !== false) ? "selected" : ""; ?> value="Product">Product</option>
                                                 <option <?php echo (stripos("$item->type", "Service") !== false) ? "selected" : ""; ?> value="Service">Service</option>
                                                 <option <?php echo (stripos("$item->type", "QSP") !== false) ? "selected" : ""; ?> value="QSP">QSP</option>
@@ -121,7 +121,7 @@
                                         </div>
                                         <div class="col-lg-4 mb-2">
                                             <strong>Item Group</strong>
-                                            <select class="form-control" name="item_categories_id" id="item_categories_id" required>
+                                            <select class="form-select" name="item_categories_id" id="item_categories_id" required>
                                                 <option value="">Select</option>
                                                 <?php 
                                                     foreach ($item_categories as $cat) { 
