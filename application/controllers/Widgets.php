@@ -307,7 +307,6 @@ class Widgets extends MY_Controller
         foreach( $leadSource as $key => $l ){
             if( $l->lead_source == 'Door Knocking' ){
                 $total_door_knocking += $l->leadSourceCount;
-                unset($leadSource[$key]);
             }
         }
 
