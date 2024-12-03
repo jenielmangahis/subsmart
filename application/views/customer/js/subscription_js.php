@@ -137,6 +137,26 @@
         });
     });
 
+    $("#subs_payment_cust_info_update_form").submit(function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
+        $.ajax({
+            type: "POST",
+            url: base_url + "customer/_update_sub_payment_customer_info",
+            data: form.serialize(),
+            success: function(o)
+            {
+                if(o === 'true'){
+                    sweetalert('Good Job!','Customer Info has been updated.','success')
+                }else{
+                    sweetalert('Sorry',o,'error')
+                }
+                console.log(o);
+            }
+        });        
+    });
+
     function sweetalert($title,information,$icon){
         Swal.fire({
             title: $title,

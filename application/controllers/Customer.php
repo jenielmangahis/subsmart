@@ -1907,6 +1907,31 @@ class Customer extends MY_Controller
         }
     }
 
+    public function ajax_update_sub_payment_customer_info()
+    {
+        $this->load->model('AcsProfile_model');
+        $input = $this->input->post();
+
+        $prof_id  = $input['prof_id'];
+        $customer = $this->AcsProfile_model->getByProfId($prof_id);        
+        if($customer) {
+            $customer_data = [
+                'first_name' => $input['first_name'],
+                'last_name' => $input['last_name'],
+                'mail_add' => $input['mail_add'],
+                'city' => $input['city'],
+                'state' => $input['state'],
+                'zip_code' => $input['zip_code'],
+                'email' => $input['email'],
+                'phone_h' => $input['phone']
+            ];
+            $this->AcsProfile_model->updateCustomerByProfId($prof_id, $customer_data);
+            echo 'true';
+        } else {
+            echo 'Customer information not found.';
+        }
+    }
+
     public function save_subscription()
     {
         $input = $this->input->post();
