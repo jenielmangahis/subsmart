@@ -7,6 +7,11 @@
     .nsm-widget-table .widget-item .content .details {
         width: 40% !important;
     }
+    #user_tech_leaderboard .nsm-profile > span {    
+        position: relative;
+        top: 10px;
+        left: 13px;
+    }
 </style>
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
     <div class="nsm-card-header">

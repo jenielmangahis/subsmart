@@ -6,9 +6,14 @@ endif;
 
 <style>
     .nsm-card .nsm-card-content.wow {
-    display: block;
-    height: 50px;
-}
+        display: block;
+        height: 50px;
+    }
+    #sales_leaderboard_v2 .nsm-profile > span {    
+        position: relative;
+        top: 10px;
+        left: 13px;
+    }
 </style>
 
 <div class="<?= $class ?>" data-id="<?= $id ?>" id="widget_<?= $id ?>" draggable="true">
