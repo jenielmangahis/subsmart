@@ -284,6 +284,103 @@ class Event_model extends MY_Model
         }
     }
 
+    public function getTodayStatsSales($companyID)
+    {
+        $this->db->select('SUM(invoices.grand_total) AS total');
+        $this->db->from('invoices');
+        $this->db->where('invoices.company_id', $companyID);
+        $this->db->where('invoices.status != ', "Draft");
+        $this->db->where('invoices.status != ', "");
+        $this->db->where('invoices.view_flag', 0);
+        $this->db->where('invoices.date_created >=', date('Y-m-d'));
+        $data = $this->db->get();
+        return $data->row();
+      
+    }
+
+    public function getTodayStatsJobsCreated($companyID)
+    {
+        $this->db->select('COUNT(*) AS total');
+        $this->db->from('jobs');
+        $this->db->where('jobs.status', "Scheduled");
+        $this->db->where('jobs.date_created >=', date('Y-m-d'));
+        $this->db->where('jobs.company_id', $companyID);
+        $data = $this->db->get();
+        return $data->row();
+      
+    }
+
+    public function getTodayJobsDone($companyID)
+    {
+        $this->db->select('COUNT(*) As total');
+        $this->db->from('jobs_completed_view');
+        $this->db->where_in('status', [
+            'Finished',
+            'Completed',
+        ]);
+        $this->db->where('date >=', date('Y-m-d'));
+        $this->db->where('company_id', $companyID);
+        $data = $this->db->get();
+        return $data->row();
+      
+    }
+
+    public function getTodayCollected($companyID)
+    {
+        $total = 0;
+    
+        // Collect total from jobs
+       $this->db->select('COALESCE(SUM(invoices.grand_total), 0) AS total');
+        $this->db->from('jobs');
+        $this->db->join('invoices', 'invoices.job_id = jobs.id', 'left');
+        $this->db->where('invoices.status', "Paid");
+        $this->db->where('invoices.view_flag', 0);
+        $this->db->where('invoices.date_created >=', date('Y-m-d'));
+        $this->db->where('invoices.company_id', $companyID);
+        $jobsTotal = $this->db->get()->row()->total ?? 0;
+    
+        // Collect total from tickets
+       $this->db->select('COALESCE(SUM(invoices.grand_total), 0) AS total');
+        $this->db->from('tickets');
+        $this->db->join('invoices', 'invoices.ticket_id = tickets.id', 'left');
+        $this->db->where('invoices.status', "Paid");
+        $this->db->where('invoices.view_flag', 0);
+        $this->db->where('invoices.date_created >=', date('Y-m-d'));
+        $this->db->where('invoices.company_id', $companyID);
+        $ticketsTotal = $this->db->get()->row()->total ?? 0;
+    
+        // Calculate total
+        $total = $jobsTotal + $ticketsTotal;
+    
+        return $total;
+    }
+    
+
+    public function getTodayStatsJobsCanceled($companyID)
+    {
+        $this->db->select('COUNT(*) AS total');
+        $this->db->from('jobs');
+        $this->db->where('jobs.status', "Cancelled");
+        $this->db->where('jobs.date_created >=', date('Y-m-d'));
+        $this->db->where('jobs.company_id', $companyID);
+        $data = $this->db->get();
+        return $data->row();
+      
+    }
+
+    public function getTotalServiceScheduled($companyID)
+    {
+        $this->db->select('COUNT(*) AS total');
+        $this->db->from('tickets');
+        $this->db->where('ticket_status', "Scheduled");
+        $this->db->where('created_at >=', date('Y-m-d'));
+        $this->db->where('company_id', $companyID);
+        $data = $this->db->get();
+        return $data->row();
+    }
+ 
+ 
+
     public function getCollected()
     {
         $company_id = logged('company_id');
