@@ -2084,10 +2084,12 @@ class Job extends MY_Controller
             'table' => 'jobs'
         );
         //Get Job
+        $cid = logged('company_id');
         $job = $this->jobs_model->get_specific_job($_POST['job_id']);
-        if ($job) {
-            if ($this->general->delete_($remove_job)) {
-
+        if ($job && $job->company_id == $cid) {
+            //if ($this->general->delete_($remove_job)) {
+                $data = ['is_archived' => 1, 'archived_date' => date("Y-m-d H:i:s")];
+                $this->jobs_model->update($job->id, $data);
                 // Record Job delete to Customer Activities Module in Customer Dashboard
                 $action = "$user_login deleted a job. $job->job_number";
 
@@ -2099,9 +2101,13 @@ class Job extends MY_Controller
                 );
                 $customerLogsRecording = $this->customer_model->recordActivityLogs($customerLogPayload);
 
+                //Activity Logs
+                $activity_name = 'Jobs : Deleted Job Number ' . $job->job_number; 
+                createActivityLog($activity_name);
+
                 customerAuditLog(logged('id'), $job->customer_id, $job->id, 'Jobs', 'Deleted Job #' . $job->job_number);
                 echo '1';
-            }
+            //}
         }
     }
 
@@ -6199,6 +6205,44 @@ class Job extends MY_Controller
         ];
 
         echo json_encode($return);        
+    }
+
+    public function ajax_archived_list()
+    {
+        $this->load->model('estimate_model');
+
+        $post = $this->input->post();
+        $cid  = logged('company_id');
+
+        $jobs = $this->jobs_model->getAllIsArchiveByCompanyId($cid);
+
+        $this->page_data['jobs'] = $jobs;
+        $this->load->view("v2/pages/job/ajax_archived_list", $this->page_data);
+    }
+
+    public function ajax_restore_archived()
+    {
+
+        $is_success = 0;
+        $msg = 'Cannot find job data';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $job = $this->jobs_model->getByIdAndCompanyId($post['job_id'], $company_id);
+        if ($job) {                        
+            $this->jobs_model->restoreJob($job->id);
+
+            //Activity Logs
+            $activity_name = 'Jobs : Restore Job Number ' . $job->job_number; 
+            createActivityLog($activity_name);
+
+            $is_success = 1;
+            $msg = '';
+        }
+
+        $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
     }
 }
 
