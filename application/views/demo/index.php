@@ -64,7 +64,7 @@ defined('BASEPATH') OR exit('No direct script access allowed'); ?>
           <div class="ctext cp-margin">
               <h3 class="chart-headline">Get a Personalized Demo</h3>
               <div class="chart-headline-sub">
-                  <p>Get 30 minutes with an expert and learn how you can grow your business in 2020 with nSmarTrac platform</p>
+                  <p>Get 30 minutes with an expert and learn how you can grow your business in <?= date("Y"); ?> with nSmarTrac platform</p>
               </div>
           </div>
       </section>

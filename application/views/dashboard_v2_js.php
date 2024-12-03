@@ -134,6 +134,35 @@ $(document).ready(function() {
         console.log('Error:', error);
     });
 
+
+    fetch('<?php echo base_url('Dashboard/today'); ?>', {
+        method: 'GET',
+    }).then(response => response.json()).then(response => {
+        var {
+            success,
+            data,
+            sales,
+            jobsCreated,
+            jobsDone,
+            collected,
+            jobsCanceled,
+            serviceSceduled
+        } = response;
+
+        if (success) {
+
+            $("#today_sales").text('$' + sales); 
+            $("#today_jobs_created").text(jobsCreated)
+            $("#today_jobs_done").text(jobsDone); 
+            $("#today_collected").text('$' +collected); 
+            $("#today_jobs_canceled").text( jobsCanceled); 
+            $("#today_service_scheduled").text( serviceSceduled); 
+        }
+    }).catch((error) => {
+        console.log('Error:', error);
+    });
+
+
     fetch('<?php echo base_url('dashboard/_recent_customers_thumbnail'); ?>', {
         method: 'GET',
     }).then(response => response.json()).then(response => {
@@ -492,8 +521,8 @@ $(document).ready(function() {
     $.post("<?php echo base_url('Dashboard/statusCount'); ?>", {
     DATE: MONTH_DATE,
     }).done(function(data) {
-        console.log('jobs tatus data =========')
-        console.log(data)
+        //console.log('jobs tatus data =========')
+        //console.log(data)
         var MONTH_DATA = JSON.parse(data);
         var content = '';
 
@@ -615,7 +644,7 @@ $(document).ready(function() {
                 }
 
             }
-            console.log(previousMonthNow);
+            //console.log(previousMonthNow);
 
         }
         var jobs = $("#jobs_chart");

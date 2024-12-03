@@ -355,7 +355,7 @@
                         });
                     }
 
-                    $("#add_employee_modal").modal('hide');
+                    //$("#add_employee_modal").modal('hide');
                     _this.trigger("reset");
 
                     _this.find("button[type=submit]").html("Save");

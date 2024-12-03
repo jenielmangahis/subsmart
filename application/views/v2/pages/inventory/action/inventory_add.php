@@ -52,7 +52,7 @@
                                         </div>
                                         <div class="col-lg-2 mb-2">
                                             <strong>Cost Per</strong>
-                                            <select class="form-control" name="cost_per" id="cost_per" required>
+                                            <select class="form-select" name="cost_per" id="cost_per" required>
                                                 <option value="Each" selected>Each</option>
                                                 <option value="Weight">Weight</option>
                                                 <option value="Length">Length</option>
@@ -67,16 +67,22 @@
                                         </div>
                                         <div class="col-lg-3 mb-2">
                                             <strong>Vendor</strong>
-                                            <select class="form-control" name="vendor_id" id="vendor_id" required>
+                                            <select class="form-select" name="vendor_id" id="vendor_id" required>
                                                 <option value="">Select</option>
-                                                <?php foreach($vendors as $vendor) : ?>
-                                                <option value="<?= $vendor->id; ?>"><?= $vendor->vendor_name; ?></option>
-                                                <?php endforeach; ?>
-                                            </select>
+                                                <?php 
+                                                    foreach ($vendors as $vendor) { 
+                                                        if ($item->vendor_id == $vendor->vendor_id) {
+                                                            echo "<option selected value='$vendor->vendor_id'>$vendor->vendor_name</option>";
+                                                        } else {
+                                                            echo "<option value='$vendor->vendor_id'>$vendor->vendor_name</option>";
+                                                        }
+                                                    }
+                                                ?>
+                                            </select> 
                                         </div>
                                         <div class="col-lg-2 mb-2">
                                             <strong>Item Type</strong>
-                                            <select class="form-control" name="type" id="type" required>
+                                            <select class="form-select" name="type" id="type" required>
                                                 <option value="Product">Product</option>
                                                 <!-- <option value="Service">Service</option> -->
                                                 <option value="QSP">QSP</option>
@@ -112,11 +118,17 @@
                                         </div>
                                         <div class="col-lg-4 mb-2">
                                             <strong>Item Group</strong>
-                                            <select class="form-control" name="item_categories_id" id="item_categories_id" required>
+                                            <select class="form-select" name="item_categories_id" id="item_categories_id" required>
                                                 <option value="">Select</option>
-                                                <?php foreach($item_categories as $cat) : ?>
-                                                <option value="<?= $cat->item_categories_id; ?>"><?= $cat->name; ?></option>
-                                                <?php endforeach; ?>
+                                                <?php 
+                                                    foreach ($item_categories as $cat) { 
+                                                        if ($item->item_categories_id == $cat->item_categories_id) {
+                                                            echo "<option selected value='$cat->item_categories_id'>$cat->name</option>";
+                                                        } else {
+                                                            echo "<option value='$cat->item_categories_id'>$cat->name</option>";
+                                                        }
+                                                    }
+                                                ?>
                                             </select>
                                         </div>
                                         <div class="col-lg-12 mb-2">
