@@ -1951,5 +1951,9 @@ $route['events/_view_event']  = 'Events/ajax_view_event';
 $route['jobs/_archived_list'] = 'Job/ajax_archived_list';
 $route['jobs/_restore_archived'] = 'Job/ajax_restore_archived';
 
-//Customer Advance
+//Customer
 $route['customers/_create_financing_category'] = 'Customer/ajax_create_financing_category';
+$route['customers/settings_financing_categories'] = 'Customer/settings_financing_categories';
+$route['customers/_update_financing_category'] = 'Customer/ajax_update_financing_category';
+$route['customers/_delete_financing_category'] = 'Customer/ajax_delete_financing_category';
+$route['customers/_create_customer_status'] = 'Customer/ajax_create_customer_status';
