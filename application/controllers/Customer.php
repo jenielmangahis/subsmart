@@ -2179,7 +2179,7 @@ class Customer extends MY_Controller
         $user_id = logged('id');
         if (isset($userid) || !empty($userid)) {
             $this->page_data['profile_info'] = $this->customer_ad_model->get_data_by_id('prof_id', $userid, 'acs_profile');
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
+            $this->page_data['billing_info'] = $bill_info = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
 
             $get_login_user = [
                 'where' => [
@@ -3099,7 +3099,7 @@ class Customer extends MY_Controller
             $this->page_data['profile_info'] = $customer;
             $this->page_data['access_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_access');
             $this->page_data['office_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_office');
-            $this->page_data['billing_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
+            $this->page_data['billing_info'] = $bilinfo = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_billing');
             $this->page_data['alarm_info'] = $this->customer_ad_model->get_data_by_id('fk_prof_id', $userid, 'acs_alarm');
             $this->page_data['panel_type'] = $this->customer_ad_model->get_select_options('acs_alarm', 'panel_type');
 
