@@ -2175,7 +2175,7 @@ class Customer extends MY_Controller
             ];
             $this->page_data['subscriptions'] = $this->general->get_data_with_param($subscriptions_query);
         }
-
+        
         $this->load->view('v2/pages/customer/subscription', $this->page_data);
     }
 
@@ -9718,6 +9718,41 @@ class Customer extends MY_Controller
         }
 
         $return = ['is_success' => $is_success, 'msg' => $msg];
+        echo json_encode($return);
+    }
+
+    public function ajax_create_financing_category()
+    {
+        $this->load->model('FinancingPaymentCategory_model');
+
+        $is_success = 0;
+        $msg   = 'Cannot save data';
+        $name  = '';
+        $value = '';
+
+        $company_id = logged('company_id');
+        $post       = $this->input->post();
+
+        $data = [
+            'company_id' => $company_id,
+            'name' => $post['category_name'],
+            'value' => $post['category_value'],
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
+
+        $this->FinancingPaymentCategory_model->create($data);
+        $name  = $post['category_name'];
+        $value = $post['category_value'];
+
+        //Activity Logs
+        $activity_name = 'Financing Payment Category : Created ' . $post['category_name']; 
+        createActivityLog($activity_name);
+
+        $is_success = 1;
+        $msg = '';
+
+        $return = ['is_success' => $is_success, 'msg' => $msg, 'name' => $name, 'value' => $value];
         echo json_encode($return);
     }
 
