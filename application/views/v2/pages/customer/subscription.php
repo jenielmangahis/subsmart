@@ -23,6 +23,15 @@ add_css(array(
         border-width: 1px;
         background-color: #E5EBF2;
     }
+
+    .subs-payment-form-container .container-left .form_line {
+        margin-bottom: 5px !important;
+    }
+
+    .subs-payment-form-container .container-right .form_line {
+        margin-bottom: 5px !important;
+    }
+
 </style>
     <div class="nsm-fab-container">
         <div class="nsm-fab nsm-fab-icon nsm-bxshadow" data-bs-toggle="modal" data-bs-target="#new_system_package_modal">
@@ -98,13 +107,15 @@ add_css(array(
                                 </div>
                             </div>
                             <br>
-                            <div class="row pl-0 pr-0">
-                                    <div class="col-md-6">
-                                        <div class="card">
-                                            <div class="card-header">
-                                                <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span>
-                                                <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Customer Information</h6>
-                                            </div>
+                            <div class="row pl-0 pr-0 subs-payment-form-container" id="subs-payment-form-container">
+                                <div id="container-left" class="col-md-6 container-left">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <!-- <span style="position: absolute;right: 0;margin-right: 25px;font-size: 20px;padding-top:10px;" class="fa fa-ellipsis-v"></span> -->
+                                            <h6 ><span class="fa fa-user"></span>&nbsp; &nbsp;Customer Information</h6>
+                                        </div>
+                                        <form id="subs_payment_cust_info_update_form" class="subs_payment_cust_info_update_form" method="post">
+                                            <input type="hidden" name="prof_id" id="prof_id" value="<?php echo isset($profile_info->prof_id) ? $profile_info->prof_id : 0; ?>" />
                                             <div class="card-body">
                                                 <div class="row form_line">
                                                     <div class="col-md-2">
@@ -138,11 +149,11 @@ add_css(array(
                                                         <input type="text" readonly class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->city; } ?>" />
                                                     </div>
 
-                                                    <div class="col-md-2">
+                                                    <div class="col-md-2" style="text-align: right;">
                                                         State 
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <input type="text" readonly class="form-control" name="city" id="city" value="<?php if(isset($profile_info->city)){ echo $profile_info->state; } ?>" />
+                                                        <input type="text" readonly class="form-control" name="state" id="state" value="<?php if(isset($profile_info->city)){ echo $profile_info->state; } ?>" />
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -150,7 +161,7 @@ add_css(array(
                                                         Zip 
                                                     </div>
                                                     <div class="col-md-4">
-                                                        <input type="text" readonly class="form-control" name="state" id="state" value="<?php if(isset($profile_info->state)){ echo $profile_info->zip_code; } ?>" />
+                                                        <input type="text" readonly class="form-control" name="zip_code" id="zip_code" value="<?php if(isset($profile_info->state)){ echo $profile_info->zip_code; } ?>" />
                                                     </div>
                                                 </div>
                                                 <div class="row form_line">
@@ -166,13 +177,26 @@ add_css(array(
                                                         Phone 
                                                     </div>
                                                     <div class="col-md-10">
-                                                        <input type="text" readonly class="form-control" name="phone" id="phone" value="<?php if(isset($profile_info)){ echo $profile_info->phone_m; } ?>" />
+                                                        <!-- <input type="text" readonly class="form-control phone_number" name="phone" id="phone" value="<?php //if(isset($profile_info)){ echo $profile_info->phone_m; } ?>" /> -->
+                                                        <input type="text" readonly class="form-control phone_number" maxlength="12" placeholder="xxx-xxx-xxxx" name="phone" id="phone" value="<?php if(isset($profile_info)){ echo $profile_info->phone_h; } ?>" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="row form_line">
+                                                    <div class="col-md-2">
+                                                    </div>
+                                                    <div class="col-md-10" style="text-align: right;">
+                                                        <button type="button" class="nsm-button primary" id="btn-edit-customer-information">Edit</button>
+                                                        <button type="button" class="nsm-button default" id="btn-cancel-customer-information" style="display:none;">Cancel</button>
+                                                        <button type="submit" class="nsm-button primary" id="btn-update-customer-information" style="display:none;">Update</button>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </form>
                                     </div>
-                                <div class="col-md-6">
+                                </div>
+
+                                <div id="container-right" class="col-md-6 container-right">
                                     <div class="card">
                                         <div class="card-header">
                                             <h6 ><span class="fa fa-money"></span>&nbsp; &nbsp;Payment Information</h6>
@@ -205,9 +229,10 @@ add_css(array(
                                                                 <option  value="Due On Receipt">Due On Receipt</option>
                                                                 <option  value="Net 5">Net 5</option>
                                                                 <option  value="Net 10">Net 10</option>
+                                                                <option  value="Net 14">Net 14</option>
                                                                 <option  value="Net 15">Net 15</option>
+                                                                <option  value="Net 21">Net 21</option>
                                                                 <option  value="Net 30">Net 30</option>
-                                                                <option  value="Net 60">Net 60</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -216,7 +241,7 @@ add_css(array(
                                                             Invoice Date
                                                         </div>
                                                         <div class="col-md-8">
-                                                            <input type="number" class="form-control" name="invoice_date" id="invoice_date" />
+                                                            <input type="date" class="form-control" name="invoice_date" value="<?= date("Y-m-d"); ?>" id="invoice_date" />
                                                         </div>
                                                     </div>
                                                     <div class="row form_line invoicing_field">
@@ -400,21 +425,15 @@ add_css(array(
                                                         <textarea type="text" style="background-color: #fdeac3;width: 100%;" class="form-controls" rows="3" cols="50" name="notes" id="notes" ></textarea>
                                                     </div>
                                                 </div>
-                                                <div>
-                                                    <div style="position: absolute; margin: 0;left: 40px;display: block;">
-                                                        <a href="<?= base_url('customer/subscription_new/'.$this->uri->segment(3)) ?>">
-                                                            <button  type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Add New Subcription Plan</button>
-                                                        </a>
+                                                <div class="text-end mt-2">
+                                                    <button type="button" class="nsm-button primary" id="btn-add-subscription-plan"><span class="fa fa-plus"></span> Add New Subcription Plan</button>                                                    
+                                                    <div id="payment-button" style="display:inline-block;">
+                                                        <button type="submit" class="nsm-button primary" id="btn-pre-auth"><span class="fa fa-money"></span> Pre Auth Now</button>
+                                                        <button type="submit" class="nsm-button primary" id="btn-capture-now"><span class="fa fa-money"></span> Capture Now</button>
                                                     </div>
-                                                    <div style="position: absolute; margin: 0;right: 40px;display: block;" >
-                                                        <div id="payment-button">
-                                                            <button type="submit" class="btn btn-primary"><span class="fa fa-money"></span> Pre Auth Now</button>&nbsp;&nbsp;
-                                                            <button type="submit" class="btn btn-primary"><span class="fa fa-money"></span> Capture Now</button>
-                                                        </div>
-                                                        <div id="paypal-button-container" style="display: none;"></div>
-                                                        <input type="hidden" name="customer_id" id="customer_id" value="<?= $this->uri->segment(3); ?>"/>
-                                                        <input type="hidden" name="method" id="method" value="CC"/>
-                                                    </div>
+                                                    <div id="paypal-button-container" style="display: none;"></div>
+                                                    <input type="hidden" name="customer_id" id="customer_id" value="<?= $this->uri->segment(3); ?>"/>
+                                                    <input type="hidden" name="method" id="method" value="CC"/>
                                                 </div>
                                             </form>
                                         </div>
@@ -485,94 +504,133 @@ add_css(array(
         'https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js',
         'https://code.jquery.com/ui/1.12.1/jquery-ui.js',
     ));
-    ?>
+?>
+
+<script>
+
+    $('#btn-edit-customer-information').click(function () {
+        $('.subs-payment-form-container .container-left .form_line input[type=text]').removeAttr('readonly');
+        $('.subs-payment-form-container .container-left .form_line input[type=email]').removeAttr('readonly');
+        $('#btn-update-customer-information').show();
+        $('#btn-cancel-customer-information').show();
+        $('#btn-edit-customer-information').hide();
+    })    
+
+    $('#btn-cancel-customer-information').click(function () {
+        $('.subs-payment-form-container .container-left .form_line input[type=text]').prop('readonly', true);
+        $('.subs-payment-form-container .container-left .form_line input[type=email]').prop('readonly', true);
+        $('#btn-update-customer-information').hide();
+        $('#btn-cancel-customer-information').hide();
+        $('#btn-edit-customer-information').show();
+    });
+
+    $(function () {
+
+        $('.phone_number').keydown(function (e) {
+            var key = e.charCode || e.keyCode || 0;
+            $text = $(this);
+            if (key !== 8 && key !== 9) {
+                if ($text.val().length === 3) {
+                    $text.val($text.val() + '-');
+                }
+                if ($text.val().length === 7) {
+                    $text.val($text.val() + '-');
+                }
+            }
+            return (key == 8 || key == 9 || key == 46 || (key >= 48 && key <= 57) || (key >= 96 && key <= 105));
+        });
+
+    });    
+
+</script>
     
 <?php include viewPath('includes/footer'); ?>
 <style>
-        .material-switch > input[type="checkbox"] {
-            display: none;
-        }
+    .material-switch > input[type="checkbox"] {
+        display: none;
+    }
 
-        .material-switch > label {
-            cursor: pointer;
-            height: 0;
-            position: relative;
-            width: 40px;
-        }
+    .material-switch > label {
+        cursor: pointer;
+        height: 0;
+        position: relative;
+        width: 40px;
+    }
 
-        .material-switch > label::before {
-            background-color: #32243d;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
-            border-radius: 8px;
-            content: '';
-            height: 16px;
-            margin-top: -8px;
-            position:absolute;
-            opacity: 0.3;
-            transition: all 0.4s ease-in-out;
-            width: 40px;
-        }
-        .material-switch > label::after {
-            background-color: #b7bdba;
-            border-radius: 16px;
-            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-            content: '';
-            height: 24px;
-            left: -4px;
-            margin-top: -8px;
-            position: absolute;
-            top: -4px;
-            transition: all 0.3s ease-in-out;
-            width: 24px;
-        }
-        .material-switch > input[type="checkbox"]:checked + label::before {
-            background: inherit;
-            opacity: 0.5;
-        }
-        .material-switch > input[type="checkbox"]:checked + label::after {
-            background: inherit;
-            left: 20px;
-            background-color: #32243d;
-        }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
-    <?php include viewPath('customer/js/subscription_js'); ?>
-    <script src="https://www.paypal.com/sdk/js?client-id=AR9qwimIa4-1uYwa5ySNmzFnfZOJ-RQ2LaGdnUsfqdLQDV-ldcniSVG9uNnlVqDSj_ckrKSDmMIIuL-M&currency=USD"></script>
-        <script>
-            paypal.Buttons({
-                style: {
-                    layout: 'horizontal',
-                    //tagline: false,
-                    //height:25,
-                    color:'blue'
+    .material-switch > label::before {
+        background-color: #32243d;
+        box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        border-radius: 8px;
+        content: '';
+        height: 16px;
+        margin-top: -8px;
+        position:absolute;
+        opacity: 0.3;
+        transition: all 0.4s ease-in-out;
+        width: 40px;
+    }
+    .material-switch > label::after {
+        background-color: #b7bdba;
+        border-radius: 16px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+        content: '';
+        height: 24px;
+        left: -4px;
+        margin-top: -8px;
+        position: absolute;
+        top: -4px;
+        transition: all 0.3s ease-in-out;
+        width: 24px;
+    }
+    .material-switch > input[type="checkbox"]:checked + label::before {
+        background: inherit;
+        opacity: 0.5;
+    }
+    .material-switch > input[type="checkbox"]:checked + label::after {
+        background: inherit;
+        left: 20px;
+        background-color: #32243d;
+    }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-timepicker/0.5.2/js/bootstrap-timepicker.min.js" integrity="sha512-2xXe2z/uA+2SyT/sTSt9Uq4jDKsT0lV4evd3eoE/oxKih8DSAsOF6LUb+ncafMJPAimWAXdu9W+yMXGrCVOzQA==" crossorigin="anonymous"></script>
+<?php include viewPath('customer/js/subscription_js'); ?>
+<script src="https://www.paypal.com/sdk/js?client-id=AR9qwimIa4-1uYwa5ySNmzFnfZOJ-RQ2LaGdnUsfqdLQDV-ldcniSVG9uNnlVqDSj_ckrKSDmMIIuL-M&currency=USD"></script>
+
+<script>
+    paypal.Buttons({
+        style: {
+            layout: 'horizontal',
+            //tagline: false,
+            //height:25,
+            color:'blue'
+        },
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                payer: {
+                    name: {
+                        given_name: 'Testing Paypal'
+                    },
                 },
-                createOrder: function(data, actions) {
-                    return actions.order.create({
-                        payer: {
-                            name: {
-                                given_name: 'Testing Paypal'
-                            },
-                        },
-                        purchase_units: [{
-                            amount: {
-                                value: '0.01'
-                            }
-                        }],
-                        application_context: {
-                            shipping_preference: 'NO_SHIPPING'
-                        }
-                    });
-                },
-                onApprove: function(data, actions) {
-                    return actions.order.capture().then(function(details) {
-                        // Show a success message to the buyer
-                        console.log(details);
-                        //$("#payment-method").val('paypal');
-                        //$("#payment-method-status").val(details.status);
-                        //activate_registration();
-                    });
+                purchase_units: [{
+                    amount: {
+                        value: '0.01'
+                    }
+                }],
+                application_context: {
+                    shipping_preference: 'NO_SHIPPING'
                 }
-            }).render('#paypal-button-container');
-            // This function displays Smart Payment Buttons on your web page.
-        </script>
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                // Show a success message to the buyer
+                console.log(details);
+                //$("#payment-method").val('paypal');
+                //$("#payment-method-status").val(details.status);
+                //activate_registration();
+            });
+        }
+    }).render('#paypal-button-container');
+    // This function displays Smart Payment Buttons on your web page.
+</script>

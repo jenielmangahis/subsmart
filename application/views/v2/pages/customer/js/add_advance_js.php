@@ -341,6 +341,8 @@
                 hide_all();
                 $(".account_cred").show('slow');
                 $("#confirmationPD").hide("slow");
+            }else if (c_type === 'APPLE PAY') {
+                hide_all();
             }
         });
 
@@ -794,7 +796,45 @@
             });
         });
 
+        $('#btn-quick-add-financing-category').on('click', function(){
+            $('#frm-quick-add-financing-category')[0].reset();
+            $('#quick_add_financing_category').modal('show');
+        });
 
+        $('#frm-quick-add-financing-category').on('submit', function(e){
+            e.preventDefault();
+
+            $.ajax({
+                type: "POST",
+                url: base_url + 'customers/_create_financing_category',
+                dataType: 'json',
+                data: $('#frm-quick-add-financing-category').serialize(),
+                success: function(data) {    
+                    $('#btn-save-financing-category').html('Save');                   
+                    if (data.is_success) {
+                        $('#quick_add_financing_category').modal('hide');
+                        $('#transaction_category').append($('<option>', {
+                            value: data.value,
+                            text: data.name
+                        }));
+                        $('#transaction_category').val(data.value);
+                    }else{
+                        Swal.fire({
+                            title: 'Error',
+                            text: data.msg,
+                            icon: 'error',
+                            showCancelButton: false,
+                            confirmButtonText: 'Okay'
+                        }).then((result) => {
+                            
+                        });
+                    }
+                },
+                beforeSend: function() {
+                    $('#btn-save-financing-category').html('<span class="bx bx-loader bx-spin"></span>');
+                }
+            });
+        });
 
     });
 </script>

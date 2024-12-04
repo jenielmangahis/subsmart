@@ -1568,6 +1568,7 @@ $route['customer/download_esign_doc'] = 'Customer/downloadEsignDoc';
 $route['customer/_load_customer_sms_messages'] = 'Customer/ajax_load_customer_sms_messages';
 $route['customer/_load_all_subscriptions'] = 'Customer/ajax_load_all_subscriptions';
 $route['customer/_quick_search'] = 'Customer/ajax_quick_search';
+$route['customer/_update_sub_payment_customer_info'] = 'Customer/ajax_update_sub_payment_customer_info';
 
 // Trac360
 $route['on-my-way-to-job'] = 'Job/update_jobs_status';
@@ -1949,3 +1950,6 @@ $route['events/_view_event']  = 'Events/ajax_view_event';
 //Job Archives
 $route['jobs/_archived_list'] = 'Job/ajax_archived_list';
 $route['jobs/_restore_archived'] = 'Job/ajax_restore_archived';
+
+//Customer Advance
+$route['customers/_create_financing_category'] = 'Customer/ajax_create_financing_category';
