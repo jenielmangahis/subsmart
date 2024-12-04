@@ -1950,3 +1950,6 @@ $route['events/_view_event']  = 'Events/ajax_view_event';
 //Job Archives
 $route['jobs/_archived_list'] = 'Job/ajax_archived_list';
 $route['jobs/_restore_archived'] = 'Job/ajax_restore_archived';
+
+//Customer Advance
+$route['customers/_create_financing_category'] = 'Customer/ajax_create_financing_category';
