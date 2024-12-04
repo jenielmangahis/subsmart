@@ -105,7 +105,7 @@ function Signing(hash) {
 
     const { jp_amount, jp_program_setup, jp_monthly_monitoring, jp_tax, jp_intallation_cost, jp_equipment_cost, jp_tax_equipment_cost } = window.__esigndata.auto_populate_data.job_payments;   
 
-    const { bill_method, check_num, routing_num, card_fname, card_lname, acct_num, equipment, credit_card_exp, credit_card_exp_mm_yyyy, credit_card_num } = window.__esigndata.auto_populate_data.billing;
+    const { bill_method, check_num, bank_name, routing_num, card_fname, card_lname, acct_num, equipment, credit_card_exp, credit_card_exp_mm_yyyy, credit_card_num } = window.__esigndata.auto_populate_data.billing;
 
     const {  total_due, equipment_cost, first_month_monitoring, one_time_activation } = window.__esigndata.auto_populate_data.cost_due;
 
@@ -408,7 +408,7 @@ function Signing(hash) {
     }
 
 
-    if( field_name == "Primary Contact" ){
+    if( field_name == "Primary Contact" || field_name == "Customer Mobile" ){
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
           return phone_m;
@@ -420,7 +420,7 @@ function Signing(hash) {
       }
     }
 
-    if( field_name == "Secondary Contact" ){
+    if( field_name == "Secondary Contact" || field_name == "Customer Phone" ){
       if( fieldValue ){
         if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
           return phone_h;
@@ -505,6 +505,18 @@ function Signing(hash) {
         }
       }else{
         return check_num;
+      }
+    }
+
+    if( field_name == "Bank Name" ){
+      if( fieldValue ){
+        if( fieldValue['value'] === '' || typeof fieldValue['value'] === 'undefined' ){
+          return bank_name;
+        }else{
+          return fieldValue['value'];
+        }
+      }else{
+        return bank_name;
       }
     }
 
@@ -882,6 +894,10 @@ function Signing(hash) {
         return first_name;
       }
       
+      if( specs_field_name.name === "customer_name" ) {
+        return first_name + " " + last_name;
+      }
+
       if( specs_field_name.name === "subscriber_lname" ) {
         return last_name;
       }
